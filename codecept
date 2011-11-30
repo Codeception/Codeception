@@ -1,7 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-require_once 'autoload.php';
+if (!class_exists('UniversalClassLoader')) {
+    require_once 'autoload.php';
+}
 
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
