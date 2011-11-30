@@ -13,5 +13,7 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\Run('run'));
  $app->add(new Codeception\Command\Install('install'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
- $app->add(new Codeception\Command\GenerateScenarios('generate-scenarios'));
+ $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
+ $app->add(new Codeception\Command\GenerateCept('generate:test'));
+ $app->add(new Codeception\Command\GenerateForClass('generate:for-class'));
  $app->run();

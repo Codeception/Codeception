@@ -29,7 +29,7 @@ class GenerateScenarios extends Base {
 
             $testManager = new \Codeception\SuiteManager(new $class, false);
             if (isset($settings['bootstrap'])) $testManager->setBootstrtap($settings['bootstrap']);
-            $testManager->loadTests($this->tests_path.'/'.$suite);
+            $testManager->loadCepts($this->tests_path.'/'.$suite);
             $tests = $testManager->getCurrentSuite()->tests();
 
             @mkdir($path.'/'.$suite);

@@ -105,9 +105,9 @@ class Codecept
         if (isset($settings['bootstrap'])) $testManager->setBootstrtap($settings['bootstrap']);
 
         if ($test) {
-            $testManager->loadTest($test, $this->path.'/'.$suite);
+            $testManager->loadCept($this->path.'/'.$suite.'/'.$test);
         } else {
-            $testManager->loadTests($this->path.'/'.$suite);
+            $testManager->loadCepts($this->path.'/'.$suite);
         }
         $tests = $testManager->getCurrentSuite()->tests();
 
