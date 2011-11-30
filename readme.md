@@ -1,8 +1,36 @@
-# TestGuy Standalone 
+# Codeception
+
+Codeception is new PHP full-stack testing framework.
+Inspired by BDD it shows you totally new way for writing acceptance, functional and even unit tests.
+Powered by PHPUnit 3.6.
+
+Previously called 'TestGuy'. Now is extended to feature CodeGuy, TestGuy, and WebGuy in one pack.
+
+# CodeGuy
+
+CodeGuy is a way of writing unit tests in descriptive way.
+Allows easily define and use mocks and stubs inside your class.
+
+Check this:
+
+``` php
+$I = new CodeGuy($scenario);
+$I->wantTo('run steps from scenario');
+$I->testMethod('\Codeception\Scenario.run');
+$I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase', array('runStep' => function() { })));
+$I->haveFakeClass($scenario = Stub::make('\Codeception\Scenario', array(
+    'test' => $test,
+    'steps' => array(Stub::makeEmpty('\Codeception\Step\Action'), Stub::makeEmpty('\Codeception\Step\Comment')))));
+$I->executeTestedMethodOn($scenario);
+$I->seeMethodInvoked($test,'runStep');
+$I->seePropertyEquals($scenario, 'currentStep', 1);
+```
+
+
+# TestGuy
 ## Functional Testing Framework
 
 TestGuy is a functional testing framework powered by PHPUnit.
-Designed make tests easy to write, read, and debug.
 
 ## Principles
 TestGuy library allows to write test scenarios in PHP with DSL designed to look like native English.
