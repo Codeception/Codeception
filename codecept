@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require_once 'autoload.php';
+
+use Symfony\Component\Console\Application,
+    Symfony\Component\Console\Input\InputInterface,
+    Symfony\Component\Console\Input\InputDefinition,
+    Symfony\Component\Console\Input\InputOption;
+
+ $app = new Application('Codeception', Codeception\Codecept::VERSION);
+ $app->add(new Codeception\Command\Build('build'));
+ $app->add(new Codeception\Command\Run('run'));
+ $app->add(new Codeception\Command\Install('install'));
+ $app->add(new Codeception\Command\Bootstrap('bootstrap'));
+ $app->add(new Codeception\Command\GenerateScenarios('generate-scenarios'));
+ $app->run();
