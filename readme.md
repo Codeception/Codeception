@@ -15,21 +15,26 @@ Check this:
 
 ``` php
 <?php
-
 $I = new CodeGuy($scenario);
 $I->wantTo('run steps from scenario');
 $I->testMethod('\Codeception\Scenario.run');
-$I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase', array('runStep' => function() { })));
+$I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase'));
 $I->haveFakeClass($scenario = Stub::make('\Codeception\Scenario', array(
     'test' => $test,
-    'steps' => array(Stub::makeEmpty('\Codeception\Step\Action'), Stub::makeEmpty('\Codeception\Step\Comment')))));
+    'steps' => array(
+        Stub::makeEmpty('\Codeception\Step\Action'),
+        Stub::makeEmpty('\Codeception\Step\Comment')
+    )
+)));
 $I->executeTestedMethodOn($scenario);
 $I->seeMethodInvoked($test,'runStep');
 $I->seePropertyEquals($scenario, 'currentStep', 1);
 ```
 
-This is a test scenario. If we run this test in debug mode we will see all passed steps.
-Notice that every step generates additional output with information that might be useful for debug.
+This is a test scenario. What happens if we run it?
+
+If we start this test in debug mode we will see passed steps one by one.
+Each steps priovides us additional information which can be helpful on debug.
 
 ```
 
