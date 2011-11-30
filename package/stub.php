@@ -14,6 +14,9 @@ $loader->registerNamespaces(array(
 $loader->register();
 $loader->registerNamespaceFallbacks(array(__DIR__.'/vendor/Mink/vendor'));
 
+// loading stub generators
+require_once 'phar://codecept.phar/src/Codeception/Util/Stub/builders/phpunit/Stub.php';
+
 @include_once 'mink/autoload.php';
 @include_once 'PHPUnit/Autoload.php';
 
