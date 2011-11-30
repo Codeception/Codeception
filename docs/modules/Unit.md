@@ -22,7 +22,7 @@ testMethod('ClassName::MethodName')
 ````
 
 
- * @param $signature
+ * param $signature
 ### haveFakeClass
 
 
@@ -31,16 +31,16 @@ Use this command if you need to convert this stub to mock.
 Without adding stub to registry you can't trace it's method invocations.
 
 
- * @param $instance
+ * param $instance
 ### haveStub
 
 
 Alias for haveFakeClass
 
 
- * @alias haveFakeClass
+ * alias haveFakeClass
 
- * @param $instance
+ * param $instance
 ### executeTestedMethod
 
 
@@ -62,77 +62,77 @@ executeTestedMethod(1, 'hello', array(5,4,5));
 ```
 
 
- * @param $object null
+ * param $object null
 
- * @throws \InvalidArgumentException
+ * throws \InvalidArgumentException
 ### executeTestedMethodOn
 
 
 Alias for executeTestedMethod, only for non-static methods
 
 
- * @alias executeTestedMethod
+ * alias executeTestedMethod
 
- * @param $object
+ * param $object
 ### seeMethodInvoked
 
 
 
 
 
- * @magic
+ * magic
 
- * @see createMocks
+ * see createMocks
 
- * @param $mock
+ * param $mock
 
- * @param $method
+ * param $method
 
- * @param array $params
+ * param array $params
 ### seeMethodInvokedOnce
 
 
 
 
- * @magic
+ * magic
 
- * @see createMocks
+ * see createMocks
 
- * @param $mock
+ * param $mock
 
- * @param $method
+ * param $method
 
- * @param array $params
+ * param array $params
 ### seeMethodNotInvoked
 
 
 
 
- * @magic
+ * magic
 
- * @see createMocks
+ * see createMocks
 
- * @param $mock
+ * param $mock
 
- * @param $method
+ * param $method
 
- * @param array $params
+ * param array $params
 ### seeMethodInvokedMultipleTimes
 
 
 
 
- * @magic
+ * magic
 
- * @see createMocks
+ * see createMocks
 
- * @param $mock
+ * param $mock
 
- * @param $method
+ * param $method
 
- * @param $times
+ * param $times
 
- * @param array $params
+ * param array $params
 ### seeResultEquals
 
 __not documented__
