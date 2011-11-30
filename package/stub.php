@@ -12,7 +12,7 @@ $loader->registerNamespaces(array(
 ));
 
 $loader->register();
-$loader->registerNamespaceFallbacks(array(__DIR__.'/vendor/Mink/vendor'));
+$loader->registerNamespaceFallbacks(array('phar://codecept.phar/vendor/Mink/vendor'));
 
 // loading stub generators
 require_once 'phar://codecept.phar/src/Codeception/Util/Stub/builders/phpunit/Stub.php';
@@ -25,6 +25,6 @@ use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputDefinition,
     Symfony\Component\Console\Input\InputOption;
 
-require_once '../codecept';
+require_once 'phar://codecept.phar/codecept';
 
 __HALT_COMPILER();
