@@ -11,11 +11,15 @@ Registers a class/method which will be tested.
 When you run 'execute' this method will be invoked.
 Please, not that it also update the feature section of scenario.
 
-For public methods:
-    'ClassName.MethodName'
+For non-static methods:
+````
+testMethod('ClassName.MethodName')
+````
 
 For static methods:
-    'ClassName::MethodName'
+`````
+testMethod('ClassName::MethodName')
+````
 
 
 @param $signature
@@ -26,13 +30,16 @@ Adds stub in internal registry.
 Use this command if you need to convert this stub to mock.
 Without adding stub to registry you can't trace it's method invocations.
 
+
 @param $instance
 ### haveStub
 
 
 Alias for haveFakeClass
 
+
 @alias haveFakeClass
+
 @param $instance
 ### executeTestedMethod
 
@@ -44,57 +51,87 @@ Otherwise bypass the first parameter blank
 Include additional arguments as parameter.
 
 Examples:
-For non-static methods__
-    executeTestedMethod($object, 1, 'hello', array(5,4,5));
-The same for static method__
-    executeTestedMethod(1, 'hello', array(5,4,5));
+For non-static methods:
+````
+executeTestedMethod($object, 1, 'hello', array(5,4,5));
+````
+
+The same for static method
+````
+executeTestedMethod(1, 'hello', array(5,4,5));
+````
+
 
 @param $object null
+
 @throws \InvalidArgumentException
 ### executeTestedMethodOn
 
 
 Alias for executeTestedMethod, only for non-static methods
 
+
 @alias executeTestedMethod
+
 @param $object
 ### seeMethodInvoked
 
 
 
 
+
 @magic
+
 @see createMocks
+
 @param $mock
+
 @param $method
+
 @param array $params
 ### seeMethodInvokedOnce
 
 
 
+
 @magic
+
 @see createMocks
+
 @param $mock
+
 @param $method
+
 @param array $params
 ### seeMethodNotInvoked
 
 
 
+
 @magic
+
 @see createMocks
+
 @param $mock
+
 @param $method
+
 @param array $params
 ### seeMethodInvokedMultipleTimes
 
 
 
+
 @magic
+
 @see createMocks
+
 @param $mock
+
 @param $method
+
 @param $times
+
 @param array $params
 ### seeResultEquals
 
