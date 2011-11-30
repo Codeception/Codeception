@@ -38,7 +38,7 @@ class Stub
 
     }
 
-    protected function bindParameters($mock, $params)
+    protected static function bindParameters($mock, $params)
     {
         $reflectionClass = new ReflectionClass($mock);
         foreach ($params as $param => $value) {

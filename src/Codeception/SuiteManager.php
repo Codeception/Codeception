@@ -2,6 +2,8 @@
 
 namespace Codeception;
 
+use Symfony\Component\Finder\Finder;
+
 
 class SuiteManager {
 
@@ -48,7 +50,7 @@ class SuiteManager {
         self::initializeModules();
     }
 
-    public function addTest($name, $testPath = null)
+    public function addCept($name, $testPath = null)
    	{
    	    $this->tests[$name] = $testPath;
 
@@ -117,20 +119,24 @@ class SuiteManager {
         $this->bootstrap = $bootstrap;
     }
 
-    public function loadTest($name, $path) {
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name($name.'Spec.php')->in($path);
-        foreach ($testFiles as $test) {
-            $this->addTest(basename($test), $test);
-            break;
-        }
+    public function loadCept($path) {
+        if (!file_exists($path)) throw new \Exception("File $path not found");
+        $this->addCept(basename($path), $path);
     }
 
-    public function loadTests($path)
+    public function loadCepts($path)
     {
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->in($path);
+        foreach ($testFiles as $test) {
+            $this->addCept(basename($test), $test);
+        }
+        // old-style namings, right?
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->in($path);
         foreach ($testFiles as $test) {
-            $this->addTest(basename($test), $test);
+            $this->addCept(basename($test), $test);
         }
+
+
     }
 
 

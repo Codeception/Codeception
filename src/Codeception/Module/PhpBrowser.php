@@ -68,7 +68,7 @@ class PhpBrowser extends \Codeception\Util\Mink {
 		$this->debug('Response code: '.$this->session->getStatusCode());
 	}
 
-	public function _failed(TestGuy_TestCase $test, $fail) {
+	public function _failed(\Codeception\TestCase $test, $fail) {
 		file_put_contents($this->config['log'].'/'.$test->getFileName().'.page.debug.html', $this->session->getPage()->getContent());
 
 	}

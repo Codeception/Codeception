@@ -252,7 +252,7 @@ class Unit extends \Codeception\Module
         }
         return \PHPUnit_Framework_Assert::assertInstanceOf($type, $this->last_result);
     }
-
+    
     public function seePropertyEquals($object, $property, $value) {
         $current = $this->retrieveProperty($object, $property);
         $this->debug('Property value is: ' . $current);
