@@ -1,15 +1,17 @@
 <?php
 
-require_once '../autoload.php';
+require_once __DIR__.'/../autoload.php';
 
 function clean_doc($doc, $indent = 3)
 {
     $lines = explode("\n", $doc);
     $lines = array_map(function ($line) use ($indent){ return substr($line,$indent); }, $lines);
-    return $doc = implode("\n", $lines);
+    $doc = implode("\n", $lines);
+    $doc = str_replace('@',"\n@", $doc);
+    return $doc;
 }
 
-$modules = \Symfony\Component\Finder\Finder::create()->files('*.php')->in('../src/Codeception/Module');
+$modules = \Symfony\Component\Finder\Finder::create()->files('*.php')->in(__DIR__.'/../src/Codeception/Module');
 
 foreach ($modules as $module) {
 
@@ -37,5 +39,5 @@ foreach ($modules as $module) {
             $text .= $doc;
         }
     }
-    file_put_contents('../docs/modules/'.$moduleName.'.md', $text);
+    file_put_contents(__DIR__.'/../docs/modules/'.$moduleName.'.md', $text);
 }

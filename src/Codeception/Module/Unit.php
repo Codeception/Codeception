@@ -61,12 +61,15 @@ class Unit extends \Codeception\Module
      * When you run 'execute' this method will be invoked.
      * Please, not that it also update the feature section of scenario.
      *
-     * For public methods:
-     *     'ClassName.MethodName'
+     * For non-static methods:
+     * ````
+     * testMethod('ClassName.MethodName')
+     * ````
      *
      * For static methods:
-     *     'ClassName::MethodName'
-     *
+     * `````
+     * testMethod('ClassName::MethodName')
+     * ````
      *
      * @param $signature
      */
@@ -124,10 +127,15 @@ class Unit extends \Codeception\Module
      * Include additional arguments as parameter.
      *
      * Examples:
-     * For non-static methods__
-     *     executeTestedMethod($object, 1, 'hello', array(5,4,5));
-     * The same for static method__
-     *     executeTestedMethod(1, 'hello', array(5,4,5));
+     * For non-static methods:
+     * ````
+     * executeTestedMethod($object, 1, 'hello', array(5,4,5));
+     * ````
+     *
+     * The same for static method
+     * ````
+     * executeTestedMethod(1, 'hello', array(5,4,5));
+     * ````
      *
      * @param $object null
      * @throws \InvalidArgumentException
