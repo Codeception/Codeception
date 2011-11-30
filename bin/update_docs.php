@@ -7,7 +7,7 @@ function clean_doc($doc, $indent = 3)
     $lines = explode("\n", $doc);
     $lines = array_map(function ($line) use ($indent){ return substr($line,$indent); }, $lines);
     $doc = implode("\n", $lines);
-    $doc = str_replace('@',"\n@", $doc);
+    $doc = str_replace('@',"\n> @", $doc);
     return $doc;
 }
 

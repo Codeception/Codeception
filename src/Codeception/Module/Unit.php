@@ -67,7 +67,7 @@ class Unit extends \Codeception\Module
      * ````
      *
      * For static methods:
-     * `````
+     * ````
      * testMethod('ClassName::MethodName')
      * ````
      *
@@ -133,9 +133,9 @@ class Unit extends \Codeception\Module
      * ````
      *
      * The same for static method
-     * ````
+     * ```
      * executeTestedMethod(1, 'hello', array(5,4,5));
-     * ````
+     * ```
      *
      * @param $object null
      * @throws \InvalidArgumentException
