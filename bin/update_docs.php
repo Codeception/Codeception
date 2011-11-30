@@ -7,7 +7,7 @@ function clean_doc($doc, $indent = 3)
     $lines = explode("\n", $doc);
     $lines = array_map(function ($line) use ($indent){ return substr($line,$indent); }, $lines);
     $doc = implode("\n", $lines);
-    $doc = str_replace('@',"\n * ", $doc);
+    $doc = str_replace('@'," * ", $doc);
     return $doc;
 }
 
@@ -29,7 +29,7 @@ foreach ($modules as $module) {
         if ($method->isConstructor() or $method->isDestructor()) continue;
         if (strpos($method->name,'_') === 0) continue;
         if ($method->isPublic()) {
-            $text .= '### '.$method->name."\n\n";
+            $text .= "\n### ".$method->name."\n\n";
             $doc = $method->getDocComment();
             if (!$doc) {
                 $doc = "__not documented__\n";
