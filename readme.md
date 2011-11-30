@@ -14,6 +14,8 @@ Allows easily define and use mocks and stubs inside your class.
 Check this:
 
 ``` php
+<?php
+
 $I = new CodeGuy($scenario);
 $I->wantTo('run steps from scenario');
 $I->testMethod('\Codeception\Scenario.run');
