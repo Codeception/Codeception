@@ -28,6 +28,34 @@ $I->seeMethodInvoked($test,'runStep');
 $I->seePropertyEquals($scenario, 'currentStep', 1);
 ```
 
+This is a test scenario. If we run this test in debug mode we will see all passed steps.
+Notice that every step generates additional output with information that might be useful for debug.
+
+```
+
+# Trying to run steps from scenario with \Codeception\Scenario.run (runSpec.php)
+# Scenario:
+
+* I test method "\Codeception\Scenario.run"
+=> Class: \Codeception\Scenario
+=> Method: run
+* I have fake class "\Codeception\TestCase"
+=> [Registered stub] Stub_0 {\Codeception\TestCase}
+* I have fake class "\Codeception\Scenario"
+=> [Registered stub] Stub_1 {\Codeception\Scenario}
+* I execute tested method on "\Codeception\Scenario"
+=> Received STUB
+=> PHPUnit_Framework_MockObject_Matcher_InvokedAtLeastOnce attached
+=> method run executed
+=> Result: null
+* I see method invoked ["\\Codeception\\TestCase","runStep"]
+=> [Triggered Stub] Stub_0 {\Codeception\TestCase}
+* I see property equals ["\\Codeception\\Scenario","currentStep",1]
+=> Received STUB
+=> Property value is: 1-
+
+
+```
 
 # TestGuy
 ## Functional Testing Framework
