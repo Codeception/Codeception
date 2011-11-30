@@ -64,7 +64,7 @@ class Unit extends \Codeception\Module
     public function haveFakeClass($instance) {
         $this->stubs[] = $instance;
         $stubid = count($this->stubs)-1;
-        if (isset($instance->__mocked)) $this->debug('Stub_'.$stubid.' '.$instance->__mocked);
+        if (isset($instance->__mocked)) $this->debugSection('Registered stub', 'Stub_'.$stubid.' {'.$instance->__mocked.'}');
     }
 
     public function haveStub($instance) {
@@ -209,7 +209,7 @@ class Unit extends \Codeception\Module
                     throw new \Exception("Probably Internal Error. There is no matchers for current mock");
                 }
                 if (isset($stub->__mocked)) {
-                    $this->debug('Stub_'.$stubid.': '.$stub->__mocked);
+                    $this->debugSection('Triggered Stub', 'Stub_'.$stubid.' {'.$stub->__mocked.'}');
                 }
 
                 \PHPUnit_Framework_Assert::assertTrue(true); // hook to increment assertions counter

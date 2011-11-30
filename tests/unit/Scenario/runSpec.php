@@ -1,5 +1,6 @@
 <?php
 $I = new CodeGuy($scenario);
+$I->wantTo('run steps from scenario');
 $I->testMethod('\Codeception\Scenario.run');
 $I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase', array('runStep' => function() { })));
 $I->haveFakeClass($scenario = Stub::make('\Codeception\Scenario', array(
