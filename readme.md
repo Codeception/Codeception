@@ -7,7 +7,7 @@ Powered by PHPUnit 3.6.
 Previously called 'TestGuy'. Now is extended to feature CodeGuy, TestGuy, and WebGuy in one pack.
 
 # CodeGuy
-## Functional Testing Framework
+## Unit Testing Framework
 
 CodeGuy is a way of writing unit tests in descriptive way.
 Allows easily define and use mocks and stubs inside your class.
