@@ -140,10 +140,12 @@ class Symfony1 extends \Codeception\Module
      * Specify the css selector to match only specific region.
      *
      * Examples:
+     *
      * ```php
      * <?php
      * $I->dontSee('Login'); // I can suppose user is already logged in
      * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
+     *
      * ```
      *
      * @param $text
@@ -160,10 +162,12 @@ class Symfony1 extends \Codeception\Module
      * Specify the css selector to match only specific region.
      *
      * Examples:
-     * ```php
+     *
+     * ``` php
      * <?php
      * $I->see('Logout'); // I can suppose user is logged in
      * $I->see('Sign Up','h1'); // I can suppose it's a signup page
+     *
      * ```
      *
      * @param $text
@@ -259,6 +263,7 @@ class Symfony1 extends \Codeception\Module
      * Use css selector or xpath to match.
      *
      * Example:
+     *
      * ``` php
      * <?php
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
@@ -279,6 +284,7 @@ class Symfony1 extends \Codeception\Module
      * Use css selector or xpath to match.
      *
      * Example:
+     *
      * ``` php
      * <?php
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
@@ -322,6 +328,7 @@ class Symfony1 extends \Codeception\Module
      * This command itself triggers the request to form's action.
      *
      * Examples:
+     *
      * ``` php
      * <?php
      * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
@@ -329,6 +336,7 @@ class Symfony1 extends \Codeception\Module
      * ```
      *
      * For sample Sign Up form:
+     *
      * ``` html
      * <form action="/sign_up">
      *     Login: <input type="text" name="user[login]" /><br/>
@@ -338,6 +346,7 @@ class Symfony1 extends \Codeception\Module
      *     <input type="submit" value="Submit" />
      * </form>
      * ```
+     * I can write this:
      *
      * ``` php
      * <?php
