@@ -45,7 +45,10 @@ class SuiteManager {
             $module = self::addModule('\Codeception\Module\\'.$module_name);
             if (isset($settings['modules']['config'][$module_name])) {
                 $module->_setConfig($settings['modules']['config'][$module_name]);
-            }
+            } else {
+				if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($module_name, "Module $module_name is not configured. Please check out it's required fields");
+			}
+			
         }
         self::initializeModules();
     }

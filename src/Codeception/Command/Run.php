@@ -45,27 +45,28 @@ class Run extends Base
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        if ($suite) $this->suites = array($suite => $this->suites[$suite]);
-
         $codecept = new \Codeception\Codecept($this->config, $options);
         $options = $codecept->getOptions();
 
+        if ($suite) {
+            $this->suites = array($suite);
+        } else {
+            $this->suites = $codecept->getSuites();
+        }
+
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
 
-
-
         if ($suite and $test) {
-            $output->writeln("Running <comment>{$test}Spec.php</comment>:");
-            $codecept->runSuite($suite, $this->suites[$suite], $test);
+            $output->writeln("Running <comment>{$test}</comment>:");
+            $codecept->runSuite($suite, $test);
         }
 
         if (!$test) {
-            foreach ($this->suites as $suite => $settings) {
+            foreach ($this->suites as $suite) {
                 if (!$options['silent']) {
-                    $guy = isset($settings['class_name']) ? $settings['class_name'] : 'NullGuy';
-                    $output->write("\n\n# <comment>$guy's $suite tests</comment> started");
+                    $output->write("\n\n# <comment>$suite tests</comment> started");
                 }
-                $codecept->runSuite($suite, $settings, $test);
+                $codecept->runSuite($suite);
             }
         }
 
