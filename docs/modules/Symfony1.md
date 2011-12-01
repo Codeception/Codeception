@@ -35,7 +35,8 @@ Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
-``` php
+
+```php
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
@@ -52,6 +53,7 @@ Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
+
 ``` php
 <?php
 $I->see('Logout'); // I can suppose user is logged in
@@ -104,6 +106,7 @@ Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
 Example:
+
 ``` php
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
@@ -120,6 +123,7 @@ Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
 Example:
+
 ``` php
 <?php
 $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
@@ -146,6 +150,7 @@ You don't need to click the 'Submit' button afterwards.
 This command itself triggers the request to form's action.
 
 Examples:
+
 ``` php
 <?php
 $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
@@ -153,6 +158,7 @@ $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
 ```
 
 For sample Sign Up form:
+
 ``` html
 <form action="/sign_up">
     Login: <input type="text" name="user[login]" /><br/>
@@ -162,6 +168,7 @@ For sample Sign Up form:
     <input type="submit" value="Submit" />
 </form>
 ```
+I can write this:
 
 ``` php
 <?php
