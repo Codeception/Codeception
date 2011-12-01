@@ -60,6 +60,9 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
     }
     
     public function setUp() {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            $module->_before($this);
+        }
         $this->loadScenario();
     }
 
@@ -68,14 +71,9 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
      */
     public function testCodecept()
     {
-        $this->logger->info('------------------');
-        $this->logger->info(strtoupper('I '.$this->scenario->getFeature()));
+        $this->logger->info("\n\n".strtoupper('I '.$this->scenario->getFeature()));
         $this->output->writeln("Trying to [[{$this->scenario->getFeature()}]] (" . basename($this->testfile) . ") ");
         if ($this->debug && count($this->scenario->getSteps())) $this->output->writeln("Scenario:\n");
-
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_before($this);
-        }
 
         try {
             $this->scenario->run();
@@ -83,10 +81,13 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
             foreach (\Codeception\SuiteManager::$modules as $module) {
                 $module->_failed($this, $fail);
             }
+            $this->logger->alert("*** last command failed ***");
             $this->logger->alert($fail->getMessage());
             throw $fail;
         }
+    }
 
+    public function tearDown() {
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_after($this);
         }
@@ -104,10 +105,6 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
         $this->logger->info($step);
         if ($this->debug) $this->output->put("\n* " . $step->__toString());
         if ($step->getName() == 'Comment') return;
-
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_beforeStep($step);
-        }
 
         $this->trace[] = $step;
         $action = $step->getAction();
@@ -132,12 +129,12 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
             $this->logger->alert($fail->getMessage());
             if ($activeModule->_getDebugOutput() && $this->debug) $this->output->debug($activeModule->_getDebugOutput());
             throw $fail;
+            // TODO: put normal handling of errors
         } catch (\Codeception\Exception\TestRuntime $e) {
             $this->logger->crit($e->getMessage());
             $this->output->put("\n(!{$e->getMessage()}!)");
             $this->output->put("\n\n".$e->getTraceAsString());
-            die;
-            // \PHPUnit_Framework_Assert::fail('Test stopped due to error in test runtime');
+            \PHPUnit_Framework_Assert::fail('Test stopped due to error in test runtime');
         }
 
         foreach (\Codeception\SuiteManager::$modules as $module) {
@@ -146,7 +143,7 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
 
         $output = $activeModule->_getDebugOutput();
         if ($output) {
-            $this->logger->debug($step);
+            $this->logger->debug($output);
             if ($this->debug) $this->output->debug($output);
         }
     }

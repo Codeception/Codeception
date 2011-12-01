@@ -41,7 +41,7 @@ class Codecept
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->output = new Output((bool)$this->options['silent'], (bool)$this->options['colors']);
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($this->config['paths']['output'].'/codeception.log', $this->config['settings']['log_max_files']);
+        $this->logHandler = new \Monolog\Handler\RotatingFileHandler(getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output'].'/codeception.log', $this->config['settings']['log_max_files']);
 
     }
     
@@ -49,10 +49,6 @@ class Codecept
         foreach ($options as $option => $value) {
             if (isset($this->config['settings'][$option])) {
                 if (!$value && $this->config['settings'][$option]) $value = $this->config['settings'][$option];
-            }
-            // no colors on windows
-            if ($option == 'colors' && !$options['colors'] && strtoupper(substr(PHP_OS, 0, 3) == 'WIN')) {
-                $value = false;
             }
             $options[$option] = $value;
         }
@@ -62,6 +58,24 @@ class Codecept
         $options['verbose'] = !$options['silent'];
         if ($options['html']) $options['html'] = $this->config['paths']['output'] . '/result.html';
         return $options;
+    }
+
+    protected function includeSuiteSettings($suite)
+    {
+        $globalConf = $this->config['settings'];
+        $moduleConf = array('modules' => isset($this->config['modules']) ? $this->config['modules'] : array());
+
+
+        $suiteConf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.yml") : array();
+        $suiteDistconf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") : array();
+
+        $settings = array_merge_recursive($globalConf, $moduleConf, $suiteDistconf, $suiteConf);
+        return $settings;
+
+    }
+    
+    public function getSuites() {
+        return $this->config['suites'];
     }
 
     public static function loadConfiguration()
@@ -78,11 +92,17 @@ class Codecept
             foreach ($helpers as $helper) include_once($helper);
         }
 
+        if (isset($config['paths']['modules'])) {
+            // Helpers
+            $helpers = Finder::create()->files()->name('*.php')->in($config['paths']['modules']);
+            foreach ($helpers as $helper) include_once($helper);
+        }
+
         if (!isset($config['suites'])) {
             $suites = Finder::create()->files()->name('*.suite.yml')->in($config['paths']['tests']);
             $config['suites'] = array();
             foreach ($suites as $suite) {
-                preg_match('~\/(.*?)(\.suite|\.suite\.dist)\.yml~', $suite, $matches);
+                preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
                 $config['suites'][] = $matches[1];
             }
         }
@@ -90,24 +110,28 @@ class Codecept
     }
 
 
-    public function runSuite($suite, $settings, $test = null) {
+    public function runSuite($suite, $test = null) {
+        $settings = $this->includeSuiteSettings($suite);
+
+        $suitePath = getcwd().DIRECTORY_SEPARATOR.$this->path.DIRECTORY_SEPARATOR.$suite.DIRECTORY_SEPARATOR;
+
         $class = $settings['suite_class'];
         if (!class_exists($class)) throw new \RuntimeException("Suite class for $suite not found");
 
-        if (file_exists($testguy = sprintf('%s/%s/%s.php', $this->path, $suite, $settings['class_name']))) {
-            require_once $testguy;
+        if (file_exists($guy = $suitePath.$settings['class_name'].'.php')) {
+            require_once $guy;
         }
-        if (!class_exists($settings['class_name'])) throw new \RuntimeException("No guys were found in $testguy. Tried to find {$settings['class_name']} but he was not there.");
+        if (!class_exists($settings['class_name'])) throw new \RuntimeException("No guys were found in $guy. Tried to find {$settings['class_name']} but he was not there.");
 
         \Codeception\SuiteManager::init($settings);
 
         $testManager = new \Codeception\SuiteManager(new $class, $this->options['debug']);
-        if (isset($settings['bootstrap'])) $testManager->setBootstrtap($settings['bootstrap']);
+        if (isset($settings['bootstrap'])) $testManager->setBootstrtap($suitePath.$settings['bootstrap']);
 
         if ($test) {
-            $testManager->loadCept($this->path.'/'.$suite.'/'.$test);
+            $testManager->loadCept($suitePath.$test);
         } else {
-            $testManager->loadCepts($this->path.'/'.$suite);
+            $testManager->loadCepts($suitePath);
         }
         $tests = $testManager->getCurrentSuite()->tests();
 

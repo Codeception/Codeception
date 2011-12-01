@@ -21,11 +21,16 @@ abstract class Module {
                 Update cunfiguration and set all required fields\n\n
         ");
     }
+	
+	public function _hasRequiredFields()
+	{
+		return !empty($this->requiredFields);
+	}
 
     // HOOK: used after configuration is loaded
     public function _initialize() {}
 
-	// HOOK: on every TestGuy class initialization
+	// HOOK: on every Guy class initialization
 	public function _cleanup()
 	{
 	}

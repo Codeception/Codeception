@@ -23,7 +23,7 @@ class Build extends Base
 **/
 
 
-class %s extends %s
+%s %s extends %s
 {
 
 
@@ -73,7 +73,7 @@ EOF;
                     $methodCounter++;
                 }
             }
-            $contents = sprintf($this->template, implode("\r\n * ", $phpdoc), $settings['class_name'], '\Codeception\AbstractGuy');
+            $contents = sprintf($this->template, implode("\r\n * ", $phpdoc), 'class',$settings['class_name'], '\Codeception\AbstractGuy');
 
             file_put_contents($file = $this->tests_path.'/'.$suite.'/'.$settings['class_name'].'.php', $contents);
             $output->writeln("$file generated sucessfully. $methodCounter methods added");
