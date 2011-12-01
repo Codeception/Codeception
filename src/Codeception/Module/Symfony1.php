@@ -141,6 +141,7 @@ class Symfony1 extends \Codeception\Module
      *
      * Examples:
      * ``` php
+     * <?php
      * $I->dontSee('Login'); // I can suppose user is already logged in
      * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
      *
@@ -161,10 +162,11 @@ class Symfony1 extends \Codeception\Module
      *
      * Examples:
      * ``` php
+     * <?php
      * $I->see('Logout'); // I can suppose user is logged in
      * $I->see('Sign Up','h1'); // I can suppose it's a signup page
      *
-     * ````
+     * ```
      *
      * @param $text
      * @param null $selector
@@ -208,6 +210,7 @@ class Symfony1 extends \Codeception\Module
      * Examples:
      *
      * ``` php
+     * <?php
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
      *
@@ -234,6 +237,7 @@ class Symfony1 extends \Codeception\Module
      * Examples:
      *
      * ``` php
+     * <?php
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
      *
      * ```
@@ -258,6 +262,7 @@ class Symfony1 extends \Codeception\Module
      *
      * Example:
      * ``` php
+     * <?php
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
      *
@@ -277,6 +282,7 @@ class Symfony1 extends \Codeception\Module
      *
      * Example:
      * ``` php
+     * <?php
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
      *
@@ -319,6 +325,7 @@ class Symfony1 extends \Codeception\Module
      *
      * Examples:
      * ``` php
+     * <?php
      * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
      *
      * ```
@@ -335,6 +342,7 @@ class Symfony1 extends \Codeception\Module
      * ```
      *
      * ``` php
+     * <?php
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
      *
      * ```
@@ -390,6 +398,7 @@ class Symfony1 extends \Codeception\Module
      * We emulate that click by running this ajax request manually.
      *
      * ``` php
+     * <?php
      * $I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
      * $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
      *
