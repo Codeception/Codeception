@@ -3,11 +3,9 @@ namespace Codeception\Module;
 
 /**
  * Module that interacts with Symfony 1.4 applications.
- * Replaces functional testing framework from symfony.
- * Authorization features uses Doctrine and sfDoctrineGuardPlugin.
  *
- * Uses native symfony connections and test classes.
- * Provides additional invormations on every actions.
+ * Replaces functional testing framework from symfony. Authorization features uses Doctrine and sfDoctrineGuardPlugin.
+ * Uses native symfony connections and test classes. Provides additional invormations on every actions.
  *
  * If test fails stores last shown page in 'output' dir.
  *
@@ -15,8 +13,6 @@ namespace Codeception\Module;
  *
  * * app *required* - application you want to test. In most cases it will be 'frontend'
  * * output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
- *
- *
  *
  */
 
@@ -144,10 +140,11 @@ class Symfony1 extends \Codeception\Module
      * Specify the css selector to match only specific region.
      *
      * Examples:
-     * ```` php
+     * ``` php
      * $I->dontSee('Login'); // I can suppose user is already logged in
      * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     * ````
+     *
+     * ```
      *
      * @param $text
      * @param null $selector
@@ -163,9 +160,10 @@ class Symfony1 extends \Codeception\Module
      * Specify the css selector to match only specific region.
      *
      * Examples:
-     * ```` php
+     * ``` php
      * $I->see('Logout'); // I can suppose user is logged in
      * $I->see('Sign Up','h1'); // I can suppose it's a signup page
+     *
      * ````
      *
      * @param $text
@@ -208,10 +206,12 @@ class Symfony1 extends \Codeception\Module
      * Specify url to match link with exact this url.
      *
      * Examples:
-     * ```` php
+     *
+     * ``` php
      * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
      * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-     * ````
+     *
+     * ```
      *
      * @param $text
      * @param null $url
@@ -232,9 +232,11 @@ class Symfony1 extends \Codeception\Module
      * Specify url to narrow the results.
      *
      * Examples:
-     * ```` php
+     *
+     * ``` php
      * $I->dontSeeLink('Logout'); // I suppose user is not logged in
-     * ````
+     *
+     * ```
      *
      * @param $text
      * @param null $url
@@ -255,10 +257,11 @@ class Symfony1 extends \Codeception\Module
      * Use css selector or xpath to match.
      *
      * Example:
-     * ```` php
+     * ``` php
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-     * ````
+     *
+     * ```
      *
      * @param $selector
      */
@@ -273,10 +276,11 @@ class Symfony1 extends \Codeception\Module
      * Use css selector or xpath to match.
      *
      * Example:
-     * ```` php
+     * ``` php
      * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-     * ````
+     *
+     * ```
      *
      * @param $selector
      */
@@ -314,12 +318,13 @@ class Symfony1 extends \Codeception\Module
      * This command itself triggers the request to form's action.
      *
      * Examples:
-     * ```` php
+     * ``` php
      * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
-     * ````
+     *
+     * ```
      *
      * For sample Sign Up form:
-     * ```` html
+     * ``` html
      * <form action="/sign_up">
      *     Login: <input type="text" name="user[login]" /><br/>
      *     Password: <input type="password" name="user[password]" /><br/>
@@ -327,10 +332,12 @@ class Symfony1 extends \Codeception\Module
      *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
      *     <input type="submit" value="Submit" />
      * </form>
+     * ```
      *
-     * ```` php
+     * ``` php
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-     * ````
+     *
+     * ```
      * Note, that pricing plan will be set to Paid, as it's selected on page.
      *
      * @param $selector
@@ -382,10 +389,11 @@ class Symfony1 extends \Codeception\Module
      * Imagine that by clicking checkbox you trigger ajax request which updates user settings.
      * We emulate that click by running this ajax request manually.
      *
-     * ```` php
+     * ``` php
      * $I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
      * $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
-     * ````
+     *
+     * ```
      *
      * @param $uri
      * @param $params
