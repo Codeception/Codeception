@@ -32,8 +32,8 @@ class Symfony1 extends \Codeception\Module
         if (!file_exists('config/ProjectConfiguration.class.php')) throw new \Codeception\Exception\Module('Symfony1', 'config/ProjectConfiguration.class.php not found. This file is required for running symfony1');
         require_once('config/ProjectConfiguration.class.php');
         $conf = \ProjectConfiguration::getApplicationConfiguration($this->config['app'], 'test', true);
-        \sfContext::createInstance($conf,'default');
-     	\sfContext::switchTo('default');
+        \sfContext::createInstance($conf, 'default');
+        \sfContext::switchTo('default');
 
         // chdir(\sfConfig::get('sf_web_dir'));
         $this->browser = new \sfBrowser();
@@ -63,7 +63,7 @@ class Symfony1 extends \Codeception\Module
         if (!isset($this->config['output'])) {
             $output = \sfConfig::get('sf_log_dir') . $test->getFileName() . '.page.debug.html';
         } else {
-            $output = getcwd().DIRECTORY_SEPARATOR.$this->config['output'].DIRECTORY_SEPARATOR.$test->getFileName() . '.page.debug.html';
+            $output = getcwd() . DIRECTORY_SEPARATOR . $this->config['output'] . DIRECTORY_SEPARATOR . $test->getFileName() . '.page.debug.html';
         }
         file_put_contents($output, $this->browser->getResponse()->getContent());
     }
