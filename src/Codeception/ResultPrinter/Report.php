@@ -23,9 +23,9 @@ class Report extends \Codeception\ResultPrinter
 
         else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
             $status = 'Incomplete';
-        }
-
-        else {
+        } else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+            $status = 'ERROR';
+        } else {
 			$status = 'Ok';
         }
 
@@ -41,8 +41,12 @@ class Report extends \Codeception\ResultPrinter
 
 	protected function endRun()
 	{
-		$this->write("\nTestGuy Results\n");
+		$this->write("\nCodeception Results\n");
 		$this->write(sprintf("Sucessful: %s. Failed: %s. Incomplete: %s. Skipped: %s", $this->successful, $this->failed, $this->skipped, $this->incomplete)."\n");
 	}
+
+    public function printResult($res) {
+
+    }
 
 }

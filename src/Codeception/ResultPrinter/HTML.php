@@ -66,15 +66,15 @@ class HTML extends \Codeception\ResultPrinter
     protected function onTest($name, $success = TRUE, array $steps = array(), $time = 0)
     {
 	    $this->timeTaken += $time;
-        if ($this->testStatus == PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
+        if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
             $scenarioStatus = 'scenarioFailed';
         }
 
-        else if ($this->testStatus == PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
             $scenarioStatus = 'scenarioSkipped';
         }
 
-        else if ($this->testStatus == PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
             $scenarioStatus = 'scenarioIncomplete';
         }
 
@@ -89,7 +89,7 @@ class HTML extends \Codeception\ResultPrinter
 
             $stepText = $currentStepName;
 
-            $stepTemplate = new Text_Template(
+            $stepTemplate = new \Text_Template(
               $this->templatePath . 'step.html'
             );
 
@@ -102,7 +102,7 @@ class HTML extends \Codeception\ResultPrinter
             $stepsBuffer .= $stepTemplate->render();
         }
 
-        $scenarioTemplate = new Text_Template(
+        $scenarioTemplate = new \Text_Template(
           $this->templatePath . 'scenario.html'
         );
 
@@ -126,7 +126,7 @@ class HTML extends \Codeception\ResultPrinter
     protected function endRun()
     {
 
-        $scenarioHeaderTemplate = new Text_Template(
+        $scenarioHeaderTemplate = new \Text_Template(
           $this->templatePath . 'scenario_header.html'
         );
 
@@ -142,7 +142,7 @@ class HTML extends \Codeception\ResultPrinter
 
         $header = $scenarioHeaderTemplate->render();
 
-        $scenariosTemplate = new Text_Template(
+        $scenariosTemplate = new \Text_Template(
           $this->templatePath . 'scenarios.html'
         );
 

@@ -67,10 +67,23 @@ class Db extends \Codeception\Module
         }
     }
 
-    public function seeInDatabase($table, $criteria)
+    public function seeInDatabase($table, $criteria = array())
     {
+        $query = "select count(*) from `%s` where %s";
 
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "`$k` = ?";
+        }
+        $params = implode('AND ',$params);
+
+        $query = sprintf($query, $table, $params);
+        $sth = $this->dbh->prepare($query);
+        $sth->execute(array_values($criteria));
+        return $sth->fetchColumn();
     }
+
+    protected function proceedSeeInDatabase($table, $criteria)
 
 
     public function dontSeeInDatabase($table, $criteria)
