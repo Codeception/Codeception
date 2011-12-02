@@ -31,9 +31,13 @@ class GenerateCept extends Base
     {
         $this->initCodeception();
         $suite = $input->getArgument('suite');
-        if (!isset($this->suites[$suite])) throw new \Exception("Suite $suite not declared");
 
-        $guy = $this->suites[$suite]['class_name'];
+        $options = $input->getOptions();
+        $codecept = new \Codeception\Codecept($this->config, $options);
+
+        $settings = $codecept->getSuiteSettings($suite);
+
+        $guy = $settings['class_name'];
 
         $file = sprintf($this->template, $guy);
         $filename = $input->getArgument('test');

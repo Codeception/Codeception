@@ -41,8 +41,18 @@ class Codecept
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->output = new Output((bool)$this->options['silent'], (bool)$this->options['colors']);
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler(getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output'].'/codeception.log', $this->config['settings']['log_max_files']);
 
+        $this->initLogger();
+    }
+
+    protected function initLogger()
+    {
+        if (!file_exists($path = getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output']))
+            throw new \Exception("Directory $path is not created. Can't write logs");
+
+        if (!isset($this->config['settings']['log_max_files'])) $this->config['settings']['log_max_files'] = 3;
+
+        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($path, $this->config['settings']['log_max_files']);
     }
     
     private function mergeOptions($options) {
@@ -71,11 +81,15 @@ class Codecept
 
         $settings = array_merge_recursive($globalConf, $moduleConf, $suiteDistconf, $suiteConf);
         return $settings;
-
     }
     
     public function getSuites() {
         return $this->config['suites'];
+    }
+
+    public function getSuiteSettings($suite) {
+        if (!in_array($suite, $this->config['suites'])) throw new \Exception("Suite $suite was not loaded");
+        return $this->includeSuiteSettings($suite);
     }
 
     public static function loadConfiguration()
@@ -109,7 +123,6 @@ class Codecept
         return $config;
     }
 
-
     public function runSuite($suite, $test = null) {
         $settings = $this->includeSuiteSettings($suite);
 
@@ -140,7 +153,7 @@ class Codecept
             if (method_exists($test, 'setLogHandler')) $test->setLogHandler($this->logHandler);
         }
 
-        $this->runner->doRun($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => false), $this->options));
+        $this->runner->perform($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => false), $this->options));
         return $this->result;
     }
 
