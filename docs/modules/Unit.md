@@ -16,14 +16,18 @@ When you run 'execute' this method will be invoked.
 Please, not that it also update the feature section of scenario.
 
 For non-static methods:
-````
-testMethod('ClassName.MethodName')
-````
+
+``` php
+<?php
+$I->testMethod('ClassName.MethodName'); // I will need ClassName instance for this
+```
 
 For static methods:
-````
-testMethod('ClassName::MethodName')
-````
+
+``` php
+<?php
+$I->testMethod('ClassName::MethodName');
+```
 
  * param $signature
 
@@ -54,14 +58,19 @@ Otherwise bypass the first parameter blank
 Include additional arguments as parameter.
 
 Examples:
+
 For non-static methods:
-````
-executeTestedMethod($object, 1, 'hello', array(5,4,5));
-````
+
+``` php
+<?php
+$I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
+```
 
 The same for static method
-```
-executeTestedMethod(1, 'hello', array(5,4,5));
+
+``` php
+<?php
+$I->executeTestedMethod(1, 'hello', array(5,4,5));
 ```
 
  * param $object null
@@ -74,6 +83,10 @@ Alias for executeTestedMethod, only for non-static methods
 
  * alias executeTestedMethod
  * param $object
+
+### seeExceptionThrown
+
+__not documented__
 
 ### seeMethodInvoked
 
