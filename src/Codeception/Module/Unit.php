@@ -30,22 +30,17 @@ class Unit extends \Codeception\Module
         \Codeception\Util\Stub\Builder::loadClasses(); // loading stub classes
     }
 
-    public function _before(\PHPUnit_Framework_TestCase $test)
+    public function _before(\Codeception\TestCase $test)
     {
         $this->test = $test;
         $this->stubs = array();
-        set_error_handler(function ($errno, $errstr, $errfile, $errline)
-        {
-            throw new \Codeception\Exception\TestRuntime($errstr, $errno);
-        });
     }
 
-    public function __after()
+    public function __after(\Codeception\TestCase $test)
     {
-        restore_error_handler();
     }
 
-    public function _failed()
+    public function _failed(\Codeception\TestCase $test, $fail)
     {
         if (count($this->stubs)) {
             $this->debug("Stubs were used:");
