@@ -130,11 +130,11 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
             if ($activeModule->_getDebugOutput() && $this->debug) $this->output->debug($activeModule->_getDebugOutput());
             throw $fail;
             // TODO: put normal handling of errors
-        } catch (\Codeception\Exception\TestRuntime $e) {
+        } catch (\Exception $e) {
             $this->logger->crit($e->getMessage());
-            $this->output->put("\n(!{$e->getMessage()}!)");
-            $this->output->put("\n\n".$e->getTraceAsString());
-            \PHPUnit_Framework_Assert::fail('Test stopped due to error in test runtime');
+            $exceptionClass = get_class($e);
+            $this->output->put("\n\n(![Exception Thrown] $exceptionClass  {$e->getMessage()}!)\n");
+            \PHPUnit_Framework_Assert::fail('Unexpected Exception');
         }
 
         foreach (\Codeception\SuiteManager::$modules as $module) {

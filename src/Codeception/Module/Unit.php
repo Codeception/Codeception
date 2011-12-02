@@ -12,6 +12,8 @@ class Unit extends \Codeception\Module
 {
 
     protected $stubs = array();
+    protected $predictedExceptions = array();
+    protected $thrownExceptions = array();
 
     protected $last_result;
 
@@ -57,14 +59,18 @@ class Unit extends \Codeception\Module
      * Please, not that it also update the feature section of scenario.
      *
      * For non-static methods:
-     * ````
-     * testMethod('ClassName.MethodName')
-     * ````
+     *
+     * ``` php
+     * <?php
+     * $I->testMethod('ClassName.MethodName'); // I will need ClassName instance for this
+     * ```
      *
      * For static methods:
-     * ````
-     * testMethod('ClassName::MethodName')
-     * ````
+     *
+     * ``` php
+     * <?php
+     * $I->testMethod('ClassName::MethodName');
+     * ```
      *
      * @param $signature
      */
@@ -122,14 +128,19 @@ class Unit extends \Codeception\Module
      * Include additional arguments as parameter.
      *
      * Examples:
+     *
      * For non-static methods:
-     * ````
-     * executeTestedMethod($object, 1, 'hello', array(5,4,5));
-     * ````
+     *
+     * ``` php
+     * <?php
+     * $I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
+     * ```
      *
      * The same for static method
-     * ```
-     * executeTestedMethod(1, 'hello', array(5,4,5));
+     *
+     * ``` php
+     * <?php
+     * $I->executeTestedMethod(1, 'hello', array(5,4,5));
      * ```
      *
      * @param $object null
@@ -138,8 +149,15 @@ class Unit extends \Codeception\Module
     public function executeTestedMethod($object = null)
     {
         $args = func_get_args();
+        $this->predictExceptions();
         if ($this->testedStatic) {
-            $res = call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
+
+            try {
+                $res = call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
+            } catch (\Exception $e) {
+                $this->catchException($e);
+            }
+
             $this->debug("Static method {$this->testedClass}::{$this->testedMethod} executed");
             $this->debug('With parameters: ' . json_encode($args));
         } else {
@@ -147,11 +165,26 @@ class Unit extends \Codeception\Module
             if (isset($obj->__mocked)) $this->debug('Received STUB');
             $this->createMocks();
             if (!$obj) throw new \InvalidArgumentException("Object for tested method is expected");
-            $res = call_user_func_array(array($obj, $this->testedMethod), $args);
+
+            try {
+                $res = call_user_func_array(array($obj, $this->testedMethod), $args);
+            } catch (\Exception $e) {
+                $this->catchException($e);
+            }
             $this->debug("method {$this->testedMethod} executed");
         }
         $this->debug('Result: ' . json_encode($res));
         $this->last_result = $res;
+    }
+
+    protected  function catchException($e) {
+        foreach ($this->predictedExceptions as $exception) {
+            if ($e instanceof $exception) {
+                $this->thrownExceptions[] = get_class($e);
+                return;
+            };
+        }
+        throw $e;
     }
 
     /**
@@ -163,6 +196,33 @@ class Unit extends \Codeception\Module
     public function executeTestedMethodOn($object)
     {
         $this->executeTestedMethod($object);
+    }
+
+    public function seeExceptionThrown($classname, $message = null) {
+
+        \PHPUnit_Framework_Assert::assertContains($classname, $this->thrownExceptions);
+        if ($message) {
+            $e = array_search($classname, $this->thrownExceptions);
+            \PHPUnit_Framework_Assert::assertContains($message, $e->getMessage());
+        }
+    }
+
+    protected function predictExceptions()
+    {
+        $this->thrownExceptions = array();
+        $this->predictedExceptions = array();
+        $scenario = $this->test->getScenario();
+        $steps = $scenario->getSteps();
+        for ($i = $scenario->getCurrentStep() + 1; $i < count($steps); $i++) {
+            $step = $steps[$i];
+            $action = $step->getAction();
+            if ($action == 'executeTestedMethod') break;
+            if ($action == 'executeTestedMethodOn') break;
+            if ($action != 'seeExceptionThrown') continue;
+
+            $args = $step->getArguments(false);
+            $this->predictedExceptions[] = $args[0];
+        }
     }
 
     /**
@@ -220,7 +280,8 @@ class Unit extends \Codeception\Module
 
 
             }
-            if ($steps[$i]->getAction() == 'execute') break;
+            if ($step->getAction() == 'executeTestedMethod') break;
+            if ($step->getAction() == 'executeTestedMethodOn') break;
         }
     }
 

@@ -3,15 +3,15 @@
 Works with SQL dabatase (MySQL tested).
 
 The most important function of this module is cleaning database before each test.
-That is the cause this module was added into global configuration file: codeception.yml.
-To have your database properly cleaned, you should configure it to access database.
+That's why this module was added into global configuration file: codeception.yml.
+To have your database properly cleaned you should configure it to access the database.
 
-In order to have your database populated with data you need an raw SQL dump.
-Just put it in /tests/_data dir (by default) and specify path to it in config.
+In order to have your database populated with data you need a raw SQL dump.
+Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
 Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
 
-** Config **
+**Config**
 
 * dsn *required* - PDO DSN
 * user *required* - user to access database
