@@ -23,6 +23,7 @@ foreach ($modules as $module) {
 
     $doc = $class->getDocComment();
     if ($doc) $text .= clean_doc($doc, 3);
+    $text .= "\n## Actions\n\n";
 
     foreach ($class->getMethods() as $method) {
         // if ($method->getDeclaringClass()->name != $className) continue;

@@ -13,6 +13,9 @@ __Configuration__
 * output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
 
 
+## Actions
+
+
 ### amOnPage
 
 
