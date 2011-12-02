@@ -12,6 +12,7 @@ Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
 
 ** Config **
+
 * dsn *required* - PDO DSN
 * user *required* - user to access database
 * password *required* - password
