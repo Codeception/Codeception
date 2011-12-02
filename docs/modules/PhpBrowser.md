@@ -1,16 +1,19 @@
 # PhpBrowser
 
-Uses Mink (http://mink.behat.org) with PHP Goutte browser to interact with your application.
-Contains all Mink actions with additional ones, listed below.
+Uses Mink (http://mink.behat.org) with Goutte Driver to interact with your application.
+Contains all Mink actions and additional ones, listed below.
 
-Use to perform acceptance tests with non-javascript browser.
+Use to perform web acceptance tests with non-javascript browser.
 
 If test fails stores last shown page in 'output' dir.
 
 __Configuration__
 
 * start *required* - the url of your app
-* output - dir were last shown page should be stored on fail.
+* output *required* - dir were last shown page should be stored on fail.
+
+
+## Actions
 
 
 ### submitForm
