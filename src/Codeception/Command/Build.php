@@ -47,7 +47,12 @@ EOF;
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
         $this->initCodeception();
-        foreach ($this->suites as $suite => $settings) {
+
+        $codecept = new \Codeception\Codecept($this->config);
+        $suites = $codecept->getSuites();
+
+        foreach ($suites as $suite) {
+            $settings = $codecept->getSuiteSettings($suite);
 
             \Codeception\SuiteManager::init($settings);
 

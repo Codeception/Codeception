@@ -49,6 +49,10 @@ abstract class Step
             $arguments = $this->arguments;
 
             foreach ($arguments as $k => $argument) {
+                if (is_callable($argument)) {
+                    $arguments[$k] = 'user-defined function';
+                    continue;
+                }
                 if (is_object($argument)) {
                     if (method_exists($argument, '__toString')) {
                         $arguments[$k] = $argument->__toString();
