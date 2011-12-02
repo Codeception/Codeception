@@ -102,7 +102,7 @@ class Db extends \Codeception\Module
      * Will generate:
      *
      * ``` sql
-     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert AND `email` = 'davert@mail.com'
+     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
      * ```
      * Fails if no such user found.
      *
@@ -132,7 +132,7 @@ class Db extends \Codeception\Module
      * Will generate:
      *
      * ``` sql
-     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert AND `email` = 'davert@mail.com'
+     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
      * ```
      * Fails if such user was found.
      *
