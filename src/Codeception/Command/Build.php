@@ -59,14 +59,16 @@ EOF;
             $phpdoc = array();
             $methodCounter = 0;
 
-            foreach (\Codeception\SuiteManager::$modules as $modulename => $module) {
+            $modules = \Codeception\SuiteManager::$modules;
+            $modules['\Codeception\AbstractGuy'] = 'AbstractGuy';
+
+            foreach ($modules as $modulename => $module) {
                 $class = new \ReflectionClass($modulename);
-                $methods = $class->getMethods();
+                $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                 $phpdoc[] = '';
                 $phpdoc[] = 'Methods from ' . $modulename;
                 foreach ($methods as $method) {
                     if (strpos($method->name, '_') === 0) continue;
-                    if (!$method->isPublic()) continue;
                     $params = array();
                     foreach ($method->getParameters() as $param) {
                         if ($param->isOptional()) continue;
@@ -74,10 +76,11 @@ EOF;
                     }
 
                     $params = implode(', ', $params);
-                    $phpdoc[] = '@method void ' . $method->name . '(' . $params . ')';
+                    $phpdoc[] = '@method ' . $settings['class_name'] .' '. $method->name . '(' . $params . ')';
                     $methodCounter++;
                 }
             }
+
             $contents = sprintf($this->template, implode("\r\n * ", $phpdoc), 'class',$settings['class_name'], '\Codeception\AbstractGuy');
 
             file_put_contents($file = $this->tests_path.'/'.$suite.'/'.$settings['class_name'].'.php', $contents);

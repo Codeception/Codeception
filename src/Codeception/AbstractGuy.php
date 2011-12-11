@@ -18,36 +18,49 @@ abstract class AbstractGuy  {
     }
 
 	public function wantToTest($text) {
-		$this->scenario->setFeature(strtolower("test $text"));
+        return $this->wantTo('test '.$text);
 	}
 
 	public function wantTo($text) {
-		$this->scenario->setFeature(strtolower($text));
+        $feature = $this->scenario->getFeature();
+        if ($feature) $feature = ', '.$feature;
+        $this->scenario->setFeature(strtolower($text). $feature);
+        return $this;
 	}
 
     public function amTestingClass($text) {
         $this->scenario->setFeature($text);
+        return $this;
+    }
+    
+    public function amTesting($method) {
+        return $this->testMethod($method);
     }
 
     public function amTestingMethod($method) {
         $this->testMethod($method);
+        return $this;
     }
 
     public function testMethod($signature) {
         if (!$this->scenario->getFeature()) {
-            $this->scenario->setFeature("execute method $signature()");
+            $this->scenario->setFeature("test method $signature()");
         } else {
             $this->scenario->setFeature($this->scenario->getFeature() . " with [[$signature]]");
         }
-        $this->scenario->when(array_merge(array('testMethod', $signature)));
+
+        $this->scenario->given(array_merge(array('testMethod', $signature)));
+        return $this;
     }
 
 	public function expectTo($prediction) {
 		$this->scenario->comment(array('expect to '.$prediction));
+        return $this;
 	}
 
 	public function amGoingTo($argumentation) {
 	    $this->scenario->comment(array('am going to '.$argumentation));
+        return $this;
 	}
 
     public function __call($method, $args) {
@@ -62,6 +75,7 @@ abstract class AbstractGuy  {
         } else {
             $this->scenario->when(array_merge(array($method),$args));
         }
+        return $this;
     }
 
 }

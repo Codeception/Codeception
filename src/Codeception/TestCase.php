@@ -2,7 +2,7 @@
 
 namespace Codeception;
 
-class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
+abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
 {
 
     protected $testfile = null;
@@ -15,11 +15,11 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
     protected $trace = array();
 
 
-    public function __construct(array $data = array(), $dataName = '')
+    public function __construct($name, array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
         if (!isset($data['file'])) throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
-        $this->specName = str_replace('Spec.php', '', basename($data['file']));
+        $this->specName = $name;
         $this->scenario = new \Codeception\Scenario($this);
         $this->testfile = $data['file'];
         $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
@@ -28,11 +28,6 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
         $this->logger = new \Monolog\Logger($this->specName);
     }
 
-
-    public function getFileName()
-    {
-        return $this->getSpecName() . 'Spec.php';
-    }
 
     public function getSpecName() {
         return $this->specName;
@@ -63,8 +58,11 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_before($this);
         }
+        if (file_exists($this->bootstrap)) require $this->bootstrap;
         $this->loadScenario();
     }
+
+    abstract public function loadScenario();
 
     /**
      * @test
@@ -93,12 +91,7 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
         }
     }
 
-    public function loadScenario()
-    {
-        $scenario = $this->scenario;
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
-        require_once $this->testfile;
-    }
+
 
     public function runStep(\Codeception\Step $step)
     {
@@ -132,9 +125,7 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
             // TODO: put normal handling of errors
         } catch (\Exception $e) {
             $this->logger->crit($e->getMessage());
-            $exceptionClass = get_class($e);
-            $this->output->put("\n\n(![Exception Thrown] $exceptionClass  {$e->getMessage()}!)\n");
-            \PHPUnit_Framework_Assert::fail('Unexpected Exception');
+            throw $e;
         }
 
         foreach (\Codeception\SuiteManager::$modules as $module) {
@@ -143,7 +134,6 @@ class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework
 
         $output = $activeModule->_getDebugOutput();
         if ($output) {
-            $this->logger->debug($output);
             if ($this->debug) $this->output->debug($output);
         }
     }

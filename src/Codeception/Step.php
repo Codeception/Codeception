@@ -49,8 +49,8 @@ abstract class Step
             $arguments = $this->arguments;
 
             foreach ($arguments as $k => $argument) {
-                if (is_callable($argument)) {
-                    $arguments[$k] = 'user-defined function';
+                if (!is_string($argument) and is_callable($argument)) {
+                    $arguments[$k] = 'lambda function';
                     continue;
                 }
                 if (is_object($argument)) {
@@ -83,12 +83,16 @@ abstract class Step
 
     public function __toString()
     {
-        return "I " . $this->humanize($this->getAction()) . ' ' . $this->clean($this->getArguments(true));
+        return "I " . $this->getHumanizedAction();
     }
 
     public function getHumanizedAction()
     {
-        return $this->humanize($this->getAction());
+        return $this->humanize($this->getAction()). ' ' . $this->getHumanizedArguments();
+    }
+    
+    public function getHumanizedArguments() {
+        return $this->clean($this->getArguments(true));
     }
 
     protected function clean($text)

@@ -57,13 +57,48 @@ class SuiteManager {
    	{
    	    $this->tests[$name] = $testPath;
 
-   	    $this->suite->addTest(new \Codeception\TestCase(array(
-   			'name' => $name,
+   	    $this->suite->addTest(new \Codeception\TestCase\Cept('testCodecept', array(
+   			'name' => str_replace('.php', '', $name),
             'file' => $testPath,
             'debug' => $this->debug,
    	        'bootstrap' => $this->bootstrap
         )));
    	}
+
+    public function addCest($name, $testPath = null) {
+        $this->tests[$name] = $testPath;
+
+        $loaded_classes = get_declared_classes();
+        require_once $testPath;
+        $extra_loaded_classes = get_declared_classes();
+
+        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
+
+        foreach ($testClasses as $testClass) {
+            $unit = new $testClass;
+
+            $reflected = new \ReflectionClass($testClass);
+
+            $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
+            foreach ($methods as $method) {
+                if ($method->isConstructor()) continue;
+                if ($method->isDestructor()) continue;
+
+                $target = $unit->class;
+                $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
+
+                $this->suite->addTest(new \Codeception\TestCase\Cest($target, array(
+                    'name' => $target,
+                    'class' => $unit,
+                    'method' => $method->name,
+                    'static' => $method->isStatic(),
+                    'file' => $testPath,
+                    'debug' => $this->debug,
+           	        'bootstrap' => $this->bootstrap
+                )));
+            }
+        }
+    }
 
 	public function saveTestAsFeature($test, $path) {
 		$text = readfile($this->tests[$test]);
@@ -122,12 +157,13 @@ class SuiteManager {
         $this->bootstrap = $bootstrap;
     }
 
-    public function loadCept($path) {
+    public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
-        $this->addCept(basename($path), $path);
+        if (strrpos(strrev($path), strrev('Cept.php')) === 0) $this->addCept(basename($path), $path);
+        if (strrpos(strrev($path), strrev('Cest.php')) === 0) $this->addCest(basename($path), $path);
     }
 
-    public function loadCepts($path)
+    public function loadTests($path)
     {
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->in($path);
         foreach ($testFiles as $test) {
@@ -137,6 +173,12 @@ class SuiteManager {
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->in($path);
         foreach ($testFiles as $test) {
             $this->addCept(basename($test), $test);
+        }
+
+        // tests inside classes
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->in($path);
+        foreach ($testFiles as $test) {
+            $this->addCest(basename($test), $test);
         }
 
 

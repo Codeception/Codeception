@@ -15,7 +15,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 	{
 	    $failedTest = $defect->failedTest();
 
-		$feature = strtolower($failedTest->getScenario()->getFeature());
+		$feature = $failedTest->getScenario()->getFeature();
 		$this->output->put("\n$count) ((Couldn't $feature)) ({$failedTest->getFilename()})\n");
 
 	}
@@ -34,7 +34,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
         if (!$this->lastTestFailed) {
-            $this->writeProgress($this->verbose ? '- ok':'.');
+            $this->writeProgress($this->verbose ? '- OK':'.');
         }
 
         if ($test instanceof \PHPUnit_Framework_TestCase) {
@@ -46,10 +46,27 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        $this->writeProgress($this->verbose ? '- fail':'F');
+        $this->writeProgress($this->verbose ? '- FAIL':'F');
         $this->lastTestFailed = TRUE;
     }
 
+    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    {
+        $this->writeProgress($this->verbose ? '- ERROR':'E');
+        $this->lastTestFailed = TRUE;
+    }
+
+    public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    {
+        $this->writeProgress($this->verbose ? '- INCOMPLETE':'I');
+        $this->lastTestFailed = TRUE;
+    }
+
+    public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    {
+        $this->writeProgress($this->verbose ? '- SKIPPED':'S');
+        $this->lastTestFailed = TRUE;
+    }
 
 
 	protected function printDefectTrace(\PHPUnit_Framework_TestFailure $defect)
@@ -71,7 +88,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 			$action = substr($action, 6);
 			$this->output->put("\nGuy unexpectedly managed to $action {$defect->getExceptionAsString()}");
 		} else {
-			$this->output->put("\nGuy coudn't $action {$defect->getExceptionAsString()}");
+			$this->output->put("\nGuy coudn't $action\n");
 		}
 
 		$this->output->put("\n  $i. (!$last!)");
@@ -83,6 +100,8 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 		$this->writeNewLine();
         if ($this->debug) {
             $this->printException($last->getAction(), $defect->thrownException());
+        } else {
+            $this->output->writeln('to see the stack trace run this test with --debug option');
         }
 	}
 

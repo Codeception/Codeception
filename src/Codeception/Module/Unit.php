@@ -146,6 +146,22 @@ class Unit extends \Codeception\Module
      * @param $object null
      * @throws \InvalidArgumentException
      */
+    /**
+     * Alias for executeTestedMethod, only for non-static methods
+     *
+     * @alias executeTestedMethod
+     * @param $object
+     */
+    public function executeTestedMethodOn($object)
+    {
+        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
+    }
+
+    public function executeTestedMethodWith($params)
+    {
+        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
+    }
+
     public function executeTestedMethod($object = null)
     {
         $args = func_get_args();
@@ -162,10 +178,9 @@ class Unit extends \Codeception\Module
             $this->debug('With parameters: ' . json_encode($args));
         } else {
             $obj = array_shift($args);
-            if (isset($obj->__mocked)) $this->debug('Received STUB');
-            $this->createMocks();
             if (!$obj) throw new \InvalidArgumentException("Object for tested method is expected");
-
+            if (isset($obj->__mocked)) $this->debug('Received Stub');
+            $this->createMocks();
             try {
                 $res = call_user_func_array(array($obj, $this->testedMethod), $args);
             } catch (\Exception $e) {
@@ -187,16 +202,7 @@ class Unit extends \Codeception\Module
         throw $e;
     }
 
-    /**
-     * Alias for executeTestedMethod, only for non-static methods
-     *
-     * @alias executeTestedMethod
-     * @param $object
-     */
-    public function executeTestedMethodOn($object)
-    {
-        $this->executeTestedMethod($object);
-    }
+
 
     public function seeExceptionThrown($classname, $message = null) {
 
