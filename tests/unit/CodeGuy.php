@@ -25,25 +25,6 @@
  * @method CodeGuy seePropertyEquals($object, $property, $value)
  * 
  * Methods from \Codeception\Module\CodeHelper
- * @method CodeGuy haveFakeModule($module)
- * @method CodeGuy testMethod($signature)
- * @method CodeGuy haveFakeClass($instance)
- * @method CodeGuy haveStub($instance)
- * @method CodeGuy executeTestedMethodOn($object)
- * @method CodeGuy executeTestedMethodWith($params)
- * @method CodeGuy executeTestedMethod()
- * @method CodeGuy seeExceptionThrown($classname)
- * @method CodeGuy seeMethodInvoked($mock, $method)
- * @method CodeGuy seeMethodInvokedOnce($mock, $method)
- * @method CodeGuy seeMethodNotInvoked($mock, $method)
- * @method CodeGuy seeMethodInvokedMultipleTimes($mock, $method, $times)
- * @method CodeGuy seeResultEquals($value)
- * @method CodeGuy seeResultContains($value)
- * @method CodeGuy dontSeeResultContains($value)
- * @method CodeGuy seeResultNotEquals($value)
- * @method CodeGuy seeEmptyResult()
- * @method CodeGuy seeResultIs($type)
- * @method CodeGuy seePropertyEquals($object, $property, $value)
  * 
  * Methods from \Codeception\AbstractGuy
  * @method CodeGuy wantToTest($text)
