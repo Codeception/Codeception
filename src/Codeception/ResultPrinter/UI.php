@@ -107,7 +107,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 
     public function printException($action, \Exception $e) {
         $i = 0;
-
+        $this->output->put("\n  [[Exception Thrown]] ".get_class($e).': '.$e->getMessage());
         $this->output->put("\n  ((Stack trace:))");
         foreach ($e->getTrace() as $step) {
             $i++;
