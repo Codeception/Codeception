@@ -5,12 +5,22 @@
 /**
 
  * Methods from \Codeception\Module\Filesystem
- * @method void openFile($filename)
- * @method void seeInFile($text)
- * @method void dontSeeInFile($text)
- * @method void seeFileFound($filename)
+ * @method TestGuy openFile($filename)
+ * @method TestGuy seeInFile($text)
+ * @method TestGuy dontSeeInFile($text)
+ * @method TestGuy seeFileFound($filename)
  * 
  * Methods from \Codeception\Module\TestHelper
+ * 
+ * Methods from \Codeception\AbstractGuy
+ * @method TestGuy wantToTest($text)
+ * @method TestGuy wantTo($text)
+ * @method TestGuy amTestingClass($text)
+ * @method TestGuy amTesting($method)
+ * @method TestGuy amTestingMethod($method)
+ * @method TestGuy testMethod($signature)
+ * @method TestGuy expectTo($prediction)
+ * @method TestGuy amGoingTo($argumentation)
 **/
 
 
