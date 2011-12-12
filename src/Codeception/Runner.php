@@ -10,7 +10,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
         return $this->printer;
     }
 
-	public function perform(\PHPUnit_Framework_Test $suite, \PHPUnit_Framework_TestResult $result, array $arguments = array())
+	public function doEnhancedRun(\PHPUnit_Framework_Test $suite, \PHPUnit_Framework_TestResult $result, array $arguments = array())
 	{
 	    $this->handleConfiguration($arguments);
 

@@ -16,6 +16,7 @@ class Cli extends \Codeception\Module
 
     public function runShellCommmand($command) {
         $this->output = shell_exec("$command");
+        if ($this->output === null) throw new \RuntimeException("$command can't be executed");
         $this->debug($this->output);
     }
 

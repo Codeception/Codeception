@@ -11,11 +11,11 @@ class Filesystem extends \Codeception\Module {
     }
     
     public function seeInFile($text) {
-        PHPUnit_Framework_Assert::assertContains($text, $this->file,"text $text in currently opened file");
+        \PHPUnit_Framework_Assert::assertContains($text, $this->file,"text $text in currently opened file");
     }
 
     public function dontSeeInFile($text) {
-        PHPUnit_Framework_Assert::assertNotContains($text, $this->file,"text $text in currently opened file");
+        \PHPUnit_Framework_Assert::assertNotContains($text, $this->file,"text $text in currently opened file");
     }
     
     public function seeFileFound($filename, $path = '') {
@@ -28,7 +28,7 @@ class Filesystem extends \Codeception\Module {
             $this->openFile($file);
             return;
         }
-        PHPUnit_Framework_Assert::fail("$filename in $path");
+        \PHPUnit_Framework_Assert::fail("$filename in $path");
     }
     
 }

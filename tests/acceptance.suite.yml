@@ -6,12 +6,8 @@
 # (tip: that's what your customer will see).
 # (tip: test your ajax and javascript by one of Mink drivers).
 
-class_name: WebGuy
+class_name: CliGuy
 modules:
     enabled:
-        - PhpBrowser
-        - WebHelper
-    config:
-        PhpBrowser:
-            start: 'http://localhost/myapp/'
-            output: tests/_log
+        - Filesystem
+        - Cli

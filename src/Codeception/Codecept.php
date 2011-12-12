@@ -47,12 +47,12 @@ class Codecept
 
     protected function initLogger()
     {
-        if (!file_exists($path = getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output']))
-            throw new \Exception("Directory $path is not created. Can't write logs");
+        if (!file_exists($path = getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output'].DIRECTORY_SEPARATOR))
+            throw new \Exception("Path $path does not exists. Can't write logs");
 
         if (!isset($this->config['settings']['log_max_files'])) $this->config['settings']['log_max_files'] = 3;
 
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($path, $this->config['settings']['log_max_files']);
+        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($path.'tests.log', $this->config['settings']['log_max_files']);
     }
     
     private function mergeOptions($options) {
@@ -77,7 +77,7 @@ class Codecept
 
 
         $suiteConf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.yml") : array();
-        $suiteDistconf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") : array();
+        $suiteDistconf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "$suite.suite.dist.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") : array();
 
         $settings = array_merge_recursive($globalConf, $moduleConf, $suiteDistconf, $suiteConf);
         return $settings;
@@ -153,7 +153,7 @@ class Codecept
             if (method_exists($test, 'setLogHandler')) $test->setLogHandler($this->logHandler);
         }
 
-        $this->runner->perform($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => false), $this->options));
+        $this->runner->doEnhancedRun($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => true), $this->options));
         return $this->result;
     }
 

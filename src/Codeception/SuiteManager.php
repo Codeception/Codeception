@@ -61,7 +61,7 @@ class SuiteManager {
    	    $this->tests[$name] = $testPath;
 
    	    $this->suite->addTest(new \Codeception\TestCase\Cept('testCodecept', array(
-   			'name' => str_replace('.php', '', $name),
+   			'name' => $name,
             'file' => $testPath,
             'debug' => $this->debug,
    	        'bootstrap' => $this->bootstrap
