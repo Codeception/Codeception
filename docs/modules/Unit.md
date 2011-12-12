@@ -48,34 +48,6 @@ Alias for haveFakeClass
  * alias haveFakeClass
  * param $instance
 
-### executeTestedMethod
-
-
-Executes the method which is tested.
-If method is not static, the class instance should be provided.
-Otherwise bypass the first parameter blank
-
-Include additional arguments as parameter.
-
-Examples:
-
-For non-static methods:
-
-``` php
-<?php
-$I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
-```
-
-The same for static method
-
-``` php
-<?php
-$I->executeTestedMethod(1, 'hello', array(5,4,5));
-```
-
- * param $object null
- * throws \InvalidArgumentException
-
 ### executeTestedMethodOn
 
 
@@ -83,6 +55,14 @@ Alias for executeTestedMethod, only for non-static methods
 
  * alias executeTestedMethod
  * param $object
+
+### executeTestedMethodWith
+
+__not documented__
+
+### executeTestedMethod
+
+__not documented__
 
 ### seeExceptionThrown
 

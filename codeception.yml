@@ -6,10 +6,7 @@ settings:
     bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
-    silent: false
     memory_limit: 1024M
-    log: true
-    log_max_files: 10
 modules:
     config:
         Db:

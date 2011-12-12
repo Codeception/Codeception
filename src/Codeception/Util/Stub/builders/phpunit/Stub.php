@@ -11,7 +11,11 @@ class Stub
             foreach ($methods as $method) {
                 if ($method->isConstructor() or ($method->isDestructor())) continue;
                 $method = $method->name;
-                $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, array($method), array(), '', false);
+                if ($reflection->isAbstract()) {
+                    $mock = PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array($method), '', false);
+                } else {
+                    $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, array($method), array(), '', false);
+                }
                 $mock->expects(new PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
                         ->method($method)
                         ->will(new PHPUnit_Framework_MockObject_Stub_Return(null));
@@ -29,7 +33,7 @@ class Stub
         return self::factory($class, $params);
     }
 
-    public static function factory($class, $params = array())
+    public static function factory($class, $params = array(), $parent = '')
     {
         $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, array(), array(), '', false);
         self::bindParameters($mock, $params);

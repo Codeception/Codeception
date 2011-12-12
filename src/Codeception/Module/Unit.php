@@ -99,7 +99,7 @@ class Unit extends \Codeception\Module
     }
 
     /**
-     * Adds stub in internal registry.
+     * Adds a stub to internal registry.
      * Use this command if you need to convert this stub to mock.
      * Without adding stub to registry you can't trace it's method invocations.
      *
@@ -376,7 +376,6 @@ class Unit extends \Codeception\Module
                     \PHPUnit_Framework_Assert::fail("\n" . $e->getMessage()); // hook to increment assertions counter
                     throw $e;
                 }
-                $mock->__phpunit_cleanup();
                 return;
             }
         }
