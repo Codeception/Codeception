@@ -13,6 +13,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     protected $bootstrap = null;
     protected $stopped = false;
     protected $trace = array();
+    protected $logger = null;
 
 
     public function __construct($name, array $data = array(), $dataName = '')
@@ -108,10 +109,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $action = $step->getAction();
         $arguments = array_merge($step->getArguments());
         if (!isset(\Codeception\SuiteManager::$methods[$action])) {
-            $this->fail("Action $action not defined");
             $this->logger->crit("Action $action not defined");
             $this->stopped = true;
+            $this->fail("Action $action not defined");
             return;
+        }
+
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            $module->_beforeStep($step);
         }
 
         $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$methods[$action]];

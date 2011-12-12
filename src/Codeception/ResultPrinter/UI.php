@@ -14,9 +14,11 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 	protected function printDefectHeader(\PHPUnit_Framework_TestFailure $defect, $count)
 	{
 	    $failedTest = $defect->failedTest();
+        if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefectHeader($defect, $count);
 
-		$feature = $failedTest->getScenario()->getFeature();
-		$this->output->put("\n$count) ((Couldn't $feature)) ({$failedTest->getFilename()})\n");
+        $feature = $failedTest->getScenario()->getFeature();
+        $this->output->put("\n$count) ((Couldn't $feature))");
+		$this->output->put("{$failedTest->getFilename()})\n");
 
 	}
 
@@ -71,8 +73,9 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 
 	protected function printDefectTrace(\PHPUnit_Framework_TestFailure $defect)
 	{
-
 		$failedTest = $defect->failedTest();
+        if (!($failedTest instanceof \Codeception\TestCase))  return parent::printDefectTrace($defect);
+
 		$trace = array_reverse($failedTest->getTrace());
 		$length = $i = count($trace);
 		$last = array_shift($trace);

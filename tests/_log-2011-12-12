@@ -1,53 +1,111 @@
-[2011-12-12 14:36:36] \Codeception\TestCase.runStep.INFO: 
-
-I RUN SINGLE STEP FROM SCENARIO, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 14:36:36] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 14:36:36] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 14:36:36] \Codeception\TestCase.runStep.CRITICAL: Illegal offset type [] []
-[2011-12-12 14:43:22] \Codeception\TestCase.runStep.INFO: 
-
-I RUN SINGLE STEP FROM SCENARIO, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 14:43:22] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 14:43:22] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 14:43:22] \Codeception\TestCase.runStep.CRITICAL: Illegal offset type [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.INFO: 
-
-I RUN SINGLE STEP FROM SCENARIO, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.INFO: I execute tested method on "((\Codeception\TestCase))" [] []
-[2011-12-12 14:44:15] \Codeception\TestCase.runStep.CRITICAL: Argument 1 passed to Mock_TestCase_2822c481::runStep() must be an instance of Codeception\Step, none given [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: 
-
-I RUN SINGLE STEP FROM SCENARIO, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I have fake class "I run action " [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I run action "] [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","_beforeStep"] [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","_afterStep"] [] []
-[2011-12-12 14:46:00] \Codeception\TestCase.runStep.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: 
-
-I RUN SINGLE ACTION FROM MODULE, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I have fake class "I run action " [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I run action "] [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","_beforeStep"] [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","runAction"] [] []
-[2011-12-12 14:47:03] \Codeception\TestCase.runStep.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: 
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: 
 
 I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I have fake module "((\Codeception\Module))" [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I have fake class "I run action " [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I run action "] [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","_beforeStep"] [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","_afterStep"] [] []
-[2011-12-12 15:00:09] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module))","runAction"] [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\Module\CodeHelper))" [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I have fake class "I empty action " [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I empty action "] [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module\\CodeHelper))","_beforeStep"] [] []
+[2011-12-12 16:55:17] \Codeception\TestCase.runStep.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: 
+
+I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\Module\CodeHelper))" [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I have fake class "I empty action " [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I empty action "] [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module\\CodeHelper))","emptyAction"] [] []
+[2011-12-12 16:56:34] \Codeception\TestCase.runStep.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: 
+
+I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\Module\CodeHelper))" [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: I have fake class "I empty action " [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I empty action "] [] []
+[2011-12-12 16:58:29] \Codeception\TestCase.runStep.CRITICAL: Action emptyAction not defined [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: 
+
+I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\Module\CodeHelper))" [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: I have fake class "I empty action " [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I empty action "] [] []
+[2011-12-12 17:00:08] \Codeception\TestCase.runStep.CRITICAL: Action emptyAction not defined [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: 
+
+I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\Module\EmulateModuleHelper))" [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I have fake class "I empty action " [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I execute tested method on ["((\\Codeception\\TestCase))","I empty action "] [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.INFO: I see method invoked ["((\\Codeception\\Module\\EmulateModuleHelper))","emptyAction"] [] []
+[2011-12-12 17:00:33] \Codeception\TestCase.runStep.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 17:01:16] \Codeception\TestCase.runStep.INFO: 
+
+I RUN ACTION FROM MODULE DEFINED IN CURRENT STEP, TEST METHOD \CODECEPTION\TESTCASE.RUNSTEP() [] []
+[2011-12-12 17:01:16] \Codeception\TestCase.runStep.INFO: I test method "\Codeception\TestCase.runStep" [] []
+[2011-12-12 17:19:28] testCodecept.INFO: 
+
+I PERFORM ACTIONS AND SEE RESULT [] []
+[2011-12-12 17:19:28] testCodecept.INFO: 
+
+I TEST A CODE SPECIFICATION [] []
+[2011-12-12 17:19:28] testCodecept.INFO: 
+
+I  [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase))","runStep"] [] []
+[2011-12-12 17:19:28] \Codeception\Scenario.run.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase))","runStep"] [] []
+[2011-12-12 17:20:14] \Codeception\Scenario.run.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase))","runStep"] [] []
+[2011-12-12 17:21:57] \Codeception\Scenario.run.CRITICAL: Probably Internal Error. There is no matchers for current mock [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:22:27] \Codeception\Scenario.run.INFO: I see property equals ["((\\Codeception\\Scenario))","currentStep",1] [] []
+[2011-12-12 17:22:37] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:22:37] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:22:37] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase))" [] []
+[2011-12-12 17:22:37] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:22:37] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase\Cept))" [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-12 17:23:01] \Codeception\Scenario.run.INFO: I see property equals ["((\\Codeception\\Scenario))","currentStep",1] [] []

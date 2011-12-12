@@ -12,6 +12,9 @@ class SuiteManager {
     public static $modulesInitialized = false;
 	public static $output;
 
+    /**
+     * @var \PHPUnit_Framework_TestSuite
+     */
 	protected $suite = null;
 	protected $tests = array();
 	protected $debug = false;
@@ -64,6 +67,11 @@ class SuiteManager {
    	        'bootstrap' => $this->bootstrap
         )));
    	}
+
+    public function addTest($path) {
+        $this->suite->addTestFile($path);
+
+    }
 
     public function addCest($name, $testPath = null) {
         $this->tests[$name] = $testPath;
@@ -119,14 +127,19 @@ class SuiteManager {
      */
     public static function addModule($modulename, $path = null) {
         if ($path) require_once $path;
-        $module = new $modulename;
+        if (!($modulename instanceof \Codeception\Module)) {
+            $module = new $modulename;
+        } else {
+            $module = $modulename;
+            $modulename = get_class($module);
+        }
         self::$modules[$modulename] = $module;
         return $module;
     }
 
     public static function removeModule($dumpModule) {
         foreach (self::$modules as $name => $module) {
-            if (get_class($dumpModule) == $name) {
+            if ($dumpModule == $name) {
                 unset(self::$modules[$name]);
                 return;
             }
@@ -137,10 +150,9 @@ class SuiteManager {
         foreach (self::$modules as $modulename => $module) {
             $module->_initialize();
             $class = new \ReflectionClass($modulename);
-            $methods = $class->getMethods();
+            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
 			    if (strpos($method->name,'_')===0) continue;
-			    if (!$method->isPublic()) continue;
                 \Codeception\SuiteManager::$methods[$method->name] = $modulename;
             }
         }
@@ -161,6 +173,7 @@ class SuiteManager {
         if (!file_exists($path)) throw new \Exception("File $path not found");
         if (strrpos(strrev($path), strrev('Cept.php')) === 0) $this->addCept(basename($path), $path);
         if (strrpos(strrev($path), strrev('Cest.php')) === 0) $this->addCest(basename($path), $path);
+        if (strrpos(strrev($path), strrev('Test.php')) === 0) $this->addTest($path);
     }
 
     public function loadTests($path)
@@ -179,6 +192,12 @@ class SuiteManager {
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->in($path);
         foreach ($testFiles as $test) {
             $this->addCest(basename($test), $test);
+        }
+
+        // PHPUnit tests
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Test.php')->in($path);
+        foreach ($testFiles as $test) {
+            $this->addTest($test->getPathname());
         }
 
 
