@@ -168,6 +168,11 @@ class Unit extends \Codeception\Module
 
     public function executeTestedMethod($object = null)
     {
+        // cleanup mocks
+        foreach ($this->stubs as $mock) {
+            $mock->__phpunit_cleanup();
+        }
+
         $args = func_get_args();
         $this->predictExceptions();
         $res = null;

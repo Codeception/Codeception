@@ -52,7 +52,6 @@ class Output {
 	}
 
 	public function writeln($message) {
-
 		$this->put("\n# $message");
 
 	}
