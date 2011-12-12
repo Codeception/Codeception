@@ -29,6 +29,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     }
 
 
+    public function getFileName()
+    {
+        return $this->getSpecName() . 'Spec.php';
+    }
+
     public function getSpecName() {
         return $this->specName;
     }
@@ -126,6 +131,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         } catch (\Exception $e) {
             $this->logger->crit($e->getMessage());
             throw $e;
+
         }
 
         foreach (\Codeception\SuiteManager::$modules as $module) {

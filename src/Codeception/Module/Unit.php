@@ -30,6 +30,10 @@ class Unit extends \Codeception\Module
     public function _initialize()
     {
         \Codeception\Util\Stub\Builder::loadClasses(); // loading stub classes
+        set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
+                    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+            }
+        );
     }
 
     public function _before(\Codeception\TestCase $test)
@@ -38,7 +42,7 @@ class Unit extends \Codeception\Module
         $this->stubs = array();
     }
 
-    public function __after(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestCase $test)
     {
     }
 
@@ -166,7 +170,11 @@ class Unit extends \Codeception\Module
     {
         $args = func_get_args();
         $this->predictExceptions();
+        $res = null;
         if ($this->testedStatic) {
+
+            if (!method_exists($this->testedClass, $this->testedMethod))
+                throw new \Codeception\Exception\Module(__CLASS__,sprintf('%s::%s is not valid callable', $this->testedClass, $this->testedMethod));
 
             try {
                 $res = call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
@@ -178,6 +186,9 @@ class Unit extends \Codeception\Module
             $this->debug('With parameters: ' . json_encode($args));
         } else {
             $obj = array_shift($args);
+            if (!method_exists($obj, $this->testedMethod))
+                throw new \Codeception\Exception\Module(__CLASS__,sprintf('Method %s can\'t be called in this object', $this->testedMethod));
+
             if (!$obj) throw new \InvalidArgumentException("Object for tested method is expected");
             if (isset($obj->__mocked)) $this->debug('Received Stub');
             $this->createMocks();
@@ -195,7 +206,9 @@ class Unit extends \Codeception\Module
     protected  function catchException($e) {
         foreach ($this->predictedExceptions as $exception) {
             if ($e instanceof $exception) {
-                $this->thrownExceptions[] = get_class($e);
+                $class = get_class($e);
+                if (strpos($class,'\\')!== 0) $class = '\\'.$class;
+                $this->thrownExceptions[$class] = $e;
                 return;
             };
         }
@@ -206,9 +219,9 @@ class Unit extends \Codeception\Module
 
     public function seeExceptionThrown($classname, $message = null) {
 
-        \PHPUnit_Framework_Assert::assertContains($classname, $this->thrownExceptions);
+        \PHPUnit_Framework_Assert::assertContains($classname, array_keys($this->thrownExceptions));
         if ($message) {
-            $e = array_search($classname, $this->thrownExceptions);
+            $e = $this->thrownExceptions[$classname];
             \PHPUnit_Framework_Assert::assertContains($message, $e->getMessage());
         }
     }

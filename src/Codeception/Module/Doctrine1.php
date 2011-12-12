@@ -4,13 +4,8 @@ namespace Codeception\Module;
 class Doctrine1 extends \Codeception\Module
 {
     public function _initialize() {
-
-        if (isset(\Codeception\SuiteManager::$modules['\Codeception\Module\Db'])) {
-            $dbh = \Codeception\SuiteManager::$modules['\Codeception\Module\Db']->_getDbh();
-            \Doctrine_Manager::connection($dbh);
-        }
+        $this->dbh = \Doctrine_Manager::connection()->getDbh();
     }
-
     
     public function _after(\Codeception\TestCase $test)
     {

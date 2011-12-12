@@ -49,7 +49,7 @@ abstract class Step
             $arguments = $this->arguments;
 
             foreach ($arguments as $k => $argument) {
-                if (!is_string($argument) and is_callable($argument)) {
+                if (!is_string($argument) and is_callable($argument, true)) {
                     $arguments[$k] = 'lambda function';
                     continue;
                 }
@@ -63,7 +63,7 @@ abstract class Step
                     }
                     continue;
                 }
-                if (settype($argument, 'string') === false) throw new \InvalidArgumentException('Argument can\'t be converted to string or serialized');
+                // if (settype($argument, 'string') === false) throw new \InvalidArgumentException('Argument can\'t be converted to string or serialized');
             }
 
             switch (count($arguments)) {
