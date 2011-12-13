@@ -38,14 +38,13 @@ class ScenarioCest
 
 ```
 
-== Features ==
+## Features
+* Descriptive writing - write the way you are going to test in natural way.
 * Method execution limit - you are limited to execute only one method in scenario. The method, you actually test.
 * Simple stub definition - create stubbed class with 1 method, all properties and methods can be passed as callable functions.
 * Dynamic mocking - stubs can be simple turned to mocks, without any additional definitions.
 
-etc....
-
-== Unit testing with scenarios ==
+## Unit testing with scenarios
 
 CodeGuy allows you to define testing scenarios in a natural way.
 Typical test should consist of 3 steps, in this direct order:
@@ -119,7 +118,7 @@ Even junior developer can understand how and what you test here.
 But how is that possible?
 How can we execute $unit->run() and see it triggered $unit->runExtra() afterwards?
 
-== Simple Magic ==
+## Simple Magic
 
 The magic inside of this module is behind the conecept of Codecept scenarios.
 You describe your test in PHP DSL, then it's logged into scenario, and after that it's run step by step.
