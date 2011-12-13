@@ -61,10 +61,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     }
     
     public function setUp() {
+        if (file_exists($this->bootstrap)) require $this->bootstrap;
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_before($this);
         }
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
         $this->loadScenario();
     }
 

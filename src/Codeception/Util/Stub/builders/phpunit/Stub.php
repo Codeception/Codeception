@@ -39,7 +39,6 @@ class Stub
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
-
     }
 
     protected static function bindParameters($mock, $params)

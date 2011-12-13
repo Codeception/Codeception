@@ -13,8 +13,8 @@ class ScenarioCest
                 Stub::makeEmpty('\Codeception\Step\Comment')
             )
         )));
-        $I->executeTestedMethodOn($scenario);
-        // $I->seeMethodInvoked($test,'runStep');
-        $I->seePropertyEquals($scenario, 'currentStep', 1);
+        $I->executeTestedMethodOn($scenario)
+            ->seeMethodInvoked($test,'runStep')
+            ->seePropertyEquals($scenario, 'currentStep', 1);
     }
 }
