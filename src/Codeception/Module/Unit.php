@@ -4,7 +4,131 @@ namespace Codeception\Module;
 /**
  * Unit testing module
  *
+ * This is the heart of CodeGuy testing framework.
+ * By providing unique set of features Unit module makes your tests cleaner, readable, and easier to write.
  *
+ * Here is example of unit test, which tests one of the methods of Codeception core.
+ *
+ * ``` php
+ * <?php
+ * class ScenarioCest
+ * {
+ *     public $class = '\Codeception\Scenario';
+ *
+ *     public function run(CodeGuy $I) {
+ *         $I->wantTo('run steps from scenario');
+ *
+ *         // creating an empty stub:
+ *         $I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase\Cept'));
+ *
+ *         // creating stub with defined properties
+ *         $I->haveFakeClass($scenario = Stub::make('\Codeception\Scenario', array(
+ *             'test' => $test,
+ *             'steps' => array(
+ *                Stub::makeEmpty('\Codeception\Step\Action'),
+ *                Stub::makeEmpty('\Codeception\Step\Comment')
+ *            )
+ *        )));
+ *
+ *        // run the method we test on object specified
+ *        $I->executeTestedMethodOn($scenario)
+ *
+ *        // perform assertions
+ *            ->seeMethodInvoked($test,'runStep')
+ *            ->seePropertyEquals($scenario, 'currentStep', 1);
+ *    }
+ *}
+ * ```
+ *
+ * == Features ==
+ * * Method execution limit - you are limited to execute only one method in scenario. The method, you actually test.
+ * * Simple stub definition - create stubbed class with 1 method, all properties and methods can be passed as callable functions.
+ * * Dynamic mocking - stubs can be simple turned to mocks, without any additional definitions.
+ *
+ * etc....
+ *
+ * == Unit testing with scenarios ==
+ *
+ * CodeGuy allows you to define testing scenarios in a natural way.
+ * Typical test should consist of 3 steps, in this direct order:
+ *
+ * * environment definition
+ * * method execution
+ * * assertions
+ *
+ * That's the natural and logical way: we do something, and after that we check for result.
+ *
+ * In many cases in unit tests, you can't write your test in this order.
+ * For example, if you use mocks, you should define the expected results before the tested method is executed.
+ * Thus, the structure of test becomes harder for reading and understanding. Assertions can be put anywhere in test.
+ *
+ * Let's say we want to test method run for class Unit
+ *
+ * ``` php
+ * <?php
+ *
+ * class Unit {
+ *
+ *      public function run()
+ *      {
+ *         $this->runExtra();
+ *      }
+ *
+ *      protected function runExtra()
+ *      {
+ *      }
+ *
+ * }
+ *
+ * ```
+ *
+ * For PHPUnit our test will look like:
+ *
+ * ``` php
+ * <?php
+ *
+ * $unit = $this->getMock('Unit', array('runExtra'));
+ * $observer->expects($this->once())
+ *   ->method('runExtra');
+ *
+ * $unit->run();
+ * ```
+ *
+ * For assertion we use ->expects($this->once()) construction.
+ * So, we have assertions that are assertions, and assertions that are expectations...
+ * What a mess!
+ *
+ * Here, how the CodeGuy scenario looks like:
+ *
+ * ``` php
+ * <?php
+ *
+ * $I = new CodeGuy($scenario);
+ * $I->testMethod('Unit.run');
+ * $I->haveStubClass($unit = Stub::make('Unit'));
+ * $I->executeTestedMethodOn($unit);
+ * $I->seeMethodInvoked($unit, 'runExtra');
+ *
+ * ```
+ * So, that becomes much clearer.
+ * We define stub (as environment) before the method execution.
+ * We execute method.
+ * We check the internal method was invoked.
+ *
+ * Also, we describe all our actions in proper and logical order.
+ * Even junior developer can understand how and what you test here.
+ *
+ * But how is that possible?
+ * How can we execute $unit->run() and see it triggered $unit->runExtra() afterwards?
+ *
+ * == Simple Magic ==
+ *
+ * The magic inside of this module is behind the conecept of Codecept scenarios.
+ * You describe your test in PHP DSL, then it's logged into scenario, and after that it's run step by step.
+ * That's important. The test you are writing won't be executed as it is, in realtime.
+ *
+ * Unit module gets a benefit from it: it's methods can review next steps in scenarios and prepare mocks and exception handling.
+ * Thus, the trick is: command $I->executeTestedMethod() doesn't actually execute it :)
  *
  */
 
@@ -191,6 +315,7 @@ class Unit extends \Codeception\Module
             $this->debug('With parameters: ' . json_encode($args));
         } else {
             $obj = array_shift($args);
+
             if (!method_exists($obj, $this->testedMethod))
                 throw new \Codeception\Exception\Module(__CLASS__,sprintf('Method %s can\'t be called in this object', $this->testedMethod));
 
@@ -259,7 +384,7 @@ class Unit extends \Codeception\Module
         $scenario = $this->test->getScenario();
         $scenario->getCurrentStep();
         $steps = $scenario->getSteps();
-        for ($i = $scenario->getCurrentStep(); $i < count($steps); $i++) {
+        for ($i = $scenario->getCurrentStep()+1; $i < count($steps); $i++) {
             $step = $steps[$i];
             if (strpos($action = $step->getAction(), 'seeMethod') === 0) {
                 $arguments = $step->getArguments(false);
@@ -306,6 +431,7 @@ class Unit extends \Codeception\Module
             }
             if ($step->getAction() == 'executeTestedMethod') break;
             if ($step->getAction() == 'executeTestedMethodOn') break;
+            if ($step->getAction() == 'executeTestedMethodWith') break;
         }
     }
 

@@ -32,12 +32,17 @@ class Doctrine2 extends \Codeception\Module
             "Doctrine2 module requires EntityManager explictly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
+
+        if (! self::$em instanceof \Doctrine\ORM\EntityManager) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
+                    "Entity Manager was not properly set.\n" .
+                    "You can use your bootstrap file to assign the EntityManager:\n\n" .
+                    '\Codeception\Module\Doctrine2::$em = $em');
     }
 
     public function _after(\Codeception\TestCase $test)
     {
         $em = self::$em;
-        $em->clear();
+//        $em->clear();
         $reflectedEm = new \ReflectionClass($em);
         $property = $reflectedEm->getProperty('repositories');
         $property->setAccessible(true);
