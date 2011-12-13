@@ -109,7 +109,21 @@ $I->executeTestedMethodOn($unit, 1, array('username' => 'miles'));
 $I->seeMethodInvoked($unit, 'save');
 $I->seeInDatabase('users', array('id' => 1, 'username' => 'miles'));
 
-``` 
+```
+
+#### Pros
+
+* fast as hell (well, in current example, you still need database repopulation).
+* can cover rarely used features.
+* can test stability of appication core.
+* you can be named a good developer only if you write them :)
+* you can show it only to your project manager only if he is quite interested.
+
+#### Cons
+
+* totally useless unless you have acceptance or functional tests.
+* most unstable: very sensitive to code changes.
+* requires good project architecture.
 
 ## Conclusion
 
