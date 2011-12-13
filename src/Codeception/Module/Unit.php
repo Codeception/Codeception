@@ -41,12 +41,12 @@ namespace Codeception\Module;
  * ```
  *
  * ## Features
- * * Descriptive writing - write the way you are going to test in natural way.
- * * Method execution limit - you are limited to execute only one method in scenario. The method, you actually test.
- * * Simple stub definition - create stubbed class with 1 method, all properties and methods can be passed as callable functions.
- * * Dynamic mocking - stubs can be simple turned to mocks, without any additional definitions.
+ * * Descriptive - simply write what do you test and how do you test.
+ * * Method execution limit - you are allowed only to execute tested method inside the scenario. Don't test several methods inside one unit.
+ * * Simple stub definition - create stubbed class with one call. All properties and methods can be passed as callable functions.
+ * * Dynamic mocking - stubs can be automatically turned to mocks.
  *
- * ## Unit testing with scenarios
+ * ## Unit Testing With Scenarios
  *
  * CodeGuy allows you to define testing scenarios in a natural way.
  * Typical test should consist of 3 steps, in this direct order:
