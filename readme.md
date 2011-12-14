@@ -9,6 +9,7 @@ Previously called 'TestGuy'. Now is extended to feature CodeGuy, TestGuy, and We
 ### In a Glance
 
 Describe what you test and how you test it. Use PHP to write descriptions faster.
+
 Run tests and see what actions were taken and what results were seen.
 
 #### Sample acceptance test
@@ -95,7 +96,7 @@ Download [codecept.phar](https://github.com/DavertMik/Codeception/raw/master/pac
 
 Copy it into your project.
 
-Execute, to run CLI utility
+Run CLI utility:
 
 ```
 php codecept.phar
