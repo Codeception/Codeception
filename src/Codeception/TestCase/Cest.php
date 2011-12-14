@@ -24,6 +24,10 @@ class Cest extends \Codeception\TestCase
             throw new \Exception("Tested class in {$unit->class} can't be loaded.");
         }
 
+        if (method_exists($unit, '_beforeEach')) {
+            call_user_func(array($unit,'_beforeEach'));
+        }
+
         // executing test
         $I = new \CodeGuy($this->scenario);
         $I->testMethod($this->specName);
