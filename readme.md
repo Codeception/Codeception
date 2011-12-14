@@ -52,16 +52,16 @@ $I->seeInDabatase('users', array('username' => 'MilesDavis'));
 
 Anyway, If you don't really like writing unit tests in DSL, Codeceptance can run PHPUnit tests natively.
 
-### Documentation
+## Documentation
 
 [Documentation on Github](https://github.com/DavertMik/Codeception/tree/master/docs)
 
 Documentation is currently bounded with project. Look for it in 'docs' directory.
 
 
-### Installation
+## Installation
 
-#### Clone
+### Clone
 
 Clone Codeception into your project.
 
@@ -75,7 +75,7 @@ Run CLI utility:
 php vendor/Codeception/codecept
 ```
 
-#### PEAR (edge)
+### PEAR
 
 Currently we don't have PEAR channel avaible, but PEAR installation is preferred for unstable releases.
 
@@ -87,11 +87,11 @@ Create batch or sh file to call CLI utility
 php %PATH-TO-INSTALLATION%/Codeception/codecept
 ```
 
-#### Phar
+### Phar
 
 Can be installed by downloading phar executable.
 
-Download (codecept.phar)[https://github.com/DavertMik/Codeception/raw/master/package/codecept.phar]
+Download [codecept.phar](https://github.com/DavertMik/Codeception/raw/master/package/codecept.phar)
 
 Copy it into your project.
 
@@ -101,7 +101,7 @@ Execute, to run CLI utility
 php codecept.phar
 ```
 
-### Getting Started
+## Getting Started
 
 If you sucessfully installed Codeception, and you have CLI utility running in your project's root, run this commands:
 
