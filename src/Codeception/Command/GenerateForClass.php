@@ -54,11 +54,11 @@ class GenerateForClass extends Base
         }
 
         $reflected = new \ReflectionClass($class);
-        $methods = $reflected->getMethods();
+        $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             if ($method->getDeclaringClass()->name != $class) continue;
             if ($method->isConstructor() or $method->isDestructor()) continue;
-            if ($method->isPublic()) {
+
                 $filename = $path.DIRECTORY_SEPARATOR.$method->name.'Cept.php';
                 if (file_exists($filename)) {
                     $output->writeln("<comment>Test $filename already exists</comment>");
@@ -73,7 +73,6 @@ class GenerateForClass extends Base
                     file_put_contents($filename, $file);
                 }
                 $output->writeln("<info>Test was generated in $filename</info>");
-            }
         }
 
     }

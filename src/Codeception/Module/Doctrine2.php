@@ -58,6 +58,23 @@ class Doctrine2 extends \Codeception\Module
         self::$em->flush();
     }
 
+
+
+    public function saveToRepository($obj, $values = array()) {
+
+        if ($values) {
+            $reflectedObj = new \ReflectionClass($obj);
+            foreach ($values as $key => $val) {
+                $property = $reflectedObj->getProperty($key);
+                $property->setAccessible(true);
+                $property->setValue($obj, $val);
+            }
+        }
+
+        self::$em->persist($obj);
+        self::$em->flush();
+    }
+
     /**
      * Mocks the repository.
      *

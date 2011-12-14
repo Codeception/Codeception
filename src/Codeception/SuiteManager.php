@@ -92,8 +92,12 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
-                $target = $unit->class;
-                $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
+                if (isset($unit->class)) {
+                    $target = $unit->class;
+                    $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
+                } else {
+                    $target = $method->name;
+                }
 
                 $this->suite->addTest(new \Codeception\TestCase\Cest($target, array(
                     'name' => $target,

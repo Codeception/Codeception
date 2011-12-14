@@ -315,14 +315,20 @@ class Unit extends \Codeception\Module
         } else {
             $obj = array_shift($args);
 
-            if (!method_exists($obj, $this->testedMethod))
+            $reflectedObj = new \ReflectionClass($obj);
+            $reflectedMethod = $reflectedObj->getMethod($this->testedMethod);
+            if (!$reflectedMethod)
                 throw new \Codeception\Exception\Module(__CLASS__,sprintf('Method %s can\'t be called in this object', $this->testedMethod));
+
+            if (!$reflectedMethod->isPublic()) {
+                $reflectedMethod->setAccessible(true);
+            }
 
             if (!$obj) throw new \InvalidArgumentException("Object for tested method is expected");
             if (isset($obj->__mocked)) $this->debug('Received Stub');
             $this->createMocks();
             try {
-                $res = call_user_func_array(array($obj, $this->testedMethod), $args);
+                $res = $reflectedMethod->invokeArgs($obj, $args);
             } catch (\Exception $e) {
                 $this->catchException($e);
             }

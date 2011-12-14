@@ -6,25 +6,25 @@ class Stub
     {
         if (!class_exists($class)) throw new \RuntimeException("Stubbed class $class doesn't exist. Use Stub::factory instead");
         $reflection = new \ReflectionClass($class);
-        $methods = $reflection->getMethods();
-        if (count($methods)) {
-            foreach ($methods as $method) {
-                if ($method->isConstructor() or ($method->isDestructor())) continue;
-                $method = $method->name;
-                if ($reflection->isAbstract()) {
-                    $mock = PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array($method), '', false);
-                } else {
-                    $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, array($method), array(), '', false);
-                }
-                $mock->expects(new PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
-                        ->method($method)
-                        ->will(new PHPUnit_Framework_MockObject_Stub_Return(null));
-                self::bindParameters($mock, $params);
-                $mock->__mocked = $class;
-                return $mock;
+
+        $callables = array_filter($params, function ($a) { return is_callable($a); });
+
+        if (!empty($callables)) {
+            if ($reflection->isAbstract()) {
+                $mock = PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array_keys($callables), '', false);
+            } else {
+                $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), array(), '', false);
+            }
+        } else {
+            if ($reflection->isAbstract()) {
+                $mock = PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, null, '', false);
+            } else {
+                $mock = PHPUnit_Framework_MockObject_Generator::getMock($class, null, array(), '', false);
             }
         }
-        return self::makeEmpty($class, $params);
+        self::bindParameters($mock, $params);
+        $mock->__mocked = $class;
+        return $mock;
     }
 
     public static function makeEmpty($class, $params = array())
