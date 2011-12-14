@@ -65,13 +65,17 @@ Documentation is currently bounded with project. Look for it in 'docs' directory
 
 Clone Codeception into your project.
 
-``` git clone git://github.com/DavertMik/Codeception.git vendor/
+```
+git clone git://github.com/DavertMik/Codeception.git vendor/
+```
 
 Run CLI utility:
 
-``` php vendor/Codeception/codecpt
+```
+php vendor/Codeception/codecept
+```
 
-### PEAR (edge)
+#### PEAR (edge)
 
 Currently we don't have PEAR channel avaible, but PEAR installation is preferred for unstable releases.
 
@@ -79,7 +83,9 @@ Enter you PEAR dir and clone this repository into it.
 
 Create batch or sh file to call CLI utility
 
-``` php %PATH-TO-INSTALLATION%/Codeception/codecept
+```
+php %PATH-TO-INSTALLATION%/Codeception/codecept
+```
 
 #### Phar
 
@@ -91,22 +97,31 @@ Copy it into your project.
 
 Execute, to run CLI utility
 
-``` php codecept.phar
+```
+php codecept.phar
+```
 
 ### Getting Started
 
 If you sucessfully installed Codeception, and you have CLI utility running in your project's root, run this commands:
 
-``` codecept install
+```
+codecept install
+```
+
 this will install all dependency tools like PHPUnit and Mink
 
-``` codecept bootstrap
+```
+codecept bootstrap
+```
+
 this will create default directory structure and default test suites
 
-``` codecept build
+```
+codecept build
+```
 
 This will generate Guy-classes, in order to make autocomplete works.
-
 
 See Documentation for more information.
 
