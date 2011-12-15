@@ -41,12 +41,19 @@ class Stub
         return $mock;
     }
 
+    public static function copy($obj, $params = array())
+    {
+        $copy = clone($obj);
+        self::bindParameters($copy, $params);
+        return $copy;
+    }
+
     protected static function bindParameters($mock, $params)
     {
-        $reflectionClass = new ReflectionClass($mock);
+        $reflectionClass = new ReflectionObject($mock);
+
         foreach ($params as $param => $value) {
             if (!is_callable($value)) {
-
                 $reflectionProperty = $reflectionClass->getProperty($param);
                 $reflectionProperty->setAccessible(true);
                 $reflectionProperty->setValue($mock, $value);

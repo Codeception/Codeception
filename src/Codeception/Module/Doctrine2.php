@@ -60,7 +60,7 @@ class Doctrine2 extends \Codeception\Module
 
 
 
-    public function saveToRepository($obj, $values = array()) {
+    public function saveEntity($obj, $values = array()) {
 
         if ($values) {
             $reflectedObj = new \ReflectionClass($obj);
