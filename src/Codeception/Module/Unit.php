@@ -350,7 +350,36 @@ class Unit extends \Codeception\Module
         throw $e;
     }
 
+    /**
+     * Updates selected properties for object passed.
+     * Can update even private and protected properties.
+     *
+     * @param $obj
+     * @param array $values
+     */
 
+    public function changeProperties($obj, $values = array()) {
+        $reflectedObj = new \ReflectionClass($obj);
+            foreach ($values as $key => $val) {
+                $property = $reflectedObj->getProperty($key);
+                $property->setAccessible(true);
+                $property->setValue($obj, $val);
+            }
+
+    }
+
+    /**
+     * Updates property of selected object
+     * Can update even private and protected properties.
+     *
+     * @param $obj
+     * @param $property
+     * @param $value
+     */
+
+    public function changeProperty($obj, $property, $value) {
+        $this->changeProperties($obj, array($property => $value));
+    }
 
     public function seeExceptionThrown($classname, $message = null) {
 
@@ -417,7 +446,7 @@ class Unit extends \Codeception\Module
                         if (!$mock) throw new \InvalidArgumentException("Stub class not defined");
                         $times = $params;
                         if (!is_int($times)) throw new \InvalidArgumentException("Invoked times count should be an integer");
-                        $params = array_shift($arguments);
+                        $params = $arguments;
                         $invoke = new \PHPUnit_Framework_MockObject_Matcher_InvokedCount($times);
                         break;
                     default:
