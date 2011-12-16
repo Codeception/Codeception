@@ -93,7 +93,7 @@ function seeClassExist($class)
 {
       \PHPUnit_Framework_Assert::assertTrue(class_exists($class));
 }
-
+```
 
 For PHPUnit you might have used to $this->assertContains construction. But in Codeception modules you should rely on static methods of PHPUnit_Framework_Assert class. 
 
