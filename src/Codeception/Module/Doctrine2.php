@@ -42,11 +42,11 @@ class Doctrine2 extends \Codeception\Module
     public function _after(\Codeception\TestCase $test)
     {
         $em = self::$em;
-//        $em->clear();
         $reflectedEm = new \ReflectionClass($em);
         $property = $reflectedEm->getProperty('repositories');
         $property->setAccessible(true);
         $property->setValue($em, array());
+        self::$em->clear();
     }
 
 
@@ -60,7 +60,7 @@ class Doctrine2 extends \Codeception\Module
 
 
 
-    public function saveEntity($obj, $values = array()) {
+    public function persistEntity($obj, $values = array()) {
 
         if ($values) {
             $reflectedObj = new \ReflectionClass($obj);

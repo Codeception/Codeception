@@ -28,11 +28,6 @@ abstract class AbstractGuy  {
         return $this;
 	}
 
-    public function amTestingClass($text) {
-        $this->scenario->setFeature($text);
-        return $this;
-    }
-    
     public function amTesting($method) {
         return $this->testMethod($method);
     }
@@ -57,6 +52,11 @@ abstract class AbstractGuy  {
 		$this->scenario->comment(array('expect to '.$prediction));
         return $this;
 	}
+
+    public function expect($prediction) {
+        $this->scenario->comment(array('expect '.$prediction));
+        return $this;
+    }
 
 	public function amGoingTo($argumentation) {
 	    $this->scenario->comment(array('am going to '.$argumentation));

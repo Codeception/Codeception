@@ -587,6 +587,14 @@ class Unit extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertEquals($value, $current);
     }
 
+    public function seePropertyIs($object, $property, $type) {
+        $current = $this->retrieveProperty($object, $property);
+        if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
+            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+        }
+        \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
+    }
+
     protected function retrieveProperty($object, $property)
     {
         if (isset($object->__mocked)) $this->debug('Received STUB');
