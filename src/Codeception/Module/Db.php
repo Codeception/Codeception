@@ -30,6 +30,8 @@ class Db extends \Codeception\Module
     protected $sql = array();
     protected $dbh;
 
+    protected $config = array('cleanup' => true);
+
     protected $requiredFields = array('dsn', 'user', 'password');
 
     public function _initialize()
@@ -42,21 +44,26 @@ class Db extends \Codeception\Module
         }
 
         // not necessary to specify dump
-        if (isset($this->config['dump'])) {
+        if (isset($this->config['dump']) && $this->config['cleanup']) {
             $sql = file_get_contents($this->config['dump']);
             $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s',"",$sql);
             $this->sql = explode("\r\n", $sql);
+        }
 
-            try {
-                $dbh = new \PDO($this->config['dsn'], $this->config['user'], $this->config['password']);
-                $this->dbh = $dbh;
-            } catch (\PDOException $e) {
-                throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
-            }
+        try {
+            $dbh = new \PDO($this->config['dsn'], $this->config['user'], $this->config['password']);
+            $this->dbh = $dbh;
+        } catch (\PDOException $e) {
+            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
         }
     }
 
     public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->config['cleanup']) $this->cleanup();
+    }
+
+    protected function cleanup()
     {
         $dbh = $this->dbh;
         if (!$dbh) {

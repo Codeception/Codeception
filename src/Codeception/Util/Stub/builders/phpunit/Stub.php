@@ -50,10 +50,10 @@ class Stub
 
     protected static function bindParameters($mock, $params)
     {
-        $reflectionClass = new ReflectionObject($mock);
+        $reflectionClass = new ReflectionClass($mock);
 
         foreach ($params as $param => $value) {
-            if (!is_callable($value)) {
+            if (!($value instanceof \Closure)) {
                 $reflectionProperty = $reflectionClass->getProperty($param);
                 $reflectionProperty->setAccessible(true);
                 $reflectionProperty->setValue($mock, $value);

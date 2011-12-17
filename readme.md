@@ -45,7 +45,7 @@ class UserControllerCest {
 
     public function createAction(CodeGuy $I)
     {
-        $I->haveFakeClass($userController = Stub::make('UserController', array('renderHtml' => function () {})));
+        $I->haveFakeClass($userController = Stub::make('UserController'));
         $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
             ->seeResultEquals(true)
             ->seeMethodInvoked($userController, 'renderHtml')

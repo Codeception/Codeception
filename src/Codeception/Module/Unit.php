@@ -247,6 +247,23 @@ class Unit extends \Codeception\Module
     }
 
 
+
+    /**
+     * Alias for executeTestedMethod, only for non-static methods
+     *
+     * @alias executeTestedMethod
+     * @param $object
+     */
+    public function executeTestedMethodOn($object)
+    {
+        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
+    }
+
+    public function executeTestedMethodWith($params)
+    {
+        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
+    }
+
     /**
      * Executes the method which is tested.
      * If method is not static, the class instance should be provided.
@@ -273,22 +290,6 @@ class Unit extends \Codeception\Module
      * @param $object null
      * @throws \InvalidArgumentException
      */
-    /**
-     * Alias for executeTestedMethod, only for non-static methods
-     *
-     * @alias executeTestedMethod
-     * @param $object
-     */
-    public function executeTestedMethodOn($object)
-    {
-        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
-    }
-
-    public function executeTestedMethodWith($params)
-    {
-        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
-    }
-
     public function executeTestedMethod($object = null)
     {
         // cleanup mocks
@@ -547,9 +548,14 @@ class Unit extends \Codeception\Module
         throw new \Exception("Mock is not registered by 'haveStub' or 'haveFakeClass' methods");
     }
 
+    /**
+     * Asserts that the last result from tested method is equal to value
+     *
+     * @param $value
+     */
     public function seeResultEquals($value)
     {
-        $this->assert(array('Equals', $value, $this->last_result));
+        $this->assert(array('Equals', $value, $this->last_result,'in '.$this->last_result));
     }
 
     public function seeResultContains($value)
