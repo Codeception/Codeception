@@ -40,14 +40,18 @@ Take a look at this:
 
 ``` php
 <?php
+class UserControllerCest {
+    public $class = 'UserController';
 
-$I = new CodeGuy($scenario);
-$I->wantTo('create new user from controller');
-$I->testMethod('UserController.createAction');
-$I->haveFakeClass($userController = Stub::make('UserController'));
-$I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'));
-$I->seeResultEquals(true);
-$I->seeInDabatase('users', array('username' => 'MilesDavis'));
+    public function createAction(CodeGuy $I)
+    {
+        $I->haveFakeClass($userController = Stub::make('UserController', array('renderHtml' => function () {})));
+        $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
+            ->seeResultEquals(true)
+            ->seeMethodInvoked($userController, 'renderHtml')
+            ->seeInDabatase('users', array('username' => 'MilesDavis'));
+    }
+}
 
 ```
 
