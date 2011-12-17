@@ -20,9 +20,11 @@ class Symfony1 extends \Codeception\Module
 {
 
     /**
+     * @api
      * @var \sfBrowser
      */
-    protected $browser;
+    public $browser;
+
     protected $session_id;
 
     protected $requiredFields = array('app');
@@ -39,11 +41,6 @@ class Symfony1 extends \Codeception\Module
         $this->browser = new \sfBrowser();
         $this->browser->get('/');
         \sfForm::disableCSRFProtection();
-    }
-
-    public function _getBrowser()
-    {
-        return $this->browser;
     }
 
     public function _cleanup()
