@@ -30,7 +30,7 @@ class Db extends \Codeception\Module
     protected $sql = array();
     protected $dbh;
 
-    protected $config = array('cleanup' => true);
+    protected $config = array('repopulate' => true, 'populate' => true);
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
@@ -48,6 +48,9 @@ class Db extends \Codeception\Module
             $sql = file_get_contents($this->config['dump']);
             $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s',"",$sql);
             $this->sql = explode("\r\n", $sql);
+
+            // starting with loading dump
+            if ($this->config['populate']) $this->cleanup();
         }
 
         try {
@@ -58,9 +61,9 @@ class Db extends \Codeception\Module
         }
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup']) $this->cleanup();
+        if ($this->config['repopulate']) $this->cleanup();
     }
 
     protected function cleanup()
