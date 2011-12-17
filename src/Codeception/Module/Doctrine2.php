@@ -37,10 +37,16 @@ class Doctrine2 extends \Codeception\Module
                     "Entity Manager was not properly set.\n" .
                     "You can use your bootstrap file to assign the EntityManager:\n\n" .
                     '\Codeception\Module\Doctrine2::$em = $em');
+
+
+        self::$em->getConnection()->beginTransaction();
+        self::$em->getConnection()->setTransactionIsolation(1);
     }
 
     public function _after(\Codeception\TestCase $test)
     {
+        self::$em->getConnection()->rollback();
+
         $em = self::$em;
         $reflectedEm = new \ReflectionClass($em);
         $property = $reflectedEm->getProperty('repositories');
