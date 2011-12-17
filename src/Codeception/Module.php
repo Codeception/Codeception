@@ -55,6 +55,12 @@ abstract class Module {
 	public function _failed(\Codeception\TestCase $test, $fail) {
 	}
 
+    public function getModule($module) {
+        $module = '\Codeception\Module\\'.$module;
+        if (!isset(SuiteManager::$modules[$module])) throw new \Codeception\Exception\Module($module, 'module not found');
+        return SuiteManager::$modules[$module];
+   }
+
 	
 	protected function debug($message) {
 	    $this->debugStack[] = $message;

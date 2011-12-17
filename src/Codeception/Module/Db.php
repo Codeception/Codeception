@@ -27,8 +27,13 @@ namespace Codeception\Module;
 class Db extends \Codeception\Module
 {
 
+    /**
+     * @api
+     * @var
+     */
+    public $dbh;
+
     protected $sql = array();
-    protected $dbh;
 
     protected $config = array('repopulate' => true, 'populate' => true);
 
@@ -97,10 +102,6 @@ class Db extends \Codeception\Module
         } catch (\Exception $e) {
             throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
         }
-    }
-
-    public function _getDbh() {
-        return $this->dbh;
     }
 
     /**

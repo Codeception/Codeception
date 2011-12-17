@@ -21,6 +21,8 @@ namespace Codeception\Module;
 class Doctrine2 extends \Codeception\Module
 {
 
+    protected $config = array('cleanup' => true);
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -39,13 +41,15 @@ class Doctrine2 extends \Codeception\Module
                     '\Codeception\Module\Doctrine2::$em = $em');
 
 
-        self::$em->getConnection()->beginTransaction();
-        self::$em->getConnection()->setTransactionIsolation(1);
+        if ($this->config['cleanup']) {
+            self::$em->getConnection()->beginTransaction();
+            self::$em->getConnection()->setTransactionIsolation(1);
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        self::$em->getConnection()->rollback();
+        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
 
         $em = self::$em;
         $reflectedEm = new \ReflectionClass($em);

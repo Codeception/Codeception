@@ -3,7 +3,7 @@
 Codeception uses modularity to create comfortable testing environment for every test suite you write. 
 Modules allows you choose actions and assertions that can be perform in tests.
 
-All actions and assertions, that can be performed by Guy object in class are defined in modules. It might look that Codeception limits you in testing, still it's not true. You can extend testing suite with your own actions and assertions, writing them into custom module. 
+All actions and assertions that can be performed by Guy object in class are defined in modules. It might look that Codeception limits you in testing, still it's not true. You can extend testing suite with your own actions and assertions, writing them into custom module.
 
 Let's look at this test.
 ``` php
@@ -44,7 +44,7 @@ Let's list all available modules
 
 All of this modules are documented. You can review their detailed references on [GitHub](https://github.com/DavertMik/Codeception/tree/master/docs/modules).
 
-## Custom modules
+## Helpers
 
 Codeception doesn't bound you only to modules from main repository. No doubts that for your project you might need your own actions added to test suite. By running the 'bootstrap' command, Codeception generates for you three dummy modules, for each of newly created suites. This custom modules are called 'Helpers', and they can be found in 'tests/helpers' path. 
 
@@ -56,6 +56,8 @@ Let's say we are going to extend TestHelper class. By default it's linked with a
 <?php
 namespace Codeception\Module;
 // here you can define custom functions for TestGuy
+
+require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 class TestHelper extends \Codeception\Module
 {
@@ -84,18 +86,22 @@ $I->dontSeeUserExist($user);
 
 ```
 
-Every 'see' or 'dontSee' function requires at least one assert. Codeception uses PHPUnit_Framework_Assert classes to define them. 
+Every 'see' or 'dontSee' function requires at least one assert. Codeception uses PHPUnit assertions.
+
+### Assertions
+You can define asserts by using assertXXX functions, from 'PHPUnit/Framework/Assert/Functions.php' file.
+In case your application falls into conflict with one of this functions, you can use PHPUnit static methods from class PHPUnit_Framework_Assert to define asserts.
 
 ``` php
 <?php
 
 function seeClassExist($class)
 {
+      assertTrue(class_exists($class));
+      // or
       \PHPUnit_Framework_Assert::assertTrue(class_exists($class));
 }
 ```
-
-For PHPUnit you might have used to $this->assertContains construction. But in Codeception modules you should rely on static methods of PHPUnit_Framework_Assert class. 
 
 Each module has special $this->assert and $this->assertNot methods. They take the same arguments and are useful if you need to define both positive and negative assertions in your module. This functions take an array as parameter, where the first value of array is the name of PHPUnit assert function.
 
@@ -128,13 +134,125 @@ protected function proceedSeeClassExist($class)
 }
 
 ```
-For dontSeeClassExist, the PHPUnit_Framework_Assert::assertFalse will be called.
+For dontSeeClassExist, the 'assertFalse' will be called.
 
-## Connecting modules
+### Resolving Collisions
+
+What happens if you have 2 modules which the same named actions within?
+Nothing exceptional happens. The action from the first module will be used in tests.
+Order of loaded modules defined in suite config.
+
+### Connecting Modules
 
 It's possible that you would need to access internal data or functions from other modules. For example, for your module, you might need connection from Doctrine, or web browser from Symfony.
 
-...
+Each modules can interact with each other by getModule method. Please, note that this method will throw an exception If required module was not loaded.
 
+Let's imagine we are writing module which reconnects to database. It's supposed to use the dbh connection value from Db module.
 
+``` php
+<?php
 
+function reconnectToDatabase() {
+    $dbh = $this->getModule('Db')->dbh;
+    $dbh->close();
+    $dbh->open();
+}
+
+```
+By using getModule function you get access to all public methods and properties of module.
+The dbh property was defined public specially to be avaible to other modules.
+
+That may be also useful if you need to perform sequence of actions taken from other modules.
+
+For example:
+
+``` php
+
+function seeConfigFilesCreated()
+{
+    $filesystem = $this->getModule('Filesystem');
+    $filesystem->seeFileFound('codeception.yml');
+    $filesystem->openFile('codeception.yml');
+    $filesystem->seeInFile('paths:);
+}
+```
+
+### Hooks
+
+Each module can handle events from running test. Module can be executed before the test starts, or after test is finished. This can be useful to bootstrap/cleanup actions.
+Also you can define special behavior when the test failes. This may help you in debugging the issue.
+For example, PhpBrowser module saves current webpage to log dir if the test fails.
+
+All hooks are defined in \Codeception\Module
+
+Here are they listed. You are free to redefine them in you module.
+
+``` php
+<?php
+
+    // HOOK: used after configuration is loaded
+    public function _initialize() {}
+
+	// HOOK: on every Guy class initialization
+	public function _cleanup()
+	{
+	}
+
+	// HOOK: before every step
+	public function _beforeStep(\Codeception\Step $step) {
+	}
+
+	// HOOK: after every  step
+	public function _afterStep(\Codeception\Step $step) {
+	}
+
+	// HOOK: before scenario
+	public function _before(\Codeception\TestCase $test) {
+	}
+
+	// HOOK: after scenario
+	public function _after(\Codeception\TestCase $test) {
+	}
+
+	// HOOK: on fail
+	public function _failed(\Codeception\TestCase $test, $fail) {
+	}
+
+```
+
+Please, note, that methods with '_' prefix are not added to the Guy class. This allows them to be defined as public, but used for internal purposes.
+
+### Debug
+
+As we mentioned, the _failed hook can help in debugging the failed test. You have an opportunty to save the current test's state and show it to user.
+
+But you are not limited to this. Each module can output internal values, that may be useful during debug.
+For example, the PhpBrowser module prints response code and current url every time it moves to new page.
+Thus, modules are not a black boxes, they are trying to show you what is happening during test. This makes debugging your tests less painful.
+
+To print additional information use debug amd debugSection methods of module.
+Here is the sample how it works for PhpBrowser:
+
+``` php
+<?php
+    $this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
+    $browser->request($method, $uri, $params);
+    $this->debug('Response code: '.$this->session->getStatusCode());
+```
+
+The test running with PhpBrowser module in debug mode will print something like this:
+
+```
+I click "All pages"
+* Request (GET) http://localhost/pages {}
+* Response code: 200
+```
+
+## Conclusion
+
+Modules are the true power of Codeception. They are used to emulate multiple inheritance for Guy-classes (CodeGuy, TestGuy, WebGuy, etc).
+Codeception provides modules to emulate web requests, access data, interact with popular PHP libraries, etc.
+For your application you might need custom actions, that can be defined in helper classes.
+If you have written a module, that may be useful to others, share it.
+Fork Codeception repository, put module into src/Codeception/Module dir and push request. Much thanks If you do so.
