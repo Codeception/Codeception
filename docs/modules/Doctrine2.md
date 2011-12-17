@@ -14,6 +14,8 @@ It can be done in bootstrap file, by setting static $em property:
 
 ```
 
+## Config
+* cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
 
 ## Actions
 
@@ -22,6 +24,20 @@ It can be done in bootstrap file, by setting static $em property:
 
 
 Performs $em->flush();
+
+### persistEntity
+
+
+Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+
+Example:
+``` php
+<?php
+$I->persistEntity($user, array('name' => 'Miles'));
+```
+
+ * param $obj
+ * param array $values
 
 ### haveFakeRepository
 
@@ -60,3 +76,7 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
 
  * param $entity
  * param array $params
+
+### getModule
+
+__not documented__

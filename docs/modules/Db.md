@@ -11,14 +11,19 @@ Just put it in ``` tests/_data ``` dir (by default) and specify path to it in co
 Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
 
-**Config**
+## Config
 
 * dsn *required* - PDO DSN
 * user *required* - user to access database
 * password *required* - password
 * dump - path to database dump.
+* populate: true - should the dump be loaded before test suite is started.
+* repopulate: true - should the dump be reloaded after each test
 
 Also provides actions to perform checks in database.
+
+## Public Properties
+* dbh - contains PDO connection.
 
 
 ## Actions
@@ -71,3 +76,7 @@ Fails if such user was found.
 
  * param $table
  * param array $criteria
+
+### getModule
+
+__not documented__

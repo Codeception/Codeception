@@ -39,12 +39,12 @@ class ScenarioCest
 ```
 
 ## Features
-* Descriptive writing - write the way you are going to test in natural way.
-* Method execution limit - you are limited to execute only one method in scenario. The method, you actually test.
-* Simple stub definition - create stubbed class with 1 method, all properties and methods can be passed as callable functions.
-* Dynamic mocking - stubs can be simple turned to mocks, without any additional definitions.
+* Descriptive - simply write what do you test and how do you test.
+* Method execution limit - you are allowed only to execute tested method inside the scenario. Don't test several methods inside one unit.
+* Simple stub definition - create stubbed class with one call. All properties and methods can be passed as callable functions.
+* Dynamic mocking - stubs can be automatically turned to mocks.
 
-## Unit testing with scenarios
+## Unit Testing With Scenarios
 
 CodeGuy allows you to define testing scenarios in a natural way.
 Typical test should consist of 3 steps, in this direct order:
@@ -185,7 +185,50 @@ __not documented__
 
 ### executeTestedMethod
 
-__not documented__
+
+Executes the method which is tested.
+If method is not static, the class instance should be provided.
+Otherwise bypass the first parameter blank
+
+Include additional arguments as parameter.
+
+Examples:
+
+For non-static methods:
+
+``` php
+<?php
+$I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
+```
+
+The same for static method
+
+``` php
+<?php
+$I->executeTestedMethod(1, 'hello', array(5,4,5));
+```
+
+ * param $object null
+ * throws \InvalidArgumentException
+
+### changeProperties
+
+
+Updates selected properties for object passed.
+Can update even private and protected properties.
+
+ * param $obj
+ * param array $values
+
+### changeProperty
+
+
+Updates property of selected object
+Can update even private and protected properties.
+
+ * param $obj
+ * param $property
+ * param $value
 
 ### seeExceptionThrown
 
@@ -235,7 +278,10 @@ __not documented__
 
 ### seeResultEquals
 
-__not documented__
+
+Asserts that the last result from tested method is equal to value
+
+ * param $value
 
 ### seeResultContains
 
@@ -258,5 +304,13 @@ __not documented__
 __not documented__
 
 ### seePropertyEquals
+
+__not documented__
+
+### seePropertyIs
+
+__not documented__
+
+### getModule
 
 __not documented__
