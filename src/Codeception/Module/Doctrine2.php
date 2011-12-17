@@ -16,6 +16,8 @@ namespace Codeception\Module;
  *
  * ```
  *
+ * ## Config
+ * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  */
 
 class Doctrine2 extends \Codeception\Module
@@ -69,7 +71,18 @@ class Doctrine2 extends \Codeception\Module
     }
 
 
-
+    /**
+     * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->persistEntity($user, array('name' => 'Miles'));
+     * ```
+     *
+     * @param $obj
+     * @param array $values
+     */
     public function persistEntity($obj, $values = array()) {
 
         if ($values) {

@@ -4,7 +4,10 @@ Performs DB operations with Doctrine ORM 1.x
 
 Uses active Doctrine connection. If none can be found will fail.
 
-This module cleans all cached entities before each test.
+This module cleans all cached data after each test.
+
+## Config
+* cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
 
 
 ## Actions
@@ -43,3 +46,7 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * mail.c
 
  * param $model
  * param array $values
+
+### getModule
+
+__not documented__

@@ -280,3 +280,7 @@ Fetches user by it's username from sfGuardUser table.
 
  * param $name
  * throws \Exception
+
+### getModule
+
+__not documented__

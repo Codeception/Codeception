@@ -5,3 +5,7 @@ Integrate your favorite PHP Framework to run integration tests
 
 ## Actions
 
+
+### getModule
+
+__not documented__
