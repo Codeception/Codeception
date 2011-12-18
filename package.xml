@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0         http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd" version="2.0">
+  <name>Codeception</name>
+  <channel>DavertMik.github.com/pear</channel>
+  <summary>Full-stack PHP testing BDD framework.</summary>
+  <description>Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.</description>
+  <lead>
+    <name>Michael Bodnarchuk</name>
+    <user>DavertMik</user>
+    <email>davert@mail.ua</email>
+    <active>yes</active>
+  </lead>
+  <date>2011-12-18</date>
+  <time>17:56:56</time>
+  <version>
+    <release>1.0.1</release>
+    <api>1.0.0</api>
+  </version>
+  <stability>
+    <release>stable</release>
+    <api>stable</api>
+  </stability>
+  <license uri="http://www.opensource.org/licenses/mit-license.html">MIT</license>
+  <notes>Initial release.</notes>
+  <contents>
+    <dir name="/" baseinstalldir="Codeception">
+      <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
+      <file name="autoload.php" role="php" md5sum="17db13b4fa1e9002b0349def7cea708e"/>
+      <dir name="bin">
+        <file name="build_phar.php" role="php" md5sum="c4cc50ec59fcb8812ea04a53d9318926"/>
+        <file name="update_docs.php" role="php" md5sum="931f3ea65f864d4850a74b9c1f57f2b6"/>
+      </dir>
+      <file name="codecept" role="script" baseinstalldir="/" md5sum="590b8a3b9f674dccd3e5a43f2edd354f">
+        <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
+        <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
+        <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
+        <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
+      </file>
+      <file name="codeception.yml" role="php" md5sum="8a642a70710cd7df84a6409cdc012b98"/>
+      <dir name="config">
+        <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
+      </dir>
+      <dir name="docs">
+        <file name="01-Introduction.md" role="php" md5sum="9159e51d1bbe4a45c4b2502ae3ffdd1e"/>
+        <file name="03-Modules.md" role="php" md5sum="1d006b535ca6da33c74213c298148180"/>
+        <dir name="modules">
+          <file name="03-Modules.md" role="php"/>
+          <file name="Cli.md" role="php" md5sum="f1540e2324e021f218435e6de38775bd"/>
+          <file name="Db.md" role="php" md5sum="d6a32840ad23f4386537222215615174"/>
+          <file name="Doctrine1.md" role="php" md5sum="7456365f79b9f7909eeb5fe8f237abb9"/>
+          <file name="Doctrine2.md" role="php" md5sum="63205e06e0c24b21a1c1507e91470d79"/>
+          <file name="Filesystem.md" role="php" md5sum="d10043ee6f3974c95113a2c46ea3939d"/>
+          <file name="Framework.md" role="php" md5sum="14e8846b4e1470ba2aa6f913090bf600"/>
+          <file name="PhpBrowser.md" role="php" md5sum="1c398ce5ce5cc7c702bec08c803ea03e"/>
+          <file name="Symfony1.md" role="php" md5sum="9e133faf43e8e329032505bd8b9ba69f"/>
+          <file name="Unit.md" role="php" md5sum="3abfdd4653f2ad1280e1315c92182653"/>
+        </dir>
+      </dir>
+      <dir name="package">
+        <file name="codecept.phar" role="php" md5sum="a2805bbd6f3098e840acb138fed01f5d"/>
+        <file name="phar.php" role="php"/>
+        <file name="stub.php" role="php" md5sum="539eb56098f744a2d921fdeea03cd7e0"/>
+      </dir>
+      <file name="readme.md" role="php" md5sum="ca3386b7218ebad07b529741e1fe97cf"/>
+      <dir name="src">
+        <dir name="Codeception">
+          <file name="AbstractGuy.php" role="php" md5sum="515284dc48fb68598bf9529b9443b707"/>
+          <file name="Codecept.php" role="php" md5sum="4743bad684b02900790de10e8a236a4c"/>
+          <dir name="Command">
+            <file name="Base.php" role="php" md5sum="7b57c26fd2227a6309eddd1d6846251c"/>
+            <file name="Bootstrap.php" role="php" md5sum="552840172e26c9062d7eb43998c476c1"/>
+            <file name="Build.php" role="php" md5sum="8f648a386b44fcb958e87390218139e4"/>
+            <file name="GenerateCept.php" role="php" md5sum="4d2e5be7032a69bbc3df4a9926abfd90"/>
+            <file name="GenerateForClass.php" role="php" md5sum="687f454bc23bffcaba4fe5ffcc246d75"/>
+            <file name="GenerateScenarios.php" role="php" md5sum="9f2468413c3b8ccece3e2b8a865aefa7"/>
+            <file name="Install.php" role="php" md5sum="627981302806331dbfbbe252caf1e2d6"/>
+            <file name="Run.php" role="php" md5sum="4adad86adce211feaacd3ee3279a013d"/>
+          </dir>
+          <dir name="Exception">
+            <file name="Configuration.php" role="php" md5sum="b6c30c298eeedf9896d0a8e37fc0d31e"/>
+            <file name="Module.php" role="php" md5sum="38a741ca0f24f1246ba07fc2e1631fd2"/>
+            <file name="ModuleConfig.php" role="php" md5sum="142abdc78542da42a2933e26ffeb6f16"/>
+            <file name="TestRuntime.php" role="php" md5sum="5ebbc744cb5262efee3faf12a62b40ee"/>
+          </dir>
+          <file name="Module.php" role="php" md5sum="19824c7b7b97c4adedee91c517d51703"/>
+          <dir name="Module">
+            <file name="Cli.php" role="php" md5sum="70fed446e3effe01a1166ee8d08cb606"/>
+            <file name="Db.php" role="php" md5sum="e19ba03d8e8df18f9708af8f906ea95c"/>
+            <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
+            <file name="Doctrine2.php" role="php" md5sum="330ba3799d5bf5fc9df8ce3d3880152a"/>
+            <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
+            <file name="Framework.php" role="php" md5sum="6fd51976e4e605ae24e96ca9a838bda5"/>
+            <file name="PhpBrowser.php" role="php" md5sum="6d353020d0599df5194958f83be40cd0"/>
+            <file name="Symfony1.php" role="php" md5sum="58dac0ea346b87abe02d7a03e423cdef"/>
+            <file name="Unit.php" role="php" md5sum="602e20aeeb547c32c7f0b132ed44f0e8"/>
+          </dir>
+          <file name="Output.php" role="php" md5sum="ae8da01467a7785e8f9d6c3d872fd4b1"/>
+          <file name="ResultPrinter.php" role="php" md5sum="abdc4ae14e9ea25a1dc88aca2bedd924"/>
+          <dir name="ResultPrinter">
+            <file name="HTML.php" role="php" md5sum="cfc9a7ea4cad6b260457462b304c2727"/>
+            <file name="Report.php" role="php" md5sum="f8fa0e845010fca0ba7caeb96754d748"/>
+            <file name="UI.php" role="php" md5sum="d85c2c0020235a75e1d1e246913bf414"/>
+            <dir name="template">
+              <file name="scenario.html.dist" role="php" md5sum="070759e037c5d4bc520ce856738a899e"/>
+              <file name="scenario_header.html.dist" role="php" md5sum="5b6ba6a697d1ee2801448473af16672a"/>
+              <file name="scenarios.html.dist" role="php" md5sum="a8319eff09ab45f00f7eefc3d6905c84"/>
+              <file name="step.html.dist" role="php" md5sum="5c98f94cbb5af86a7d789b484d227c73"/>
+            </dir>
+          </dir>
+          <file name="Runner.php" role="php" md5sum="a745f78f696c89d037db7704fe82703b"/>
+          <file name="Scenario.php" role="php" md5sum="a644feca2a915c65635d1cca582f49a4"/>
+          <file name="Step.php" role="php" md5sum="819005028c949156ddf1d7eb1d6ee5d5"/>
+          <dir name="Step">
+            <file name="Action.php" role="php" md5sum="ce76bcc260b9a0435a1d880edb4bd977"/>
+            <file name="Assertion.php" role="php" md5sum="44d200412f1a923c528d9361bd6c70e0"/>
+            <file name="Comment.php" role="php" md5sum="dd35ed2ed948e016d886f31fb4cbf0db"/>
+            <file name="Condition.php" role="php" md5sum="5fae7e73f16ddae682fb3d72d6fdfe7a"/>
+          </dir>
+          <file name="SuiteManager.php" role="php" md5sum="7ccc745e4f46a058bbe3889c868a3bb0"/>
+          <file name="TestCase.php" role="php" md5sum="16be80b06c0489bf92d558ad321c2216"/>
+          <dir name="TestCase">
+            <file name="Cept.php" role="php" md5sum="f2c6d28af89906ce0c79e0859fd45b3f"/>
+            <file name="Cest.php" role="php" md5sum="d6834cb5d1535e4a0318da95d8c2bd52"/>
+          </dir>
+          <dir name="Util">
+            <file name="Fixtures.php" role="php" md5sum="3831f0c5dec7495cc065c8c26aeb0f75"/>
+            <file name="Mink.php" role="php" md5sum="60184b9d14e0e85601d02b0b1ca8da90"/>
+            <dir name="Stub">
+              <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
+              <file name="Stub.php" role="php" md5sum="e8e63cec6bf0629ba25d451838c52bab"/>
+              <dir name="builders">
+                <dir name="phpunit">
+                  <file name="AbstractStub.php" role="php" md5sum="8a669cc3bd05f4063b4391bd9316b536"/>
+                  <file name="EmptyStub.php" role="php" md5sum="7a7a1bfc408bc7d8d854f85fd3c9f709"/>
+                  <file name="Stub.php" role="php" md5sum="d459be5dc7e1f40ad8f59a47abfb4b99"/>
+                </dir>
+              </dir>
+            </dir>
+          </dir>
+        </dir>
+      </dir>
+      <dir name="tests">
+        <dir name="_data">
+          <file name="dump.sql" role="php" md5sum="3d349163aab8a16bfa72a739e0f983d1"/>
+        </dir>
+        <dir name="_log">
+          <file name="codeception-2011-11-28.log" role="php"/>
+          <file name="codeception-2011-11-30.log" role="php"/>
+          <file name="tests-2011-12-13.log" role="php" md5sum="6bcbb0ec68987dcfbb24ab4ff130c9db"/>
+        </dir>
+        <file name="acceptance.suite.yml" role="php" md5sum="0cfc1ffb13c5965302af17378847fce7"/>
+        <dir name="acceptance">
+          <file name="CliGuy.php" role="php" md5sum="5e55e4f8cbcae8d1e5cc9c5fb5b191b5"/>
+          <dir name="Cli">
+            <file name="BuildCept.php" role="php" md5sum="152f108b9902b7444ee6c526858a8937"/>
+            <file name="RunCept.php" role="php" md5sum="d42d418106d8d6365d6c07252b21b868"/>
+          </dir>
+          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
+        </dir>
+        <file name="functional.suite.yml" role="php" md5sum="a24168a89aef6a113c387e33a1efa206"/>
+        <dir name="functional">
+          <file name="TestGuy.php" role="php" md5sum="ac637023eaa816dc920eb8ba6f7fc678"/>
+          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
+        </dir>
+        <dir name="helpers">
+          <file name="CodeHelper.php" role="php" md5sum="d62cec808b7f2a2df9999af72cb42bf6"/>
+          <file name="EmulateModuleHelper.php" role="php" md5sum="7fbee3d4fb2a6f4c839f484320d645e4"/>
+          <file name="TestHelper.php" role="php" md5sum="4dbb120787f29956079180b0d466e17a"/>
+        </dir>
+        <file name="unit.suite.yml" role="php" md5sum="3bb565bd912f8e5c6517e31fdbf7d124"/>
+        <dir name="unit">
+          <file name="CodeGuy.php" role="php" md5sum="6fafb29904878ad996dcc22ec5c20610"/>
+          <dir name="Codeception">
+            <file name="ScenarioCest.php" role="php" md5sum="6812d91faa0fd85f30b9189f430f7290"/>
+            <file name="SuiteManagerTest.php" role="php" md5sum="4eaaba8e8c527eae2eac004d9177c56a"/>
+            <file name="TestCaseTest.php" role="php" md5sum="4cf23f52783f2d4d19af4268339e7d3c"/>
+          </dir>
+          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
+        </dir>
+      </dir>
+      <dir name="vendor">
+        <dir name="Monolog">
+          <dir name="Formatter">
+            <file name="FormatterInterface.php" role="php" md5sum="88ce50ca1d4aa52c23891af81ec1da9e"/>
+            <file name="JsonFormatter.php" role="php" md5sum="390919ec1fb92a38c83ca6c6f76a51fd"/>
+            <file name="LineFormatter.php" role="php" md5sum="254095eb60c5d7e6bd1754900ef6de30"/>
+            <file name="WildfireFormatter.php" role="php" md5sum="c24234a51556d03fc7aa018a062b6bc9"/>
+          </dir>
+          <dir name="Handler">
+            <file name="AbstractHandler.php" role="php" md5sum="6fcc18f5a26f8263e773696df0b1a350"/>
+            <file name="AbstractProcessingHandler.php" role="php" md5sum="1fa17d7dbecc56cf297e9955f77009c7"/>
+            <file name="BufferHandler.php" role="php" md5sum="43be2b0dee758a452ea181d2ecb69e6c"/>
+            <file name="FingersCrossedHandler.php" role="php" md5sum="d22dbe18aa3c03de62d8cab52cdcc2b0"/>
+            <file name="FirePHPHandler.php" role="php" md5sum="45ad96494935f5d4584ec059378d4b8d"/>
+            <file name="GroupHandler.php" role="php" md5sum="5b6315d5d8257129b70fa76036cd14d8"/>
+            <file name="HandlerInterface.php" role="php" md5sum="5a19549c07d16cd297d844c486613199"/>
+            <file name="MailHandler.php" role="php" md5sum="c4cb93dcaaf2486a381b9c435192affa"/>
+            <file name="NativeMailerHandler.php" role="php" md5sum="d33c140c19beeb5ea97b61e36f879c16"/>
+            <file name="NullHandler.php" role="php" md5sum="b5de4c11388bb7309fb608fa10b9e2e3"/>
+            <file name="RotatingFileHandler.php" role="php" md5sum="09b3d2483dbc73a3a281c8df36871c34"/>
+            <file name="StreamHandler.php" role="php" md5sum="302fe55fb675d44c94f1fd6845cdd78b"/>
+            <file name="SwiftMailerHandler.php" role="php" md5sum="82be58fc89c4b5d6836d40c6607bb748"/>
+            <file name="SyslogHandler.php" role="php" md5sum="251e36df400282119c37130cf7766393"/>
+            <file name="TestHandler.php" role="php" md5sum="532d863c0d717f302d47aa4dfc1dfad8"/>
+          </dir>
+          <file name="Logger.php" role="php" md5sum="6045333754d8cd7279f9ded487ed9915"/>
+          <dir name="Processor">
+            <file name="IntrospectionProcessor.php" role="php" md5sum="95b07391bd6eeac1f0abdadaf9ab54fe"/>
+            <file name="MemoryPeakUsageProcessor.php" role="php" md5sum="1add77a21753b1cf1a43f7841b512784"/>
+            <file name="MemoryProcessor.php" role="php" md5sum="0ee81459c716d60d3ef8a689b680e609"/>
+            <file name="MemoryUsageProcessor.php" role="php" md5sum="4ad60eb87ce1f316928cc359f37725d3"/>
+            <file name="WebProcessor.php" role="php" md5sum="0373afb9f36d5d06781c80574a3d6024"/>
+          </dir>
+        </dir>
+        <dir name="Symfony">
+          <dir name="Component">
+            <dir name="Console">
+              <file name="Application.php" role="php" md5sum="571b11c565cc0a3d8c431a356a568b26"/>
+              <dir name="Command">
+                <file name="Command.php" role="php" md5sum="c546a2d79152f851237fc957c04fab11"/>
+                <file name="HelpCommand.php" role="php" md5sum="4f527e07f1340dee6d83a9a1b4a98788"/>
+                <file name="ListCommand.php" role="php" md5sum="c8ffa53a1b83545777cd6528ad0982e5"/>
+              </dir>
+              <dir name="Formatter">
+                <file name="OutputFormatter.php" role="php" md5sum="3c79d86e959872d03096339da602dfd5"/>
+                <file name="OutputFormatterInterface.php" role="php" md5sum="dd6dcfb5c1e8e43904d6bb8bde05766c"/>
+                <file name="OutputFormatterStyle.php" role="php" md5sum="e01f27ffaf197643faf80b5751b911f0"/>
+                <file name="OutputFormatterStyleInterface.php" role="php" md5sum="6afbffff5d0ce33635f3989c7b9b8b23"/>
+              </dir>
+              <dir name="Helper">
+                <file name="DialogHelper.php" role="php" md5sum="084533aa3e8c3904e86a4be159a6a95e"/>
+                <file name="FormatterHelper.php" role="php" md5sum="efb994382ce9e20e29cea66492ee4e40"/>
+                <file name="Helper.php" role="php" md5sum="98ba8553238ecbaf2877d3baa17edf41"/>
+                <file name="HelperInterface.php" role="php" md5sum="f272307e41770084f906b378b5af7bfe"/>
+                <file name="HelperSet.php" role="php" md5sum="8a17c88be547731de880192ddc7328f8"/>
+              </dir>
+              <dir name="Input">
+                <file name="ArgvInput.php" role="php" md5sum="bd1de8793153451cd36bab964ad2749e"/>
+                <file name="ArrayInput.php" role="php" md5sum="3ef387565591ff6749c46591bbd81f54"/>
+                <file name="Input.php" role="php" md5sum="6247a5219605f3702e1de88b421ac750"/>
+                <file name="InputArgument.php" role="php" md5sum="39fecbe39e0cc42a3170ce4063d9450b"/>
+                <file name="InputDefinition.php" role="php" md5sum="a44be64fac3c63136224a440977b4928"/>
+                <file name="InputInterface.php" role="php" md5sum="501d4f45579df9e74dc5b7e491751e60"/>
+                <file name="InputOption.php" role="php" md5sum="2b9520a26ee5ebfd3317356cf0797714"/>
+                <file name="StringInput.php" role="php" md5sum="4b4a6d45b0315bd005e36b2456a3e34e"/>
+              </dir>
+              <file name="LICENSE" role="php" md5sum="822e1c98323380d6f85065c1669bcdb7"/>
+              <dir name="Output">
+                <file name="ConsoleOutput.php" role="php" md5sum="73230e5a2257c424c2bdc488b698f1a4"/>
+                <file name="NullOutput.php" role="php" md5sum="9edaf0c0b498bc093bee43241bb5ea39"/>
+                <file name="Output.php" role="php" md5sum="03e9d5d15970063a9315f37499a87195"/>
+                <file name="OutputInterface.php" role="php" md5sum="1021b74106ee89f380bf30f7acf4b44c"/>
+                <file name="StreamOutput.php" role="php" md5sum="68746ee13437333c6047d1b3b0595f27"/>
+              </dir>
+              <file name="Shell.php" role="php" md5sum="c3a2b1346992e1eae64aeae036eecb12"/>
+              <dir name="Tester">
+                <file name="ApplicationTester.php" role="php" md5sum="8687a11d49425c4e85463ab8ba307c17"/>
+                <file name="CommandTester.php" role="php" md5sum="83887fdc4d102f88c662d9edb46caf41"/>
+              </dir>
+              <file name="composer.json" role="php" md5sum="81b425fb6f28eb4ef21b4743a45cc3a0"/>
+            </dir>
+            <dir name="Finder">
+              <dir name="Comparator">
+                <file name="Comparator.php" role="php" md5sum="90d3a0864b6ed0912e0e4a9c160cc674"/>
+                <file name="DateComparator.php" role="php" md5sum="8e6af563bde9bfa39d288afdf0996c42"/>
+                <file name="NumberComparator.php" role="php" md5sum="e1ec4d497c77f67b4a331742586ffe89"/>
+              </dir>
+              <file name="Finder.php" role="php" md5sum="3c6947d131dea028f1d26afef6eb0a8d"/>
+              <file name="Glob.php" role="php" md5sum="7189d3703c479d795b081360374619d5"/>
+              <dir name="Iterator">
+                <file name="CustomFilterIterator.php" role="php" md5sum="0822804a61a176e1884dc1fa2b09bd23"/>
+                <file name="DateRangeFilterIterator.php" role="php" md5sum="3b966dc889bcaa50ff4d938fb7ae9a0e"/>
+                <file name="DepthRangeFilterIterator.php" role="php" md5sum="8199d3d0984091f36554b66f16a06a74"/>
+                <file name="ExcludeDirectoryFilterIterator.php" role="php" md5sum="8ca68d40a99c5293a60f7736f814d978"/>
+                <file name="FileTypeFilterIterator.php" role="php" md5sum="681797e3f27c2ed319b8b6ee3b27c8c2"/>
+                <file name="FilenameFilterIterator.php" role="php" md5sum="b4e980d96ade383af662297051b5e39b"/>
+                <file name="RecursiveDirectoryIterator.php" role="php" md5sum="360e1f5f3761c568c1d39b0d3d152001"/>
+                <file name="SizeRangeFilterIterator.php" role="php" md5sum="e16cf5730850b7797ab6f0a667c17ba4"/>
+                <file name="SortableIterator.php" role="php" md5sum="2ccf85f8c39c2bb9d6aa3ef8d9e37a32"/>
+              </dir>
+              <file name="LICENSE" role="php" md5sum="822e1c98323380d6f85065c1669bcdb7"/>
+              <file name="SplFileInfo.php" role="php" md5sum="519c56c7eb73b6274a23fb8b73bc896a"/>
+              <file name="composer.json" role="php" md5sum="4fe9e33fc277b8dc156a72bddcfa9397"/>
+            </dir>
+            <dir name="Yaml">
+              <file name="Dumper.php" role="php" md5sum="5ea4dce98aa9e85fe94cee4a7098142d"/>
+              <file name="Escaper.php" role="php" md5sum="be39afffb6dab2149757ea17762c10d7"/>
+              <dir name="Exception">
+                <file name="DumpException.php" role="php" md5sum="4bf9199f9b3062a4b8f6a238c3e9a7bd"/>
+                <file name="ExceptionInterface.php" role="php" md5sum="984f9a20686fb74c66ea6b9b8becd713"/>
+                <file name="ParseException.php" role="php" md5sum="12e6e871c930e122e7ab03f0a3b66dd0"/>
+              </dir>
+              <file name="Inline.php" role="php" md5sum="d611aa3176d70a16412039a1096f6f75"/>
+              <file name="LICENSE" role="php" md5sum="822e1c98323380d6f85065c1669bcdb7"/>
+              <file name="Parser.php" role="php" md5sum="385ee2f2d0e12e0d00bf3a9697d163c9"/>
+              <file name="Unescaper.php" role="php" md5sum="5ce6b29e12a32061bf811d791b2e37c1"/>
+              <file name="Yaml.php" role="php" md5sum="cda02b034cc197ef653ec2522bcbb187"/>
+              <file name="composer.json" role="php" md5sum="b5885cb66e98abe12b242cd3bb8f4a8f"/>
+            </dir>
+          </dir>
+        </dir>
+        <file name="UniversalClassLoader.php" role="php" md5sum="fff1a1a69eb1f43731604f16f2ee064c"/>
+      </dir>
+    </dir>
+  </contents>
+  <dependencies>
+    <required>
+      <php>
+        <min>5.0.0</min>
+      </php>
+      <pearinstaller>
+        <min>1.4.0</min>
+      </pearinstaller>
+    </required>
+  </dependencies>
+  <phprelease>
+    <filelist>
+      <install as="codecept" name="codecept"/>
+    </filelist>
+  </phprelease>
+</package>
