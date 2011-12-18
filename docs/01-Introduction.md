@@ -117,13 +117,11 @@ $I->seeInDatabase('users', array('id' => 1, 'username' => 'miles'));
 * can cover rarely used features.
 * can test stability of appication core.
 * you can be named a good developer only if you write them :)
-* you can show it only to your project manager only if he is quite interested.
 
 #### Cons
 
-* totally useless unless you have acceptance or functional tests.
+* doesn't test connections between units.
 * most unstable: very sensitive to code changes.
-* requires good project architecture.
 
 ## Conclusion
 

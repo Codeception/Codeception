@@ -9,10 +9,13 @@ namespace Codeception\Module;
  *
  * If test fails stores last shown page in 'output' dir.
  *
- * __Configuration__
+ * ## Configuration
  *
  * * app *required* - application you want to test. In most cases it will be 'frontend'
  * * output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
+ *
+ * ## Public Properties
+ * * browser - current instance of sfBrowser class.
  *
  */
 

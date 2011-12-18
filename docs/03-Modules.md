@@ -192,26 +192,26 @@ Here are they listed. You are free to redefine them in you module.
 <?php
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {}
+    public function _initialize() {
+    }
 
 	// HOOK: on every Guy class initialization
-	public function _cleanup()
-	{
+	public function _cleanup() {
 	}
 
-	// HOOK: before every step
+	// HOOK: before each step
 	public function _beforeStep(\Codeception\Step $step) {
 	}
 
-	// HOOK: after every  step
+	// HOOK: after each  step
 	public function _afterStep(\Codeception\Step $step) {
 	}
 
-	// HOOK: before scenario
+	// HOOK: before test
 	public function _before(\Codeception\TestCase $test) {
 	}
 
-	// HOOK: after scenario
+	// HOOK: after test
 	public function _after(\Codeception\TestCase $test) {
 	}
 

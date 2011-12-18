@@ -28,11 +28,11 @@ abstract class Module {
 	}
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {}
+    public function _initialize() {
+    }
 
 	// HOOK: on every Guy class initialization
-	public function _cleanup()
-	{
+	public function _cleanup() {
 	}
 
 	// HOOK: before every step
