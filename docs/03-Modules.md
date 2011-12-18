@@ -6,6 +6,7 @@ Modules allows you choose actions and assertions that can be perform in tests.
 All actions and assertions that can be performed by Guy object in class are defined in modules. It might look that Codeception limits you in testing, still it's not true. You can extend testing suite with your own actions and assertions, writing them into custom module.
 
 Let's look at this test.
+
 ``` php
 <?php
 
@@ -15,6 +16,7 @@ $I->see('Hello');
 $I->seeInDatabase('users', array('id' => 1));
 $I->seeFileFound('running.lock');
 ```
+
 It can operate with different entities: the web page can be loaded with Symfony1 module, the database assertion uses Db module, and file state can be checked with Filesystem module. 
 
 Modules are attached to Guy-classes in suite config.
@@ -139,8 +141,8 @@ For dontSeeClassExist, the 'assertFalse' will be called.
 ### Resolving Collisions
 
 What happens if you have 2 modules which the same named actions within?
-Nothing exceptional happens. The action from the first module will be used in tests.
-Order of loaded modules defined in suite config.
+Nothing exceptional. The action from the first module will be loaded, action from second will be ignored.
+Order of modules can be defined in suite config.
 
 ### Connecting Modules
 
