@@ -23,7 +23,7 @@ Modules are attached to Guy-classes in suite config.
 For current example in 'tests/functional.suite.yml' we should see.
 
 ```
-class_name: CodeGuy
+class_name: TestGuy
 modules:
     enabled: [Symfony1, Db, Filesystem]
 ```
