@@ -11,6 +11,8 @@
  * @method CodeGuy executeTestedMethodOn($object)
  * @method CodeGuy executeTestedMethodWith($params)
  * @method CodeGuy executeTestedMethod()
+ * @method CodeGuy changeProperties($obj)
+ * @method CodeGuy changeProperty($obj, $property, $value)
  * @method CodeGuy seeExceptionThrown($classname)
  * @method CodeGuy seeMethodInvoked($mock, $method)
  * @method CodeGuy seeMethodInvokedOnce($mock, $method)
@@ -23,17 +25,18 @@
  * @method CodeGuy seeEmptyResult()
  * @method CodeGuy seeResultIs($type)
  * @method CodeGuy seePropertyEquals($object, $property, $value)
+ * @method CodeGuy seePropertyIs($object, $property, $type)
  * 
  * Methods from \Codeception\Module\CodeHelper
  * 
  * Methods from \Codeception\AbstractGuy
  * @method CodeGuy wantToTest($text)
  * @method CodeGuy wantTo($text)
- * @method CodeGuy amTestingClass($text)
  * @method CodeGuy amTesting($method)
  * @method CodeGuy amTestingMethod($method)
  * @method CodeGuy testMethod($signature)
  * @method CodeGuy expectTo($prediction)
+ * @method CodeGuy expect($prediction)
  * @method CodeGuy amGoingTo($argumentation)
 **/
 

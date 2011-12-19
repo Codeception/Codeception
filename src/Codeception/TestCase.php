@@ -26,7 +26,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
         $this->debug = isset($data['debug']) ? $data['debug'] : false;
         $this->output = new Output(false); // no output by default
-        $this->logger = new \Monolog\Logger($this->specName);
     }
 
 
@@ -62,10 +61,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     
     public function setUp() {
         if (file_exists($this->bootstrap)) require $this->bootstrap;
+        $this->loadScenario();
+
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_before($this);
         }
-        $this->loadScenario();
+
     }
 
     abstract public function loadScenario();
@@ -75,7 +76,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
      */
     public function testCodecept()
     {
-        $this->logger->info("\n\n".strtoupper('I '.$this->scenario->getFeature()));
         $this->output->writeln("Trying to [[{$this->scenario->getFeature()}]] (" . basename($this->testfile) . ") ");
         if ($this->debug && count($this->scenario->getSteps())) $this->output->writeln("Scenario:\n");
 
@@ -85,8 +85,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             foreach (\Codeception\SuiteManager::$modules as $module) {
                 $module->_failed($this, $fail);
             }
-            $this->logger->alert("*** last command failed ***");
-            $this->logger->alert($fail->getMessage());
             throw $fail;
         }
     }
@@ -101,7 +99,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     public function runStep(\Codeception\Step $step)
     {
-        $this->logger->info($step);
         if ($this->debug) $this->output->put("\n* " . $step->__toString());
         if ($step->getName() == 'Comment') return;
 
@@ -109,7 +106,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $action = $step->getAction();
         $arguments = array_merge($step->getArguments());
         if (!isset(\Codeception\SuiteManager::$methods[$action])) {
-            $this->logger->crit("Action $action not defined");
             $this->stopped = true;
             $this->fail("Action $action not defined");
             return;
@@ -129,12 +125,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
                 throw new \RuntimeException("Action can't be called");
             }
         } catch (\PHPUnit_Framework_ExpectationFailedException $fail) {
-            $this->logger->alert($fail->getMessage());
             if ($activeModule->_getDebugOutput() && $this->debug) $this->output->debug($activeModule->_getDebugOutput());
             throw $fail;
             // TODO: put normal handling of errors
         } catch (\Exception $e) {
-            $this->logger->crit($e->getMessage());
             throw $e;
 
         }
@@ -163,8 +157,5 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $this->output = $output;
     }
 
-    public function setLogHandler(\Monolog\Handler\HandlerInterface $handler) {
-        $this->logger->pushHandler($handler);
-    }
 
 }

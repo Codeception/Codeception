@@ -18,11 +18,6 @@ class Codecept
     protected $result;
 
     /**
-     * @var \Monolog\Handler\StreamHandler
-     */
-    protected $logHandler;
-
-    /**
      * @var array
      */
     protected $options = array(
@@ -30,8 +25,7 @@ class Codecept
         'debug' => false,
         'html' => false,
         'report' => false,
-        'colors' => true,
-        'log' => true
+        'colors' => true
     );
 
     public function __construct($config = array(), $options = array()) {
@@ -41,20 +35,8 @@ class Codecept
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->output = new Output((bool)$this->options['silent'], (bool)$this->options['colors']);
-
-        $this->initLogger();
     }
 
-    protected function initLogger()
-    {
-        if (!file_exists($path = getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output'].DIRECTORY_SEPARATOR))
-            throw new \Exception("Path $path does not exists. Can't write logs");
-
-        if (!isset($this->config['settings']['log_max_files'])) $this->config['settings']['log_max_files'] = 3;
-
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($path.'tests.log', $this->config['settings']['log_max_files']);
-    }
-    
     private function mergeOptions($options) {
         foreach ($options as $option => $value) {
             if (isset($this->config['settings'][$option])) {
@@ -150,7 +132,6 @@ class Codecept
 
         foreach ($tests as $test) {
             if (method_exists($test, 'setOutput')) $test->setOutput($this->output);
-            if (method_exists($test, 'setLogHandler')) $test->setLogHandler($this->logHandler);
         }
 
         $this->runner->doEnhancedRun($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => true), $this->options));
