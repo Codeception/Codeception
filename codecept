@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 if (!class_exists('UniversalClassLoader')) {

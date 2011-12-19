@@ -15,11 +15,11 @@
  * Methods from \Codeception\AbstractGuy
  * @method TestGuy wantToTest($text)
  * @method TestGuy wantTo($text)
- * @method TestGuy amTestingClass($text)
  * @method TestGuy amTesting($method)
  * @method TestGuy amTestingMethod($method)
  * @method TestGuy testMethod($signature)
  * @method TestGuy expectTo($prediction)
+ * @method TestGuy expect($prediction)
  * @method TestGuy amGoingTo($argumentation)
 **/
 
