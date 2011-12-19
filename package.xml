@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0         http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd" version="2.0">
   <name>Codeception</name>
-  <channel>DavertMik.github.com/pear</channel>
+  <channel>davertmik.github.com/pear</channel>
   <summary>Full-stack PHP testing BDD framework.</summary>
   <description>Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.</description>
   <lead>
@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2011-12-18</date>
-  <time>17:56:56</time>
+  <date>2011-12-19</date>
+  <time>03:00:09</time>
   <version>
     <release>1.0.1</release>
     <api>1.0.0</api>
@@ -28,7 +28,6 @@
       <file name="autoload.php" role="php" md5sum="17db13b4fa1e9002b0349def7cea708e"/>
       <dir name="bin">
         <file name="build_phar.php" role="php" md5sum="c4cc50ec59fcb8812ea04a53d9318926"/>
-        <file name="update_docs.php" role="php" md5sum="931f3ea65f864d4850a74b9c1f57f2b6"/>
       </dir>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="590b8a3b9f674dccd3e5a43f2edd354f">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
@@ -40,27 +39,7 @@
       <dir name="config">
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
-      <dir name="docs">
-        <file name="01-Introduction.md" role="php" md5sum="9159e51d1bbe4a45c4b2502ae3ffdd1e"/>
-        <file name="03-Modules.md" role="php" md5sum="1d006b535ca6da33c74213c298148180"/>
-        <dir name="modules">
-          <file name="03-Modules.md" role="php"/>
-          <file name="Cli.md" role="php" md5sum="f1540e2324e021f218435e6de38775bd"/>
-          <file name="Db.md" role="php" md5sum="d6a32840ad23f4386537222215615174"/>
-          <file name="Doctrine1.md" role="php" md5sum="7456365f79b9f7909eeb5fe8f237abb9"/>
-          <file name="Doctrine2.md" role="php" md5sum="63205e06e0c24b21a1c1507e91470d79"/>
-          <file name="Filesystem.md" role="php" md5sum="d10043ee6f3974c95113a2c46ea3939d"/>
-          <file name="Framework.md" role="php" md5sum="14e8846b4e1470ba2aa6f913090bf600"/>
-          <file name="PhpBrowser.md" role="php" md5sum="1c398ce5ce5cc7c702bec08c803ea03e"/>
-          <file name="Symfony1.md" role="php" md5sum="9e133faf43e8e329032505bd8b9ba69f"/>
-          <file name="Unit.md" role="php" md5sum="3abfdd4653f2ad1280e1315c92182653"/>
-        </dir>
-      </dir>
-      <dir name="package">
-        <file name="codecept.phar" role="php" md5sum="a2805bbd6f3098e840acb138fed01f5d"/>
-        <file name="phar.php" role="php"/>
-        <file name="stub.php" role="php" md5sum="539eb56098f744a2d921fdeea03cd7e0"/>
-      </dir>
+      <file name="pearfarm.spec" role="php" md5sum="ad3b252a9f1ea566ef55acb28f384ad0"/>
       <file name="readme.md" role="php" md5sum="ca3386b7218ebad07b529741e1fe97cf"/>
       <dir name="src">
         <dir name="Codeception">
@@ -137,45 +116,6 @@
               </dir>
             </dir>
           </dir>
-        </dir>
-      </dir>
-      <dir name="tests">
-        <dir name="_data">
-          <file name="dump.sql" role="php" md5sum="3d349163aab8a16bfa72a739e0f983d1"/>
-        </dir>
-        <dir name="_log">
-          <file name="codeception-2011-11-28.log" role="php"/>
-          <file name="codeception-2011-11-30.log" role="php"/>
-          <file name="tests-2011-12-13.log" role="php" md5sum="6bcbb0ec68987dcfbb24ab4ff130c9db"/>
-        </dir>
-        <file name="acceptance.suite.yml" role="php" md5sum="0cfc1ffb13c5965302af17378847fce7"/>
-        <dir name="acceptance">
-          <file name="CliGuy.php" role="php" md5sum="5e55e4f8cbcae8d1e5cc9c5fb5b191b5"/>
-          <dir name="Cli">
-            <file name="BuildCept.php" role="php" md5sum="152f108b9902b7444ee6c526858a8937"/>
-            <file name="RunCept.php" role="php" md5sum="d42d418106d8d6365d6c07252b21b868"/>
-          </dir>
-          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
-        </dir>
-        <file name="functional.suite.yml" role="php" md5sum="a24168a89aef6a113c387e33a1efa206"/>
-        <dir name="functional">
-          <file name="TestGuy.php" role="php" md5sum="ac637023eaa816dc920eb8ba6f7fc678"/>
-          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
-        </dir>
-        <dir name="helpers">
-          <file name="CodeHelper.php" role="php" md5sum="d62cec808b7f2a2df9999af72cb42bf6"/>
-          <file name="EmulateModuleHelper.php" role="php" md5sum="7fbee3d4fb2a6f4c839f484320d645e4"/>
-          <file name="TestHelper.php" role="php" md5sum="4dbb120787f29956079180b0d466e17a"/>
-        </dir>
-        <file name="unit.suite.yml" role="php" md5sum="3bb565bd912f8e5c6517e31fdbf7d124"/>
-        <dir name="unit">
-          <file name="CodeGuy.php" role="php" md5sum="6fafb29904878ad996dcc22ec5c20610"/>
-          <dir name="Codeception">
-            <file name="ScenarioCest.php" role="php" md5sum="6812d91faa0fd85f30b9189f430f7290"/>
-            <file name="SuiteManagerTest.php" role="php" md5sum="4eaaba8e8c527eae2eac004d9177c56a"/>
-            <file name="TestCaseTest.php" role="php" md5sum="4cf23f52783f2d4d19af4268339e7d3c"/>
-          </dir>
-          <file name="_bootstrap.php" role="php" md5sum="c729033cbe1ab534ef208bc92f45e675"/>
         </dir>
       </dir>
       <dir name="vendor">
