@@ -36,7 +36,7 @@ public function testValidateEmail()
 Sure, it's simplier. Still Codeception is good for writing complex test scenarios.
 You don't throw away frameworks, even creating the 'HelloWorld' page with Symfony, Zend or Yii is much harder then writing 'echo "Hello world"'.
 
-### Testing the Controller
+## Testing the Controller
 
 For the same reason we won't use testing of abstract classes like Apple and Tree in examples. As the 90% of overall PHP usage is web-development, we will test common classes for MVC pattern.
 
@@ -63,6 +63,8 @@ The only thing we test is behavior of `show` action is performed.
 
 For unit tests Codeception provides a different test file format. It's called Cest (Test + Cept = Cest).
 
+### Codeception Test
+
 Here is how test of this method looks in 'UserControllerCest.php' file:
 
 ``` php
@@ -84,7 +86,7 @@ class UserControllerCest {
             ->executeTestedMethodOn($controller, 0)
             ->seeResultNotEquals(true)
             ->seeMethodInvoked($controller, 'render404','User not found')
-            ->seeMethodNotInvoked($controller, 'render);
+            ->seeMethodNotInvoked($controller, 'render');
     }
 }
 
