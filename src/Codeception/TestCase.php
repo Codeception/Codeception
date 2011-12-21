@@ -2,6 +2,8 @@
 
 namespace Codeception;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
 {
 
@@ -13,30 +15,35 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     protected $bootstrap = null;
     protected $stopped = false;
     protected $trace = array();
-    protected $logger = null;
+
+    protected $dispatcher;
 
 
-    public function __construct($name, array $data = array(), $dataName = '')
+    public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
+        $this->dispatcher = $dispatcher;
+
         if (!isset($data['file'])) throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
-        $this->specName = $name;
+
+        $this->name = $data['name'];
         $this->scenario = new \Codeception\Scenario($this);
         $this->testfile = $data['file'];
         $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
-        $this->debug = isset($data['debug']) ? $data['debug'] : false;
-        $this->output = new Output(false); // no output by default
-        $this->logger = new \Monolog\Logger($this->specName);
+    }
+
+    public function setDispatcher(EventDispatcher $dispatcher) {
+        $this->dispatcher = $dispatcher;
     }
 
 
     public function getFileName()
     {
-        return $this->getSpecName() . 'Spec.php';
+        return $this->name;
     }
 
     public function getSpecName() {
-        return $this->specName;
+        return $this->name;
     }
 
     /**
@@ -62,9 +69,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     
     public function setUp() {
         if (file_exists($this->bootstrap)) require $this->bootstrap;
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_before($this);
-        }
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         $this->loadScenario();
     }
 
@@ -75,7 +80,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
      */
     public function testCodecept()
     {
-        $this->logger->info("\n\n".strtoupper('I '.$this->scenario->getFeature()));
         $this->output->writeln("Trying to [[{$this->scenario->getFeature()}]] (" . basename($this->testfile) . ") ");
         if ($this->debug && count($this->scenario->getSteps())) $this->output->writeln("Scenario:\n");
 
@@ -92,9 +96,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     }
 
     public function tearDown() {
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_after($this);
-        }
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
 
@@ -115,9 +117,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             return;
         }
 
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_beforeStep($step);
-        }
+        $this->dispatcher->dispatch('step.before', new \Codeception\Event\Step($this, $step));
 
         $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$methods[$action]];
 
@@ -132,16 +132,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             $this->logger->alert($fail->getMessage());
             if ($activeModule->_getDebugOutput() && $this->debug) $this->output->debug($activeModule->_getDebugOutput());
             throw $fail;
-            // TODO: put normal handling of errors
-        } catch (\Exception $e) {
-            $this->logger->crit($e->getMessage());
-            throw $e;
-
         }
 
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_afterStep($step);
-        }
+        $this->dispatcher->dispatch('step.before', new \Codeception\Event\Step($this, $step));
 
         $output = $activeModule->_getDebugOutput();
         if ($output) {
@@ -159,12 +152,5 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->trace;
     }
 
-    public function setOutput(Output $output) {
-        $this->output = $output;
-    }
-
-    public function setLogHandler(\Monolog\Handler\HandlerInterface $handler) {
-        $this->logger->pushHandler($handler);
-    }
 
 }

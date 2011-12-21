@@ -35,10 +35,6 @@ class Run extends Base
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->initCodeception();
-
-        ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
-
         $options = $input->getOptions();
         if ($input->getArgument('test')) $options['debug'] = true;
 
@@ -46,33 +42,22 @@ class Run extends Base
         $test = $input->getArgument('test');
 
         $codecept = new \Codeception\Codecept($this->config, $options);
-        $options = $codecept->getOptions();
 
-        if ($suite) {
-            $this->suites = array($suite);
-        } else {
-            $this->suites = $codecept->getSuites();
-        }
+        $suites = $suite ? array($suite) : \Codeception\Configuration::suites();
 
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
 
         if ($suite and $test) {
-            $output->writeln("Running <comment>{$test}</comment>:");
             $codecept->runSuite($suite, $test);
         }
 
         if (!$test) {
-            foreach ($this->suites as $suite) {
-                if (!$options['silent']) {
-                    $output->write("\n\n# <comment>$suite tests</comment> started");
-                }
+            foreach ($suites as $suite) {
                 $codecept->runSuite($suite);
             }
         }
 
         $codecept->getRunner()->getPrinter()->printResult($codecept->getResult());
-
-
         if ($codecept->getResult()->failures() > 0) exit(1);
 
     }

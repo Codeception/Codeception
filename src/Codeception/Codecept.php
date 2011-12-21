@@ -2,11 +2,12 @@
 namespace Codeception;
 
 use \Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Finder\Finder;
+use \Symfony\Component\Finder\Finder;
+use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.01a";
+    const VERSION = "0.9.5";
 
     /**
      * @var \Codeception\Runner
@@ -23,38 +24,33 @@ class Codecept
     protected $logHandler;
 
     /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     */
+    protected $dispatcher;
+
+    /**
      * @var array
      */
     protected $options = array(
         'silent' => false,
         'debug' => false,
+        'steps' => false,
         'html' => false,
         'report' => false,
         'colors' => true,
         'log' => true
     );
 
-    public function __construct($config = array(), $options = array()) {
-        $this->runner = new \Codeception\Runner();
+    public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
-        $this->config = $config;
+        $this->dispatcher = new EventDispatcher();
+        $this->config = \Codeception\Configuration::config();
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
-        $this->output = new Output((bool)$this->options['silent'], (bool)$this->options['colors']);
-
-        $this->initLogger();
+        $this->addSubscribers();
     }
 
-    protected function initLogger()
-    {
-        if (!file_exists($path = getcwd().DIRECTORY_SEPARATOR.$this->config['paths']['output'].DIRECTORY_SEPARATOR))
-            throw new \Exception("Path $path does not exists. Can't write logs");
 
-        if (!isset($this->config['settings']['log_max_files'])) $this->config['settings']['log_max_files'] = 3;
-
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($path.'tests.log', $this->config['settings']['log_max_files']);
-    }
-    
     private function mergeOptions($options) {
         foreach ($options as $option => $value) {
             if (isset($this->config['settings'][$option])) {
@@ -70,104 +66,26 @@ class Codecept
         return $options;
     }
 
-    protected function includeSuiteSettings($suite)
-    {
-        $globalConf = $this->config['settings'];
-        $moduleConf = array('modules' => isset($this->config['modules']) ? $this->config['modules'] : array());
-
-
-        $suiteConf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.yml") : array();
-        $suiteDistconf = file_exists(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "$suite.suite.dist.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$this->path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") : array();
-
-        $settings = array_merge_recursive($globalConf, $moduleConf, $suiteDistconf, $suiteConf);
-        return $settings;
-    }
-    
-    public function getSuites() {
-        return $this->config['suites'];
-    }
-
-    public function getSuiteSettings($suite) {
-        if (!in_array($suite, $this->config['suites'])) throw new \Exception("Suite $suite was not loaded");
-        return $this->includeSuiteSettings($suite);
-    }
-
-    public static function loadConfiguration()
-    {
-        $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-        $config = array_merge($distConfig, $config);
-
-        if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths not defined');
-
-        if (isset($config['paths']['helpers'])) {
-            // Helpers
-            $helpers = Finder::create()->files()->name('*Helper.php')->in($config['paths']['helpers']);
-            foreach ($helpers as $helper) include_once($helper);
-        }
-
-        if (isset($config['paths']['modules'])) {
-            // Helpers
-            $helpers = Finder::create()->files()->name('*.php')->in($config['paths']['modules']);
-            foreach ($helpers as $helper) include_once($helper);
-        }
-
-        if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($config['paths']['tests']);
-            $config['suites'] = array();
-            foreach ($suites as $suite) {
-                preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
-                $config['suites'][] = $matches[1];
-            }
-        }
-        return $config;
+    public function addSubscribers() {
+        if (!$this->options['silent']) $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Output($colors, $steps, $debug));
+        $this->dispatcher->addSubscriber(\Codeception\Subscriber\Logger);
     }
 
     public function runSuite($suite, $test = null) {
-        $settings = $this->includeSuiteSettings($suite);
 
-        $suitePath = getcwd().DIRECTORY_SEPARATOR.$this->path.DIRECTORY_SEPARATOR.$suite.DIRECTORY_SEPARATOR;
+        $settings = \Codeception\Configuration::suiteSettings($suite, $this->config);
+        $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $settings);
 
-        $class = $settings['suite_class'];
-        if (!class_exists($class)) throw new \RuntimeException("Suite class for $suite not found");
+        $test ? $suiteManager->loadTest($test) : $suiteManager->loadTests();
 
-        if (file_exists($guy = $suitePath.$settings['class_name'].'.php')) {
-            require_once $guy;
-        }
-        if (!class_exists($settings['class_name'])) throw new \RuntimeException("No guys were found in $guy. Tried to find {$settings['class_name']} but he was not there.");
+        $suiteManager->run($this->result, $this->options);
 
-        \Codeception\SuiteManager::init($settings);
-
-        $testManager = new \Codeception\SuiteManager(new $class, $this->options['debug']);
-        if (isset($settings['bootstrap'])) $testManager->setBootstrtap($suitePath.$settings['bootstrap']);
-
-        if ($test) {
-            $testManager->loadTest($suitePath.$test);
-        } else {
-            $testManager->loadTests($suitePath);
-        }
-        $tests = $testManager->getCurrentSuite()->tests();
-
-        foreach ($tests as $test) {
-            if (method_exists($test, 'setOutput')) $test->setOutput($this->output);
-            if (method_exists($test, 'setLogHandler')) $test->setLogHandler($this->logHandler);
-        }
-
-        $this->runner->doEnhancedRun($testManager->getCurrentSuite(), $this->result, array_merge(array('convertErrorsToExceptions' => true), $this->options));
         return $this->result;
     }
 
     public static function versionString() {
    	    return 'Codeception PHP Testing Framework v'.self::VERSION;
    	}
-
-    /**
-     * @return \Codeception\Runner
-     */
-    public function getRunner()
-    {
-        return $this->runner;
-    }
 
     /**
      * @return \PHPUnit_Framework_TestResult
