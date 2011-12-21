@@ -17,4 +17,5 @@ $spec = Pearfarm_PackageSpec::create(array(Pearfarm_PackageSpec::OPT_BASEDIR => 
              ->addExcludeFilesRegex('~package\/*~')
              ->addExcludeFilesRegex('~docs\/*~')
              ->addExecutable('codecept')
+             ->addExecutable('codecept.bat')
              ;

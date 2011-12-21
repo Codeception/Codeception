@@ -1,0 +1,139 @@
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase\Cept))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase\\Cept))","runStep"] [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see property equals ["((\\Codeception\\Scenario))","currentStep",1] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: 
+
+I TEST RUN COMMAND [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I run shell commmand "php codecept run unit" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase\Cept))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase\\Cept))","runStep"] [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see property equals ["((\\Codeception\\Scenario))","currentStep",1] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "Codeception" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "1.01a" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "Scenario.run" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "OK" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: 
+((I am going to execute a single cest file )) [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I run shell commmand "php codecept run unit Codeception/ScenarioCest.php" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: 
+
+I RUN STEPS FROM SCENARIO, TEST METHOD \CODECEPTION\SCENARIO.RUN() [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I test method "\Codeception\Scenario.run" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\TestCase\Cept))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I have fake class "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I execute tested method on "((\Codeception\Scenario))" [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see method invoked ["((\\Codeception\\TestCase\\Cept))","runStep"] [] []
+[2011-12-16 17:45:13] \Codeception\Scenario.run.INFO: I see property equals ["((\\Codeception\\Scenario))","currentStep",1] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "Scenario.run" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I don't see in shell output "FAIL" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: 
+((I am going to execute a single test file )) [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I run shell commmand "php codecept run unit Codeception/TestCaseTest.php" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "TestCaseTest::testRunStep" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I don't see in shell output "FAIL" [] []
+[2011-12-16 17:45:13] testCodecept.ALERT: Failed asserting that 'Codeception PHP Testing Framework v1.01a
+Powered by PHPUnit 3.6.3 by Sebastian Bergmann.
+Running Codeception/TestCaseTest.php:
+
+Starting test 'TestCaseTest::testRunStep'.
+- ERROR
+Starting test 'TestCaseTest::testTestCodecept'.
+- ERROR
+
+Time: 0 seconds, Memory: 10.75Mb
+
+There were 2 errors:
+
+1) TestCaseTest::testRunStep
+ErrorException: Argument 2 passed to PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass() must be an array, null given, called in /home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php on line 20 and defined
+
+/home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php:20
+/home/davert/codeception/tests/unit/Codeception/TestCaseTest.php:21
+/home/davert/codeception/src/Codeception/Runner.php:96
+/home/davert/codeception/src/Codeception/Codecept.php:156
+/home/davert/codeception/src/Codeception/Command/Run.php:61
+/home/davert/codeception/vendor/Symfony/Component/Console/Command/Command.php:227
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:188
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:105
+/home/davert/codeception/codecept:20
+
+2) TestCaseTest::testTestCodecept
+ErrorException: Argument 2 passed to PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass() must be an array, null given, called in /home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php on line 20 and defined
+
+/home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php:20
+/home/davert/codeception/tests/unit/Codeception/TestCaseTest.php:38
+/home/davert/codeception/src/Codeception/Runner.php:96
+/home/davert/codeception/src/Codeception/Codecept.php:156
+/home/davert/codeception/src/Codeception/Command/Run.php:61
+/home/davert/codeception/vendor/Symfony/Component/Console/Command/Command.php:227
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:188
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:105
+/home/davert/codeception/codecept:20
+
+[37;41m[2KFAILURES!
+[0m[37;41m[2KTests: 2, Assertions: 0, Errors: 2.
+[0m[2K' does not contain "FAIL". [] []
+[2011-12-16 17:45:13] testCodecept.ALERT: *** last command failed *** [] []
+[2011-12-16 17:45:13] testCodecept.ALERT: Failed asserting that 'Codeception PHP Testing Framework v1.01a
+Powered by PHPUnit 3.6.3 by Sebastian Bergmann.
+Running Codeception/TestCaseTest.php:
+
+Starting test 'TestCaseTest::testRunStep'.
+- ERROR
+Starting test 'TestCaseTest::testTestCodecept'.
+- ERROR
+
+Time: 0 seconds, Memory: 10.75Mb
+
+There were 2 errors:
+
+1) TestCaseTest::testRunStep
+ErrorException: Argument 2 passed to PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass() must be an array, null given, called in /home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php on line 20 and defined
+
+/home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php:20
+/home/davert/codeception/tests/unit/Codeception/TestCaseTest.php:21
+/home/davert/codeception/src/Codeception/Runner.php:96
+/home/davert/codeception/src/Codeception/Codecept.php:156
+/home/davert/codeception/src/Codeception/Command/Run.php:61
+/home/davert/codeception/vendor/Symfony/Component/Console/Command/Command.php:227
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:188
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:105
+/home/davert/codeception/codecept:20
+
+2) TestCaseTest::testTestCodecept
+ErrorException: Argument 2 passed to PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass() must be an array, null given, called in /home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php on line 20 and defined
+
+/home/davert/codeception/src/Codeception/Util/Stub/builders/phpunit/Stub.php:20
+/home/davert/codeception/tests/unit/Codeception/TestCaseTest.php:38
+/home/davert/codeception/src/Codeception/Runner.php:96
+/home/davert/codeception/src/Codeception/Codecept.php:156
+/home/davert/codeception/src/Codeception/Command/Run.php:61
+/home/davert/codeception/vendor/Symfony/Component/Console/Command/Command.php:227
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:188
+/home/davert/codeception/vendor/Symfony/Component/Console/Application.php:105
+/home/davert/codeception/codecept:20
+
+[37;41m[2KFAILURES!
+[0m[37;41m[2KTests: 2, Assertions: 0, Errors: 2.
+[0m[2K' does not contain "FAIL". [] []
+[2011-12-16 17:45:13] testCodecept.INFO: 
+
+I TEST BUILD COMMAND [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I run shell commmand "php codecept build" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in shell output "generated sucessfully" [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see file found ["TestGuy.php","tests/functional"] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see file found ["CodeGuy.php","tests/unit"] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see file found ["CliGuy.php","tests/acceptance"] [] []
+[2011-12-16 17:45:13] testCodecept.INFO: I see in file "seeFileFound(" [] []

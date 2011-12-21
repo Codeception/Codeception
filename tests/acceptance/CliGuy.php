@@ -19,11 +19,11 @@
  * Methods from \Codeception\AbstractGuy
  * @method CliGuy wantToTest($text)
  * @method CliGuy wantTo($text)
- * @method CliGuy amTestingClass($text)
  * @method CliGuy amTesting($method)
  * @method CliGuy amTestingMethod($method)
  * @method CliGuy testMethod($signature)
  * @method CliGuy expectTo($prediction)
+ * @method CliGuy expect($prediction)
  * @method CliGuy amGoingTo($argumentation)
 **/
 
