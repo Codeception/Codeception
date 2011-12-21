@@ -5,14 +5,14 @@ class Cest extends \Codeception\TestCase
 {
     protected $testClass;
     
-    public function __construct($name, array $data = array(), $dataName = '') {
-        parent::__construct($name, $data, $dataName);
+    public function __construct($dispatcher, array $data = array(), $dataName = '') {
+        parent::__construct($dispatcher, $data, $dataName);
         $this->testClass = $data['class'];
         $this->testMethod = $data['method'];
         $this->static = $data['static'];
 
         if (!isset($this->testClass->class)) {
-            throw new \Exception("Cest $name has no binding to tested class. Please, provide public property class with the name of class being tested.");
+            throw new \Exception("Cest {$data['name']} has no binding to tested class. Please, provide public property class with the name of class being tested.");
         }
     }
     
