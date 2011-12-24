@@ -4,27 +4,17 @@
 
 /**
 
- * Methods from \Codeception\Module\Filesystem
+ * Methods from Filesystem
  * @method CliGuy openFile($filename)
  * @method CliGuy seeInFile($text)
  * @method CliGuy dontSeeInFile($text)
  * @method CliGuy seeFileFound($filename)
  * 
- * Methods from \Codeception\Module\Cli
+ * Methods from Cli
  * @method CliGuy amInPath($dir)
  * @method CliGuy runShellCommmand($command)
  * @method CliGuy seeInShellOutput($text)
  * @method CliGuy dontSeeInShellOutput($text)
- * 
- * Methods from \Codeception\AbstractGuy
- * @method CliGuy wantToTest($text)
- * @method CliGuy wantTo($text)
- * @method CliGuy amTesting($method)
- * @method CliGuy amTestingMethod($method)
- * @method CliGuy testMethod($signature)
- * @method CliGuy expectTo($prediction)
- * @method CliGuy expect($prediction)
- * @method CliGuy amGoingTo($argumentation)
 **/
 
 

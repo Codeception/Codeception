@@ -12,7 +12,3 @@ $I->runShellCommmand('php codecept run unit Codeception/ScenarioCest.php');
 $I->seeInShellOutput('Scenario.run');
 $I->dontSeeInShellOutput('FAIL');
 
-$I->amGoingTo('execute a single Test file');
-$I->runShellCommmand('php codecept run unit Codeception/TestCaseTest.php');
-$I->seeInShellOutput('TestCaseTest::testRunStep');
-$I->dontSeeInShellOutput('FAIL');

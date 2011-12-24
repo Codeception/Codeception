@@ -1,7 +1,7 @@
 <?php
-namespace Codeception\ResultPrinter;
+namespace Codeception\PhpUnit\ResultPrinter;
 
-class Report extends \Codeception\ResultPrinter
+class Report extends \Codeception\PHPUnit\ResultPrinter
 {
 
     /**

@@ -46,6 +46,5 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function endTest(\PHPUnit_Framework_Test $test, $time) {
         $this->dispatcher->dispatch('test.end', new \Codeception\Event\Test($test));
     }
-
-
+    
 }

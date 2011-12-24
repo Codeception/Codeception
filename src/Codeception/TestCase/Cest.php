@@ -4,12 +4,14 @@ namespace Codeception\TestCase;
 class Cest extends \Codeception\TestCase
 {
     protected $testClass;
-    
+    protected $signature;
+
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);
         $this->testClass = $data['class'];
         $this->testMethod = $data['method'];
         $this->static = $data['static'];
+        $this->signature = $data['signature'];
 
         if (!isset($this->testClass->class)) {
             throw new \Exception("Cest {$data['name']} has no binding to tested class. Please, provide public property class with the name of class being tested.");
@@ -24,13 +26,9 @@ class Cest extends \Codeception\TestCase
             throw new \Exception("Tested class in {$unit->class} can't be loaded.");
         }
 
-        if (method_exists($unit, '_beforeEach')) {
-            call_user_func(array($unit,'_beforeEach'));
-        }
-
         // executing test
         $I = new \CodeGuy($this->scenario);
-        $I->testMethod($this->specName);
+        $I->testMethod($this->signature);
 
         if ($this->static) {
             $class = $unit->class;

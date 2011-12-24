@@ -36,7 +36,8 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
                 'bootstrap' => '_bootstrap.php',
                 'suite_class' => '\PHPUnit_Framework_TestSuite',
                 'colors' => (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN'),
-                'memory_limit' => '1024M'
+                'memory_limit' => '1024M',
+                'log' => true
             ),
             'modules' => array('config' => array(
               'Db' => array(

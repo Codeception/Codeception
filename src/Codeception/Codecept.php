@@ -37,7 +37,7 @@ class Codecept
         'steps' => false,
         'html' => false,
         'report' => false,
-        'colors' => true,
+        'colors' => false,
         'log' => true
     );
 
@@ -48,37 +48,43 @@ class Codecept
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->addSubscribers();
+        $this->addListeners();
+
     }
 
-
     private function mergeOptions($options) {
-        foreach ($options as $option => $value) {
-            if (isset($this->config['settings'][$option])) {
-                if (!$value && $this->config['settings'][$option]) $value = $this->config['settings'][$option];
+
+        foreach ($this->options as $option => $default) {
+            $value = isset($options[$option]) ? $options[$option] : $default;
+            if (!$value) {
+                $options[$option] = isset($this->config['settings'][$option]) ? $this->config['settings'][$option] : $this->options[$option];
             }
-            $options[$option] = $value;
         }
-        if ($options['report']) {
-            $options['silent'] = true;
-        }
-        $options['verbose'] = !$options['silent'];
+
+        if ($options['report']) $options['silent'] = true;
         if ($options['html']) $options['html'] = $this->config['paths']['output'] . '/result.html';
+
         return $options;
     }
 
+    protected function addListeners() {
+        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
+        $this->result->addListener($listener);
+    }
+
     public function addSubscribers() {
-        if (!$this->options['silent']) $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Output($colors, $steps, $debug));
-        $this->dispatcher->addSubscriber(\Codeception\Subscriber\Logger);
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger($this->config['paths']['output'].DIRECTORY_SEPARATOR));
     }
 
     public function runSuite($suite, $test = null) {
-
         $settings = \Codeception\Configuration::suiteSettings($suite, $this->config);
-        $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $settings);
+        $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $suite, $settings);
 
-        $test ? $suiteManager->loadTest($test) : $suiteManager->loadTests();
+        $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
 
-        $suiteManager->run($this->result, $this->options);
+        $this->runner = $suiteManager->run($this->result, $this->options);
 
         return $this->result;
     }
@@ -86,6 +92,10 @@ class Codecept
     public static function versionString() {
    	    return 'Codeception PHP Testing Framework v'.self::VERSION;
    	}
+    
+    public function printResult() {
+        $this->runner->getPrinter()->printResult($this->getResult());
+    }
 
     /**
      * @return \PHPUnit_Framework_TestResult

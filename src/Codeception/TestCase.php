@@ -42,10 +42,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->name;
     }
 
-    public function getSpecName() {
-        return $this->name;
-    }
-
     /**
      * @return \Codeception\Scenario
      */
@@ -69,8 +65,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     
     public function setUp() {
         if (file_exists($this->bootstrap)) require $this->bootstrap;
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         $this->loadScenario();
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
     }
 
     abstract public function loadScenario();
@@ -80,38 +76,21 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
      */
     public function testCodecept()
     {
-        $this->output->writeln("Trying to [[{$this->scenario->getFeature()}]] (" . basename($this->testfile) . ") ");
-        if ($this->debug && count($this->scenario->getSteps())) $this->output->writeln("Scenario:\n");
-
-        try {
             $this->scenario->run();
-        } catch (\PHPUnit_Framework_ExpectationFailedException $fail) {
-            foreach (\Codeception\SuiteManager::$modules as $module) {
-                $module->_failed($this, $fail);
-            }
-            $this->logger->alert("*** last command failed ***");
-            $this->logger->alert($fail->getMessage());
-            throw $fail;
-        }
     }
 
     public function tearDown() {
         $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
-
-
     public function runStep(\Codeception\Step $step)
     {
-        $this->logger->info($step);
-        if ($this->debug) $this->output->put("\n* " . $step->__toString());
         if ($step->getName() == 'Comment') return;
 
         $this->trace[] = $step;
         $action = $step->getAction();
         $arguments = array_merge($step->getArguments());
-        if (!isset(\Codeception\SuiteManager::$methods[$action])) {
-            $this->logger->crit("Action $action not defined");
+        if (!isset(\Codeception\SuiteManager::$actions[$action])) {
             $this->stopped = true;
             $this->fail("Action $action not defined");
             return;
@@ -119,7 +98,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
         $this->dispatcher->dispatch('step.before', new \Codeception\Event\Step($this, $step));
 
-        $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$methods[$action]];
+        $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$action]];
 
         try {
             if (is_callable(array($activeModule, $action))) {
@@ -129,17 +108,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
                 throw new \RuntimeException("Action can't be called");
             }
         } catch (\PHPUnit_Framework_ExpectationFailedException $fail) {
-            $this->logger->alert($fail->getMessage());
-            if ($activeModule->_getDebugOutput() && $this->debug) $this->output->debug($activeModule->_getDebugOutput());
+            $this->dispatcher->dispatch('step.after', new \Codeception\Event\Step($this, $step));
             throw $fail;
         }
 
-        $this->dispatcher->dispatch('step.before', new \Codeception\Event\Step($this, $step));
-
-        $output = $activeModule->_getDebugOutput();
-        if ($output) {
-            if ($this->debug) $this->output->debug($output);
-        }
+        $this->dispatcher->dispatch('step.after', new \Codeception\Event\Step($this, $step));
+    }
+    
+    public function getFeature() {
+        return $this->scenario->getFeature();
     }
 
     public function toString()
