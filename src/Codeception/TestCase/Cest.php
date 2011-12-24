@@ -39,4 +39,10 @@ class Cest extends \Codeception\TestCase
             call_user_func(array($this->testClass, $this->testMethod), $I);
         }
     }
+
+    public function getTestClass()
+    {
+        return $this->testClass;
+    }
+
 }
