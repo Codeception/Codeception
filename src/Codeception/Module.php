@@ -55,13 +55,7 @@ abstract class Module {
 	public function _failed(\Codeception\TestCase $test, $fail) {
 	}
 
-    public function getModule($module) {
-        $module = '\Codeception\Module\\'.$module;
-        if (!isset(SuiteManager::$modules[$module])) throw new \Codeception\Exception\Module($module, 'module not found');
-        return SuiteManager::$modules[$module];
-   }
 
-	
 	protected function debug($message) {
 	    $this->debugStack[] = $message;
 	}
@@ -98,5 +92,12 @@ abstract class Module {
 	protected function assertNot($arguments) {
 		$this->assert($arguments, true);
 	}
+
+    protected function getModule($name) {
+        if (!isset(\Codeception\SuiteManager::$modules)) throw new \Codeception\Exception\Module($this, "Module $name couldn't be connected");
+        return \Codeception\SuiteManager::$modules[$name];
+    }
+
+
 
 }

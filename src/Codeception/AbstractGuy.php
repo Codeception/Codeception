@@ -22,9 +22,7 @@ abstract class AbstractGuy  {
 	}
 
 	public function wantTo($text) {
-        $feature = $this->scenario->getFeature();
-        if ($feature) $feature = ', '.$feature;
-        $this->scenario->setFeature(strtolower($text). $feature);
+        $this->scenario->setFeature(strtolower($text));
         return $this;
 	}
 

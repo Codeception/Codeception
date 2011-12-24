@@ -3,16 +3,13 @@ namespace Codeception;
  
 class Output {
 
-	protected $silent = false;
     protected $colors = true;
 
-	function __construct($silent = false, $colors = true) {
-	    $this->silent = $silent;
+	function __construct($colors = true) {
 	    $this->colors = $colors;
 	}
 
 	public function put($message) {
-		if ($this->silent) return;
         $message = $this->colors ? $this->colorize($message) : $this->naturalize($message);
 		$message = $this->clean($message);
 		$this->write($message);
@@ -22,7 +19,6 @@ class Output {
 
 	private function write($text)
 	{
-		if ($this->silent) return;
         ob_get_flush();
         print $text;
         ob_start();
@@ -52,14 +48,13 @@ class Output {
 	}
 
 	public function writeln($message) {
-		$this->put("\n# $message");
+		$this->put("$message\n");
 
 	}
 
 	public function debug($message) {
-        if ($this->silent) return;
 		if (is_array($message)) $message = implode("\n=> ", $message);
-        $this->colors ? $this->write("\033[36m\n=> ".$message."\033[0m") : $this->write("=> ".$message) ;
+        $this->colors ? $this->writeln("\033[36m=> ".$message."\033[0m") : $this->writeln("=> ".$message) ;
 	}
 
 

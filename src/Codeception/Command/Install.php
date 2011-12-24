@@ -26,7 +26,7 @@ class Install extends \Symfony\Component\Console\Command\Command {
 
         $output->writeln('Intalling PHPUnit...');
 		$output->write(shell_exec('pear config-set auto_discover 1'));
-		$output->write(shell_exec('pear install pear.phpunit.de/PHPUnit'));
+		$output->write(shell_exec('pear install --alldeps pear.phpunit.de/PHPUnit'));
 
         $output->writeln("Installing Symfony Components...");
         $output->write(shell_exec("pear channel-discover pear.symfony.com"));
@@ -36,6 +36,7 @@ class Install extends \Symfony\Component\Console\Command\Command {
         $output->write(shell_exec("pear channel-discover pear.behat.org"));
         $output->write(shell_exec("pear install behat/mink"));
 
+        $output->writeln('Please check PHPUnit was installed sucessfully. Run the "phpunit" command. If it is not avaible try installing PHPUnit manually');
         $output->writeln("Installaction complete. Init your new TestGuy suite calling the 'init' command");
     }
 

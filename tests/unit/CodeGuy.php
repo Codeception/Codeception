@@ -4,7 +4,7 @@
 
 /**
 
- * Methods from \Codeception\Module\Unit
+ * Methods from Unit
  * @method CodeGuy testMethod($signature)
  * @method CodeGuy haveFakeClass($instance)
  * @method CodeGuy haveStub($instance)
@@ -27,17 +27,7 @@
  * @method CodeGuy seePropertyEquals($object, $property, $value)
  * @method CodeGuy seePropertyIs($object, $property, $type)
  * 
- * Methods from \Codeception\Module\CodeHelper
- * 
- * Methods from \Codeception\AbstractGuy
- * @method CodeGuy wantToTest($text)
- * @method CodeGuy wantTo($text)
- * @method CodeGuy amTesting($method)
- * @method CodeGuy amTestingMethod($method)
- * @method CodeGuy testMethod($signature)
- * @method CodeGuy expectTo($prediction)
- * @method CodeGuy expect($prediction)
- * @method CodeGuy amGoingTo($argumentation)
+ * Methods from CodeHelper
 **/
 
 

@@ -1,5 +1,5 @@
 <?php
-namespace Codeception;
+namespace Codeception\PHPUnit;
 
 class Runner extends \PHPUnit_TextUI_TestRunner {
 
@@ -58,7 +58,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	            $arguments['printer'] instanceof \PHPUnit_Util_Printer) {
 	            $this->printer = $arguments['printer'];
 	        } else {
-	            $this->printer = new \Codeception\ResultPrinter\UI(
+	            $this->printer = new \Codeception\PHPUnit\ResultPrinter\UI(
 	              NULL,
 	              $arguments['verbose'],
 	              $arguments['colors'],
@@ -68,16 +68,17 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	    }
 
 	    if (isset($arguments['report'])) {
-		    if ($arguments['report']) $this->printer = new \Codeception\ResultPrinter\Report();
+		    if ($arguments['report']) $this->printer = new \Codeception\PHPUnit\ResultPrinter\Report();
 	    }
 
 	    if (isset($arguments['html'])) {
 
-	        if ($arguments['html']) $arguments['listeners'][] = new \Codeception\ResultPrinter\HTML($arguments['html']);
+	        if ($arguments['html']) $arguments['listeners'][] = new \Codeception\PHPUnit\ResultPrinter\HTML($arguments['html']);
 	    }
 
         $arguments['listeners'][] = $this->printer;
 
+        // clean up listeners between suites
 	    foreach ($arguments['listeners'] as $listener) {
             $result->removeListener($listener);
 	        $result->addListener($listener);

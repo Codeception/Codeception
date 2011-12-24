@@ -72,7 +72,8 @@ class Configuration
 
         $moduleNames = $settings['modules']['enabled'];
         foreach ($moduleNames as $moduleName) {
-            $module = new $moduleName;
+            $classname = '\Codeception\Module\\'.$moduleName;
+            $module = new $classname;
             $modules[$moduleName] = $module;
 
             if (isset($settings['modules']['config'][$moduleName])) {
@@ -81,6 +82,7 @@ class Configuration
 				if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
 			}
         }
+
         return $modules;
     }
 
@@ -88,7 +90,7 @@ class Configuration
         $actions = array();
         foreach ($modules as $modulename => $module) {
             $module->_initialize();
-            $class = new \ReflectionClass($modulename);
+            $class = new \ReflectionClass('\Codeception\Module\\'.$modulename);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
 			    if (strpos($method->name,'_')===0) continue;

@@ -23,6 +23,7 @@ class Run extends Base
             new \Symfony\Component\Console\Input\InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
             new \Symfony\Component\Console\Input\InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
+            new \Symfony\Component\Console\Input\InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new \Symfony\Component\Console\Input\InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output')
         ));
         parent::configure();
@@ -36,12 +37,12 @@ class Run extends Base
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
-        if ($input->getArgument('test')) $options['debug'] = true;
+        if ($input->getArgument('test')) $options['steps'] = true;
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        $codecept = new \Codeception\Codecept($this->config, $options);
+        $codecept = new \Codeception\Codecept((array) $options);
 
         $suites = $suite ? array($suite) : \Codeception\Configuration::suites();
 
@@ -57,7 +58,7 @@ class Run extends Base
             }
         }
 
-        $codecept->getRunner()->getPrinter()->printResult($codecept->getResult());
+        $codecept->printResult();
         if ($codecept->getResult()->failures() > 0) exit(1);
 
     }

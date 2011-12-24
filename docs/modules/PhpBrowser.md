@@ -7,10 +7,11 @@ Use to perform web acceptance tests with non-javascript browser.
 
 If test fails stores last shown page in 'output' dir.
 
-__Configuration__
+## Configuration
 
 * start *required* - the url of your app
 * output *required* - dir were last shown page should be stored on fail.
+
 
 
 ## Actions

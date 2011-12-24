@@ -46,24 +46,19 @@ EOF;
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $this->initCodeception();
-
-        $codecept = new \Codeception\Codecept($this->config);
-        $suites = $codecept->getSuites();
+        $config = \Codeception\Configuration::config();
+        $suites = \Codeception\Configuration::suites();
 
         foreach ($suites as $suite) {
-            $settings = $codecept->getSuiteSettings($suite);
+            $settings = \Codeception\Configuration::suiteSettings($suite, $config);
 
-            \Codeception\SuiteManager::init($settings);
+            $modules = \Codeception\Configuration::modules($settings);
 
             $phpdoc = array();
             $methodCounter = 0;
 
-            $modules = \Codeception\SuiteManager::$modules;
-            $modules['\Codeception\AbstractGuy'] = 'AbstractGuy';
-
             foreach ($modules as $modulename => $module) {
-                $class = new \ReflectionClass($modulename);
+                $class = new \ReflectionClass('\Codeception\\Module\\'.$modulename);
                 $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                 $phpdoc[] = '';
                 $phpdoc[] = 'Methods from ' . $modulename;
@@ -83,7 +78,7 @@ EOF;
 
             $contents = sprintf($this->template, implode("\r\n * ", $phpdoc), 'class',$settings['class_name'], '\Codeception\AbstractGuy');
 
-            file_put_contents($file = $this->tests_path.'/'.$suite.'/'.$settings['class_name'].'.php', $contents);
+            file_put_contents($file = $settings['path'].$settings['class_name'].'.php', $contents);
             $output->writeln("$file generated sucessfully. $methodCounter methods added");
         }
     }

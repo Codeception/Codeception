@@ -1,7 +1,7 @@
 <?php
-namespace Codeception\ResultPrinter;
+namespace Codeception\PHPUnit\ResultPrinter;
 
-class HTML extends \Codeception\ResultPrinter
+class HTML extends \Codeception\PHPUnit\ResultPrinter
 {
     /**
      * @var boolean

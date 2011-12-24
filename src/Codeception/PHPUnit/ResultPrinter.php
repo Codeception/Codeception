@@ -1,10 +1,8 @@
 <?php
-namespace Codeception;
+namespace Codeception\PHPUnit;
 
 class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
 {
-
-	protected $testTypeOfInterest = '\Codeception\TestCase';
 
     /**
      * A test ended.
@@ -14,24 +12,16 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
      */
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-
-	    if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED) {
+        $steps = array();
+        if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED) {
             $this->successful++;
             $success = TRUE;
-		    $steps = $test->getScenario()->getSteps();
+            if ($test instanceof \Codeception\TestCase) $steps = $test->getScenario()->getSteps();
         } else {
             $success = FALSE;
-		    $steps = $test->getTrace();
+            if ($test instanceof \Codeception\TestCase) $steps = $test->getTrace();;
         }
 
-        $this->onTest(
-            $test->getScenario()->getFeature(),
-            $success,
-            $steps,
-	        $time
-        );
+        $this->onTest($test->toString(), $success, $steps, $time);
     }
-
-
-
 }

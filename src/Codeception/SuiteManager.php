@@ -8,8 +8,8 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager {
 
-    public $modules = array();
-    public $actions = array();
+    public static $modules = array();
+    public static $actions = array();
 
     /**
      * @var \PHPUnit_Framework_TestSuite
@@ -28,7 +28,7 @@ class SuiteManager {
 
 
     protected $defaults = array(
-        'class_name' => '',
+        'class_name' => 'NoGuy',
         'modules' => array('enabled' => array(), 'config' => array()),
         'bootstrap' => false,
         'suite_class' => '\PHPUnit_Framework_TestSuite',
@@ -39,19 +39,21 @@ class SuiteManager {
 
     protected $settings = array();
 
-    public function __construct(EventDispatcher $dispatcher, $settings) {
-        $this->settings = array_merge_recursive($this->defaults, $settings);
+    public function __construct(EventDispatcher $dispatcher, $name, $settings) {
+        $this->settings = array_merge($this->defaults, $settings);
         $this->dispatcher = $dispatcher;
-        $this->modules = \Codeception\Configuration::modules($settings);
-        $this->actions = \Codeception\Configuration::actions($this->modules);
-        $this->suite = $this->createSuite();
+        $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
+
+        self::$modules = \Codeception\Configuration::modules($settings);
+        self::$actions = \Codeception\Configuration::actions(self::$modules);
     }
 
-    protected function createSuite() {
+    protected function createSuite($name) {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class not found");
         $suite = new $suiteClass;
+        $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
         return $suite;
     }
@@ -72,10 +74,6 @@ class SuiteManager {
         )));
    	}
 
-    protected function relativeName($file)
-    {
-        return $name = str_replace($this->path, '', $file);
-    }
 
     public function addCest($file) {
         $name = $this->relativeName($file);
@@ -109,54 +107,34 @@ class SuiteManager {
                     'class' => $unit,
                     'method' => $method->name,
                     'static' => $method->isStatic(),
+                    'signature' => $target,
                     'file' => $file,
            	        'bootstrap' => $this->settings['bootstrap']
                 )));
             }
         }
     }
-    
-    public function run($result, $options) {
 
-        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
-        $result->addListener($listener);
-
-        $this->subscribeModules();
-
-        $runner = new \Codeception\Runner();
-
-        $this->dispatcher->dispatch('suite.before', new \Codeception\Event\Suite($this->suite));
-        $runner->doEnhancedRun($this->suite, $result, array_merge(array('convertErrorsToExceptions' => true), $options));
-        $this->dispatcher->dispatch('suite.after', new \Codeception\Event\Suite($this->suite));
-
-    }
-
-    protected function subscribeModules()
+    protected function relativeName($file)
     {
-        foreach ($this->modules as $module) {
-            $this->dispatcher->addSubscriber($module);
-        }
+        return $name = str_replace($this->path, '', $file);
     }
 
-	public function saveTestAsFeature($test, $path) {
-		$text = readfile($this->tests[$test]);
-	}
+    
+    public function run(\PHPUnit_Framework_TestResult $result, $options) {
+        $runner = new \Codeception\PHPUnit\Runner();
+        $runner->setPrinter(new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $options));
 
-    /**
-     * @return \PHPUnit_Framework_TestSuite
-     */
-    public function getCurrentSuite() {
-        return $this->suite;
+        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
+        $runner->doEnhancedRun($this->suite, $result, array_merge(array('convertErrorsToExceptions' => true), $options));
+        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));
+
+        return $runner;
     }
-
-    public function setBootstrtap($bootstrap) {
-        $this->bootstrap = $bootstrap;
-    }
-
     public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
-        if (strrpos(strrev($path), strrev('Cept.php')) === 0) $this->addCept(basename($path), $path);
-        if (strrpos(strrev($path), strrev('Cest.php')) === 0) $this->addCest(basename($path), $path);
+        if (strrpos(strrev($path), strrev('Cept.php')) === 0) $this->addCept($path);
+        if (strrpos(strrev($path), strrev('Cest.php')) === 0) $this->addCest($path);
         if (strrpos(strrev($path), strrev('Test.php')) === 0) $this->addTest($path);
     }
 
@@ -164,18 +142,18 @@ class SuiteManager {
     {
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->in($this->path);
         foreach ($testFiles as $test) {
-            $this->addCept($test);
+            $this->addCept($test->getPathname());
         }
         // old-style namings, right?
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->in($this->path);
         foreach ($testFiles as $test) {
-            $this->addCept($test);
+            $this->addCept($test->getPathname());
         }
 
         // tests inside classes
         $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->in($this->path);
         foreach ($testFiles as $test) {
-            $this->addCest($test);
+            $this->addCest($test->getPathname());
         }
 
         // PHPUnit tests

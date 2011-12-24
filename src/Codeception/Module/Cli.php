@@ -17,7 +17,7 @@ class Cli extends \Codeception\Module
     public function runShellCommmand($command) {
         $this->output = shell_exec("$command");
         if ($this->output === null) throw new \RuntimeException("$command can't be executed");
-        $this->debug($this->output);
+        $this->debug(preg_replace('~s/\e\[\d+(?>(;\d+)*)m//g~', '',$this->output));
     }
 
     public function seeInShellOutput($text) {
