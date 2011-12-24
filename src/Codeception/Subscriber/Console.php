@@ -22,23 +22,29 @@ class Console implements EventSubscriberInterface
         $this->output = new \Codeception\Output($this->color);
     }
 
-    public function startTest(\Codeception\Event\Test $e) {}
+    // triggered for all tests
+    public function startTest(\Codeception\Event\Test $e) {
+        if ($this->silent) return;
+        if ($e->getTest() instanceof \Codeception\TestCase) return;
+        $this->output->put("Trying to run [[".$e->getTest()->toString().']] ');
+    }
 
+    // triggered for scenario based tests: cept, cest
     public function beforeTest(\Codeception\Event\Test $e) {
-        if (!($e->getTest() instanceof \Codeception\TestCase)) return;
         if ($this->silent) return;
         $test = $e->getTest();
         $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
-        if ($this->steps && count($test->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
+        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
     public function afterTest(\Codeception\Event\Test $e) {
-
     }
+    
 
     public function endTest(\Codeception\Event\Test $e) {
         $test = $e->getTest();
-        $this->formattedTestOutput($test, 'Passed','.');
+        if (!$this->lastTestFailed) $this->formattedTestOutput($test, 'Ok','.');
+        $this->lastTestFailed = FALSE;
     }
 
     public function testFail(\Codeception\Event\Fail $e) {

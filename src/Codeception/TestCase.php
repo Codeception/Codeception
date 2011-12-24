@@ -32,11 +32,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
     }
 
-    public function setDispatcher(EventDispatcher $dispatcher) {
-        $this->dispatcher = $dispatcher;
-    }
-
-
     public function getFileName()
     {
         return $this->name;

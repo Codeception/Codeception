@@ -152,7 +152,7 @@ class Unit extends \Codeception\Module
 
     public function _initialize()
     {
-        \Codeception\Util\Stub\Builder::loadClasses(); // loading stub classes
+        // \Codeception\Util\Stub\Builder::loadClasses(); // loading stub classes
         set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
                     throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
             }

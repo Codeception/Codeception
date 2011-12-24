@@ -3,4 +3,4 @@
 # suite for unit (internal) tests.
 class_name: CodeGuy
 modules:
-    enabled: [Unit, CodeHelper]
+    enabled: [Unit, CodeHelper, EmulateModuleHelper]

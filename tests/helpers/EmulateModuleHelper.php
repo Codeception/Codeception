@@ -5,8 +5,11 @@ namespace Codeception\Module;
 
 class EmulateModuleHelper extends \Codeception\Module
 {
-    public function emptyAction() {
+    public $assertions = 0;
 
+    public function seeEquals($expected, $actual) {
+        \PHPUnit_Framework_Assert::assertEquals($expected, $actual);
+        $this->assertions++;
     }
 
 }

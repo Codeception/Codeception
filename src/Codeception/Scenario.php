@@ -34,17 +34,17 @@ class Scenario {
 	    $this->feature = $feature;
 	}
 
-    public function given($arguments)
+    public function condition($arguments)
     {
         return $this->addStep(new \Codeception\Step\Condition($arguments));
     }
 
-    public function when($arguments)
+    public function action($arguments)
     {
         return $this->addStep(new \Codeception\Step\Action($arguments));
     }
 
-    public function then($arguments)
+    public function assertion($arguments)
     {
         return $this->addStep(new \Codeception\Step\Assertion($arguments));
     }
