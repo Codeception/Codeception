@@ -8,8 +8,8 @@ class ScenarioCest
     public function run(CodeGuy $I) {
 
         $I->wantTo('run steps from scenario');
-        $I->haveFakeClass($test = Stub::makeEmpty('\Codeception\TestCase\Cept'));
-        $I->haveFakeClass($scenario = Stub::make('\Codeception\Scenario', array('test' => $test, 'steps' => Stub::factory('\Codeception\Step', 2))));
+        $I->haveStub($test = Stub::makeEmpty('\Codeception\TestCase\Cept'));
+        $I->haveStub($scenario = Stub::make('\Codeception\Scenario', array('test' => $test, 'steps' => Stub::factory('\Codeception\Step', 2))));
 
         $I->executeTestedMethodOn($scenario)
             ->seeMethodInvoked($test,'runStep')
