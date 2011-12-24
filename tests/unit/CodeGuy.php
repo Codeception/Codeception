@@ -28,6 +28,9 @@
  * @method CodeGuy seePropertyIs($object, $property, $type)
  * 
  * Methods from CodeHelper
+ * 
+ * Methods from EmulateModuleHelper
+ * @method CodeGuy seeEquals($expected, $actual)
 **/
 
 

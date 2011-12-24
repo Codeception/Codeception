@@ -1,9 +1,11 @@
 <?php
+namespace Codeception\Util;
+
 class Stub
 {
     public static function make($class, $params = array())
     {
-        if (!class_exists($class)) throw new \RuntimeException("Stubbed class $class doesn't exist. Use Stub::factory instead");
+        if (!class_exists($class)) throw new \RuntimeException("Stubbed class $class doesn't exist.");
         $reflection = new \ReflectionClass($class);
 
         $callables = array_filter($params, function ($a) { return is_callable($a); });
@@ -26,8 +28,15 @@ class Stub
         return $mock;
     }
 
+    public static function factory($class, $num = 1, $params = array())
+    {
+        $objs = array();
+        for ($i = 0; $i < $num; $i++) $objs[] = self::makeEmpty($class, $params);
+        return $objs;
+    }
+
     public static function makeEmptyExcept($class, $method, $params = array()) {
-        $reflectionClass = new \ReflectionClass($mock);
+        $reflectionClass = new \ReflectionClass($class);
         $methods = $reflectionClass->getMethods();
         $methods = array_filter($methods, function ($m) use ($method) { return $method != $m->name; });
         $methods = array_map(function ($m) { return $m->name; }, $methods);
@@ -38,11 +47,6 @@ class Stub
     }
 
     public static function makeEmpty($class, $params = array())
-    {
-        return self::factory($class, $params);
-    }
-
-    public static function factory($class, $params = array(), $parent = '')
     {
         $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), array(), '', false);
         self::bindParameters($mock, $params);

@@ -7,9 +7,11 @@ use Symfony\Component\Finder\Finder;
 class Configuration
 {
     protected static $suites = array();
+    protected static $config = null;
 
     public static function config()
     {
+        if (self::$config) return self::$config;
         $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
         $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
         $config = array_merge($distConfig, $config);
@@ -34,6 +36,7 @@ class Configuration
         ini_set('memory_limit', isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M');
 
         self::$suites = $config['suites'];
+        self::$config = $config;
 
         return $config;
     }

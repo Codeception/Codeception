@@ -41,8 +41,7 @@ abstract class AbstractGuy  {
         } else {
             $this->scenario->setFeature($this->scenario->getFeature() . " with [[$signature]]");
         }
-
-        $this->scenario->given(array_merge(array('testMethod', $signature)));
+        $this->scenario->condition(array_merge(array('testMethod', $signature)));
         return $this;
     }
 
@@ -67,11 +66,11 @@ abstract class AbstractGuy  {
 //            if (is_object($arg)) $args[$k] = clone($arg);
 //        }
         if (0 === strpos($method,'see')) {
-            $this->scenario->then(array_merge(array($method) ,$args));
+            $this->scenario->assertion(array_merge(array($method) ,$args));
         } elseif (0 === strpos($method,'am')) {
-            $this->scenario->given(array_merge(array($method) ,$args));
+            $this->scenario->condition(array_merge(array($method) ,$args));
         } else {
-            $this->scenario->when(array_merge(array($method),$args));
+            $this->scenario->action(array_merge(array($method),$args));
         }
         return $this;
     }
