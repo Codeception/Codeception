@@ -54,7 +54,7 @@ abstract class Mink extends \Codeception\Module
 
     public function click($link) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findRl($link);
+        $el = $this->findEl($link);
         $el->click();
         if ($this->session->getCurrentUrl() != $url) {
             $this->debug('moved to page '. $this->session->getCurrentUrl());
