@@ -15,6 +15,9 @@ namespace Codeception\Module;
  * * url *required* - start url of your app
  * * output *required* - dir were last shown page should be stored on fail.
  *
+ * ## Public Properties
+ *
+ * * session - contains Mink Session
  *
  */
 

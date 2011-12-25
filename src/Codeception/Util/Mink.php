@@ -6,12 +6,10 @@ abstract class Mink extends \Codeception\Module
     /**
      * @var \Behat\Mink\Session
      */
-    protected $session;
-    private $content;
+    public $session;
 
     public function amOnPage($page)
     {
-
         $this->session->visit($this->config['start'].$page);
     }
 
@@ -74,26 +72,47 @@ abstract class Mink extends \Codeception\Module
         return $el;
     }
 
-    
+    /**
+     * Reloads current page
+     */
     public function reloadPage() {
         $this->session->reload();
     }
-    
+
+    /**
+     * Moves back in history
+     */
     public function moveBack() {
         $this->session->back();
         $this->debug($this->session->getCurrentUrl());
     }
 
+    /**
+     * Moves forward in history
+     */
     public function moveForward() {
         $this->session->forward();
         $this->debug($this->session->getCurrentUrl());
     }
 
+    /**
+     * Fill the field found by it's name with given value
+     *
+     * @param $field
+     * @param $value
+     */
     public function fillField($field, $value)
     {
         $this->session->getPage()->fillField($field, $value);
     }
 
+    /**
+     * Shortcut for filling multiple fields by their names.
+     * Array with field names => values expected.
+     *
+     *
+     * @param array $fields
+     */
     public function fillFields(array $fields)
     {
         foreach ($fields as $field => $value) {
@@ -101,6 +120,11 @@ abstract class Mink extends \Codeception\Module
         }
     }
 
+    /**
+     * Press the button, found by it's name.
+     *
+     * @param $button
+     */
     public function press($button) {
         $this->session->getPage()->pressButton($button);
     }
