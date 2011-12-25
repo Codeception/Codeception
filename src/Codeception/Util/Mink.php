@@ -54,11 +54,26 @@ abstract class Mink extends \Codeception\Module
 
     public function click($link) {
         $url = $this->session->getCurrentUrl();
-        $this->session->getPage()->clickLink($link);
+        $el = $this->findRl($link);
+        $el->click();
         if ($this->session->getCurrentUrl() != $url) {
             $this->debug('moved to page '. $this->session->getCurrentUrl());
         }
     }
+
+    /**
+     * @param $link
+     * @return \Behat\Mink\Element\Behat\Mink\Element\NodeElement
+     */
+    protected function findEl($link)
+    {
+        $page = $this->session->getPage();
+        $el = $page->findLink($link);
+        if (!$el) $el = $page->find('css', $link);
+        if (!$el) \PHPUnit_Framework_Assert::fail("Element for '$link' npt found'");
+        return $el;
+    }
+
     
     public function reloadPage() {
         $this->session->reload();
@@ -79,11 +94,15 @@ abstract class Mink extends \Codeception\Module
         $this->session->getPage()->fillField($field, $value);
     }
 
-    public function fillFields(TableNode $fields)
+    public function fillFields(array $fields)
     {
-        foreach ($fields->getRowsHash() as $field => $value) {
+        foreach ($fields as $field => $value) {
             $this->fillField($field, $value);
         }
+    }
+
+    public function press($button) {
+        $this->session->getPage()->pressButton($button);
     }
 
     public function selectOption($select, $option)
@@ -106,7 +125,7 @@ abstract class Mink extends \Codeception\Module
         $this->session->getPage()->attachFileToField($field, $path);
     }
 
-    public function seeInCurrentAddress($uri) {
+    public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
     }
     
