@@ -7,6 +7,7 @@ class Output {
 
 	function __construct($colors = true) {
 	    $this->colors = $colors;
+        ob_start();
 	}
 
 	public function put($message) {
