@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2011-12-26</date>
-  <time>14:24:25</time>
+  <time>15:57:22</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -25,7 +25,6 @@
   <contents>
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
-      <file name="Codeception-1.0.1.tgz" role="php" md5sum="b5e1db734653db9589e5c94b309279dc"/>
       <file name="autoload.php" role="php" md5sum="cafac820bba1a20228fff9908c0f5ad6"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="504fac3f9c08825d9d2ce3f85d3ecc78">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
@@ -44,7 +43,7 @@
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
       <file name="pearfarm.spec" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
-      <file name="readme.md" role="php" md5sum="ca3386b7218ebad07b529741e1fe97cf"/>
+      <file name="readme.md" role="php" md5sum="cd7db5edbca01c15a38e26dd47f9434b"/>
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="7ac9a4574d70c6f403b25d26fcf03b94"/>
@@ -80,7 +79,6 @@
             <file name="Doctrine2.php" role="php" md5sum="2f52eeb272efa29fac44123d084c0a97"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
             <file name="Framework.php" role="php" md5sum="6fd51976e4e605ae24e96ca9a838bda5"/>
-            <file name="Logger.php" role="php"/>
             <file name="PhpBrowser.php" role="php" md5sum="373b0ef539d5993037c6af62196ee509"/>
             <file name="Selenium.php" role="php" md5sum="83f72596d2224d558b2420c697ecb058"/>
             <file name="Symfony1.php" role="php" md5sum="8252ad562447dfa00f51a10571a334ec"/>

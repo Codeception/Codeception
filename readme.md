@@ -63,43 +63,21 @@ Anyway, If you don't really like writing unit tests in DSL, Codeceptance can run
 
 Documentation is currently bounded with project. Look for it in 'docs' directory.
 
-
 ## Installation
 
-### Clone
-
-Clone Codeception into your project.
-
-```
-git clone git://github.com/DavertMik/Codeception.git vendor/
-```
-
-Run CLI utility:
+## PEAR
+Install latest PEAR package from GitHub:
 
 ```
-php vendor/Codeception/codecept
-```
-
-### PEAR
-
-Currently we don't have PEAR channel avaible, but PEAR installation is preferred for unstable releases.
-
-Enter you PEAR dir and clone this repository into it.
-
-Create batch or sh file to call CLI utility
-
-```
-php %PATH-TO-INSTALLATION%/Codeception/codecept
+pear channel-discover davertmik.github.com/pear
+pear install codeception/Codeception
 ```
 
 ### Phar
 
-Can be installed by downloading phar executable.
-
 Download [codecept.phar](https://github.com/DavertMik/Codeception/raw/master/package/codecept.phar)
 
 Copy it into your project.
-
 Run CLI utility:
 
 ```
@@ -108,7 +86,7 @@ php codecept.phar
 
 ## Getting Started
 
-If you sucessfully installed Codeception, and you have CLI utility running in your project's root, run this commands:
+If you sucessfully installed Codeception, run this commands:
 
 ```
 codecept install
