@@ -16,9 +16,14 @@ class Logger implements EventSubscriberInterface
     protected $path;
     protected $max_files;
 
-    public function __construct($path, $max_files = 3) {
-        $this->path = $path;
+    public function __construct($max_files = 3) {
+        $this->path = \Codeception\Configuration::logDir();
         $this->max_files = $max_files;
+
+        // internal log
+        $logHandler = new \Monolog\Handler\RotatingFileHandler($this->path.'codeception.log', $this->max_files);
+        $this->logger = new \Monolog\Logger('Codeception');
+        $this->logger->pushHandler($logHandler);
 
     }
 

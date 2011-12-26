@@ -29,7 +29,8 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $basicConfig = array(
             'paths' => array(
                 'tests' => 'tests',
-                'output' => 'tests/_log',
+                'log' => 'tests/log',
+                'data' => 'tests/data',
                 'helpers' => 'tests/helpers'
             ),
             'settings' => array(
@@ -44,7 +45,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
                 'dsn' => '',
                 'user' => '',
                 'password' => '',
-                'dump' => 'tests/_data/dump.sql'
+                'dump' => 'tests/data/dump.sql'
               )
             )
             )
@@ -60,14 +61,14 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         @mkdir('tests/unit');
         @mkdir('tests/acceptance');
         @mkdir('tests/helpers');
-        @mkdir('tests/_log');
-        @mkdir('tests/_data');
+        @mkdir('tests/log');
+        @mkdir('tests/data');
 
         $output->writeln("tests/unit created - unit tests");
         $output->writeln("tests/functional created - functional tests");
         $output->writeln("tests/acceptance created - acceptance tests");
 
-        file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
+        file_put_contents('tests/data/dump.sql', '/* Replace this file with actual dump of your database */');
 
         file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
         file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");

@@ -8,6 +8,15 @@ abstract class Mink extends \Codeception\Module
      */
     public $session;
 
+    public function _before(\Codeception\TestCase $test) {
+        // should be done to have request and response not empty
+        $this->amOnPage($this->config['url']);
+    }
+
+    public function _after(\Codeception\TestCase $test) {
+        $this->session->stop();
+    }
+
     public function amOnPage($page)
     {
         $this->session->visit($this->config['start'].$page);
@@ -30,7 +39,7 @@ abstract class Mink extends \Codeception\Module
 		    foreach ($nodes as $node) {
 		        $values[] = trim($node->getText());
 		    }
-			return array('contains', $text, $values, "'$selector' selector in " . $this->session->getPage()->getContent().'. For more details look for page snapshot in the log directory');
+			return array('contains', $text, implode('<!-- Merged Output -->',$values), "'$selector' selector. For more details look for page snapshot in the log directory");
         }
 
         $response = $this->session->getPage()->getContent();

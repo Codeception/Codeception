@@ -76,7 +76,7 @@ class Codecept
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger($this->config['paths']['output'].DIRECTORY_SEPARATOR));
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
     }
 
     public function runSuite($suite, $test = null) {

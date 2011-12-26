@@ -13,7 +13,7 @@ abstract class Module {
 
     public function _setConfig($config)
     {
-        $this->config = $config;
+        $this->config = array_merge($this->config, $config);
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
             throw new \Codeception\Exception\ModuleConfig(get_class($this),"

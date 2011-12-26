@@ -39,7 +39,7 @@ class MinkJS extends Mink
     public function seeElement($css) {
         $el = $this->session->getPage()->find('css', $css);
         if (!$el) \PHPUnit_Framework_Assert::fail("Element $css not found");
-        \PHPUnit_Framework_Assert::assertTrue($this->session->getDriver()->isVisible($el->getXPath()));
+        \PHPUnit_Framework_Assert::assertTrue($this->session->getDriver()->isVisible($el->getXpath()));
     }
 
     /**
@@ -50,30 +50,31 @@ class MinkJS extends Mink
      * @return array
      */
     protected function proceedSee($text, $selector = null) {
-        if (!$selector) parent::proceedSee($text, $selector);
+        if (!$selector) return parent::proceedSee($text, $selector);
         $nodes = $this->session->getPage()->findAll('css', $selector);
 		$values = array();
 		foreach ($nodes as $node) {
-            if (!$this->session->getDriver()->isVisible($node->getXPath())) continue;
+            if (!$this->session->getDriver()->isVisible($node->getXpath())) continue;
+
 		    $values[] = trim($node->getText());
         }
-		return array('contains', $text, $values, "'$selector' selector in " . $this->session->getPage()->getContent().'. For more details look for page snapshot in the log directory');
+		return array('contains', $text, implode('<!-- Merged Output -->',$values), "'$selector' selector For more details look for page snapshot in the log directory");
     }
 
     public function pressKey($element, $char, $modifier = null)
     {
         $el = $this->findEl($element);
-        $this->session->getDriver()->keyPress($el->getXPath(), $char, $modifier);
+        $this->session->getDriver()->keyPress($el->getXpath(), $char, $modifier);
     }
     
     public function pressKeyUp($element, $char, $modifier = null) {
         $el = $this->findEl($element);
-        $this->session->getDriver()->keyUp($el->getXPath(), $char, $modifier);
+        $this->session->getDriver()->keyUp($el->getXpath(), $char, $modifier);
     }
 
     public function pressKeyDown($element, $char, $modifier = null) {
         $el = $this->findEl($element);
-        $this->session->getDriver()->keyDown($el->getXPath(), $char, $modifier);
+        $this->session->getDriver()->keyDown($el->getXpath(), $char, $modifier);
     }
 
     public function wait($miliseconds) {

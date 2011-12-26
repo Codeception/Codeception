@@ -71,7 +71,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
      */
     public function testCodecept()
     {
+        try {
             $this->scenario->run();
+        } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+            $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
+            throw $e;
+        }
     }
 
     public function tearDown() {

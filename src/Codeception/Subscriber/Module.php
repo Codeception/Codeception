@@ -43,7 +43,7 @@ class Module implements EventSubscriberInterface {
             'test.after' => 'after',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'test.failed' => 'failed'
+            'test.fail' => 'failed'
         );
     }
 
