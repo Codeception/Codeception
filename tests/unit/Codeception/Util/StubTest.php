@@ -10,7 +10,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $conf = \Codeception\Configuration::config();
-        require_once $conf['paths']['tests'].'/_data/DummyClass.php';
+        require_once $file = \Codeception\Configuration::dataDir().'DummyClass.php';
         $this->dummy = new DummyClass();
     }
     
