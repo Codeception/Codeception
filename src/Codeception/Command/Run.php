@@ -59,7 +59,6 @@ class Run extends Base
         }
 
         $codecept->printResult();
-        if ($codecept->getResult()->failures() > 0) exit(1);
-
+        if ($codecept->getResult()->failureCount() > 0) exit(1);
     }
 }
