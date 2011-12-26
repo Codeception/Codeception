@@ -9,4 +9,4 @@ branches:
     - master
     - develop
 
-script: ./codecept run
+script: "codecept run"
