@@ -9,7 +9,4 @@ branches:
     - master
     - develop
 
-before_script:
-  - ./codecept install
-
 script: ./codecept run
