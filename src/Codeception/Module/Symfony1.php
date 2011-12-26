@@ -230,6 +230,7 @@ class Symfony1 extends \Codeception\Module
                 return \PHPUnit_Framework_Assert::assertContains($text, $node->nodeValue, "with url '$url'");
             }
         }
+        \PHPUnit_Framework_Assert::fail($text, "with url '$url'");
     }
 
     /**

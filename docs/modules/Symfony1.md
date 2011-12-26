@@ -7,10 +7,13 @@ Uses native symfony connections and test classes. Provides additional invormatio
 
 If test fails stores last shown page in 'output' dir.
 
-__Configuration__
+## Configuration
 
 * app *required* - application you want to test. In most cases it will be 'frontend'
 * output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
+
+## Public Properties
+* browser - current instance of sfBrowser class.
 
 
 ## Actions
@@ -280,7 +283,3 @@ Fetches user by it's username from sfGuardUser table.
 
  * param $name
  * throws \Exception
-
-### getModule
-
-__not documented__

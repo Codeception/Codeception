@@ -310,7 +310,3 @@ __not documented__
 ### seePropertyIs
 
 __not documented__
-
-### getModule
-
-__not documented__

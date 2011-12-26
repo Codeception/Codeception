@@ -30,12 +30,24 @@ class MinkJS extends Mink
         $el->blur();
     }
 
+    /**
+     * Drag first element to second
+     *
+     * @param $el1
+     * @param $el2
+     */
     public function dragAndDrop($el1, $el2) {
         $el1 = $this->findEl($el1);
         $el2 = $this->findEl($el2);
         $el1->dragTo($el2);
     }
-    
+
+    /**
+     * Checks element visibility.
+     * Fails if element exists but is invisible to user.
+     *
+     * @param $css
+     */
     public function seeElement($css) {
         $el = $this->session->getPage()->find('css', $css);
         if (!$el) \PHPUnit_Framework_Assert::fail("Element $css not found");
