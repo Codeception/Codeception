@@ -4,7 +4,7 @@ Codeception is new PHP full-stack testing framework.
 Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.6.
 
-Previously called 'TestGuy'. Now is extended to feature CodeGuy, TestGuy, and WebGuy in one pack.
+[![Build Status](https://secure.travis-ci.org/davertmik/codeception.png?branch=master)](http://travis-ci.org/davetrmik/codeception)
 
 ### In a Glance
 
@@ -65,7 +65,7 @@ Documentation is currently bounded with project. Look for it in 'docs' directory
 
 ## Installation
 
-## PEAR
+### PEAR
 Install latest PEAR package from GitHub:
 
 ```
