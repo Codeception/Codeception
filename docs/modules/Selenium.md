@@ -11,6 +11,7 @@ Will save a screenshot of browser window to log directory on fail.
 ## Installation
 
 Take Selenium Server from http://seleniumhq.org/download
+
 Execute it: java -jar selenium-server-standalone-x.xx.xxx.jar
 
 Best used with Firefox browser.
@@ -21,8 +22,8 @@ Don't forget to turn on Db repopulation if you are using database.
 
 * url *required* - start url for your app
 * browser *required* - browser that would be launched
-* host  - Selenium server host
-* port - Selenium server port
+* host  - Selenium server host (localhost by default)
+* port - Selenium server port (4444 by default)
 
 ## Public Properties
 

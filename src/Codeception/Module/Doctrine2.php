@@ -75,6 +75,7 @@ class Doctrine2 extends \Codeception\Module
      * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
      *
      * Example:
+     *
      * ``` php
      * <?php
      * $I->persistEntity($user, array('name' => 'Miles'));
@@ -105,6 +106,7 @@ class Doctrine2 extends \Codeception\Module
      * Please, note: this fake repositories will be accessible through entity manager till the end of test.
      *
      * Example:
+     * 
      * ``` php
      * <?php
      *
