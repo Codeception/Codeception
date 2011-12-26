@@ -10,6 +10,6 @@ branches:
     - develop
 
 before_script:
-  - codecept install
+  - ./codecept install
 
-script: codecept run
+script: ./codecept run
