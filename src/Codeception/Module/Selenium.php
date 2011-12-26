@@ -26,6 +26,17 @@ class Selenium extends \Codeception\Util\MinkJS
         $driver = new \Behat\Mink\Driver\SeleniumDriver(
             $this->config['browser'], $this->config['url'], $client
         );
+
         $this->session = new \Behat\Mink\Session($driver);
+        $this->session->start();
     }
+
+    public function _failed(\Codeception\TestCase $test, $error) {
+        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot(\Codeception\Configuration::logDir().$test->getFileName().'.debug.png','');
+//        $this->debug($this->session->getDriver()->getBrowser()->retrieveLastRemoteControlLogs());
+        $this->debug("Screenshot was saved into 'log' dir");
+    }
+
+    // please, add more custom Selenium functions here
+
 }

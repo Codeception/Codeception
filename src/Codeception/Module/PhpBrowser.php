@@ -13,7 +13,6 @@ namespace Codeception\Module;
  * ## Configuration
  *
  * * url *required* - start url of your app
- * * output *required* - dir were last shown page should be stored on fail.
  *
  * ## Public Properties
  *
@@ -23,7 +22,7 @@ namespace Codeception\Module;
 
 class PhpBrowser extends \Codeception\Util\Mink {
 
-    protected $requiredFields = array('url', 'output');
+    protected $requiredFields = array('url');
 
     public function _cleanup() {
         $zendOptions = array('httpversion' => '1.1', 'useragent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0a2) Gecko/20110613 Firefox/6.0a2');
@@ -155,7 +154,7 @@ class PhpBrowser extends \Codeception\Util\Mink {
 	}
 
 	public function _failed(\Codeception\TestCase $test, $fail) {
-		file_put_contents($this->config['log'].'/'.$test->getFileName().'.page.debug.html', $this->session->getPage()->getContent());
+		file_put_contents(\Codeception\Configuration::dataDir().$test->getFileName().'.page.debug.html', $this->session->getPage()->getContent());
 	}
     
 }

@@ -1,6 +1,7 @@
 paths:
     tests: tests
-    output: tests/_log
+    log: tests/log
+    data: tests/data
     helpers: tests/helpers
 settings:
     bootstrap: _bootstrap.php
@@ -14,4 +15,4 @@ modules:
             dsn: ''
             user: ''
             password: ''
-            dump: tests/_data/dump.sql
+            dump: tests/data/dump.sql

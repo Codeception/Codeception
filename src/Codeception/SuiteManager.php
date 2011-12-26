@@ -140,24 +140,24 @@ class SuiteManager {
 
     public function loadTests()
     {
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->depth('>= 1')->in($this->path);
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->depth('>= 0')->in($this->path);
         foreach ($testFiles as $test) {
             $this->addCept($test->getPathname());
         }
         // old-style namings, right?
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->depth('>= 1')->in($this->path);
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->depth('>= 0')->in($this->path);
         foreach ($testFiles as $test) {
             $this->addCept($test->getPathname());
         }
 
         // tests inside classes
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->depth('>= 1')->in($this->path);
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->depth('>= 0')->in($this->path);
         foreach ($testFiles as $test) {
             $this->addCest($test->getPathname());
         }
 
         // PHPUnit tests
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Test.php')->depth('>= 1')->in($this->path);
+        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Test.php')->depth('>= 0')->in($this->path);
         foreach ($testFiles as $test) {
             $this->addTest($test->getPathname());
         }
