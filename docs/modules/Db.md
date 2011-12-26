@@ -76,7 +76,3 @@ Fails if such user was found.
 
  * param $table
  * param array $criteria
-
-### getModule
-
-__not documented__

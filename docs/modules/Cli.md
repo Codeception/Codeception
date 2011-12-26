@@ -18,7 +18,3 @@ __not documented__
 ### dontSeeInShellOutput
 
 __not documented__
-
-### getModule
-
-__not documented__

@@ -76,7 +76,3 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
 
  * param $entity
  * param array $params
-
-### getModule
-
-__not documented__

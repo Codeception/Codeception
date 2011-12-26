@@ -46,7 +46,3 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * mail.c
 
  * param $model
  * param array $values
-
-### getModule
-
-__not documented__
