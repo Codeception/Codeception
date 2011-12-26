@@ -106,7 +106,7 @@ class Doctrine2 extends \Codeception\Module
      * Please, note: this fake repositories will be accessible through entity manager till the end of test.
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      *
