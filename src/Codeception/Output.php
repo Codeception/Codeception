@@ -14,8 +14,6 @@ class Output {
         $message = $this->colors ? $this->colorize($message) : $this->naturalize($message);
 		$message = $this->clean($message);
 		$this->write($message);
-
-
 	}
 
 	private function write($text)
@@ -57,6 +55,4 @@ class Output {
 		if (is_array($message)) $message = implode("\n=> ", $message);
         $this->colors ? $this->writeln("\033[36m=> ".$message."\033[0m") : $this->writeln("=> ".$message) ;
 	}
-
-
 }

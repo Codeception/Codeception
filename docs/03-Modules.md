@@ -170,7 +170,7 @@ That may be also useful if you need to perform sequence of actions taken from ot
 For example:
 
 ``` php
-
+<?php
 function seeConfigFilesCreated()
 {
     $filesystem = $this->getModule('Filesystem');
@@ -250,6 +250,47 @@ I click "All pages"
 * Request (GET) http://localhost/pages {}
 * Response code: 200
 ```
+
+### Configuration
+
+Modules can be configured from suite config file, or globally from codeception.yml.
+Mandatory parameters should be defined in $$requiredFields property of module class. Here how it is done in Db module
+
+```
+<?php
+class Db extends \Codeception\Module {
+    protected $requiredFields = array('dsn', 'user', 'password');
+```
+Next time you start suite without this values set, an exception will be thrown. 
+
+For the optional parameters you should have default values set. The $config property is used to define optional parameters as well as their values. In Seleinum module we use default Selenium Server address and port. 
+
+``` php
+<?php
+class Selenium extends \Codeception\Util\MinkJS
+{
+    protected $requiredFields = array('browser', 'url');    
+    protected $config = array('host' => '127.0.0.1', 'port' => '4444');
+```
+
+The host and port parameter can be redefined in suite config. Values are set in 'modules:config' section of configuration file.
+
+```
+modules:
+    enabled:
+        - Selenium
+        - Db
+    config:
+        Selenium:
+            url: 'http://web.begrouped/'
+            browser: 'firefox'
+        Db:
+            cleanup: false
+            repopulate: false
+```
+
+ Optional and mandatory parameters can be accessed through the $config property. Use $this->config['parameter'] to get it's value. 
+
 
 ## Conclusion
 
