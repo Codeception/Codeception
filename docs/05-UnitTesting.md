@@ -1,18 +1,12 @@
 # Unit Testing
 
-Codeception brings BDD to unit testing. Yes, that's true, no matter how strange it sounds.
+Each function is like a little a little application itself. It's the most simple and indivisible part of program. Still, it's natural to have it tested in a similar manner we test the application in a whole. Codeception unit tests are much similar to acceptance tests with some additional features that simplifies the code testing. 
 
-What the purpose for that? We are not reinventing RSpec for PHP. We are just bringing the clear specifications to unit tests.
-Unit tests are required to be readable as much as possible. They should be clean and easy for understanding.
-Codeception helps developer to follow this practices. Also it provides some useful tools for writing tests, making them stay compact and readable.
-
-Unit tests are about testing of one method. Each class method represents a unit of functionality.
-Even if it is not, the indevicible part of your code is a function. Thus we are going to have one (and only one) function per test.
-This seems like limitation, but if you test several functions with one test you are following [anti-patterns](http://blog.james-carr.org/2006/11/03/tdd-anti-patterns/) (The Giant, The Free Ride, The One).
+Unit tests are required to be readable as much as possible. They should be clean and easy for understanding. Codeception helps developer to follow this practices. Also it provides some useful tools for writing tests, making them stay compact and readable.
 
 ## Writing a Simple Test
 
-With the Codeception you shoould describe your test in a scenario, as we did it for acceptance test.
+With the Codeception you should describe your test in a scenario, as we did it for acceptance test.
 
 ``` php
 <?php
@@ -21,26 +15,33 @@ $I = new CodeGuy($scenario);
 $I->testMethod('Validator::validateEmail');
 $I->executeTestedMethodWith('davert@mail.ua');
 $I->seeResultEquals(true);
+?>
 
 ```
 
-This a simple scenario. Propbably you can reproduce this testcase in PHPUnit with less lines.
+This a simple test of very simple function. The similar test in PHPUnit will look like this:
 
 ``` php
 <?php
 public function testValidateEmail()
     $this->assertTrue(Validator::validateEmail('davert@mail.ua'));
 }
+?>
 ```
 
-Sure, it's simplier. Still Codeception is good for writing complex test scenarios.
-You don't throw away frameworks, even creating the 'HelloWorld' page with Symfony, Zend or Yii is much harder then writing 'echo "Hello world"'.
+As you can see there is no any practical reason using Codeception for simple methods. No problems if you prefer PHPUnit tests over Codeception DSL. The Codeception can run any PHPUnit test natively, as it uses PHPUnit engine. 
+
+But not all the functions can be executed and tested that way. Whenever function have dependencies and it's results is not so obviously observable the Codeception will be quite useful. 
+
+Using Codeception for unit testing is like using framework for web development. Even it's hard to create 'hello world' page with the Symfony, Zend, or Yii, but writing the complex sites or web-services requires the power of framework.
 
 ## Testing the Controller
 
-For the same reason we won't use testing of abstract classes like Apple and Tree in examples. As the 90% of overall PHP usage is web-development, we will test common classes for MVC pattern.
+It's natural to assume you are using PHP for web development. 
+Commonly web applications use MVC (Model-View-Controller) pattern. 
+Let's show how Codeception simplifies unit testing for controller classes.
 
-Let's say we have a controller UserController.
+We have controller class of imaginable MVC framework:
 
 ``` php
 <?php
@@ -54,18 +55,22 @@ class UserController extends AbtractController {
         return true;
     }
 }
+?>
 
 ```
 
-We are not sure how this method should be tested. It's not that simple as previous case. That's because show method has lots of dependencies.
-As we are performing unit testing we should ignore all that dependencies in test. We don't worry of how the render method works or how the $this->db searched for a user instance.
-The only thing we test is behavior of `show` action is performed.
+We want to test the show method. As you can see it's rather different then the 'validateEmail' function from previous example.
+This because method show relies on other functions and classes.
 
-For unit tests Codeception provides a different test file format. It's called Cest (Test + Cept = Cest).
+As we are performing unit testing we should ignore all that dependencies in test. We don't worry of how the render method works or how the $this->db searched for a user instance.
+The only thing we test is behavior of 'show' action.
+For testing of such method we should replace classes with their [stubs and use mocks](http://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs) for assertions.
 
 ### Codeception Test
 
-Here is how test of this method looks in 'UserControllerCest.php' file:
+For unit tests Codeception provides a different test file format. It's called Cest (Test + Cept = Cest).
+
+Here is the Codeception test for the 'show' action:
 
 ``` php
 <?php
@@ -74,62 +79,71 @@ class UserControllerCest {
 
     public function show(CodeGuy $I) {
         // prepare environment
-        $I->haveFakeClass($controller = Stub::make($this->class, array('render' => function() {}, 'render404' => function() {})));
-            ->haveFakeClass($db = Stub::make('DbConnector', array('find' => function($id) { return $id > 0 ? new User() : null )));
-            ->setProperty($controller, 'db', $db);
+        $I->haveFakeClass($controller = Stub::makeEmptyExcept($this->class, 'show'));
+        $I->haveFakeClass($db = Stub::make('DbConnector', array('find' => function($id) { return $id ? new User() : null )));
+        $I->setProperty($controller, 'db', $db);
 
         $I->executeTestedMethodOn($controller, 1)
             ->seeResultEquals(true)
             ->seeMethodInvoked($controller, 'render');
 
-        $I->expect('it will render404 for unexistent user')
+        $I->expect('it will render 404 page for non existent user')
             ->executeTestedMethodOn($controller, 0)
             ->seeResultNotEquals(true)
             ->seeMethodInvoked($controller, 'render404','User not found')
             ->seeMethodNotInvoked($controller, 'render');
     }
 }
-
+?>
 ```
-In this example we are creating [stubs](http://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs) for each class and methods we depend on.
-The declaration haveFakeClass describes that we are using fake object for testing. We redefine methods of stubbed class.
-For UserController we redefine methods render and render404 with dummies.
-For $db peroperty which is supposed to be DbConnector (imaginable Db class) instance we redefine find method to return User model instance for id > 0 and return null otherwise.
 
-Then we connect both stubbed classed with something like: $controller->db = $db; Why do we use a special command 'setProperty' for that?
-Because the 'db' property might be protected and you are not allowed to change it from your test. But that's not a problem for Codeception.
-With usage of [Reflection](http://php.net/manual/en/book.reflection.php) we easily change even protected and private properties.
-'setProperty' command just makes it the most simple way.
+This test is written as a simple scenario. Every command of scenario clearly describes the action being taken. We will review this code now.
 
-Ok, we prepared the environment. No dependencies left. Method show is not using any external classes except our test stubs.
-First test case - we execute tested for id of existing user.
+First of all, take a look at Cest suffix. By it Codeception knows it's a Cest testing class. Public property class is not less important. It defines the class which is being tested. Each public method of class will be treated as a test. Please note, that name of each test method is the same as method which is actually being tested. In other words, to test UserController.show we use UserControllerCest.show, UserController.edit => UserControllerCest.edit, etc. The only parameter of test method is CodeGuy class instance. 
+
+With the CodeGuy we write a scenario for unit testing. Action haveFakeClass declares that we will use stub in our testing. By using this command Codeception will dynamically create mock for this class.
+
+For stubs and mocks Codeception uses PHPUnit's mocking library with a custom wrapper. Creating Stub in Codeception is quite easy: you need only a class name and array of properties. As you can see, we also can redefine methods of class by passing a closure into this array. 
+
+### Codeception Stub
+
+Codeception\Util\Stub class has several helpers to generate required stub easily:
+
+* Stub::make - generates class with all it's methods but without calling a constructor. 
+* Stub::makeEmpty - generates class and replaces all it's methods with dummies. 
+* Stub::makeEmptyExcept - good for creating stub to test current method. Uses dummies for all methods except one, set in second parameter.
+* Stub::factory - creates several stubs in array.
+* Stub::copy - copies one object. This method can work with any class, not only stubs. By second parameter you can redefines properties of a copy. 
+
+For UserController we redefine all it's method except tested one with dummies.
+For $db property which is supposed to be DbConnector (Database class) instance we redefine it's 'find' method. Depending on parameter it is supposed to return User model or null.
+
+Next we connect both stubbed classes. We'd normally use:
+
+``` php
+<?php
+    $controller->db = $db;
+?>
+```
+
+But $controller->db property can be protected. By using 'setProperty' command we can set values even to protected and private properties! It can be done with the power of [Reflection](http://php.net/manual/en/book.reflection.php).
+
+Environment is prepared. No dependencies left. We can concentrate on actual testing. 
+
+First test case - we execute run 'show' action for existing user.
 We see tested method returned true and method render was invoked.
 
-To gain 100% code coverage of this method we should test negative scenario too. That's a [Happy Path anti-pattern](http://www.ibm.com/developerworks/opensource/library/os-junit/).
-So yes, we should run tested method second time in order to get a 404 error. All the processing of 404 is performed in render404 method.
-All we can do is to check weather this method was executed, and test the regular rendering is not performed.
+To gain 100% code coverage of this method we should test negative scenario too. We should avoid [Happy Path anti-pattern](http://www.ibm.com/developerworks/opensource/library/os-junit/).
 
-WTF?
-This test is longer then the actual code!
+Our second test case is running 'show' action for non existent user. The 404 page should be rendered in this case.
 
-Yes, all because Controller in MVC pattern is the one who connects Model and View layer. It always has dependencies to this layers.
-3 lines of our test we are just configuring this dependencies for `show` action.
+Expect command we use here is as good as a comment. We describe expected result if it's not obvious. Actually we can guess that 'UserController.show' method would show user. But we can't be sure what would happen if user doesn't exist.
+That's why we use 'expect' to describe the function description. 
 
-Then we execute method twice and make the assertions. As you know, all assertions starts with 'see' prefix.
+### PHPUnit Example
 
-But what about this 'expect' method. What is it for?
-It's just a comment, which describes what result is expecting for this method. It's obvoius that for existing user we expect a user's page rendered.
-But we should be noted on results we expect beyond the Happy Path scenario.
-
-And some things still are left to say. How do we know what we are testing here?
-First of all it's a $class property - it states the class which is being tested.
-Second - the method name. It is the same as the tested method name. Thus executeTestedMethodOn will always execute 'show' method for given UserController object.
-
-### ...and the same with PHPUnit
-
-Yes, it would be a good idea, to rewrite this example as PHPUnit testcase.
-
-Remember: all PHPUnit tests are run by Codeception. If your class ends with 'Test' it will be as PHPUnit test. If it's Cest, then it's a Codeception testcase.
+To prove Codeception was useful for controller testing, we will write same test in PHPUnit. 
+Remember, it can be run with Codeception too.
 
 ``` php
 <?php
@@ -149,7 +163,6 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         $dbProperty = $r->getProperty('db');
         $dbProperty->setAccessible(true);
         $dbProperty->setValue($controller, $db);
-
     }
 
     public function testShowForExistingUser()
@@ -163,32 +176,22 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
     {
         $controller = $this->prepareController();
         $controller->expects($this->never())->method('render')->with($this->anything());
-        $controller->expects($this->once())
-            ->method('404')
-            ->with($this->equalTo('User not found'));
-
+        $controller->expects($this->once())->method('404')->with($this->equalTo('User not found'));
         $this->assertNotEquals(true, $controller->show(0));
     }
 }
+?>
 ```
+This test is 1.5 times longer. One test is split into two. Mocking requires strong knowledge of PHPUnit API. It's hard to understand behavior of tested method 'show' without looking into it's code.
+Nevertheless this test is quite readable. 
 
-Is it more readable for you? Probably not.
+Let's analyze, why we split the one test into two.
+We test one feature, but two different behaviors. This can be argues, but we suppose that showing "404 page" can't be treated as a feature of your product.
 
-We won't process it's code line by line as we did for Codeception test. You can review [PHPUnit documentation](http://www.phpunit.de/manual/current/en/) if you don't understand some lines.
-
-But we will look into major differences. First of all we divided testing of method into 2 tests.
-This 2 behaviors can't be tested in one test.
-But is "showing 404 page for unexistent users" it's neither a new feature nor a new function.
-So why would we have 2 tests for one method?
-It's a technical, not logical limitation of PHPUnit. We can't test method 'render' invoked once and it never invoked in one test.
-That happens because assertions for expectaions are done after test is finished. You can't control when they actually happens.
-
-Just to be clear: Codeception does exactly the same as the PHPUnit test does. It just has very tools to skip all redundand steps and write less code.
-Only descriptions and asserts.
+Having to test instead of one is a technical, not logical limitation of PHPUnit. 
+That's because you can test method 'render' invoked once and not invoked in one test. All mock methods invocations are checked in the very end of the test. Thus, having expectations for 'render' once and 'render' never we will get that only the last one will be performed. 
 
 ## Conclusion
 
-
 You are free to decide the testing framework you will use for unit tests. Codeception and PHPUnit runs the same engine.
-The Codeception provides you DSL to simplify your unit test. You are writing the definitions, not the actual executed code.
-Behind the doors all the dirty work is done. You write only testing logic.
+The Codeception provides cool you DSL to simplify your unit tests. You are writing the definitions, not the actual executed code. Behind the scene all the dirty work is done. You write only testing logic.
