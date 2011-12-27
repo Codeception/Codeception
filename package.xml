@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2011-12-27</date>
-  <time>21:06:47</time>
+  <time>21:11:16</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -44,6 +44,7 @@
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
+      <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <file name="readme.md" role="php" md5sum="0f675084223b3cc5433a45609a526c9a"/>
       <dir name="src">
         <dir name="Codeception">
