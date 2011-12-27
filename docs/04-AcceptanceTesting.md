@@ -11,11 +11,10 @@ Writing Codeception tests is just the same as describing actions you perform on 
 <?php
 $I = new WebGuy($scenario);
 $I->wantTo('sign in');
-$I->amOnPage('/');
-$I->click('LOGIN');
+$I->amOnPage('/login');
 $I->fillField('signin[username]', 'davert');
 $I->fillField('signin[password]','qwerty');
-$I->click('#splashLoginBtn');
+$I->click('LOGIN');
 $I->see('Welcome, Davert!');
 ?>
 ```
@@ -25,11 +24,10 @@ Well, if you have problems reading this, Codeception can convert this scenario i
 
 ```
 I WANT TO SIGN IN
-I am on page '/'
-I click 'LOGIN'
+I am on page '/login'
 I fill field ['signin[username]', 'davert']
 I fill field ['signin[password]', 'qwerty']
-I click '#splashLoginBtn'
+I click 'LOGIN'
 I see 'Welcome, Davert!'
 
 ```
@@ -38,7 +36,11 @@ This scenario can be performed in either simple PHP browser or within the browse
 
 ## Getting Started
 
-There is no difference what CMS or Framework is used on the site. You can event tests sites created without PHP. It's always a good idea to add tests to your web site. At least you will be sure site features works after the last changes made.
+There is no difference what CMS or Framework is used on the site. Even sites created with no PHP can be tested. It's always a good idea to add tests to your web site. At least you will be sure site features works after the last changes made.
+
+### PHP Browser emulator
+
+
 
 
 
