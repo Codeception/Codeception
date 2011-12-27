@@ -4,7 +4,7 @@ Codeception is new PHP full-stack testing framework.
 Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.6.
 
-[![Build Status](https://secure.travis-ci.org/DavertMik/Codeception.png?branch=master)](http://travis-ci.org/davertmik/codeception)
+[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
 
 ### In a Glance
 
@@ -31,7 +31,7 @@ $I->see('page created'); // notice generated
 $I->see('Tree of Life Movie Review','h1'); // head of page of is our title
 $I->seeInCurrentUrl('pages/tree-of-life-mobie-review'); // slug is generated
 $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // data is stored in database
-
+?>
 ```
 Ok, as for unit test similar approach may seem weired, but...
 Take a look at this:
@@ -52,6 +52,7 @@ class UserControllerCest {
             ->seeInDabatase('users', array('username' => 'MilesDavis'));
     }
 }
+?>
 
 ```
 
@@ -59,7 +60,7 @@ Anyway, If you don't really like writing unit tests in DSL, Codeceptance can run
 
 ## Documentation
 
-[Documentation on Github](https://github.com/DavertMik/Codeception/tree/master/docs)
+[Documentation on Github](https://github.com/Codeception/Codeception/tree/master/docs)
 
 Documentation is currently bounded with project. Look for it in 'docs' directory.
 
@@ -69,13 +70,13 @@ Documentation is currently bounded with project. Look for it in 'docs' directory
 Install latest PEAR package from GitHub:
 
 ```
-pear channel-discover davertmik.github.com/pear
+pear channel-discover codeception.github.com/pear
 pear install codeception/Codeception
 ```
 
 ### Phar
 
-Download [codecept.phar](https://github.com/DavertMik/Codeception/raw/master/package/codecept.phar)
+Download [codecept.phar](https://github.com/Codeception/Codeception/raw/master/package/codecept.phar)
 
 Copy it into your project.
 Run CLI utility:
