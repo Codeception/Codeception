@@ -15,6 +15,7 @@ $I->amOnPage('/');
 $I->see('Hello');
 $I->seeInDatabase('users', array('id' => 1));
 $I->seeFileFound('running.lock');
+?>
 ```
 
 It can operate with different entities: the web page can be loaded with Symfony1 module, the database assertion uses Db module, and file state can be checked with Filesystem module. 
@@ -64,6 +65,7 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
 class TestHelper extends \Codeception\Module
 {
 }
+?>
 ```
 
 As for actions everything is quite simple. Every action you define is a public function. Write down any public method, run 'build' command, and you will see this function added into TestGuy class. Still, public methods prefixed by '_' are treated as hidden and won't be added you your Guy class. 
@@ -85,7 +87,7 @@ $I = new TestGuy($scenario);
 $I->seePageReloaded();
 $I->seeClassIsLoaded('TestGuy');
 $I->dontSeeUserExist($user);
-
+?>
 ```
 
 Every 'see' or 'dontSee' function requires at least one assert. Codeception uses PHPUnit assertions.
@@ -103,6 +105,7 @@ function seeClassExist($class)
       // or
       \PHPUnit_Framework_Assert::assertTrue(class_exists($class));
 }
+?>
 ```
 
 Each module has special $this->assert and $this->assertNot methods. They take the same arguments and are useful if you need to define both positive and negative assertions in your module. This functions take an array as parameter, where the first value of array is the name of PHPUnit assert function.
@@ -113,7 +116,7 @@ Each module has special $this->assert and $this->assertNot methods. They take th
 $this->assert(array('Equals',$int,3));
 $this->assertNot(array('internalType',$int,'bool'));
 $this->assert(array('Contains', array(3,5,9), 3));
-
+?>
 ```
 Let's see how define both 'see' and don't see action without code duplication.
 
@@ -134,7 +137,7 @@ protected function proceedSeeClassExist($class)
 {
     return array('True',get_class($class));
 }
-
+?>
 ```
 For dontSeeClassExist, the 'assertFalse' will be called.
 
@@ -160,7 +163,7 @@ function reconnectToDatabase() {
     $dbh->close();
     $dbh->open();
 }
-
+?>
 ```
 By using getModule function you get access to all public methods and properties of module.
 The dbh property was defined public specially to be avaible to other modules.
@@ -176,8 +179,9 @@ function seeConfigFilesCreated()
     $filesystem = $this->getModule('Filesystem');
     $filesystem->seeFileFound('codeception.yml');
     $filesystem->openFile('codeception.yml');
-    $filesystem->seeInFile('paths:);
+    $filesystem->seeInFile('paths');
 }
+?>
 ```
 
 ### Hooks
@@ -220,7 +224,7 @@ Here are they listed. You are free to redefine them in you module.
 	// HOOK: on fail
 	public function _failed(\Codeception\TestCase $test, $fail) {
 	}
-
+?>
 ```
 
 Please, note, that methods with '_' prefix are not added to the Guy class. This allows them to be defined as public, but used for internal purposes.
@@ -241,6 +245,7 @@ Here is the sample how it works for PhpBrowser:
     $this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
     $browser->request($method, $uri, $params);
     $this->debug('Response code: '.$this->session->getStatusCode());
+?>    
 ```
 
 The test running with PhpBrowser module in debug mode will print something like this:
@@ -260,6 +265,7 @@ Mandatory parameters should be defined in $$requiredFields property of module cl
 <?php
 class Db extends \Codeception\Module {
     protected $requiredFields = array('dsn', 'user', 'password');
+?>
 ```
 Next time you start suite without this values set, an exception will be thrown. 
 
@@ -271,6 +277,7 @@ class Selenium extends \Codeception\Util\MinkJS
 {
     protected $requiredFields = array('browser', 'url');    
     protected $config = array('host' => '127.0.0.1', 'port' => '4444');
+?>    
 ```
 
 The host and port parameter can be redefined in suite config. Values are set in 'modules:config' section of configuration file.
