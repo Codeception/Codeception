@@ -113,7 +113,7 @@ Codeception\Util\Stub class has several helpers to generate required stub easily
 * _Stub::makeEmpty_ - generates class and replaces all it's methods with dummies. 
 * _Stub::makeEmptyExcept_ - good for creating stub to test current method. Uses dummies for all methods except one, set in second parameter.
 * _Stub::factory_ - creates several stubs in array.
-* _Stub::copy_ - copies one object. This method can work with any class, not only stubs. By second parameter you can redefines properties of a copy. 
+* _Stub::copy_ - copies one object. This method can work with any class, not only stubs. By second parameter you can set new property values in a copy. 
 
 For UserController we redefine all it's method except tested one with dummies.
 For $db property which is supposed to be DbConnector (Database class) instance we redefine it's 'find' method. Depending on parameter it is supposed to return User model or null.
