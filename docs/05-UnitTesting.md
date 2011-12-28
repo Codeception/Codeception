@@ -19,7 +19,7 @@ $I->seeResultEquals(true);
 
 ```
 
-This a simple test of very simple function. The similar test in PHPUnit will look like this:
+This a test of a very simple function. The similar test in PHPUnit will look like this:
 
 ``` php
 <?php
@@ -29,9 +29,7 @@ public function testValidateEmail()
 ?>
 ```
 
-As you can see there is no any practical reason using Codeception for simple methods. No problems if you prefer PHPUnit tests over Codeception DSL. The Codeception can run any PHPUnit test natively, as it uses PHPUnit engine. 
-
-But not all the functions can be executed and tested that way. Whenever function have dependencies and it's results is not so obviously observable the Codeception will be quite useful. 
+As you can see, there is no practical reason using Codeception for testing simple methods. But not all the functions can be executed and tested that way. Whenever function have dependencies and it's results can't be so easily observable, the Codeception will be quite useful. 
 
 Using Codeception for unit testing is like using framework for web development. Even it's hard to create 'hello world' page with the Symfony, Zend, or Yii, but writing the complex sites or web-services requires the power of framework.
 

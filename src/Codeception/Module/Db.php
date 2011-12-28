@@ -40,7 +40,7 @@ class Db extends \Codeception\Module
 
     protected $sql = array();
 
-    protected $config = array('repopulate' => true, 'cleanup' => true);
+    protected $config = array('repopulate' => false, 'cleanup' => false);
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
