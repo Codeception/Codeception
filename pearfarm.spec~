@@ -4,7 +4,7 @@ $version = \Codeception\Codecept::VERSION;
 
 $spec = Pearfarm_PackageSpec::create(array(Pearfarm_PackageSpec::OPT_BASEDIR => dirname(__FILE__)))
              ->setName('Codeception')
-             ->setChannel('codeception.github.com/pear')
+             ->setChannel('davertmik.github.com/pear')
              ->setSummary('Full-stack PHP testing BDD framework.')
              ->setDescription('Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.')
              ->setReleaseVersion($version)

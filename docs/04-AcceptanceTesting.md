@@ -237,6 +237,3 @@ PhpBrowser module outputs all valuable information while running. Just execute t
 ## Conclusion
 
 Writing acceptance test with Codeception and PhpBrowser is a good start. You can easily test your Joomla, Drupal, Wordpress sites, as well as made with frameworks. Writing acceptance test is like describing tester's action in PHP. They are quite readable and very easy to write. Don't forget to repopulate database on each test run.
-
-
-
