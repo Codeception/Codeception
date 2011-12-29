@@ -1,8 +1,15 @@
 #!/usr/bin/php
 <?php
+/**
+ * Codeception CLI
+ */
 
 if (!class_exists('UniversalClassLoader')) {
-    require_once 'autoload.php';
+    $bootstrap_folder = (is_dir(__DIR__ . '/src'))
+        ? dirname(__FILE__)
+        : 'Codeception';
+
+    require_once $bootstrap_folder.'/autoload.php';
 }
 
 use Symfony\Component\Console\Application,
