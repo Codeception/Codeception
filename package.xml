@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0         http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd" version="2.0">
   <name>Codeception</name>
-  <channel>davertmik.github.com/pear</channel>
+  <channel>codeception.github.com/pear</channel>
   <summary>Full-stack PHP testing BDD framework.</summary>
   <description>Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.</description>
   <lead>
@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2011-12-29</date>
-  <time>00:20:55</time>
+  <time>00:53:04</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -27,7 +27,7 @@
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
       <file name=".travis.yml" role="php" md5sum="af8f7f49104c61ff3051cdcccdd3ca37"/>
       <file name="autoload.php" role="php" md5sum="cafac820bba1a20228fff9908c0f5ad6"/>
-      <file name="codecept" role="script" baseinstalldir="/" md5sum="504fac3f9c08825d9d2ce3f85d3ecc78">
+      <file name="codecept" role="script" baseinstalldir="/" md5sum="4b350446bbc8aa09841b88a5338b46e9">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
@@ -43,8 +43,9 @@
       <dir name="config">
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
-      <file name="pearfarm.spec" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
-      <file name="readme.md" role="php" md5sum="0f675084223b3cc5433a45609a526c9a"/>
+      <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
+      <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
+      <file name="readme.md" role="php" md5sum="743d391a83d4ec8acc3f49e1b7158e32"/>
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="7ac9a4574d70c6f403b25d26fcf03b94"/>
