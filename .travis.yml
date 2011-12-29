@@ -9,4 +9,9 @@ branches:
     - master
     - develop
 
-script: "php codecept run"
+before_script:
+  - pyrus channel-discover codeception.com/pear
+  - pyrus install codeception/Codeception
+  - phpenv rehash
+
+script: "codecept run"
