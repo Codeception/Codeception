@@ -4,31 +4,48 @@ $version = \Codeception\Codecept::VERSION;
 
 chdir(__DIR__.'/../');
 
-$docs = \Symfony\Component\Finder\Finder::create()->files('*.md')->in(__DIR__.'/../docs');
+$docs = \Symfony\Component\Finder\Finder::create()->files('*.md')->sortByName()->in(__DIR__.'/../docs');
 
 @mkdir("package/site");
 system('git clone git@github.com:Codeception/codeception.github.com.git package/site/');
 chdir('package/site');
 
+$modules = array();
+$api = array();
 foreach ($docs as $doc) {
+    $newfile = str_replace('.md','.markdown', $doc->getFilename());
+    $name = str_replace('.markdown','', $newfile);
     if (strpos($doc->getPathname(),'modules')) {
-        $newfile = 'docs/modules/'.$doc->getFilename();
+        $newfile = 'docs/modules/'.$newfile;
+        $url = str_replace('.md','', $doc->getFilename());
+        $modules[$name] = '/docs/modules/'.$url;
     } else {
-        $newfile = 'docs/'.$doc->getFilename();
+        $newfile = 'docs/'.$newfile;
+        $url = str_replace('.md','', $doc->getFilename());
+        $api[$name] = '/docs/'.$url;
     }
 
-    $newfile = str_replace('.md','.markdown', $newfile);
     copy($doc->getPathname(), $newfile);
     $contents = file_get_contents($newfile);
-    $contents = "---\nlayout: default\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
-    // add preg replace for code
-    $contents = str_replace('``` php','{% highlight php %}', $contents);
-    $contents = str_replace('```','{% endhighlight %}', $contents);
+    $contents = preg_replace('~``` php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
+    $contents = preg_replace('~```(.*?)```~ms',"{% highlight bash %}\n$1\n{% endhighlight %}", $contents);
+    $contents = "---\nlayout: page\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
     file_put_contents($newfile, $contents);
 }
 
+$content = '<h2>Documentation</h2><ul>';
+foreach ($api as $name => $url) {
+    $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+}
+
+$content.= '<h2 class="prepend-top">Modules</h2><ul>';
+foreach ($modules as $name => $url) {
+    $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+}
+
+file_put_contents('_includes/toc.html', $content);
 
 system('git add .');
 system('git commit -m="auto-updated documentation"');
