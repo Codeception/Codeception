@@ -1,4 +1,4 @@
-<?php
+gu<?php
 require_once __DIR__.'/../autoload.php';
 $version = \Codeception\Codecept::VERSION;
 
@@ -29,6 +29,7 @@ foreach ($docs as $doc) {
     $contents = file_get_contents($newfile);
 
     $contents = preg_replace('~``` php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
+    $contents = preg_replace('~``` html(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);    
     $contents = preg_replace('~```(.*?)```~ms',"{% highlight bash %}\n$1\n{% endhighlight %}", $contents);
     $contents = "---\nlayout: page\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
