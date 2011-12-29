@@ -27,6 +27,14 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->testcase->runStep($step);
         $this->assertEquals($events, array('step.before', 'step.after'));
     }
+
+    public function testRunFailedTestEvent() {
+        $events = array();
+        $this->dispatcher->addListener('test.fail', function () use (&$events) { $events[] = 'test.fail'; });
+        $this->testcase->getScenario()->assertion(array('seeEquals',5,6));
+        $this->testcase->run();
+        $this->assertEquals($events, array('test.fail'));
+    }
     
     public function testRunStep() {
         $assertions = &\Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions;
