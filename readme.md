@@ -1,10 +1,10 @@
 # Codeception
 
+[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
+
 Codeception is new PHP full-stack testing framework.
 Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.6.
-
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
 
 ### In a Glance
 
@@ -23,10 +23,7 @@ $I->amOnPage('/');
 $I->click('Pages');
 $I->click('New');
 $I->see('New Page');
-$I->submitForm('#pageForm', array('page' => array(
-    'title' => 'Tree of Life Movie Review',
-    'body' => 'Next time don\'t let Hollywood create arthouse =) '
-)));
+$I->submitForm('form#new_page', array('title' => 'Tree of Life Movie Review','body' => "Next time don't let Hollywood create arthouse!"));
 $I->see('page created'); // notice generated
 $I->see('Tree of Life Movie Review','h1'); // head of page of is our title
 $I->seeInCurrentUrl('pages/tree-of-life-mobie-review'); // slug is generated
@@ -45,7 +42,7 @@ class UserControllerCest {
 
     public function createAction(CodeGuy $I)
     {
-        $I->haveFakeClass($userController = Stub::make('UserController'));
+        $I->haveFakeClass($userController = Stub::makeEmptyExcept('UserController'));
         $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
             ->seeResultEquals(true)
             ->seeMethodInvoked($userController, 'renderHtml')
@@ -70,7 +67,7 @@ Documentation is currently bounded with project. Look for it in 'docs' directory
 Install latest PEAR package from GitHub:
 
 ```
-pear channel-discover codeception.github.com/pear
+pear channel-discover codeception.com/pear
 pear install codeception/Codeception
 ```
 
