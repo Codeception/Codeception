@@ -15,22 +15,23 @@ $api = array();
 foreach ($docs as $doc) {
     $newfile = str_replace('.md','.markdown', $doc->getFilename());
     $name = str_replace('.markdown','', $newfile);
+    $contents = file_get_contents($doc->getPathname());
     if (strpos($doc->getPathname(),'modules')) {
         $newfile = 'docs/modules/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $modules[$name] = '/docs/modules/'.$url;
+        $contents = str_replace('# ','## ', $contents);
     } else {
         $newfile = 'docs/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
-        $api[$name] = '/docs/'.$url;
+        $api[substr($name,3)] = '/docs/'.$url;
     }
 
-    copy($doc->getPathname(), $newfile);
-    $contents = file_get_contents($newfile);
+    copy($doc->getPathname(), $newfile);    
 
     $contents = preg_replace('~``` php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~``` html(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);    
-    $contents = preg_replace('~```(.*?)```~ms',"{% highlight bash %}\n$1\n{% endhighlight %}", $contents);
+    $contents = preg_replace('~```(.*?)```~ms',"{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
     $contents = "---\nlayout: page\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
     file_put_contents($newfile, $contents);

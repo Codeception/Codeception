@@ -1,4 +1,4 @@
-# Db
+# Db Module
 
 Works with SQL dabatase (MySQL tested).
 
@@ -29,29 +29,6 @@ Also provides actions to perform checks in database.
 ## Actions
 
 
-### seeInDatabase
-
-
-Checks if a row with given column values exists.
-Provide table name and column values.
-
-Example:
-
-``` php
-<?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * mail.com'));
-
-```
-Will generate:
-
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * mail.com'
-```
-Fails if no such user found.
-
- * param $table
- * param array $criteria
-
 ### dontSeeInDatabase
 
 
@@ -73,6 +50,30 @@ Will generate:
 SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * mail.com'
 ```
 Fails if such user was found.
+
+ * param $table
+ * param array $criteria
+
+
+### seeInDatabase
+
+
+Checks if a row with given column values exists.
+Provide table name and column values.
+
+Example:
+
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * mail.com'));
+
+```
+Will generate:
+
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * mail.com'
+```
+Fails if no such user found.
 
  * param $table
  * param array $criteria

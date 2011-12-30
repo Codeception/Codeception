@@ -1,4 +1,4 @@
-# Symfony1
+# Symfony1 Module
 
 Module that interacts with Symfony 1.4 applications.
 
@@ -19,12 +19,34 @@ If test fails stores last shown page in 'output' dir.
 ## Actions
 
 
+### am
+
+
+Log in as sfGuardUser.
+Only name of user should be provided.
+
+ * alias amLoggedAs
+ * param $name
+
+
+### amLoggedAs
+
+
+Log in as sfDoctrineGuardUser.
+Only name of user should be provided.
+Fetches user by it's username from sfGuardUser table.
+
+ * param $name
+ * throws \Exception
+
+
 ### amOnPage
 
 
 Opens the page.
 
  * param $page
+
 
 ### click
 
@@ -33,6 +55,16 @@ Click on link or button and move to next page.
 Either link text, css selector, or xpath can be passed
 
  * param $link
+
+
+### clickSubmitButton
+
+
+Emulates click on form's submit button.
+You don't need that action if you fill form by ->submitForm action.
+
+ * param $selector
+
 
 ### dontSee
 
@@ -52,6 +84,43 @@ $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
  * param $text
  * param null $selector
 
+
+### dontSeeCheckboxIsChecked
+
+
+Assert if the specified checkbox is unchecked.
+Use css selector or xpath to match.
+
+Example:
+
+``` php
+<?php
+$I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
+$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
+
+```
+
+ * param $selector
+
+
+### dontSeeLink
+
+
+Checks if page doesn't contain the link with text specified.
+Specify url to narrow the results.
+
+Examples:
+
+``` php
+<?php
+$I->dontSeeLink('Logout'); // I suppose user is not logged in
+
+```
+
+ * param $text
+ * param null $url
+
+
 ### see
 
 
@@ -69,6 +138,56 @@ $I->see('Sign Up','h1'); // I can suppose it's a signup page
 
  * param $text
  * param null $selector
+
+
+### seeCheckboxIsChecked
+
+
+Assert if the specified checkbox is checked.
+Use css selector or xpath to match.
+
+Example:
+
+``` php
+<?php
+$I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
+$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+
+```
+
+ * param $selector
+
+
+### seeEmailReceived
+
+
+Checks if there were at least one email sent through Symfony test mailer.
+
+
+### seeErrorInField
+
+
+Checks for invalid value in Symfony1 form.
+Matches the first sfForm instance from controller and returns getErrorSchema() values.
+Specify field which should contain error message.
+
+ * param $field
+
+
+### seeErrorsInForm
+
+
+Performs validation of Symfony1 form.
+Matches the first sfForm instance from controller and returns getErrorSchema() values.
+Shows all errors in debug.
+
+
+### seeFormIsValid
+
+
+Performs validation of Symfony1 form.
+Matches the first sfForm instance from controller and returns isValid() value.
+
 
 ### seeLink
 
@@ -88,61 +207,59 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * param $text
  * param null $url
 
-### dontSeeLink
+
+### sendAjaxGetRequest
 
 
-Checks if page doesn't contain the link with text specified.
-Specify url to narrow the results.
+If your page triggers an ajax request, you can perform it manually.
+This action sends a GET ajax request with specified params.
 
-Examples:
+See ->sendAjaxPostRequest for examples.
 
-``` php
-<?php
-$I->dontSeeLink('Logout'); // I suppose user is not logged in
-
-```
-
- * param $text
- * param null $url
-
-### seeCheckboxIsChecked
+ * param $uri
+ * param $params
 
 
-Assert if the specified checkbox is checked.
-Use css selector or xpath to match.
+### sendAjaxPostRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends a POST ajax request with specified params.
+Additional params can be passed as array.
 
 Example:
 
-``` php
-<?php
-$I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
-$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-
-```
-
- * param $selector
-
-### dontSeeCheckboxIsChecked
-
-
-Assert if the specified checkbox is unchecked.
-Use css selector or xpath to match.
-
-Example:
+Imagine that by clicking checkbox you trigger ajax request which updates user settings.
+We emulate that click by running this ajax request manually.
 
 ``` php
 <?php
-$I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
 
 ```
 
- * param $selector
+ * param $uri
+ * param $params
 
-### seeEmailReceived
+
+### signIn
 
 
-Checks if there were at least one email sent through Symfony test mailer.
+Sign's user in with sfGuardAuth.
+Uses standard path: /sfGuardAuth/signin for authorization.
+Provide username and password.
+
+ * param $username
+ * param $password
+
+
+### signOut
+
+
+Sign out is performing by triggering '/logout' url.
+
+
 
 ### submitForm
 
@@ -185,101 +302,3 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
  * param $selector
  * param $params
-
-### sendAjaxPostRequest
-
-
-If your page triggers an ajax request, you can perform it manually.
-This action sends a POST ajax request with specified params.
-Additional params can be passed as array.
-
-Example:
-
-Imagine that by clicking checkbox you trigger ajax request which updates user settings.
-We emulate that click by running this ajax request manually.
-
-``` php
-<?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
-
-```
-
- * param $uri
- * param $params
-
-### sendAjaxGetRequest
-
-
-If your page triggers an ajax request, you can perform it manually.
-This action sends a GET ajax request with specified params.
-
-See ->sendAjaxPostRequest for examples.
-
- * param $uri
- * param $params
-
-### clickSubmitButton
-
-
-Emulates click on form's submit button.
-You don't need that action if you fill form by ->submitForm action.
-
- * param $selector
-
-### seeFormIsValid
-
-
-Performs validation of Symfony1 form.
-Matches the first sfForm instance from controller and returns isValid() value.
-
-### seeErrorsInForm
-
-
-Performs validation of Symfony1 form.
-Matches the first sfForm instance from controller and returns getErrorSchema() values.
-Shows all errors in debug.
-
-### seeErrorInField
-
-
-Checks for invalid value in Symfony1 form.
-Matches the first sfForm instance from controller and returns getErrorSchema() values.
-Specify field which should contain error message.
-
- * param $field
-
-### signIn
-
-
-Sign's user in with sfGuardAuth.
-Uses standard path: /sfGuardAuth/signin for authorization.
-Provide username and password.
-
- * param $username
- * param $password
-
-### signOut
-
-
-Sign out is performing by triggering '/logout' url.
-
-
-### am
-
-
-Log in as sfGuardUser.
-Only name of user should be provided.
-
- * alias amLoggedAs
- * param $name
-
-### amLoggedAs
-
-
-Log in as sfDoctrineGuardUser.
-Only name of user should be provided.
-Fetches user by it's username from sfGuardUser table.
-
- * param $name
- * throws \Exception
