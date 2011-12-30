@@ -4,7 +4,7 @@ Let's take a look into Codeception architecture. We assume you already [installe
 
 ## Guys
 
-One of the main concepts of Codeception is representation of test as an actions of a person. We call this person Guy. We have a CodeGuy, who executes functions, and tests the code. We also have a TestGuy, a qualified tester, who tests the application in a whole, with the knowledge of it's internals. And a WebGuy, a user who works with our application through interface we provided.
+One of the main concepts of Codeception is representation of test as an actions of a person. We call this person a Guy. We have a CodeGuy, who executes functions, and tests the code. We also have a TestGuy, a qualified tester, who tests the application in a whole, with the knowledge of it's internals. And a WebGuy, a user who works with our application through interface we provided.
 
 Each of this guys are PHP classes with the actions they are allowed to do. As you can see each of guys have different abilities. They are not constant, you can extend them. You can create new guys If you like. But one Guy belongs to one suite. You can see guy classes inside the suites directories.
 

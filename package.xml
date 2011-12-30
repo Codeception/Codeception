@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2011-12-29</date>
-  <time>05:24:35</time>
+  <time>05:46:45</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -25,7 +25,7 @@
   <contents>
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
-      <file name=".travis.yml" role="php" md5sum="af8f7f49104c61ff3051cdcccdd3ca37"/>
+      <file name=".travis.yml" role="php" md5sum="d27ed00ef7f16bbf20541f231bee412a"/>
       <file name="autoload.php" role="php" md5sum="cafac820bba1a20228fff9908c0f5ad6"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="8696bad3fbd97d356bd9120ee2ae60bb">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
@@ -39,13 +39,13 @@
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
-      <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
+      <file name="codeception.yml" role="php" md5sum="46d827b7a1e5688e9eb2528f6d88142f"/>
       <dir name="config">
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
-      <file name="readme.md" role="php" md5sum="743d391a83d4ec8acc3f49e1b7158e32"/>
+      <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="7ac9a4574d70c6f403b25d26fcf03b94"/>
@@ -82,7 +82,7 @@
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
             <file name="Framework.php" role="php" md5sum="6fd51976e4e605ae24e96ca9a838bda5"/>
             <file name="PhpBrowser.php" role="php" md5sum="373b0ef539d5993037c6af62196ee509"/>
-            <file name="Selenium.php" role="php" md5sum="83f72596d2224d558b2420c697ecb058"/>
+            <file name="Selenium.php" role="php" md5sum="bf06a8e6cdc677149383eacb2882444f"/>
             <file name="Symfony1.php" role="php" md5sum="8252ad562447dfa00f51a10571a334ec"/>
             <file name="Unit.php" role="php" md5sum="a64e0d2e4e5b23e9bc5925c331891b6c"/>
           </dir>
@@ -112,10 +112,10 @@
             <file name="Condition.php" role="php" md5sum="5fae7e73f16ddae682fb3d72d6fdfe7a"/>
           </dir>
           <dir name="Subscriber">
-            <file name="Cest.php" role="php" md5sum="823f2f5aeaf808d0302b975c538b4289"/>
-            <file name="Console.php" role="php" md5sum="ef69fd3121cde3672b5fb5fa3fcde0b1"/>
-            <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
-            <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
+            <file name="Cest.php" role="php" md5sum="48b1a7866f4f2274f8b93be2e8de9229"/>
+            <file name="Console.php" role="php" md5sum="eba3615603d71e6cc63cd46539ad7df1"/>
+            <file name="Logger.php" role="php" md5sum="09e0ec5d22c07c477b9880a2da83d6e8"/>
+            <file name="Module.php" role="php" md5sum="b512befb3d3bfd5ec7ab44908b0df019"/>
           </dir>
           <file name="SuiteManager.php" role="php" md5sum="29285a0f0550a5ac19789adb8bc1db5a"/>
           <file name="TestCase.php" role="php" md5sum="cec943d1db91e028c6db2cd72b6d4d9c"/>
@@ -124,10 +124,10 @@
             <file name="Cest.php" role="php" md5sum="42cf2868ebfd2710e8e09a646d266d1a"/>
           </dir>
           <dir name="Util">
-            <file name="Data.php" role="php" md5sum="dc816dd743d0395d4d60149e736b6047"/>
+            <file name="Data.php" role="php" md5sum="329736e978cb5beba1d7a44adc2dc223"/>
             <file name="Fixtures.php" role="php" md5sum="3831f0c5dec7495cc065c8c26aeb0f75"/>
             <file name="Mink.php" role="php" md5sum="24d13f819792e3a73c8c416919154858"/>
-            <file name="MinkJS.php" role="php" md5sum="961c7fe3605b772802e4bfec8a443d4f"/>
+            <file name="MinkJS.php" role="php" md5sum="dd6571e14e65d1d84811c2d532035ab0"/>
             <file name="Stub.php" role="php" md5sum="42ba3cef2831b2d69929d83296d82625"/>
             <dir name="Stub">
               <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
@@ -225,13 +225,13 @@
               <file name="composer.json" role="php" md5sum="81b425fb6f28eb4ef21b4743a45cc3a0"/>
             </dir>
             <dir name="EventDispatcher">
-              <file name="Event.php" role="php" md5sum="fccf5992ff4637e29aa417899d527b25"/>
-              <file name="EventDispatcher.php" role="php" md5sum="d7f38f3f707e23103c5278a54546e07f"/>
-              <file name="EventDispatcherInterface.php" role="php" md5sum="be45be614de298e9fec1621e9095f2be"/>
-              <file name="EventSubscriberInterface.php" role="php" md5sum="554429374bbae39bd21f1d118b750509"/>
-              <file name="LICENSE" role="php" md5sum="822e1c98323380d6f85065c1669bcdb7"/>
-              <file name="README.md" role="php" md5sum="9783795acdf5cd9415066427d69bd8dc"/>
-              <file name="composer.json" role="php" md5sum="23178adf85d6a4db0bf37f002a816eb5"/>
+              <file name="Event.php" role="php" md5sum="d42be878fe52c0e769a767f731764316"/>
+              <file name="EventDispatcher.php" role="php" md5sum="03d9a0a412bbd58729df772adcd3a22c"/>
+              <file name="EventDispatcherInterface.php" role="php" md5sum="296f338bfc37921e82813b4c44d22aae"/>
+              <file name="EventSubscriberInterface.php" role="php" md5sum="3673c98c0486a161e8150880e522d1ef"/>
+              <file name="LICENSE" role="php" md5sum="df54d83d7f7efc17ce284f8270ad641d"/>
+              <file name="README.md" role="php" md5sum="ec902a585ca1f760ad5bb326f95eed0a"/>
+              <file name="composer.json" role="php" md5sum="fdaa0b89d937eed0a9f0024f44de3e26"/>
             </dir>
             <dir name="Finder">
               <dir name="Comparator">

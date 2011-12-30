@@ -1,4 +1,4 @@
-# Acceptance Testing with PHP Browser
+# Acceptance Testing
 
 Acceptance testing is a testing that can be performed by non-technical guy. That can be your tester, manager or even client.
 Such testing can be performed by non-technical guy. If you are developing a web-application (and probably you are) tester needs nothing more then a web browser to check your site works correctly. In Codeception we call such testers a WebGuy. You can reproduce WebGuy's actions in scenarios and run them automatically after each site change. Codeception keeps tests clean and simple, as they were recorded from words of WebGuy. 
@@ -215,6 +215,45 @@ $I->see('Form is filled incorrectly');
 ?>
 ```
 
+## Selenium
+
+Nice feature of Codeception that most scenarios can be easily ported between the testing backends.
+Your PhpBrowser tests we wrote previously can be performed by Selenium. The only one thing we need to change is to reconfigure and rebuild the WebGuy class, to use Selenium instead PhpBrowser.
+
+```
+class_name: WebGuy
+modules:
+    enabled:
+        - Selenium
+        - WebHelper
+    config:
+        Selenium:
+            url: 'http://localhost/myapp/'
+            browser: firefox            
+
+
+```
+
+Sure, running tests with PhpBrowser and Selenium is quite different. There are some actions which are not exist in both of modules, like the submitForm, we reviewed before. 
+
+In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/) and get it running. 
+
+If you run acceptance tests with Selenium, the Firefox will be started and all actions will be performed step by step. 
+Commands we use for Selenium is mostly like we have for PHPBrowser. Nevertheless, their behavior may be slightly different.
+All the actions performed on page will trigger javascript events, which might update the page contents. So, the 'click' action not just loading page from 'href' parameter of anchor, but also may start the ajax request, or toggle visibility of element.
+
+By the way, the 'see' command with element set, won't just check the text exists inside the element, but it will check this element is actually visible to user. 
+
+``` php
+<?php 
+// will check the element #modal 
+// is visible and contains 'Confirm' text.
+$I->see('Confirm','#modal'); 
+?>
+```
+
+Look to Selenium module documentation for the full reference.
+
 ### Cleaning the things up
 
 While testing your actions may change data on site. Tests will fail trying to create or update the same data twice. To avoid this problem, your database should be repopulated for each test. Codeception provides a Db module for that purposes. It will load a database dump after each passed test. To make repopulation works create sql dump of your database and put it into /tests/data dir. Set the database connection and path to dump in global Codection config.
@@ -233,7 +272,7 @@ modules:
 
 ### Debugging
 
-PhpBrowser module outputs all valuable information while running. Just execute test with --debug option to see additional output. On each fail, the snapshot of last shown page will be stored in 'tests/log' directory. This is quite helpful, as usually tests fail in cases you get unexpected response from server.
+PhpBrowser module outputs all valuable information while running. Just execute test with --debug option to see additional output. On each fail, the snapshot of last shown page will be stored in 'tests/log' directory. PHPBrowser will store html code, and Selenium will save the screenshot of a page.
 
 ## Conclusion
 

@@ -16,7 +16,7 @@ $modules = \Symfony\Component\Finder\Finder::create()->files('*.php')->in(__DIR_
 foreach ($modules as $module) {
 
     $moduleName = basename(substr($module,0,-4));
-    $text = '# '.$moduleName."\n";
+    $text = '# '.$moduleName." Module\n";
 
     $className = '\Codeception\Module\\'.$moduleName;
     $class = new ReflectionClass($className);
@@ -25,20 +25,24 @@ foreach ($modules as $module) {
     if ($doc) $text .= clean_doc($doc, 3);
     $text .= "\n## Actions\n\n";
 
+    $reference = array();
     foreach ($class->getMethods() as $method) {
         // if ($method->getDeclaringClass()->name != $className) continue;
         if ($method->isConstructor() or $method->isDestructor()) continue;
         if (strpos($method->name,'_') === 0) continue;
         if ($method->isPublic()) {
-            $text .= "\n### ".$method->name."\n\n";
+            $title = "\n### ".$method->name."\n\n";
             $doc = $method->getDocComment();
             if (!$doc) {
                 $doc = "__not documented__\n";
             } else {
                 $doc = clean_doc($doc, 7);
             }
-            $text .= $doc;
+            $reference[$method->name] = $title . $doc;
         }
     }
+    ksort($reference);
+    $text .= implode("\n", $reference);
+
     file_put_contents(__DIR__.'/../docs/modules/'.$moduleName.'.md', $text);
 }
