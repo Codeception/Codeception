@@ -18,7 +18,7 @@ class Stub
             }
         } else {
             if ($reflection->isAbstract()) {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, null, '', false);
+                $mock = \PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array(), '', false);
             } else {
                 $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, array(), '', false);
             }

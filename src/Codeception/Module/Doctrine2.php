@@ -51,6 +51,11 @@ class Doctrine2 extends \Codeception\Module
 
     public function _after(\Codeception\TestCase $test)
     {
+        if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
+            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "You can use your bootstrap file to assign the EntityManager:\n\n" .
+            '\Codeception\Module\Doctrine2::$em = $em');
+
         if ($this->config['cleanup']) self::$em->getConnection()->rollback();
 
         $em = self::$em;

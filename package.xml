@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2011-12-29</date>
-  <time>05:46:45</time>
+  <date>2012-01-03</date>
+  <time>13:22:48</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -84,7 +84,7 @@
             <file name="PhpBrowser.php" role="php" md5sum="373b0ef539d5993037c6af62196ee509"/>
             <file name="Selenium.php" role="php" md5sum="bf06a8e6cdc677149383eacb2882444f"/>
             <file name="Symfony1.php" role="php" md5sum="8252ad562447dfa00f51a10571a334ec"/>
-            <file name="Unit.php" role="php" md5sum="a64e0d2e4e5b23e9bc5925c331891b6c"/>
+            <file name="Unit.php" role="php" md5sum="12653fb5a32a9b1c90d98ea4cab98984"/>
           </dir>
           <file name="Output.php" role="php" md5sum="ee5d8a0e66a7099b3b6db0821df1af4a"/>
           <dir name="PHPUnit">

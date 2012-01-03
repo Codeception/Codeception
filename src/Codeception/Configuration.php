@@ -11,7 +11,7 @@ class Configuration
 
     protected static $logDir = null;
     protected static $dataDir = null;
-
+    
     public static function config()
     {
         if (self::$config) return self::$config;
@@ -20,6 +20,8 @@ class Configuration
         $config = array_merge($distConfig, $config);
 
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
+        if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
+        if (!isset($config['paths']['log'])) throw new \Codeception\Exception\Configuration('Log path is not defined');
 
         if (isset($config['paths']['helpers'])) {
             // Helpers
