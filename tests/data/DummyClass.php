@@ -21,5 +21,18 @@ class DummyClass
     public function getCheckMe() {
         return $this->checkMe;
     }
+    
+    public function call() {
+        $this->targetMethod();
+        return true;
+    }
+    
+    public function targetMethod() {
+        return true;
+    }
+
+    public function exceptionalMethod() {
+        throw new Exception('Catch it!');
+    }
 
 }

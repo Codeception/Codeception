@@ -2,6 +2,7 @@
 
 We already compared approach of writing tests provided by PHPUnit (and similar unit test libraries) and Codeception.
 In this chapter we will lift up the curtains and show you a bit of magic Codeception does to simplify unit testing.
+Earlier we tested the controller layer of MVC pattern. In this chapter we will concetrate on testing models.
 
 ## What do we test
 
@@ -92,22 +93,7 @@ $I->seeInDatabase('posts', array('id' => $post_id));
 
 For testing result we use ->seeResult* actions. But you can't use data returned by tested method inside your next actions.
 
-#### All variables must be constant.
-
-ALl variables used in scenarios can't be changed. 
-
-``` php
-<?php
-$post_id = 1;
-$I->seeInDatabase('posts', $post_id);
-$post_id = 3;
-$I->seeInDatabase('posts', $post_id);
-?>
-```	
-
-As we already know, the first assertions won't be executed as expected. The test will start with the $post_id equals to 3. This example could be rewritten with two post_id variables instead of one. 
-
-#### Objects can be updated
+#### Objects can be updated by CodeGuy
 
 Still, not all varibles are constant. CodeGuy can update objects inside scenarios.
 
@@ -134,7 +120,7 @@ In Codeception we work directly with object's properties. If you think of it, yo
 
 ### Making Mocks Dynamically
 
-That's plenty much limitations that Codeception provides. But what's the profit of BDD approach into writing unit tests?
+That's plenty much limitations that Codeception has. But what's the profit of BDD approach into writing unit tests?
 
 Let's go back to controller test example.
 
@@ -214,4 +200,4 @@ $I->seeInTable('Table',array('property' => 'value'));
 
 ## Conclusion
 
-Codeception has it's powers and it's limits. We belive Codeception limits keeps your tests clean and narrative. Codeception hardens writing a bad code for tests. Codeception has it's simple but powerful tools to create stubs and mocks. Different modules can be attached to unit tests, which, for example, will simplify database interactions. 
+Codeception has it's powers and it's limits. We belive Codeception limitations keeps your tests clean and narrative. Codeception hardens writing a bad code for tests. Codeception has it's simple but powerful tools to create stubs and mocks. Different modules can be attached to unit tests, which, for example, will simplify database interactions. 
