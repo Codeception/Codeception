@@ -10,7 +10,7 @@ abstract class Mink extends \Codeception\Module
 
     public function _before(\Codeception\TestCase $test) {
         // should be done to have request and response not empty
-        $this->amOnPage($this->config['url']);
+        $this->amOnPage('/');
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -24,7 +24,7 @@ abstract class Mink extends \Codeception\Module
      */
     public function amOnPage($page)
     {
-        $this->session->visit($this->config['url'].$page);
+        $this->session->visit($page);
     }
 
     /**
