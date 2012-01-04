@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-01-03</date>
-  <time>13:22:48</time>
+  <date>2012-01-04</date>
+  <time>02:30:07</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -60,7 +60,7 @@
             <file name="Install.php" role="php" md5sum="cc529a4a5b15189c952a27d31a7d4230"/>
             <file name="Run.php" role="php" md5sum="1d61bf92d97817b96ed03cc410eee241"/>
           </dir>
-          <file name="Configuration.php" role="php" md5sum="efe61434cee0075fd65ecc0e91e2945d"/>
+          <file name="Configuration.php" role="php" md5sum="f3d885770bf9d17d84ef0b809629042a"/>
           <dir name="Event">
             <file name="Fail.php" role="php" md5sum="aa808eb83f07cb882e6fbd3b00584305"/>
             <file name="Step.php" role="php" md5sum="7af213be46e292d9a57347852e62fd54"/>
@@ -78,7 +78,7 @@
             <file name="Cli.php" role="php" md5sum="895a152e20f944d15d83221921c2a99e"/>
             <file name="Db.php" role="php" md5sum="9d59a240e3b6255b4026a5a20933e461"/>
             <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
-            <file name="Doctrine2.php" role="php" md5sum="2f52eeb272efa29fac44123d084c0a97"/>
+            <file name="Doctrine2.php" role="php" md5sum="7a93aee80d2dff9701d9c73235666278"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
             <file name="Framework.php" role="php" md5sum="6fd51976e4e605ae24e96ca9a838bda5"/>
             <file name="PhpBrowser.php" role="php" md5sum="373b0ef539d5993037c6af62196ee509"/>
@@ -128,7 +128,7 @@
             <file name="Fixtures.php" role="php" md5sum="3831f0c5dec7495cc065c8c26aeb0f75"/>
             <file name="Mink.php" role="php" md5sum="24d13f819792e3a73c8c416919154858"/>
             <file name="MinkJS.php" role="php" md5sum="dd6571e14e65d1d84811c2d532035ab0"/>
-            <file name="Stub.php" role="php" md5sum="42ba3cef2831b2d69929d83296d82625"/>
+            <file name="Stub.php" role="php" md5sum="ea80e8e5d44e3d71738dc40482043548"/>
             <dir name="Stub">
               <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
               <file name="Stub.php" role="php" md5sum="e8e63cec6bf0629ba25d451838c52bab"/>
