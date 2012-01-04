@@ -24,7 +24,7 @@ abstract class Mink extends \Codeception\Module
      */
     public function amOnPage($page)
     {
-        $this->session->visit($this->config['start'].$page);
+        $this->session->visit($this->config['url'].$page);
     }
 
     /**
