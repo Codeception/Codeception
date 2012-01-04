@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-01-04</date>
-  <time>02:30:07</time>
+  <time>03:34:03</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -126,7 +126,7 @@
           <dir name="Util">
             <file name="Data.php" role="php" md5sum="329736e978cb5beba1d7a44adc2dc223"/>
             <file name="Fixtures.php" role="php" md5sum="3831f0c5dec7495cc065c8c26aeb0f75"/>
-            <file name="Mink.php" role="php" md5sum="24d13f819792e3a73c8c416919154858"/>
+            <file name="Mink.php" role="php" md5sum="21cf12be187e5c21befce3d80254a81c"/>
             <file name="MinkJS.php" role="php" md5sum="dd6571e14e65d1d84811c2d532035ab0"/>
             <file name="Stub.php" role="php" md5sum="ea80e8e5d44e3d71738dc40482043548"/>
             <dir name="Stub">
