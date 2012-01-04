@@ -70,7 +70,7 @@ class SuiteManager {
    	    $this->suite->addTest(new \Codeception\TestCase\Cept($this->dispatcher, array(
    			'name' => $name,
             'file' => $file,
-   	        'bootstrap' => $this->settings['bootstrap']
+   	        'bootstrap' => $this->path.$this->settings['bootstrap']
         )));
    	}
 
@@ -109,7 +109,7 @@ class SuiteManager {
                     'static' => $method->isStatic(),
                     'signature' => $target,
                     'file' => $file,
-           	        'bootstrap' => $this->settings['bootstrap']
+           	        'bootstrap' => $this->path.$this->settings['bootstrap']
                 )));
             }
         }
