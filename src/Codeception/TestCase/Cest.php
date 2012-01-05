@@ -23,8 +23,8 @@ class Cest extends \Codeception\TestCase
 
         $unit = $this->testClass;
 
-        if (!class_exists($this->testClass->class)) {
-            throw new \Exception("Tested class in {$unit->class} can't be loaded.");
+        if (!class_exists($this->testClass->class, true)) {
+            throw new \Exception("Tested class '{$unit->class}' can't be loaded.");
         }
 
         // executing test
