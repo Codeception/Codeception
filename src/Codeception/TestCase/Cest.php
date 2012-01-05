@@ -19,6 +19,7 @@ class Cest extends \Codeception\TestCase
     }
     
     public function loadScenario() {
+        if (file_exists($this->bootstrap)) require $this->bootstrap;
 
         $unit = $this->testClass;
 

@@ -18,7 +18,7 @@ Don't forget to include CREATE TABLE statements into it.
 * password *required* - password
 * dump - path to database dump.
 * populate: true - should the dump be loaded before test suite is started.
-* repopulate: true - should the dump be reloaded after each test
+* cleanup: true - should the dump be reloaded after each test
 
 Also provides actions to perform checks in database.
 

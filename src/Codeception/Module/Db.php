@@ -20,7 +20,7 @@ namespace Codeception\Module;
  * * password *required* - password
  * * dump - path to database dump.
  * * populate: true - should the dump be loaded before test suite is started.
- * * repopulate: true - should the dump be reloaded after each test
+ * * cleanup: true - should the dump be reloaded after each test
  *
  * Also provides actions to perform checks in database.
  *
@@ -40,7 +40,7 @@ class Db extends \Codeception\Module
 
     protected $sql = array();
 
-    protected $config = array('repopulate' => false, 'cleanup' => false);
+    protected $config = array('populate' => true, 'cleanup' => true);
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
@@ -85,6 +85,8 @@ class Db extends \Codeception\Module
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
         }
         try {
+            // don't clear database for empty dump
+            if (!count($this->sql)) return;
 
             $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
 
