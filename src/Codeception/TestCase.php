@@ -59,7 +59,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     }
     
     public function setUp() {
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
         $this->loadScenario();
         $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
     }

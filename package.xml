@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-01-04</date>
-  <time>03:34:03</time>
+  <date>2012-01-05</date>
+  <time>00:29:30</time>
   <version>
     <release>0.9.8</release>
     <api>0.9.8</api>
@@ -76,7 +76,7 @@
           <file name="Module.php" role="php" md5sum="fe258b550aa28565b9530b6ae554b3f7"/>
           <dir name="Module">
             <file name="Cli.php" role="php" md5sum="895a152e20f944d15d83221921c2a99e"/>
-            <file name="Db.php" role="php" md5sum="9d59a240e3b6255b4026a5a20933e461"/>
+            <file name="Db.php" role="php" md5sum="f8875f179690988d1fab566d4d27e8f9"/>
             <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
             <file name="Doctrine2.php" role="php" md5sum="7a93aee80d2dff9701d9c73235666278"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
@@ -117,7 +117,7 @@
             <file name="Logger.php" role="php" md5sum="09e0ec5d22c07c477b9880a2da83d6e8"/>
             <file name="Module.php" role="php" md5sum="b512befb3d3bfd5ec7ab44908b0df019"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="29285a0f0550a5ac19789adb8bc1db5a"/>
+          <file name="SuiteManager.php" role="php" md5sum="cb8a1fe44c3fed12f1fabe4f4a3817b2"/>
           <file name="TestCase.php" role="php" md5sum="cec943d1db91e028c6db2cd72b6d4d9c"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="f2c6d28af89906ce0c79e0859fd45b3f"/>

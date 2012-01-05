@@ -44,6 +44,7 @@ class SuiteManager {
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
+        $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
         self::$modules = \Codeception\Configuration::modules($settings);
         self::$actions = \Codeception\Configuration::actions(self::$modules);
@@ -133,9 +134,11 @@ class SuiteManager {
     }
     public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
-        if (strrpos(strrev($path), strrev('Cept.php')) === 0) $this->addCept($path);
-        if (strrpos(strrev($path), strrev('Cest.php')) === 0) $this->addCest($path);
-        if (strrpos(strrev($path), strrev('Test.php')) === 0) $this->addTest($path);
+        if (strrpos(strrev($path), strrev('Cept.php')) === 0) return $this->addCept($path);
+        if (strrpos(strrev($path), strrev('Spec.php')) === 0) return $this->addCept($path);
+        if (strrpos(strrev($path), strrev('Cest.php')) === 0) return $this->addCest($path);
+        if (strrpos(strrev($path), strrev('Test.php')) === 0) return $this->addTest($path);
+        throw new Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
     }
 
     public function loadTests()
