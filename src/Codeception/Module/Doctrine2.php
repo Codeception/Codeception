@@ -42,10 +42,9 @@ class Doctrine2 extends \Codeception\Module
                     "You can use your bootstrap file to assign the EntityManager:\n\n" .
                     '\Codeception\Module\Doctrine2::$em = $em');
 
-
+        self::$em->getConnection()->connect();
         if ($this->config['cleanup']) {
-            self::$em->getConnection()->beginTransaction();
-            self::$em->getConnection()->setTransactionIsolation(1);
+//            self::$em->getConnection()->beginTransaction();
         }
     }
 
@@ -56,7 +55,7 @@ class Doctrine2 extends \Codeception\Module
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
-        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
+//        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
 
         $em = self::$em;
         $reflectedEm = new \ReflectionClass($em);

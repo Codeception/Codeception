@@ -40,13 +40,14 @@ class Db extends \Codeception\Module
 
     protected $sql = array();
 
-    protected $config = array('populate' => true, 'cleanup' => true);
+    protected $config = array('populate' => true, 'cleanup' => true, 'dump' => null, 'snapshot' => true);
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
+    protected $firstRun = true;
+
     public function _initialize()
     {
-
         if (!file_exists($this->config['dump'])) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "
                 File with dump deesn't exist.\n
@@ -54,7 +55,7 @@ class Db extends \Codeception\Module
         }
 
         // not necessary to specify dump
-        if (isset($this->config['dump']) && $this->config['cleanup']) {
+        if (isset($this->config['dump']) && ($this->config['cleanup'] or ($this->config['populate']))) {
             $sql = file_get_contents($this->config['dump']);
             $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s',"",$sql);
             $this->sql = explode("\r\n", $sql);
@@ -68,14 +69,20 @@ class Db extends \Codeception\Module
         }
 
         // starting with loading dump
-        if ($this->config['cleanup']) {
+        if ($this->config['cleanup'] or $this->config['populate']) {
             $this->cleanup();
+            $this->loadDump();
+            if ($this->config['cleanup'] && $this->config['snapshot']) $this->createSnapshot();
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestCase $test)
     {
-        if ($this->config['repopulate']) $this->cleanup();
+        if ($this->config['cleanup'] && !$this->firstRun) {
+            $this->cleanup();
+            $this->config['snapshot'] ? $this->restoreSnapshot() : $this->loadDump();
+        }
+        $this->firstRun = false;
     }
 
     protected function cleanup()
@@ -92,18 +99,9 @@ class Db extends \Codeception\Module
 
             $res = $this->dbh->query('show tables')->fetchAll();
             foreach ($res as $row) {
+                $table = $row[0];
+                if (strpos($table,'__codeception_snapshot_') === 0) continue;
                 $dbh->exec('drop table ' . $row[0]);
-            }
-
-            $query = "";
-            foreach ($this->sql as $sql_line) {
-                if (trim($sql_line) != "" && trim($sql_line) != ";") {
-                    $query .= $sql_line;
-                    if (substr(rtrim($query), -1,1) == ';') {
-                        $this->dbh->exec($query);
-                        $query = "";
-                    }
-                }
             }
 
             $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
@@ -111,6 +109,60 @@ class Db extends \Codeception\Module
         } catch (\Exception $e) {
             throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
         }
+    }
+
+    protected function loadDump()
+    {
+        if (!$this->sql) return;
+        $dbh = $this->dbh;
+
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
+
+        $query = "";
+        foreach ($this->sql as $sql_line) {
+            if (trim($sql_line) != "" && trim($sql_line) != ";") {
+                $query .= $sql_line;
+                if (substr(rtrim($query), -1,1) == ';') {
+                    $this->dbh->exec($query);
+                    $query = "";
+                }
+            }
+        }
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
+
+    }
+
+    protected function createSnapshot()
+    {
+        if (!$this->sql) return;
+        $dbh = $this->dbh;
+
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
+
+        $res = $this->dbh->query('show tables')->fetchAll();
+        foreach ($res as $row) {
+            $table = $row[0];
+            if (strpos($table,'__codeception_snapshot_')===0) continue;
+            $dbh->exec("CREATE TABLE __codeception_snapshot_$table AS SELECT * FROM $table;");
+        }
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    protected function restoreSnapshot()
+    {
+        if (!$this->sql) return;
+        $dbh = $this->dbh;
+
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
+
+        $res = $this->dbh->query('show tables')->fetchAll();
+        foreach ($res as $row) {
+            $table = $row[0];
+            if (strpos($table,'__codeception_snapshot_') !==0 ) continue;
+            $table = substr($table,23);
+            $dbh->exec("CREATE TABLE $table AS SELECT * FROM __codeception_snapshot_$table;");
+        }
+        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**
