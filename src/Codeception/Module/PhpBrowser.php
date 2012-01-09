@@ -120,7 +120,7 @@ class PhpBrowser extends \Codeception\Util\Mink {
       * @param $uri
       * @param $params
       */
-    public function sendAjaxPostRequest($uri, $params) {
+    public function sendAjaxPostRequest($uri, $params = array()) {
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         $this->call($uri, 'post', $params);
         $this->debug($this->session->getPage()->getContent());
@@ -135,7 +135,7 @@ class PhpBrowser extends \Codeception\Util\Mink {
      * @param $uri
      * @param $params
      */
-    public function sendAjaxGetRequest($uri, $params) {
+    public function sendAjaxGetRequest($uri, $params = array()) {
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         $this->call($uri, 'get', $params);
         $this->debug($this->session->getPage()->getContent());

@@ -19,7 +19,7 @@ namespace Codeception\Module;
  *
  */
 
-class Symfony1 extends \Codeception\Module
+class Symfony1 extends \Codeception\Module implements \FrameworkInterface
 {
 
     /**

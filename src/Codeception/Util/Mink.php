@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Util;
 
-abstract class Mink extends \Codeception\Module
+abstract class Mink extends \Codeception\Module implements FrameworkInterface
 {
     /**
      * @var \Behat\Mink\Session
