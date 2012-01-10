@@ -10,7 +10,7 @@ namespace Codeception\Module;
  *
  * * app_path ('app' by default) - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  *
- *  ## Public Properties
+ * ## Public Properties
  *
  * * kernel - HttpKernel instance
  * * client - current Crawler instance
