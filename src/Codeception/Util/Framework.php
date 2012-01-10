@@ -60,15 +60,27 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function see($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), "$text on page");
-        \PHPUnit_Framework_Assert::assertAttributeGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), "'$text'' within selector '$selector' on page");
+            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertAttributeGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), "'$text'' within selector '$selector' on page \n".$this->formatHtmlResponse());
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), "$text on page");
-        \PHPUnit_Framework_Assert::assertAttributeEquals(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), "'$text'' within selector '$selector' on page");
+            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertAttributeEquals(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), "'$text'' within selector '$selector' on page \n".$this->formatHtmlResponse());
+    }
+
+    protected function formatHtmlResponse()
+    {
+        $response = $this->client->getResponse()->getContent();
+        if (strpos($response, '<!DOCTYPE') !== false) {
+            $formatted = $this->crawler->filter('title')->first()->text();
+            $h1 = $this->crawler->filter('h1')->first()->text();
+            $formatted .= '. Contents are to long to display here, you can see the response in Codeception log directory.';
+            return $formatted;
+        }
+        return $response;
     }
 
     public function seeLink($text, $url = null)
@@ -183,13 +195,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $form = $this->getFormFor($field = $this->crawler->filter($field)->first());
         $form[$field->attr('name')] = $value;
-    }
-
-    public function fillFields(array $fields)
-    {
-        foreach ($fields as $field => $value) {
-            $this->fillField($field, $value);
-        }
     }
 
     public function selectOption($select, $option)
