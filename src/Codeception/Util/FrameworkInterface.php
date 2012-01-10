@@ -64,6 +64,26 @@ interface FrameworkInterface
      */
     public function dontSee($text, $selector = null);
 
+    /**
+     * Perform a click on link or button.
+     * Link or button are found by their names.
+     * Submits a form if button is a submit type.
+     *
+     * If link is an image it's found by alt attribute value of image.
+     * If button is image button is found by it's value
+     *
+     * Examples:
+     *
+     * ``` php
+     * <?php
+     * // simple link
+     * $I->click('Logout');
+     * // button of form
+     * $I->click('Submit');
+     * ?>
+     * ```
+     * @param $link
+     */
     public function click($link);
 
     /**
@@ -176,6 +196,11 @@ interface FrameworkInterface
      */
     public function dontSeeLink($text, $url = null);
 
+    /**
+     * Checks that current uri contains value
+     *
+     * @param $uri
+     */
     public function seeInCurrentUrl($uri);
 
     /**
@@ -212,19 +237,95 @@ interface FrameworkInterface
      */
     public function dontSeeCheckboxIsChecked($checkbox);
 
+    /**
+     * Checks that an input field or textarea contains value.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->seeInField('form textarea[name=body]','Type your comment here');
+     * $I->seeInField('form input[type=hidden]','hidden_value');
+     * $I->seeInField('#searchform input','Search');
+     * ?>
+     * ```
+     *
+     * @param $field
+     * @param $value
+     */
     public function seeInField($field, $value);
 
+    /**
+     * Checks that an input field or textarea doesn't contain value.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
+     * $I->dontSeeInField('form input[type=hidden]','hidden_value');
+     * $I->dontSeeInField('#searchform input','Search');
+     * ?>
+     * ```
+     *
+     * @param $field
+     * @param $value
+     */
     public function dontSeeInField($field, $value);
 
+    /**
+     * Selects an option in select tag or in radio button group.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->selectOption('form select[name=account]', 'Premium');
+     * $I->selectOption('form input[name=payment]', 'Monthly');
+     * ?>
+     * ```
+     *
+     * @param $select
+     * @param $option
+     */
     public function selectOption($select, $option);
 
+    /**
+     * Ticks a checkbox.
+     *
+     * @param $option
+     */
     public function checkOption($option);
 
+    /**
+     * Unticks a checkbox.
+     *
+     * @param $option
+     */
     public function uncheckOption($option);
 
+    /**
+     * Fills a text field or textarea with value.
+     *
+     * @param $field
+     * @param $value
+     */
     public function fillField($field, $value);
 
-    public function fillFields(array $fields);
-
+    /**
+     * Attaches file from Codeception data directory to upload field.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // file is stored in 'tests/data/tests.xls'
+     * $I->attachFile('prices.xls');
+     * ?>
+     * ```
+     *
+     * @param $field
+     * @param $filename
+     */
     public function attachFile($field, $filename);
 }

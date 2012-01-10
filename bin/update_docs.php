@@ -1,24 +1,27 @@
 <?php
 
-require_once __DIR__.'/../autoload.php';
+require_once __DIR__ . '/../autoload.php';
 
 function clean_doc($doc, $indent = 3)
 {
     $lines = explode("\n", $doc);
-    $lines = array_map(function ($line) use ($indent){ return substr($line,$indent); }, $lines);
+    $lines = array_map(function ($line) use ($indent)
+    {
+        return substr($line, $indent);
+    }, $lines);
     $doc = implode("\n", $lines);
-    $doc = str_replace('@'," * ", $doc);
+    $doc = str_replace('@', " * ", $doc);
     return $doc;
 }
 
-$modules = \Symfony\Component\Finder\Finder::create()->files('*.php')->in(__DIR__.'/../src/Codeception/Module');
+$modules = \Symfony\Component\Finder\Finder::create()->files('*.php')->in(__DIR__ . '/../src/Codeception/Module');
 
 foreach ($modules as $module) {
 
-    $moduleName = basename(substr($module,0,-4));
-    $text = '# '.$moduleName." Module\n";
+    $moduleName = basename(substr($module, 0, -4));
+    $text = '# ' . $moduleName . " Module\n";
 
-    $className = '\Codeception\Module\\'.$moduleName;
+    $className = '\Codeception\Module\\' . $moduleName;
     $class = new ReflectionClass($className);
 
     $doc = $class->getDocComment();
@@ -29,9 +32,9 @@ foreach ($modules as $module) {
     foreach ($class->getMethods() as $method) {
         // if ($method->getDeclaringClass()->name != $className) continue;
         if ($method->isConstructor() or $method->isDestructor()) continue;
-        if (strpos($method->name,'_') === 0) continue;
+        if (strpos($method->name, '_') === 0) continue;
         if ($method->isPublic()) {
-            $title = "\n### ".$method->name."\n\n";
+            $title = "\n### " . $method->name . "\n\n";
             $doc = $method->getDocComment();
             if (!$doc) {
                 $interfaces = $class->getInterfaces();
@@ -50,15 +53,16 @@ foreach ($modules as $module) {
                     }
                 }
 
-                if (!$doc) $doc = "__not documented__\n";
-            } else {
-                $doc = clean_doc($doc, 7);
-            }
-            $reference[$method->name] = $title . $doc;
-        }
-    }
-    ksort($reference);
-    $text .= implode("\n", $reference);
 
-    file_put_contents(__DIR__.'/../docs/modules/'.$moduleName.'.md', $text);
+            }
+
+            $doc = $doc ? clean_doc($doc, 7) : "__not documented__\n";
+        }
+        $reference[$method->name] = $title . $doc;
+    }
 }
+ksort($reference);
+$text .= implode("\n", $reference);
+
+file_put_contents(__DIR__ . '/../docs/modules/' . $moduleName . '.md', $text);
+
