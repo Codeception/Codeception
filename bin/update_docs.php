@@ -36,7 +36,7 @@ foreach ($modules as $module) {
             if (!$doc) {
                 $interfaces = $class->getInterfaces();
                 foreach ($interfaces as $interface) {
-                    $i = new \ReflectionClass($interface);
+                    $i = new \ReflectionClass($interface->name);
                     if ($i->hasMethod($method->name)) {
                         $doc = $i->getMethod($method->name)->getDocComment();
                         break;
@@ -44,7 +44,7 @@ foreach ($modules as $module) {
                 }
 
                 if (!$doc) {
-                    $parent = new \ReflectionClass($class->getParentClass());
+                    $parent = new \ReflectionClass($class->getParentClass()->name);
                     if ($parent->hasMethod($method->name)) {
                         $doc = $parent->getMethod($method->name)->getDocComment();
                     }
