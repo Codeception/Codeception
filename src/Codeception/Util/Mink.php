@@ -27,43 +27,13 @@ abstract class Mink extends \Codeception\Module
         $this->session->visit($this->config['url'].$page);
     }
 
-    /**
-     * Check if current page doesn't contain the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ```php
-     * <?php
-     * $I->dontSee('Login'); // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
+
     public function dontSee($text, $selector = null) {
         $res = $this->proceedSee($text, $selector);
         $this->assertNot($res);
     }
 
-    /**
-     * Check if current page contains the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->see('Logout'); // I can suppose user is logged in
-     * $I->see('Sign Up','h1'); // I can suppose it's a signup page
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
+
     public function see($text, $selector = null) {
         $res = $this->proceedSee($text, $selector);
         $this->assert($res);
@@ -96,22 +66,7 @@ abstract class Mink extends \Codeception\Module
         return array('contains', $text, strip_tags($this->session->getPage()->getContent()), "'$text' in ".$response.'. For more details look for page snapshot in the log directory');
     }
 
-    /**
-     * Checks if there is a link with text specified.
-     * Specify url to match link with exact this url.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
-     * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $url
-     */
+
     public function seeLink($text, $url = null)
     {
         if (!$url) return $this->see($text, 'a');
@@ -124,21 +79,7 @@ abstract class Mink extends \Codeception\Module
         \PHPUnit_Framework_Assert::fail("with url '$url'");
     }
 
-    /**
-     * Checks if page doesn't contain the link with text specified.
-     * Specify url to narrow the results.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeLink('Logout'); // I suppose user is not logged in
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $url
-     */
+
     public function dontSeeLink($text, $url = null)
     {
         if (!$url) return $this->dontSee($text, 'a');
@@ -286,66 +227,24 @@ abstract class Mink extends \Codeception\Module
         $this->session->getPage()->attachFileToField($field, $path);
     }
 
-    /**
-     * Assert if the specified checkbox is checked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-     *
-     * ```
-     *
-     * @param $selector
-     */
     public function seeCheckboxIsChecked($checkbox) {
        $node = $this->session->getPage()->findField($checkbox);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         \PHPUnit_Framework_Assert::assertTrue($node->isChecked);
     }
 
-    /**
-     * Assert if the specified checkbox is unchecked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-     *
-     * ```
-     *
-     * @param $selector
-     */
     public function dontSeeCheckboxIsChecked($checkbox) {
         $node = $this->session->getPage()->findField($checkbox);
          if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
          \PHPUnit_Framework_Assert::assertFalse($node->isChecked);
     }
 
-    /**
-     * Checks matched field has a passed value
-     *
-     * @param $field
-     * @param $value
-     */
     public function seeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
         \PHPUnit_Framework_Assert::assertEquals($value, $node->getValue());
     }
 
-    /**
-     * Checks matched field doesn't contain a value passed
-     *
-     * @param $field
-     * @param $value
-     */
     public function dontSeeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
