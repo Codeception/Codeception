@@ -45,24 +45,22 @@ foreach ($modules as $module) {
                         break;
                     }
                 }
-
-                if (!$doc) {
-                    $parent = new \ReflectionClass($class->getParentClass()->name);
-                    if ($parent->hasMethod($method->name)) {
-                        $doc = $parent->getMethod($method->name)->getDocComment();
-                    }
-                }
-
-
             }
 
+            if (!$doc) {
+                $parent = new \ReflectionClass($class->getParentClass()->name);
+                if ($parent->hasMethod($method->name)) {
+                    $doc = $parent->getMethod($method->name)->getDocComment();
+                }
+            }
             $doc = $doc ? clean_doc($doc, 7) : "__not documented__\n";
+            $reference[$method->name] = $title . $doc;
         }
-        $reference[$method->name] = $title . $doc;
+
     }
+    ksort($reference);
+    $text .= implode("\n", $reference);
+
+    file_put_contents(__DIR__ . '/../docs/modules/' . $moduleName . '.md', $text);
+
 }
-ksort($reference);
-$text .= implode("\n", $reference);
-
-file_put_contents(__DIR__ . '/../docs/modules/' . $moduleName . '.md', $text);
-
