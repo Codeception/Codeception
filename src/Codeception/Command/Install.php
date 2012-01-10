@@ -31,6 +31,10 @@ class Install extends \Symfony\Component\Console\Command\Command {
         $output->writeln("Installing Symfony Components...");
         $output->write(shell_exec("pear channel-discover pear.symfony.com"));
         $output->write(shell_exec('pear install symfony2/Finder'));
+        $output->write(shell_exec('pear install symfony2/Process'));
+        $output->write(shell_exec('pear install symfony2/CssSelector'));
+        $output->write(shell_exec('pear install symfony2/DomCrawler'));
+        $output->write(shell_exec('pear install symfony2/BrowserKit'));
 
         $output->writeln("Installing Mink...");
         $output->write(shell_exec("pear channel-discover pear.behat.org"));

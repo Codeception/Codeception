@@ -280,6 +280,12 @@ abstract class Mink extends \Codeception\Module implements FrameworkInterface
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
     }
 
+    public function attachFile($field, $filename) {
+        $path = \Codeception\Configuration::dataDir().$filename;
+        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
+        $this->session->getPage()->attachFileToField($field, $path);
+    }
+
     /**
      * Assert if the specified checkbox is checked.
      * Use css selector or xpath to match.
@@ -346,5 +352,6 @@ abstract class Mink extends \Codeception\Module implements FrameworkInterface
         \PHPUnit_Framework_Assert::assertNotEquals($value, $node->getValue());
 
     }
+
 
 }
