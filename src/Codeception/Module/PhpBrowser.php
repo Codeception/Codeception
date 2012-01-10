@@ -20,7 +20,7 @@ namespace Codeception\Module;
  *
  */
 
-class PhpBrowser extends \Codeception\Util\Mink {
+class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\FrameworkInterface {
 
     protected $requiredFields = array('url');
 
