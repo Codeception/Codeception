@@ -28,4 +28,5 @@ interface FrameworkInterface
     public function uncheckOption($option);
     public function fillField($field, $value);
     public function fillFields(array $fields);
+    public function attachFile($field, $filename);
 }

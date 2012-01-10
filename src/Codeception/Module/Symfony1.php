@@ -7,7 +7,9 @@ namespace Codeception\Module;
  * Replaces functional testing framework from symfony. Authorization features uses Doctrine and sfDoctrineGuardPlugin.
  * Uses native symfony connections and test classes. Provides additional invormations on every actions.
  *
- * If test fails stores last shown page in 'output' dir.
+ * If test fails stores last shown page in 'log' dir.
+ *
+ * Please note, this module doesn't implement standard frameworks interface.
  *
  * ## Configuration
  *
@@ -19,7 +21,7 @@ namespace Codeception\Module;
  *
  */
 
-class Symfony1 extends \Codeception\Module implements \FrameworkInterface
+class Symfony1 extends \Codeception\Module
 {
 
     /**

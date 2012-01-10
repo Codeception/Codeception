@@ -89,7 +89,11 @@ class PhpBrowser extends \Codeception\Util\Mink {
 
 	    $fields = $this->session->getPage()->findAll('css', $selector.' select');
 	    foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
+            foreach ($field->childNodes as $option) {
+                if ($option->getAttribute('selected') == 'selected')
+                    $url .= sprintf('%s=%s',$field->getAttribute('name'), $option->getValue()).'&';
+
+            }
 	    }
 
 		$url .= '&'.http_build_query($params);
