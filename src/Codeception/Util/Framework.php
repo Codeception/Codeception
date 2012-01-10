@@ -215,12 +215,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $form[$field->attr('name')]->upload($filename);
     }
     
-    public function sendAjaxGetRequest($uri, $params) {
+    public function sendAjaxGetRequest($uri, $params = array()) {
         $this->client->request('GET', $uri, $params, array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
-    public function sendAjaxPostRequest($uri, $params) {
+    public function sendAjaxPostRequest($uri, $params = array()) {
         $this->client->request('POST', $uri, $params, array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest'));
         $this->debugResponse();
     }

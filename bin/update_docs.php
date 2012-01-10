@@ -34,7 +34,23 @@ foreach ($modules as $module) {
             $title = "\n### ".$method->name."\n\n";
             $doc = $method->getDocComment();
             if (!$doc) {
-                $doc = "__not documented__\n";
+                $interfaces = $class->getInterfaces();
+                foreach ($interfaces as $interface) {
+                    $i = new \ReflectionClass($interface);
+                    if ($i->hasMethod($method->name)) {
+                        $doc = $i->getMethod($method->name)->getDocComment();
+                        break;
+                    }
+                }
+
+                if (!$doc) {
+                    $parent = new \ReflectionClass($class->getParentClass());
+                    if ($parent->hasMethod($method->name)) {
+                        $doc = $parent->getMethod($method->name)->getDocComment();
+                    }
+                }
+
+                if (!$doc) $doc = "__not documented__\n";
             } else {
                 $doc = clean_doc($doc, 7);
             }
