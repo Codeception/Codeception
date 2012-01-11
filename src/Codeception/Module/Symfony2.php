@@ -8,7 +8,7 @@ namespace Codeception\Module;
  *
  * ## Config
  *
- * * app_path ('app' by default) - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+ * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  *
  * ## Public Properties
  *
@@ -18,6 +18,7 @@ namespace Codeception\Module;
  */
 
 use Codeception\Util\Connector\Symfony2 as Connector;
+use Symfony\Component\Finder\Finder;
 
 class Symfony2 extends \Codeception\Util\Framework
 {
@@ -26,11 +27,13 @@ class Symfony2 extends \Codeception\Util\Framework
      */
     public $kernel;
 
-    public $fields = array('app_path' => 'app');
+    public $config = array('app_path' => 'app');
     /**
      * @var
      */
     protected $kernelClass;
+
+    protected $clientClass = '\Symfony\Component\HttpKernel\Client';
 
 
     public function _initialize() {
@@ -38,17 +41,24 @@ class Symfony2 extends \Codeception\Util\Framework
         if (!file_exists($cache)) throw new \RuntimeException('Symfony2 bootstrap file not found in '.$cache);
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
+        $this->kernel = new $this->kernelClass('test', true);
+        $this->kernel->boot();
+
+        $dispatcher = $this->kernel->getContainer()->get('event_dispatcher');
+        $dispatcher->addListener('kernel.exception', function ($event) {
+            throw $event->getException();
+        });
+
     }
     
     public function _before(\Codeception\TestCase $test) {
-        $this->kernel = new $this->kernelClass('test', true);
-        $this->kernel->loadClassCache();
-
-        $this->client = new Connector($this->kernel);
+        $this->client = new $this->clientClass($this->kernel);
+        $this->client->followRedirects(true);
     }
 
     public function _after(\Codeception\TestCase $test) {
         $this->kernel->shutdown();
+        unset($this->client);
     }
 
     /**
@@ -75,9 +85,60 @@ class Symfony2 extends \Codeception\Util\Framework
         return $class;
     }
 
-    protected function getBootstrapCache()
-    {
-
+    /**
+     * Authenticates user for HTTP_AUTH 
+     *
+     * @param $username
+     * @param $password
+     */
+    public function amHttpAuthenticated($username, $password) {
+        $this->client->setServerParameter('PHP_AUTH_USER', $username);
+        $this->client->setServerParameter('PHP_AUTH_PW', $password);
     }
 
+
+    /**
+     * Checks if any email were sent by last request
+     *
+     * @throws \LogicException
+     */
+    public function seeEmailIsSent() {
+        $profile = $this->getProfiler();
+        if (!$profile) \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without Profiler');
+        if (!$profile->hasCollector('swiftmailer')) \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without SwiftMailer connector');
+
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
+    }
+
+
+
+    /**
+     * @return \Symfony\Component\HttpKernel\Profiler\Profile
+     */
+    protected function getProfiler()
+    {
+        if (!$this->kernel->getContainer()->has('profiler')) return null;
+        $profiler = $this->kernel->getContainer()->get('profiler');
+        return $profiler->loadProfileFromResponse($this->client->getResponse());
+    }
+
+    protected function debugResponse()
+    {
+        $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        if ($profile = $this->getProfiler()) {
+            if ($profile->hasCollector('security')) {
+                if ($profile->getCollector('security')->isAuthenticated()) {
+                    $this->debugSection('User', $profile->getCollector('security')->getUser().' ['.implode(',', $profile->getCollector('security')->getRoles()).']');
+                } else {
+                    $this->debugSection('User', 'Anonymous');
+                }
+            }
+            if ($profile->hasCollector('swiftmailer')) {
+                $messages = $profile->getCollector('swiftmailer')->getMessageCount();
+                if ($messages) $this->debugSection('Emails',$messages .' sent');
+            }
+            if ($profile->hasCollector('timer'))    $this->debugSection('Time', $profile->getCollector('timer')->getTime());
+            if ($profile->hasCollector('db'))       $this->debugSection('Db', $profile->getCollector('db')->getQueryCount().' queries');
+        }
+    }
 }

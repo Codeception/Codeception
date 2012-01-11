@@ -1,4 +1,9 @@
-# Doctrine2 Module
+---
+layout: page
+title: Codeception - Documentation
+---
+
+## Doctrine2 Module
 
 Allows integration and testing for projects with Doctrine2 ORM.
 
@@ -7,22 +12,24 @@ As the module uses active connection and active entity manager, instance of this
 
 It can be done in bootstrap file, by setting static $em property:
 
-``` php
+{% highlight php %}
+
 <?php
 
 \Codeception\Module\Doctrine2::$em = $em
 
-```
 
-## Config
+{% endhighlight %}
+
+### Config
 
 * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
 * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
 
-## Actions
+### Actions
 
 
-### dontSeeInRepository
+#### dontSeeInRepository
 
 
 Flushes changes to database and performs ->findOneBy() call for current repository.
@@ -31,13 +38,13 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
  * param array $params
 
 
-### flushToDatabase
+#### flushToDatabase
 
 
 Performs $em->flush();
 
 
-### haveFakeRepository
+#### haveFakeRepository
 
 
 Mocks the repository.
@@ -47,12 +54,14 @@ Please, note: this fake repositories will be accessible through entity manager t
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 
 $I->haveFakeRepository('Entity\User', array('findByUsername' => function($username) {  return null; }));
 
-```
+
+{% endhighlight %}
 
 This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
 
@@ -60,23 +69,25 @@ This creates a stub class for Entity\User repository with redefined method findB
  * param array $methods
 
 
-### persistEntity
+#### persistEntity
 
 
 Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->persistEntity($user, array('name' => 'Miles'));
-```
+
+{% endhighlight %}
 
  * param $obj
  * param array $values
 
 
-### seeInRepository
+#### seeInRepository
 
 
 Flushes changes to database and performs ->findOneBy() call for current repository.

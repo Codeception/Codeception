@@ -47,8 +47,8 @@ class Codecept
         $this->config = \Codeception\Configuration::config();
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
-        $this->addSubscribers();
-        $this->addListeners();
+        $this->registerSubscribers();
+        $this->registerListeners();
 
     }
 
@@ -67,16 +67,17 @@ class Codecept
         return $options;
     }
 
-    protected function addListeners() {
+    protected function registerListeners() {
         $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
 
-    public function addSubscribers() {
+    public function registerSubscribers() {
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
     }
 
     public function runSuite($suite, $test = null) {

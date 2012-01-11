@@ -44,14 +44,14 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
 	    $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
 	    foreach ($fields as $field) {
-		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getText()).'&';
+		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->nodeValue).'&';
 	    }
 
 	    $fields = $this->session->getPage()->findAll('css', $selector.' select');
 	    foreach ($fields as $field) {
             foreach ($field->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected')
-                    $url .= sprintf('%s=%s',$field->getAttribute('name'), $option->getValue()).'&';
+                    $url .= sprintf('%s=%s',$field->getAttribute('name'), $option->getAttribute('value')).'&';
 
             }
 	    }
