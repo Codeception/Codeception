@@ -84,7 +84,7 @@ class Configuration
         if (!isset($settings['modules'])) throw new \Codeception\Exception\Configuration('No modules configured!');
 
         if (file_exists($guy = $settings['path'].DIRECTORY_SEPARATOR.$settings['class_name'].'.php')) require_once $guy;
-        if (!class_exists($settings['class_name'])) throw new \ConfigurationException("No guys were found. Tried to find {$settings['class_name']} but he was not there.");
+        // if (!class_exists($settings['class_name'])) throw new \Codeception\Exception\Configuration("No guys were found. Tried to find {$settings['class_name']} but he was not there.");
 
         $modules = array();
 

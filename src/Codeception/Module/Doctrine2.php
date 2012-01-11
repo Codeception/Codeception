@@ -17,13 +17,15 @@ namespace Codeception\Module;
  * ```
  *
  * ## Config
+ *
+ * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  */
 
 class Doctrine2 extends \Codeception\Module
 {
 
-    protected $config = array('cleanup' => true);
+    protected $config = array('cleanup' => true, 'auto_connect' => true);
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -32,6 +34,16 @@ class Doctrine2 extends \Codeception\Module
 
     public function _before(\Codeception\TestCase $test)
     {
+        // trying to connect to Symfony2 to get event manager
+        if (!self::$em && $this->config['auto_connect']) {
+            if ($this->hasModule('Symfony2')) {
+                $kernel = $this->getModule('Symfony2')->kernel;
+                if ($kernel->getContainer()->has('doctrine')) {
+                    self::$em = $kernel->getContainer()->get('doctrine')->getEntityManager();
+                }
+            }
+       }
+
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
             "Doctrine2 module requires EntityManager explictly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
@@ -44,7 +56,7 @@ class Doctrine2 extends \Codeception\Module
 
         self::$em->getConnection()->connect();
         if ($this->config['cleanup']) {
-//            self::$em->getConnection()->beginTransaction();
+            self::$em->getConnection()->beginTransaction();
         }
     }
 
@@ -55,7 +67,7 @@ class Doctrine2 extends \Codeception\Module
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
-//        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
+        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
 
         $em = self::$em;
         $reflectedEm = new \ReflectionClass($em);

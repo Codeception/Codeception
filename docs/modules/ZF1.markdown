@@ -1,32 +1,14 @@
-# Symfony2 Module
+---
+layout: page
+title: Codeception - Documentation
+---
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+## ZF1 Module
 
-It implements common Framework interface.
-
-## Config
-
-* app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
-
-## Public Properties
-
-* kernel - HttpKernel instance
-* client - current Crawler instance
+### Actions
 
 
-## Actions
-
-
-### amHttpAuthenticated
-
-
-Authenticates user for HTTP_AUTH 
-
- * param $username
- * param $password
-
-
-### amOnPage
+#### amOnPage
 
 
 Opens the page.
@@ -34,37 +16,41 @@ Requires relative uri as parameter
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 // opens front page
 $I->amOnPage('/');
 // opens /register page
 $I->amOnPage('/register');
 ?>
-```
+
+{% endhighlight %}
 
  * param $page
 
 
-### attachFile
+#### attachFile
 
 
 Attaches file from Codeception data directory to upload field.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 // file is stored in 'tests/data/tests.xls'
 $I->attachFile('prices.xls');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $filename
 
 
-### checkOption
+#### checkOption
 
 
 Ticks a checkbox.
@@ -72,7 +58,7 @@ Ticks a checkbox.
  * param $option
 
 
-### click
+#### click
 
 
 Perform a click on link or button.
@@ -84,18 +70,20 @@ If button is image button is found by it's value
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 // simple link
 $I->click('Logout');
 // button of form
 $I->click('Submit');
 ?>
-```
+
+{% endhighlight %}
  * param $link
 
 
-### dontSee
+#### dontSee
 
 
 Check if current page doesn't contain the text specified.
@@ -103,18 +91,20 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-```php
+{% highlight yaml %}
+php
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### dontSeeCheckboxIsChecked
+#### dontSeeCheckboxIsChecked
 
 
 Assert if the specified checkbox is unchecked.
@@ -122,36 +112,40 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### dontSeeInField
+#### dontSeeInField
 
 
 Checks that an input field or textarea doesn't contain value.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### dontSeeLink
+#### dontSeeLink
 
 
 Checks if page doesn't contain the link with text specified.
@@ -159,17 +153,19 @@ Specify url to narrow the results.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### fillField
+#### fillField
 
 
 Fills a text field or textarea with value.
@@ -178,7 +174,7 @@ Fills a text field or textarea with value.
  * param $value
 
 
-### see
+#### see
 
 
 Check if current page contains the text specified.
@@ -186,18 +182,20 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### seeCheckboxIsChecked
+#### seeCheckboxIsChecked
 
 
 Assert if the specified checkbox is checked.
@@ -205,25 +203,19 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### seeEmailIsSent
-
-
-Checks if any email were sent by last request
-
- * throws \LogicException
-
-
-### seeInCurrentUrl
+#### seeInCurrentUrl
 
 
 Checks that current uri contains value
@@ -231,26 +223,28 @@ Checks that current uri contains value
  * param $uri
 
 
-### seeInField
+#### seeInField
 
 
 Checks that an input field or textarea contains value.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### seeLink
+#### seeLink
 
 
 Checks if there is a link with text specified.
@@ -258,36 +252,40 @@ Specify url to match link with exact this url.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeLink('Logout'); // matches <a href="#">Logout</a>
 $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### selectOption
+#### selectOption
 
 
 Selects an option in select tag or in radio button group.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
 ?>
-```
+
+{% endhighlight %}
 
  * param $select
  * param $option
 
 
-### sendAjaxGetRequest
+#### sendAjaxGetRequest
 
 
 If your page triggers an ajax request, you can perform it manually.
@@ -299,7 +297,7 @@ See ->sendAjaxPostRequest for examples.
  * param $params
 
 
-### sendAjaxPostRequest
+#### sendAjaxPostRequest
 
 
 If your page triggers an ajax request, you can perform it manually.
@@ -311,18 +309,20 @@ Example:
 Imagine that by clicking checkbox you trigger ajax request which updates user settings.
 We emulate that click by running this ajax request manually.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
 $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
 
-```
+
+{% endhighlight %}
 
  * param $uri
  * param $params
 
 
-### submitForm
+#### submitForm
 
 
 Submits a form located on page.
@@ -335,15 +335,18 @@ This command itself triggers the request to form's action.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
 
-```
+
+{% endhighlight %}
 
 For sample Sign Up form:
 
-``` html
+{% highlight php %}
+
 <form action="/sign_up">
     Login: <input type="text" name="user[login]" /><br/>
     Password: <input type="password" name="user[password]" /><br/>
@@ -351,21 +354,24 @@ For sample Sign Up form:
     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
     <input type="submit" value="Submit" />
 </form>
-```
+
+{% endhighlight %}
 I can write this:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
 
-```
+
+{% endhighlight %}
 Note, that pricing plan will be set to Paid, as it's selected on page.
 
  * param $selector
  * param $params
 
 
-### uncheckOption
+#### uncheckOption
 
 
 Unticks a checkbox.

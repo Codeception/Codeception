@@ -18,7 +18,7 @@ class Symfony2 extends \Symfony\Component\BrowserKit\Client
         parent::__construct();
     }
 
-    public function doRequest($request) {
+    public function doRequest(\Symfony\Component\BrowserKit\Request $request) {
 
         $response = $this->kernel->handle($request);
 

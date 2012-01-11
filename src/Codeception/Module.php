@@ -93,8 +93,13 @@ abstract class Module {
 		$this->assert($arguments, true);
 	}
 
+    protected function hasModule($name)
+    {
+        return isset(\Codeception\SuiteManager::$modules[$name]);
+    }
+
     protected function getModule($name) {
-        if (!isset(\Codeception\SuiteManager::$modules)) throw new \Codeception\Exception\Module($this, "Module $name couldn't be connected");
+        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module($this, "Module $name couldn't be connected");
         return \Codeception\SuiteManager::$modules[$name];
     }
 
