@@ -25,6 +25,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected $forms = array();
 
+    public function _failed(\Codeception\TestCase $test, $fail) {
+        file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.debug.html', $this->client->getResponse()->getContent());
+    }
+
+    public function _after(\Codeception\TestCase $test) {
+        $this->client = null;
+        $this->crawler = null;
+        $this->forms = array();
+
+    }
+
     public function amOnPage($page)
     {
         $this->crawler = $this->client->request('GET', $page);
@@ -61,15 +72,15 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function see($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), $this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), " within CSS selector '$selector' ".$this->formatHtmlResponse());
+            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), $this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), " within CSS selector '$selector' ".$this->formatHtmlResponse());
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $text . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $text . '")')->count(), "'$text'' within CSS selector '$selector' ".$this->formatHtmlResponse());
+            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), "'$text'' within CSS selector '$selector' ".$this->formatHtmlResponse());
     }
 
     protected function formatHtmlResponse()
@@ -89,6 +100,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function seeLink($text, $url = null)
     {
+
         $links = $this->crawler->selectLink($text);
         if (!$url) \PHPUnit_Framework_Assert::assertGreaterThan(0, $links->count(), "'$text' on page");
         $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' '.$url.' ')));
@@ -167,6 +179,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $url .= '&' . http_build_query($params);
         parse_str($url, $params);
+
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
 
         $this->debugSection('Uri', $form->attr('action'));
@@ -208,7 +221,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         if (!isset($input)) $input = $this->crawler->filter($field);
         if (!count($input)) \PHPUnit_Framework_Assert::fail("Form field for '$field' not found on page");
-        return $input;
+        return $input->first();
     }
 
     public function selectOption($select, $option)

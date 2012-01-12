@@ -61,6 +61,6 @@ foreach ($modules as $module) {
     ksort($reference);
     $text .= implode("\n", $reference);
 
-    file_put_contents(__DIR__ . '/../docs/modules/' . $moduleName . '.markdown', $text);
+    file_put_contents(__DIR__ . '/../docs/modules/' . $moduleName . '.md', $text);
 
 }

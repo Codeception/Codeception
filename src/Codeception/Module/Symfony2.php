@@ -58,7 +58,7 @@ class Symfony2 extends \Codeception\Util\Framework
 
     public function _after(\Codeception\TestCase $test) {
         $this->kernel->shutdown();
-        unset($this->client);
+        parent::_after($test);
     }
 
     /**

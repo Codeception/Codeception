@@ -48,7 +48,7 @@ class Selenium extends \Codeception\Util\MinkJS
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
-        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot(\Codeception\Configuration::logDir().$test->getFileName().'.debug.png','');
+        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png','');
         $this->debug("Screenshot was saved into 'log' dir");
     }
 
