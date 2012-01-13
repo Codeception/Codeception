@@ -9,6 +9,8 @@ branches:
     - master
     - develop
 
-before_script: php -S localhost:8000 &
+before_script:
+  - php -S localhost:8000 &
+  - php codecept install
 
 script: "php codecept run"
