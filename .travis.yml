@@ -11,6 +11,7 @@ branches:
 
 before_script:
   - php -S localhost:8000 &
+  - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
 
 
