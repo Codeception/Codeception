@@ -182,20 +182,26 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
 
-        $this->debugSection('Uri', $form->attr('action'));
+        $this->debugSection('Uri', $this->getFormUrl($form));
         $this->debugSection('Method', $method);
         $this->debugSection('Parameters', $params);
 
-        $this->crawler = $this->client->request($method, $form->attr('action'), $params);
+        $this->crawler = $this->client->request($method, $this->getFormUrl($form), $params);
         $this->debugResponse();
+    }
+
+    protected function getFormUrl($form)
+    {
+        $action = $form->attr('action');
+        if ((!$action) or ($action == '#')) $action = $this->client->getHistory()->current()->getUri();
+        return $action;
     }
 
     protected function getFormFor($node)
     {
         $form = $node->parents()->filter('form')->first();
         if (!$form) \PHPUnit_Framework_Assert::fail('The selected node does not have a form ancestor.');
-        $action = $form->attr('action');
-        if (!$action) \PHPUnit_Framework_Assert::fail('The selected form has no action.');
+        $action = $this->getFormUrl($form);
 
         if (!isset($this->forms[$action])) {
             $form->children()->addHtmlContent('<input type="submit" />'); // for forms with no submits...
@@ -243,17 +249,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function attachFile($field, $filename) {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
         $path = \Codeception\Configuration::dataDir().$filename;
-        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
-        $form[$field->attr('name')]->upload($filename);
+        if (!is_readable($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
+        $form[$field->attr('name')]->upload($path);
     }
     
     public function sendAjaxGetRequest($uri, $params = array()) {
-        $this->client->request('GET', $uri, $params, array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest'));
+        $this->client->request('GET', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
     public function sendAjaxPostRequest($uri, $params = array()) {
-        $this->client->request('POST', $uri, $params, array(), array('HTTP_X-Requested-With' => 'XMLHttpRequest'));
+        $this->client->request('POST', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
