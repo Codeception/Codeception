@@ -11,6 +11,9 @@ branches:
 
 before_script:
   - php -S localhost:8000 &
-  - git clone git://github.com/Behat/Mink.git mink
+  - wget http://getcomposer.org/composer.phar
+  - pirus channel-discover pear.symfony.com
+  - pirus channel-discover pear.behat.org
+  - pirus install behat/mink
 
 script: "php codecept run"
