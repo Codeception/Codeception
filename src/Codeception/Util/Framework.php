@@ -184,7 +184,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $this->debugSection('Uri', $this->getFormUrl($form));
         $this->debugSection('Method', $method);
-        $this->debugSection('Parameters', $params);
+        $this->debugSection('Parameters', json_encode($params));
 
         $this->crawler = $this->client->request($method, $this->getFormUrl($form), $params);
         $this->debugResponse();
