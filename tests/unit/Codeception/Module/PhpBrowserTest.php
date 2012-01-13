@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Util\Stub;
+require_once 'tests/data/app/data.php';
 require_once __DIR__.'/TestsForMink.php';
 
 class PhpBrowserTest extends TestsForMink
@@ -25,7 +26,6 @@ class PhpBrowserTest extends TestsForMink
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
 
-        require_once \Codeception\Configuration::dataDir().'app/data.php';
         $this->noPhpWebserver();
     }
     
