@@ -15,6 +15,7 @@ class PhpBrowserTest extends TestsForMink
     protected $is_local = false;
 
     public function setUp() {
+        $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
         if (strpos(PHP_VERSION, '5.4')===0) $url = 'http://localhost:8000';
@@ -25,8 +26,6 @@ class PhpBrowserTest extends TestsForMink
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
-
-        $this->noPhpWebserver();
     }
     
     public function tearDown() {
