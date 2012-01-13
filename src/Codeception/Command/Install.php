@@ -15,14 +15,27 @@ class Install extends \Symfony\Component\Console\Command\Command {
         return 'Installs all required components: PHPUnit, Mink, Symfony Components';
     }
 
+    protected function configure()
+    {
+        $this->setDefinition(array(
+            new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Don\'t ask for permissions')
+        ));
+        parent::configure();
+    }
+
 	public function execute(InputInterface $input, OutputInterface $output) {
 
         $dialog = new DialogHelper();
-        $confirmed = $dialog->askConfirmation($output,
-            "This will install all TestGuy dependencies through PEAR installer.\n"
-            . "PHPUnit, Symfony Components, and Mink will be installed.\n"
-            . "Do you want to proceed? (Y/n)");
-        if (!$confirmed) return;
+        if (!$input->getOption('silent')) {
+            $confirmed = $dialog->askConfirmation($output,
+                "This will install all TestGuy dependencies through PEAR installer.\n"
+                    . "PHPUnit, Symfony Components, and Mink will be installed.\n"
+                    . "Make shure this script has permission to install PEAR packages.\n"
+                    . "Do you want to proceed? (Y/n)");
+            if (!$confirmed) return;
+        }
+
+
 
         $output->writeln('Intalling PHPUnit...');
 		$output->write(shell_exec('pear config-set auto_discover 1'));
