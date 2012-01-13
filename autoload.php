@@ -10,11 +10,10 @@ $loader->registerNamespaces(array(
 ));
 
 $loader->register();
-$loader->registerNamespaceFallbacks(array(__DIR__.'/vendor/Mink/vendor'));
 
 @include_once 'PHPUnit/Autoload.php';
 @include_once 'mink/autoload.php';
 
 if (!class_exists('Behat\Behat\Mink')) {
-    @include_once 'vendor/Mink/autoload.php';
+    include_once 'vendor/.composer/autoload.php';
 }
