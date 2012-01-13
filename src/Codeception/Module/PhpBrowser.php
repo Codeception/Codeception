@@ -37,24 +37,18 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 	    $fields = $this->session->getPage()->findAll('css', $selector.' input');
 	    $url = '';
 	    foreach ($fields as $field) {
-		    if ($field->getAttribute('type') == 'checkbox') continue;
-		    if ($field->getAttribute('type') == 'radio') continue;
 		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
 	    }
 
 	    $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
 	    foreach ($fields as $field) {
-		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->nodeValue).'&';
+		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
 	    }
 
 	    $fields = $this->session->getPage()->findAll('css', $selector.' select');
-	    foreach ($fields as $field) {
-            foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected')
-                    $url .= sprintf('%s=%s',$field->getAttribute('name'), $option->getAttribute('value')).'&';
-
-            }
-	    }
+        foreach ($fields as $field) {
+   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
+   	    }
 
 		$url .= '&'.http_build_query($params);
 	    parse_str($url, $params);
@@ -66,13 +60,14 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
     public function sendAjaxPostRequest($uri, $params = array()) {
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        $this->call($uri, 'post', $params);
+        $this->call($uri, 'POST', $params);
         $this->debug($this->session->getPage()->getContent());
     }
 
     public function sendAjaxGetRequest($uri, $params = array()) {
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        $this->call($uri, 'get', $params);
+        $query = $params ? '?'. http_build_query($params) : '';
+        $this->call($uri.$query, 'GET', $params);
         $this->debug($this->session->getPage()->getContent());
     }
 

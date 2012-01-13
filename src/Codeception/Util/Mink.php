@@ -10,7 +10,7 @@ abstract class Mink extends \Codeception\Module
 
     public function _before(\Codeception\TestCase $test) {
         // should be done to have request and response not empty
-        $this->session->visit($this->config['url']);
+        $this->session->visit($this->config['url'].'/');
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -69,8 +69,8 @@ abstract class Mink extends \Codeception\Module
 
     public function seeLink($text, $url = null)
     {
-        if (!$url) return $this->see($text, 'a');
-        $nodes = $nodes = $this->session->getPage()->findAll('named', $text);
+        $nodes = $this->session->getPage()->findLink($text);
+        if (!$url) return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         foreach ($nodes as $node) {
             if (false !== strpos($node->getAttribute('href'), $url)) {
                 return \PHPUnit_Framework_Assert::assertContains($text, $node->getHtml(), "with url '$url'");
@@ -83,7 +83,7 @@ abstract class Mink extends \Codeception\Module
     public function dontSeeLink($text, $url = null)
     {
         if (!$url) return $this->dontSee($text, 'a');
-        $nodes = $nodes = $this->session->getPage()->findAll('named', $text);
+        $nodes = $this->session->getPage()->findAll('named', $text);
         foreach ($nodes as $node) {
             if (false !== strpos($node->getAttribute('href'), $url)) {
                 return \PHPUnit_Framework_Assert::fail("with url '$url'");
@@ -93,7 +93,7 @@ abstract class Mink extends \Codeception\Module
     }
 
     /**
-     * Clicks on either link (for PHPBrowser) or on any selector for JS browsers.
+     * Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
      * Link text or css selector can be passed.
      *
      * @param $link
@@ -102,6 +102,7 @@ abstract class Mink extends \Codeception\Module
         $url = $this->session->getCurrentUrl();
         $el = $this->findEl($link);
         $el->click();
+
         if ($this->session->getCurrentUrl() != $url) {
             $this->debug('moved to page '. $this->session->getCurrentUrl());
         }
@@ -109,14 +110,15 @@ abstract class Mink extends \Codeception\Module
 
     /**
      * @param $link
-     * @return \Behat\Mink\Element\Behat\Mink\Element\NodeElement
+     * @return \Behat\Mink\Element\NodeElement
      */
     protected function findEl($link)
     {
         $page = $this->session->getPage();
         $el = $page->findLink($link);
+        if (!$el) $el = $page->findButton($link);
         if (!$el) $el = $page->find('css', $link);
-        if (!$el) \PHPUnit_Framework_Assert::fail("Element for '$link' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS for '$link' not found'");
         return $el;
     }
 
@@ -144,42 +146,21 @@ abstract class Mink extends \Codeception\Module
     }
 
     /**
-     * Fill the field found by it's name with given value
+     * Fill the field with given value.
+     * Field is searched by its id|name|label|value or CSS selector.
      *
      * @param $field
      * @param $value
      */
     public function fillField($field, $value)
     {
-        $this->session->getPage()->fillField($field, $value);
-    }
-
-    /**
-     * Shortcut for filling multiple fields by their names.
-     * Array with field names => values expected.
-     *
-     *
-     * @param array $fields
-     */
-    public function fillFields(array $fields)
-    {
-        foreach ($fields as $field => $value) {
-            $this->fillField($field, $value);
-        }
-    }
-
-    /**
-     * Press the button, found by it's name.
-     *
-     * @param $button
-     */
-    public function press($button) {
-        $this->session->getPage()->pressButton($button);
+        $field = $this->findField($field);
+        $field->setValue($value);
     }
 
     /**
      * Selects opition from selectbox.
-     * Use CSS selector to match selectbox.
+     * Use field name|label|value|id or CSS selector to match selectbox.
      * Either values or text of options can be used to fetch option.
      *
      * @param $select
@@ -187,69 +168,119 @@ abstract class Mink extends \Codeception\Module
      */
     public function selectOption($select, $option)
     {
-        $this->session->getPage()->selectFieldOption($select, $option);
+        $field = $this->findField($select);
+        $field->selectOption($option);
     }
 
     /**
      * Check matched checkbox or radiobutton.
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
      * @param $option
      */
     public function checkOption($option)
     {
-        $this->session->getPage()->checkField($option);
+        $field = $this->findField($option);
+        $field->check();
+    }
+
+    /**
+     * @param $selector
+     * @return \Behat\Mink\Element\NodeElement
+     */
+    protected function findField($selector)
+    {
+        $page = $this->session->getPage();
+        $field = $page->find('named', array(
+            'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)
+        ));
+        if (!$field) $field = $page->find('css', $selector);
+        if (!$field) \PHPUnit_Framework_Assert::fail("Field matching id|name|label|value or css selector does not exists");
+        return $field;
     }
 
     /**
      * Uncheck matched checkbox or radiobutton.
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
      * @param $option
      */
     public function uncheckOption($option)
     {
-        $this->session->getPage()->uncheckField($option);
-    }
-
-    public function attachFileToField($field, $path)
-    {
-        $this->session->getPage()->attachFileToField($field, $path);
+        $field = $this->findField($option);
+        $field->uncheck();
     }
 
     /**
      * Checks if current url contains the $uri.
+     *
      * @param $uri
      */
     public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
     }
 
+    /**
+     * Attaches file stored in Codeception data directory to field specified.
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
+     * @param $field
+     * @param $filename
+     */
     public function attachFile($field, $filename) {
+        $field = $this->findField($field);
         $path = \Codeception\Configuration::dataDir().$filename;
         if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
-        $this->session->getPage()->attachFileToField($field, $path);
+        $field->attachFile($path);
     }
 
+    /**
+     * Asserts the checkbox is checked.
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
+     * @param $checkbox
+     */
     public function seeCheckboxIsChecked($checkbox) {
-       $node = $this->session->getPage()->findField($checkbox);
+       $node = $this->findField($checkbox);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
-        \PHPUnit_Framework_Assert::assertTrue($node->isChecked);
+        \PHPUnit_Framework_Assert::assertTrue($node->isChecked());
     }
 
+    /**
+     * Asserts that checbox is not checked
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
+     * @param $checkbox
+     */
     public function dontSeeCheckboxIsChecked($checkbox) {
-        $node = $this->session->getPage()->findField($checkbox);
+        $node = $this->findField($checkbox);
          if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
-         \PHPUnit_Framework_Assert::assertFalse($node->isChecked);
+         \PHPUnit_Framework_Assert::assertFalse($node->isChecked());
     }
 
+    /**
+     * Checks the value of field is equal to value passed.
+     *
+     * @param $field
+     * @param $value
+     */
     public function seeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
         \PHPUnit_Framework_Assert::assertEquals($value, $node->getValue());
     }
 
+    /**
+     * Checks the value in field is not equal to value passed.
+     * Field is searched by its id|name|label|value or CSS selector.
+     *
+     * @param $field
+     * @param $value
+     */
     public function dontSeeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
         \PHPUnit_Framework_Assert::assertNotEquals($value, $node->getValue());
-
     }
 
 

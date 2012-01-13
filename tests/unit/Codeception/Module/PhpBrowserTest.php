@@ -1,0 +1,68 @@
+<?php
+
+use Codeception\Util\Stub;
+require_once __DIR__.'/TestsForMink.php';
+
+class PhpBrowserTest extends TestsForMink
+{
+    /**
+     * @var \Codeception\Module\PhpBrowser
+     */
+    protected $module;
+
+    // this is my local config
+    protected $is_local = true;
+
+    public function setUp() {
+        $this->module = new \Codeception\Module\PhpBrowser();
+        $url = '';
+        if (strpos(PHP_VERSION, '5.4')===0) $url = 'http://localhost:8000';
+        // my local config.
+        if ($this->is_local) $url = 'http://testapp.com';
+
+        $this->module->_setConfig(array('url' => $url));
+        $this->module->_initialize();
+        $this->module->_cleanup();
+        $this->module->_before($this->makeTest());
+
+        require_once \Codeception\Configuration::dataDir().'app/data.php';
+        $this->noPhpWebserver();
+    }
+    
+    public function tearDown() {
+        $this->module->_after($this->makeTest());
+        data::clean();
+    }
+
+    protected function makeTest()
+    {
+        return Stub::makeEmpty('\Codeception\TestCase', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+    }
+
+    protected function noPhpWebserver() {
+        if ((strpos(PHP_VERSION, '5.4')!==0) and (!$this->is_local))
+        $this->markTestIncomplete(
+          'Requires PHP built-in web server, available only in PHP 5.4.'
+        );
+    }
+    
+    public function testSubmitForm() {
+        $this->module->amOnPage('/form/complex');
+        $this->module->submitForm('form', array('name' => 'Davert'));
+        $form = data::get('form');
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+
+    }
+
+    public function testAjax() {
+        $this->module->sendAjaxGetRequest('/info');
+        $this->assertNotNull(data::get('ajax'));
+
+        $this->module->sendAjaxPostRequest('/form/complex', array('show' => 'author'));
+        $this->assertNotNull(data::get('ajax'));
+        $post = data::get('form');
+        $this->assertEquals('author', $post['show']);
+
+    }
+}

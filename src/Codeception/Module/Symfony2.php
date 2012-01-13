@@ -17,7 +17,6 @@ namespace Codeception\Module;
  *
  */
 
-use Codeception\Util\Connector\Symfony2 as Connector;
 use Symfony\Component\Finder\Finder;
 
 class Symfony2 extends \Codeception\Util\Framework
