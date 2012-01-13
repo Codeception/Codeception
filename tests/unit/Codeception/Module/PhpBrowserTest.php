@@ -29,6 +29,7 @@ class PhpBrowserTest extends TestsForMink
     }
     
     public function tearDown() {
+        $this->noPhpWebserver();
         $this->module->_after($this->makeTest());
         data::clean();
     }
@@ -40,7 +41,7 @@ class PhpBrowserTest extends TestsForMink
 
     protected function noPhpWebserver() {
         if ((strpos(PHP_VERSION, '5.4')!==0) and (!$this->is_local))
-        $this->markTestIncomplete(
+        $this->markTestSkipped(
           'Requires PHP built-in web server, available only in PHP 5.4.'
         );
     }
