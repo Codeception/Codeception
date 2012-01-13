@@ -11,9 +11,7 @@ branches:
 
 before_script:
   - php -S localhost:8000 &
-  - wget http://getcomposer.org/composer.phar
-  - pyrus channel-discover pear.symfony.com
-  - pyrus channel-discover pear.behat.org
-  - pyrus install behat/mink
+  - pyrus install http://pear.behat.org//get/mink-1.3.2.tgz
+  - phpenv rehash
 
 script: "php codecept run"
