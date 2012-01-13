@@ -11,9 +11,9 @@ branches:
 
 before_script:
   - php -S localhost:8000 &
-  - git clone  git://github.com/Behat/Mink.git mink && cd mink
+  - git clone  git://github.com/Behat/Mink.git vendor/Mink && cd vendor/Mink
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
-  - cd ..
+  - cd ../..
 
 script: "php codecept run"
