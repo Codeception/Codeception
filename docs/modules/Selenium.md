@@ -42,12 +42,12 @@ Opens the page.
 
 ### attachFile
 
-__not documented__
 
+Attaches file stored in Codeception data directory to field specified.
+Field is searched by its id|name|label|value or CSS selector.
 
-### attachFileToField
-
-__not documented__
+ * param $field
+ * param $filename
 
 
 ### blur
@@ -59,13 +59,15 @@ __not documented__
 
 
 Check matched checkbox or radiobutton.
+Field is searched by its id|name|label|value or CSS selector.
+
  * param $option
 
 
 ### click
 
 
-Clicks on either link (for PHPBrowser) or on any selector for JS browsers.
+Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
 Link text or css selector can be passed.
 
  * param $link
@@ -83,12 +85,21 @@ __not documented__
 
 ### dontSeeCheckboxIsChecked
 
-__not documented__
+
+Asserts that checbox is not checked
+Field is searched by its id|name|label|value or CSS selector.
+
+ * param $checkbox
 
 
 ### dontSeeInField
 
-__not documented__
+
+Checks the value in field is not equal to value passed.
+Field is searched by its id|name|label|value or CSS selector.
+
+ * param $field
+ * param $value
 
 
 ### dontSeeLink
@@ -118,20 +129,11 @@ __not documented__
 ### fillField
 
 
-Fill the field found by it's name with given value
+Fill the field with given value.
+Field is searched by its id|name|label|value or CSS selector.
 
  * param $field
  * param $value
-
-
-### fillFields
-
-
-Shortcut for filling multiple fields by their names.
-Array with field names => values expected.
-
-
- * param array $fields
 
 
 ### focus
@@ -154,14 +156,6 @@ Moves forward in history
 ### moveMouseOver
 
 __not documented__
-
-
-### press
-
-
-Press the button, found by it's name.
-
- * param $button
 
 
 ### pressKey
@@ -192,7 +186,11 @@ __not documented__
 
 ### seeCheckboxIsChecked
 
-__not documented__
+
+Asserts the checkbox is checked.
+Field is searched by its id|name|label|value or CSS selector.
+
+ * param $checkbox
 
 
 ### seeElement
@@ -208,12 +206,17 @@ Fails if element exists but is invisible to user.
 
 
 Checks if current url contains the $uri.
+
  * param $uri
 
 
 ### seeInField
 
-__not documented__
+
+Checks the value of field is equal to value passed.
+
+ * param $field
+ * param $value
 
 
 ### seeLink
@@ -225,7 +228,7 @@ __not documented__
 
 
 Selects opition from selectbox.
-Use CSS selector to match selectbox.
+Use field name|label|value|id or CSS selector to match selectbox.
 Either values or text of options can be used to fetch option.
 
  * param $select
@@ -236,6 +239,8 @@ Either values or text of options can be used to fetch option.
 
 
 Uncheck matched checkbox or radiobutton.
+Field is searched by its id|name|label|value or CSS selector.
+
  * param $option
 
 
