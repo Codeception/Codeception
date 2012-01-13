@@ -27,7 +27,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->dispatcher->dispatch('fail.incomplete', new \Codeception\Event\Fail($test, $e));
     }
 
-    public function addSkippedTest(\PHPUnit_Framework_Test $test, Exception $e, $time) {
+    public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
         $this->dispatcher->dispatch('fail.skipped', new \Codeception\Event\Fail($test, $e));
     }
 
