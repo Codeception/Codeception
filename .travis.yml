@@ -11,6 +11,6 @@ branches:
 
 before_script:
   - php -S localhost:8000 &
-  - php codecept install
+  - php codecept install --silent
 
 script: "php codecept run"
