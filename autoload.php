@@ -13,7 +13,4 @@ $loader->register();
 
 @include_once 'PHPUnit/Autoload.php';
 @include_once 'mink/autoload.php';
-
-if (!class_exists('Behat\Behat\Mink')) {
-    include_once 'vendor/.composer/autoload.php';
-}
+@include_once 'vendor/.composer/autoload.php';

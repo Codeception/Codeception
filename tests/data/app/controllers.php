@@ -16,7 +16,7 @@ class info {
 
 class form {
     function GET($matches) {
-        $object = $matches[1];
+        $object = strtolower($matches[1]);
         include __DIR__.'/view/form/'.$object.'.php';
     }
 
