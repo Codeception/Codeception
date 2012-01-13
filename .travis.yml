@@ -14,5 +14,6 @@ before_script:
   - git clone  git://github.com/Behat/Mink.git mink && cd mink
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
+  - cd ..
 
 script: "php codecept run"
