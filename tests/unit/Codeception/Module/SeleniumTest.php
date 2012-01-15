@@ -67,10 +67,4 @@ class SeleniumTest extends TestsForMink
         // In Selenium you can't select option by it's value
     }
 
-    public function testFileFieldByLabel()
-    {
-        // well, some problems were here...
-        $this->markTestSkipped('files are not uploading yet with Selenium');
-    }
-    
 }
