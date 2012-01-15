@@ -4,7 +4,7 @@ class DummyClass
 {
     protected $checkMe = 1;
 
-    function __construct($checkMe)
+    function __construct($checkMe = 1)
     {
         $this->checkMe = "constructed: ".$checkMe;
     }

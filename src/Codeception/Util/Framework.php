@@ -233,6 +233,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function selectOption($select, $option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
+
         $form[$field->attr('name')]->select($option);
     }
 
