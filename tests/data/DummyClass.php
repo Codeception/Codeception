@@ -2,6 +2,12 @@
 
 class DummyClass
 {
+    protected $checkMe = 1;
+
+    function __construct($checkMe)
+    {
+        $this->checkMe = "constructed: ".$checkMe;
+    }
     
     public function helloWorld() {
         return "hello";
@@ -16,8 +22,6 @@ class DummyClass
         return "goAway";
     }
 
-    protected $checkMe = 1;
-    
     public function getCheckMe() {
         return $this->checkMe;
     }

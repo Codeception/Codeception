@@ -61,6 +61,42 @@ class Stub
         return $copy;
     }
 
+    public static function construct($class, $constructorParams = array(), $params = array())
+    {
+        $callables = array_filter($params, function ($a) { return is_callable($a); });
+
+        if (!empty($callables)) {
+                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), $constructorParams);
+        } else {
+                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, $constructorParams);
+        }
+        self::bindParameters($mock, $params);
+        $mock->__mocked = $class;
+        return $mock;
+
+    }
+
+    public static function constructEmpty($class, $constructorParams = array(), $params = array())
+    {
+        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), $constructorParams);
+        self::bindParameters($mock, $params);
+        $mock->__mocked = $class;
+        return $mock;
+    }
+
+    public static function constructEmptyExcept($class, $method, $constructorParams = array(), $params = array())
+    {
+        $reflectionClass = new \ReflectionClass($class);
+        $methods = $reflectionClass->getMethods();
+        $methods = array_filter($methods, function ($m) use ($method) { return $method != $m->name; });
+        $methods = array_map(function ($m) { return $m->name; }, $methods);
+        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, $methods, $constructorParams);
+        self::bindParameters($mock, $params);
+        $mock->__mocked = $class;
+        return $mock;
+
+    }
+
     protected static function bindParameters($mock, $params)
     {
         $reflectionClass = new \ReflectionClass($mock);
