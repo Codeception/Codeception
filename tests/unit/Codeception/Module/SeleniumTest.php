@@ -17,7 +17,7 @@ class SeleniumTest extends TestsForMink
     public function setUp() {
         $this->noPhpWebserver();
         $this->noSelenium();
-        $this->module = new \Codeception\Module\PhpBrowser();
+        $this->module = new \Codeception\Module\Selenium();
         $url = '';
         if (strpos(PHP_VERSION, '5.4')===0) $url = 'http://localhost:8000';
         // my local config.
@@ -31,6 +31,7 @@ class SeleniumTest extends TestsForMink
     
     public function tearDown() {
         $this->noPhpWebserver();
+        $this->noSelenium();
         $this->module->_after($this->makeTest());
         data::clean();
     }
