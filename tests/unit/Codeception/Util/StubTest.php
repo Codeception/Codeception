@@ -11,7 +11,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
     public function setUp() {
         $conf = \Codeception\Configuration::config();
         require_once $file = \Codeception\Configuration::dataDir().'DummyClass.php';
-        $this->dummy = new DummyClass();
+        $this->dummy = new DummyClass(true);
     }
     
     public function testMakeEmpty() {
@@ -55,5 +55,29 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $dummy = Stub::copy($this->dummy, array('checkMe' => 'checked!'));
         $this->assertEquals('checked!', $dummy->getCheckMe());
     }
+
+    public function testConstruct()
+    {
+        $dummy = Stub::construct('DummyClass', array('checkMe' => 'checked!'));
+        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
+
+        $dummy = Stub::construct('DummyClass', array('checkMe' => 'checked!'), array('targetMethod' => function () { return false; }));
+        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
+        $this->assertEquals(false, $dummy->targetMethod());
+    }
+
+    public function testConstructEmpty()
+    {
+        $dummy = Stub::constructEmpty('DummyClass', array('checkMe' => 'checked!'));
+        $this->assertNull($dummy->getCheckMe());
+    }
+
+    public function testConstructEmptyExcept()
+    {
+        $dummy = Stub::constructEmptyExcept('DummyClass', 'getCheckMe', array('checkMe' => 'checked!'));
+        $this->assertNull($dummy->targetMethod());
+        $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
+    }
+
 
 }
