@@ -28,7 +28,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         if ($e->getTest() instanceof \Codeception\TestCase) return;
-        $this->output->put("Trying to run [[" . $e->getTest()->toString() . ']] ');
+        $this->output->put("Running [[" . $e->getTest()->toString() . "]]");
     }
 
     // triggered for scenario based tests: cept, cest
@@ -36,7 +36,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         $test = $e->getTest();
-        $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        $this->output->put("Trying to  [[{$test->getFeature()}]] ({$test->getFileName()})");
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 

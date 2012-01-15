@@ -10,6 +10,7 @@ class CestTest extends \PHPUnit_Framework_TestCase
         $conf = \Codeception\Configuration::config();
 		require_once \Codeception\Configuration::dataDir().'DummyClass.php';
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
+        require_once $file;
         $this->testcase = new \Codeception\TestCase\Cest($this->dispatcher, array('name' => '', 'file' => $file,'class' => new SimpleCest(), 'method' => 'helloWorld', 'static' => false, 'signature' => 'DummyClass.helloWorld'));
     }
 
