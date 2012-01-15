@@ -234,6 +234,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
 
+        $options = $field->filter(sprintf('option:contains(%s)',$option));
+        if ($options->count()) {
+            $form[$field->attr('name')]->select($options->first()->attr('value'));
+            return;
+        }
+
         $form[$field->attr('name')]->select($option);
     }
 

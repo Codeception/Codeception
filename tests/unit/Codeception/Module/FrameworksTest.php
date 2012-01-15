@@ -88,6 +88,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('dead', $form['age']);
     }
+
+    public function testSelectByLabelAndOptionText() {
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption('Select your age','21-60');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('adult', $form['age']);
+    }
     
     public function testHidden() {
         $this->module->amOnPage('/form/hidden');
