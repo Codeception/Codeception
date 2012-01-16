@@ -88,7 +88,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
         $this->trace[] = $step;
         $action = $step->getAction();
-        $arguments = array_merge($step->getArguments());
+        $arguments = $step->getArguments();
         if (!isset(\Codeception\SuiteManager::$actions[$action])) {
             $this->stopped = true;
             $this->fail("Action $action not defined");

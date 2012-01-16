@@ -94,7 +94,13 @@ class Stub
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
+    }
 
+    public static function update($mock, array $params)
+    {
+        if (!$mock->__mocked) throw new \LogicException('You can update only stubbed objects');
+        self::bindParameters($mock, $params);
+        return $mock;
     }
 
     protected static function bindParameters($mock, $params)
