@@ -126,75 +126,33 @@ class Unit extends \Codeception\Module
         $this->haveFakeClass($instance);
     }
 
-
-
     /**
-     * Alias for executeTestedMethod, only for non-static methods
+     * Execute tested method on an object (stub can be passed).
+     * First argument is an object, rest are supposed to be parameters passed to method.
      *
-     * @alias executeTestedMethod
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->wantTo('authenticate user');
+     * $I->testMethod('User.authenticate');
+     * $user = new User();
+     * $I->executeTestedMethodOn($user, 'Davert','qwerty');
+     * // By this line $user->authenticate('Davert',''qwerty') was called.
+     * $I->seeResultEquals(true);
+     * ?>
+     * ```
+     *
+     * For static methods use 'executeTestedMethodWith'.
+     *
      * @param $object
      */
     public function executeTestedMethodOn($object)
     {
-        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
-    }
-
-    public function executeTestedMethodWith($params)
-    {
-        call_user_func_array(array($this, 'executeTestedMethod'), func_get_args());
-    }
-
-    /**
-     * Executes the method which is tested.
-     * If method is not static, the class instance should be provided.
-     * Otherwise bypass the first parameter blank
-     *
-     * Include additional arguments as parameter.
-     *
-     * Examples:
-     *
-     * For non-static methods:
-     *
-     * ``` php
-     * <?php
-     * $I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
-     * ```
-     *
-     * The same for static method
-     *
-     * ``` php
-     * <?php
-     * $I->executeTestedMethod(1, 'hello', array(5,4,5));
-     * ```
-     *
-     * @param $object null
-     * @throws \InvalidArgumentException
-     */
-    public function executeTestedMethod($object = null)
-    {
-        // cleanup mocks
-        foreach ($this->stubs as $mock) {
-            $mock->__phpunit_cleanup();
-        }
-
         $args = func_get_args();
-        $this->predictExceptions();
-        $res = null;
-        if ($this->testedStatic) {
+        $obj = array_shift($args);
 
-            if (!method_exists($this->testedClass, $this->testedMethod))
-                throw new \Codeception\Exception\Module(__CLASS__,sprintf('%s::%s is not valid callable', $this->testedClass, $this->testedMethod));
-
-            try {
-                $res = call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
-            } catch (\Exception $e) {
-                $this->catchException($e);
-            }
-
-            $this->debug("Static method {$this->testedClass}::{$this->testedMethod} executed");
-            $this->debug('With parameters: ' . json_encode($args));
-        } else {
-            $obj = array_shift($args);
+        $callable = function () use ($obj, $args) {
 
             $reflectedObj = new \ReflectionClass($obj);
             $reflectedMethod = $reflectedObj->getMethod($this->testedMethod);
@@ -204,31 +162,123 @@ class Unit extends \Codeception\Module
             if (!$reflectedMethod->isPublic()) {
                 $reflectedMethod->setAccessible(true);
             }
+            return $reflectedMethod->invokeArgs($obj, $args);
+        };
 
-            if (!$obj) throw new \InvalidArgumentException("Object for tested method is expected");
-            if (isset($obj->__mocked)) $this->debug('Received Stub');
-            $this->createMocks();
-            try {
-                $res = $reflectedMethod->invokeArgs($obj, $args);
-            } catch (\Exception $e) {
-                $this->catchException($e);
-            }
-            $this->debug("method {$this->testedMethod} executed");
-        }
-        $this->debug('Result: ' . json_encode($res));
-        $this->last_result = $res;
+        $this->createMocks();
+        $this->execute($callable);
+        if (isset($obj->__mocked)) $this->debug('Received Stub');
+        $this->debug("Method {$this->testedMethod} executed");
+        $this->debug('With parameters: ' . json_encode($args));
+
     }
 
-    protected  function catchException($e) {
-        foreach ($this->predictedExceptions as $exception) {
-            if ($e instanceof $exception) {
-                $class = get_class($e);
-                if (strpos($class,'\\')!== 0) $class = '\\'.$class;
-                $this->thrownExceptions[$class] = $e;
-                return;
-            };
+    /**
+     * Executes tested static method with parameters provided.
+     *
+     * ```
+     * <?php
+     * $I->testMethod('User::validateName');
+     * $I->executeTestedMethodWith('davert',true);
+     * // User::validate('davert', true); was called
+     * ?>
+     * ```
+     * For non-static method use 'executeTestedMethodOn'
+     *
+     * @param $params
+     * @throws \Codeception\Exception\Module
+     */
+    public function executeTestedMethodWith($params)
+    {
+        $args = func_get_args();
+        if (!method_exists($this->testedClass, $this->testedMethod))
+            throw new \Codeception\Exception\Module(__CLASS__,sprintf('%s::%s is not valid callable', $this->testedClass, $this->testedMethod));
+
+        $callable = function () use ($args) {
+            return call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
+        };
+
+        $this->execute($callable);
+
+        $this->debug("Static method {$this->testedClass}::{$this->testedMethod} executed");
+        $this->debug('With parameters: ' . json_encode($args));
+    }
+
+    /**
+     * Executes the method which is tested.
+     * If method is not static, the class instance should be provided.
+     *
+     * If a method is static 'executeTestedWith' will be called.
+     * If a method is not static 'executeTestedOn' will be called.
+     * See those methods for the full reference
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function executeTestedMethod()
+    {
+        $args = func_get_args();
+        if ($this->testedStatic) {
+            call_user_func_array(array($this, 'executeTestedMethodWith'), $args);
+        } else {
+            call_user_func_array(array($this, 'executeTestedMethodOn'), $args);
         }
-        throw $e;
+    }
+
+
+    /**
+     * Executes a code block. The result of execution will be stored.
+     * Parameter should be a valid Closure. The returned value can be checked with seeResult actions.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $user = new User();
+     * $I->execute(function() use ($user) {
+     *      $user->setName('Davert');
+     *      return $user->getName();
+     * });
+     * $I->seeResultEquals('Davert');
+     * ?>
+     * ```
+     *
+     * You can use native PHPUnit asserts in executed code. This can be either static methods of PHPUnit_Framework_assert class,
+     * or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
+     * You should manually include this file, as this functions may conflict with functions in your code.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * require_once 'PHPUnit/Framework/Assert/Functions.php';
+     *
+     * $user = new User();
+     * $I->execute(function() use ($user) {
+     *      $user->setName('Davert');
+     *      assertEquals('Davert', $user->getName());
+     * });
+     * ```
+     *
+     * @param \Closure $code
+     */
+    public function execute(\Closure $code)
+    {
+        // cleanup mocks
+        foreach ($this->stubs as $mock) {
+            $mock->__phpunit_cleanup();
+        }
+
+        $this->predictExceptions();
+        $res = null;
+
+        try {
+            $res = $code->__invoke();
+        } catch (\Exception $e) {
+            $this->catchException($e);
+        }
+
+        $this->debug('Result: ' . json_encode($res));
+        $this->last_result = $res;
     }
 
     /**
@@ -264,10 +314,12 @@ class Unit extends \Codeception\Module
 
     public function seeExceptionThrown($classname, $message = null) {
 
-        \PHPUnit_Framework_Assert::assertContains($classname, array_keys($this->thrownExceptions));
-        if ($message) {
-            $e = $this->thrownExceptions[$classname];
-            \PHPUnit_Framework_Assert::assertContains($message, $e->getMessage());
+        foreach ($this->thrownExceptions as $e) {
+            if ($e instanceof $classname) {
+                \PHPUnit_Framework_Assert::assertInstanceOf($classname, $e);
+                if ($message) \PHPUnit_Framework_Assert::assertContains($message, $e->getMessage());
+                return;
+            }
         }
     }
 
@@ -282,11 +334,22 @@ class Unit extends \Codeception\Module
             $action = $step->getAction();
             if ($action == 'executeTestedMethod') break;
             if ($action == 'executeTestedMethodOn') break;
+            if ($action == 'executeTestedMethodWith') break;
+            if ($action == 'execute') break;
             if ($action != 'seeExceptionThrown') continue;
 
             $args = $step->getArguments(false);
             $this->predictedExceptions[] = $args[0];
         }
+    }
+
+    protected function catchException($e)
+    {
+        $this->thrownExceptions[] = $e;
+        foreach ($this->predictedExceptions as $predicted) {
+            if ($e instanceof $predicted) return;
+        }
+        throw $e;
     }
 
     /**
@@ -345,13 +408,31 @@ class Unit extends \Codeception\Module
 
             }
             if ($step->getAction() == 'executeTestedMethod') break;
+            if ($step->getAction() == 'execute') break;
             if ($step->getAction() == 'executeTestedMethodOn') break;
             if ($step->getAction() == 'executeTestedMethodWith') break;
         }
     }
 
     /**
+     * Checks the method of stub was invoked after the last execution.
+     * Requires a stub as a first parameter, a method name as second.
+     * Optionally pass an arguments which are expected for executed method.
      *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->testMethod('UserService.create');
+     * $I->haveStub($user = Stub::make('Model\User'));*
+     * $service = new UserService($user);
+     * $I->executeTestedMethodOn($service);
+     * // we expect $user->save was invoked.
+     * $I->seeMethodInvoked($user, 'save');
+     * ?>
+     * ```
+     *
+     * This method dynamically creates mock from stub.
      *
      * @magic
      * @see createMocks
@@ -365,7 +446,12 @@ class Unit extends \Codeception\Module
     }
 
     /**
+     * Checks the method of stub was invoked *only once* after the last execution.
+     * Requires a stub as a first parameter, a method name as second.
+     * Optionally pass an arguments which are expected for executed method.
      *
+     * Look for 'seeMethodInvoked' to see the example.
+
      * @magic
      * @see createMocks
      * @param $mock
@@ -378,7 +464,10 @@ class Unit extends \Codeception\Module
     }
 
     /**
-     *
+     * Checks the method of stub *was not invoked* after the last execution.
+     * Requires a stub as a first parameter, a method name as second.
+     * Optionally pass an arguments which are expected for executed method.
+
      * @magic
      * @see createMocks
      * @param $mock
@@ -391,7 +480,12 @@ class Unit extends \Codeception\Module
     }
 
     /**
+     * Checks the method of stub was invoked *only once* after the last execution.
+     * Requires a stub as a first parameter, a method name as second and expected executions number.
+     * Optionally pass an arguments which are expected for executed method.
      *
+     * Look for 'seeMethodInvoked' to see the example.
+
      * @magic
      * @see createMocks
      * @param $mock
@@ -443,29 +537,69 @@ class Unit extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertContains($value, $this->last_result);
     }
 
+    /**
+     * Checks the result of last execution doesn't contain a value passed.
+     *
+     * @param $value
+     */
     public function dontSeeResultContains($value)
     {
         \PHPUnit_Framework_Assert::assertNotContains($value, $this->last_result);
     }
 
-    public function seeResultNotEquals($value)
+    /**
+     * Checks result of last execution not equal to variable passed.
+     *
+     * @param $value
+     */
+    public function dontSeeResultEquals($value)
     {
         \PHPUnit_Framework_Assert::assertNotEquals($value, $this->last_result);
     }
 
+    /**
+     * Checks the result of last execution is empty.
+     */
     public function seeEmptyResult()
     {
         \PHPUnit_Framework_Assert::assertEmpty($this->last_result);
     }
 
+    /**
+     * Checks result of last execution is of specific type.
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     * Otherwise property will be checked to be an instance of type.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->execute(function() { return new User });
+     * $I->seeResultIs('User');
+     * ?>
+     * ```
+     *
+     * @param $type
+     */
     public function seeResultIs($type)
     {
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
             return \PHPUnit_Framework_Assert::assertInternalType($type, $this->last_result);
         }
-        return \PHPUnit_Framework_Assert::assertInstanceOf($type, $this->last_result);
+        \PHPUnit_Framework_Assert::assertInstanceOf($type, $this->last_result);
     }
 
+    /**
+     * Checks property of object equals to value provided.
+     * Can check even protected or private properties.
+     *
+     * Consider testing hidden properties as a bad practice.
+     * Use it if you have no other ways to test.
+     *
+     * @param $object
+     * @param $property
+     * @param $value
+     */
     public function seePropertyEquals($object, $property, $value)
     {
         $current = $this->retrieveProperty($object, $property);
@@ -473,6 +607,18 @@ class Unit extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertEquals($value, $current);
     }
 
+    /**
+     * Checks property is a passed type.
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     * Otherwise property will be checked to be an instance of type.
+     *
+     * Consider testing hidden properties as a bad practice.
+     * Use it if you have no other ways to test.
+     *
+     * @param $object
+     * @param $property
+     * @param $type
+     */
     public function seePropertyIs($object, $property, $type) {
         $current = $this->retrieveProperty($object, $property);
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
@@ -480,6 +626,85 @@ class Unit extends \Codeception\Module
         }
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
     }
+
+    /**
+     * Executes method and checks result is equal to passed value
+     *
+     * Example:
+     *
+     * ``` php
+     * $I->testMethod('User.setName');
+     * $user = new User();
+     * $I->executeTestedMethodOn($user, 'davert');
+     * $I->seeMethodResultEquals($user,'getName','davert');
+     *
+     * ```
+     *     *
+     * @param $object
+     * @param $method
+     * @param $value
+     * @param array $params
+     */
+    public function seeMethodResultEquals($object, $method, $value, $params = array())
+    {
+        $result = call_user_func_array(array($object, $method), $params);
+        \PHPUnit_Framework_Assert::assertEquals($value, $result);
+    }
+
+    /**
+     * Executes method and checks result is of specified type.
+     *
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     * Otherwise property will be checked to be an instance of type.
+     *
+     * @param $object
+     * @param $method
+     * @param $type
+     * @param array $params
+     */
+    public function seeMethodResultIs($object, $method, $type, $params = array())
+    {
+        $current = call_user_func_array(array($object, $method), $params);
+        if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
+            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+        }
+        \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
+    }
+
+    /**
+     * Executes method and checks result is equal to passed value.
+     *
+     * Look for 'seeMethodResultEquals' for example.
+     *
+     * @param $object
+     * @param $method
+     * @param $value
+     * @param array $params
+     */
+    public function dontSeeMethodResultEquals($object, $method, $value, $params = array())
+    {
+        $result = call_user_func_array(array($object, $method), $params);
+        \PHPUnit_Framework_Assert::assertNotEquals($value, $result);
+    }
+
+    /**
+     * Executes method and checks result is not of specified type.
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     *
+     * @param $object
+     * @param $method
+     * @param $type
+     * @param array $params
+     */
+    public function seeMethodResultIsNot($object, $method, $type, $params = array())
+    {
+        $current = call_user_func_array(array($object, $method), $params);
+        if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
+            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+        }
+        \PHPUnit_Framework_Assert::assertNotInstanceOf($type, $current);
+    }
+
 
     protected function retrieveProperty($object, $property)
     {

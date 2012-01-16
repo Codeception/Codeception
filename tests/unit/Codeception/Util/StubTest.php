@@ -79,5 +79,12 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
     }
 
+    public function testUpdate()
+    {
+        $dummy = Stub::construct('DummyClass');
+        Stub::update($dummy, array('checkMe' => 'done'));
+        $this->assertEquals('done', $dummy->getCheckMe());
+    }
+
 
 }
