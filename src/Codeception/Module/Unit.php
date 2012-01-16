@@ -194,8 +194,11 @@ class Unit extends \Codeception\Module
         if (!method_exists($this->testedClass, $this->testedMethod))
             throw new \Codeception\Exception\Module(__CLASS__,sprintf('%s::%s is not valid callable', $this->testedClass, $this->testedMethod));
 
-        $callable = function () use ($args) {
-            return call_user_func_array(array($this->testedClass, $this->testedMethod), $args);
+        $class = $this->testedClass;
+        $method = $this->testedMethod;
+
+        $callable = function () use ($args, $class, $method) {
+            return call_user_func_array(array($class, $method), $args);
         };
 
         $this->execute($callable);
