@@ -152,10 +152,11 @@ class Unit extends \Codeception\Module
         $args = func_get_args();
         $obj = array_shift($args);
 
-        $callable = function () use ($obj, $args) {
+        $method = $this->testedMethod;
+        $callable = function () use ($method, $obj, $args) {
 
             $reflectedObj = new \ReflectionClass($obj);
-            $reflectedMethod = $reflectedObj->getMethod($this->testedMethod);
+            $reflectedMethod = $reflectedObj->getMethod($method);
             if (!$reflectedMethod)
                 throw new \Codeception\Exception\Module(__CLASS__,sprintf('Method %s can\'t be called in this object', $this->testedMethod));
 

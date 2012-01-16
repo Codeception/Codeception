@@ -75,6 +75,9 @@ class UnitTest extends \PHPUnit_Framework_TestCase
         $I->testMethod('UserModel.save');
         $I->executeTestedMethodOn($user);
         $I->seeResultEquals(true);
+        $I->seeResultIs('bool');
+        $I->dontSeeResultEquals(false);
+        $I->seePropertyIs($user, 'id','string');
         $this->runSteps();
     }
 
