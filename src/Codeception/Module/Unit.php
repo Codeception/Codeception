@@ -165,7 +165,6 @@ class Unit extends \Codeception\Module
             return $reflectedMethod->invokeArgs($obj, $args);
         };
 
-        $this->createMocks();
         $this->execute($callable);
         if (isset($obj->__mocked)) $this->debug('Received Stub');
         $this->debug("Method {$this->testedMethod} executed");
@@ -268,6 +267,7 @@ class Unit extends \Codeception\Module
             $mock->__phpunit_cleanup();
         }
 
+        $this->createMocks();
         $this->predictExceptions();
         $res = null;
 
