@@ -80,7 +80,6 @@ class UnitTest extends \PHPUnit_Framework_TestCase
 
     function testMocks()
     {
-        $this->markTestSkipped();
         $I = new CodeGuy($this->scenario);
         $I->testMethod('UserService.create');
         $I->haveFakeClass($user = Stub::makeEmpty('UserModel'));
