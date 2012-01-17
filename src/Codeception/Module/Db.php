@@ -65,7 +65,7 @@ class Db extends \Codeception\Module
             $dbh = new \PDO($this->config['dsn'], $this->config['user'], $this->config['password']);
             $this->dbh = $dbh;
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage().' while creating PDO connection');
         }
 
         // starting with loading dump

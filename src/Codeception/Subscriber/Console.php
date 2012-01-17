@@ -129,7 +129,11 @@ class Console implements EventSubscriberInterface
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            $this->output->writeln("  " . $failToString);
+            if (!$this->debug) {
+                $this->output->writeln($failToString);
+                return;
+            }
+            $this->output->writeln($this->printException('not an action', $fail));
             return;
         }
         $action = $last->getHumanizedAction();
@@ -166,7 +170,7 @@ class Console implements EventSubscriberInterface
     {
         $i = 0;
         $class = get_class($e);
-        $this->output->writeln("  Exception thrown " . $class . ":\n " . $e->getMessage());
+        $this->output->writeln("  Exception thrown " . $class . ":\n  (!" . $e->getMessage().'!)');
         $this->output->writeln("  Stack trace:");
         foreach ($e->getTrace() as $step) {
             $i++;
@@ -187,7 +191,7 @@ class Console implements EventSubscriberInterface
                 }
             }
         }
-        $this->output->writeln("\nIf it's a Codeception bug, please report it on GitHub");
+        $this->output->writeln("\nIf it's a Codeception bug, please report it to GitHub");
     }
 
     static function getSubscribedEvents()

@@ -7,8 +7,9 @@ class Module extends \Exception {
     
     public function __construct($module, $message) {
         $module = str_replace('\Codeception\Module\\','',$module);
+        $this->module = $module;
         parent::__construct($message);
-        $this->message = '(Exception in '.$this->module.') ' . $this->message;
+        $this->message = '(Exception in '.$module.') ' . $this->message;
     }
 
 }

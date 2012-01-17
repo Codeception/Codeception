@@ -118,7 +118,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $suiteConfig = array(
             'class_name' => 'WebGuy',
             'modules' => array(
-                'enabled' => array('PhpBrowser','WebHelper','Db'),
+                'enabled' => array('PhpBrowser','WebHelper'),
                 'config' => array(
                     'PhpBrowser' => array(
                         'url' => 'http://localhost/myapp/'
