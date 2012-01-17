@@ -289,7 +289,7 @@ modules:
         - Db
     config:
         Selenium:
-            url: 'http://web.begrouped/'
+            url: 'http://mysite.com/'
             browser: 'firefox'
         Db:
             cleanup: false

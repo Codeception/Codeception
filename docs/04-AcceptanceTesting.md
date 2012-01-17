@@ -266,7 +266,7 @@ modules:
             dsn: '[set pdo dsn here]'
             user: '[set user]'
             password: '[set password]'
-            dump: tests/data/dump.sql
+            dump: tests/_data/dump.sql
 
 ````
 
