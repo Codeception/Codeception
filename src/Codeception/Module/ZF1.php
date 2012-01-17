@@ -83,11 +83,10 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
 
         require_once 'Zend/Loader/Autoloader.php';
         \Zend_Loader_Autoloader::getInstance();
-
         $this->client = new \Codeception\Util\Connector\ZF1();
     }
 
-    public function _before($test) {
+    public function _before(\Codeception\TestCase $test) {
         $this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
         $this->bootstrap->bootstrap();
         $this->client->setBootstrap($this->bootstrap);
@@ -100,7 +99,7 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
         }
     }
 
-    public function _after($test) {
+    public function _after(\Codeception\TestCase $test) {
         $_SESSION = array();
         $_GET     = array();
         $_POST    = array();
