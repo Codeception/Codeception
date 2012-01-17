@@ -126,12 +126,13 @@ paths:
 
 	# logs will, and debug 
 	# outputs will be done there
-    log: tests/log
+    log: tests/_log
 
     # directory for fixture data    
-    data: tests/data
+    data: tests/_data
 
-    helpers: tests/helpers
+    # directory for custom modules (helpers)
+    helpers: tests/_helpers
 settings:
 
 	# name of bootstrap will be used
@@ -163,7 +164,7 @@ modules:
             dsn: ''
             user: ''
             password: ''
-            dump: tests/data/dump.sql
+            dump: tests/_data/dump.sql
 
 ```
 

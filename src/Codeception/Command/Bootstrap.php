@@ -29,9 +29,9 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $basicConfig = array(
             'paths' => array(
                 'tests' => 'tests',
-                'log' => 'tests/log',
-                'data' => 'tests/data',
-                'helpers' => 'tests/helpers'
+                'log' => 'tests/_log',
+                'data' => 'tests/_data',
+                'helpers' => 'tests/_helpers'
             ),
             'settings' => array(
                 'bootstrap' => '_bootstrap.php',
@@ -45,7 +45,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
                 'dsn' => '',
                 'user' => '',
                 'password' => '',
-                'dump' => 'tests/data/dump.sql'
+                'dump' => 'tests/_data/dump.sql'
               )
             )
             )
@@ -60,24 +60,24 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         @mkdir('tests/functional');
         @mkdir('tests/unit');
         @mkdir('tests/acceptance');
-        @mkdir('tests/helpers');
-        @mkdir('tests/log');
-        @mkdir('tests/data');
+        @mkdir('tests/_helpers');
+        @mkdir('tests/_log');
+        @mkdir('tests/_data');
 
         $output->writeln("tests/unit created - unit tests");
         $output->writeln("tests/functional created - functional tests");
         $output->writeln("tests/acceptance created - acceptance tests");
 
-        file_put_contents('tests/data/dump.sql', '/* Replace this file with actual dump of your database */');
+        file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
         file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
         file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
         file_put_contents('tests/acceptance/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
 
 
-        file_put_contents('tests/helpers/CodeHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
-        file_put_contents('tests/helpers/TestHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
-        file_put_contents('tests/helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
 
 //        file_put_contents('tests/unit/SampleSpec.php', "<?php\n\$I = new CodeGuy(\$scenario);\n\$I->wantTo('test a code specification');");
 //        file_put_contents('tests/functional/SampleSpec.php', "<?php\n\$I = new TestGuy(\$scenario);\n\$I->wantTo('test an integration feature');");
