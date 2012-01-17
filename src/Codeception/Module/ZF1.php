@@ -9,8 +9,8 @@
  *
  * ## Config
  *
- * * env __testing__ - environment used for testing.
- * * config __application/configs/application.ini__ - relative path to your application config.
+ * * env  - environment used for testing ('testing' by default).
+ * * config - relative path to your application config ('application/configs/application.ini' by default).
  *
  * ## API
  *
@@ -20,11 +20,12 @@
  *
  * ## Cleaning up
  *
- * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction. Consider using this modules to speed up testing.
- * It's impossible to use nested transactions in Zend_Db, so for cleaning your database you should either use standard Db module or
+ * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction. If you are using one of this ORMs connect their modules to speed up testing.
+ *
+ * Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning your database you should either use standard Db module or
  * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
  *
- * If your Database supports nesting transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
+ * If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
  * Use a generated helper TestHelper. Usse this code inside of it.
  *
  * ``` php

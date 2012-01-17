@@ -36,9 +36,72 @@ Can update even private and protected properties.
  * param $value
 
 
+### dontSeeMethodResultEquals
+
+
+Executes method and checks result is equal to passed value.
+
+Look for 'seeMethodResultEquals' for example.
+
+ * param $object
+ * param $method
+ * param $value
+ * param array $params
+
+
 ### dontSeeResultContains
 
-__not documented__
+
+Checks the result of last execution doesn't contain a value passed.
+
+ * param $value
+
+
+### dontSeeResultEquals
+
+
+Checks result of last execution not equal to variable passed.
+
+ * param $value
+
+
+### execute
+
+
+Executes a code block. The result of execution will be stored.
+Parameter should be a valid Closure. The returned value can be checked with seeResult actions.
+
+Example:
+
+``` php
+<?php
+$user = new User();
+$I->execute(function() use ($user) {
+     $user->setName('Davert');
+     return $user->getName();
+});
+$I->seeResultEquals('Davert');
+?>
+```
+
+You can use native PHPUnit asserts in executed code. This can be either static methods of PHPUnit_Framework_assert class,
+or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
+You should manually include this file, as this functions may conflict with functions in your code.
+
+Example:
+
+``` php
+<?php
+require_once 'PHPUnit/Framework/Assert/Functions.php';
+
+$user = new User();
+$I->execute(function() use ($user) {
+     $user->setName('Davert');
+     assertEquals('Davert', $user->getName());
+});
+```
+
+ * param \Closure $code
 
 
 ### executeTestedMethod
@@ -46,42 +109,54 @@ __not documented__
 
 Executes the method which is tested.
 If method is not static, the class instance should be provided.
-Otherwise bypass the first parameter blank
 
-Include additional arguments as parameter.
+If a method is static 'executeTestedWith' will be called.
+If a method is not static 'executeTestedOn' will be called.
+See those methods for the full reference
 
-Examples:
-
-For non-static methods:
-
-``` php
-<?php
-$I->executeTestedMethod($object, 1, 'hello', array(5,4,5));
-```
-
-The same for static method
-
-``` php
-<?php
-$I->executeTestedMethod(1, 'hello', array(5,4,5));
-```
-
- * param $object null
  * throws \InvalidArgumentException
 
 
 ### executeTestedMethodOn
 
 
-Alias for executeTestedMethod, only for non-static methods
+Execute tested method on an object (stub can be passed).
+First argument is an object, rest are supposed to be parameters passed to method.
 
- * alias executeTestedMethod
+Example:
+
+``` php
+<?php
+$I->wantTo('authenticate user');
+$I->testMethod('User.authenticate');
+$user = new User();
+$I->executeTestedMethodOn($user, 'Davert','qwerty');
+// By this line $user->authenticate('Davert',''qwerty') was called.
+$I->seeResultEquals(true);
+?>
+```
+
+For static methods use 'executeTestedMethodWith'.
+
  * param $object
 
 
 ### executeTestedMethodWith
 
-__not documented__
+
+Executes tested static method with parameters provided.
+
+```
+<?php
+$I->testMethod('User::validateName');
+$I->executeTestedMethodWith('davert',true);
+// User::validate('davert', true); was called
+?>
+```
+For non-static method use 'executeTestedMethodOn'
+
+ * param $params
+ * throws \Codeception\Exception\Module
 
 
 ### haveFakeClass
@@ -105,7 +180,8 @@ Alias for haveFakeClass
 
 ### seeEmptyResult
 
-__not documented__
+
+Checks the result of last execution is empty.
 
 
 ### seeExceptionThrown
@@ -116,7 +192,24 @@ __not documented__
 ### seeMethodInvoked
 
 
+Checks the method of stub was invoked after the last execution.
+Requires a stub as a first parameter, a method name as second.
+Optionally pass an arguments which are expected for executed method.
 
+Example:
+
+``` php
+<?php
+$I->testMethod('UserService.create');
+$I->haveStub($user = Stub::make('Model\User'));*
+$service = new UserService($user);
+$I->executeTestedMethodOn($service);
+// we expect $user->save was invoked.
+$I->seeMethodInvoked($user, 'save');
+?>
+```
+
+This method dynamically creates mock from stub.
 
  * magic
  * see createMocks
@@ -128,6 +221,11 @@ __not documented__
 ### seeMethodInvokedMultipleTimes
 
 
+Checks the method of stub was invoked *only once* after the last execution.
+Requires a stub as a first parameter, a method name as second and expected executions number.
+Optionally pass an arguments which are expected for executed method.
+
+Look for 'seeMethodInvoked' to see the example.
 
  * magic
  * see createMocks
@@ -140,6 +238,11 @@ __not documented__
 ### seeMethodInvokedOnce
 
 
+Checks the method of stub was invoked *only once* after the last execution.
+Requires a stub as a first parameter, a method name as second.
+Optionally pass an arguments which are expected for executed method.
+
+Look for 'seeMethodInvoked' to see the example.
 
  * magic
  * see createMocks
@@ -151,6 +254,9 @@ __not documented__
 ### seeMethodNotInvoked
 
 
+Checks the method of stub *was not invoked* after the last execution.
+Requires a stub as a first parameter, a method name as second.
+Optionally pass an arguments which are expected for executed method.
 
  * magic
  * see createMocks
@@ -159,14 +265,80 @@ __not documented__
  * param array $params
 
 
+### seeMethodResultEquals
+
+
+Executes method and checks result is equal to passed value
+
+Example:
+
+``` php
+$I->testMethod('User.setName');
+$user = new User();
+$I->executeTestedMethodOn($user, 'davert');
+$I->seeMethodResultEquals($user,'getName','davert');
+
+```
+    *
+ * param $object
+ * param $method
+ * param $value
+ * param array $params
+
+
+### seeMethodResultIs
+
+
+Executes method and checks result is of specified type.
+
+Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+Otherwise property will be checked to be an instance of type.
+
+ * param $object
+ * param $method
+ * param $type
+ * param array $params
+
+
+### seeMethodResultIsNot
+
+
+Executes method and checks result is not of specified type.
+Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+
+ * param $object
+ * param $method
+ * param $type
+ * param array $params
+
+
 ### seePropertyEquals
 
-__not documented__
+
+Checks property of object equals to value provided.
+Can check even protected or private properties.
+
+Consider testing hidden properties as a bad practice.
+Use it if you have no other ways to test.
+
+ * param $object
+ * param $property
+ * param $value
 
 
 ### seePropertyIs
 
-__not documented__
+
+Checks property is a passed type.
+Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+Otherwise property will be checked to be an instance of type.
+
+Consider testing hidden properties as a bad practice.
+Use it if you have no other ways to test.
+
+ * param $object
+ * param $property
+ * param $type
 
 
 ### seeResultContains
@@ -184,12 +356,21 @@ Asserts that the last result from tested method is equal to value
 
 ### seeResultIs
 
-__not documented__
 
+Checks result of last execution is of specific type.
+Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+Otherwise property will be checked to be an instance of type.
 
-### seeResultNotEquals
+Example:
 
-__not documented__
+``` php
+<?php
+$I->execute(function() { return new User });
+$I->seeResultIs('User');
+?>
+```
+
+ * param $type
 
 
 ### testMethod
