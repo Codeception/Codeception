@@ -11,10 +11,10 @@
     <active>yes</active>
   </lead>
   <date>2012-01-18</date>
-  <time>02:57:29</time>
+  <time>05:23:45</time>
   <version>
-    <release>0.9.9</release>
-    <api>0.9.9</api>
+    <release>1.0.0</release>
+    <api>1.0.0</api>
   </version>
   <stability>
     <release>stable</release>
@@ -50,7 +50,7 @@
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="7ac9a4574d70c6f403b25d26fcf03b94"/>
-          <file name="Codecept.php" role="php" md5sum="e8c05998727f3b2ea2626c131baf2e68"/>
+          <file name="Codecept.php" role="php" md5sum="e7814bb6decda63dd2eeffb52fea4f1b"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
             <file name="Bootstrap.php" role="php" md5sum="e0efd82bb06a042b09217a80f77ae008"/>

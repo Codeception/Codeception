@@ -37,7 +37,7 @@ foreach ($docs as $doc) {
     file_put_contents($newfile, $contents);
 }
 
-$content = '<h2>Documentation</h2><ul>';
+$content = '<h2>Guides</h2><ul>';
 foreach ($api as $name => $url) {
     $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
