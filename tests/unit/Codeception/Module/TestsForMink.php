@@ -168,10 +168,16 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
      public function testSeeMethodsWithUnicode() {
          $this->module->amOnPage('/info');
-         $this->module->see('Текст');
-         $this->module->see('Текст', 'p');
-         $this->module->seeLink('Ссылочка');
-         $this->module->click('Ссылочка');
-     }
+         $module = $this->module;
+         $mockedcall = function ($args) use ($module) {
+             $method = array_shift($args);
+             call_user_func_array(array($module,$method), $args);
+         };
 
+         $guy = \Codeception\Util\Stub::make('Codeception\AbstractGuy', array('scenario' => \Codeception\Util\Stub::makeEmpty('Codeception\Scenario',array('assertion' => $mockedcall, 'action' => $mockedcall))));
+         $guy->see('Текст');
+         $guy->see('Текст', 'p');
+         $guy->seeLink('Ссылочка');
+         $guy->click('Ссылочка');
+     }
 }
