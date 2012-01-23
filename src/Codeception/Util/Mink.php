@@ -43,7 +43,6 @@ abstract class Mink extends \Codeception\Module
         if ($selector) {
             $nodes = $this->session->getPage()->findAll('css', $selector);
 		    $values = '';
-            $text = mb_convert_encoding($text, 'UTF-8');
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
 		    }
@@ -70,7 +69,6 @@ abstract class Mink extends \Codeception\Module
 
     public function seeLink($text, $url = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
         $nodes = $this->session->getPage()->findLink($text);
         if (!$url) return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         foreach ($nodes as $node) {
@@ -84,7 +82,6 @@ abstract class Mink extends \Codeception\Module
 
     public function dontSeeLink($text, $url = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
         if (!$url) return $this->dontSee($text, 'a');
         $nodes = $this->session->getPage()->findAll('named', $text);
         foreach ($nodes as $node) {
@@ -117,7 +114,6 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findEl($link)
     {
-        $link = mb_convert_encoding($link, 'UTF-8');
         $page = $this->session->getPage();
         $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
@@ -194,7 +190,6 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findField($selector)
     {
-        $selector = mb_convert_encoding($selector, 'UTF-8');
         $page = $this->session->getPage();
         $field = $page->find('named', array(
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)

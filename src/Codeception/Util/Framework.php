@@ -44,7 +44,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function click($link)
     {
-        $link = mb_convert_encoding($link, 'UTF-8');
         $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
@@ -72,7 +71,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function see($text, $selector = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
         if (!$selector)
             return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), $this->formatHtmlResponse());
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), " within CSS selector '$selector' ".$this->formatHtmlResponse());
@@ -80,7 +78,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function dontSee($text, $selector = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
         if (!$selector)
             return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
         \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), "'$text'' within CSS selector '$selector' ".$this->formatHtmlResponse());
@@ -103,7 +100,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function seeLink($text, $url = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
+
         $links = $this->crawler->selectLink($text);
         if (!$url) \PHPUnit_Framework_Assert::assertGreaterThan(0, $links->count(), "'$text' on page");
         $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' '.$url.' ')));
@@ -112,7 +109,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function dontSeeLink($text, $url = null)
     {
-        $text = mb_convert_encoding($text, 'UTF-8');
         $links = $this->crawler->selectLink($text);
         if (!$url) \PHPUnit_Framework_Assert::assertEquals(0, $links->count(), "'$text' on page");
         $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' '.$url.' ')));
@@ -126,14 +122,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function seeCheckboxIsChecked($checkbox)
     {
-        $checkbox = mb_convert_encoding($checkbox, 'UTF-8');
         $checkboxes = $this->crawler->filter($checkbox);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $checkboxes->filter('input[checked=checked]')->count());
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
     {
-        $checkbox = mb_convert_encoding($checkbox, 'UTF-8');
         $checkboxes = $this->crawler->filter($checkbox);
         \PHPUnit_Framework_Assert::assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
     }
@@ -150,9 +144,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function proceedSeeInField($field, $value)
     {
-        $field = mb_convert_encoding($field, 'UTF-8');
-        $value = mb_convert_encoding($value, 'UTF-8');
-
         $fields = $this->crawler->filter($field);
         $values1 = $fields->filter('input')->extract(array('value'));
         $values2 = $fields->filter('textarea')->extract(array('_text'));
