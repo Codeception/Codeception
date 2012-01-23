@@ -10,7 +10,7 @@ system('git branch gh-pages');
 system('pirum add package/pear Codeception-'.$version.'.tgz');
 @unlink("Codeception-$version.tgz");
 chdir('package/pear');
-system('git add .');
+system('git add -A');
 system('git commit -m="version '.$version.'"');
 system('git push origin gh-pages');
 chdir('..');

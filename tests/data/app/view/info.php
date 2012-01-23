@@ -17,5 +17,8 @@ Is that interesting?
     <input type="submit" />
 </form>
 
+<p>Текст на русском</p>
+<a href="/">Ссылочка</a>
+
 </body>
 </html>

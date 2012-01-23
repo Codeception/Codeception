@@ -72,6 +72,8 @@ Here is the Codeception test for the 'show' action:
 
 ``` php
 <?php
+use Codeception\Util\Stub as Stub;
+
 class UserControllerCest {
     public $class = 'UserController';
 
@@ -100,20 +102,7 @@ This test is written as a simple scenario. Every command of scenario clearly des
 First of all, take a look at Cest suffix. By it Codeception knows it's a Cest testing class. Public property class is not less important. It defines the class which is being tested. Each public method of class will be treated as a test. Please note, that name of each test method is the same as method which is actually being tested. In other words, to test UserController.show we use UserControllerCest.show, UserController.edit => UserControllerCest.edit, etc. The only parameter of test method is CodeGuy class instance. 
 
 With the CodeGuy we write a scenario for unit testing. Action haveFakeClass declares that we will use stub in our testing. By using this command Codeception will dynamically create mock for this class.
-
-For stubs and mocks Codeception uses PHPUnit's mocking library with a custom wrapper. Creating Stub in Codeception is quite easy: you need only a class name and array of properties. As you can see, we also can redefine methods of class by passing a closure into this array. 
-
-### Codeception Stubs
-
-Codeception\Util\Stub class has several helpers to generate required stub easily:
-
-* _Stub::make_ - generates class with all it's methods but without calling a constructor. 
-* _Stub::makeEmpty_ - generates class and replaces all it's methods with dummies. 
-* _Stub::makeEmptyExcept_ - good for creating stub to test current method. Uses dummies for all methods except one, set in second parameter.
-* _Stub::factory_ - creates several stubs in array.
-* _Stub::copy_ - copies one object. This method can work with any class, not only stubs. By second parameter you can set new property values in a copy.
-
-We use PHPUnit's mocking library. Please note, it disallow mocking static or private methods. 
+Codeception uses wrapper over PHPUnit's mocking library. It can create various stubs in a simple way. Later we will review this tool deeply.
 
 For UserController we redefine all it's method except tested one with dummies.
 For $db property which is supposed to be DbConnector (Database class) instance we redefine it's 'find' method. Depending on parameter it is supposed to return User model or null.

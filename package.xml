@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-01-18</date>
-  <time>05:23:45</time>
+  <time>05:37:50</time>
   <version>
     <release>1.0.0</release>
     <api>1.0.0</api>
@@ -82,7 +82,6 @@
             <file name="Doctrine2.php" role="php" md5sum="5ff32af0fb7e9f8f53c3be8617c1c780"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
             <file name="PhpBrowser.php" role="php" md5sum="439de87d41f6ccdfb809093d09a54930"/>
-            <file name="PhpSite.php" role="php"/>
             <file name="Selenium.php" role="php" md5sum="0cbf4ec0d3780daeb35cc13d4689df08"/>
             <file name="Symfony1.php" role="php" md5sum="c01ce35c9ff5b5fd7f0ee41f7ce8c8f6"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>

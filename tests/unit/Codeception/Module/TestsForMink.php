@@ -166,4 +166,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
          $this->module->seeCheckboxIsChecked('input[type=checkbox]');
      }
 
+     public function testSeeMethodsWithUnicode() {
+         $this->module->amOnPage('/info');
+         $this->module->see('Текст');
+         $this->module->see('Текст', 'p');
+         $this->module->seeLink('Ссылочка');
+         $this->module->click('Ссылочка');
+     }
+
 }

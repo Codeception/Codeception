@@ -183,4 +183,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('author', $post['show']);
 
     }
+
+    public function testSeeWithUnicode() {
+        $this->module->amOnPage('/info');
+        $this->module->see('Текст');
+        $this->module->see('Текст', 'p');
+        $this->module->seeLink('Ссылочка');
+        $this->module->click('Ссылочка');
+
+    }
+
 }
