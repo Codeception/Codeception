@@ -50,6 +50,8 @@ abstract class Mink extends \Codeception\Module
         }
 
         $response = $this->session->getPage()->getContent();
+        $response = mb_convert_encoding($response, 'UTF-8');
+
         if (strpos($response, '<!DOCTYPE')!==false) {
             $response = array();
             $title = $this->session->getPage()->find('css','title');
@@ -63,7 +65,8 @@ abstract class Mink extends \Codeception\Module
             $response = json_encode($response);
             $response = 'html page response '.$response;
         }
-        return array('contains', $text, strip_tags($this->session->getPage()->getContent()), "'$text' in ".$response.'. For more details look for page snapshot in the log directory');
+
+        return array('contains', $text, strip_tags($response), "'$text' in ".$response.'. For more details look for page snapshot in the log directory');
     }
 
 
