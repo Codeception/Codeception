@@ -54,7 +54,6 @@ class Selenium extends \Codeception\Util\MinkJS
     }
 
 
-
     // please, add more custom Selenium functions here
 
 }
