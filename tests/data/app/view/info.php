@@ -23,8 +23,5 @@ Is that interesting?
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
 
-
-
-
 </body>
 </html>
