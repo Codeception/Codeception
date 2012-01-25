@@ -62,7 +62,7 @@ class MinkJS extends Mink
      * @return array
      */
     protected function proceedSee($text, $selector = null) {
-        if (!$selector) return parent::proceedSee($text, $selector);
+        if (!$selector) return parent::proceedSee($this->escape($text), $selector);
         $nodes = $this->session->getPage()->findAll('css', $selector);
 		$values = array();
 		foreach ($nodes as $node) {
@@ -70,7 +70,7 @@ class MinkJS extends Mink
 
 		    $values[] = trim($node->getText());
         }
-		return array('contains', $text, implode('<!-- Merged Output -->',$values), "'$selector' selector For more details look for page snapshot in the log directory");
+		return array('contains', $this->escape($text), implode('<!-- Merged Output -->',$values), "'$selector' selector For more details look for page snapshot in the log directory");
     }
 
     public function pressKey($element, $char, $modifier = null)
