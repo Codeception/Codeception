@@ -185,20 +185,26 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
     }
 
-    public function testSeeMethodsWithUnicode()
-    {
+    public function testSeeWithNonLatin() {
         $this->module->amOnPage('/info');
-        $module = $this->module;
-        $mockedcall = function ($args) use ($module)
-        {
-            $method = array_shift($args);
-            call_user_func_array(array($module, $method), $args);
-        };
+        $this->module->see('на');
+    }
 
-        $guy = \Codeception\Util\Stub::make('Codeception\AbstractGuy', array('scenario' => \Codeception\Util\Stub::makeEmpty('Codeception\Scenario', array('assertion' => $mockedcall, 'action' => $mockedcall))));
-        $guy->see('Текст');
-        $guy->see('Текст', 'p');
-        $guy->seeLink('Ссылочка');
-        $guy->click('Ссылочка');
+    public function testSeeWithNonLatinAndSelectors() {
+        $this->module->amOnPage('/info');
+        $this->module->see('Текст', 'p');
+        $this->module->seeLink('Ссылочка');
+        $this->module->click('Ссылочка');
+    }
+
+    public function testLinksWithNonLatin() {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Ссылочка');
+        $this->module->click('Ссылочка');
+    }
+
+    public function testFieldWithNonLatin() {
+        $this->module->amOnPage('/info');
+        $this->module->seeInField('rus','Верно');
     }
 }

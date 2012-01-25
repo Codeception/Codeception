@@ -29,6 +29,7 @@ class Universal extends \Symfony\Component\BrowserKit\Client
         ob_end_clean();
 
         $headers = headers_list();
+        $headers['Content-type'] = "text/html; charset=UTF-8";
         // header_remove();
 
         $response = new Response($content,200,$headers);

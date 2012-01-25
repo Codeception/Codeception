@@ -1,4 +1,6 @@
 <html>
+<head>
+</head>
 <body>
 
 <h1>Information</h1>
@@ -14,11 +16,15 @@
 Is that interesting?
 <form action="/">
 <input type="checkbox" name="interesting" value="1" checked="checked" />
+    <input type="text" name="rus" value="Верно" />
     <input type="submit" />
 </form>
 
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
+
+
+
 
 </body>
 </html>
