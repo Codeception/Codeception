@@ -56,6 +56,7 @@ class Db extends \Codeception\Module
 
         // not necessary to specify dump
         if (isset($this->config['dump']) && ($this->config['cleanup'] or ($this->config['populate']))) {
+            if (!file_exists($this->config['dump'])) throw new \Codeception\Exception\ModuleConfig(__CLASS__, 'Dump not found');
             $sql = file_get_contents($this->config['dump']);
             $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s',"",$sql);
             $this->sql = explode("\r\n", $sql);
