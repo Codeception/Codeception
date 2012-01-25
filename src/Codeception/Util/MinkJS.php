@@ -64,7 +64,7 @@ class MinkJS extends Mink
     protected function proceedSee($text, $selector = null) {
         if (!$selector) return parent::proceedSee($this->escape($text), $selector);
         $nodes = $this->session->getPage()->findAll('css', $selector);
-		$values = array();
+		$values = '';
 		foreach ($nodes as $node) {
             if (!$this->session->getDriver()->isVisible($node->getXpath())) continue;
 
