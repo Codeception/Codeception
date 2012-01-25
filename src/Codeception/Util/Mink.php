@@ -292,7 +292,6 @@ abstract class Mink extends \Codeception\Module
     protected function escape($string)
     {
         return addslashes($string);
-
     }
 
 }

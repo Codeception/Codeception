@@ -288,7 +288,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function escape($string)
     {
-        return mb_convert_encoding($string, 'UTF-8');
+        return addslashes($string);
     }
 
 
