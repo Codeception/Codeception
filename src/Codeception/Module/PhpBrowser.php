@@ -80,6 +80,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     	$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);
 
+
 		$this->debug('Response code: '.$this->session->getStatusCode());
 	}
 
