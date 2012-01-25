@@ -207,4 +207,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }
+
+
+
 }
