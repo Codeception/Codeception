@@ -74,15 +74,6 @@ abstract class AbstractGuy
     {
         // if (!in_array($method, array_keys(TestGuy::$methods))) throw new \RuntimeException("Action $method not defined");
 
-        // convert encoding.
-        if (function_exists('mb_convert_encoding')) {
-            foreach ($args as $k => $arg) {
-                if (is_string($arg)) {
-                    $args[$k] = mb_convert_encoding($arg, 'UTF-8');
-                }
-            }
-        }
-
         if (0 === strpos($method, 'see')) {
             $this->scenario->assertion(array_merge(array($method), $args));
         } elseif (0 === strpos($method, 'am')) {

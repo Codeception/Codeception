@@ -86,5 +86,6 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 	public function _failed(\Codeception\TestCase $test, $fail) {
 		file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.debug.html', $this->session->getPage()->getContent());
 	}
-    
+
+
 }

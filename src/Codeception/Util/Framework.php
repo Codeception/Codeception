@@ -25,11 +25,13 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected $forms = array();
 
-    public function _failed(\Codeception\TestCase $test, $fail) {
-        file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.debug.html', $this->client->getResponse()->getContent());
+    public function _failed(\Codeception\TestCase $test, $fail)
+    {
+        file_put_contents(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html', $this->client->getResponse()->getContent());
     }
 
-    public function _after(\Codeception\TestCase $test) {
+    public function _after(\Codeception\TestCase $test)
+    {
         $this->client = null;
         $this->crawler = null;
         $this->forms = array();
@@ -44,6 +46,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function click($link)
     {
+        $link = $this->escape($link);
         $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
@@ -59,7 +62,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::fail("Link or button for '$link' was not found");
     }
 
-    protected function submitFormWithButton($button) {
+    protected function submitFormWithButton($button)
+    {
         $domForm = $button->form();
         $form = $this->getFormFor($button);
 
@@ -72,15 +76,15 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function see($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), $this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), " within CSS selector '$selector' ".$this->formatHtmlResponse());
+            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), $this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), " within CSS selector '$selector' " . $this->formatHtmlResponse());
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . addslashes($text) . '")')->count(), "$text on page \n".$this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . addslashes($text) . '")')->count(), "'$text'' within CSS selector '$selector' ".$this->formatHtmlResponse());
+            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . $this->formatHtmlResponse());
+        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' " . $this->formatHtmlResponse());
     }
 
     protected function formatHtmlResponse()
@@ -89,29 +93,28 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $formatted = "on page\n";
         if (strpos($response, '<!DOCTYPE') !== false) {
             $title = $this->crawler->filter('title');
-            if (count($title)) $formatted .= "Title: ".trim($title->first()->text());
+            if (count($title)) $formatted .= "Title: " . trim($title->first()->text());
             $h1 = $this->crawler->filter('h1');
-            if (count($h1)) $formatted .= "\nH1: ".trim($h1->first()->text());
+            if (count($h1)) $formatted .= "\nH1: " . trim($h1->first()->text());
             $formatted .= ".\nFull response is saved in 'log' directory.";
             return $formatted;
         }
-        return $formatted.$response;
+        return $formatted . $response;
     }
 
     public function seeLink($text, $url = null)
     {
-
-        $links = $this->crawler->selectLink($text);
+        $links = $this->crawler->selectLink($this->escape($text));
         if (!$url) \PHPUnit_Framework_Assert::assertGreaterThan(0, $links->count(), "'$text' on page");
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' '.$url.' ')));
+        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $links->count());
     }
 
     public function dontSeeLink($text, $url = null)
     {
-        $links = $this->crawler->selectLink($text);
+        $links = $this->crawler->selectLink($this->escape($text));
         if (!$url) \PHPUnit_Framework_Assert::assertEquals(0, $links->count(), "'$text' on page");
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' '.$url.' ')));
+        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
         \PHPUnit_Framework_Assert::assertEquals(0, $links->count());
     }
 
@@ -147,7 +150,9 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $fields = $this->crawler->filter($field);
         $values1 = $fields->filter('input')->extract(array('value'));
         $values2 = $fields->filter('textarea')->extract(array('_text'));
-        return array('Contains', $value, array_merge($values1, $values2));
+        if (empty($values1) && empty($values2)) \PHPUnit_Framework_Assert::fail('field not found');
+        $values = array_merge($values1, $values2);
+        return array('Contains', $this->escape($value), $values);
     }
 
     public function submitForm($selector, $params)
@@ -158,24 +163,24 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $url = '';
         $fields = $this->crawler->filter($selector . ' input');
         foreach ($fields as $field) {
-   		    if ($field->getAttribute('type') == 'checkbox') continue;
-   		    if ($field->getAttribute('type') == 'radio') continue;
-   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
-   	    }
+            if ($field->getAttribute('type') == 'checkbox') continue;
+            if ($field->getAttribute('type') == 'radio') continue;
+            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
+        }
 
-   	    $fields = $this->crawler->filter($selector . ' textarea');
-   	    foreach ($fields as $field) {
-   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->nodeValue).'&';
-   	    }
+        $fields = $this->crawler->filter($selector . ' textarea');
+        foreach ($fields as $field) {
+            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
+        }
 
         $fields = $this->crawler->filter($selector . ' select');
-   	    foreach ($fields as $field) {
-               foreach ($field->childNodes as $option) {
-                   if ($option->getAttribute('selected') == 'selected')
-                       $url .= sprintf('%s=%s',$field->getAttribute('name'), $option->getAttribute('value')).'&';
+        foreach ($fields as $field) {
+            foreach ($field->childNodes as $option) {
+                if ($option->getAttribute('selected') == 'selected')
+                    $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
 
-               }
-   	    }
+            }
+        }
 
         $url .= '&' . http_build_query($params);
         parse_str($url, $params);
@@ -222,7 +227,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $label = $this->crawler->filterXPath(sprintf('descendant-or-self::label[text()="%s"]', $field))->first();
         if (count($label) && $label->attr('for')) {
-            $input = $this->crawler->filter('#'.$label->attr('for'));
+            $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
         if (!isset($input)) $input = $this->crawler->filter($field);
@@ -234,7 +239,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
 
-        $options = $field->filter(sprintf('option:contains(%s)',$option));
+        $options = $field->filter(sprintf('option:contains(%s)', $option));
         if ($options->count()) {
             $form[$field->attr('name')]->select($options->first()->attr('value'));
             return;
@@ -243,29 +248,34 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $form[$field->attr('name')]->select($option);
     }
 
-    public function checkOption($option) {
+    public function checkOption($option)
+    {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $form[$field->attr('name')]->tick();
     }
 
-    public function uncheckOption($option) {
+    public function uncheckOption($option)
+    {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $form[$field->attr('name')]->untick();
     }
 
-    public function attachFile($field, $filename) {
+    public function attachFile($field, $filename)
+    {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
-        $path = \Codeception\Configuration::dataDir().$filename;
+        $path = \Codeception\Configuration::dataDir() . $filename;
         if (!is_readable($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
         $form[$field->attr('name')]->upload($path);
     }
-    
-    public function sendAjaxGetRequest($uri, $params = array()) {
+
+    public function sendAjaxGetRequest($uri, $params = array())
+    {
         $this->client->request('GET', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
-    public function sendAjaxPostRequest($uri, $params = array()) {
+    public function sendAjaxPostRequest($uri, $params = array())
+    {
         $this->client->request('POST', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
@@ -275,5 +285,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->debugSection('Response', $this->client->getResponse()->getStatus());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
     }
+
+    protected function escape($string)
+    {
+        return addslashes(mb_convert_encoding($string, 'UTF-8'));
+    }
+
 
 }

@@ -46,11 +46,10 @@ abstract class Mink extends \Codeception\Module
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
 		    }
-			return array('contains', $text, $values, "'$selector' selector. For more details look for page snapshot in the log directory");
+			return array('contains', $this->escape($text), addslashes($values), "'$selector' selector. For more details look for page snapshot in the log directory");
         }
 
         $response = $this->session->getPage()->getContent();
-        $response = mb_convert_encoding($response, 'UTF-8');
 
         if (strpos($response, '<!DOCTYPE')!==false) {
             $response = array();
@@ -72,6 +71,7 @@ abstract class Mink extends \Codeception\Module
 
     public function seeLink($text, $url = null)
     {
+        $text = $this->escape($text);
         $nodes = $this->session->getPage()->findLink($text);
         if (!$url) return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         foreach ($nodes as $node) {
@@ -86,6 +86,7 @@ abstract class Mink extends \Codeception\Module
     public function dontSeeLink($text, $url = null)
     {
         if (!$url) return $this->dontSee($text, 'a');
+        $text = $this->escape($text);
         $nodes = $this->session->getPage()->findAll('named', $text);
         foreach ($nodes as $node) {
             if (false !== strpos($node->getAttribute('href'), $url)) {
@@ -117,6 +118,7 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findEl($link)
     {
+        $link = $this->escape($link);
         $page = $this->session->getPage();
         $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
@@ -193,6 +195,7 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findField($selector)
     {
+        $selector = $this->escape($selector);
         $page = $this->session->getPage();
         $field = $page->find('named', array(
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)
@@ -270,7 +273,7 @@ abstract class Mink extends \Codeception\Module
     public function seeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertEquals($value, $node->getValue());
+        \PHPUnit_Framework_Assert::assertEquals($this->escape($value), $node->getValue());
     }
 
     /**
@@ -283,8 +286,13 @@ abstract class Mink extends \Codeception\Module
     public function dontSeeInField($field, $value) {
         $node  = $this->session->getPage()->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertNotEquals($value, $node->getValue());
+        \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
     }
 
+    protected function escape($string)
+    {
+        return addslashes(mb_convert_encoding($string, 'UTF-8'));
+
+    }
 
 }
