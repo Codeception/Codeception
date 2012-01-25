@@ -46,7 +46,7 @@ abstract class Mink extends \Codeception\Module
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
 		    }
-			return array('contains', $this->escape($text), addslashes($values), "'$selector' selector. For more details look for page snapshot in the log directory");
+			return array('contains', $this->escape($text), $values, "'$selector' selector. For more details look for page snapshot in the log directory");
         }
 
         $response = $this->session->getPage()->getContent();
@@ -291,7 +291,7 @@ abstract class Mink extends \Codeception\Module
 
     protected function escape($string)
     {
-        return addslashes(mb_convert_encoding($string, 'UTF-8'));
+        return mb_convert_encoding($string, 'UTF-8');
 
     }
 

@@ -68,9 +68,9 @@ class MinkJS extends Mink
 		foreach ($nodes as $node) {
             if (!$this->session->getDriver()->isVisible($node->getXpath())) continue;
 
-		    $values[] = trim($node->getText());
+            $values .= '<!-- Merged Output -->'.$node->getText();
         }
-		return array('contains', $this->escape($text), implode('<!-- Merged Output -->',$values), "'$selector' selector For more details look for page snapshot in the log directory");
+		return array('contains', $this->escape($text), $values, "'$selector' selector For more details look for page snapshot in the log directory");
     }
 
     public function pressKey($element, $char, $modifier = null)
