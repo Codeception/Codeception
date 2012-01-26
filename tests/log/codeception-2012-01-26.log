@@ -1,0 +1,444 @@
+[2012-01-26 00:03:59] Codeception.INFO: # Skipped # [] []
+[2012-01-26 00:03:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:03:59] Codeception.INFO: # Skipped # [] []
+[2012-01-26 00:03:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:03:59] Codeception.INFO: # Skipped # [] []
+[2012-01-26 00:03:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:03:59] Codeception.INFO: # Skipped # [] []
+[2012-01-26 00:03:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:03:59] Codeception.INFO: # Skipped # [] []
+[2012-01-26 00:03:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:04:23] Codeception.INFO: PASSED [] []
+[2012-01-26 00:04:59] Codeception.ALERT: 'Ð½Ð°' in <head>
+</head>
+<body>
+
+<h1>Information</h1>
+
+<p>Lots of valuable data here
+
+    <a href="/" id="back"><img src="blank.gif" alt="Back"></a>
+</p>
+
+<div class="notice"></div>
+
+
+Is that interesting?
+<form action="/">
+<input name="interesting" value="1" checked="checked" type="checkbox">
+    <input name="rus" value="Р’РµСЂРЅРѕ" type="text">
+    <input type="submit">
+</form>
+
+<p>РўРµРєСЃС‚ РЅР° СЂСѓСЃСЃРєРѕРј</p>
+<a href="/">РЎСЃС‹Р»РѕС‡РєР°</a>
+
+
+</body>. For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x0a0a0a0a496e666f726d6174696f6e0a0a4c6f7473206f662076616c7561626c65206461746120686572650a0a202020200a0a0a0a0a0a4973207468617420696e746572657374696e673f0a0a0a202020200a202020200a0a0ad0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d1980ad0a0d08ed0a1d083d0a1e280b9d0a0c2bbd0a0d195d0a1e280a1d0a0d194d0a0c2b00a0a0a contains "Ð½Ð°". [] []
+[2012-01-26 00:04:59] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:04:59] Codeception.INFO: PASSED [] []
+[2012-01-26 00:05:07] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x3c212d2d204d6572676564204f7574707574202d2d3e4c6f7473206f662076616c7561626c65206461746120686572653c212d2d204d6572676564204f7574707574202d2d3ed0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d198 contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:05:07] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:05:07] Codeception.INFO: PASSED [] []
+[2012-01-26 00:05:15] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:05:15] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:05:15] Codeception.INFO: PASSED [] []
+[2012-01-26 00:05:35] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:05:35] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:05:35] Codeception.INFO: PASSED [] []
+[2012-01-26 00:06:24] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:06:24] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:06:24] Codeception.INFO: PASSED [] []
+[2012-01-26 00:06:44] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:06:44] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:06:44] Codeception.INFO: PASSED [] []
+[2012-01-26 00:06:52] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:06:52] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:06:52] Codeception.INFO: PASSED [] []
+[2012-01-26 00:08:48] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:08:48] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:08:48] Codeception.INFO: PASSED [] []
+[2012-01-26 00:08:55] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x3c212d2d204d6572676564204f7574707574202d2d3e4c6f7473206f662076616c7561626c65206461746120686572653c212d2d204d6572676564204f7574707574202d2d3ed0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d198 contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:08:55] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:08:55] Codeception.INFO: PASSED [] []
+[2012-01-26 00:09:02] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:09:02] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:09:02] Codeception.INFO: PASSED [] []
+[2012-01-26 00:09:23] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:09:23] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:09:23] Codeception.INFO: PASSED [] []
+[2012-01-26 00:10:41] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:10:41] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:10:41] Codeception.INFO: PASSED [] []
+[2012-01-26 00:12:49] Codeception.ALERT: Unable to connect !  [] []
+[2012-01-26 00:12:49] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:12:49] Codeception.INFO: PASSED [] []
+[2012-01-26 00:13:26] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:13:26] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:13:26] Codeception.INFO: PASSED [] []
+[2012-01-26 00:13:33] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x3c212d2d204d6572676564204f7574707574202d2d3e4c6f7473206f662076616c7561626c65206461746120686572653c212d2d204d6572676564204f7574707574202d2d3ed0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d198 contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:13:33] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:13:33] Codeception.INFO: PASSED [] []
+[2012-01-26 00:13:41] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:13:41] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:13:41] Codeception.INFO: PASSED [] []
+[2012-01-26 00:15:41] Codeception.ALERT: Unable to connect !  [] []
+[2012-01-26 00:15:41] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:15:41] Codeception.INFO: PASSED [] []
+[2012-01-26 00:22:04] Codeception.ALERT: 'Ð½Ð°' in <head>
+</head>
+<body>
+
+<h1>Information</h1>
+
+<p>Lots of valuable data here
+
+    <a href="/" id="back"><img src="blank.gif" alt="Back"></a>
+</p>
+
+<div class="notice"></div>
+
+
+Is that interesting?
+<form action="/">
+<input name="interesting" value="1" checked="checked" type="checkbox">
+    <input name="rus" value="Р’РµСЂРЅРѕ" type="text">
+    <input type="submit">
+</form>
+
+<p>РўРµРєСЃС‚ РЅР° СЂСѓСЃСЃРєРѕРј</p>
+<a href="/">РЎСЃС‹Р»РѕС‡РєР°</a>
+
+
+</body>. For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x0a0a0a0a496e666f726d6174696f6e0a0a4c6f7473206f662076616c7561626c65206461746120686572650a0a202020200a0a0a0a0a0a4973207468617420696e746572657374696e673f0a0a0a202020200a202020200a0a0ad0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d1980ad0a0d08ed0a1d083d0a1e280b9d0a0c2bbd0a0d195d0a1e280a1d0a0d194d0a0c2b00a0a0a contains "Ð½Ð°". [] []
+[2012-01-26 00:22:04] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:22:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:25:42] Codeception.ALERT: Unable to connect !  [] []
+[2012-01-26 00:25:42] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:25:42] Codeception.INFO: PASSED [] []
+[2012-01-26 00:25:49] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x3c212d2d204d6572676564204f7574707574202d2d3e4c6f7473206f662076616c7561626c65206461746120686572653c212d2d204d6572676564204f7574707574202d2d3ed0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d198 contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:25:49] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:25:49] Codeception.INFO: PASSED [] []
+[2012-01-26 00:26:09] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:26:09] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:26:09] Codeception.INFO: PASSED [] []
+[2012-01-26 00:29:49] Codeception.ALERT: 'Ð½Ð°' in <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+
+<h1>Information</h1>
+
+<p>Lots of valuable data here
+
+    <a href="/" id="back"><img src="blank.gif" alt="Back"></a>
+</p>
+
+<div class="notice"></div>
+
+
+Is that interesting?
+<form action="/">
+<input name="interesting" value="1" checked="checked" type="checkbox">
+    <input name="rus" value="Р’РµСЂРЅРѕ" type="text">
+    <input type="submit">
+</form>
+
+<p>РўРµРєСЃС‚ РЅР° СЂСѓСЃСЃРєРѕРј</p>
+<a href="/">РЎСЃС‹Р»РѕС‡РєР°</a>
+
+
+</body>. For more details look for page snapshot in the log directory
+Failed asserting that Binary String: 0x0a202020200a0a0a0a496e666f726d6174696f6e0a0a4c6f7473206f662076616c7561626c65206461746120686572650a0a202020200a0a0a0a0a0a4973207468617420696e746572657374696e673f0a0a0a202020200a202020200a0a0ad0a0d19ed0a0c2b5d0a0d194d0a1d083d0a1e2809a20d0a0d085d0a0c2b020d0a1d082d0a1d193d0a1d083d0a1d083d0a0d194d0a0d195d0a0d1980ad0a0d08ed0a1d083d0a1e280b9d0a0c2bbd0a0d195d0a1e280a1d0a0d194d0a0c2b00a0a0a contains "Ð½Ð°". [] []
+[2012-01-26 00:29:49] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:29:49] Codeception.INFO: PASSED [] []
+[2012-01-26 00:31:22] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that '<!-- Merged Output -->Lots of valuable data here<!-- Merged Output -->Текст на русском' contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:31:22] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:31:22] Codeception.INFO: PASSED [] []
+[2012-01-26 00:33:22] Codeception.ALERT: Unable to connect !  [] []
+[2012-01-26 00:33:22] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:33:22] Codeception.INFO: PASSED [] []
+[2012-01-26 00:33:29] Codeception.ALERT: Failed asserting that two strings are equal. [] []
+[2012-01-26 00:33:29] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:33:29] Codeception.INFO: PASSED [] []
+[2012-01-26 00:38:56] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:38:56] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:38:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:44:40] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:44:40] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:44:40] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.ALERT: 'Information' in html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}. For more details look for page snapshot in the log directory
+Failed asserting that 'html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}' contains "Information". [] []
+[2012-01-26 00:46:04] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:04] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.ALERT: 'на' in html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}. For more details look for page snapshot in the log directory
+Failed asserting that 'html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}' contains "на". [] []
+[2012-01-26 00:46:05] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.ALERT: 'p' selector. For more details look for page snapshot in the log directory
+Failed asserting that '<!-- Merged Output -->Lots of valuable data here<!-- Merged Output -->Текст на русском' contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:46:05] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:46:05] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:05] Codeception.ALERT: Failed asserting that two strings are equal. [] []
+[2012-01-26 00:46:05] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.ALERT: 'Information' in html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}. For more details look for page snapshot in the log directory
+Failed asserting that 'html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}' contains "Information". [] []
+[2012-01-26 00:46:50] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:50] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.ALERT: 'на' in html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}. For more details look for page snapshot in the log directory
+Failed asserting that 'html page response {"uri":"http:\/\/testapp.com\/info","responseCode":"200"}' contains "на". [] []
+[2012-01-26 00:46:51] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.ALERT: 'p' selector. For more details look for page snapshot in the log directory
+Failed asserting that '<!-- Merged Output -->Lots of valuable data here<!-- Merged Output -->Текст на русском' contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:46:51] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:46:51] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:46:51] Codeception.ALERT: Failed asserting that two strings are equal. [] []
+[2012-01-26 00:46:51] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:46:51] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:05] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.ALERT: 'p' selector. For more details look for page snapshot in the log directory
+Failed asserting that '<!-- Merged Output -->Lots of valuable data here<!-- Merged Output -->Текст на русском' contains "Ð¢ÐµÐºÑÑ". [] []
+[2012-01-26 00:55:06] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.ALERT: Failed asserting that a NULL is not empty. [] []
+[2012-01-26 00:55:06] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:55:06] Codeception.ALERT: Failed asserting that two strings are equal. [] []
+[2012-01-26 00:55:06] Codeception.INFO: # FAILED # [] []
+[2012-01-26 00:55:06] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:56] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:57:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:58:57] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 00:58:57] Codeception.INFO: # ERROR # [] []
+[2012-01-26 00:58:57] Codeception.INFO: PASSED [] []
+[2012-01-26 00:59:04] Codeception.INFO: PASSED [] []
+[2012-01-26 01:01:04] Codeception.ALERT: Unable to connect !  [] []
+[2012-01-26 01:01:04] Codeception.INFO: # ERROR # [] []
+[2012-01-26 01:01:04] Codeception.INFO: PASSED [] []
+[2012-01-26 01:01:28] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 01:01:28] Codeception.INFO: # ERROR # [] []
+[2012-01-26 01:01:28] Codeception.INFO: PASSED [] []
+[2012-01-26 01:02:34] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 01:02:34] Codeception.INFO: # ERROR # [] []
+[2012-01-26 01:02:34] Codeception.INFO: PASSED [] []
+[2012-01-26 01:02:41] Codeception.INFO: PASSED [] []
+[2012-01-26 01:02:49] Codeception.INFO: PASSED [] []
+[2012-01-26 01:03:09] Codeception.ALERT: Invalid response from server : Failed to start new browser session: Error while launching browser [] []
+[2012-01-26 01:03:09] Codeception.INFO: # ERROR # [] []
+[2012-01-26 01:03:09] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.ALERT: on page
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+
+<h1>Information</h1>
+
+<p>Lots of valuable data here
+
+    <a href="/" id="back"><img src="blank.gif" alt="Back" /></a>
+</p>
+
+<div class="notice"></div>
+
+
+Is that interesting?
+<form action="/">
+<input type="checkbox" name="interesting" value="1" checked="checked" />
+    <input type="text" name="rus" value="Верно" />
+    <input type="submit" />
+</form>
+
+<p>Текст на русском</p>
+<a href="/">Ссылочка</a>
+
+</body>
+</html>
+Failed asserting that 0 is greater than 0. [] []
+[2012-01-26 01:17:26] Codeception.INFO: # FAILED # [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.ALERT:  within CSS selector 'p' on page
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+
+<h1>Information</h1>
+
+<p>Lots of valuable data here
+
+    <a href="/" id="back"><img src="blank.gif" alt="Back" /></a>
+</p>
+
+<div class="notice"></div>
+
+
+Is that interesting?
+<form action="/">
+<input type="checkbox" name="interesting" value="1" checked="checked" />
+    <input type="text" name="rus" value="Верно" />
+    <input type="submit" />
+</form>
+
+<p>Текст на русском</p>
+<a href="/">Ссылочка</a>
+
+</body>
+</html>
+Failed asserting that 0 is greater than 0. [] []
+[2012-01-26 01:17:26] Codeception.INFO: # FAILED # [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.ALERT: 'Ссылочка' on page
+Failed asserting that 0 is greater than 0. [] []
+[2012-01-26 01:17:26] Codeception.INFO: # FAILED # [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:17:26] Codeception.ALERT: Failed asserting that an array contains 'ÐÐµÑÐ½Ð¾'. [] []
+[2012-01-26 01:17:26] Codeception.INFO: # FAILED # [] []
+[2012-01-26 01:17:26] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:22] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []
+[2012-01-26 01:21:23] Codeception.INFO: PASSED [] []

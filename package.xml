@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-01-26</date>
-  <time>03:13:17</time>
+  <time>14:13:46</time>
   <version>
     <release>1.0.1</release>
     <api>1.0.1</api>
@@ -53,7 +53,7 @@
           <file name="Codecept.php" role="php" md5sum="d51c65f45be015d679155617c84efc66"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
-            <file name="Bootstrap.php" role="php" md5sum="e0efd82bb06a042b09217a80f77ae008"/>
+            <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="4d2e5be7032a69bbc3df4a9926abfd90"/>
             <file name="GenerateForClass.php" role="php" md5sum="687f454bc23bffcaba4fe5ffcc246d75"/>

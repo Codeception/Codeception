@@ -12,10 +12,6 @@ class Cest extends \Codeception\TestCase
         $this->testMethod = $data['method'];
         $this->static = $data['static'];
         $this->signature = $data['signature'];
-
-        if (!isset($this->testClass->class)) {
-            throw new \Exception("Cest {$data['name']} has no binding to tested class. Please, provide public property class with the name of class being tested.");
-        }
     }
     
     public function loadScenario() {
@@ -23,8 +19,10 @@ class Cest extends \Codeception\TestCase
 
         $unit = $this->testClass;
 
-        if (!class_exists($this->testClass->class, true)) {
-            throw new \Exception("Tested class '{$unit->class}' can't be loaded.");
+        if (isset($this->testClass->class)) {
+            if (!class_exists($this->testClass->class, true)) {
+                throw new \Exception("Tested class '{$unit->class}' can't be loaded.");
+            }
         }
 
         // executing test

@@ -76,10 +76,18 @@ Let's begin writing our test!
 
 ## Describe And Run
 
+First of all a code from application we need to test should be loaded.
+
+#### Bootstrap
+
+To prepare environment for unit testing you can use a bootstrap file  __tests/unit/_bootstrap.php__ .
+It will be loaded on each test run. To start unit testing you should initialize autoloader for your application there.
+If you don't use any - load classes inside a tests, with 'require_once' command.
+Use bootstrap file to any preparements you need to make. For example, load fixtures, initialize db connection, etc.
+
+#### Test != Code
+
 The thing you should understand very clearly: you write scenario, not the code which actually would be run. Usage of PHP-specific operators can lead to unpredictable results. Methods of Guy class just record the actions. They will be performed after test is fully written, and environment prepared. This leads us to some limitations we should keep in mind.
-
-#### Code is executed before the test.
-
 All the code you write besides the $I object will be executed before the test is run. No matter where in test your code is written.
 
 ``` php
