@@ -32,6 +32,10 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
         $this->suiteman->addCest($file);
         $this->assertEquals(2, $this->suiteman->getSuite()->count());
+
+        $file = \Codeception\Configuration::dataDir().'SimpleWithNoClassCest.php';
+        $this->suiteman->addCest($file);
+        $this->assertEquals(3, $this->suiteman->getSuite()->count());
     }
 
     public function testAddCept() {

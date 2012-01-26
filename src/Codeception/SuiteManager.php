@@ -100,7 +100,7 @@ class SuiteManager {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
                 } else {
-                    $target = $method->name;
+                    $target = get_class($unit).'::'.$method->name;
                 }
 
                 $this->suite->addTest(new \Codeception\TestCase\Cest($this->dispatcher, array(
