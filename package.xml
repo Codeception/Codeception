@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-01-18</date>
-  <time>05:37:50</time>
+  <date>2012-01-26</date>
+  <time>03:13:17</time>
   <version>
-    <release>1.0.0</release>
-    <api>1.0.0</api>
+    <release>1.0.1</release>
+    <api>1.0.1</api>
   </version>
   <stability>
     <release>stable</release>
@@ -49,8 +49,8 @@
       <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
       <dir name="src">
         <dir name="Codeception">
-          <file name="AbstractGuy.php" role="php" md5sum="7ac9a4574d70c6f403b25d26fcf03b94"/>
-          <file name="Codecept.php" role="php" md5sum="e7814bb6decda63dd2eeffb52fea4f1b"/>
+          <file name="AbstractGuy.php" role="php" md5sum="e4e20cffc612dbbe65a7373488b2f81d"/>
+          <file name="Codecept.php" role="php" md5sum="d51c65f45be015d679155617c84efc66"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
             <file name="Bootstrap.php" role="php" md5sum="e0efd82bb06a042b09217a80f77ae008"/>
@@ -77,12 +77,12 @@
           <file name="Module.php" role="php" md5sum="0647a116230a96b9c4f0cfa8ae259711"/>
           <dir name="Module">
             <file name="Cli.php" role="php" md5sum="895a152e20f944d15d83221921c2a99e"/>
-            <file name="Db.php" role="php" md5sum="8b3418c0aa8671b17666501c7d4d7de2"/>
+            <file name="Db.php" role="php" md5sum="b1f16050d236d7fc022a8dc63f71b790"/>
             <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
             <file name="Doctrine2.php" role="php" md5sum="5ff32af0fb7e9f8f53c3be8617c1c780"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
-            <file name="PhpBrowser.php" role="php" md5sum="439de87d41f6ccdfb809093d09a54930"/>
-            <file name="Selenium.php" role="php" md5sum="0cbf4ec0d3780daeb35cc13d4689df08"/>
+            <file name="PhpBrowser.php" role="php" md5sum="2352b7e6fa803e670ebea71874bcf51f"/>
+            <file name="Selenium.php" role="php" md5sum="ddbbf4f2b92830d2dfaeaf9e7bce1883"/>
             <file name="Symfony1.php" role="php" md5sum="c01ce35c9ff5b5fd7f0ee41f7ce8c8f6"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
             <file name="Unit.php" role="php" md5sum="71913ce18ee81daeef9ba965ebeddcbf"/>
@@ -120,7 +120,7 @@
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="fe44e64f2730684ba10c467abf9b244d"/>
+          <file name="SuiteManager.php" role="php" md5sum="2054bfc908f4dc59a6e1153ddaa3aaa6"/>
           <file name="TestCase.php" role="php" md5sum="01bf0e6e431f5900aca665d91948cf12"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
@@ -128,14 +128,14 @@
           </dir>
           <dir name="Util">
             <dir name="Connector">
-              <file name="Universal.php" role="php" md5sum="8238d54cce67c2afd38e5b22cfc18286"/>
+              <file name="Universal.php" role="php" md5sum="0381e84ea59e577a6846d271836a00c6"/>
               <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
             </dir>
             <file name="Fixtures.php" role="php" md5sum="3831f0c5dec7495cc065c8c26aeb0f75"/>
-            <file name="Framework.php" role="php" md5sum="88c8914a8e1b46dfcd0e30d379c51243"/>
+            <file name="Framework.php" role="php" md5sum="2046773e3a9b46fa32049069651c1797"/>
             <file name="FrameworkInterface.php" role="php" md5sum="0d3681c7ba4998bf4b90f5b45f8e3c4e"/>
-            <file name="Mink.php" role="php" md5sum="f7350ad4ff47a29b3825e3f6c44631d4"/>
-            <file name="MinkJS.php" role="php" md5sum="961c7fe3605b772802e4bfec8a443d4f"/>
+            <file name="Mink.php" role="php" md5sum="083e588f0c98cef6f159c8d418d7e173"/>
+            <file name="MinkJS.php" role="php" md5sum="bc853aceb30937ecedc26e1de964cd03"/>
             <file name="Stub.php" role="php" md5sum="cde8ad69ae0bfa0390ad242d462d517a"/>
             <dir name="Stub">
               <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
