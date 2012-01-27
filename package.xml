@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0         http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd" version="2.0">
   <name>Codeception</name>
-  <channel>codeception.com/pear</channel>
+  <channel>codeception.github.com/pear</channel>
   <summary>Full-stack PHP testing BDD framework.</summary>
   <description>Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.</description>
   <lead>
@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-01-27</date>
-  <time>02:55:28</time>
+  <time>05:07:30</time>
   <version>
     <release>1.0.1</release>
     <api>1.0.1</api>
@@ -26,6 +26,7 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
       <file name=".travis.yml" role="php" md5sum="e3eb52761990da7f7869021ec17989d9"/>
+      <file name="Codeception-1.0.1.tgz" role="php" md5sum="ed3f3f0434ea7a9d299459ea4eaf1b75"/>
       <file name="autoload.php" role="php" md5sum="a0e349df43aa73af17591b3f5f26ede2"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="8696bad3fbd97d356bd9120ee2ae60bb">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
@@ -44,7 +45,7 @@
       <dir name="config">
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
-      <file name="pearfarm.spec" role="php" md5sum="d1586c084b792738216d8126f2fe4e54"/>
+      <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
       <dir name="src">
@@ -53,7 +54,7 @@
           <file name="Codecept.php" role="php" md5sum="d51c65f45be015d679155617c84efc66"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
-            <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
+            <file name="Bootstrap.php" role="php" md5sum="fdea28256a295fed1bc6a558b5f8e4cc"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="4d2e5be7032a69bbc3df4a9926abfd90"/>
             <file name="GenerateForClass.php" role="php" md5sum="687f454bc23bffcaba4fe5ffcc246d75"/>
