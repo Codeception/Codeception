@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0         http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd" version="2.0">
   <name>Codeception</name>
-  <channel>codeception.github.com/pear</channel>
+  <channel>codeception.com/pear</channel>
   <summary>Full-stack PHP testing BDD framework.</summary>
   <description>Codeception is new PHP full-stack testing framework. Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests. Powered by PHPUnit 3.6.</description>
   <lead>
@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-01-26</date>
-  <time>14:13:46</time>
+  <date>2012-01-27</date>
+  <time>02:55:28</time>
   <version>
     <release>1.0.1</release>
     <api>1.0.1</api>
@@ -44,7 +44,7 @@
       <dir name="config">
         <file name="codeception.yml" role="php" md5sum="87e4a5793c70bf60d00d95a6996d9772"/>
       </dir>
-      <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
+      <file name="pearfarm.spec" role="php" md5sum="d1586c084b792738216d8126f2fe4e54"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
       <dir name="src">
@@ -120,11 +120,11 @@
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="2054bfc908f4dc59a6e1153ddaa3aaa6"/>
+          <file name="SuiteManager.php" role="php" md5sum="aa979a2ce86a18264d03ac54ec8cc766"/>
           <file name="TestCase.php" role="php" md5sum="01bf0e6e431f5900aca665d91948cf12"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
-            <file name="Cest.php" role="php" md5sum="e0266baaadc4cb93cee4438db1025482"/>
+            <file name="Cest.php" role="php" md5sum="94e66775faaafa48f836ec48b83a98ca"/>
           </dir>
           <dir name="Util">
             <dir name="Connector">
