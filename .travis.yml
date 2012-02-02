@@ -19,5 +19,6 @@ before_script:
   - php composer.phar install
   - "psql -c 'create database codeception_test;' -U postgres"
   - "mysql -e 'create database codeception_test;'"
+  - echo "extension=pgsql.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 script: "php codecept run"
