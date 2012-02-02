@@ -13,6 +13,13 @@ namespace Codeception\Module;
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
  *
+ * Performance may dramatically change when using SQLite file database storage.
+ * Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
+ * While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
+ *
+ * For PostgreSQL, make sure no __'COPY ... STDIN'__ is present in your dump. Replace with inserts or __COPY ... CSV__
+ * Otherwise use your own module and
+ *
  * ## Config
  *
  * * dsn *required* - PDO DSN
@@ -29,7 +36,9 @@ namespace Codeception\Module;
  *
  */
 
-class Db extends \Codeception\Module
+use \Codeception\Util\Driver\Db as Driver;
+
+class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 {
 
     /**
@@ -40,68 +49,62 @@ class Db extends \Codeception\Module
 
     protected $sql = array();
 
-    protected $config = array('populate' => true, 'cleanup' => true, 'dump' => null);
+    protected $config = array('populate' => true,
+                              'cleanup'  => true,
+                              'dump'     => null);
+
+    /**
+     * @var \Codeception\Util\Driver\Db
+     */
+    protected $driver;
 
     protected $requiredFields = array('dsn', 'user', 'password');
-
-    protected $firstRun = true;
 
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
-            if (!file_exists(getcwd().DIRECTORY_SEPARATOR.$this->config['dump'])) {
+            if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
                 throw new \Codeception\Exception\ModuleConfig(__CLASS__, "
                     File with dump deesn't exist.\n
                     Please, check path for sql file: " . $this->config['dump']);
             }
-
-            $sql = file_get_contents(getcwd().DIRECTORY_SEPARATOR.$this->config['dump']);
-            $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s',"",$sql);
-            $this->sql = explode("\r\n", $sql);
+            $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
+            $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+            $this->sql = explode("\n", $sql);
         }
 
         try {
-            $dbh = new \PDO($this->config['dsn'], $this->config['user'], $this->config['password']);
-            $this->dbh = $dbh;
+            $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage().' while creating PDO connection');
+            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage() . ' while creating PDO connection');
         }
 
         // starting with loading dump
-        if ($this->config['cleanup'] or $this->config['populate']) {
-            $this->cleanup();
-            $this->loadDump();
+        if ($this->config['populate']) {
+                $this->cleanup();
+                $this->loadDump();
         }
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup'] && !$this->firstRun) {
-            $this->cleanup();
-            $this->loadDump();
+        if ($this->config['cleanup']) {
+                $this->cleanup();
+                $this->loadDump();
         }
-        $this->firstRun = false;
     }
 
     protected function cleanup()
     {
-        $dbh = $this->dbh;
+        $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
         }
         try {
             // don't clear database for empty dump
             if (!count($this->sql)) return;
-
-            $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
-
-            $res = $this->dbh->query('show tables')->fetchAll();
-            foreach ($res as $row) {
-                $dbh->exec('drop table ' . $row[0]);
-            }
-
-            $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
+            $this->driver->cleanup();
 
         } catch (\Exception $e) {
             throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
@@ -111,76 +114,20 @@ class Db extends \Codeception\Module
     protected function loadDump()
     {
         if (!$this->sql) return;
-
-        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0');
-
-        $query = "";
-        foreach ($this->sql as $sql_line) {
-            if (trim($sql_line) != "" && trim($sql_line) != ";") {
-                if (preg_match('~^--.*?~s', $sql_line)) continue;
-                $query .= $sql_line;
-                if (substr(rtrim($query), -1,1) == ';') {
-                    $this->dbh->exec($query);
-                    $query = "";
-                }
-            }
+        try {
+            $this->driver->load($this->sql);
+        } catch (\PDOException $e) {
+            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
         }
-        $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1');
-
     }
 
-    /**
-     * Checks if a row with given column values exists.
-     * Provide table name and column values.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
-     *
-     * ```
-     * Will generate:
-     *
-     * ``` sql
-     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
-     * ```
-     * Fails if no such user found.
-     *
-     * @param $table
-     * @param array $criteria
-     */
     public function seeInDatabase($table, $criteria = array())
     {
         $res = $this->proceedSeeInDatabase($table, $criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
-
     }
 
-    /**
-     * Effect is opposite to ->seeInDatabase
-     *
-     * Checks if there is no record with such column values in database.
-     * Provide table name and column values.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
-     *
-     * ```
-     * Will generate:
-     *
-     * ``` sql
-     * SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
-     * ```
-     * Fails if such user was found.
-     *
-     * @param $table
-     * @param array $criteria
-     */
-    public function dontSeeInDatabase($table, $criteria)
+    public function dontSeeInDatabase($table, $criteria = array())
     {
         $res = $this->proceedSeeInDatabase($table, $criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
@@ -192,15 +139,15 @@ class Db extends \Codeception\Module
 
         $params = array();
         foreach ($criteria as $k => $v) {
-            $params[] = "`$k` = ?";
+            $params[] = "`$k` = ? ";
         }
-        $params = implode('AND ',$params);
+        $params = implode('AND ', $params);
 
         $query = sprintf($query, $table, $params);
 
-        $this->debugSection('Query',$query, $params);
+        $this->debugSection('Query', $query, $params);
 
-        $sth = $this->dbh->prepare($query);
+        $sth = $this->getDbh()->prepare($query);
         $sth->execute(array_values($criteria));
         return $sth->fetchColumn();
     }

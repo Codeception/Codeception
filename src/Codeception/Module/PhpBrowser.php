@@ -74,8 +74,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
 	protected function call($uri, $method = 'get', $params = array())
 	{
+        if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
         $browser = $this->session->getDriver()->getClient();
-//        $uri = $browser->getAbsoluteUri($uri);
 
     	$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);

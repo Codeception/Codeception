@@ -16,8 +16,4 @@ class Fixtures
         return self::$fixtures[$name];
     }
     
-    public function __() {
-        
-    }
-
 }

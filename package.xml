@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-01-27</date>
-  <time>05:07:30</time>
+  <time>06:27:14</time>
   <version>
     <release>1.0.1</release>
     <api>1.0.1</api>
@@ -26,7 +26,6 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
       <file name=".travis.yml" role="php" md5sum="e3eb52761990da7f7869021ec17989d9"/>
-      <file name="Codeception-1.0.1.tgz" role="php" md5sum="ed3f3f0434ea7a9d299459ea4eaf1b75"/>
       <file name="autoload.php" role="php" md5sum="a0e349df43aa73af17591b3f5f26ede2"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="8696bad3fbd97d356bd9120ee2ae60bb">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
@@ -78,7 +77,7 @@
           <file name="Module.php" role="php" md5sum="0647a116230a96b9c4f0cfa8ae259711"/>
           <dir name="Module">
             <file name="Cli.php" role="php" md5sum="895a152e20f944d15d83221921c2a99e"/>
-            <file name="Db.php" role="php" md5sum="b1f16050d236d7fc022a8dc63f71b790"/>
+            <file name="Db.php" role="php" md5sum="f5f12f3924e3e3bb26a92b0da0359551"/>
             <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
             <file name="Doctrine2.php" role="php" md5sum="5ff32af0fb7e9f8f53c3be8617c1c780"/>
             <file name="Filesystem.php" role="php" md5sum="6a1369e3260565dd598fa36b7ea08cfc"/>
