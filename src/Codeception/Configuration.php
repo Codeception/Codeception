@@ -11,6 +11,8 @@ class Configuration
 
     protected static $logDir = null;
     protected static $dataDir = null;
+
+    protected static $dir = null;
     
     public static function config()
     {
@@ -44,18 +46,19 @@ class Configuration
         self::$config = $config;
         self::$dataDir = $config['paths']['data'];
         self::$logDir = $config['paths']['log'];
+        self::$dir = getcwd();
 
         return $config;
     }
 
     public static function dataDir() {
         if (!self::$dataDir) throw new \ConfigurationException("Path for data not specified. Please, set data path in global config");
-        return getcwd().DIRECTORY_SEPARATOR.self::$dataDir.DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$dataDir.DIRECTORY_SEPARATOR;
     }
 
     public static function logDir() {
         if (!self::$logDir) throw new \ConfigurationException("Path for logs not specified. Please, set log path in global config");
-        return getcwd().DIRECTORY_SEPARATOR.self::$logDir.DIRECTORY_SEPARATOR;
+        return self::$dir.DIRECTORY_SEPARATOR.self::$logDir.DIRECTORY_SEPARATOR;
     }
 
     public static function suiteSettings($suite, $config)

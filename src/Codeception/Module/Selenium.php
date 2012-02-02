@@ -31,12 +31,12 @@
  */
 namespace Codeception\Module;
 
+
 class Selenium extends \Codeception\Util\MinkJS
 {
     protected $requiredFields = array('browser', 'url');
-    
+
     protected $config = array('host' => '127.0.0.1', 'port' => '4444');
-    
     public function _cleanup() {
         $client = new \Selenium\Client($this->config['host'], $this->config['port']);
         $driver = new \Behat\Mink\Driver\SeleniumDriver(

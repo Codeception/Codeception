@@ -14,7 +14,6 @@ namespace Codeception\Module;
  * ## Configuration
  *
  * * app *required* - application you want to test. In most cases it will be 'frontend'
- * * output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
  *
  * ## Public Properties
  * * browser - current instance of sfBrowser class.
@@ -32,7 +31,7 @@ class Symfony1 extends \Codeception\Module
 
     protected $session_id;
 
-    protected $requiredFields = array('app');
+    protected $config = array('app' => 'frontend');
 
     public function _initialize()
     {
@@ -62,11 +61,7 @@ class Symfony1 extends \Codeception\Module
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        if (!isset($this->config['output'])) {
-            $output = \sfConfig::get('sf_log_dir') . $test->getFileName() . '.page.debug.html';
-        } else {
-            $output = getcwd() . DIRECTORY_SEPARATOR . $this->config['output'] . DIRECTORY_SEPARATOR . $test->getFileName() . '.page.debug.html';
-        }
+        $output = \Codeception\Configuration::logDir() . DIRECTORY_SEPARATOR . basename($test->getFileName()) . '.page.debug.html';
         file_put_contents($output, $this->browser->getResponse()->getContent());
     }
 
@@ -365,6 +360,7 @@ class Symfony1 extends \Codeception\Module
     {
 
         $form = $this->browser->getResponseDomCssSelector()->matchSingle($selector)->getNode();
+        if (!$form) \PHPUnit_Framework_Assert::fail("Form by selector '$selector' not found");
         $fields = $this->browser->getResponseDomCssSelector()->matchAll($selector . ' input')->getNodes();
         $url = '';
         foreach ($fields as $field) {
