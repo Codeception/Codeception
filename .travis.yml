@@ -17,5 +17,7 @@ before_script:
   - php -S localhost:8000 -t tests/data/app &
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
+  - "psql -c 'create database codeception_test;' -U postgres"
+  - "mysql -e 'create database codeception_test;'"
 
 script: "php codecept run"
