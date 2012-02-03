@@ -11,6 +11,7 @@ branches:
 
 before_script:
   - sudo apt-get install php5-pgsql
+  - echo "extension=memcache.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.16.1.jar
