@@ -27,6 +27,7 @@ class PostgreSql extends Db
             $this->putline = false;
             pg_put_line($this->connection, $sql."\n");
             pg_end_copy($this->connection);
+            pg_close($this->connection);
         } else {
             pg_put_line($this->connection, $sql."\n");
         }
