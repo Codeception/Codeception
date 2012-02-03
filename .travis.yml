@@ -11,6 +11,7 @@ branches:
 
 before_script:
   - sudo apt-get install php5-pgsql
+  - php -i | grep pgsql
   - echo "extension=pgsql.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
