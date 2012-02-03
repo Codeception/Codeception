@@ -35,11 +35,16 @@ class PostgreSql extends Db
 
     public function sqlQuery($query)
     {
-        $constring = str_replace(';',' ',substr($this->dsn,6));
-        $constring .= ' user='.$this->user;
-        $constring .= ' password='.$this->password;
-        $this->connection = pg_connect($constring);
-        pg_query($this->connection, $query);
-        if (strpos(trim($query), 'COPY ') === 0) $this->putline = true;
+        if (strpos(trim($query), 'COPY ') === 0) {
+            if (!extension_loaded('pgsql')) throw new \Codeception\Exception\Module('\Codeception\Module\Db', "To run 'COPY' commands 'pgsql' extension should be installed");
+            $constring = str_replace(';',' ',substr($this->dsn,6));
+            $constring .= ' user='.$this->user;
+            $constring .= ' password='.$this->password;
+            $this->connection = pg_connect($constring);
+            pg_query($this->connection, $query);
+            $this->putline = true;
+        } else {
+            $this->dbh->exec($query);
+        }
     }
 }
