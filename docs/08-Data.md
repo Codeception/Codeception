@@ -1,4 +1,4 @@
-# Data
+# Working with Data
 
 Tests should not affect each other. That's a rule. When tests interact with databases they may change data inside them. This leads to data inconsistency. Test may try to insert the record is already inserted, or retrieve deleted record. To avoid test fails, database should be brought to it's initial state. Codeception has different methods and approaches to get your data cleaned.
 
