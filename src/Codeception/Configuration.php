@@ -103,7 +103,7 @@ class Configuration
 
         $modules = array();
 
-        $settings = array_merge_recursive($defaults, $settings);
+        $settings = self::mergeConfigs($defaults, $settings);
 
         $moduleNames = $settings['modules']['enabled'];
         foreach ($moduleNames as $moduleName) {

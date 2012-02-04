@@ -1,6 +1,8 @@
-# Data and Cleanup
+# Data
 
 Tests should not affect each other. That's a rule. When tests interact with databases they may change data inside them. This leads to data inconsistency. Test may try to insert the record is already inserted, or retrieve deleted record. To avoid test fails, database should be brought to it's initial state. Codeception has different methods and approaches to get your data cleaned.
+
+## Cleanup
 
 This chapter summarizes all notices on clean ups from previous chapter and suggests you best strategies to choose data storage backends.
 
@@ -49,7 +51,7 @@ Before test suite is started SQLite database is created and copied. After each t
 ## Shared connections
 
 When application or it's parts are run within Codeception process, you can use your application connection in your tests. 
-If you gain access to connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written to database at the end, thus no database repopulation is actually needed.
+If you get an access to connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written to database at the end, thus no database repopulation is actually needed.
 
 ### ORM modules
 
@@ -69,5 +71,21 @@ modules:
 
 Still, Db module will perform database population from dump before each test. Use 'populate: false' to disable it.
 
-### Transaction module
+### Dbh module
 
+If you use PostgreSQL, or any other database which supports nested transactions, you can use Dbh module. It takes a PDO instance from your application, starts a transaction in the begining of tests, and rolls it back at the end.
+A PDO connection can be set in bootstrap file. This module also overrides _seeInDatabase_ and _dontSeeInDatabase_ actions of Db module.
+To use Db module for population and Dbh for cleanups, use this config:
+
+``` yaml
+modules:
+	enabled: [Db, Dbh, TestHelper]
+	config:
+		Db:
+			cleanup: false
+
+```
+
+Please, note that Dbh module goes after Db. That allows Dbh module to override actions.
+
+#### To be written soon
