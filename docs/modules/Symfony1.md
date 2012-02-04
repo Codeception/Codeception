@@ -12,7 +12,6 @@ Please note, this module doesn't implement standard frameworks interface.
 ## Configuration
 
 * app *required* - application you want to test. In most cases it will be 'frontend'
-* output - dir were last shown page should be stored. Will be stored to 'sf_log_dir' log path If none specified
 
 ## Public Properties
 * browser - current instance of sfBrowser class.
