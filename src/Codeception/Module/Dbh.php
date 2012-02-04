@@ -21,6 +21,7 @@
  *
  * ### Configuration
  *
+ * * cleanup: true - enable cleanups by covering all queries inside transaction.
  *
  */
 namespace Codeception\Module;
