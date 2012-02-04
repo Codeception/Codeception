@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Util\Framework as Framework;
+
 /**
  * Module that interacts with Symfony 1.4 applications.
  *
@@ -178,28 +180,22 @@ class Symfony1 extends \Codeception\Module
 
     protected function proceedSee($text, $selector = null)
     {
+        $response = $this->browser->getResponse()->getContent();
+
         if ($selector) {
             $nodes = $this->browser->getResponseDomCssSelector()->matchAll($selector);
             $values = array();
             foreach ($nodes as $node) {
                 $values[] = trim($node->nodeValue);
             }
-            return array('contains', $text, $values, "'$selector' selector in " . $this->browser->getResponse()->getContent() . '. For more details look page snapshot in the log directory');
+            $response = Framework::formatResponse($response);
+
+            return array('pageContains', $text, $values, "'$selector' on $response");
         }
 
-        $response = $this->browser->getResponse()->getContent();
-        if (strpos($response, '<!DOCTYPE') !== false) {
-            $response = array();
-            $title = $this->browser->getResponse()->getTitle();
-            if ($title) $response['title'] = trim($title);
-            $h1 = $this->browser->getResponseDomCssSelector()->matchSingle('h1')->getNode();
-            if ($h1 && is_object($title)) $response['h1'] = trim($title->nodeValue);
-            $response['uri'] = $this->browser->fixUri($this->browser->getRequest()->getUri());
-            $response['responseCode'] = $this->browser->getResponse()->getStatusCode();
-            $response = json_encode($response);
-            $response = 'html page response ' . $response;
-        }
-        return array('contains', $text, strip_tags($this->browser->getResponse()->getContent()), "'$text' in " . $response . '. For more details look page snapshot in the log directory');
+        $response = Framework::formatResponse($response);
+
+        return array('pageContains', $text, strip_tags($this->browser->getResponse()->getContent()), "on $response.");
     }
 
     /**

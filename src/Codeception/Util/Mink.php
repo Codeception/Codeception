@@ -46,30 +46,15 @@ abstract class Mink extends \Codeception\Module
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
 		    }
-			return array('contains', $this->escape($text), $values, "'$selector' selector. For more details look for page snapshot in the log directory");
+			return array('pageContains', $this->escape($text), $values, "'$selector' selector.");
         }
 
         $response = $this->session->getPage()->getText();
 
-        $output = $response;
+        $output = Framework::formatResponse($response);
 
-        if (strpos($response, '<!DOCTYPE')!==false) {
-            $output = array();
-            $title = $this->session->getPage()->find('css','title');
-            if ($title) $output['title'] = trim(utf8_decode($title->getText()));
-
-            $h1 = $this->session->getPage()->find('css','h1');
-            if ($h1 && $title) $output['h1'] = trim(utf8_decode($h1->getText()));
-
-            $output['uri'] = $this->session->getCurrentUrl();
-            if ($this->session->getStatusCode()) $output['responseCode'] = $this->session->getStatusCode();
-            $output = json_encode($output);
-            $output = 'html page response '.$output;
-        }
-
-        return array('contains', $this->escape($text), $response, "'$text' in ".$output.'. For more details look for page snapshot in the log directory');
+        return array('pageContains', $this->escape($text), $response, "'$text' in ".$output.'.');
     }
-
 
     public function seeLink($text, $url = null)
     {

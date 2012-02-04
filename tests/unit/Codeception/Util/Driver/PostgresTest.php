@@ -16,6 +16,7 @@ class postgresTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        if (!function_exists('pg_connect')) return $this->markTestSkipped("Postgres extensions not loaded");
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $this->sql = explode("\n", $sql);

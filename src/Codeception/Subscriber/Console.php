@@ -36,7 +36,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         $test = $e->getTest();
-        $this->output->put("Trying to  [[{$test->getFeature()}]] ({$test->getFileName()})");
+        $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
@@ -101,7 +101,9 @@ class Console implements EventSubscriberInterface
         $step = $e->getStep();
         $action = $step->getAction();
         $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$action]];
-        if ($output = $activeModule->_getDebugOutput()) $this->output->debug($output);
+        if ($output = $activeModule->_getDebugOutput()) {
+            $this->output->debug($output);
+        }
     }
 
     public function beforeSuite(\Codeception\Event\Suite $e)
@@ -154,7 +156,7 @@ class Console implements EventSubscriberInterface
             $action = substr($action, 6);
             $this->output->writeln("\nGuy unexpectedly managed to $action {$failToString}");
         } else {
-            $this->output->writeln("Guy coudn't $action $failToString");
+            $this->output->writeln("Guy couldn't $action $failToString");
         }
 
         $this->output->writeln("  $i. (!$last!)");
