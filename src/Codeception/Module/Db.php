@@ -147,7 +147,9 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
         $this->debugSection('Query', $query, $params);
 
-        $sth = $this->getDbh()->prepare($query);
+        $sth = $this->driver->getDbh()->prepare($query);
+        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
+
         $sth->execute(array_values($criteria));
         return $sth->fetchColumn();
     }

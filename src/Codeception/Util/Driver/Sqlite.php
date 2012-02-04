@@ -10,17 +10,13 @@ class Sqlite extends Db
 
     public function __construct($dsn, $user, $password) {
         parent::__construct($dsn, $user, $password);
-        $this->filename = substr($this->dsn, 7);
-    }
-
-    protected function removeDatabase($filename)
-    {
-        file_put_contents($this->filename,'');
+        $this->filename = \Codeception\Configuration::projectDir().substr($this->dsn, 7);
+        $this->dsn = 'sqlite:'.$this->filename;
     }
 
     public function cleanup() {
         $this->dbh = null;
-        $this->removeDatabase($this->filename);
+        file_put_contents($this->filename,'');
         $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
     }
 

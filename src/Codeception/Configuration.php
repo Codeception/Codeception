@@ -13,7 +13,7 @@ class Configuration
     protected static $dataDir = null;
 
     protected static $dir = null;
-    
+
     public static function config()
     {
         if (self::$config) return self::$config;
@@ -51,15 +51,23 @@ class Configuration
         return $config;
     }
 
-    public static function dataDir() {
+    public static function dataDir()
+    {
         if (!self::$dataDir) throw new \ConfigurationException("Path for data not specified. Please, set data path in global config");
-        return self::$dir.DIRECTORY_SEPARATOR.self::$dataDir.DIRECTORY_SEPARATOR;
+        return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
     }
 
-    public static function logDir() {
+    public static function logDir()
+    {
         if (!self::$logDir) throw new \ConfigurationException("Path for logs not specified. Please, set log path in global config");
-        return self::$dir.DIRECTORY_SEPARATOR.self::$logDir.DIRECTORY_SEPARATOR;
+        return self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR;
     }
+
+    public static function projectDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
 
     public static function suiteSettings($suite, $config)
     {
@@ -68,11 +76,14 @@ class Configuration
         $moduleConf = array('modules' => isset($config['modules']) ? $config['modules'] : array());
         $path = $config['paths']['tests'];
 
-        $suiteConf = file_exists(getcwd().DIRECTORY_SEPARATOR. $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$path . DIRECTORY_SEPARATOR .  "/$suite.suite.yml") : array();
-        $suiteDistconf = file_exists(getcwd().DIRECTORY_SEPARATOR.$path . DIRECTORY_SEPARATOR .  "$suite.suite.dist.yml") ? Yaml::parse(getcwd().DIRECTORY_SEPARATOR.$path . DIRECTORY_SEPARATOR .  "/$suite.suite.dist.yml") : array();
+        $suiteConf = file_exists(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "/$suite.suite.yml") : array();
+        $suiteDistconf = file_exists(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "/$suite.suite.dist.yml") : array();
 
-        $settings = array_merge_recursive($globalConf, $moduleConf, $suiteDistconf, $suiteConf);
-        $settings['path'] = getcwd().DIRECTORY_SEPARATOR. $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        $settings = self::mergeConfigs($globalConf, $moduleConf);
+        $settings = self::mergeConfigs($settings, $suiteDistconf);
+        $settings = self::mergeConfigs($settings, $suiteConf);
+
+        $settings['path'] = getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
     }
@@ -82,11 +93,12 @@ class Configuration
         return self::$suites;
     }
 
-    public static function modules($settings) {
+    public static function modules($settings)
+    {
         $defaults = array('modules' => array('enabled' => array(), 'config' => array()));
         if (!isset($settings['modules'])) throw new \Codeception\Exception\Configuration('No modules configured!');
 
-        if (file_exists($guy = $settings['path'].DIRECTORY_SEPARATOR.$settings['class_name'].'.php')) require_once $guy;
+        if (file_exists($guy = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php')) require_once $guy;
         // if (!class_exists($settings['class_name'])) throw new \Codeception\Exception\Configuration("No guys were found. Tried to find {$settings['class_name']} but he was not there.");
 
         $modules = array();
@@ -95,32 +107,52 @@ class Configuration
 
         $moduleNames = $settings['modules']['enabled'];
         foreach ($moduleNames as $moduleName) {
-            $classname = '\Codeception\Module\\'.$moduleName;
+            $classname = '\Codeception\Module\\' . $moduleName;
             $module = new $classname;
             $modules[$moduleName] = $module;
 
             if (isset($settings['modules']['config'][$moduleName])) {
                 $module->_setConfig($settings['modules']['config'][$moduleName]);
             } else {
-				if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
-			}
+                if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
+            }
         }
 
         return $modules;
     }
 
-    public static function actions($modules) {
+    public static function actions($modules)
+    {
         $actions = array();
         foreach ($modules as $modulename => $module) {
             $module->_initialize();
-            $class = new \ReflectionClass('\Codeception\Module\\'.$modulename);
+            $class = new \ReflectionClass('\Codeception\Module\\' . $modulename);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-			    if (strpos($method->name,'_')===0) continue;
+                if (strpos($method->name, '_') === 0) continue;
                 $actions[$method->name] = $modulename;
             }
         }
         return $actions;
+    }
+
+    protected static function mergeConfigs($a1, $a2)
+    {
+        if (!is_array($a1) || !is_array($a2))
+            return $a2;
+        $res = array();
+        foreach ($a2 as $k2 => $v2)
+        {
+            if (!isset($a1[$k2])) { // if no such key
+                $res[$k2] = $v2;
+                continue;
+            }
+            $res[$k2] = self::array_merge_myrecursive($a1[$k2], $v2);
+            unset($a1[$k2]);
+        }
+        foreach ($a1 as $k1 => $v1) // only single elements here left
+            $res[$k1] = $v1;
+        return $res;
     }
 
 

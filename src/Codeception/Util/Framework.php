@@ -76,30 +76,15 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function see($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), $this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), " within CSS selector '$selector' " . $this->formatHtmlResponse());
+            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), " within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . $this->formatHtmlResponse());
-        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' " . $this->formatHtmlResponse());
-    }
-
-    protected function formatHtmlResponse()
-    {
-        $response = $this->client->getResponse()->getContent();
-        $formatted = "on page\n";
-        if (strpos($response, '<!DOCTYPE') !== false) {
-            $title = $this->crawler->filter('title');
-            if (count($title)) $formatted .= "Title: " . trim($title->first()->text());
-            $h1 = $this->crawler->filter('h1');
-            if (count($h1)) $formatted .= "\nH1: " . trim($h1->first()->text());
-            $formatted .= ".\nFull response is saved in 'log' directory.";
-            return $formatted;
-        }
-        return $formatted . $response;
+            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . self::formatResponse($this->client->getResponse()->getContent()));
+        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function seeLink($text, $url = null)
@@ -289,6 +274,26 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     protected function escape($string)
     {
         return addslashes($string);
+    }
+
+    public static function formatResponse($response)
+    {
+        if (strlen($response) <= 500) {
+            $response = trim($response);
+            $response = preg_replace('/\s[\s]+/',' ',$response); // strip spaces
+            $response = str_replace("\n",'', $response);
+            return $response;
+        }
+        if (strpos($response, '<html') !== false) {
+            $formatted = 'page [';
+            $crawler = new \Symfony\Component\DomCrawler\Crawler($response);
+            $title = $crawler->filter('title');
+            if (count($title)) $formatted .= "Title: " . trim($title->first()->text());
+            $h1 = $crawler->filter('h1');
+            if (count($h1)) $formatted .= "\nH1: " . trim($h1->first()->text());
+            return $formatted. "]";
+        }
+        return "page.";
     }
 
 

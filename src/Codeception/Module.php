@@ -86,7 +86,7 @@ abstract class Module {
 			$not = '';
 		}
 
-		call_user_func_array(array('\PHPUnit_Framework_Assert', 'assert'.$not.$method), $arguments);
+		call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
 	}
 
 	protected function assertNot($arguments) {
