@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * Works with SQL dabatase (MySQL tested).
+ * Works with SQL dabatase.
  *
  * The most important function of this module is cleaning database before each test.
  * That's why this module was added into global configuration file: codeception.yml.
@@ -17,8 +17,19 @@ namespace Codeception\Module;
  * Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
  * While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
  *
- * For PostgreSQL, make sure no __'COPY ... STDIN'__ is present in your dump. Replace with inserts or __COPY ... CSV__
- * Otherwise use your own module and
+ * Supported and tested databases are:
+ *
+ * * MySQL
+ * * SQLite (only file)
+ * * PostgreSQL
+ *
+ * Supported but not tested.
+ *
+ * * MSSQL
+ * * Orcale
+ *
+ * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
+ * Check out drivers if you get problems loading dumps and cleaning databases.
  *
  * ## Config
  *
