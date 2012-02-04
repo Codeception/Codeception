@@ -147,7 +147,7 @@ class Configuration
                 $res[$k2] = $v2;
                 continue;
             }
-            $res[$k2] = self::array_merge_myrecursive($a1[$k2], $v2);
+            $res[$k2] = self::mergeConfigs($a1[$k2], $v2);
             unset($a1[$k2]);
         }
         foreach ($a1 as $k1 => $v1) // only single elements here left
