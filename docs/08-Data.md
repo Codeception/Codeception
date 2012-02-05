@@ -165,10 +165,12 @@ class MyFixtures extends Fixtures {
         return parent::get("user.$key");
     }
 };
+
+MyFixtures::add('user', 'davert', Doctrine::getTable('User')->findOneBy('name', 'davert'));
+
 ?>
 ```
 
-MyFixtures::add('user', 'davert', Doctrine::getTable('User')->findOneBy('name', 'davert'));
 
 In test:
 
