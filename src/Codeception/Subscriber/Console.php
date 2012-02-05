@@ -28,7 +28,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         if ($e->getTest() instanceof \Codeception\TestCase) return;
-        $this->output->put("Running [[" . $e->getTest()->toString() . "]]");
+        $this->output->put("Running [[" . $e->getTest()->toString() . "]] ");
     }
 
     // triggered for scenario based tests: cept, cest

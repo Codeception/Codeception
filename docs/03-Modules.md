@@ -144,7 +144,8 @@ For dontSeeClassExist, the 'assertFalse' will be called.
 ### Resolving Collisions
 
 What happens if you have 2 modules which the same named actions within?
-Nothing exceptional. The action from the first module will be loaded, action from second will be ignored.
+Codeception allows override actions by changing module order.
+The action from the second module will be loaded and action from first will be ignored.
 Order of modules can be defined in suite config.
 
 ### Connecting Modules

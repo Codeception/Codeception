@@ -31,7 +31,7 @@ class Stub
     public static function factory($class, $num = 1, $params = array())
     {
         $objs = array();
-        for ($i = 0; $i < $num; $i++) $objs[] = self::makeEmpty($class, $params);
+        for ($i = 0; $i < $num; $i++) $objs[] = self::make($class, $params);
         return $objs;
     }
 

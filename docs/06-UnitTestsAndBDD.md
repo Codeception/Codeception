@@ -2,24 +2,25 @@
 
 Each function is like a little a little application itself. It's the most simple and indivisible part of program. Still, it's natural to have it tested in a similar manner we test the application in a whole. Codeception unit tests are much similar to acceptance tests with some additional features that simplifies the code testing. 
 
-Unit tests are required to be readable as much as possible. They should be clean and easy for understanding. Codeception helps developer to follow this practices. Also it provides some useful tools for writing tests, making them stay compact and readable.
+Unit tests are required to be readable as much as possible. They should be clean and easy for understanding. Codeception helps developer to follow this practices.
 
 ## Writing a Simple Test
 
-With the Codeception you should describe your test in a scenario, as we did it for acceptance test.
+With the Codeception you should describe your test in a scenario, as we did that for acceptance test.
 
 ``` php
 <?php
 
 $I = new CodeGuy($scenario);
-$I->testMethod('Validator::validateEmail');
-$I->executeTestedMethodWith('davert@mail.ua');
+$I->execute(function () {
+   return Validator::validateEmail('davert@mail.ua');
+});
 $I->seeResultEquals(true);
 ?>
 
 ```
 
-This a test of a very simple function. The similar test in PHPUnit will look like this:
+The similar test in PHPUnit will look like this:
 
 ``` php
 <?php
@@ -29,9 +30,9 @@ public function testValidateEmail()
 ?>
 ```
 
-As you can see, there is no practical reason using Codeception for testing simple methods. But not all the functions can be executed and tested that way. Whenever function have dependencies and it's results can't be so easily observable, the Codeception will be quite useful. 
+Well, PHPUnit wins here: it's test is shorter and readable. There is no practical reason using Codeception for testing simple methods. But not all the functions can be executed and tested that way. Whenever function have dependencies and it's results can't be so easily observable, the Codeception will be quite useful.
 
-Using Codeception for unit testing is like using framework for web development. Even it's hard to create 'hello world' page with the Symfony, Zend, or Yii, but writing the complex sites or web-services requires the power of framework.
+Using Codeception for unit testing is like using framework for web development. Even it's hard to create 'hello world' page with the Symfony, Zend, or Yii, they help you build complex web applications.
 
 ## Testing the Controller
 
@@ -74,21 +75,25 @@ Here is the Codeception test for the 'show' action:
 <?php
 use Codeception\Util\Stub as Stub;
 
+const VALID_USER_ID = 1;
+const INVALID_USER_ID = 0;
+
 class UserControllerCest {
     public $class = 'UserController';
+
 
     public function show(CodeGuy $I) {
         // prepare environment
         $I->haveFakeClass($controller = Stub::makeEmptyExcept($this->class, 'show'));
-        $I->haveFakeClass($db = Stub::make('DbConnector', array('find' => function($id) { return $id ? new User() : null )));
+        $I->haveFakeClass($db = Stub::make('DbConnector', array('find' => function($id) { return $id == VALID_USER_ID ? new User() : null )));
         $I->setProperty($controller, 'db', $db);
 
-        $I->executeTestedMethodOn($controller, 1)
+        $I->executeTestedMethodOn($controller, VALID_USER_ID)
             ->seeResultEquals(true)
             ->seeMethodInvoked($controller, 'render');
 
         $I->expect('it will render 404 page for non existent user')
-            ->executeTestedMethodOn($controller, 0)
+            ->executeTestedMethodOn($controller, INVALID_USER_ID)
             ->seeResultNotEquals(true)
             ->seeMethodInvoked($controller, 'render404','User not found')
             ->seeMethodNotInvoked($controller, 'render');

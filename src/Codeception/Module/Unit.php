@@ -47,6 +47,7 @@ class Unit extends \Codeception\Module
 
     public function _after(\Codeception\TestCase $test)
     {
+        \Codeception\Util\Fixtures::cleanup();
     }
 
     public function _failed(\Codeception\TestCase $test, $fail)

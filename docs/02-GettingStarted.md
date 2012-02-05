@@ -109,6 +109,11 @@ Give it a try!
 
 The actions in Guy classes are taken form modules. With the 'build' command described above, Codeception emulates multiple inheritance. Modules are designed to have one action done with one method. According to DRY principle, If you use same scenario parts in different modules, you can combine them and move to custom module. By default each suite has an empty module, which can extend guy classes. They are stored in 'helpers' directory.
 
+## Bootstrap
+
+Each suite has it's bootstrap file. It's located in suite directory and is named _bootstrap.php_. It will be executed before each test.
+Write any set up preparations there.
+
 ## Tests
 
 Codeception supports 3 test formats. Besides the Cept, early described Codeception can execute PHPUnit Test files, and the hybrid format, for unit testing - Cept. There is no difference tests of which format will be in suite. But within the PHPUnit tests you can't use Guy classes. 
