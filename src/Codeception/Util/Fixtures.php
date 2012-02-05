@@ -15,5 +15,10 @@ class Fixtures
         if (!isset(self::$fixtures[$name])) throw new \RuntimeException("$name not found in fixtures");
         return self::$fixtures[$name];
     }
+
+    public static function cleanup()
+    {
+        self::$fixtures = array();
+    }
     
 }

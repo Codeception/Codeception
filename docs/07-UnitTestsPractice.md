@@ -85,6 +85,73 @@ It will be loaded on each test run. To start unit testing you should initialize 
 If you don't use any - load classes inside a tests, with 'require_once' command.
 Use bootstrap file to any preparements you need to make. For example, load fixtures, initialize db connection, etc.
 
+Example bootstrap file (tests/unit/_bootstrap.php)
+
+``` php
+<?php
+require_once 'PHPUnit/Framework/Assert/Functions.php';
+
+require_once __DIR__.'/../../config.xml';
+
+MyApplication::autoload();
+MyApplication::cleanCaches();
+
+// setting database connection
+\Codeception\Module\Dbh::$dbh = MyApplication::getDatabaseConnection();
+
+?>
+```
+
+### setUp and tearDown
+
+Cest files has analogs for PHPUnit's setUp and tearDown methods. 
+You can use _before and _after methods of Cest class to prepare and clean environment.
+
+``` php
+<?php
+
+use \Codeception\Util\Stub as Stub;
+
+class ControllerCest {
+	$class = 'Controller';
+
+	public function _before() {
+		$this->db = Stub::makeEmpty('DbConnector');
+	}
+
+	public function show(CodeGuy $I)
+	{
+		$controller = Stub::makeEmptyExcept('Controller', 'save');
+		$I->setProperty($controller, 'db', $this->db);
+		// ...
+	}
+
+	public function _after() {		
+	}
+}
+?>
+```
+
+### Native Asserts
+
+You are not limited to using asserts only in 'see' actions. The native PHPUnit assert actions are working anywhere in your test code. 
+By default 'assert*' functions from 'PHPUnit/Framework/Assert/Functions.php' file is loaded in your bootsrtap file. 
+If you get any conflicts with your own code, use PHPUnit_Framework_Assert class for writing assertions.
+
+``` php
+<?php
+$I->haveStub($user = Stub::make('User', array(function ('setName' => function ($name) { assertEquals('davert', $name); }))));
+$I->execute(function() use($user) {
+	$user->name = 'davert'; // we assume updating property will execute setter.
+	$user->email = 'davert@mail.ua'
+	assertEquals('davert@mail.ua', $user->getEmail());
+});
+?>
+```
+
+Still we don't recommend using asserts in test doubles, as it breaks the test logic. We suppose all asserts are performed after the code is executed. It can lead to misunderstanding while reading the test. 
+
+
 #### Test != Code
 
 The thing you should understand very clearly: you write scenario, not the code which actually would be run. Usage of PHP-specific operators can lead to unpredictable results. Methods of Guy class just record the actions. They will be performed after test is fully written, and environment prepared. This leads us to some limitations we should keep in mind.
@@ -101,9 +168,7 @@ $I->seeInDatabase('posts',array('id' => 5, 'comments_count' => 1));
 
 This scenario will fail, because developer expects the comment counter will be incrementer by DB::updateCounters call. But this method will be executed before comment is saved, so the last assertions will fail. To perform actions inside the scenario add your code as an action into CodeHelper module. 
 
-#### Actions won't return any results
-
-No method of Guy class is allowed to return values. It will return the current CodeGuy instance only. Reconsider your testing scenario every time you want write something like this:
+This leads to other thing. No method of Guy class is allowed to return values. It will return the current CodeGuy instance only. Reconsider your testing scenario every time you want write something like this:
 
 ``` php
 <?php
@@ -116,9 +181,56 @@ $I->seeInDatabase('posts', array('id' => $post_id));
 
 For testing result we use ->seeResult* actions. But you can't use data returned by tested method inside your next actions.
 
-#### Objects can be updated by CodeGuy
+#### Stubs
 
-Even we can't execute code inside a test we can still perform a manipulations with objects:
+Specially designed class \Codeception\Util\Stub is used for creating test doubles. It's just a simple wrapper on top of PHPUnit's Mock Builder.
+It can generate any stub with just a one factory method. 
+
+Let's see how we can create stubs for User class:
+
+``` php
+<?php
+use \Codeception\Util\Stub as Stub;
+
+// create class instance with name set method 'save' redefined.
+$user = Stub::make('User', array('name' => 'davert', 'save' => function () { return true; }));
+$user->save(); // returns true
+
+// create class instance with all empty methods (will return NULL)
+$user = Stub::makeEmpty('User', array('getName' => function () { return 'davert'; }));
+$user->save(); // is empty and returns NULL
+$user->getName(); // return 'davert'
+
+// create class with empty methods except one
+$user = Stub::makeEmptyExcept('User', 'getName', array('name' => 'davert'));
+$user->save(); // is empty and returns NULL
+$user->getName(); // returns 'davert'
+
+// create class instance through constructor
+// second parameter is array, it's values will be passed to constructor.
+
+// similar to $user = new User($con, $is_new);
+$user = Stub::construct('User', array($con, $is_new), array('name' => 'davert'));
+
+// similar is constructEmpty 
+$user = Stub::constructEmpty('User', array($con, $is_new), array('getName' => function () { return 'davert'; }));
+
+// and constructEmptyExcept
+$user = Stub::constructEmptyExcept('User', 'getName', array($con, $is_new), array('name' => 'davert'));
+
+// copy and redefine class instance
+// can act with regular objects, not only stubs
+$user->getName(); // returns 'davert'
+$user2 = Stub::copy($user, array('name' => 'davert2'));
+$user->getName(); // returns 'davert2'
+?>
+``` 
+
+Let's briefly summarize it: if you want to create stub with constructor use _Stub::construct*_, if you want to bypass constructor use Stub::make*.
+
+#### Change objects with CodeGuy
+
+Various manipulations on tested objects can be performed:
 
 ``` php
 <?php
@@ -173,63 +285,15 @@ $I->haveStub($controller = Stub::makeEmpty('Controller'));
 Only the objects defined by one of those methods can be turned into mocks. 
 For stubs that won't become mocks, haveFakeClass execution is not required.
 
-### Native Asserts
-
-You are not limited to using asserts only in 'see' actions. The native PHPUnit assert actions are working anywhere in your test code. 
-To use 'assert*' functions include a 'PHPUnit/Framework/Assert/Functions.php' file. 
-
-``` php
-<?php
-require_once 'PHPUnit/Framework/Assert/Functions.php';
-
-$I->haveStub($user = Stub::make('User', array(function ('setName' => function ($name) { assertEquals('davert', $name); }))));
-$I->execute(function() use($user) {
-	$user->name = 'davert'; // we assume updating property will execute setter.
-	$user->email = 'davert@mail.ua'
-	assertEquals('davert@mail.ua', $user->getEmail());
-});
-?>
-```
-
-Still we don't recommend using asserts in test doubles, as it breaks the test logic. We suppose all asserts are performed after the code is executed. It can lead to misunderstanding while reading the test. 
-
-
-### setUp and tearDown
-
-Cest files has analogs for PHPUnit's setUp and tearDown methods. 
-You can use _before and _after methods of Cest class to prepare and clean environment.
-
-``` php
-<?php
-class ControllerCest {
-	$class = 'Controller';
-
-	public function _before() {
-		$this->db = Stub::makeEmpty('DbConnector');
-	}
-
-	public function show(CodeGuy $I)
-	{
-		$controller = Stub::makeEmptyExcept('Controller', 'save');
-		$I->setProperty($controller, 'db', $this->db);
-		// ...
-	}
-
-	public function _after() {		
-	}
-}
-?>
-```
-
 ## Working with Database
 
 We used Db module widely in examples. As we tested methods of model, it was natural to test result inside the database.
 Connect the Db module to your unit suite to perform 'seeInDatabase' calls. 
 But before each test the database should be cleaned. Deleting all tables and loading dump may take quite a lot of time. For unit tests that are supposed to be run fast that's a catastrophee. 
 
-We could perform all our database interactions inside the transaction, but MySQL doesn't support nested transaction. We recommend you to using SQLite Memory instead MySQL database for running your unit tests.
+We can perform all our database interactions within a transaction. If you are using PostgreSQL include [Dbh](http://codeception.com/docs/modules/Dbh) module to your suite. 
 
-ORMs like Doctrine or Doctrine2 can emulate nested transaction. Thus, If you use such ORMs, you'd better connect their modules to your suite.  In order to not conflict with Db module they have slightly different actions for looking into database.
+MySQL doesn't support nested transaction, so running this module can lead to unpredictiple results. ORMs like Doctrine or Doctrine2 can emulate nested transaction. Thus, If you use such ORMs, you'd better connect their modules to your suite.  In order to not conflict with Db module they have slightly different actions for looking into database.
 
 ``` php
 <?php
@@ -239,6 +303,8 @@ $I->seeInRepository('Entity',array('property' => 'value'));
 $I->seeInTable('Table',array('property' => 'value'));
 ?>
 ```
+
+If you don't use ORMs and MySQL, consider using SQLite for testing instead. 
 
 ## Conclusion
 
