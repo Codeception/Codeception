@@ -221,6 +221,15 @@ There are plenty of options you can use.
 * report - format results in report mode.
 * html - generate html file with results. It will be stored in log dir.
 
+### Generators
+
+There are plenty of useful Codeception commands.
+
+* generate:cept *suite* *filename* - Generates sample Cept scenario.
+* generate:cest *suite* *filename* - Generates sample Cest test.
+* generate:suite *suite* *guy* - Generates new suite with given Guy class name.
+* generate:scenarios *suite* - Generates text files with scenarios from tests.
+
 
 ## Conclusion
 
