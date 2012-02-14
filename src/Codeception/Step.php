@@ -57,9 +57,9 @@ abstract class Step
                     if (method_exists($argument, '__toString')) {
                         $arguments[$k] = $argument->__toString();
                     } elseif (isset($argument->__mocked)) {
-                        $arguments[$k] = "(({$argument->__mocked}))";
+                        $arguments[$k] = $this->formatClassName($argument->__mocked);
                     } else {
-                        $arguments[$k] = 'Instance of ' . get_class($argument);
+                        $arguments[$k] = $this->formatClassName(get_class($argument));
                     }
                     continue;
                 }
@@ -73,10 +73,15 @@ abstract class Step
                     return '"' . $arguments[0] . '"';
                 default:
 
-                    return json_encode($arguments);
+                    return stripcslashes(json_encode($arguments));
 
             }
         }
+    }
+
+    protected function formatClassName($classname)
+    {
+        return 'instance of '.$classname;
     }
 
     abstract public function getName();
@@ -90,6 +95,16 @@ abstract class Step
     {
         return $this->humanize($this->getAction()). ' ' . $this->getHumanizedArguments();
     }
+
+    public function getHtmlAction() {
+        $args = $this->getHumanizedArguments();
+        $args = preg_replace('~\$(.*?)\s~','$<span style="color: #3C3C89; font-weight: bold;">$1</span>', $args);
+        return $this->humanize($this->getAction()). ' <span style="color: #732E81;">'.$args.'</span>';
+    }
+
+    public function getHumanizedActionWithoutArguments() {
+        return $this->humanize($this->getAction());
+    }
     
     public function getHumanizedArguments() {
         return $this->clean($this->getArguments(true));
@@ -97,7 +112,7 @@ abstract class Step
 
     protected function clean($text)
     {
-        return str_replace('\/', '/', $text);
+        return str_replace('\/','',$text);
     }
 
     protected function humanize($text)

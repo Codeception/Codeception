@@ -32,7 +32,7 @@ class Configuration
         }
 
         if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($config['paths']['tests']);
+            $suites = Finder::create()->files()->name('*.suite.yml')->in($config['paths']['tests'])->depth(0);
             $config['suites'] = array();
             foreach ($suites as $suite) {
                 preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
@@ -154,6 +154,7 @@ class Configuration
             $res[$k1] = $v1;
         return $res;
     }
+
 
 
 }

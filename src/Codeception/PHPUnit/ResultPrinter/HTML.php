@@ -95,7 +95,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
 
             $stepTemplate->setVar(
               array(
-                'action' => $step->getHumanizedAction() . ' ' . $step->getArguments(TRUE),
+                'action' => $step->getHtmlAction(),
               )
             );
 
@@ -134,7 +134,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
 
         $scenarioHeaderTemplate->setVar(
           array(
-            'name' => 'TestGuy Results',
+            'name' => 'Codeception Results',
 	        'status' => $status,
 	        'time' => round($this->timeTaken,1)
 	      )

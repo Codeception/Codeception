@@ -70,7 +70,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
-        file_put_contents('tests/unit/_bootstrap.php', "<?php\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n// Here you can initialize variables that will for your tests\n");
+        file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
         file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
         file_put_contents('tests/acceptance/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
 

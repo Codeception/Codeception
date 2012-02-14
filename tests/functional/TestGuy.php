@@ -5,9 +5,13 @@
 /**
 
  * Methods from Filesystem
+ * @method TestGuy amInPath($path)
  * @method TestGuy openFile($filename)
- * @method TestGuy seeInFile($text)
- * @method TestGuy dontSeeInFile($text)
+ * @method TestGuy deleteFile($filename)
+ * @method TestGuy deleteDir($dirname)
+ * @method TestGuy seeInThisFile($text)
+ * @method TestGuy dontSeeInThisFile($text)
+ * @method TestGuy deleteThisFile()
  * @method TestGuy seeFileFound($filename)
  * 
  * Methods from TestHelper

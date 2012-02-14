@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.0.2";
+    const VERSION = "1.0.3";
 
     /**
      * @var \Codeception\Runner
@@ -62,7 +62,7 @@ class Codecept
         }
 
         if ($options['report']) $options['silent'] = true;
-        if ($options['html']) $options['html'] = $this->config['paths']['output'] . '/result.html';
+        if ($options['html']) $options['html'] = \Codeception\Configuration::dataDir() . 'result.html';
 
         return $options;
     }
@@ -109,6 +109,18 @@ class Codecept
 
     public function getOptions() {
         return $this->options;
+    }
+
+    public static function checkLastVersion() {
+        if (!class_exists('SimpleXMLElement')) return false;
+        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
+        if (!$file) return '';
+        $feed = new \SimpleXMLElement($file);
+        @$codeception = $feed->entry[0]->title;
+        if (!$codeception) return '';
+        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
+        if (!isset($version[0])) return '';
+        return $version[0];
     }
 
 }
