@@ -3,11 +3,6 @@
 ## Actions
 
 
-### amInPath
-
-__not documented__
-
-
 ### dontSeeInShellOutput
 
 __not documented__
