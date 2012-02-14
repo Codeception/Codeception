@@ -9,6 +9,7 @@
  * @method TestGuy openFile($filename)
  * @method TestGuy deleteFile($filename)
  * @method TestGuy deleteDir($dirname)
+ * @method TestGuy copyDir($src, $dst)
  * @method TestGuy seeInThisFile($text)
  * @method TestGuy dontSeeInThisFile($text)
  * @method TestGuy deleteThisFile()

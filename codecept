@@ -13,7 +13,7 @@ if (!class_exists('UniversalClassLoader')) {
 }
 
 if ($version = \Codeception\Codecept::checkLastVersion()) {
-    if ($version != \Codeception\Codecept::VERSION) {
+    if (version_compare($version, \Codeception\Codecept::VERSION) > 0) {
         echo "UPDATE: version $version released. See changes on: http://codeception.com.\n";
     }
 }

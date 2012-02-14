@@ -12,6 +12,7 @@ class CliHelper extends \Codeception\Module
 
     public function _after(\Codeception\TestCase $test) {
         $this->getModule('Filesystem')->deleteDir(\Codeception\Configuration::dataDir().'sandbox');
+        chdir(\Codeception\Configuration::projectDir());
     }
     
     public function executeCommand($command) {
