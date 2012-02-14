@@ -9,6 +9,7 @@
  * @method CliGuy openFile($filename)
  * @method CliGuy deleteFile($filename)
  * @method CliGuy deleteDir($dirname)
+ * @method CliGuy copyDir($src, $dst)
  * @method CliGuy seeInThisFile($text)
  * @method CliGuy dontSeeInThisFile($text)
  * @method CliGuy deleteThisFile()
