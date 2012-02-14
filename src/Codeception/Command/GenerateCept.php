@@ -24,41 +24,40 @@ class GenerateCept extends Base
     }
 
     public function getDescription() {
-        return 'Generates empty test file in suite';
+        return 'Generates empty Cept file in suite';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->initCodeception();
         $suite = $input->getArgument('suite');
-
-        $options = $input->getOptions();
-        $codecept = new \Codeception\Codecept($this->config, $options);
-
-        $settings = $codecept->getSuiteSettings($suite);
-
-        $guy = $settings['class_name'];
-
-        $file = sprintf($this->template, $guy);
         $filename = $input->getArgument('test');
 
-        $filename = $this->config['paths']['tests'].DIRECTORY_SEPARATOR.$suite.DIRECTORY_SEPARATOR.$filename;
-        if (file_exists($filename)) {
+        $config = \Codeception\Configuration::config();
+        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+
+        $guy = $suiteconf['class_name'];
+
+        $file = sprintf($this->template, $guy);
+
+        if (file_exists($suiteconf['path'].DIRECTORY_SEPARATOR.$filename)) {
             $output->writeln("<comment>Test $filename already exists</comment>");
             return;
         }
 
+        if (strpos(strrev($filename), strrev('Cept')) === 0) $filename .= '.php';
         if (strpos(strrev($filename), strrev('Cept.php')) !== 0) $filename .= 'Cept.php';
         if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
 
-        $dirs = explode(DIRECTORY_SEPARATOR, dirname($filename));
-        $path = '';
+        $filename = str_replace('\\','/', $filename);
+        $dirs = explode('/', $filename);
+        array_pop($dirs);
+        $path = $suiteconf['path'].DIRECTORY_SEPARATOR;
         foreach ($dirs as $dir) {
-            $path .= DIRECTORY_SEPARATOR.$dir;
+            $path .= $dir.DIRECTORY_SEPARATOR;
             @mkdir($path);
         }
 
-        file_put_contents($filename, $file);
+        file_put_contents($suiteconf['path'].DIRECTORY_SEPARATOR.$filename, $file);
         $output->writeln("<info>Test was generated in $filename</info>");
     }
 

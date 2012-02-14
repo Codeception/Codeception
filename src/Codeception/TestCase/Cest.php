@@ -3,7 +3,8 @@ namespace Codeception\TestCase;
 
 class Cest extends \Codeception\TestCase
 {
-    protected $testClass;
+    protected $testClass = null;
+    protected $testMethod = null;
     protected $signature;
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
@@ -27,7 +28,9 @@ class Cest extends \Codeception\TestCase
 
         // executing test
         $I = new \CodeGuy($this->scenario);
-        $I->testMethod($this->signature);
+        if ($this->getCoveredMethod()) {
+            $I->testMethod($this->signature);
+        }
 
         if ($this->static) {
             $class = $unit->class;
@@ -42,6 +45,21 @@ class Cest extends \Codeception\TestCase
     public function getTestClass()
     {
         return $this->testClass;
+    }
+
+    public function getCoveredClass()
+    {
+        $class = $this->getTestClass();
+        if (isset($class->class)) return $class->class;
+        return null;
+    }
+
+    public function getCoveredMethod()
+    {
+        if (!$this->getCoveredClass()) return null;
+        $r = new \ReflectionClass($this->getCoveredClass());
+        if ($r->hasMethod($this->testMethod)) return $this->testMethod;
+        return null;
     }
 
 }

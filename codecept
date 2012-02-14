@@ -12,6 +12,12 @@ if (!class_exists('UniversalClassLoader')) {
     require_once $bootstrap_folder.'/autoload.php';
 }
 
+if ($version = \Codeception\Codecept::checkLastVersion()) {
+    if ($version != \Codeception\Codecept::VERSION) {
+        echo "UPDATE: version $version released. See changes on: http://codeception.com.\n";
+    }
+}
+
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Input\InputDefinition,
@@ -22,7 +28,8 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\Run('run'));
  $app->add(new Codeception\Command\Install('install'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
+ $app->add(new Codeception\Command\GenerateCept('generate:cept'));
+ $app->add(new Codeception\Command\GenerateCest('generate:cest'));
+ $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
- $app->add(new Codeception\Command\GenerateCept('generate:test'));
- $app->add(new Codeception\Command\GenerateForClass('generate:for-class'));
  $app->run();

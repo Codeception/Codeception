@@ -1,0 +1,7 @@
+I WANT TO GENERATE SAMPLE CEST
+
+I am in path "tests/data/sandbox"
+I execute command "generate:cest dummy DummyClass"
+I see file found "DummyClassCest.php"
+I see in this file "$class = 'DummyClass'"
+I see in this file "public function helloWorld"
