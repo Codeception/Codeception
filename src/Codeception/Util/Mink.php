@@ -56,30 +56,67 @@ abstract class Mink extends \Codeception\Module
         return array('pageContains', $this->escape($text), $response, "'$text' in ".$output.'.');
     }
 
+    /**
+     * Checks if the document has link that contains specified
+     * text (or text and url)
+     *
+     * @param  string $text
+     * @param  string $url (Default: null)
+     * @return mixed
+     */
     public function seeLink($text, $url = null)
     {
         $text = $this->escape($text);
-        $nodes = $this->session->getPage()->findLink($text);
-        if (!$url) return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
+
+        $nodes = $this->session->getPage()->findAll(
+            'named', array(
+                'link', $this->session->getSelectorsHandler()->xpathLiteral($text)
+            )
+        );
+
+        if (!$url) {
+            return \PHPUnit_Framework_Assert::assertNotNull($nodes);
+        }
+
         foreach ($nodes as $node) {
             if (false !== strpos($node->getAttribute('href'), $url)) {
-                return \PHPUnit_Framework_Assert::assertContains($text, $node->getHtml(), "with url '$url'");
+                return \PHPUnit_Framework_Assert::assertContains(
+                    $text, $node->getHtml(), "with url '{$url}'"
+                );
             }
         }
-        \PHPUnit_Framework_Assert::fail("with url '$url'");
+
+        return \PHPUnit_Framework_Assert::fail("with url '{$url}'");
     }
 
-
+    /**
+     * Checks if the document hasn't link that contains specified
+     * text (or text and url)
+     *
+     * @param  string $text
+     * @param  string $url (Default: null)
+     * @return mixed
+     */
     public function dontSeeLink($text, $url = null)
     {
-        if (!$url) return $this->dontSee($text, 'a');
+        if (!$url) {
+            return $this->dontSee($text, 'a');
+        }
+
         $text = $this->escape($text);
-        $nodes = $this->session->getPage()->findAll('named', $text);
+
+        $nodes = $this->session->getPage()->findAll(
+            'named', array(
+                'link', $this->session->getSelectorsHandler()->xpathLiteral($text)
+            )
+        );
+
         foreach ($nodes as $node) {
             if (false !== strpos($node->getAttribute('href'), $url)) {
                 return \PHPUnit_Framework_Assert::fail("with url '$url'");
             }
         }
+
         return \PHPUnit_Framework_Assert::assertTrue(true, "with url '$url'");
     }
 
