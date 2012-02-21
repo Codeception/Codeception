@@ -55,17 +55,18 @@ class SE extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         
-        $_COOKIE = $request->getCookies();
+
+        //$_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
         $_FILES = $request->getFiles();
 
-        $_SERVER  = array();
+        //$_SERVER  = array();
         $_SERVER['HTTP_HOST'] = 'http://testse.my';
         $_SERVER['SERVER_SOFTWARE'] = '';
 
 
-        if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters();
-        if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
+        //if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters();
+        //if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI'] = strtoupper($request->getUri());
 
