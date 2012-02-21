@@ -20,16 +20,6 @@ Please note, this module doesn't implement standard frameworks interface.
 ## Actions
 
 
-### am
-
-
-Log in as sfGuardUser.
-Only name of user should be provided.
-
- * alias amLoggedAs
- * param $name
-
-
 ### amLoggedAs
 
 

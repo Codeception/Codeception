@@ -71,7 +71,28 @@ $I->wantTo('sign in with valid account');
 ?>
 ```
 
-The 'wantTo' section describe your scenario in short. Then we can use the $I object to write next interactions. All the methods of the $I object are taken from PHPBrowser and Db modules. We will briefly describe them. For the full reference look into modules reference, here on (Codeception.com)[http://codeception.com]. 
+The 'wantTo' section describe your scenario in short. There are additional comment methods, that are useful to match Codeception scenario a BDD Story. If you ever written a BDD scenario on Gherkin, you may translate classical story into Codeception code.
+
+``` bash
+As an Account Holder
+I want to withdraw cash from an ATM
+So that I can get money when the bank is closed
+```
+
+Goes for:
+
+``` php
+<?php
+$I = new WebGuy($scenario);
+$I->am('Account Holder'); 
+$I->wantTo('withdraw cash from an ATM');
+$I->lookForwardTo('get money when the bank is closed');
+?>
+```
+
+After we described Story background, let's start writing a scenario. 
+
+The $I object is used to write all interactions. Methods of the $I object are taken from PHPBrowser and Db modules. We will briefly describe them. For the full reference look into modules reference, here on (Codeception.com)[http://codeception.com]. 
 
 ```
 <?php
