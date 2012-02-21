@@ -200,22 +200,25 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
 
 
         $application->bootstrap();
-        $application->run();
+        //$application->run();
 
-        $this->client = new \Codeception\Util\Connector\ZF1();
+        $this->bootstrap = $application;
+        $this->client = new \Codeception\Util\Connector\SE();
+        $this->client->setBootstrap($this->bootstrap);
     }
 
     public function _before(\Codeception\TestCase $test) {
-        $this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
-        $this->bootstrap->bootstrap();
-        $this->client->setBootstrap($this->bootstrap);
+        //$this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
 
-        $db = $this->bootstrap->getBootstrap()->getResource('db');
-        if ($db instanceof \Zend_Db_Adapter_Abstract) {
-            $this->db = $db;
-            $this->db->getProfiler()->setEnabled(true);
-            $this->db->getProfiler()->clear();
-        }
+        //$this->bootstrap->bootstrap(); - тут делать плохо. сессия должна стартануть до любого вывода
+        //$this->client->setBootstrap($this->bootstrap);
+
+        // $db = $this->bootstrap->getBootstrap()->getResource('db');
+        // if ($db instanceof \Zend_Db_Adapter_Abstract) {
+        //     $this->db = $db;
+        //     $this->db->getProfiler()->setEnabled(true);
+        //     $this->db->getProfiler()->clear();
+        // }
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -223,7 +226,9 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
         $_GET     = array();
         $_POST    = array();
         $_COOKIE  = array();
-        $this->bootstrap->getBootstrap()->getResource('frontcontroller')->resetInstance();
+        
+        
+        //$this->bootstrap->getBootstrap()->getResource('frontcontroller')->resetInstance();
         \Zend_Layout::resetMvcInstance();
         \Zend_Controller_Action_HelperBroker::resetHelpers();
         \Zend_Session::$_unitTestEnabled = true;
