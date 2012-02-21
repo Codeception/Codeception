@@ -1,4 +1,4 @@
-# Unit Tests: A BDD approach
+# Unit Tests Inside Scenario
 
 Each function is like a little a little application itself. It's the most simple and indivisible part of program. Still, it's natural to have it tested in a similar manner we test the application in a whole. Codeception unit tests are much similar to acceptance tests with some additional features that simplifies the code testing. 
 

@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-02-14</date>
-  <time>11:53:41</time>
+  <date>2012-02-21</date>
+  <time>19:24:57</time>
   <version>
-    <release>1.0.3</release>
-    <api>1.0.3</api>
+    <release>1.0.4</release>
+    <api>1.0.4</api>
   </version>
   <stability>
     <release>stable</release>
@@ -40,14 +40,14 @@
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
       <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
-      <file name="composer.json" role="php" md5sum="7cd1ff9107e6bb28f9d3fbd2522af639"/>
+      <file name="composer.json" role="php" md5sum="009a41cf9d53c866fd68ca297a08c77d"/>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <dir name="plugins">
         <dir name="DocBlox">
           <dir name="Codeception">
             <file name="Exception.php" role="php" md5sum="62de9f70a0439702f5b0542392867d9e"/>
-            <file name="Listener.php" role="php" md5sum="005c62c36c944ed3b047b4132d56c678"/>
+            <file name="Listener.php" role="php" md5sum="d9187a057e2c8783856e825c30393964"/>
             <dir name="Messages">
               <file name="en.php" role="php" md5sum="50a23e96f46967310fa27e0355ee2ec1"/>
             </dir>
@@ -58,8 +58,8 @@
       <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
       <dir name="src">
         <dir name="Codeception">
-          <file name="AbstractGuy.php" role="php" md5sum="e4e20cffc612dbbe65a7373488b2f81d"/>
-          <file name="Codecept.php" role="php" md5sum="f219a0e57cabbba2526a21931c305192"/>
+          <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
+          <file name="Codecept.php" role="php" md5sum="fe20474e2882aff5fdb71c81e6e142df"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
@@ -94,9 +94,9 @@
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="PhpBrowser.php" role="php" md5sum="8ad18735225010418104e4537972f2dd"/>
             <file name="Selenium.php" role="php" md5sum="a421651374a4066e4ac95ce8456600b4"/>
-            <file name="Symfony1.php" role="php" md5sum="a63b3f2ffc1ada30573d8489baf15d8e"/>
+            <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
-            <file name="Unit.php" role="php" md5sum="a0feb505b10324469eaf4511abf94d37"/>
+            <file name="Unit.php" role="php" md5sum="ee46df675f766380ce3bdc82bd40cb03"/>
             <file name="ZF1.php" role="php" md5sum="e9476ddac6bf3971c6f45ba0236a9ffa"/>
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
@@ -125,21 +125,21 @@
           <dir name="Step">
             <file name="Action.php" role="php" md5sum="ce76bcc260b9a0435a1d880edb4bd977"/>
             <file name="Assertion.php" role="php" md5sum="44d200412f1a923c528d9361bd6c70e0"/>
-            <file name="Comment.php" role="php" md5sum="dd35ed2ed948e016d886f31fb4cbf0db"/>
+            <file name="Comment.php" role="php" md5sum="6e35ea44d4a5517edc151083a80dddf5"/>
             <file name="Condition.php" role="php" md5sum="5fae7e73f16ddae682fb3d72d6fdfe7a"/>
           </dir>
           <dir name="Subscriber">
             <file name="Cest.php" role="php" md5sum="823f2f5aeaf808d0302b975c538b4289"/>
-            <file name="Console.php" role="php" md5sum="b3119c2b8e33c330a1cfbf95c1ca850d"/>
+            <file name="Console.php" role="php" md5sum="bc62a0e25359cb2bad5571f8f9b0fada"/>
             <file name="ErrorHandler.php" role="php" md5sum="a3aad91f65cf7833a9b3aea21ecb0b43"/>
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
           <file name="SuiteManager.php" role="php" md5sum="e03aaee476dd2e16290bc3554290137b"/>
-          <file name="TestCase.php" role="php" md5sum="01bf0e6e431f5900aca665d91948cf12"/>
+          <file name="TestCase.php" role="php" md5sum="7719eaa01fe51af4e90e4ce851667041"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
-            <file name="Cest.php" role="php" md5sum="ffd703343d8af75b8eb6e464de652824"/>
+            <file name="Cest.php" role="php" md5sum="84e9549a25483cace3285a98c97e30e8"/>
           </dir>
           <dir name="Util">
             <dir name="Connector">
@@ -157,10 +157,10 @@
               <file name="SqliteGeneral.php" role="php" md5sum="c57aed5f24614e8873b7e983813409c2"/>
             </dir>
             <file name="Fixtures.php" role="php" md5sum="4bd48136b17f074c96e28b3048a63e24"/>
-            <file name="Framework.php" role="php" md5sum="862627d6cc3a2a15d8a9ce9736854012"/>
+            <file name="Framework.php" role="php" md5sum="6d79759e0eea0668dc038bd2f53e3850"/>
             <file name="FrameworkInterface.php" role="php" md5sum="0d3681c7ba4998bf4b90f5b45f8e3c4e"/>
-            <file name="Mink.php" role="php" md5sum="caf14de6ed3ec32ec71c6e2320b6c494"/>
-            <file name="MinkJS.php" role="php" md5sum="bc853aceb30937ecedc26e1de964cd03"/>
+            <file name="Mink.php" role="php" md5sum="c6d758478f3b44fa9fee00dbbf4b1c99"/>
+            <file name="MinkJS.php" role="php" md5sum="8d9eea4d1cf5f6fcda79d98275c5d8d5"/>
             <file name="Stub.php" role="php" md5sum="3bc174c04f5404bf1754818e3a428702"/>
             <dir name="Stub">
               <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
