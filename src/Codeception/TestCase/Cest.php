@@ -71,6 +71,7 @@ class Cest extends \Codeception\TestCase
             $text = substr($this->testMethod,6);
             $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
             $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+            $text = strtolower($text);
             return $text;
         }
         return '';

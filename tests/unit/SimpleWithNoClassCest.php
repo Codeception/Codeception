@@ -8,4 +8,8 @@ class PhpTestCest
         $I->seeResultEquals('HELLO');
     }
 
+    public function shouldTryWritingShoulds(CodeGuy $I) {
+        $I->seeFeaturesEquals('try writing shoulds');
+    }
+
 }
