@@ -14,6 +14,20 @@ class info {
 
 }
 
+class login {
+
+    function GET($matches) {
+        include __DIR__.'/view/login.php';
+    }
+
+    function POST() {
+        data::set('form', $_POST);
+        include __DIR__.'/view/login.php';
+    }
+
+}
+
+
 class form {
     function GET($matches) {
         $object = strtolower($matches[1]);

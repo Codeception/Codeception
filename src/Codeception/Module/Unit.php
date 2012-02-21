@@ -9,7 +9,7 @@ namespace Codeception\Module;
  *
  * ## Features
  * * Descriptive - simply write what do you test and how do you test.
- * * Method execution limit - you are allowed only to execute tested method inside the scenario. Don't test several methods inside one unit.
+ * * Execution limit - only execute* methods actually execute your code. It's easy to see where tested methods are invoked.
  * * Simple stub definition - create stubbed class with one call. All properties and methods can be passed as callable functions.
  * * Dynamic mocking - stubs can be automatically turned to mocks.
  *
@@ -287,6 +287,54 @@ class Unit extends \Codeception\Module
     }
 
     /**
+     * Executes method of an object.
+     * Additional parameters can be provided.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // to execute $user->getName()
+     * $I->executeMethod($user,'getName');
+     *
+     * // to execute $user->setName('davert');
+     * $I->executeMethod($user,'setName', 'davert');
+     *
+     * // or more parameters
+     * $I->executeMethod($user, 'setNameAndAge', 'davert', '30');
+     *
+     * ?>
+     * ```
+     *
+     * @param $object
+     * @param $method
+     */
+    public function executeMethod($object, $method) {
+        $params = func_get_args();
+        $object = array_shift($params);
+        $method = array_shift($params);
+
+        // cleanup mocks
+        foreach ($this->stubs as $mock) {
+            $mock->__phpunit_cleanup();
+        }
+
+        $this->createMocks();
+        $this->predictExceptions();
+        $res = null;
+
+        try {
+            $res = call_user_func_array(array($object, $method), $params);
+        } catch (\Exception $e) {
+            $this->catchException($e);
+        }
+
+        $this->debug('Result: ' . json_encode($res));
+        $this->last_result = $res;
+    }
+
+
+    /**
      * Updates selected properties for object passed.
      * Can update even private and protected properties.
      *
@@ -341,6 +389,7 @@ class Unit extends \Codeception\Module
             if ($action == 'executeTestedMethodOn') break;
             if ($action == 'executeTestedMethodWith') break;
             if ($action == 'execute') break;
+            if ($action == 'executeMethod') break;
             if ($action != 'seeExceptionThrown') continue;
 
             $args = $step->getArguments(false);
@@ -632,8 +681,10 @@ class Unit extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
     }
 
+
     /**
-     * Executes method and checks result is equal to passed value
+     * Executes method and checks result is equal to passed value.
+     * Good for testing values taken from getters.
      *
      * Example:
      *
@@ -641,7 +692,7 @@ class Unit extends \Codeception\Module
      * $I->testMethod('User.setName');
      * $user = new User();
      * $I->executeTestedMethodOn($user, 'davert');
-     * $I->seeMethodResultEquals($user,'getName','davert');
+     * $I->seeMethodReturns($user,'getName','davert');
      *
      * ```
      *     *
@@ -650,66 +701,28 @@ class Unit extends \Codeception\Module
      * @param $value
      * @param array $params
      */
-    public function seeMethodResultEquals($object, $method, $value, $params = array())
+    public function seeMethodReturns($object, $method, $value, $params = array())
     {
         $result = call_user_func_array(array($object, $method), $params);
         \PHPUnit_Framework_Assert::assertEquals($value, $result);
     }
 
     /**
-     * Executes method and checks result is of specified type.
-     *
-     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
-     * Otherwise property will be checked to be an instance of type.
-     *
-     * @param $object
-     * @param $method
-     * @param $type
-     * @param array $params
-     */
-    public function seeMethodResultIs($object, $method, $type, $params = array())
-    {
-        $current = call_user_func_array(array($object, $method), $params);
-        if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
-        }
-        \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
-    }
-
-    /**
      * Executes method and checks result is equal to passed value.
+     * Good for testing values taken from getters.
      *
-     * Look for 'seeMethodResultEquals' for example.
+     * Look for 'seeMethodReturns' for example.
      *
      * @param $object
      * @param $method
      * @param $value
      * @param array $params
      */
-    public function dontSeeMethodResultEquals($object, $method, $value, $params = array())
+    public function seeMethodNotReturns($object, $method, $value, $params = array())
     {
         $result = call_user_func_array(array($object, $method), $params);
         \PHPUnit_Framework_Assert::assertNotEquals($value, $result);
     }
-
-    /**
-     * Executes method and checks result is not of specified type.
-     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
-     *
-     * @param $object
-     * @param $method
-     * @param $type
-     * @param array $params
-     */
-    public function seeMethodResultIsNot($object, $method, $type, $params = array())
-    {
-        $current = call_user_func_array(array($object, $method), $params);
-        if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
-        }
-        \PHPUnit_Framework_Assert::assertNotInstanceOf($type, $current);
-    }
-
 
     protected function retrieveProperty($object, $property)
     {

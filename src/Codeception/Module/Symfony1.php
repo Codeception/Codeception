@@ -533,18 +533,6 @@ class Symfony1 extends \Codeception\Module
     }
 
     /**
-     * Log in as sfGuardUser.
-     * Only name of user should be provided.
-     *
-     * @alias amLoggedAs
-     * @param $name
-     */
-    public function am($name)
-    {
-        $this->amLoggedAs($name);
-    }
-
-    /**
      * Log in as sfDoctrineGuardUser.
      * Only name of user should be provided.
      * Fetches user by it's username from sfGuardUser table.
