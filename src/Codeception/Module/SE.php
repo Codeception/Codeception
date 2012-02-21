@@ -195,7 +195,7 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
           );
           \Engine_Application::setInstance($application);
           \Engine_Api::getInstance()->setApplication($application);
-
+          //\Zend_Session::$_unitTestEnabled = true;
         }
 
 
@@ -228,10 +228,10 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
         $_COOKIE  = array();
         
         
-        //$this->bootstrap->getBootstrap()->getResource('frontcontroller')->resetInstance();
+        $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->resetInstance();
         \Zend_Layout::resetMvcInstance();
         \Zend_Controller_Action_HelperBroker::resetHelpers();
-        \Zend_Session::$_unitTestEnabled = true;
+        \Zend_Session::$_unitTestEnabled = false;
         $this->queries = 0;
         $this->time = 0;
     }
