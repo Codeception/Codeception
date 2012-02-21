@@ -216,7 +216,7 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
         // $db = $this->bootstrap->getBootstrap()->getResource('db');
         // if ($db instanceof \Zend_Db_Adapter_Abstract) {
         //     $this->db = $db;
-        //     $this->db->getProfiler()->setEnabled(true);
+        //     $this->db->getProfiler()->setEnabled(true); 
         //     $this->db->getProfiler()->clear();
         // }
     }

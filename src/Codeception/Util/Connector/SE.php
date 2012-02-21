@@ -62,7 +62,7 @@ class SE extends \Symfony\Component\BrowserKit\Client
 
         //$_SERVER  = array();
         $_SERVER['HTTP_HOST'] = 'http://testse.my';
-        $_SERVER['SERVER_SOFTWARE'] = '';
+        $_SERVER['SERVER_SOFTWARE'] = ''; 
 
 
         //if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters();
