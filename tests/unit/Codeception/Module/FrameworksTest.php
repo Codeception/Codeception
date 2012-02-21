@@ -180,7 +180,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('HTTP_X_REQUESTED_WITH', $_SERVER);
         $post = data::get('form');
         $this->assertEquals('author', $post['show']);
-
     }
 
     public function testSeeWithNonLatin() {
@@ -205,6 +204,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('input[name=rus]','Верно');
+    }
+    
+    public function testComplexSelectorsAndForms() {
+        $this->module->amOnPage('/login');
+        $this->module->submitForm('form#user_form_login', array('email' => 'miles@davis.com', 'password' => '111111'));
+        $post = data::get('form');
+        $this->assertEquals('miles@davis.com', $post['email']);
+
     }
 
 }
