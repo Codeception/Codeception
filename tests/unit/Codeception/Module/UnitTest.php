@@ -81,6 +81,24 @@ class UnitTest extends \PHPUnit_Framework_TestCase
         $this->runSteps();
     }
 
+    public function testExecuteMethod() {
+        $I = new CodeGuy($this->scenario);
+        $user = new \UserModel;
+        $I->executeMethod($user, 'setName','davert');
+        $I->executeMethod($user, 'getName');
+        $I->seeResultEquals('Mr. davert');
+        $this->runSteps();
+
+    }
+
+    public function testSeeMethodResult() {
+        $I = new CodeGuy($this->scenario);
+        $user = new \UserModel;
+        $I->executeMethod($user, 'setName','davert');
+        $I->seeMethodReturns($user, 'getName','Mr. davert');
+        $this->runSteps();
+    }
+
     function testMocks()
     {
         $I = new CodeGuy($this->scenario);

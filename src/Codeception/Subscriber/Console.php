@@ -90,6 +90,13 @@ class Console implements EventSubscriberInterface
         }
     }
 
+    public function beforeComment(\Codeception\Event\Step $e) {
+        if ($this->steps) $this->output->writeln("((".$e->getStep()->__toString()."))");
+    }
+
+    public function afterComment(\Codeception\Event\Step $e) {
+    }
+
     public function beforeStep(\Codeception\Event\Step $e)
     {
         if ($this->steps) $this->output->writeln("* " . $e->getStep()->__toString());
@@ -143,7 +150,8 @@ class Console implements EventSubscriberInterface
             $action = 'become' . substr($action, 2);
         }
 
-        if (!($fail instanceof \PHPUnit_Framework_ExpectationFailedException)) {
+        // it's exception
+        if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
             if ($this->debug) {
                 $this->printException($last->getAction(), $fail);
             } else {
@@ -151,6 +159,8 @@ class Console implements EventSubscriberInterface
             }
             return;
         };
+
+        // it's assertion
 
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
@@ -207,6 +217,8 @@ class Console implements EventSubscriberInterface
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
+            'comment.before' => 'beforeComment',
+            'comment.after' => 'afterComment',
             'fail.fail' => 'testFail',
             'fail.error' => 'testError',
             'fail.incomplete' => 'testIncomplete',

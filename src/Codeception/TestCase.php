@@ -84,11 +84,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     public function runStep(\Codeception\Step $step)
     {
-        if ($step->getName() == 'Comment') return;
-
         $this->trace[] = $step;
+
+        if ($step->getName() == 'Comment') {
+            $this->dispatcher->dispatch('comment.before', new \Codeception\Event\Step($this, $step));
+            $this->dispatcher->dispatch('comment.after', new \Codeception\Event\Step($this, $step));
+            return;
+        }
+
         $action = $step->getAction();
         $arguments = $step->getArguments();
+
         if (!isset(\Codeception\SuiteManager::$actions[$action])) {
             $this->stopped = true;
             $this->fail("Action $action not defined");

@@ -27,6 +27,7 @@ abstract class AbstractGuy
     public function wantTo($text)
     {
         $this->scenario->setFeature(strtolower($text));
+        $this->scenario->comment(array('I want to ' . $text));
         return $this;
     }
 
@@ -54,20 +55,32 @@ abstract class AbstractGuy
 
     public function expectTo($prediction)
     {
-        $this->scenario->comment(array('expect to ' . $prediction));
+        $this->scenario->comment(array('I expect to ' . $prediction));
         return $this;
     }
 
     public function expect($prediction)
     {
-        $this->scenario->comment(array('expect ' . $prediction));
+        $this->scenario->comment(array('I expect ' . $prediction));
         return $this;
     }
 
     public function amGoingTo($argumentation)
     {
-        $this->scenario->comment(array('am going to ' . $argumentation));
+        $this->scenario->comment(array('I am going to ' . $argumentation));
         return $this;
+    }
+
+    public function am($role) {
+        $this->scenario->comment(array('As a ' . $role));
+        return $this;
+    }
+
+
+    public function lookForwardTo($role) {
+        $this->scenario->comment(array('So that I ' . $role));
+        return $this;
+
     }
 
     public function __call($method, $args)
