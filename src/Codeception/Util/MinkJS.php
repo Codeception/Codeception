@@ -4,27 +4,52 @@ namespace Codeception\Util;
 class MinkJS extends Mink
 {
 
+    /**
+     * Double clicks on link or button or any node found by css
+     *
+     * @param $link
+     */
     public function doubleClick($link) {
         $el = $this->findEl($link);
         $el->doubleClick();
     }
 
+    /**
+     * Clicks with right button on link or button or any node found by css
+     *
+     * @param $link
+     */
     public function clickWithRightButton($link) {
         $el = $this->findEl($link);
         $el->rightClick();
 
     }
 
+    /**
+     * Moves mouse over link or button or any node found by css
+     *
+     * @param $link
+     */
     public function moveMouseOver($link) {
         $el = $this->findEl($link);
         $el->mouseOver();
     }
 
+    /**
+     * Moves focus to link or button or any node found by css
+     *
+     * @param $el
+     */
     public function focus($el) {
         $el = $this->findEl($el);
         $el->focus();
     }
 
+    /**
+     * Removes focus from link or button or any node found by css
+     *
+     * @param $el
+     */
     public function blur($el) {
         $el = $this->findEl($el);
         $el->blur();
@@ -73,30 +98,81 @@ class MinkJS extends Mink
 		return array('contains', $this->escape($text), $values, "'$selector' selector For more details look for page snapshot in the log directory");
     }
 
+    /**
+     * Presses key on element found by css is focused
+     * A char and modifier (ctrl, alt, shift, meta) can be provided.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->pressKey('#page','u','ctrl');
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param $char char can be either char ('b') or char-code (98)
+     * @param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     */
     public function pressKey($element, $char, $modifier = null)
     {
         $el = $this->findEl($element);
         $this->session->getDriver()->keyPress($el->getXpath(), $char, $modifier);
     }
-    
+
+    /**
+     * Presses key up on element found by CSS.
+     *
+     * For example see 'pressKey'.
+     *
+     * @param $element
+     * @param $char char can be either char ('b') or char-code (98)
+     * @param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     */
     public function pressKeyUp($element, $char, $modifier = null) {
         $el = $this->findEl($element);
         $this->session->getDriver()->keyUp($el->getXpath(), $char, $modifier);
     }
+
+    /**
+     * Presses key down on element found by CSS.
+     *
+     * For example see 'pressKey'.
+     *
+     * @param $element
+     * @param $char char can be either char ('b') or char-code (98)
+     * @param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
+     */
 
     public function pressKeyDown($element, $char, $modifier = null) {
         $el = $this->findEl($element);
         $this->session->getDriver()->keyDown($el->getXpath(), $char, $modifier);
     }
 
+    /**
+     * Wait for x miliseconds
+     *
+     * @param $miliseconds
+     */
     public function wait($miliseconds) {
         $this->session->getDriver()->wait($miliseconds, null);
     }
-    
+
+    /**
+     * Waits for x miliseconds or until JS condition turns true.
+     *
+     * @param $miliseconds
+     * @param $jsCondition
+     */
     public function waitForJS($miliseconds, $jsCondition) {
         $this->session->getDriver()->wait($miliseconds, $jsCondition);
     }
-    
+
+    /**
+     * Executes any JS code.
+     *
+     * @param $jsCode
+     */
     public function executeJs($jsCode) {
         $this->session->getDriver()->executeScript($jsCode);
     }
