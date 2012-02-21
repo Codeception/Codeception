@@ -3,7 +3,32 @@
 ## Actions
 
 
-### dontSeeInFile
+### amInPath
+
+__not documented__
+
+
+### copyDir
+
+__not documented__
+
+
+### deleteDir
+
+__not documented__
+
+
+### deleteFile
+
+__not documented__
+
+
+### deleteThisFile
+
+__not documented__
+
+
+### dontSeeInThisFile
 
 __not documented__
 
@@ -18,6 +43,6 @@ __not documented__
 __not documented__
 
 
-### seeInFile
+### seeInThisFile
 
 __not documented__

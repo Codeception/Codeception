@@ -12,6 +12,7 @@
  * @method CodeGuy executeTestedMethodWith($params)
  * @method CodeGuy executeTestedMethod()
  * @method CodeGuy execute($code)
+ * @method CodeGuy executeMethod($object, $method)
  * @method CodeGuy changeProperties($obj)
  * @method CodeGuy changeProperty($obj, $property, $value)
  * @method CodeGuy seeExceptionThrown($classname)
@@ -27,10 +28,8 @@
  * @method CodeGuy seeResultIs($type)
  * @method CodeGuy seePropertyEquals($object, $property, $value)
  * @method CodeGuy seePropertyIs($object, $property, $type)
- * @method CodeGuy seeMethodResultEquals($object, $method, $value)
- * @method CodeGuy seeMethodResultIs($object, $method, $type)
- * @method CodeGuy dontSeeMethodResultEquals($object, $method, $value)
- * @method CodeGuy seeMethodResultIsNot($object, $method, $type)
+ * @method CodeGuy seeMethodReturns($object, $method, $value)
+ * @method CodeGuy seeMethodNotReturns($object, $method, $value)
  * 
  * Methods from CodeHelper
  * 
