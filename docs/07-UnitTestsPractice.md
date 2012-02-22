@@ -72,7 +72,25 @@ class PostCase {
 ?>
 ```
 
-Let's begin writing our test!
+You can bypass specifying of test method at all. That might be useful if you are writing specifications instead of test, and so you have no method developed yet. For such cases write specifications as a method names.
+
+``` php
+<?php
+class PostCase {
+	$class = 'Post';
+
+	function shouldSave(CodeGuy $I)
+	{
+		$post = new Post;
+		$I->executeMethod($post, 'save');
+	}
+}
+?>
+```
+
+Please note, in such cases you can't use 'executeTestedMethod' actions.
+
+After we've taken everything into account, let's begin writing test!
 
 ## Describe And Run
 

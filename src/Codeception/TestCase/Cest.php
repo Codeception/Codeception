@@ -63,6 +63,18 @@ class Cest extends \Codeception\TestCase
         if (!$this->getCoveredClass()) return null;
         $r = new \ReflectionClass($this->getCoveredClass());
         if ($r->hasMethod($this->testMethod)) return $this->testMethod;
+
+        // search by annotations
+        $rm = new \ReflectionMethod($this->testClass, $this->testMethod);
+        $doc = $rm->getDocComment();
+
+
+        if (preg_match('~@(covers|doc) (.*?)\*~si', $doc, $matches)) {
+            $method = trim($matches[2]);
+            if ($r->hasMethod($method)) return $method;
+            return null;
+        }
+
         return null;
     }
 
