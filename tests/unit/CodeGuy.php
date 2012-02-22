@@ -35,6 +35,7 @@
  * 
  * Methods from EmulateModuleHelper
  * @method CodeGuy seeEquals($expected, $actual)
+ * @method CodeGuy seeFeaturesEquals($expected)
 **/
 
 

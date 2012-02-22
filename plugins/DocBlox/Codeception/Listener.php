@@ -135,7 +135,7 @@ class DocBlox_Plugin_Codeception_Listener extends DocBlox_Plugin_ListenerAbstrac
 
             }, $args);
 
-            if (in_array($step->getAction(), array('executeTestedMethodOn'))) {
+            if (in_array($step->getAction(), array('executeTestedMethodOn', 'executeMethod'))) {
                 $stub = array_shift($args);
             }
 
@@ -158,6 +158,11 @@ class DocBlox_Plugin_Codeception_Listener extends DocBlox_Plugin_ListenerAbstrac
                 continue;
             }
 
+            if (in_array($step->getAction(), array('executeMethod'))) {
+                $text .= "I execute <span style=\"background: #ddd;\">$stub->$method($args)</span>\n";
+                continue;
+            }
+
             if (in_array($step->getAction(), array('executeTestedMethodOn'))) {
                 $text .= "If I execute <span style=\"background: #ddd;\">$stub->$method($args)</span>\n";
                 continue;
@@ -165,7 +170,7 @@ class DocBlox_Plugin_Codeception_Listener extends DocBlox_Plugin_ListenerAbstrac
 
 
             if ($step->getName() == 'Comment') {
-                $text .= "\nI ".$this->getStepAction($step)." $args\n";
+                $text .= "\n".ucfirst($step)." $args\n";
                 continue;
             }
 
