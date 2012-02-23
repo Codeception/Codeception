@@ -71,8 +71,9 @@ class SE extends \Symfony\Component\BrowserKit\Client
         $_SERVER['HTTP_HOST'] = str_replace('http://','',$this->host);
         //$_SERVER['SERVER_SOFTWARE'] = ''; 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        //$_SERVER['REQUEST_URI'] = str_replace('http://localhost','',$request->getUri();
+        $_SERVER['REQUEST_URI'] = str_replace('http://localhost','',$request->getUri());
 
+        var_dump($_SERVER);
         $zendResponse = new \Zend_Controller_Response_Http;
         
         $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->setRequest($zendRequest)->setResponse($zendResponse);
