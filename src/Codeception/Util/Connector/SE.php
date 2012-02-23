@@ -23,19 +23,19 @@ class SE extends \Symfony\Component\BrowserKit\Client
      */
     protected $zendRequest;
 
+    protected $host;
+
     public function setBootstrap($bootstrap) {
         $this->bootstrap = $bootstrap;
-
-
-        $this->bootstrap->bootstrap('frontcontroller');
-        $this->bootstrap->bootstrap('router');
         $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
 
-         $this->front->returnResponse(false);
-        // $this->front = $this->bootstrap->getBootstrap()->getResource('frontcontroller');
-        // $this->front
-        //     ->throwExceptions(true)
-        //     ->returnResponse(false);
+         $this->front
+            ->throwExceptions(true)
+            ->returnResponse(false);
+    }
+
+    public function setHost($host) {
+        $this->host = $host;
     }
 
     public function doRequest($request) {
@@ -49,31 +49,30 @@ class SE extends \Symfony\Component\BrowserKit\Client
         $json->suppressExit = true;
 
         $zendRequest = new \Zend_Controller_Request_HttpTestCase();
+
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
-        $zendRequest->setParams($request->getParameters());
+        //$zendRequest->setParams($request->getParameters()); - странно, но это не работает. 
+        if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters(); // а это работает
+        if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
+
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         
-
         //$_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
         $_FILES = $request->getFiles();
 
-        //$_SERVER  = array();
-        $_SERVER['HTTP_HOST'] = 'http://testse.my';
+        // это нужно для нормальной работы SE
+        $_SERVER['HTTP_HOST'] = $this->host;
         $_SERVER['SERVER_SOFTWARE'] = ''; 
-
-
-        //if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters();
-        //if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI'] = strtoupper($request->getUri());
 
 
         $zendResponse = new \Zend_Controller_Response_Http;
         
-        $this->front->setRequest($zendRequest)->setResponse($zendResponse);
+        $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->setRequest($zendRequest)->setResponse($zendResponse);
 
         ob_start();
         $this->bootstrap->run();
@@ -84,7 +83,6 @@ class SE extends \Symfony\Component\BrowserKit\Client
         $headers['Content-type'] = "text/html; charset=UTF-8";
 
         $response = new Response($zendResponse->getBody(), $zendResponse->getHttpResponseCode(), $headers);
-        //var_dump($response);
         return $response;
     }
     /**

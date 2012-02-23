@@ -128,8 +128,6 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
         );
 
 
-
-
         if( file_exists(APPLICATION_PATH_SET . DS . 'general.php') ) {
           $generalConfig = include APPLICATION_PATH_SET . DS . 'general.php';
         } else {
@@ -172,10 +170,15 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
           // Application
           require_once APPLICATION_PATH_LIB. DS .'Engine/Loader.php';
           require_once APPLICATION_PATH_LIB. DS .'Engine/Application.php';
+        }
 
-          // Create application, bootstrap, and run
+        $this->client = new \Codeception\Util\Connector\SE();
+        $this->client->setHost($this->config['host']);
+    }
 
-          $application = new \Engine_Application(
+    public function _before(\Codeception\TestCase $test) {
+        // Create application, bootstrap, and run
+        $this->bootstrap = new \Engine_Application(
             array(
               'environment' => APPLICATION_ENV,
               'bootstrap' => array(
@@ -193,25 +196,14 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
               ),
             )
           );
-          \Engine_Application::setInstance($application);
-          \Engine_Api::getInstance()->setApplication($application);
-          //\Zend_Session::$_unitTestEnabled = true;
-        }
+        \Zend_Session::$_unitTestEnabled = true;
+
+        \Engine_Application::setInstance($this->bootstrap);
+        \Engine_Api::getInstance()->setApplication($this->bootstrap);
 
 
-        $application->bootstrap();
-        //$application->run();
-
-        $this->bootstrap = $application;
-        $this->client = new \Codeception\Util\Connector\SE();
+        $this->bootstrap->bootstrap(); 
         $this->client->setBootstrap($this->bootstrap);
-    }
-
-    public function _before(\Codeception\TestCase $test) {
-        //$this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
-
-        //$this->bootstrap->bootstrap(); - тут делать плохо. сессия должна стартануть до любого вывода
-        //$this->client->setBootstrap($this->bootstrap);
 
         // $db = $this->bootstrap->getBootstrap()->getResource('db');
         // if ($db instanceof \Zend_Db_Adapter_Abstract) {
@@ -231,7 +223,7 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
         $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->resetInstance();
         \Zend_Layout::resetMvcInstance();
         \Zend_Controller_Action_HelperBroker::resetHelpers();
-        \Zend_Session::$_unitTestEnabled = false;
+        \Zend_Session::$_unitTestEnabled = true;
         $this->queries = 0;
         $this->time = 0;
     }
