@@ -30,7 +30,7 @@ class SE extends \Symfony\Component\BrowserKit\Client
         $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
 
          $this->front
-            ->throwExceptions(true)
+            ->throwExceptions(false)
             ->returnResponse(false);
     }
 
@@ -61,14 +61,19 @@ class SE extends \Symfony\Component\BrowserKit\Client
         
         //$_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
+        if(isset($_SERVER['HTTP_REFERER'])){
+            $_SERVER['HTTP_REFERER'] = str_replace('http://localhost','',$_SERVER['HTTP_REFERER']);
+        }
+
         $_FILES = $request->getFiles();
 
         // это нужно для нормальной работы SE
-        $_SERVER['HTTP_HOST'] = $this->host;
-        $_SERVER['SERVER_SOFTWARE'] = ''; 
+        $_SERVER['HTTP_HOST'] = str_replace('http://','',$this->host);
+        //$_SERVER['SERVER_SOFTWARE'] = ''; 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI'] = strtoupper($request->getUri());
+        //$_SERVER['REQUEST_URI'] = str_replace('http://localhost','',$request->getUri();
 
+        var_dump($_SERVER);
 
         $zendResponse = new \Zend_Controller_Response_Http;
         
