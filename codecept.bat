@@ -5,4 +5,4 @@ GOTO RUN
 :USE_PEAR_PATH
 set PHPBIN=%PHP_PEAR_PHP_BIN%
 :RUN
-"%PHPBIN%" "codecept" %*
+"%PHPBIN%" "@bin_dir@\codecept" %*
