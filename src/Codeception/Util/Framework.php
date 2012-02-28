@@ -194,7 +194,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $action = $this->getFormUrl($form);
 
         if (!isset($this->forms[$action])) {
-            $form->children()->addHtmlContent('<input type="submit" />'); // for forms with no submits...
+            $submit = new \DOMElement('input');
+            $submit = $form->current()->appendChild($submit);
+            $submit->setAttribute('type','submit'); // for forms with no submits
+
             $form = $form->filter('input[type=submit]')->form();
             $this->forms[$action] = $form;
         }

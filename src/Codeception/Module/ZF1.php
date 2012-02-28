@@ -119,6 +119,7 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
 //            $this->client->getzendrequest()->getcontrollername(),
 //            $this->client->getzendrequest()->getactionname()
 //        ));
+        $this->debugSection('Session',json_encode($_COOKIE));
         if ($this->db) {
             $profiler = $this->db->getProfiler();
             $queries = $profiler->getTotalNumQueries() - $this->queries;
