@@ -169,6 +169,20 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('kill_all', $form['action']);
     }
+
+    public function testSubmitFormWithNoSubmitButton() {
+        $this->module->amOnPage('/form/empty');
+        $this->module->submitForm('form', array('text' => 'davert'));
+        $form = data::get('form');
+        $this->assertEquals('davert', $form['text']);
+    }
+
+    public function testSubmitFormByButton() {
+        $this->module->amOnPage('/form/button');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
+    }
     
     public function testAjax() {
         $this->module->sendAjaxGetRequest('/info', array('show' => 'author'));
@@ -213,5 +227,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('miles@davis.com', $post['email']);
 
     }
+    
+
 
 }
