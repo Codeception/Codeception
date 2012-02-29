@@ -4,7 +4,7 @@ namespace Codeception\Util\Connector;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
-class SE extends \Symfony\Component\BrowserKit\Client
+class SocialEngine extends \Symfony\Component\BrowserKit\Client
 {
 
     /**
