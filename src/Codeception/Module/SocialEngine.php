@@ -1,70 +1,35 @@
 <?php
 /**
- * This module allows you to run tests inside Zend Framework.
- * It acts just like ControllerTestCase, but with usage of Codeception syntax.
- * Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
+ * This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
  *
- * It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
- * and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
+ * Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
  *
  * ## Config
  *
- * * env  - environment used for testing ('testing' by default).
- * * config - relative path to your application config ('application/configs/application.ini' by default).
+ * * host *required* - a host in which your application is registered, according to your license.
  *
  * ## API
  *
  * * client - BrowserKit client
- * * db - current instance of Zend_Db_Adapter
  * * bootstrap - current bootstrap file.
  *
- * ## Cleaning up
  *
- * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction. If you are using one of this ORMs connect their modules to speed up testing.
- *
- * Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning your database you should either use standard Db module or
- * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
- *
- * If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
- * Use a generated helper TestHelper. Usse this code inside of it.
- *
- * ``` php
- * <?php
- * namespace Codeception\Module;
- * class TestHelper extends \Codeception\Module {
- *      function _before($test) {
- *          $this->getModule('ZF1')->db->beginTransaction();
- *      }
- *
- *      function _after($test) {
- *          $this->getModule('ZF1')->db->rollback();
- *      }
- * }
- * ?>
- * ```
- *
- * This will make your functional tests run super-fast.
+ * Module is created by [Artem Kovradin](http://tvorzasp.com)
  *
  */
 namespace Codeception\Module;
 
 class SocialEngine extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {
-    protected $config = array('env' => 'testing', 'config' => 'application/settings/database.php', 'base' => '');
-    // 'app_path' => 'application', 'lib_path' => 'library',
 
+    protected $requiredFields = array('host');
     /**
      * @var \Zend_Application
      */
     public $bootstrap;
 
     /**
-     * @var \Zend_Db_Adapter_Abstract
-     */
-    public $db;
-
-    /**
-     * @var \Codeception\Util\Connector\SE
+     * @var \Codeception\Util\Connector\SocialEngine
      */
     public $client;
 
@@ -85,7 +50,7 @@ class SocialEngine extends \Codeception\Util\Framework implements \Codeception\U
             define('_ENGINE_REQUEST_START', microtime(true));
 
         defined('APPLICATION_PATH') || 
-            define('APPLICATION_PATH',     $this->config['base']);
+            define('APPLICATION_PATH',     \Codeception\Configuration::projectDir());
         defined('APPLICATION_PATH_COR') || 
             define('APPLICATION_PATH_COR', APPLICATION_PATH.DS.'application');
         defined('APPLICATION_PATH_EXT') || 
@@ -205,12 +170,6 @@ class SocialEngine extends \Codeception\Util\Framework implements \Codeception\U
         $this->bootstrap->bootstrap(); 
         $this->client->setBootstrap($this->bootstrap);
 
-        // $db = $this->bootstrap->getBootstrap()->getResource('db');
-        // if ($db instanceof \Zend_Db_Adapter_Abstract) {
-        //     $this->db = $db;
-        //     $this->db->getProfiler()->setEnabled(true); 
-        //     $this->db->getProfiler()->clear();
-        // }
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -230,20 +189,6 @@ class SocialEngine extends \Codeception\Util\Framework implements \Codeception\U
 
     protected function debugResponse()
     {
-//        $this->debugsection('Route', sprintf('%/%/%',
-//            $this->client->getzendrequest()->getmodulename(),
-//            $this->client->getzendrequest()->getcontrollername(),
-//            $this->client->getzendrequest()->getactionname()
-//        ));
-        if ($this->db) {
-            $profiler = $this->db->getProfiler();
-            $queries = $profiler->getTotalNumQueries() - $this->queries;
-            $time = $profiler->getTotalElapsedSecs() - $this->time;
-            $this->debugSection('Db',$queries.' queries');
-            $this->debugSection('Time',round($time,2).' secs taken');
-            $this->time = $profiler->getTotalElapsedSecs();
-            $this->queries = $profiler->getTotalNumQueries();
-        }
     }
 
 }
