@@ -52,23 +52,21 @@ class SE extends \Symfony\Component\BrowserKit\Client
 
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
-        //$zendRequest->setParams($request->getParameters()); - странно, но это не работает. 
-        if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters(); // а это работает
+        //$zendRequest->setParams($request->getParameters()); 
+        if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters(); 
         if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
 
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         
-        //$_COOKIE = $request->getCookies();
-        $_SERVER = $request->getServer();
-        if(isset($_SERVER['HTTP_REFERER'])){
-            $_SERVER['HTTP_REFERER'] = str_replace('http://localhost','',$_SERVER['HTTP_REFERER']);
-        }
 
         $_FILES = $request->getFiles();
 
         // это нужно для нормальной работы SE
         $_SERVER['HTTP_HOST'] = str_replace('http://','',$this->host);
+        if(isset($_SERVER['HTTP_REFERER'])){
+            $_SERVER['HTTP_REFERER'] = str_replace('http://localhost','',$_SERVER['HTTP_REFERER']);
+        }
         //$_SERVER['SERVER_SOFTWARE'] = ''; 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI'] = str_replace('http://localhost','',$request->getUri());
