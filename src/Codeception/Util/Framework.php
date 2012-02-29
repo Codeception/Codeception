@@ -143,6 +143,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function submitForm($selector, $params)
     {
         $form = $this->crawler->filter($selector)->first();
+
         if (!count($form)) return \PHPUnit_Framework_Assert::fail(', form does not exists');
 
         $url = '';
@@ -169,7 +170,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $url .= '&' . http_build_query($params);
         parse_str($url, $params);
-
+   
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
 
         $this->debugSection('Uri', $this->getFormUrl($form));
