@@ -48,7 +48,7 @@
  */
 namespace Codeception\Module;
 
-class SE extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
+class SocialEngine extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {
     protected $config = array('env' => 'testing', 'config' => 'application/settings/database.php', 'base' => '');
     // 'app_path' => 'application', 'lib_path' => 'library',
@@ -172,7 +172,7 @@ class SE extends \Codeception\Util\Framework implements \Codeception\Util\Framew
           require_once APPLICATION_PATH_LIB. DS .'Engine/Application.php';
         }
 
-        $this->client = new \Codeception\Util\Connector\SE();
+        $this->client = new \Codeception\Util\Connector\SocialEngine();
         $this->client->setHost($this->config['host']);
     }
 
