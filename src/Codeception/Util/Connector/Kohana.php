@@ -17,12 +17,12 @@ class Kohana extends \Symfony\Component\BrowserKit\Client {
 		$_SERVER = $request->getServer();
 		$_FILES = $request->getFiles();
 
-
 		$uri = str_replace('http://localhost', '', $request->getUri());
 
 		if (strtoupper($request->getMethod()) == 'GET') {
 			$_GET = $request->getParameters();
 		}
+		
 		if (strtoupper($request->getMethod()) == 'POST') {
 			$_POST = $request->getParameters();
 		}
@@ -33,14 +33,12 @@ class Kohana extends \Symfony\Component\BrowserKit\Client {
 
 		$this->_initRequest();
 		
-		$content = \Request::factory($uri)
-					->execute()
-					->send_headers()
-					->body();
-		
+		$request = \Request::factory($uri);
+		$request::$initial = $request;
+		$content = $request->execute()->render();
+
 		$headers = headers_list();
 		$headers['Content-type'] = "text/html; charset=UTF-8";
-		// header_remove();
 		$response = new Response($content, 200, $headers);
 		return $response;
 	}
@@ -52,9 +50,9 @@ class Kohana extends \Symfony\Component\BrowserKit\Client {
 		}
 		if ($is_first_call) {
 			$is_first_call = false;
-			ob_start();
+			
 			include $this->index;
-			ob_end_clean();
+
 		} 
 	}
 
