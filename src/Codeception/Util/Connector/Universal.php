@@ -17,7 +17,6 @@ class Universal extends \Symfony\Component\BrowserKit\Client
 
         $uri = str_replace('http://localhost','',$request->getUri());
 
-
         if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters();
         if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());

@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-02-21</date>
-  <time>19:24:57</time>
+  <date>2012-02-29</date>
+  <time>17:14:12</time>
   <version>
-    <release>1.0.4</release>
-    <api>1.0.4</api>
+    <release>1.0.5</release>
+    <api>1.0.5</api>
   </version>
   <stability>
     <release>stable</release>
@@ -26,14 +26,14 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
-      <file name="autoload.php" role="php" md5sum="81c47d2a1e3de3b9b1222e67b4287171"/>
+      <file name="autoload.php" role="php" md5sum="ccefaa5732bc2072081ff3a2dac9d16a"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="a497f943cf8e766005ff3b4f5f3c08b5">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
-      <file name="codecept.bat" role="script" baseinstalldir="/" md5sum="aa051bc2f59d51174b343b387f096a03">
+      <file name="codecept.bat" role="script" baseinstalldir="/" md5sum="2018bcecd1df87a23b5e9150e165633a">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
@@ -59,7 +59,7 @@
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
-          <file name="Codecept.php" role="php" md5sum="fe20474e2882aff5fdb71c81e6e142df"/>
+          <file name="Codecept.php" role="php" md5sum="4cd5472f2746f484d4dc12ca41e3aa13"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
@@ -94,10 +94,11 @@
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="PhpBrowser.php" role="php" md5sum="8ad18735225010418104e4537972f2dd"/>
             <file name="Selenium.php" role="php" md5sum="a421651374a4066e4ac95ce8456600b4"/>
+            <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
             <file name="Unit.php" role="php" md5sum="ee46df675f766380ce3bdc82bd40cb03"/>
-            <file name="ZF1.php" role="php" md5sum="e9476ddac6bf3971c6f45ba0236a9ffa"/>
+            <file name="ZF1.php" role="php" md5sum="90006954129bde092eaae3252f70fba6"/>
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
           <dir name="PHPUnit">
@@ -143,6 +144,7 @@
           </dir>
           <dir name="Util">
             <dir name="Connector">
+              <file name="SocialEngine.php" role="php" md5sum="05706cf9213f455cc5fec17e57b00b21"/>
               <file name="Universal.php" role="php" md5sum="0381e84ea59e577a6846d271836a00c6"/>
               <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
             </dir>
@@ -157,7 +159,7 @@
               <file name="SqliteGeneral.php" role="php" md5sum="c57aed5f24614e8873b7e983813409c2"/>
             </dir>
             <file name="Fixtures.php" role="php" md5sum="4bd48136b17f074c96e28b3048a63e24"/>
-            <file name="Framework.php" role="php" md5sum="6d79759e0eea0668dc038bd2f53e3850"/>
+            <file name="Framework.php" role="php" md5sum="064c83559218d3ae2f13fcaa8037601b"/>
             <file name="FrameworkInterface.php" role="php" md5sum="0d3681c7ba4998bf4b90f5b45f8e3c4e"/>
             <file name="Mink.php" role="php" md5sum="c6d758478f3b44fa9fee00dbbf4b1c99"/>
             <file name="MinkJS.php" role="php" md5sum="8d9eea4d1cf5f6fcda79d98275c5d8d5"/>

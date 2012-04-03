@@ -34,7 +34,7 @@ class Kohana extends \Symfony\Component\BrowserKit\Client {
 		$this->_initRequest();
 		
 		$request = \Request::factory($uri);
-		$request::$initial = $request;
+		$request::initial = $request;
 		$content = $request->execute()->render();
 
 		$headers = headers_list();
