@@ -1,7 +1,7 @@
 <?php
 /**
  * This module provides integration with [Kohana](http://kohanaframework.org/) v3.
- * Current status PRE ALFA=)
+ * Current status is PRE ALFA=)
  * Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
  *
  * INSTALLATION

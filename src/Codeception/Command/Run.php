@@ -21,6 +21,9 @@ class Run extends Base
 
             new \Symfony\Component\Console\Input\InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new \Symfony\Component\Console\Input\InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
+            new \Symfony\Component\Console\Input\InputOption('xml', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
+            new \Symfony\Component\Console\Input\InputOption('tap', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
+            new \Symfony\Component\Console\Input\InputOption('json', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
             new \Symfony\Component\Console\Input\InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new \Symfony\Component\Console\Input\InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),

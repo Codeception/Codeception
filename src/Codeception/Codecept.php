@@ -36,9 +36,12 @@ class Codecept
         'debug' => false,
         'steps' => false,
         'html' => false,
+        'xml' => false,
+        'json' => false,
+        'tap' => false,
         'report' => false,
         'colors' => false,
-        'log' => true
+        'log' => true,
     );
 
     public function __construct($options = array()) {
@@ -62,7 +65,6 @@ class Codecept
         }
 
         if ($options['report']) $options['silent'] = true;
-        if ($options['html']) $options['html'] = \Codeception\Configuration::dataDir() . 'result.html';
 
         return $options;
     }
@@ -96,7 +98,9 @@ class Codecept
    	}
     
     public function printResult() {
-        $this->runner->getPrinter()->printResult($this->getResult());
+        $result = $this->getResult();
+        $result->flushListeners();
+        $this->runner->getPrinter()->printResult($result);
     }
 
     /**

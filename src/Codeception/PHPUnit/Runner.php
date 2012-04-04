@@ -3,6 +3,8 @@ namespace Codeception\PHPUnit;
 
 class Runner extends \PHPUnit_TextUI_TestRunner {
 
+    public static $persistentListeners = array();
+
     /**
      * @return null|\PHPUnit_TextUI_ResultPrinter
      */
@@ -67,20 +69,37 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	        }
 	    }
 
-	    if (isset($arguments['report'])) {
-		    if ($arguments['report']) $this->printer = new \Codeception\PHPUnit\ResultPrinter\Report();
-	    }
+        if (isset($arguments['report'])) {
+            if ($arguments['report']) $this->printer = new \Codeception\PHPUnit\ResultPrinter\Report();
+        }
 
-	    if (isset($arguments['html'])) {
+        if (empty(self::$persistentListeners)) {
 
-	        if ($arguments['html']) $arguments['listeners'][] = new \Codeception\PHPUnit\ResultPrinter\HTML($arguments['html']);
-	    }
+            if (isset($arguments['html'])) {
+                if ($arguments['html']) self::$persistentListeners[] = new \Codeception\PHPUnit\ResultPrinter\HTML(\Codeception\Configuration::logDir() . 'report.html');
+            }
+
+            if (isset($arguments['xml'])) {
+                if ($arguments['xml']) self::$persistentListeners[] = new \Codeception\PHPUnit\Log\JUnit(\Codeception\Configuration::logDir() . 'report.xml', false);
+            }
+
+            if (isset($arguments['tap'])) {
+                if ($arguments['tap']) self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP(\Codeception\Configuration::logDir() . 'report.tap.log');
+            }
+
+            if (isset($arguments['json'])) {
+                if ($arguments['json']) self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON(\Codeception\Configuration::logDir() . 'report.json');
+            }
+
+            foreach (self::$persistentListeners as $listener) {
+       	        $result->addListener($listener);
+       	    }
+        }
 
         $arguments['listeners'][] = $this->printer;
 
         // clean up listeners between suites
 	    foreach ($arguments['listeners'] as $listener) {
-            $result->removeListener($listener);
 	        $result->addListener($listener);
 	    }
 
@@ -97,10 +116,13 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	    );
 
 	    unset($suite);
-	    $result->flushListeners();
+
+        foreach ($arguments['listeners'] as $listener) {
+   	        $result->removeListener($listener);
+   	    }
+
 
 	    return $result;
 	}
-
 
 }

@@ -51,6 +51,11 @@ class Cest extends \Codeception\TestCase
         return $this->testClass;
     }
 
+    public function getTestMethod()
+    {
+        return $this->testMethod;
+    }
+
     public function getCoveredClass()
     {
         $class = $this->getTestClass();

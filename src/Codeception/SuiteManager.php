@@ -61,7 +61,7 @@ class SuiteManager {
 
     public function addTest($path) {
         // bootstrap invokation is slightly different for PHPUnit
-        if (file_exists($this->settings['bootstrap'])) require $this->settings['bootstrap'];
+//        if (file_exists($this->settings['bootstrap'])) require $this->settings['bootstrap'];
         $this->suite->addTestFile($path);
     }
 
@@ -88,10 +88,12 @@ class SuiteManager {
 
         $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
 
+
         foreach ($testClasses as $testClass) {
             $unit = new $testClass;
-
             $reflected = new \ReflectionClass($testClass);
+
+            $cestSuite = new \PHPUnit_Framework_TestSuite($testClass.' ');
 
             $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
@@ -105,7 +107,7 @@ class SuiteManager {
                     $target = get_class($unit).'::'.$method->name;
                 }
 
-                $this->suite->addTest(new \Codeception\TestCase\Cest($this->dispatcher, array(
+                $cestSuite->addTest(new \Codeception\TestCase\Cest($this->dispatcher, array(
                     'name' => $name.':'.$target,
                     'class' => $unit,
                     'method' => $method->name,
@@ -115,6 +117,7 @@ class SuiteManager {
            	        'bootstrap' => $this->settings['bootstrap']
                 )));
             }
+            $this->suite->addTestSuite($cestSuite);
         }
     }
 
