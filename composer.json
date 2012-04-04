@@ -1,9 +1,16 @@
 {
     "require": {
-        "behat/mink": ">=1.3.2"
+        "behat/mink":  "*",
+        "fabpot/goutte": "*",
+        "alexandresalome/php-selenium": "*",
+        "facebook/php-webdriver": "*",
+        "behat/sahi-client": "*"
     },
 
     "repositories": {
-        "behat/mink-deps": { "type": "composer", "url": "behat.org" }
+        "behat/mink-deps": {
+            "type": "composer",
+            "url":  "behat.org"
+        }
     }
 }
