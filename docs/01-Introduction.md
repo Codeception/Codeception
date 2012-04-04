@@ -26,12 +26,12 @@ Please, note, that **any site** can be covered with acceptance tests. Even you u
 
 ``` php
 <?php
-$I = new TestGuy($scenario);
+$I = new WebGuy($scenario);
 $I->amOnPage('/');
 $I->click('Sign Up');
 $I->submitForm('#signup', array('username' => 'MilesDavis', 'email' => 'miles@davis.com'));
 $I->see('Thank you for Signing Up!');
-
+?>
 ```
 
 #### Pros
@@ -41,7 +41,7 @@ $I->see('Thank you for Signing Up!');
 * can be shown to your clients and managers
 * the most stable: less affected by changes in source code or technologies.
 
-### Cons
+#### Cons
 * less checks leads to false-positive results
 * most slow: requires running browser and database repopulation.
 * yep, they are really slow.
@@ -68,7 +68,7 @@ $I->submitForm('#signup', array('username' => 'MilesDavis', 'email' => 'miles@da
 $I->see('Thank you for Signing Up!');
 $I->seeEmailSent('miles@davis.com', 'Thank you for registration');
 $I->seeInDatabase('users', array('email' => 'miles@davis.com'));
-
+?>
 ```
 
 #### Pros
@@ -108,7 +108,7 @@ $I->dontSeeInDatabase('users', array('id' => 1, 'username' => 'miles'));
 $I->executeTestedMethodOn($unit, 1, array('username' => 'miles'));
 $I->seeMethodInvoked($unit, 'save');
 $I->seeInDatabase('users', array('id' => 1, 'username' => 'miles'));
-
+?>
 ```
 
 #### Pros

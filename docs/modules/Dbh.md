@@ -1,5 +1,29 @@
 # Dbh Module
 
+This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
+Be default it will cover all database queries into transaction and rollback it afterwards.
+The database should support nested transactions, in order to make cleanup work as expected.
+
+Pass PDO instance to this module from within your bootstrap file.
+
+In _bootstrap.php:
+
+``` php
+<?php
+\Codeception\Module\Dbh::$dbh = $dbh;
+?>
+```
+
+This will make all queries in this connection run withing transaction and rolled back afterwards.
+
+Note, that you can't use this module with MySQL. Or perhaps you don't use transactions in your project, then it's ok.
+Otherwise consider using ORMs like Doctrine, that emulate nested transactions, or switch to Db module.
+
+### Configuration
+
+* cleanup: true - enable cleanups by covering all queries inside transaction.
+
+
 ## Actions
 
 

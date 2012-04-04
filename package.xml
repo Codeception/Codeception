@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-02-29</date>
-  <time>17:14:12</time>
+  <date>2012-04-05</date>
+  <time>01:55:40</time>
   <version>
-    <release>1.0.5</release>
-    <api>1.0.5</api>
+    <release>1.0.7</release>
+    <api>1.0.7</api>
   </version>
   <stability>
     <release>stable</release>
@@ -24,7 +24,7 @@
   <notes>Initial release.</notes>
   <contents>
     <dir name="/" baseinstalldir="Codeception">
-      <file name=".gitignore" role="php" md5sum="95b55b1e3a304f4e340394a679893575"/>
+      <file name=".gitignore" role="php" md5sum="b62f0d49b28925cfbc26c8f7ee944ac7"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
       <file name="autoload.php" role="php" md5sum="ccefaa5732bc2072081ff3a2dac9d16a"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="a497f943cf8e766005ff3b4f5f3c08b5">
@@ -40,7 +40,7 @@
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
       <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
-      <file name="composer.json" role="php" md5sum="009a41cf9d53c866fd68ca297a08c77d"/>
+      <file name="composer.json" role="php" md5sum="3617cd8e0a26d088bf891ef5846c8412"/>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <dir name="plugins">
@@ -59,7 +59,7 @@
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
-          <file name="Codecept.php" role="php" md5sum="4cd5472f2746f484d4dc12ca41e3aa13"/>
+          <file name="Codecept.php" role="php" md5sum="82e3240ec80f85221772ddd6115097b6"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
@@ -69,7 +69,7 @@
             <file name="GenerateScenarios.php" role="php" md5sum="2da620661ec1c67d69dffcfdf8689ef0"/>
             <file name="GenerateSuite.php" role="php" md5sum="30b9acf0ca499878035f9fd59fada7b9"/>
             <file name="Install.php" role="php" md5sum="efdaecb611a658f1a668a42d3b8e52cd"/>
-            <file name="Run.php" role="php" md5sum="3e0ece38f9dc98e9ba786e8e9bb73472"/>
+            <file name="Run.php" role="php" md5sum="f79ead42872e1a013ef39657aa87d3a4"/>
           </dir>
           <file name="Configuration.php" role="php" md5sum="3dade1f9e405aa75d3b930c950ef2a30"/>
           <dir name="Event">
@@ -92,6 +92,7 @@
             <file name="Doctrine1.php" role="php" md5sum="6d746b357fa8d9955b3c0317943d4532"/>
             <file name="Doctrine2.php" role="php" md5sum="5ff32af0fb7e9f8f53c3be8617c1c780"/>
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
+            <file name="Kohana.php" role="php" md5sum="b2be84337e81f0f8b1c018fd649bf17b"/>
             <file name="PhpBrowser.php" role="php" md5sum="8ad18735225010418104e4537972f2dd"/>
             <file name="Selenium.php" role="php" md5sum="a421651374a4066e4ac95ce8456600b4"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
@@ -107,6 +108,9 @@
               <file name="Page.php" role="php" md5sum="73719880d3993ef9815f2c6ac244614d"/>
             </dir>
             <file name="Listener.php" role="php" md5sum="d7b104080ee4f85b720622adccdb324b"/>
+            <dir name="Log">
+              <file name="JUnit.php" role="php" md5sum="3110ddb5fb8c5f08db48db2db31098b6"/>
+            </dir>
             <file name="ResultPrinter.php" role="php" md5sum="a1ef8c428e69edeca001d492ec2af3d9"/>
             <dir name="ResultPrinter">
               <file name="HTML.php" role="php" md5sum="c8399696ad2b5f2654b5ec5c20872534"/>
@@ -119,7 +123,7 @@
                 <file name="step.html.dist" role="php" md5sum="5c98f94cbb5af86a7d789b484d227c73"/>
               </dir>
             </dir>
-            <file name="Runner.php" role="php" md5sum="4e500f61ddea44c6ac4ccb905da51e2b"/>
+            <file name="Runner.php" role="php" md5sum="281c6bb41c8120aafc3ed2a3418241be"/>
           </dir>
           <file name="Scenario.php" role="php" md5sum="af748e6cd511b0395e9466617ce4e2d0"/>
           <file name="Step.php" role="php" md5sum="5a8884ab0ba17200327fb5d5fbb57831"/>
@@ -136,16 +140,17 @@
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="e03aaee476dd2e16290bc3554290137b"/>
+          <file name="SuiteManager.php" role="php" md5sum="710b26a88e030199324d45ec8b18d104"/>
           <file name="TestCase.php" role="php" md5sum="7719eaa01fe51af4e90e4ce851667041"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
-            <file name="Cest.php" role="php" md5sum="84e9549a25483cace3285a98c97e30e8"/>
+            <file name="Cest.php" role="php" md5sum="5ad717a8386ec084413b3bda5107c57e"/>
           </dir>
           <dir name="Util">
             <dir name="Connector">
+              <file name="Kohana.php" role="php" md5sum="41aede7ea40fe954d67c115720f6f598"/>
               <file name="SocialEngine.php" role="php" md5sum="05706cf9213f455cc5fec17e57b00b21"/>
-              <file name="Universal.php" role="php" md5sum="0381e84ea59e577a6846d271836a00c6"/>
+              <file name="Universal.php" role="php" md5sum="6c3ad469023c45df1993a362b5be60a5"/>
               <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
             </dir>
             <file name="DbInterface.php" role="php" md5sum="386503db593725e82eb5d4904c623889"/>
