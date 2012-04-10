@@ -219,6 +219,7 @@ There are plenty of options you can use.
 * colors - turn on colors (if disabled)
 * silent - don't show the progress output.
 * report - format results in report mode.
+* no-exit - don't provide exit codes on finish. This option may be useful for using Codeception with some CI servers like Bamboo.
 
 With next options you can set output in most suitable format.
 
