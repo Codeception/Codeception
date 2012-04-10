@@ -208,6 +208,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('rus','Верно');
     }
 
+    public function testApostrophesInText() {
+        $this->module->amOnPage('/info');
+        $this->module->see("Don't do that at home!");
+        $this->module->see("Don't do that at home!",'h3');
+    }
+
 
 
 }
