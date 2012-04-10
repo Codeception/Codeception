@@ -61,7 +61,7 @@ class SuiteManager {
 
     public function addTest($path) {
         // bootstrap invokation is slightly different for PHPUnit
-//        if (file_exists($this->settings['bootstrap'])) require $this->settings['bootstrap'];
+        if (file_exists($this->settings['bootstrap'])) require_once $this->settings['bootstrap'];
         $this->suite->addTestFile($path);
     }
 
