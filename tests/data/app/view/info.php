@@ -16,7 +16,8 @@
 
 <h3>Don't do that at home!</h3>
 
-Is that interesting?
+<p>Is that interesting?</p>
+
 <form action="/">
 <input type="checkbox" name="interesting" value="1" checked="checked" />
     <input type="text" name="rus" value="Верно" />
