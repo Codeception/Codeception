@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Behat\\Behat": "src/"
+            "Monolog": "src"
         }
     },
     "bin": ["codecept"]
