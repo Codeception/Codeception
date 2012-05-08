@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-05-08</date>
-  <time>11:28:48</time>
+  <time>11:44:24</time>
   <version>
     <release>1.0.8</release>
     <api>1.0.8</api>
@@ -148,7 +148,7 @@
           </dir>
           <dir name="Util">
             <dir name="Connector">
-              <file name="Kohana.php" role="php" md5sum="3e89f076e3d315064120223036e907f4"/>
+              <file name="Kohana.php" role="php" md5sum="df69ba195235eda74a72d95ec4109b20"/>
               <file name="SocialEngine.php" role="php" md5sum="05706cf9213f455cc5fec17e57b00b21"/>
               <file name="Universal.php" role="php" md5sum="6c3ad469023c45df1993a362b5be60a5"/>
               <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
