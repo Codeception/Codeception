@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Monolog": "src"
+            "Codecept": "src"
         }
     },
     "bin": ["codecept"]
