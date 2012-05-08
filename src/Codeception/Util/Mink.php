@@ -146,7 +146,13 @@ abstract class Mink extends \Codeception\Module
         $page = $this->session->getPage();
         $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
-        if (!$el) $el = $page->find('css', $link);
+        if (!$el)  {
+            try {
+                \Symfony\Component\CssSelector\CssSelector::toXPath($link);
+                $el = $page->find('css', $link);
+            } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+        }
+
         if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS for '$link' not found'");
         return $el;
     }
@@ -315,6 +321,7 @@ abstract class Mink extends \Codeception\Module
 
     protected function escape($string)
     {
+
         return $string;
     }
 

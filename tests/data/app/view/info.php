@@ -27,5 +27,7 @@
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
 
+<a href="/" class="sign">Sign in!</a>
+
 </body>
 </html>
