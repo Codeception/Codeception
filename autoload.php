@@ -9,7 +9,7 @@ $loader->registerNamespaces(array(
     'Symfony\Component' => __DIR__ . '/vendor',
 ));
 
-$loader->register();
+$loader->register(true);
 
 if (stream_resolve_include_path('PHPUnit/Autoload.php') ) {
     include_once 'PHPUnit/Autoload.php';
