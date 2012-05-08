@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-04-10</date>
-  <time>20:05:32</time>
+  <date>2012-05-08</date>
+  <time>11:28:48</time>
   <version>
     <release>1.0.8</release>
     <api>1.0.8</api>
@@ -26,7 +26,7 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="b62f0d49b28925cfbc26c8f7ee944ac7"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
-      <file name="autoload.php" role="php" md5sum="ccefaa5732bc2072081ff3a2dac9d16a"/>
+      <file name="autoload.php" role="php" md5sum="2cea26b6b1ab6ec977314736444bdc54"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="a497f943cf8e766005ff3b4f5f3c08b5">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
@@ -61,7 +61,7 @@
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
           <file name="Codecept.php" role="php" md5sum="0a8ea4a3907d4b1da9c8aa693d4d77ae"/>
           <dir name="Command">
-            <file name="Base.php" role="php" md5sum="d00ccb8f35592b619868fa894f60217f"/>
+            <file name="Base.php" role="php" md5sum="20c127d8045203332c72c36a045035c2"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>
@@ -148,7 +148,7 @@
           </dir>
           <dir name="Util">
             <dir name="Connector">
-              <file name="Kohana.php" role="php" md5sum="41aede7ea40fe954d67c115720f6f598"/>
+              <file name="Kohana.php" role="php" md5sum="3e89f076e3d315064120223036e907f4"/>
               <file name="SocialEngine.php" role="php" md5sum="05706cf9213f455cc5fec17e57b00b21"/>
               <file name="Universal.php" role="php" md5sum="6c3ad469023c45df1993a362b5be60a5"/>
               <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
@@ -166,7 +166,7 @@
             <file name="Fixtures.php" role="php" md5sum="4bd48136b17f074c96e28b3048a63e24"/>
             <file name="Framework.php" role="php" md5sum="064c83559218d3ae2f13fcaa8037601b"/>
             <file name="FrameworkInterface.php" role="php" md5sum="0d3681c7ba4998bf4b90f5b45f8e3c4e"/>
-            <file name="Mink.php" role="php" md5sum="1236a3c6a998faea7696b1e580180fac"/>
+            <file name="Mink.php" role="php" md5sum="3a2ec9256ea46a2761f3700f5ae983d6"/>
             <file name="MinkJS.php" role="php" md5sum="8d9eea4d1cf5f6fcda79d98275c5d8d5"/>
             <file name="Stub.php" role="php" md5sum="3bc174c04f5404bf1754818e3a428702"/>
             <dir name="Stub">
