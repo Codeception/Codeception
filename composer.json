@@ -1,16 +1,29 @@
 {
+    "name":         "Codeception/Codeception",
+    "description":  "BDD-style testing framework",
+    "keywords":     ["BDD", "accetpance testing", "functional testing","unit testing","tdd"],
+    "homepage":     "http://codeception.com/",
+    "type":         "library",
+    "license":      "MIT",
+    "authors":      [
+        {
+            "name":      "Michael Bodnarchuk",
+            "email":     "davert@mail.ua",
+            "homepage":  "http://codegyre.com"
+        }
+    ],
     "require": {
+        "php": ">=5.3.2",
         "behat/mink":  "*",
         "fabpot/goutte": "*",
         "alexandresalome/php-selenium": "*",
         "facebook/php-webdriver": "*",
-        "behat/sahi-client": "*"
+        "EHER/PHPUnit": ">=1.2"
     },
-
-    "repositories": {
-        "behat/mink-deps": {
-            "type": "composer",
-            "url":  "behat.org"
+    "autoload": {
+        "psr-0": {
+            "Behat\\Behat": "src/"
         }
-    }
+    },
+    "bin": ["codecept"]
 }
