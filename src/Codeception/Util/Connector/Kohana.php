@@ -37,7 +37,7 @@ class Kohana extends \Symfony\Component\BrowserKit\Client {
 
 		$kohanaRequest->cookie($_COOKIE);
 
-		$kohanaRequest::$initial = $kohanaRequest;
+		$kohanaRequest::initial = $kohanaRequest;
 		$content = $kohanaRequest->execute()->render();
 
 		$headers = (array)$kohanaRequest->response()->headers();
