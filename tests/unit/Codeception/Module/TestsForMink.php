@@ -214,6 +214,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see("Don't do that at home!",'h3');
     }
 
+    public function testSign() {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Sign in!');
+        $this->module->amOnPage('/info');
+        $this->module->click('Sign in!');
+    }
+
 
 
 }

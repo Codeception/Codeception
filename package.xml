@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-04-10</date>
-  <time>19:22:30</time>
+  <time>20:05:32</time>
   <version>
     <release>1.0.8</release>
     <api>1.0.8</api>
@@ -140,7 +140,7 @@
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="710b26a88e030199324d45ec8b18d104"/>
+          <file name="SuiteManager.php" role="php" md5sum="399adf4e54614ea8e19ae6aebd9a398b"/>
           <file name="TestCase.php" role="php" md5sum="7719eaa01fe51af4e90e4ce851667041"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
