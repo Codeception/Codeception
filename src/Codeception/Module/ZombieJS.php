@@ -19,6 +19,8 @@
  * ``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
  * into your **.bashrc**.
  *
+ * Also not that this module requires php5-http PECL extension to parse returned headers properly
+ *
  * Don't forget to turn on Db repopulation if you are using database.
  *
  * ## Configuration
