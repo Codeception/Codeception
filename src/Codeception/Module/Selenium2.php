@@ -1,20 +1,15 @@
 <?php
 /**
- * Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
+ * Uses Mink to manipulate Selenium2 WebDriver
  *
- * Note, all method takes CSS selectors to fetch elements.
- * For links, buttons, fields you can use names/values/ids of elements.
- * For form fields you can use name of matched label.
+ * Note that all method take CSS selectors to fetch elements.
  *
- * Will save a screenshot of browser window to log directory on fail.
+ * On test failure the browser window screenshot will be saved to log directory
  *
  * ## Installation
  *
- * Take Selenium Server from http://seleniumhq.org/download
- *
- * Execute it: java -jar selenium-server-standalone-x.xx.xxx.jar
- *
- * Best used with Firefox browser.
+ * Download Selenium2 WebDriver from http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2
+ * Launch the daemon: ```java -jar selenium-server-standalone-2.xx.xxx.jar```
  *
  * Don't forget to turn on Db repopulation if you are using database.
  *
