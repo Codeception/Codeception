@@ -28,6 +28,7 @@
  * * node_bin - defines full path to node.js binary. Default one is just **node**
  * * script - defines a node.js script to start zombie.js server. If you pass a **null** the default script will be used. Use this option carefully!
  * * threshold - amount of microseconds for the process to wait (as of \Behat\Mink\Driver\Zombie\Server)
+ * * autostart - whether zombie.js should be started automatically. Defaults to **true**
  *
  * ## Public Properties
  *
@@ -43,21 +44,27 @@ class ZombieJS extends \Codeception\Util\MinkJS
     protected $config = array(
         'host' => '127.0.0.1', 'port' => 8124,
         'node_bin' => null, 'script' => null,
-        'threshold' => 20000000
+        'threshold' => 20000000,
+        'autostart' => true
     );
+
     /** @var \Behat\Mink\Driver\Zombie\Connection */
     protected $connection;
-    public function _cleanup() {
+
+    public function _cleanup()
+    {
         $this->connection = new MinkDriver\Zombie\Connection($this->config['host'],$this->config['port']);
-        $driver  = new MinkDriver\ZombieDriver(
-            $this->connection,
-            null,false /*new MinkDriver\Zombie\Server(
-                $this->config['host'],$this->config['port'],
-                $this->config['node_bin'],   $this->config['script'],
-                $this->config['threshold']
-            )*/
+
+        $server = null;
+        if($this->config['autostart'] == true)
+        {
+            $server = new MinkDriver\Zombie\Server($this->config['host'], $this->config['port'],
+                $this->config['node_bin'], $this->config['script'], $this->config['threshold']);
+        }
+
+        $this->session = new \Behat\Mink\Session(
+            new MinkDriver\ZombieDriver($this->connection, $server, $this->config['autostart'])
         );
-        $this->session = new \Behat\Mink\Session($driver);
         $this->session->start();
     }
 
