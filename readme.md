@@ -2,11 +2,11 @@
 
 [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
 
-Codeception is new PHP full-stack testing framework.
-Inspired by BDD, it provides you absolutely new way for writing acceptance, functional and even unit tests.
+Codeception is a new PHP full-stack testing framework.
+Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.6.
 
-### In a Glance
+### At a Glance
 
 Describe what you test and how you test it. Use PHP to write descriptions faster.
 
@@ -23,14 +23,15 @@ $I->amOnPage('/');
 $I->click('Pages');
 $I->click('New');
 $I->see('New Page');
-$I->submitForm('form#new_page', array('title' => 'Tree of Life Movie Review','body' => "Next time don't let Hollywood create arthouse!"));
+$I->submitForm('form#new_page', array('title' => 'Tree of Life Movie Review','body' => "Next time don't let Hollywood create art-house!"));
 $I->see('page created'); // notice generated
 $I->see('Tree of Life Movie Review','h1'); // head of page of is our title
 $I->seeInCurrentUrl('pages/tree-of-life-mobie-review'); // slug is generated
 $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // data is stored in database
 ?>
 ```
-Ok, as for unit test similar approach may seem weired, but...
+Ok, as for unit test similar approach may seem weird, but...
+
 Take a look at this:
 
 #### Sample unit test
@@ -50,16 +51,15 @@ class UserControllerCest {
     }
 }
 ?>
-
 ```
 
-Anyway, If you don't really like writing unit tests in DSL, Codeceptance can run PHPUnit tests natively.
+Anyway, if you don't really like writing unit tests in DSL, Codeception can run PHPUnit tests natively.
 
 ## Documentation
 
 [Documentation on Github](https://github.com/Codeception/Codeception/tree/master/docs)
 
-Documentation is currently bounded with project. Look for it in 'docs' directory.
+Documentation is currently included within the project. Look for it in the 'docs' directory.
 
 ## Installation
 
@@ -76,6 +76,7 @@ pear install codeception/Codeception
 Download [codecept.phar](https://github.com/Codeception/Codeception/raw/master/package/codecept.phar)
 
 Copy it into your project.
+
 Run CLI utility:
 
 ```
@@ -84,7 +85,7 @@ php codecept.phar
 
 ## Getting Started
 
-If you sucessfully installed Codeception, run this commands:
+If you successfully installed Codeception, run this command:
 
 ```
 codecept install
@@ -96,13 +97,13 @@ this will install all dependency tools like PHPUnit and Mink
 codecept bootstrap
 ```
 
-this will create default directory structure and default test suites
+this will create a default directory structure and default test suites
 
 ```
 codecept build
 ```
 
-This will generate Guy-classes, in order to make autocomplete works.
+This will generate Guy-classes, in order to make autocomplete work.
 
 See Documentation for more information.
 
