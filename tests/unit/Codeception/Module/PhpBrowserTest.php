@@ -63,6 +63,12 @@ class PhpBrowserTest extends TestsForMink
         $this->assertNotNull(data::get('ajax'));
         $post = data::get('form');
         $this->assertEquals('author', $post['show']);
-
     }
+
+    public function testLinksWithNonLatin() {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Ссылочка');
+        $this->module->click('Ссылочка');
+    }
+
 }
