@@ -2,7 +2,7 @@
     "name":         "Codeception/Codeception",
     "description":  "BDD-style testing framework",
     "keywords":     ["BDD", "accetpance testing", "functional testing","unit testing","tdd"],
-    "homepage":     "http://codeception.com",
+    "homepage":     "http://codeception.com/",
     "type":         "library",
     "license":      "MIT",
     "authors":      [
@@ -20,6 +20,14 @@
         "facebook/php-webdriver": "*",
         "EHER/PHPUnit": ">=1.2"
     },
+
+    "repositories": {
+        "behat/mink-deps": {
+            "type": "composer",
+            "url":  "behat.org"
+        }
+    },
+
     "autoload": {
         "psr-0": {
             "Codeception": "src"
