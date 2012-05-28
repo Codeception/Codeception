@@ -21,25 +21,24 @@
         "EHER/PHPUnit":">=1.2"
     },
 
-    "repositories": {
-        "webdriver":
-        {
-            "name":"facebook/php-webdriver",
-            "version":"master-dev",
-            "version_normalized":"9999999-dev",
-            "source":{
-                "type":"git",
-                "url":"git://github.com/facebook/php-webdriver.git",
-                "reference":"master"
+    "repositories": [{
+            "type": "package",
+            "package": {
+                "name":"facebook/php-webdriver",
+                "version": "master-dev",
+                "version_normalized": "9999999-dev",
+                "source": {
+                    "type": "git",
+                    "url": "git://github.com/facebook/php-webdriver.git",
+                    "reference": "master"
+                },
+                "dist": {
+                    "type": "zip",
+                    "url": "https://github.com/facebook/php-webdriver/zipball/master",
+                    "reference": null,
+                    "shasum": null
+                }
             },
-            "dist":{
-                "type":"zip",
-                "url":"https://github.com/facebook/php-webdriver/zipball/master",
-                "reference":null,
-                "shasum":null
-            },
-            "type":"library",
-            "installation-source":"source",
             "autoload":{
                 "psr-0":{
                     "WebDriverBase":".",
@@ -51,8 +50,7 @@
                     "WebDriverSimpleItem":"."
                 }
             }
-        }
-    },
+    }],
 
     "autoload":{
         "psr-0":{
