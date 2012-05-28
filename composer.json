@@ -26,6 +26,7 @@
             "type": "composer",
             "url":  "behat.org"
         }
+
     },
 
     "autoload": {
