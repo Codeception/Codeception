@@ -1,38 +1,62 @@
 {
-    "name":         "Codeception/Codeception",
-    "description":  "BDD-style testing framework",
-    "keywords":     ["BDD", "accetpance testing", "functional testing","unit testing","tdd"],
-    "homepage":     "http://codeception.com/",
-    "type":         "library",
-    "license":      "MIT",
-    "authors":      [
+    "name":"Codeception/Codeception",
+    "description":"BDD-style testing framework",
+    "keywords":["BDD", "accetpance testing", "functional testing", "unit testing", "tdd"],
+    "homepage":"http://codeception.com/",
+    "type":"library",
+    "license":"MIT",
+    "authors":[
         {
-            "name":      "Michael Bodnarchuk",
-            "email":     "davert@mail.ua",
-            "homepage":  "http://codegyre.com"
+            "name":"Michael Bodnarchuk",
+            "email":"davert@mail.ua",
+            "homepage":"http://codegyre.com"
         }
     ],
-    "require": {
-        "php": ">=5.3.2",
-        "behat/mink":  "*",
-        "fabpot/goutte": "*",
-        "alexandresalome/php-selenium": "*",
-        "facebook/php-webdriver": "*",
-        "EHER/PHPUnit": ">=1.2"
+    "require":{
+        "php":">=5.3.2",
+        "behat/mink":"*",
+        "fabpot/goutte":"*",
+        "alexandresalome/php-selenium":"*",
+        "facebook/php-webdriver":"*",
+        "EHER/PHPUnit":">=1.2"
     },
 
-    "repositories": {
-        "facebook/webdriver": {
-            "type": "vcs",
-            "url": "https://github.com/facebook/php-webdriver"
+    "repositories":[
+        {
+            "name":"facebook/php-webdriver",
+            "version":"master-dev",
+            "version_normalized":"9999999-dev",
+            "source":{
+                "type":"git",
+                "url":"git://github.com/facebook/php-webdriver.git",
+                "reference":"master"
+            },
+            "dist":{
+                "type":"zip",
+                "url":"https://github.com/facebook/php-webdriver/zipball/master",
+                "reference":null,
+                "shasum":null
+            },
+            "type":"library",
+            "installation-source":"source",
+            "autoload":{
+                "psr-0":{
+                    "WebDriverBase":".",
+                    "WebDriver":".",
+                    "WebDriverContainer":".",
+                    "WebDriverSession":".",
+                    "WebDriverElement":".",
+                    "WebDriverEnvironment":".",
+                    "WebDriverSimpleItem":"."
+                }
+            }
         }
+    ],
 
-    },
-
-    "autoload": {
-        "psr-0": {
-            "Codeception": "src"
+    "autoload":{
+        "psr-0":{
+            "Codeception":"src"
         }
     },
-    "bin": ["codecept"]
+    "bin":["codecept"]
 }
