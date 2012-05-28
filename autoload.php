@@ -19,6 +19,6 @@ if (stream_resolve_include_path('PHPUnit/Autoload.php') ) {
 
 if (stream_resolve_include_path('mink/autoload.php')) {
     include_once 'mink/autoload.php';
-} elseif (file_exists('vendor/.composer/autoload.php') && !class_exists('Composer\Autoload\ClassLoader')) {
-    include_once 'vendor/.composer/autoload.php';
+} elseif (file_exists('vendor/autoload.php') && !class_exists('Composer\Autoload\ClassLoader')) {
+    include_once 'vendor/autoload.php';
 }
