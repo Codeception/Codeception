@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-05-08</date>
-  <time>11:44:24</time>
+  <date>2012-05-10</date>
+  <time>15:48:34</time>
   <version>
     <release>1.0.8</release>
     <api>1.0.8</api>
@@ -26,7 +26,7 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="b62f0d49b28925cfbc26c8f7ee944ac7"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
-      <file name="autoload.php" role="php" md5sum="2cea26b6b1ab6ec977314736444bdc54"/>
+      <file name="autoload.php" role="php" md5sum="d52fc72287b9095923c71f4cf8fa6d19"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="a497f943cf8e766005ff3b4f5f3c08b5">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
@@ -40,7 +40,7 @@
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
       <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
-      <file name="composer.json" role="php" md5sum="3617cd8e0a26d088bf891ef5846c8412"/>
+      <file name="composer.json" role="php" md5sum="2c9bcb3641fe1bc2f8a47b44ee7c71e7"/>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <dir name="plugins">
@@ -61,7 +61,7 @@
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
           <file name="Codecept.php" role="php" md5sum="0a8ea4a3907d4b1da9c8aa693d4d77ae"/>
           <dir name="Command">
-            <file name="Base.php" role="php" md5sum="20c127d8045203332c72c36a045035c2"/>
+            <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>

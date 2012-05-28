@@ -19,6 +19,7 @@
  * * browser *required* - browser that would be launched
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
+ * * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
  *
  * ## Public Properties
  *
@@ -30,8 +31,9 @@ namespace Codeception\Module;
 class Selenium2 extends \Codeception\Util\MinkJS
 {
     protected $requiredFields = array('browser', 'url');
+    protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0);
 
-    protected $config = array('host' => '127.0.0.1', 'port' => '4444');
+
     public function _cleanup() {
         $driver = new \Behat\Mink\Driver\Selenium2Driver(
             $this->config['browser'],
@@ -48,6 +50,9 @@ class Selenium2 extends \Codeception\Util\MinkJS
         $this->session->stop();
     }
 
+    public function _afterStep(\Codeception\Step $step) {
+        if ($this->config['delay']) usleep($this->config['delay'] * 1000);
+    }
 
     // please, add more custom Selenium functions here
 
