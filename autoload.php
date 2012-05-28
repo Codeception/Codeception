@@ -21,4 +21,10 @@ if (stream_resolve_include_path('mink/autoload.php')) {
     include_once 'mink/autoload.php';
 } elseif (file_exists('vendor/autoload.php') && !class_exists('Composer\Autoload\ClassLoader')) {
     include_once 'vendor/autoload.php';
+    // hardcode fix to broken goutte. Fuck this composer and friends!
+    if (!class_exists('Goutte\Client')) {
+        $loader->registerNamespace('Goutte','vendor/fabpot/goutte');
+        $loader->register(true);
+    }
+   
 }
