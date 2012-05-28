@@ -22,12 +22,11 @@
     },
 
     "repositories": {
-        "repositories": [
-            {
-                "type": "vcs",
-                "url": "https://github.com/facebook/php-webdriver"
-            }
-        ]
+        "facebook/webdriver": {
+            "type": "vcs",
+            "url": "facebook/php-webdriver"
+        }
+
     },
 
     "autoload": {
