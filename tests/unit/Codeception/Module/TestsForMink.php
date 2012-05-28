@@ -161,7 +161,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty(data::get('files'));
         $files = data::get('files');
         $this->assertArrayHasKey('avatar', $files);
-        $this->assertEquals('avatar.jpg', $files['avatar']['name']);
     }
 
     public function testFileFieldByLabel()
