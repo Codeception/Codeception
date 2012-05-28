@@ -24,7 +24,7 @@
     "repositories": {
         "facebook/webdriver": {
             "type": "vcs",
-            "url": "facebook/php-webdriver"
+            "url": "https://github.com/facebook/php-webdriver"
         }
 
     },
