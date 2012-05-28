@@ -21,7 +21,8 @@
         "EHER/PHPUnit":">=1.2"
     },
 
-    "repositories":[
+    "repositories": {
+        "webdriver":
         {
             "name":"facebook/php-webdriver",
             "version":"master-dev",
@@ -51,7 +52,7 @@
                 }
             }
         }
-    ],
+    },
 
     "autoload":{
         "psr-0":{
