@@ -192,14 +192,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     public function testSeeWithNonLatinAndSelectors() {
         $this->module->amOnPage('/info');
         $this->module->see('Текст', 'p');
-        $this->module->seeLink('Ссылочка');
-        $this->module->click('Ссылочка');
-    }
-
-    public function testLinksWithNonLatin() {
-        $this->module->amOnPage('/info');
-        $this->module->seeLink('Ссылочка');
-        $this->module->click('Ссылочка');
     }
 
     public function testFieldWithNonLatin() {
