@@ -20,14 +20,6 @@
         "facebook/php-webdriver": "*",
         "EHER/PHPUnit": ">=1.2"
     },
-
-    "repositories": {
-        "behat/mink-deps": {
-            "type": "composer",
-            "url":  "behat.org"
-        }
-    },
-
     "autoload": {
         "psr-0": {
             "Codeception": "src"
