@@ -22,11 +22,12 @@
     },
 
     "repositories": {
-        "behat/mink-deps": {
-            "type": "composer",
-            "url":  "behat.org"
-        }
-
+        "repositories": [
+            {
+                "type": "vcs",
+                "url": "https://github.com/facebook/php-webdriver"
+            }
+        ]
     },
 
     "autoload": {
