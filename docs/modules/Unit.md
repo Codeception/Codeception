@@ -2,14 +2,14 @@
 
 Unit testing module
 
-This is the heart of CodeGuy testing framework.
-By providing unique set of features Unit module makes your tests cleaner, readable, and easier to write.
+This is the heart of the CodeGuy testing framework.
+By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
 
 ## Features
-* Descriptive - simply write what do you test and how do you test.
-* Execution limit - only execute* methods actually execute your code. It's easy to see where tested methods are invoked.
+* Descriptive - simply write what you are testing and how you are testing.
+* Execution limit - only 'execute* methods actually execute your code. It's easy to see where tested methods are invoked.
 * Simple stub definition - create stubbed class with one call. All properties and methods can be passed as callable functions.
-* Dynamic mocking - stubs can be automatically turned to mocks.
+* Dynamic mocking - stubs can be automatically turned into mocks.
 
 
 ## Actions
@@ -18,8 +18,12 @@ By providing unique set of features Unit module makes your tests cleaner, readab
 ### changeProperties
 
 
-Updates selected properties for object passed.
+Updates multiple properties of the selected object.
 Can update even private and protected properties.
+
+Properties to be updated and their values are passed in the second parameter as an array:
+array('theProprrty'     => 'some value',
+     ('anotherProperty' => 'another value')
 
  * param $obj
  * param array $values
@@ -28,7 +32,7 @@ Can update even private and protected properties.
 ### changeProperty
 
 
-Updates property of selected object
+Updates a single property of the selected object
 Can update even private and protected properties.
 
  * param $obj
@@ -39,7 +43,7 @@ Can update even private and protected properties.
 ### dontSeeResultContains
 
 
-Checks the result of last execution doesn't contain a value passed.
+Checks that the result of the last execution doesn't contain a value.
 
  * param $value
 
@@ -47,7 +51,7 @@ Checks the result of last execution doesn't contain a value passed.
 ### dontSeeResultEquals
 
 
-Checks result of last execution not equal to variable passed.
+Checks that the result of the last execution is not equal to a value.
 
  * param $value
 
@@ -71,9 +75,10 @@ $I->seeResultEquals('Davert');
 ?>
 ```
 
-You can use native PHPUnit asserts in executed code. This can be either static methods of PHPUnit_Framework_assert class,
+You can use native PHPUnit asserts in the executed code. 
+These can be either static methods of the 'PHPUnit_Framework_assert' class,
 or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
-You should manually include this file, as this functions may conflict with functions in your code.
+You should manually include this file, as these functions may conflict with functions in your code.
 
 Example:
 
@@ -94,7 +99,7 @@ $I->execute(function() use ($user) {
 ### executeMethod
 
 
-Executes method of an object.
+Executes a method of an object.
 Additional parameters can be provided.
 
 Example:
@@ -120,8 +125,8 @@ $I->executeMethod($user, 'setNameAndAge', 'davert', '30');
 ### executeTestedMethod
 
 
-Executes the method which is tested.
-If method is not static, the class instance should be provided.
+Executes the method which is being tested.
+If the method is not static, the class instance should be provided.
 
 If a method is static 'executeTestedWith' will be called.
 If a method is not static 'executeTestedOn' will be called.
@@ -133,8 +138,8 @@ See those methods for the full reference
 ### executeTestedMethodOn
 
 
-Execute tested method on an object (stub can be passed).
-First argument is an object, rest are supposed to be parameters passed to method.
+Execute The tested method on an object (a stub can be passed).
+First argument is an object, the rest are supposed to be parameters passed to method.
 
 Example:
 
@@ -144,7 +149,7 @@ $I->wantTo('authenticate user');
 $I->testMethod('User.authenticate');
 $user = new User();
 $I->executeTestedMethodOn($user, 'Davert','qwerty');
-// By this line $user->authenticate('Davert',''qwerty') was called.
+// This line $user->authenticate('Davert','qwerty') was called.
 $I->seeResultEquals(true);
 ?>
 ```
@@ -157,16 +162,16 @@ For static methods use 'executeTestedMethodWith'.
 ### executeTestedMethodWith
 
 
-Executes tested static method with parameters provided.
+Executes the tested static method with parameters provided.
 
 ```
 <?php
 $I->testMethod('User::validateName');
 $I->executeTestedMethodWith('davert',true);
-// User::validate('davert', true); was called
+// This line User::validate('davert', true); was called
 ?>
 ```
-For non-static method use 'executeTestedMethodOn'
+For a non-static method use 'executeTestedMethodOn'
 
  * param $params
  * throws \Codeception\Exception\Module
@@ -175,9 +180,9 @@ For non-static method use 'executeTestedMethodOn'
 ### haveFakeClass
 
 
-Adds a stub to internal registry.
-Use this command if you need to convert this stub to mock.
-Without adding stub to registry you can't trace it's method invocations.
+Adds a stub to the internal registry.
+Use this command if you need to convert this stub to a mock.
+Without adding the stub to registry you can't trace it's method invocations.
 
  * param $instance
 
@@ -194,7 +199,7 @@ Alias for haveFakeClass
 ### seeEmptyResult
 
 
-Checks the result of last execution is empty.
+Checks that the result of the last execution is empty.
 
 
 ### seeExceptionThrown
@@ -205,9 +210,9 @@ __not documented__
 ### seeMethodInvoked
 
 
-Checks the method of stub was invoked after the last execution.
-Requires a stub as a first parameter, a method name as second.
-Optionally pass an arguments which are expected for executed method.
+Checks that a method of a stub was invoked after the last execution.
+Requires a stub as the first parameter, the method name as the second.
+Optionally pass the arguments which are expected by the executed method.
 
 Example:
 
@@ -222,7 +227,7 @@ $I->seeMethodInvoked($user, 'save');
 ?>
 ```
 
-This method dynamically creates mock from stub.
+This method dynamically creates a mock from a stub.
 
  * magic
  * see createMocks
@@ -234,9 +239,9 @@ This method dynamically creates mock from stub.
 ### seeMethodInvokedMultipleTimes
 
 
-Checks the method of stub was invoked *only once* after the last execution.
-Requires a stub as a first parameter, a method name as second and expected executions number.
-Optionally pass an arguments which are expected for executed method.
+Checks that a method of a stub was invoked *multiple times* after the last execution.
+Requires a stub as the first parameter, a method name as the second and the expected number of executions.
+Optionally pass the arguments which are expected by the executed method.
 
 Look for 'seeMethodInvoked' to see the example.
 
@@ -251,9 +256,9 @@ Look for 'seeMethodInvoked' to see the example.
 ### seeMethodInvokedOnce
 
 
-Checks the method of stub was invoked *only once* after the last execution.
-Requires a stub as a first parameter, a method name as second.
-Optionally pass an arguments which are expected for executed method.
+Checks that a method of a stub was invoked *only once* after the last execution.
+Requires a stub as the first parameter, a method name as the second.
+Optionally pass the arguments which are expected by the executed method.
 
 Look for 'seeMethodInvoked' to see the example.
 
@@ -267,9 +272,9 @@ Look for 'seeMethodInvoked' to see the example.
 ### seeMethodNotInvoked
 
 
-Checks the method of stub *was not invoked* after the last execution.
-Requires a stub as a first parameter, a method name as second.
-Optionally pass an arguments which are expected for executed method.
+Checks that a method of a stub *was not invoked* after the last execution.
+Requires a stub as the first parameter, a method name as the second.
+Optionally pass the arguments which are expected by the executed method.
 
  * magic
  * see createMocks
@@ -281,7 +286,7 @@ Optionally pass an arguments which are expected for executed method.
 ### seeMethodNotReturns
 
 
-Executes method and checks result is equal to passed value.
+Executes a method and checks that the result is NOT equal to a value.
 Good for testing values taken from getters.
 
 Look for 'seeMethodReturns' for example.
@@ -295,7 +300,7 @@ Look for 'seeMethodReturns' for example.
 ### seeMethodReturns
 
 
-Executes method and checks result is equal to passed value.
+Executes a method and checks that the result is equal to a value.
 Good for testing values taken from getters.
 
 Example:
@@ -317,11 +322,11 @@ $I->seeMethodReturns($user,'getName','davert');
 ### seePropertyEquals
 
 
-Checks property of object equals to value provided.
+Checks that the property of an object equals the value provided.
 Can check even protected or private properties.
 
-Consider testing hidden properties as a bad practice.
-Use it if you have no other ways to test.
+Bear in mind that testing non-public properties is not a good practice.
+Use it only if you have no other way to test it.
 
  * param $object
  * param $property
@@ -331,12 +336,12 @@ Use it if you have no other ways to test.
 ### seePropertyIs
 
 
-Checks property is a passed type.
+Checks that the property is a passed type.
 Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
-Otherwise property will be checked to be an instance of type.
+Otherwise the parameter must be a class and the property must be an instance of that class.
 
-Consider testing hidden properties as a bad practice.
-Use it if you have no other ways to test.
+Bear in mind that testing non-public properties is not a good practice.
+Use it only if you have no other way to test it.
 
  * param $object
  * param $property
@@ -351,7 +356,7 @@ __not documented__
 ### seeResultEquals
 
 
-Asserts that the last result from tested method is equal to value
+Asserts that the last result from the tested method is equal to value
 
  * param $value
 
@@ -359,9 +364,9 @@ Asserts that the last result from tested method is equal to value
 ### seeResultIs
 
 
-Checks result of last execution is of specific type.
+Checks that the result of the last execution is a specific type.
 Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
-Otherwise property will be checked to be an instance of type.
+Otherwise the parameter must be a class and the result must be an instance of that class.
 
 Example:
 
@@ -380,7 +385,7 @@ $I->seeResultIs('User');
 
 Registers a class/method which will be tested.
 When you run 'execute' this method will be invoked.
-Please, not that it also update the feature section of scenario.
+Please, note that it also updates the feature section of the scenario.
 
 For non-static methods:
 

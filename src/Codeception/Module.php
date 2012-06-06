@@ -98,6 +98,11 @@ abstract class Module {
         return isset(\Codeception\SuiteManager::$modules[$name]);
     }
 
+    protected function getModules()
+    {
+        return \Codeception\SuiteManager::$modules;
+    }
+
     protected function getModule($name) {
         if (!$this->hasModule($name)) throw new \Codeception\Exception\Module($this, "Module $name couldn't be connected");
         return \Codeception\SuiteManager::$modules[$name];

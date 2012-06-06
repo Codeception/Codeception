@@ -29,8 +29,8 @@ foreach ($docs as $doc) {
 
     copy($doc->getPathname(), $newfile);    
 
-    $contents = preg_replace('~``` php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
-    $contents = preg_replace('~``` html(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);    
+    $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
+    $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```(.*?)```~ms',"{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
     $contents = "---\nlayout: page\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
