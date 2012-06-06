@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-05-10</date>
-  <time>15:48:34</time>
+  <date>2012-05-29</date>
+  <time>01:16:22</time>
   <version>
-    <release>1.0.8</release>
-    <api>1.0.8</api>
+    <release>1.0.9</release>
+    <api>1.0.9</api>
   </version>
   <stability>
     <release>stable</release>
@@ -26,7 +26,7 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="b62f0d49b28925cfbc26c8f7ee944ac7"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
-      <file name="autoload.php" role="php" md5sum="d52fc72287b9095923c71f4cf8fa6d19"/>
+      <file name="autoload.php" role="php" md5sum="e0fccb410a4e1340fa257a108bbcb0ab"/>
       <file name="codecept" role="script" baseinstalldir="/" md5sum="a497f943cf8e766005ff3b4f5f3c08b5">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
@@ -40,7 +40,7 @@
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
       <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
-      <file name="composer.json" role="php" md5sum="2c9bcb3641fe1bc2f8a47b44ee7c71e7"/>
+      <file name="composer.json" role="php" md5sum="52404e6584ed5e3365f69879f415d7c5"/>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <dir name="plugins">
@@ -55,11 +55,11 @@
           </dir>
         </dir>
       </dir>
-      <file name="readme.md" role="php" md5sum="db205b42bf5308de788020a21a681730"/>
+      <file name="readme.md" role="php" md5sum="516c976dad3bb0b98f77457da0c5d357"/>
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
-          <file name="Codecept.php" role="php" md5sum="0a8ea4a3907d4b1da9c8aa693d4d77ae"/>
+          <file name="Codecept.php" role="php" md5sum="0cf70197e0d71e52049aa4ee8f3260be"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
             <file name="Bootstrap.php" role="php" md5sum="6973da59de17f597eea358015372d9cc"/>
@@ -94,12 +94,14 @@
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="Kohana.php" role="php" md5sum="b2be84337e81f0f8b1c018fd649bf17b"/>
             <file name="PhpBrowser.php" role="php" md5sum="8ad18735225010418104e4537972f2dd"/>
-            <file name="Selenium.php" role="php" md5sum="a421651374a4066e4ac95ce8456600b4"/>
+            <file name="Selenium.php" role="php" md5sum="d41cfd569353f667693a9cd7591e1e2e"/>
+            <file name="Selenium2.php" role="php" md5sum="f1d7bd94c69b763701d7de21fed2e124"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
-            <file name="Unit.php" role="php" md5sum="ee46df675f766380ce3bdc82bd40cb03"/>
+            <file name="Unit.php" role="php" md5sum="5801f0eddfb3a13f94f2937b6821eff2"/>
             <file name="ZF1.php" role="php" md5sum="90006954129bde092eaae3252f70fba6"/>
+            <file name="ZombieJS.php" role="php" md5sum="3fe4c3bfe136b5f8d72f1d41b98b29a0"/>
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
           <dir name="PHPUnit">

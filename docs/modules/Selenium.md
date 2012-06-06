@@ -24,6 +24,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * browser *required* - browser that would be launched
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
+* delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
 
 ## Public Properties
 
