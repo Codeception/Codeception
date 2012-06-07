@@ -6,7 +6,7 @@ abstract class Mink extends \Codeception\Module
     /**
      * @var \Behat\Mink\Session
      */
-    public $session;
+    public $session = null;
 
     public function _before(\Codeception\TestCase $test) {
         // should be done to have request and response not empty
@@ -14,7 +14,7 @@ abstract class Mink extends \Codeception\Module
     }
 
     public function _after(\Codeception\TestCase $test) {
-        $this->session->stop();
+        if ($this->session) $this->session->stop();
     }
 
     /**
