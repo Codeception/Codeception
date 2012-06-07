@@ -19,6 +19,7 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
         $this->module->client = Stub::makeEmpty('\Behat\Mink\Driver\Goutte\Client');
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->is_functional = true;
     }
     
     public function testXmlIsBuilt() {

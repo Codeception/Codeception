@@ -3,6 +3,15 @@
  * Module for testing SOAP WSDL web services.
  * Send requests and check if response matches the pattern.
  *
+ * THis module can be used either with frameworks or PHPBrowser.
+ * It tries to guess the framework is is attached to.
+ * If a endpoint is a full url then it uses PHPBrowser.
+ *
+ * ### Using Inside Framework
+ * Please note, that PHP SoapServer::handle method sends additional headers.
+ * This may trigger warning: "Cannot modify header information"
+ * If you use PHP SoapServer with framework, try to block call to this method in testing environment.
+ *
  * ## Configuration
  *
  * * endpoint *required* - soap wsdl endpoint
@@ -18,7 +27,7 @@ namespace Codeception\Module;
 
 use Codeception\Util\Soap as SoapUtils;
 
-class Soap extends \Codeception\Module
+class SOAP extends \Codeception\Module
 {
 
     protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/');
@@ -27,6 +36,7 @@ class Soap extends \Codeception\Module
      * @var \Symfony\Component\BrowserKit\Client
      */
     public $client = null;
+    public $is_functional = false;
 
     /**
      * @var \DOMDocument
@@ -45,6 +55,7 @@ class Soap extends \Codeception\Module
                 foreach ($this->getModules() as $module) {
                     if ($module instanceof \Codeception\Util\Framework) {
                         $this->client = $module->client;
+                        $this->is_functional = true;
                         break;
                     }
                 }
@@ -111,20 +122,28 @@ class Soap extends \Codeception\Module
      * @param $request
      * @param $body
      */
-    public function sendSoapRequest($request, $body)
+    public function sendSoapRequest($action, $body = "")
     {
-
         $soap_schema_url = $this->config['schema_url'];
         $xml = $this->xmlRequest;
-        $call = $xml->createElement('ns:' . $request);
+        $call = $xml->createElement('ns:' . $action);
+        if ($body) {
+            $bodyXml = SoapUtils::toXml($body);
+            $bodyNode = $xml->importNode($bodyXml->documentElement, true);
+            $call->appendChild($bodyNode);
+        }
         $xmlBody = $xml->getElementsByTagNameNS($soap_schema_url, 'Body')->item(0);
-
-        $bodyXml = SoapUtils::toXml($body);
-
-        $bodyNode = $xml->importNode($bodyXml->documentElement, true);
-        $call->appendChild($bodyNode);
         $xmlBody->appendChild($call);
-        $this->client->request('POST', $this->config['endpoint'], array(), array(), array(), $xml->saveXML());
+        $this->debugSection("Request", $req = $xml->C14N());
+
+        if ($this->is_functional) {
+            $response = $this->processInternalRequest($action, $req);
+        } else {
+            $response = $this->processExternalRequest($action, $req);
+        }
+
+        $this->debugSection("Response", $response);
+        $this->xmlResponse = SoapUtils::toXml($response);
     }
 
     /**
@@ -213,4 +232,41 @@ class Soap extends \Codeception\Module
         $this->xmlRequest = $xml;
         return $xml;
     }
+
+    protected function processRequest($action, $body)
+    {
+        $this->client->request('POST',
+        $this->config['endpoint'],
+        array(), array(),
+        array(
+            "HTTP_Content-Type" => "text/xml; charset=UTF-8",
+            'HTTP_Content-Length' => strlen($body),
+            'HTTP_SOAPAction' => $action,
+            'HTTP_HTTP_HOST' => 'localhost'),
+        $body
+        );
+    }
+
+    protected function processInternalRequest($action, $body)
+    {
+        ob_start();
+        try {
+            $this->client->setServerParameter('HTTP_HOST', 'localhost');
+            $this->processRequest($action, $body);
+        } catch (\ErrorException $e) {
+            if (strpos($e->getMessage(),'Warning: Cannot modify header information')===false) {
+                throw $e;
+            }
+        }
+        $response = ob_get_contents();
+        ob_end_clean();
+        return $response;
+    }
+
+    protected function processExternalRequest($action, $body)
+    {
+        $this->processRequest($action, $body);
+        return $this->client->getResponse()->getContent();
+    }
+
 }

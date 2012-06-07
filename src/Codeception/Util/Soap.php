@@ -35,6 +35,7 @@ class Soap
         }
         if ($xml instanceof \DOMDocument) return $xml;
         $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
         if ($xml instanceof \DOMNode) {
             $xml = $dom->importNode($xml, true);
             $dom->appendChild($xml);
@@ -44,7 +45,7 @@ class Soap
         if (is_array($xml)) {
             return self::arrayToXml($dom, $dom, $xml);
         }
-        $dom->loadXML($xml);
+        if (!empty($xml)) $dom->loadXML($xml);
         return $dom;
     }
 
