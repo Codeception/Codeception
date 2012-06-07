@@ -241,8 +241,7 @@ class SOAP extends \Codeception\Module
         array(
             "HTTP_Content-Type" => "text/xml; charset=UTF-8",
             'HTTP_Content-Length' => strlen($body),
-            'HTTP_SOAPAction' => $action,
-            'HTTP_HTTP_HOST' => 'localhost'),
+            'HTTP_SOAPAction' => $action),
         $body
         );
     }

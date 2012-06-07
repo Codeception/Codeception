@@ -16,41 +16,12 @@
         "php":">=5.3.2",
         "behat/mink":"*",
         "fabpot/goutte":"*",
-        "alexandresalome/php-selenium":"*",
-        "facebook/php-webdriver":"*",
-        "EHER/PHPUnit":">=1.2"
+        "EHER/PHPUnit":">=1.2",
+        "behat/mink-goutte-driver": "*",
+        "behat/mink-selenium-driver": "*",
+        "behat/mink-selenium2-driver": "*",
+        "behat/mink-zombie-driver": "*"
     },
-
-    "repositories": [{
-            "type": "package",
-            "package": {
-                "name":"facebook/php-webdriver",
-                "version": "master-dev",
-                "version_normalized": "9999999-dev",
-                "source": {
-                    "type": "git",
-                    "url": "git://github.com/facebook/php-webdriver.git",
-                    "reference": "master"
-                },
-                "dist": {
-                    "type": "zip",
-                    "url": "https://github.com/facebook/php-webdriver/zipball/master",
-                    "reference": null,
-                    "shasum": null
-                }
-            },
-            "autoload":{
-                "psr-0":{
-                    "WebDriverBase":".",
-                    "WebDriver":".",
-                    "WebDriverContainer":".",
-                    "WebDriverSession":".",
-                    "WebDriverElement":".",
-                    "WebDriverEnvironment":".",
-                    "WebDriverSimpleItem":"."
-                }
-            }
-    }],
 
     "autoload":{
         "psr-0":{
