@@ -73,6 +73,7 @@ class SoapTest extends \PHPUnit_Framework_TestCase
     public function testSeeXmlIncludes() {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
+        $dom->preserveWhiteSpace = false;
         $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?>    <doc> <a a2="2" a1="1" >123</a>  </doc>');
         $this->module->seeSoapResponseIncludes('<a    a2="2"      a1="1" >123</a>');
     }
@@ -81,6 +82,7 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $xml = '<?xml version="1.0" encoding="UTF-8"?> <doc> <a a2="2" a1="1" >123</a>  </doc>';
+        $dom->preserveWhiteSpace = false;
         $dom->loadXML($xml);
         $this->module->seeSoapResponseEquals($xml);
     }
