@@ -33,7 +33,6 @@ $p->compressFiles(Phar::GZ);
 
 echo "copying archive";
 
-copy('codecept.phar', __DIR__.'/../package/codecept');
 copy('codecept.phar', __DIR__.'/../package/codecept.phar');
 
 chdir('..');
