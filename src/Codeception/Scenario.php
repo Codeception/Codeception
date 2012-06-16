@@ -19,6 +19,8 @@ class Scenario {
 
     protected $currentStep = 0;
 
+    protected $finislizers = array();
+
     /**
      * Constructor.
      *
@@ -56,6 +58,11 @@ class Scenario {
             $this->currentStep = $k;
             $this->test->runStep($step);
         }
+
+        foreach ($this->finislizers as $fin) {
+            $fin();
+        }
+
     }
 
     protected function addStep(\Codeception\Step $step)
@@ -86,6 +93,15 @@ class Scenario {
     public function getCurrentStep()
     {
         return $this->currentStep;
+    }
+
+    public function prepare(\Closure $lambda) {
+        $res = $lambda();
+        return $res;
+    }
+
+    public function finilize(\Closure $lambda) {
+        $this->finislizers[] = $lambda;
     }
 
 }
