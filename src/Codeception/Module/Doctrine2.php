@@ -155,7 +155,20 @@ class Doctrine2 extends \Codeception\Module
     }
 
     /**
-     * Flushes changes to database and performs ->findOneBy() call for current repository.
+     * Flushes changes to database executes a query defined by array.
+     * It builds query based on array of parameters.
+     * You can use entity associations to build complex queries.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->seeInRepository('User', array('name' => 'davert'));
+     * $I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
+     * $I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
+     * ?>
+     * ```
+     *
      * Fails if record for given criteria can\'t be found,
      *
      * @param $entity
@@ -181,8 +194,46 @@ class Doctrine2 extends \Codeception\Module
     {
         // we need to store to database...
         self::$em->flush();
-        $res = self::$em->getRepository($entity)->findBy($params);
-        return array('True', (count($res) > 0), "$entity with " . implode(', ', $params));
+        $data = self::$em->getClassMetadata($entity);
+        $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
+        $this->buildAssociationQuery($qb,$entity, 's', $params);
+        $res = $qb->getQuery()->getArrayResult();
+
+        return array('True', (count($res) > 0), "$entity with " . json_encode($params));
     }
 
+    /**
+     * It's Fuckin Recursive!
+     *
+     * @param $qb
+     * @param $assoc
+     * @param $alias
+     * @param $params
+     */
+    protected function buildAssociationQuery($qb, $assoc, $alias, $params)
+    {
+        $data = self::$em->getClassMetadata($assoc);
+        foreach ($params as $key => $val) {
+            if (isset($data->associationMappings)) {
+                if ($map = array_key_exists($key, $data->associationMappings)) {
+                    if (is_array($val)) {
+                        $qb->innerJoin("$alias.$key", $key);
+                        foreach ($val as $column => $v) {
+                            if (is_array($v)) {
+                                $this->buildAssociationQuery($qb, $map['targetEntity'], $column, $v);
+                                continue;
+                            }
+                            $paramname = $key.'__'.$column;
+                            $qb->andWhere("$key.$column = :$paramname");
+                            $qb->setParameter($paramname, $v);
+                        }
+                        continue;
+                    }
+                }
+            }
+            $qb->andWhere("s.$key = :$key");
+            $qb->setParameter($key, $val);
+
+        }
+    }
 }
