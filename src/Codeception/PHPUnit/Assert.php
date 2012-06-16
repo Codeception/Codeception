@@ -16,14 +16,4 @@ class Assert extends \PHPUnit_Framework_Assert
         self::assertThat($haystack, $constraint, $message);
     }
 
-    public static function assertArrayContainsArray($needle, $haystack, $message = '')
-    {
-        $result = array_intersect($needle, $haystack);
-
-        foreach ($haystack as $k)
-    }
-
-
-
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-use Codeception\Util\Stub;
+use Codeception\Util\Stub as Stub;
 use Codeception\Util\Soap as SoapUtil;
 
 class SoapTest extends \PHPUnit_Framework_TestCase
@@ -17,8 +17,9 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\Soap();
         $this->module->_setConfig(array('schema' => 'http://www.w3.org/2001/xml.xsd', 'endpoint' => 'http://codeception.com/api/wsdl'));
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
-        $this->module->client = \Codeception\Util\Connector\Universal();
+        $this->module->client = Stub::makeEmpty('\Codeception\Util\Connector\Universal');
         $this->module->is_functional = true;
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cept'));
     }
     
     public function testXmlIsBuilt() {

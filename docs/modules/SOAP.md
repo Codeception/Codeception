@@ -3,7 +3,7 @@
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
 
-THis module can be used either with frameworks or PHPBrowser.
+This module can be used either with frameworks or PHPBrowser.
 It tries to guess the framework is is attached to.
 If a endpoint is a full url then it uses PHPBrowser.
 
@@ -18,8 +18,8 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 ## Public Properties
 
-* request - last soap request
-* response - last soap response
+* request - last soap request (DOMDocument)
+* response - last soap response (DOMDocument)
 
 
 ## Actions
@@ -83,6 +83,18 @@ Comparison is done by canonicalizing both xml`s.
 
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
 
+Example:
+
+``` php
+<?php
+$I->seeSoapResponseEquals("<?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope><SOAP-ENV:Body><result>1</result></SOAP-ENV:Envelope>");
+
+$dom = new \DOMDocument();
+$dom->load($file);
+$I->seeSoapRequestIncludes($dom);
+
+```
+
  * param $xml
 
 
@@ -92,6 +104,19 @@ Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (i
 Checks XML response includes provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+
+Example:
+
+``` php
+<?php
+$I->seeSoapResponseIncludes("<result>1</result>");
+$I->seeSoapRequestIncludes(\Codeception\Utils\Soap::response()->result->val(1));
+
+$dom = new \DDOMDocument();
+$dom->load('template.xml');
+$I->seeSoapRequestIncludes($dom);
+?>
+```
 
  * param $xml
 
@@ -108,6 +133,9 @@ Example:
 
 ``` php
 $I->sendRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
+$I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
+  ->id->val(1)->parent()
+  ->name->val('notdavert');
 ```
 
  * param $request
