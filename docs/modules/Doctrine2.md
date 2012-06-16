@@ -79,7 +79,20 @@ $I->persistEntity($user, array('name' => 'Miles'));
 ### seeInRepository
 
 
-Flushes changes to database and performs ->findOneBy() call for current repository.
+Flushes changes to database executes a query defined by array.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$I->seeInRepository('User', array('name' => 'davert'));
+$I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
+$I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
+?>
+```
+
 Fails if record for given criteria can\'t be found,
 
  * param $entity
