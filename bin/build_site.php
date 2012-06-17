@@ -32,7 +32,7 @@ foreach ($docs as $doc) {
     $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```(.*?)```~ms',"{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
-    $contents = "---\nlayout: page\ntitle: Codeception - Documentation\n---\n\n".$contents;
+    $contents = "---\nlayout: doc\ntitle: Codeception - Documentation\n---\n\n".$contents;
 
     file_put_contents($newfile, $contents);
 }

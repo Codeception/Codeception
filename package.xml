@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-06-16</date>
-  <time>16:11:47</time>
+  <date>2012-06-17</date>
+  <time>01:30:30</time>
   <version>
     <release>1.0.10</release>
     <api>1.0.10</api>
@@ -39,6 +39,7 @@
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
         <tasks:replace type="pear-config" from="@pear_directory@" to="php_dir"/>
       </file>
+      <file name="codecept.phar" role="php" md5sum="972eeaf147e3d6a0f5d854e754bcc399"/>
       <file name="codeception.yml" role="php" md5sum="3668ec68c3421d1f57644eb2d591cede"/>
       <file name="composer.json" role="php" md5sum="fc4683391acc64e1f23422fdbe9296f3"/>
       <file name="pearfarm.spec" role="php" md5sum="c85d27aaf03efd7e433280597e7f3035"/>
@@ -62,7 +63,7 @@
           <file name="Codecept.php" role="php" md5sum="ef42567b389a5650237065fb4deca122"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
-            <file name="Bootstrap.php" role="php" md5sum="8363ee59f68de22375ce419e3d80b96a"/>
+            <file name="Bootstrap.php" role="php" md5sum="46f0a46a79e47a97624cadecd21943c0"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>
             <file name="GenerateCest.php" role="php" md5sum="00daa7d2e73eeccb30b2fb5f766f62f1"/>
@@ -107,7 +108,7 @@
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
           <dir name="PHPUnit">
-            <file name="Assert.php" role="php" md5sum="1ffd3b3fdf5160fdeb3b69c53f4ff3ee"/>
+            <file name="Assert.php" role="php" md5sum="5d7615ce8579e680fc7615d37c01870b"/>
             <dir name="Constraint">
               <file name="Page.php" role="php" md5sum="73719880d3993ef9815f2c6ac244614d"/>
             </dir>
