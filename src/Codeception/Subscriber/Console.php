@@ -32,7 +32,7 @@ class Console implements EventSubscriberInterface
     }
 
     // triggered for scenario based tests: cept, cest
-    public function beforeTest(\Codeception\Event\Test $e)
+    public function before(\Codeception\Event\Test $e)
     {
         if ($this->silent) return;
         $test = $e->getTest();
@@ -211,7 +211,7 @@ class Console implements EventSubscriberInterface
         return array(
             'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
-            'test.before' => 'beforeTest',
+            'test.before' => 'before',
             'test.after' => 'afterTest',
             'test.start' => 'startTest',
             'test.end' => 'endTest',

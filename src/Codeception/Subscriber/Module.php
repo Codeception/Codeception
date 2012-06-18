@@ -10,7 +10,7 @@ class Module implements EventSubscriberInterface {
             $module->_before($e->getTest());
         }
     }
-
+    
     public function after(\Codeception\Event\Test $e) {
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_after($e->getTest());
@@ -21,6 +21,7 @@ class Module implements EventSubscriberInterface {
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_failed($e->getTest(), $e->getFail());
         }
+        $this->after(new \Codeception\Event\Test($e->getTest()));
     }
 
     public function beforeStep(\Codeception\Event\Step $e) {
@@ -43,10 +44,7 @@ class Module implements EventSubscriberInterface {
             'test.after' => 'after',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'test.fail' => 'failed'
+            'test.fail' => 'failed',
         );
     }
-
-
-
 }

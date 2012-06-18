@@ -47,6 +47,10 @@ class SOAP extends \Codeception\Module
      */
     public $xmlResponse = null;
 
+    public function _initialize() {
+
+    }
+
     public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
@@ -64,7 +68,7 @@ class SOAP extends \Codeception\Module
                     throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For Soap testing via HTTP please enable PhpBrowser module");
                 $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
             }
-            if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module, or Framework module which shares FrameworkInterface");
+            if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
         }
 
         $this->buildRequest();
@@ -113,6 +117,8 @@ class SOAP extends \Codeception\Module
      * Requires of api function name and parameters.
      * Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
      *
+     * You are allowed to execute as much requests as you need inside test. But keep in mind that request xml is cleaned after each call.
+     *
      * Example:
      *
      * ``` php
@@ -135,6 +141,7 @@ class SOAP extends \Codeception\Module
             $bodyNode = $xml->importNode($bodyXml->documentElement, true);
             $call->appendChild($bodyNode);
         }
+
         $xmlBody = $xml->getElementsByTagNameNS($soap_schema_url, 'Body')->item(0);
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
@@ -147,6 +154,7 @@ class SOAP extends \Codeception\Module
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
+        $this->buildRequest();
     }
 
     /**
@@ -230,6 +238,12 @@ class SOAP extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertNotContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
     }
 
+    public function seeSoapResponseContainsStructure($xml) {
+        $xml = $this->canonicalize($xml);
+
+        // TODO: Implement
+    }
+
     protected function getSchema()
     {
         return $this->config['schema'];
@@ -238,7 +252,6 @@ class SOAP extends \Codeception\Module
     protected function canonicalize($xml)
     {
         $xml = SoapUtils::toXml($xml)->C14N();
-        $this->debug($xml);
         return $xml;
     }
 
@@ -281,7 +294,9 @@ class SOAP extends \Codeception\Module
             $this->client->setServerParameter('HTTP_HOST', 'localhost');
             $this->processRequest($action, $body);
         } catch (\ErrorException $e) {
+            // Zend_Soap outputs warning as an exception
             if (strpos($e->getMessage(),'Warning: Cannot modify header information')===false) {
+                ob_end_clean();
                 throw $e;
             }
         }
