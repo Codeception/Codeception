@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-06-17</date>
-  <time>01:30:30</time>
+  <date>2012-06-18</date>
+  <time>02:32:54</time>
   <version>
     <release>1.0.10</release>
     <api>1.0.10</api>
@@ -146,7 +146,7 @@
             <file name="Module.php" role="php" md5sum="f7ea665c5eda4f6ec2951c4b84488434"/>
           </dir>
           <file name="SuiteManager.php" role="php" md5sum="399adf4e54614ea8e19ae6aebd9a398b"/>
-          <file name="TestCase.php" role="php" md5sum="7719eaa01fe51af4e90e4ce851667041"/>
+          <file name="TestCase.php" role="php" md5sum="1fe8ec1db3ec0d8519a880ee456edcb4"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
             <file name="Cest.php" role="php" md5sum="5ad717a8386ec084413b3bda5107c57e"/>

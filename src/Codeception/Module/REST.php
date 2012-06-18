@@ -36,8 +36,7 @@ class REST extends \Codeception\Module
     public $headers = array();
     public $params = array();
     public $response = "";
-
-
+    
     public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
@@ -57,6 +56,11 @@ class REST extends \Codeception\Module
             }
             if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for REST requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
         }
+
+        $this->headers = array();
+        $this->params = array();
+        $this->response = "";
+
     }
 
     /**

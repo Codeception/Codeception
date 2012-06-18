@@ -31,10 +31,10 @@ class Doctrine2 extends \Codeception\Module
      * @var \Doctrine\ORM\EntityManager
      */
     public static $em = null;
-
+    
     public function _before(\Codeception\TestCase $test)
     {
-        // trying to connect to Symfony2 to get event manager
+        // trying to connect to Symfony2 and get event manager
         if (!self::$em && $this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
                 $kernel = $this->getModule('Symfony2')->kernel;
@@ -49,7 +49,7 @@ class Doctrine2 extends \Codeception\Module
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
-        if (! self::$em instanceof \Doctrine\ORM\EntityManager) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
+        if (!self::$em instanceof \Doctrine\ORM\EntityManager) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
                     "Entity Manager was not properly set.\n" .
                     "You can use your bootstrap file to assign the EntityManager:\n\n" .
                     '\Codeception\Module\Doctrine2::$em = $em');
@@ -67,8 +67,14 @@ class Doctrine2 extends \Codeception\Module
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
-        if ($this->config['cleanup']) self::$em->getConnection()->rollback();
+        if ($this->config['cleanup']) {
+            self::$em->getConnection()->rollback();
+        }
+        $this->clean();
+    }
 
+    protected function clean()
+    {
         $em = self::$em;
         $reflectedEm = new \ReflectionClass($em);
         $property = $reflectedEm->getProperty('repositories');
@@ -197,6 +203,7 @@ class Doctrine2 extends \Codeception\Module
         $data = self::$em->getClassMetadata($entity);
         $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
         $this->buildAssociationQuery($qb,$entity, 's', $params);
+        $this->debug($qb->getDQL());
         $res = $qb->getQuery()->getArrayResult();
 
         return array('True', (count($res) > 0), "$entity with " . json_encode($params));
