@@ -47,10 +47,6 @@ class SOAP extends \Codeception\Module
      */
     public $xmlResponse = null;
 
-    public function _initialize() {
-
-    }
-
     public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
@@ -117,7 +113,7 @@ class SOAP extends \Codeception\Module
      * Requires of api function name and parameters.
      * Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
      *
-     * You are allowed to execute as much requests as you need inside test. But keep in mind that request xml is cleaned after each call.
+     * You are allowed to execute as much requests as you need inside test.
      *
      * Example:
      *
@@ -154,7 +150,6 @@ class SOAP extends \Codeception\Module
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
-        $this->buildRequest();
     }
 
     /**
