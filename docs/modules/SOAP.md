@@ -153,7 +153,7 @@ Submits request to endpoint.
 Requires of api function name and parameters.
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
 
-You are allowed to execute as much requests as you need inside test. But keep in mind that request xml is cleaned after each call.
+You are allowed to execute as much requests as you need inside test.
 
 Example:
 
