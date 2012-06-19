@@ -15,4 +15,5 @@ class ScenarioCest
             ->seeMethodInvoked($test,'runStep')
             ->seePropertyEquals($scenario, 'currentStep', 1);
     }
+
 }
