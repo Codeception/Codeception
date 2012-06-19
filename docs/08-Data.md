@@ -2,11 +2,39 @@
 
 Tests should not affect each other. That's a rule. When tests interact with databases they may change data inside them. This leads to data inconsistency. A test may try to insert a record that is already inserted, or retrieve a deleted record. To avoid test failures, the database should be brought to it's initial state. Codeception has different methods and approaches to get your data cleaned.
 
-## Cleanup
-
 This chapter summarizes all of the notices on clean ups from previous chapters and suggests the best strategies to choose data storage backends.
 
 When we choose to clean up a database, we should make this cleaning as fast as possible. Tests should always run fast. Rebuilding the database from scratch is not the best way, but might be the only one. In any case, you should use a special test database for testing. Do not ever test on a development or production database!
+
+## Manual Cleanup
+
+You could possibly create records at the begining of test and delete them afterwards. This is cool option if you don't have shared data between tests.
+
+Use following hooks to execute any code at the beginning and the end of test (new in 1.0.11).
+
+``` php
+<?php
+$user = $scenario->prepare(function() {
+    $user = new User();
+    $user->name('davert');
+    $user->save();
+    return $user;
+});
+
+$I = new WebGuy($scenario);
+$I->amOnPage('/admin/users');
+$I->see('User: '. $user->name);
+
+$scenario->finalize(function() use ($user) {
+    $user->delete();
+});
+
+```
+
+We don't recommend using `$scenario->prepare`, `$scenario->finialize` too often, as they make your test less readable. Consider moving fixtures to bootsrtap file and using aoutmatical cleanup.
+
+
+## Automatical Cleanup
 
 Codeception has a Db module, which takes on most of the tasks of database interaction. By default it will try to repopulate the database from a dump and clean it up after each test. This module expects a database dump in SQL format. It's already prepared for configuration in codeception.yml
 

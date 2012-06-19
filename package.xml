@@ -11,10 +11,10 @@
     <active>yes</active>
   </lead>
   <date>2012-06-19</date>
-  <time>04:41:12</time>
+  <time>12:09:50</time>
   <version>
-    <release>1.0.10</release>
-    <api>1.0.10</api>
+    <release>1.0.11</release>
+    <api>1.0.11</api>
   </version>
   <stability>
     <release>stable</release>
@@ -60,7 +60,7 @@
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
-          <file name="Codecept.php" role="php" md5sum="ef42567b389a5650237065fb4deca122"/>
+          <file name="Codecept.php" role="php" md5sum="947febf8c1804318b396f4ca4d753ec2"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
             <file name="Bootstrap.php" role="php" md5sum="46f0a46a79e47a97624cadecd21943c0"/>
@@ -98,7 +98,7 @@
             <file name="REST.php" role="php" md5sum="b4c9861abbdf6ff8a036cc7b2b34e9d9"/>
             <file name="Selenium.php" role="php" md5sum="d41cfd569353f667693a9cd7591e1e2e"/>
             <file name="Selenium2.php" role="php" md5sum="f1d7bd94c69b763701d7de21fed2e124"/>
-            <file name="Soap.php" role="php" md5sum="fe847c410d09f85011527ca44b4f22be"/>
+            <file name="Soap.php" role="php" md5sum="8186e5afc948bc7225523e3961eda4eb"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
