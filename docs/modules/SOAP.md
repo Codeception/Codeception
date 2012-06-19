@@ -75,6 +75,30 @@ Will produce header:
  * param array $params
 
 
+### seeSoapResponseContainsStructure
+
+
+Checks XML response contains provided structure.
+Response elements will be compared with XML provided.
+Only nodeNames are checked to see elements match.
+
+Example:
+
+``` php
+<?php
+
+$I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
+$I->seeSoapResponseContainsStructure("<query><name></name></query>");
+?>
+```
+
+Use this method to check XML of valid structure is returned.
+This method doesn't use schema for validation.
+This method dosn't require whole response XML to match the structure.
+
+ * param $xml
+
+
 ### seeSoapResponseEquals
 
 
@@ -128,6 +152,8 @@ Submits request to endpoint.
 
 Requires of api function name and parameters.
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
+
+You are allowed to execute as much requests as you need inside test. But keep in mind that request xml is cleaned after each call.
 
 Example:
 
