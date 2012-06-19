@@ -238,10 +238,59 @@ class SOAP extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertNotContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
     }
 
+    /**
+     * Checks XML response contains provided structure.
+     * Response elements will be compared with XML provided.
+     * Only nodeNames are checked to see elements match.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     *
+     * $I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
+     * $I->seeSoapResponseContainsStructure("<query><name></name></query>");
+     * ?>
+     * ```
+     *
+     * Use this method to check XML of valid structure is returned.
+     * This method doesn't use schema for validation.
+     * This method dosn't require whole response XML to match the structure.
+     *
+     * @param $xml
+     */
     public function seeSoapResponseContainsStructure($xml) {
-        $xml = $this->canonicalize($xml);
+        $xml = SoapUtils::toXml($xml);
+        $this->debugSection("Structure", $xml->saveXML());
+        $root = $xml->firstChild;
 
-        // TODO: Implement
+        $this->debugSection("Structure Root", $root->nodeName);
+
+        $els = $this->xmlResponse->getElementsByTagName($root->nodeName);
+
+        if (empty($els)) return \PHPUnit_Framework_Assert::fail("Element {$root->nodeName} not found in response");
+
+        $matches = false;
+        foreach ($els as $node) {
+            $matches |= $this->structureMatches($root, $node);
+        }
+        \PHPUnit_Framework_Assert::assertTrue((bool)$matches, "this structure is in response");
+
+    }
+
+    protected function structureMatches($schema, $xml)
+    {
+        foreach ($schema->childNodes as $node1) {
+            $matched = false;
+            foreach ($xml->childNodes as $node2) {
+                if ($node1->nodeName == $node2->nodeName) {
+                    $matched = $this->structureMatches($node1, $node2);
+                    if ($matched) break;
+                }
+            }
+            if (!$matched) return false;
+        }
+        return true;
     }
 
     protected function getSchema()
