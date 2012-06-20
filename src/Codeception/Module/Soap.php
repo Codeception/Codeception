@@ -139,6 +139,12 @@ class SOAP extends \Codeception\Module
         }
 
         $xmlBody = $xml->getElementsByTagNameNS($soap_schema_url, 'Body')->item(0);
+
+        // cleanup if body already set
+        foreach ($xmlBody->childNodes as $node) {
+            $xmlBody->removeChild($node);
+        }
+
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
