@@ -77,7 +77,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
-        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\nr// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
 
 //        file_put_contents('tests/unit/SampleSpec.php', "<?php\n\$I = new CodeGuy(\$scenario);\n\$I->wantTo('test a code specification');");
 //        file_put_contents('tests/functional/SampleSpec.php', "<?php\n\$I = new TestGuy(\$scenario);\n\$I->wantTo('test an integration feature');");
