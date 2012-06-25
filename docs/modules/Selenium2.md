@@ -1,30 +1,5 @@
 # Selenium2 Module
 
-Uses Mink to manipulate Selenium2 WebDriver
-
-Note that all method take CSS selectors to fetch elements.
-
-On test failure the browser window screenshot will be saved to log directory
-
-## Installation
-
-Download Selenium2 WebDriver from http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2
-Launch the daemon: ```java -jar selenium-server-standalone-2.xx.xxx.jar```
-
-Don't forget to turn on Db repopulation if you are using database.
-
-## Configuration
-
-* url *required* - start url for your app
-* browser *required* - browser that would be launched
-* host  - Selenium server host (localhost by default)
-* port - Selenium server port (4444 by default)
-* delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
-
-## Public Properties
-
-* session - contains Mink Session
-
 ## Actions
 
 

@@ -1,27 +1,5 @@
 # SOAP Module
 
-Module for testing SOAP WSDL web services.
-Send requests and check if response matches the pattern.
-
-This module can be used either with frameworks or PHPBrowser.
-It tries to guess the framework is is attached to.
-If a endpoint is a full url then it uses PHPBrowser.
-
-### Using Inside Framework
-Please note, that PHP SoapServer::handle method sends additional headers.
-This may trigger warning: "Cannot modify header information"
-If you use PHP SoapServer with framework, try to block call to this method in testing environment.
-
-## Configuration
-
-* endpoint *required* - soap wsdl endpoint
-
-## Public Properties
-
-* request - last soap request (DOMDocument)
-* response - last soap response (DOMDocument)
-
-
 ## Actions
 
 
@@ -73,6 +51,14 @@ Will produce header:
 
  * param $header
  * param array $params
+
+
+### seeResponseCodeIs
+
+
+Checks response code from server.
+
+ * param $code
 
 
 ### seeSoapResponseContainsStructure

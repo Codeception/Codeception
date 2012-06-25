@@ -1,22 +1,5 @@
 # SocialEngine Module
 
-This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
-
-Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
-
-## Config
-
-* host *required* - a host in which your application is registered, according to your license.
-
-## API
-
-* client - BrowserKit client
-* bootstrap - current bootstrap file.
-
-
-Module is created by [Artem Kovradin](http://tvorzasp.com)
-
-
 ## Actions
 
 

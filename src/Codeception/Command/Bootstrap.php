@@ -127,14 +127,14 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
             ),
         );
 
-        if ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') and file_exists('codecept.phar') and (!file_exists('codecept.bat'))) {
-            file_put_contents('codecept.bat','
-            @echo off
-            if "%PHPBIN%" == "" set PHPBIN=@php_bin@
-            "%PHPBIN%" "codecept.phar" %*
-            ');
-            $output->writeln('batch file was created added');
-        }
+//        if ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') and file_exists('codecept.phar') and (!file_exists('codecept.bat'))) {
+//            file_put_contents('codecept.bat','
+//            @echo off
+//            if "%PHPBIN%" == "" set PHPBIN=@php_bin@
+//            "%PHPBIN%" "codecept.phar" %*
+//            ');
+//            $output->writeln('batch file was created added');
+//        }
 
         $str = $firstline;
         $str .= "# suite for acceptance tests.\n";
