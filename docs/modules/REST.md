@@ -1,25 +1,5 @@
 # REST Module
 
-Module for testing REST WebService.
-
-This module can be used either with frameworks or PHPBrowser.
-It tries to guess the framework is is attached to.
-
-Whether framework is used it operates via standard framework modules.
-Otherwise sends raw HTTP requests to url via PHPBrowser.
-
-## Configuration
-
-* url *optional* - the url of api
-
-## Public Properties
-
-* headers - array of headers going to be sent.
-* params - array of sent data
-* response - last response (string)
-
-
-
 ## Actions
 
 

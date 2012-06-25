@@ -1,51 +1,5 @@
 # ZF1 Module
 
-This module allows you to run tests inside Zend Framework.
-It acts just like ControllerTestCase, but with usage of Codeception syntax.
-Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
-
-It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
-and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
-
-## Config
-
-* env  - environment used for testing ('testing' by default).
-* config - relative path to your application config ('application/configs/application.ini' by default).
-
-## API
-
-* client - BrowserKit client
-* db - current instance of Zend_Db_Adapter
-* bootstrap - current bootstrap file.
-
-## Cleaning up
-
-For Doctrine1 and Doctrine2 all queries are put inside rollback transaction. If you are using one of this ORMs connect their modules to speed up testing.
-
-Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning your database you should either use standard Db module or
-[implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
-
-If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
-Use a generated helper TestHelper. Usse this code inside of it.
-
-``` php
-<?php
-namespace Codeception\Module;
-class TestHelper extends \Codeception\Module {
-     function _before($test) {
-         $this->getModule('ZF1')->db->beginTransaction();
-     }
-
-     function _after($test) {
-         $this->getModule('ZF1')->db->rollback();
-     }
-}
-?>
-```
-
-This will make your functional tests run super-fast.
-
-
 ## Actions
 
 
