@@ -3,7 +3,7 @@ Phar::mapPhar();
 
 chdir(__DIR__);
 
-require_once 'phar://codecept.phar/autoload.php';
+require_once 'phar://codecept.phar/vendor/autoload.php';
 
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
