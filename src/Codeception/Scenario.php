@@ -96,7 +96,7 @@ class Scenario {
     }
 
     public function prepare(\Closure $lambda) {
-        $res = $lambda();
+        $res = call_user_func($lambda);
         return $res;
     }
 
