@@ -72,6 +72,7 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
     protected $time = 0;
 
     public function _initialize() {
+        defined('APPLICATION_ENV') || define('APPLICATION_ENV', $this->config['env']);
         defined('APPLICATION_PATH') || define('APPLICATION_PATH', getcwd().DIRECTORY_SEPARATOR.'application');
         defined('LIBRARY_PATH') || define('LIBRARY_PATH', getcwd().DIRECTORY_SEPARATOR.'library');
 
@@ -104,7 +105,10 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
         $_GET     = array();
         $_POST    = array();
         $_COOKIE  = array();
-        $this->bootstrap->getBootstrap()->getResource('frontcontroller')->resetInstance();
+        $fc = $this->bootstrap->getBootstrap()->getResource('frontcontroller');
+        if ($fc) {
+            $fc->resetInstance();
+        }
         \Zend_Layout::resetMvcInstance();
         \Zend_Controller_Action_HelperBroker::resetHelpers();
         \Zend_Session::$_unitTestEnabled = true;
