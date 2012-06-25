@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-06-19</date>
-  <time>12:41:46</time>
+  <date>2012-06-20</date>
+  <time>14:04:03</time>
   <version>
     <release>1.0.11</release>
     <api>1.0.11</api>
@@ -63,7 +63,7 @@
           <file name="Codecept.php" role="php" md5sum="947febf8c1804318b396f4ca4d753ec2"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
-            <file name="Bootstrap.php" role="php" md5sum="46f0a46a79e47a97624cadecd21943c0"/>
+            <file name="Bootstrap.php" role="php" md5sum="6cd3d3115ed5a4322cca77e2ac82ac6d"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>
             <file name="GenerateCest.php" role="php" md5sum="00daa7d2e73eeccb30b2fb5f766f62f1"/>
@@ -95,10 +95,10 @@
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="Kohana.php" role="php" md5sum="b2be84337e81f0f8b1c018fd649bf17b"/>
             <file name="PhpBrowser.php" role="php" md5sum="8cf835bf96eb3465307d35ac55372336"/>
-            <file name="REST.php" role="php" md5sum="b4c9861abbdf6ff8a036cc7b2b34e9d9"/>
+            <file name="REST.php" role="php" md5sum="b6612237cc92a1cd3b78f3fa8fa46de6"/>
             <file name="Selenium.php" role="php" md5sum="d41cfd569353f667693a9cd7591e1e2e"/>
             <file name="Selenium2.php" role="php" md5sum="f1d7bd94c69b763701d7de21fed2e124"/>
-            <file name="Soap.php" role="php" md5sum="8186e5afc948bc7225523e3961eda4eb"/>
+            <file name="Soap.php" role="php" md5sum="8b2b52cf132c5abb669e264dde7c5c77"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
