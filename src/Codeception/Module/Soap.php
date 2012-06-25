@@ -279,6 +279,15 @@ class SOAP extends \Codeception\Module
 
     }
 
+    /**
+     * Checks response code from server.
+     *
+     * @param $code
+     */
+    public function seeResponseCodeIs($code) {
+        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatusCode(), "soap response code matches expected");
+    }
+
     protected function structureMatches($schema, $xml)
     {
         foreach ($schema->childNodes as $node1) {

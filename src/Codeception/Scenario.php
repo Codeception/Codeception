@@ -19,7 +19,7 @@ class Scenario {
 
     protected $currentStep = 0;
 
-    protected $finislizers = array();
+    protected $finalizers = array();
 
     /**
      * Constructor.
@@ -59,7 +59,7 @@ class Scenario {
             $this->test->runStep($step);
         }
 
-        foreach ($this->finislizers as $fin) {
+        foreach ($this->finalizers as $fin) {
             $fin();
         }
 
@@ -100,8 +100,8 @@ class Scenario {
         return $res;
     }
 
-    public function finilize(\Closure $lambda) {
-        $this->finislizers[] = $lambda;
+    public function finalize(\Closure $lambda) {
+        $this->finalizers[] = $lambda;
     }
 
 }

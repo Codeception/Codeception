@@ -128,7 +128,7 @@ Sends DELETE request to given uri.
 ### sendGET
 
 
-Sends a GET request to gievn uri
+Sends a GET request to given uri.
 
  * param $url
  * param array $params
