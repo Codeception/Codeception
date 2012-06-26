@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-06-26</date>
-  <time>02:24:55</time>
+  <time>22:31:58</time>
   <version>
     <release>1.0.12</release>
     <api>1.0.12</api>
@@ -96,9 +96,9 @@
             <file name="Kohana.php" role="php" md5sum="b2be84337e81f0f8b1c018fd649bf17b"/>
             <file name="PhpBrowser.php" role="php" md5sum="8cf835bf96eb3465307d35ac55372336"/>
             <file name="REST.php" role="php" md5sum="fad1ba8dd1ae3ee44e1efab9d2c1adf4"/>
+            <file name="SOAP.php" role="php" md5sum="2ad6d17edb4a03d644aa3ee95a338f7c"/>
             <file name="Selenium.php" role="php" md5sum="d41cfd569353f667693a9cd7591e1e2e"/>
             <file name="Selenium2.php" role="php" md5sum="f1d7bd94c69b763701d7de21fed2e124"/>
-            <file name="Soap.php" role="php" md5sum="6f0ea838f1124d140f88084dead27141"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
@@ -128,7 +128,7 @@
                 <file name="step.html.dist" role="php" md5sum="5c98f94cbb5af86a7d789b484d227c73"/>
               </dir>
             </dir>
-            <file name="Runner.php" role="php" md5sum="281c6bb41c8120aafc3ed2a3418241be"/>
+            <file name="Runner.php" role="php" md5sum="e6f8213110ea602e6bae7b74932d083b"/>
           </dir>
           <file name="Scenario.php" role="php" md5sum="8cd6caf1ac56943eeeec2af7712e0ab2"/>
           <file name="Step.php" role="php" md5sum="5a8884ab0ba17200327fb5d5fbb57831"/>
@@ -145,7 +145,7 @@
             <file name="Logger.php" role="php" md5sum="6cb38263ce66b989a7786a675b95f47d"/>
             <file name="Module.php" role="php" md5sum="2c3fd0c72915a3cd398349ea9562f9fc"/>
           </dir>
-          <file name="SuiteManager.php" role="php" md5sum="399adf4e54614ea8e19ae6aebd9a398b"/>
+          <file name="SuiteManager.php" role="php" md5sum="91738acc99f68affd809ac9d4cee8af8"/>
           <file name="TestCase.php" role="php" md5sum="7719eaa01fe51af4e90e4ce851667041"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="d09d254f114ed900918b76f6efab20d3"/>
