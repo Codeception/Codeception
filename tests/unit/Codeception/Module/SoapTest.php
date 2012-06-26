@@ -14,7 +14,7 @@ class SoapTest extends \PHPUnit_Framework_TestCase
     protected $layout;
 
     public function setUp() {
-        $this->module = new \Codeception\Module\Soap();
+        $this->module = new \Codeception\Module\SOAP();
         $this->module->_setConfig(array('schema' => 'http://www.w3.org/2001/xml.xsd', 'endpoint' => 'http://codeception.com/api/wsdl'));
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
         $this->module->client = Stub::makeEmpty('\Codeception\Util\Connector\Universal');
