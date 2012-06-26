@@ -132,7 +132,7 @@ class SuiteManager {
         $runner->setPrinter(new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $options));
 
         $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
-        $runner->doEnhancedRun($this->suite, $result, array_merge(array('convertErrorsToExceptions' => true), $options));
+        $runner->doEnhancedRun($this->suite, $result, $options);
         $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));
 
         return $runner;

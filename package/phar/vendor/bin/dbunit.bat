@@ -1,0 +1,7 @@
+@echo off
+pushd .
+cd %~dp0
+cd "../EHER/PHPUnit/bin"
+set BIN_TARGET=%CD%\dbunit
+popd
+php "%BIN_TARGET%" %*
