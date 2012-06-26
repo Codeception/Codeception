@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-SRC_DIR=`pwd`
-cd `dirname "$0"`
-cd "../Codeception/Codeception"
-BIN_TARGET=`pwd`/codecept
-cd $SRC_DIR
-$BIN_TARGET "$@"
