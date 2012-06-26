@@ -36,8 +36,8 @@ echo "copying archive";
 copy('codecept.phar', __DIR__.'/../package/codecept.phar');
 
 chdir('..');
-//@system('del /s /q /F phar');
-//@system('rd /s /q phar');
-//@system('rm -rf phar');
+@system('del /s /q /F phar');
+@system('rd /s /q phar');
+@system('rm -rf phar');
 
 echo "PHAR build succesfull";
