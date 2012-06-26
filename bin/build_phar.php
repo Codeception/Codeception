@@ -25,6 +25,7 @@ system('php composer.phar install');
 
 $p = new Phar('codecept.phar');
 $p->startBuffering();
+$p->buildFromDirectory(__DIR__.'/../package/phar/vendor','~\.html.dist$~');
 $p->buildFromDirectory(__DIR__.'/../package/phar/vendor','~\.php$~');
 $p->addFile(__DIR__.'/../package/bin','codecept');
 $p->setStub(file_get_contents(__DIR__.'/../package/stub.php'));
