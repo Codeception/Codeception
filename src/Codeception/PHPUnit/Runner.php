@@ -27,9 +27,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	        );
 	    }
 
-	    if (!$arguments['convertErrorsToExceptions']) {
-	        $result->convertErrorsToExceptions(FALSE);
-	    }
+        $result->convertErrorsToExceptions(FALSE);
 
 	    if (!$arguments['convertNoticesToExceptions']) {
 	        \PHPUnit_Framework_Error_Notice::$enabled = FALSE;

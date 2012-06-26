@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+SRC_DIR=`pwd`
+cd `dirname "$0"`
+cd "../EHER/PHPUnit/bin"
+BIN_TARGET=`pwd`/dbunit
+cd $SRC_DIR
+$BIN_TARGET "$@"

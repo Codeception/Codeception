@@ -10,11 +10,11 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-06-20</date>
-  <time>14:04:03</time>
+  <date>2012-06-26</date>
+  <time>02:24:55</time>
   <version>
-    <release>1.0.11</release>
-    <api>1.0.11</api>
+    <release>1.0.12</release>
+    <api>1.0.12</api>
   </version>
   <stability>
     <release>stable</release>
@@ -60,10 +60,10 @@
       <dir name="src">
         <dir name="Codeception">
           <file name="AbstractGuy.php" role="php" md5sum="8f58898c57380876427283cc6ac91255"/>
-          <file name="Codecept.php" role="php" md5sum="947febf8c1804318b396f4ca4d753ec2"/>
+          <file name="Codecept.php" role="php" md5sum="0a619533ba4cc3f3aeb277df60eb5e47"/>
           <dir name="Command">
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
-            <file name="Bootstrap.php" role="php" md5sum="6cd3d3115ed5a4322cca77e2ac82ac6d"/>
+            <file name="Bootstrap.php" role="php" md5sum="90842d511b483e63c14a6c73e9145ba0"/>
             <file name="Build.php" role="php" md5sum="b1331a1ea13fc74ebf5e43537dc63af8"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>
             <file name="GenerateCest.php" role="php" md5sum="00daa7d2e73eeccb30b2fb5f766f62f1"/>
@@ -95,15 +95,15 @@
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="Kohana.php" role="php" md5sum="b2be84337e81f0f8b1c018fd649bf17b"/>
             <file name="PhpBrowser.php" role="php" md5sum="8cf835bf96eb3465307d35ac55372336"/>
-            <file name="REST.php" role="php" md5sum="b6612237cc92a1cd3b78f3fa8fa46de6"/>
+            <file name="REST.php" role="php" md5sum="fad1ba8dd1ae3ee44e1efab9d2c1adf4"/>
             <file name="Selenium.php" role="php" md5sum="d41cfd569353f667693a9cd7591e1e2e"/>
             <file name="Selenium2.php" role="php" md5sum="f1d7bd94c69b763701d7de21fed2e124"/>
-            <file name="Soap.php" role="php" md5sum="8b2b52cf132c5abb669e264dde7c5c77"/>
+            <file name="Soap.php" role="php" md5sum="6f0ea838f1124d140f88084dead27141"/>
             <file name="SocialEngine.php" role="php" md5sum="7920e9ca724667accecb3ed1bf239c98"/>
             <file name="Symfony1.php" role="php" md5sum="84005d3da39a70d8e89ce43b69d81df4"/>
             <file name="Symfony2.php" role="php" md5sum="35d06622ec77d01b81e380caaddabe68"/>
             <file name="Unit.php" role="php" md5sum="5801f0eddfb3a13f94f2937b6821eff2"/>
-            <file name="ZF1.php" role="php" md5sum="90006954129bde092eaae3252f70fba6"/>
+            <file name="ZF1.php" role="php" md5sum="e6868dc0286becfcde58df60a768c47d"/>
             <file name="ZombieJS.php" role="php" md5sum="3fe4c3bfe136b5f8d72f1d41b98b29a0"/>
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
@@ -130,7 +130,7 @@
             </dir>
             <file name="Runner.php" role="php" md5sum="281c6bb41c8120aafc3ed2a3418241be"/>
           </dir>
-          <file name="Scenario.php" role="php" md5sum="518de3c8faf86a58f4092e80da71e8c3"/>
+          <file name="Scenario.php" role="php" md5sum="8cd6caf1ac56943eeeec2af7712e0ab2"/>
           <file name="Step.php" role="php" md5sum="5a8884ab0ba17200327fb5d5fbb57831"/>
           <dir name="Step">
             <file name="Action.php" role="php" md5sum="ce76bcc260b9a0435a1d880edb4bd977"/>
