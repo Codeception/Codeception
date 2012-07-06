@@ -89,6 +89,195 @@ abstract class Module {
 		call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
 	}
 
+    /**
+     * Checks that two variables are equal.
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     * @return mixed
+     */
+    protected function assertEquals($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertEquals($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that a Web page contains text (ignoring HTML tags)
+     *
+     * @param $needle
+     * @param $haystack
+     * @param string $message
+     */
+    protected function assertPageContains($needle, $haystack, $message = '')
+    {
+        return \Codeception\PHPUnit\Assert::assertPageContains($needle, $haystack, $message);
+    }
+
+    /**
+     * Checks that a web page doesn't contain text (ignoring HTML tags)
+     *
+     * @param $needle
+     * @param $haystack
+     * @param string $message
+     * @return mixed
+     */
+    protected function assertPageNotContains($needle, $haystack, $message = '')
+    {
+        return \Codeception\PHPUnit\Assert::assertPageNotContains($needle, $haystack, $message);
+    }
+
+    /**
+     * Checks that two vraibles are not equal
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertNotEquals($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNotEquals($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is greater then actual
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertGreaterThen($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertGreaterThan($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is gretaer or equal then actual
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertGreaterThenOrEqual($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is lower then actual
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     * @return mixed
+     */
+    protected function assertLowerThen($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertLowerThan($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is lower or euqal then actual
+     *
+     * @param $expected
+     * @param $actual
+     * @param string $message
+     * @return mixed
+     */
+    protected function assertLowerThenOrEqual($expected, $actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertLowerThanOrEqual($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that haystack contains needle
+     *
+     * @param $needle
+     * @param $haystack
+     * @param string $message
+     */
+    protected function assertContains($needle, $haystack, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertContains($needle, $haystack, $message);
+    }
+
+    /**
+     * Checks that haystack doesn't contain needle.
+     *
+     * @param $needle
+     * @param $haystack
+     * @param string $message
+     */
+    protected function assertNotContains($needle, $haystack, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNotContains($needle, $haystack, $message);
+    }
+
+    /**
+     * Checks that variable is empty.
+     *
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertEmpty($actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertEmpty($actual, $message);
+    }
+
+    /**
+     * Checks that variable is not empty.
+     *
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertNotEmpty($actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNotEmpty($actual, $message);
+    }
+
+    /**
+     * Checks that variable is NULL
+     *
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertNull($actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNull($actual, $message);
+    }
+
+    /**
+     * Checks that condition is positive.
+     *
+     * @param $condition
+     * @param string $message
+     */
+    protected function assertTrue($condition, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertTrue($condition, $message);
+    }
+
+    /**
+     * Checks that condition is negative.
+     *
+     * @param $condition
+     * @param string $message
+     */
+    protected function assertFalse($condition, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertFalse($condition, $message);
+    }
+
+    /**
+     * Fails the test with message.
+     *
+     * @param $message
+     */
+    protected function fail($message)
+    {
+        return \PHPUnit_Framework_Assert::fail($message);
+    }
+
 	protected function assertNot($arguments) {
 		$this->assert($arguments, true);
 	}
