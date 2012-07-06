@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * Module for testing REST WebService.
  *
@@ -20,8 +22,6 @@
  *
  *
  */
-
-namespace Codeception\Module;
 
 class REST extends \Codeception\Module
 {

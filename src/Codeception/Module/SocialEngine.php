@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
  *
@@ -17,7 +19,6 @@
  * Module is created by [Artem Kovradin](http://tvorzasp.com)
  *
  */
-namespace Codeception\Module;
 
 class SocialEngine extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {

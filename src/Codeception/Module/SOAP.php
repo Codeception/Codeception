@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * Module for testing SOAP WSDL web services.
  * Send requests and check if response matches the pattern.
@@ -22,8 +24,6 @@
  * * response - last soap response (DOMDocument)
  *
  */
-
-namespace Codeception\Module;
 
 use Codeception\Util\Soap as SoapUtils;
 

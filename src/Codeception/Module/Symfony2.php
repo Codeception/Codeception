@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Module;
+use Symfony\Component\Finder\Finder;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
@@ -16,8 +17,6 @@ namespace Codeception\Module;
  * * client - current Crawler instance
  *
  */
-
-use Symfony\Component\Finder\Finder;
 
 class Symfony2 extends \Codeception\Util\Framework
 {

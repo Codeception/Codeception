@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
  * Be default it will cover all database queries into transaction and rollback it afterwards.
@@ -24,7 +26,6 @@
  * * cleanup: true - enable cleanups by covering all queries inside transaction.
  *
  */
-namespace Codeception\Module;
 
 class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
 {
