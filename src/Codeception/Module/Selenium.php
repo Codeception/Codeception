@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
  *
@@ -30,8 +32,6 @@
  *
  * * session - contains Mink Session
  */
-namespace Codeception\Module;
-
 
 class Selenium extends \Codeception\Util\MinkJS
 {

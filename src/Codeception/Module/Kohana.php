@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * This module provides integration with [Kohana](http://kohanaframework.org/) v3.
  * Current status is PRE ALFA=)
@@ -16,7 +18,6 @@
  * Module is created by [Nikita Groshin](nike-17@ya.ru)
  * 
  */
-namespace Codeception\Module;
 
 class Kohana extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface {
 

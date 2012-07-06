@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * This module allows you to run tests inside Zend Framework.
  * It acts just like ControllerTestCase, but with usage of Codeception syntax.
@@ -46,7 +48,6 @@
  * This will make your functional tests run super-fast.
  *
  */
-namespace Codeception\Module;
 
 class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {
