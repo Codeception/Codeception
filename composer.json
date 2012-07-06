@@ -12,6 +12,7 @@
             "homepage":"http://codegyre.com"
         }
     ],
+    "minimum-stability": "dev",
     "require":{
         "php":">=5.3.2",
         "behat/mink": "1.4@stable",
