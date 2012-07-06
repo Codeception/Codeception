@@ -34,16 +34,7 @@ The TestGuy class has its methods defined in modules. Actually, it doesn't conta
 ## Standard Modules
 
 Codeception has many bundled modules which will help you run tests for different purposes and in different environments. The number of modules is not constant -- it's supposed to grow as more frameworks and ORMs are supported.
-
-Let's list all available modules
-
-* Db - refreshes your database after each run. Also can check that the data in the database exists.
-* PhpBrowser - emulates browser with [Goutte PHP Web Scraper](https://github.com/fabpot/Goutte), driven by [Mink](http://mink.behat.org). Commonly used for acceptance tests.
-* Filesystem - module to perform simple assertions in your filesystem. 
-* Doctrine1 - provides additional tools for projects powered with Doctrine ORM
-* Doctrine2 - similar to Doctrine1 ORM, but also has powerful tools to mock Doctrine internal objects.
-* Symfony1 - connector to the Symfony1 framework. Codeception scenarios are run in application's test environment.
-* Unit - module for unit testing. Contains powerful methods for mocking objects, running test methods, asserting, etc.
+See all of them listed in the right of the page at sidebar.
 
 All of these modules are documented. You can review their detailed references on [GitHub](https://github.com/DavertMik/Codeception/tree/master/docs/modules).
 
@@ -59,8 +50,6 @@ Let's say we are going to extend the TestHelper class. By default it's linked wi
 <?php
 namespace Codeception\Module;
 // here you can define custom functions for TestGuy
-
-require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 class TestHelper extends \Codeception\Module
 {
@@ -92,23 +81,42 @@ $I->dontSeeUserExist($user);
 
 Every `see` or `dontSee` function requires at least one assert. Codeception uses PHPUnit assertions.
 
-### Assertions
-You can define asserts by using assertXXX functions, from the `PHPUnit/Framework/Assert/Functions.php` file.
-In case your application conflicts with one of these functions, you can use PHPUnit static methods from the PHPUnit_Framework_Assert class to define asserts.
+You can define asserts by using assertXXX methods of module.
+Codeception uses PHPUnit asserts. So in case you miss some of asserts you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class for more.
 
-```php
+``` php
 <?php
 
 function seeClassExist($class)
 {
-    assertTrue(class_exists($class));
+    $this->assertTrue(class_exists($class));
     // or
     \PHPUnit_Framework_Assert::assertTrue(class_exists($class));
 }
 ?>
 ```
 
-Each module has special `$this->assert` and `$this->assertNot` methods. They both take the same arguments and are useful if you need to define both positive and negative assertions in your module. These functions take an array as a parameter, where the first value of the array is the name of the PHPUnit assert function.
+In your helpers you can use this assertions:
+
+``` php
+<?php
+
+function seeCanCheckEverything($thing)
+{
+    $this->assertTrue(isset($thing), "this thing is set");
+    $this->assertFalse(empty($any), "this thing is not empty");
+    $this->assertNotNull($thing, "this thing is not null");
+    $this->assertContains("world", $thing, "this thing contains 'world'");
+    $this->assertNotContains("bye", $thing, "this thing doesn`t contain 'bye'");
+    $this->assertEquals("hello world", $thing, "this thing is 'Hello world'!");
+    // ...
+}
+?>
+```
+
+Just type `$this->assert` to see all of them.
+
+Also each module has special `$this->assert` and `$this->assertNot` methods. They both take the same arguments and are useful if you need to define both positive and negative assertions in your module. These functions take an array as a parameter, where the first value of the array is the name of the PHPUnit assert function.
 
 ```php
 <?php
