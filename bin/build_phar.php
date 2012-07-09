@@ -16,7 +16,8 @@ file_put_contents('composer.json','
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "*"
-    }
+    },
+    "minimum-stability": "dev"
 }
 ');
 
