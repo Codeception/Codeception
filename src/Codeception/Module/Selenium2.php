@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * Uses Mink to manipulate Selenium2 WebDriver
  *
@@ -8,8 +10,8 @@
  *
  * ## Installation
  *
- * Download Selenium2 WebDriver from http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2
- * Launch the daemon: ```java -jar selenium-server-standalone-2.xx.xxx.jar```
+ * Download Selenium2 [WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+ * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
  * Don't forget to turn on Db repopulation if you are using database.
  *
@@ -25,8 +27,6 @@
  *
  * * session - contains Mink Session
  */
-namespace Codeception\Module;
-
 
 class Selenium2 extends \Codeception\Util\MinkJS
 {
@@ -45,7 +45,11 @@ class Selenium2 extends \Codeception\Util\MinkJS
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
-        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png','');
+        if (!issed($this->session->getDriver()->wdSession)) return;
+        $wd = $this->session->getDriver()->wdSession;
+        $imgData = base64_decode($wd->screenshot());
+        file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png', $imgData);
+
         $this->debug("Screenshot was saved into 'log' dir");
         $this->session->stop();
     }

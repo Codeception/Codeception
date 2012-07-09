@@ -12,9 +12,9 @@ namespace Codeception\Module;
  *
  * ## Installation
  *
- * Take Selenium Server from http://seleniumhq.org/download
+ * [Download Selenium RC Server](http://seleniumhq.org/download)
  *
- * Execute it: java -jar selenium-server-standalone-x.xx.xxx.jar
+ * Execute it: `java -jar selenium-server-standalone-x.xx.xxx.jar`
  *
  * Best used with Firefox browser.
  *

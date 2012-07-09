@@ -1,5 +1,35 @@
 # Selenium Module
 
+Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
+
+Note, all method takes CSS selectors to fetch elements.
+For links, buttons, fields you can use names/values/ids of elements.
+For form fields you can use name of matched label.
+
+Will save a screenshot of browser window to log directory on fail.
+
+## Installation
+
+[Download Selenium RC Server](http://seleniumhq.org/download)
+
+Execute it: `java -jar selenium-server-standalone-x.xx.xxx.jar`
+
+Best used with Firefox browser.
+
+Don't forget to turn on Db repopulation if you are using database.
+
+## Configuration
+
+* url *required* - start url for your app
+* browser *required* - browser that would be launched
+* host  - Selenium server host (localhost by default)
+* port - Selenium server port (4444 by default)
+* delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+
+## Public Properties
+
+* session - contains Mink Session
+
 ## Actions
 
 
