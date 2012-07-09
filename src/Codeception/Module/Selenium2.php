@@ -45,7 +45,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
-        if (!issed($this->session->getDriver()->wdSession)) return;
+        if (!isset($this->session->getDriver()->wdSession)) return;
         $wd = $this->session->getDriver()->wdSession;
         $imgData = base64_decode($wd->screenshot());
         file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png', $imgData);
