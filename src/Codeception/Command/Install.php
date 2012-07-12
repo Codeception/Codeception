@@ -43,18 +43,18 @@ class Install extends \Symfony\Component\Console\Command\Command {
 
         $output->writeln("Installing Symfony Components...");
         $output->write(shell_exec("pear channel-discover pear.symfony.com"));
-        $output->write(shell_exec('pear install symfony2/Finder'));
-        $output->write(shell_exec('pear install symfony2/Process'));
-        $output->write(shell_exec('pear install symfony2/CssSelector'));
-        $output->write(shell_exec('pear install symfony2/DomCrawler'));
-        $output->write(shell_exec('pear install symfony2/BrowserKit'));
+        $output->write(shell_exec('pear install symfony2/Finder-2.0.16'));
+        $output->write(shell_exec('pear install symfony2/Process-2.0.16'));
+        $output->write(shell_exec('pear install symfony2/CssSelector-2.0.16'));
+        $output->write(shell_exec('pear install symfony2/DomCrawler-2.0.16'));
+        $output->write(shell_exec('pear install symfony2/BrowserKit-2.0.16'));
 
         $output->writeln("Installing Mink...");
         $output->write(shell_exec("pear channel-discover pear.behat.org"));
         $output->write(shell_exec("pear install behat/mink"));
 
         $output->writeln('Please check PHPUnit was installed sucessfully. Run the "phpunit" command. If it is not avaible try installing PHPUnit manually');
-        $output->writeln("Installaction complete. Init your new TestGuy suite calling the 'init' command");
+        $output->writeln("Installaction complete. Init your new Codeception suite calling the 'init' command");
     }
 
 
