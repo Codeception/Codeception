@@ -44,10 +44,11 @@ class WebDebug extends \Codeception\Module
 
     protected $config = array('disable' => false);
 
-    private $screenOrderCounter = 0;
+    private $fileOrderCounter = 0;
 
     public function _before(\Codeception\TestCase $test) {
         $this->test = $test;
+        $this->fileOrderCounter = 0;
 
         foreach ($this->getModules() as $module) {
             if ($module instanceof \Codeception\Util\Mink) {
@@ -100,7 +101,7 @@ class WebDebug extends \Codeception\Module
     }
 
 
-    protected function generateFilename($name)
+    protected function generateFilename($name = null)
     {
         $debugDir = \Codeception\Configuration::logDir().'debug';
         if (!is_dir($debugDir)) mkdir($debugDir, 0777);
@@ -110,7 +111,7 @@ class WebDebug extends \Codeception\Module
         $this->fileOrderCounter++;
 
         $caseName = str_replace('Cept.php', '', $this->test->getFileName());
-        $screenName = is_null($name) ? $caseName.' - '.$this->screenOrderCounter : $caseName.' - '.$this->screenOrderCounter.' - '.$name;
+        $screenName = is_null($name) ? $caseName.' - '.$this->fileOrderCounter : $caseName.' - '.$this->fileOrderCounter.' - '.$name;
         return $debugDir . DIRECTORY_SEPARATOR . $screenName;
     }
 

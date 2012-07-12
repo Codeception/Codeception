@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
 {
-
+    private $name;
     protected $testfile = null;
     protected $output;
     protected $debug;
