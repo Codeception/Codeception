@@ -45,17 +45,24 @@ class Selenium2 extends \Codeception\Util\MinkJS
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
-        if (!isset($this->session->getDriver()->wdSession)) return;
-        $wd = $this->session->getDriver()->wdSession;
-        $imgData = base64_decode($wd->screenshot());
-        file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png', $imgData);
-
+        $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
         $this->debug("Screenshot was saved into 'log' dir");
         $this->session->stop();
     }
 
     public function _afterStep(\Codeception\Step $step) {
         if ($this->config['delay']) usleep($this->config['delay'] * 1000);
+    }
+
+    public function _saveScreenshot($filename)
+    {
+        if (!isset($this->session->getDriver()->wdSession)) {
+            $this->debug("Can't make screenshot, no web driver");
+            return;
+        }
+        $wd = $this->session->getDriver()->wdSession;
+        $imgData = base64_decode($wd->screenshot());
+        file_put_contents($filename, $imgData);
     }
 
     // please, add more custom Selenium functions here
