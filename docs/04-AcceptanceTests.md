@@ -285,6 +285,31 @@ modules:
 ### Debugging
 
 The PhpBrowser module can output valuable information while running. Just execute tests with the `--debug` option to see additional output. On each fail, the snapshot of the last shown page will be stored in the __tests/log__ directory. PHPBrowser will store html code, and Selenium will save the screenshot of a page.
+When [WebDebug](http://codeception.com/docs/modules/WebDebug) is attached you can use it's methods to save screenshot of current window in any time.
+
+### Custom Methods
+
+In case you need to implement custom assertions or action you can extend a [Helper](http://codeception.com/docs/03-Modules#helpers) class.
+To perform operations on current browser state you should access [Mink Session](http://mink.behat.org/#control-the-browser-session) object.
+Here is the way you can do this:
+
+``` php
+<?php
+
+class WebHelper extends \Codeception\Module {
+
+    function seeResponseIsPrettyLong($size = 3000) {
+        $session = $this->getModule('PhpBrowser')->session;
+        $content = $session->getPage()->getConetent();
+        $this->assertGreaterThen($size, strlen($content));
+    }
+}
+
+```
+
+We [connected a module](http://codeception.com/docs/03-Modules#connecting-modules), then we retrieved content from Mink session class.
+You should definetely learn Mink to dig deeper.
+And in the end we performed assertion on current content.
 
 ## Conclusion
 

@@ -2,8 +2,6 @@
 namespace Codeception\Module;
 
 /**
- * # Web Debugging Module
- *
  * This is a mini-module with helper actions to debug acceptance tests.
  * Use it with Selenium, Selenium2, ZombieJS, or PhpBrowser module.
  * Whenever none of this modules are connected the exception is thrown.
@@ -62,7 +60,8 @@ class WebDebug extends \Codeception\Module
    	}
 
     /**
-     * Saves screenshot of browser to _logs/debug/
+     * Saves screenshot of browser window and saves to `_logs/debug/`
+     *
      * Optionally you can provide a screenshot name.
      *
      * @param $name
@@ -87,7 +86,7 @@ class WebDebug extends \Codeception\Module
     }
 
     /**
-     * Saves current response content to _logs/debug/
+     * Saves current response content to `_logs/debug/`
      * By default a response is treated as HTML, so all stored files will have html extension
      *
      * Optionally you can provide a dump name.
