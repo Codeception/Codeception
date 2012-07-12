@@ -56,6 +56,12 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/info');
     }
     
+    public function testClickByCss() {
+        $this->module->amOnPage('/info');
+        $this->module->click('form input[type=submit]');
+        $this->module->seeInCurrentUrl('/');
+    }
+
     public function testCheckboxByCss() {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
@@ -227,7 +233,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('miles@davis.com', $post['email']);
 
     }
-    
 
 
 }

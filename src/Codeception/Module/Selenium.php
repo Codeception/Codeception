@@ -51,7 +51,7 @@ class Selenium extends \Codeception\Util\MinkJS
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
-        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.debug.png','');
+        $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
         $this->debug("Screenshot was saved into 'log' dir");
         $this->session->stop();
     }
@@ -59,6 +59,11 @@ class Selenium extends \Codeception\Util\MinkJS
     // please, add more custom Selenium functions here
     public function _afterStep(\Codeception\Step $step) {
         if ($this->config['delay']) usleep($this->config['delay'] * 1000);
+    }
+
+    public function _saveScreenshot($filename)
+    {
+        $this->session->getDriver()->getBrowser()->captureEntirePageScreenshot($filename,'');
     }
 
 }

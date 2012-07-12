@@ -3,6 +3,10 @@ class index {
     function GET($matches) {
         include __DIR__.'/view/index.php';
     }
+
+    function POST($matches) {
+        include __DIR__.'/view/index.php';
+    }
 }
 
 class info {

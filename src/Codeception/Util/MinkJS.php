@@ -4,6 +4,7 @@ namespace Codeception\Util;
 class MinkJS extends Mink
 {
 
+    private $screenOrderCounter = 0;
     /**
      * Double clicks on link or button or any node found by css
      *
@@ -176,5 +177,4 @@ class MinkJS extends Mink
     public function executeJs($jsCode) {
         $this->session->getDriver()->executeScript($jsCode);
     }
-
 }

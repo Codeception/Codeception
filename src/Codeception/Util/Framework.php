@@ -54,12 +54,29 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $this->debugResponse();
             return;
         }
+
         $button = $this->crawler->selectButton($link);
         if (count($button)) {
             $this->submitFormWithButton($button);
             $this->debugResponse();
             return;
         }
+
+        $nodes = $this->crawler->filter($link);
+        if ($nodes->count()) {
+            foreach ($nodes as $node) {
+                if ($node->nodeName == 'a') {
+                    $this->crawler = $this->client->click($nodes->first()->link());
+                    $this->debugResponse();
+                    return;
+                } elseif($node->nodeName == 'input' && $node->getAttribute('type') == 'submit') {
+                    $this->submitFormWithButton($nodes->first());
+                    $this->debugResponse();
+                    return;
+                }
+            }
+        }
+
         \PHPUnit_Framework_Assert::fail("Link or button for '$link' was not found");
     }
 

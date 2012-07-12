@@ -18,7 +18,7 @@
 
 <p>Is that interesting?</p>
 
-<form action="/">
+<form action="/" method="post">
     <input type="checkbox" name="interesting" value="1" checked="checked"/>
     <input type="text" name="rus" value="Верно"/>
     <input type="submit"/>
