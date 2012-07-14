@@ -82,6 +82,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function submitFormWithButton($button)
     {
+        foreach ($button as $node) {
+            if (!$node->getAttribute('name')) {
+                $node->setAttribute('name','codeception_generated_button_name');
+            }
+        }
         $domForm = $button->form();
         $form = $this->getFormFor($button);
 
