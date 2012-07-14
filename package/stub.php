@@ -6,6 +6,15 @@ chdir(__DIR__);
 require_once 'phar://codecept.phar/Codeception/Codeception/autoload.php';
 require_once 'phar://codecept.phar/autoload.php';
 
+function phpunit_autoload() { return array(); };
+function phpunit_mockobject_autoload() { return array(); } ;
+function file_iterator_autoload() { return array(); } ;
+function php_codecoverage_autoload() { return array(); };
+function php_timer_autoload() { return array(); };
+function text_template_autoload() { return array(); };
+function php_tokenstream_autoload() { return array(); };
+
+
 $loader = new UniversalClassLoader();
 $loader->registerPrefix('PHPUnit_','phar://codecept.phar/EHER/PHPUnit/src/phpunit');
 $loader->registerPrefixFallbacks(array(

@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-07-12</date>
-  <time>11:50:30</time>
+  <date>2012-07-13</date>
+  <time>00:17:04</time>
   <version>
     <release>1.0.14</release>
     <api>1.0.14</api>
@@ -68,7 +68,7 @@
             <file name="GenerateCest.php" role="php" md5sum="00daa7d2e73eeccb30b2fb5f766f62f1"/>
             <file name="GenerateScenarios.php" role="php" md5sum="2da620661ec1c67d69dffcfdf8689ef0"/>
             <file name="GenerateSuite.php" role="php" md5sum="30b9acf0ca499878035f9fd59fada7b9"/>
-            <file name="Install.php" role="php" md5sum="efdaecb611a658f1a668a42d3b8e52cd"/>
+            <file name="Install.php" role="php" md5sum="680785a4bd63ac845b1a22525d94b675"/>
             <file name="Run.php" role="php" md5sum="88518a4c4638b42a5633d68edda7baa1"/>
           </dir>
           <file name="Configuration.php" role="php" md5sum="3dade1f9e405aa75d3b930c950ef2a30"/>
