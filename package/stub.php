@@ -6,14 +6,27 @@ chdir(__DIR__);
 require_once 'phar://codecept.phar/Codeception/Codeception/autoload.php';
 require_once 'phar://codecept.phar/autoload.php';
 
-function phpunit_autoload() { return array(); };
-function phpunit_mockobject_autoload() { return array(); } ;
-function file_iterator_autoload() { return array(); } ;
-function php_codecoverage_autoload() { return array(); };
-function php_timer_autoload() { return array(); };
-function text_template_autoload() { return array(); };
-function php_tokenstream_autoload() { return array(); };
-
+if (!function_exists('phpunit_autoload')) {
+    function phpunit_autoload() { return array(); };
+}
+if (!function_exists('phpunit_mockobject_autoload')) {
+    function phpunit_mockobject_autoload() { return array(); } ;
+}
+if (!function_exists('file_iterator_autoload')) {
+    function file_iterator_autoload() { return array(); } ;
+}
+if (!function_exists('php_codecoverage_autoload')) {
+    function php_codecoverage_autoload() { return array(); };
+}
+if (!function_exists('php_timer_autoload')) {
+    function php_timer_autoload() { return array(); };
+}
+if (!function_exists('php_tokenstream_autoload')) {
+    function php_tokenstream_autoload() { return array(); };
+}
+if (!function_exists('text_template_autoload')) {
+    function text_template_autoload() { return array(); };
+}
 
 $loader = new UniversalClassLoader();
 $loader->registerPrefix('PHPUnit_','phar://codecept.phar/EHER/PHPUnit/src/phpunit');

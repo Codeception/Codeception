@@ -216,8 +216,14 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $submit = new \DOMElement('input');
             $submit = $form->current()->appendChild($submit);
             $submit->setAttribute('type','submit'); // for forms with no submits
+            $submit->setAttribute('name','codeception_added_auto_submit');
 
-            $form = $form->filter('input[type=submit]')->form();
+            // Symfony2.1 DOM component requires name for each field.
+            if (!$form->filter('input[type=submit]')->attr('name')) {
+                $form = $form->filter('input[type=submit][name=codeception_added_auto_submit]')->form();
+            } else {
+                $form = $form->filter('input[type=submit]')->form();
+            }
             $this->forms[$action] = $form;
         }
         return $this->forms[$action];
