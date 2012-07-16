@@ -202,17 +202,33 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue($this->arrayHasArray($json, $resp_json), "response JSON matches provided");
     }
 
-    protected function arrayHasArray($needle, $haystack)
-    {
-        $mix = array_intersect($needle, $haystack);
-        if ($mix == $needle) return true;
-        foreach ($haystack as $v) {
-            if (is_array($v)) {
-                $res = $this->arrayHasArray($needle, $v);
-                if ($res) return true;
-            }
-        }
-        return false;
+	/**
+	 * @author nleippe@integr8ted.com
+	 * @author tiger.seo@gmail.com
+	 * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
+	 *
+	 * @param mixed $arr1
+	 * @param mixed $arr2
+	 *
+	 * @return array|bool
+	 */
+	private function arrayIntersectAssocRecursive($arr1, $arr2) {
+		if (! is_array($arr1) || ! is_array($arr2)) {
+			return $arr1 === $arr2 ? $arr1 : null;
+		}
+		$commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
+		$ret        = array();
+		foreach ($commonkeys as $key) {
+			$_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
+			if ($_return !== null) {
+				$ret[$key] = $_return;
+			}
+		}
+		return $ret;
+	}
+
+	protected function arrayHasArray(array $needle, array $haystack) {
+        return $needle == $this->arrayIntersectAssocRecursive($needle, $haystack);
     }
 
     /**
