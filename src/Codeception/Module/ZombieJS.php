@@ -1,4 +1,6 @@
 <?php
+namespace Codeception\Module;
+
 /**
  * * Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
  * *
@@ -36,7 +38,6 @@
  *
  * * session - contains Mink Session
  */
-namespace Codeception\Module;
 
 use \Behat\Mink\Driver as MinkDriver;
 
