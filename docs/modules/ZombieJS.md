@@ -1,5 +1,41 @@
 # ZombieJS Module
 
+* Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
+*
+* Note, all methods take CSS selectors to fetch elements.
+* For links, buttons, fields you can use names/values/ids of elements.
+* For form fields you can use input[name=fieldname] notation.
+*
+* ## Installation
+*
+In order to talk with zombie.js server, you should install and configure zombie.js first:
+
+* Install node.js by following instructions from the official site: http://nodejs.org/.
+* Install npm (node package manager) by following instructions from the http://npmjs.org/.
+* Install zombie.js with npm:
+``` $ npm install -g zombie ```
+After installing npm and zombie.js, you’ll need to add npm libs to your **NODE_PATH**. The easiest way to do this is to add:
+
+``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
+into your **.bashrc**.
+
+Also not that this module requires php5-http PECL extension to parse returned headers properly
+
+Don't forget to turn on Db repopulation if you are using database.
+
+## Configuration
+
+* host - simply defines the host on which zombie.js will be started. It’s **127.0.0.1** by default.
+* port - defines a zombie.js port. Default one is **8124**.
+* node_bin - defines full path to node.js binary. Default one is just **node**
+* script - defines a node.js script to start zombie.js server. If you pass a **null** the default script will be used. Use this option carefully!
+* threshold - amount of milliseconds (1/1000 of second) for the process to wait  (as of \Behat\Mink\Driver\Zombie\Server)
+* autostart - whether zombie.js should be started automatically. Defaults to **true**
+
+## Public Properties
+
+* session - contains Mink Session
+
 ## Actions
 
 
