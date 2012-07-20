@@ -165,4 +165,10 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         return $sth->fetchColumn();
     }
 
+    /**
+     * @return \Codeception\Util\Driver\Db
+     */
+    public function getDriver() {
+        return $this->driver;
+    }
 }
