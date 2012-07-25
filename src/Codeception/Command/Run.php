@@ -19,7 +19,6 @@ class Run extends Base
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new \Symfony\Component\Console\Input\InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
 
-            new \Symfony\Component\Console\Input\InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
             new \Symfony\Component\Console\Input\InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new \Symfony\Component\Console\Input\InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
             new \Symfony\Component\Console\Input\InputOption('xml', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
