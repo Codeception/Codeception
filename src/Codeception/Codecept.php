@@ -47,7 +47,7 @@ class Codecept
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
-        $this->config = \Codeception\Configuration::config();
+        $this->config = \Codeception\Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
