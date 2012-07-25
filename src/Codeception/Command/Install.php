@@ -30,7 +30,7 @@ class Install extends \Symfony\Component\Console\Command\Command {
             $confirmed = $dialog->askConfirmation($output,
                 "This will install all TestGuy dependencies through PEAR installer.\n"
                     . "PHPUnit, Symfony Components, and Mink will be installed.\n"
-                    . "Make shure this script has permission to install PEAR packages.\n"
+                    . "Make sure this script has permission to install PEAR packages.\n"
                     . "Do you want to proceed? (Y/n)");
             if (!$confirmed) return;
         }
