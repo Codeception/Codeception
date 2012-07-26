@@ -44,6 +44,7 @@ namespace Codeception\Module;
  *
  * ## Public Properties
  * * dbh - contains PDO connection.
+ * * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
  *
  */
 
@@ -58,6 +59,10 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
      */
     public $dbh;
 
+    /**
+     * @var
+     */
+
     protected $sql = array();
 
     protected $config = array('populate' => true,
@@ -67,7 +72,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     /**
      * @var \Codeception\Util\Driver\Db
      */
-    protected $driver;
+    public $driver;
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
@@ -165,10 +170,4 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         return $sth->fetchColumn();
     }
 
-    /**
-     * @return \Codeception\Util\Driver\Db
-     */
-    public function getDriver() {
-        return $this->driver;
-    }
 }
