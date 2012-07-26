@@ -64,10 +64,11 @@ class Configuration
 
     public static function logDir()
     {
-        if (!self::$logDir) throw new \ConfigurationException("Path for logs not specified. Please, set log path in global config");
+        $exceptionClass = class_exists('\ConfigurationException') ? '\ConfigurationException' : '\Exception';
+        if (!self::$logDir) throw new $exceptionClass("Path for logs not specified. Please, set log path in global config");
         $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR);
-        if (!is_writable($dir)) throw new \ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
-        return ;
+        if (!is_writable($dir)) throw new $exceptionClass("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        return;
     }
 
     public static function projectDir()
