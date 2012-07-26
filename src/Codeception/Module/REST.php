@@ -256,7 +256,7 @@ class REST extends \Codeception\Module
      * @param $num
      */
     public function seeResponseCodeIs($num) {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
     }
 
 }
