@@ -14,12 +14,17 @@ class Configuration
 
     protected static $dir = null;
 
-    public static function config()
+    public static function config($config = null)
     {
         if (self::$config) return self::$config;
-        $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-        $config = array_merge($distConfig, $config);
+
+        if ($config === null) {
+            $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
+            $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
+            $config = array_merge($distConfig, $config);
+        } else {
+            $config = file_exists($config) ? Yaml::parse($config) : array();
+        }
 
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
         if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
