@@ -214,7 +214,7 @@ class REST extends \Codeception\Module
 	 */
 	private function arrayIntersectAssocRecursive($arr1, $arr2) {
 		if (! is_array($arr1) || ! is_array($arr2)) {
-			return $arr1 === $arr2 ? $arr1 : null;
+			return $arr1 == $arr2 ? $arr1 : null;
 		}
 		$commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
 		$ret        = array();
