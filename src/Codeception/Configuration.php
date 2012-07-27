@@ -14,12 +14,17 @@ class Configuration
 
     protected static $dir = null;
 
-    public static function config()
+    public static function config($config = null)
     {
         if (self::$config) return self::$config;
-        $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-        $config = array_merge($distConfig, $config);
+
+        if ($config === null) {
+            $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
+            $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
+            $config = array_merge($distConfig, $config);
+        } else {
+            $config = file_exists($config) ? Yaml::parse($config) : array();
+        }
 
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
         if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
@@ -59,8 +64,11 @@ class Configuration
 
     public static function logDir()
     {
-        if (!self::$logDir) throw new \ConfigurationException("Path for logs not specified. Please, set log path in global config");
-        return self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR;
+        $exceptionClass = class_exists('\ConfigurationException') ? '\ConfigurationException' : '\Exception';
+        if (!self::$logDir) throw new $exceptionClass("Path for logs not specified. Please, set log path in global config");
+        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
+        if (!is_writable($dir)) throw new $exceptionClass("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        return $dir;
     }
 
     public static function projectDir()
