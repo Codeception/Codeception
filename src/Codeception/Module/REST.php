@@ -113,7 +113,7 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Sends PUT request to gieven uri.
+     * Sends PUT request to given uri.
      *
      * @param $url
      * @param array $params
