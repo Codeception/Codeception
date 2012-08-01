@@ -2,8 +2,7 @@
 
 class PhpTestCest
 {
-
-    public function phpFuncitons(CodeGuy $I) {
+    public function phpFuntions(CodeGuy $I) {
         $I->execute(function() { return strtoupper('hello'); });
         $I->seeResultEquals('HELLO');
     }

@@ -6,6 +6,9 @@ use Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 
+/**
+ * @property \Codeception\PHPUnit\ResultPrinter\ printer
+ */
 class SuiteManager {
 
     public static $modules = array();
@@ -25,6 +28,7 @@ class SuiteManager {
 	protected $debug = false;
     protected $path = '';
     protected $testcaseClass = 'Codeception\TestCase';
+    protected $printer = null;
 
 
     protected $defaults = array(
@@ -46,6 +50,11 @@ class SuiteManager {
         $this->path = $settings['path'];
         $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
+        if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
+            throw new \Codeception\Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
+        }
+        require_once $settings['path'] . $settings['class_name'].'.php';
+
         self::$modules = \Codeception\Configuration::modules($settings);
         self::$actions = \Codeception\Configuration::actions(self::$modules);
     }
@@ -61,8 +70,15 @@ class SuiteManager {
 
     public function addTest($path) {
         // bootstrap invokation is slightly different for PHPUnit
-        if (file_exists($this->settings['bootstrap'])) require_once $this->settings['bootstrap'];
         $this->suite->addTestFile($path);
+        $tests = $this->suite->testAt(0)->tests();
+
+        foreach ($tests as $test) {
+            if ($test instanceof \Codeception\TestCase\Test) {
+                $test->setDispatcher($this->dispatcher);
+                if (file_exists($this->settings['bootstrap'])) $test->setBootstrap($this->settings['bootstrap']);
+            }
+        }
     }
 
     public function addCept($file)
@@ -100,6 +116,7 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
+                $target = $method->name;
                 if (isset($unit->class)) {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
@@ -108,7 +125,7 @@ class SuiteManager {
                 }
 
                 $cestSuite->addTest(new \Codeception\TestCase\Cest($this->dispatcher, array(
-                    'name' => $name.':'.$target,
+                    'name' => $name.'::'.$target,
                     'class' => $unit,
                     'method' => $method->name,
                     'static' => $method->isStatic(),
@@ -123,14 +140,14 @@ class SuiteManager {
 
     protected function relativeName($file)
     {
-        return $name = str_replace($this->path, '', $file);
+        return $name = basename($file);
     }
 
     
     public function run(\PHPUnit_Framework_TestResult $result, $options) {
         $runner = new \Codeception\PHPUnit\Runner();
-        $runner->setPrinter(new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $options));
-
+        if (!$this->printer) $this->printer = new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $options);
+        $runner->setPrinter($this->printer);
         $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
         $runner->doEnhancedRun($this->suite, $result, $options);
         $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));

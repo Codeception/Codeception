@@ -1,0 +1,4 @@
+I WANT TO CHECK CONFIG EXISTS
+
+
+I see file found "codeception.yml"

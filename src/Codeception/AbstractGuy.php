@@ -10,13 +10,11 @@ abstract class AbstractGuy
      */
     protected $scenario;
 
+    protected $running = false;
+
     public function __construct(\Codeception\Scenario $scenario)
     {
         $this->scenario = $scenario;
-
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_cleanup();
-        }
     }
 
     public function wantToTest($text)
@@ -26,8 +24,12 @@ abstract class AbstractGuy
 
     public function wantTo($text)
     {
-        $this->scenario->setFeature(strtolower($text));
         $this->scenario->comment(array('I want to ' . $text));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
+        $this->scenario->setFeature(strtolower($text));
         return $this;
     }
 
@@ -44,57 +46,73 @@ abstract class AbstractGuy
 
     public function testMethod($signature)
     {
+        $this->scenario->condition('testMethod', array($signature));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
+
         if (!$this->scenario->getFeature()) {
             $this->scenario->setFeature("test method $signature()");
         } else {
             $this->scenario->setFeature($this->scenario->getFeature() . " with [[$signature]]");
         }
-        $this->scenario->condition(array_merge(array('testMethod', $signature)));
+
         return $this;
     }
 
     public function expectTo($prediction)
     {
         $this->scenario->comment(array('I expect to ' . $prediction));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
         return $this;
     }
 
     public function expect($prediction)
     {
         $this->scenario->comment(array('I expect ' . $prediction));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
         return $this;
     }
 
     public function amGoingTo($argumentation)
     {
         $this->scenario->comment(array('I am going to ' . $argumentation));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
         return $this;
     }
 
     public function am($role) {
         $this->scenario->comment(array('As a ' . $role));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
         return $this;
     }
 
 
     public function lookForwardTo($role) {
         $this->scenario->comment(array('So that I ' . $role));
-        return $this;
-
-    }
-
-    public function __call($method, $args)
-    {
-        // if (!in_array($method, array_keys(TestGuy::$methods))) throw new \RuntimeException("Action $method not defined");
-
-        if (0 === strpos($method, 'see')) {
-            $this->scenario->assertion(array_merge(array($method), $args));
-        } elseif (0 === strpos($method, 'am')) {
-            $this->scenario->condition(array_merge(array($method), $args));
-        } else {
-            $this->scenario->action(array_merge(array($method), $args));
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
         }
-        return $this;
     }
 
+    public function __call($method, $arguments) {
+        if ($this->scenario->running()) {
+            $class = get_class($this);
+            throw new \RuntimeException("Call to undefined method $class::$method");
+        }
+    }
 }

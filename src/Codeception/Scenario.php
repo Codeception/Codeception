@@ -21,6 +21,8 @@ class Scenario {
 
     protected $finalizers = array();
 
+    protected $running = false;
+
     /**
      * Constructor.
      *
@@ -36,39 +38,44 @@ class Scenario {
 	    $this->feature = $feature;
 	}
 
-    public function condition($arguments)
+    public function condition($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Condition($arguments));
+        return $this->addStep(new \Codeception\Step\Condition($action, $arguments));
     }
 
-    public function action($arguments)
+    public function action($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Action($arguments));
+        return $this->addStep(new \Codeception\Step\Action($action, $arguments));
     }
 
-    public function assertion($arguments)
+    public function assertion($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Assertion($arguments));
+        return $this->addStep(new \Codeception\Step\Assertion($action, $arguments));
     }
 
-    public function run()
+    public function runStep()
     {
-        foreach ($this->steps as $k => $step)
-        {
-            $this->currentStep = $k;
-            $this->test->runStep($step);
+        if (empty($this->steps)) return;
+        $this->currentStep++;
+        $step = $this->lastStep();
+        if (!$step->executed) {
+            $result = $this->test->runStep($step);
+            $step->executed = true;
+            return $result;
         }
+    }
 
-        foreach ($this->finalizers as $fin) {
-            $fin();
-        }
-
+    /**
+     * @return \Codeception\Step
+     */
+    protected function lastStep()
+    {
+        return end($this->steps);
     }
 
     protected function addStep(\Codeception\Step $step)
     {
         $this->steps[] = $step;
-
         return $this->test;
     }
 
@@ -87,12 +94,22 @@ class Scenario {
 	}
 
 	public function comment($comment) {
-		$this->addStep(new \Codeception\Step\Comment($comment));
+		$this->addStep(new \Codeception\Step\Comment("",$comment));
 	}
 
     public function getCurrentStep()
     {
-        return $this->currentStep;
+        return $this->runningStep;
+    }
+    
+    public function run() {
+        $this->running = true;
+        $this->steps = array();
+    }
+
+    public function running()
+    {
+        return $this->running;
     }
 
     public function prepare(\Closure $lambda) {

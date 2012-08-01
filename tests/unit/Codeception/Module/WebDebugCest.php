@@ -11,9 +11,9 @@ class WebDebugCest {
             'test' => Stub::makeEmpty('\Codeception\TestCase\Cept', array('getFileName' => function () { return 'testtest'; })),
             'module' => $selenium ))
         );
-        $I->executeTestedMethodOn($stub)
-            ->seeMethodInvoked($selenium, '_saveScreenshot')
-            ->seeMethodNotInvoked($stub, 'debug');
+        $I->executeTestedMethodOn($stub);
+        $I->seeMethodInvoked($selenium, '_saveScreenshot');
+        $I->seeMethodNotInvoked($stub, 'debug');
     }
 
     public function generateFilename(CodeGuy $I) {

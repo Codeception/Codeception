@@ -47,4 +47,5 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
         $this->lastTestFailed = TRUE;
     }
 
+
 }

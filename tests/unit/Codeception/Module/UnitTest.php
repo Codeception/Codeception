@@ -30,7 +30,7 @@ class UnitTest extends \PHPUnit_Framework_TestCase
 
     protected function makeTest()
     {
-        return Stub::make('\Codeception\TestCase', array('scenario' => Stub::make('\Codeception\Scenario'), 'dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::make('\Codeception\TestCase\Cept', array('scenario' => Stub::make('\Codeception\Scenario'), 'dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
     protected function runSteps()

@@ -319,6 +319,13 @@ abstract class Mink extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
     }
 
+    public function grabTextFromPage($cssOrXPathOrRegex) {
+        $el = $this->session->getPage()->find('css', $cssOrXPathOrRegex);
+        if ($el) {
+            return $el->getText();
+        }
+    }
+
     protected function escape($string)
     {
 
