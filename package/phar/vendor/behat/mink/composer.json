@@ -1,0 +1,44 @@
+{
+    "name":         "behat/mink",
+    "description":  "Web acceptance testing framework for PHP 5.3",
+    "keywords":     ["web", "testing", "browser"],
+    "homepage":     "http://mink.behat.org/",
+    "type":         "library",
+    "license":      "MIT",
+
+    "authors": [
+        {
+            "name":      "Konstantin Kudryashov",
+            "email":     "ever.zet@gmail.com",
+            "homepage":  "http://everzet.com"
+        }
+    ],
+
+    "require": {
+        "php":                   ">=5.3.1",
+        "symfony/css-selector":  ">=2.0.0,<2.2.0-dev"
+    },
+
+    "require-dev": {
+        "behat/mink-goutte-driver":     "*",
+        "behat/mink-sahi-driver":       "*",
+        "behat/mink-selenium-driver":   "*",
+        "behat/mink-selenium2-driver":  "*",
+        "behat/mink-zombie-driver":     "*",
+        "symfony/finder":               ">=2.0.0,<2.2.0-dev"
+    },
+
+    "suggest": {
+        "behat/mink-goutte-driver":     "to enable Goutte support",
+        "behat/mink-sahi-driver":       "to enable Sahi.JS support",
+        "behat/mink-selenium-driver":   "to enable Selenium1 support",
+        "behat/mink-selenium2-driver":  "to enable Selenium2 (webdriver support)",
+        "behat/mink-zombie-driver":     "to enable Zombie.js support"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Behat\\Mink": "src/"
+        }
+    }
+}

@@ -1,0 +1,6 @@
+default:
+  context:
+    parameters:
+      javascript_session:   selenium
+      base_url:             http://test.mink.dev/
+      show_cmd:             open %s
