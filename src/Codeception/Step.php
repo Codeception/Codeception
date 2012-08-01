@@ -14,14 +14,11 @@ abstract class Step
      */
     protected $arguments;
 
-    /**
-     * Constructor.
-     *
-     * @param  array $arguments
-     */
-    public function __construct(array $arguments)
+    public $executed = false;
+
+    public function __construct($action, array $arguments)
     {
-        $this->action = array_shift($arguments);
+        $this->action = $action;
         $this->arguments = $arguments;
     }
 
@@ -71,12 +68,12 @@ abstract class Step
                     return '';
                 case 1:
                     if (is_array($arguments[0])) {
-                        $arguments[0] = stripcslashes(json_encode($arguments[0]));
+                        $arguments[0] = trim(stripcslashes(json_encode($arguments[0])),'[]');
                     }
                     return '"' . $arguments[0] . '"';
                 default:
 
-                    return stripcslashes(json_encode($arguments));
+                    return stripcslashes(trim(json_encode($arguments),'[]'));
 
             }
         }
@@ -84,7 +81,7 @@ abstract class Step
 
     protected function formatClassName($classname)
     {
-        return 'instance of '.$classname;
+        return '\\'.trim($classname,'\\');
     }
 
     abstract public function getName();
@@ -124,7 +121,7 @@ abstract class Step
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
         $text = preg_replace('~\bdont\b~', 'don\'t', $text);
         return strtolower($text);
-
     }
+    
 
 }

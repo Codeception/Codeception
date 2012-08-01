@@ -36,7 +36,11 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         $test = $e->getTest();
-        $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        if ($test->getFeature()) {
+            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        } else {
+            $this->output->put("Running {$test->getFileName()}");
+        }
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
@@ -131,18 +135,15 @@ class Console implements EventSubscriberInterface
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
 
         $feature = $failedTest->getScenario()->getFeature();
-        $this->output->put("\nCouldn't $feature");
-        $this->output->put(" ({$failedTest->getFilename()})\n");
+        if ($feature) $this->output->put("Couldn't $feature in ");
+        $this->output->put($failedTest->getFilename()."\n");
 
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            if (!$this->debug) {
-                $this->output->writeln($failToString);
-                return;
-            }
-            $this->output->writeln($this->printException('not an action', $fail));
+            $this->output->writeln("(!Action is not defined!)");
+            $this->printException($fail);
             return;
         }
         $action = $last->getHumanizedAction();
@@ -152,16 +153,11 @@ class Console implements EventSubscriberInterface
 
         // it's exception
         if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            if ($this->debug) {
-                $this->printException($last->getAction(), $fail);
-            } else {
-                $this->output->writeln('to see the stack trace run this test with --debug option');
-            }
+            $this->errorFail($fail);
             return;
         };
 
         // it's assertion
-
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
             $this->output->writeln("\nGuy unexpectedly managed to $action {$failToString}");
@@ -169,27 +165,35 @@ class Console implements EventSubscriberInterface
             $this->output->writeln("Guy couldn't $action $failToString");
         }
 
-        $this->output->writeln("  $i. (!$last!)");
+        $this->output->writeln("$i. (!$last!)");
         foreach ($trace as $step) {
             $i--;
-            $this->output->writeln("  $i. " . $step);
+            $this->output->writeln("$i. " . $step);
             if (($length - $i - 1) >= $this->traceLength) break;
         }
         $this->output->writeln("");
+        $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
+        $this->printException($fail);
+        $this->output->writeln("");
+
     }
 
-    public function printException($action, \Exception $e)
+    protected function errorFail($fail)
+    {
+        $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
+        $this->printException($fail);
+        $this->output->writeln("");
+    }
+
+    public function printException(\Exception $e)
     {
         $i = 0;
         $class = get_class($e);
-        $this->output->writeln("  Exception thrown " . $class . ":\n  (!" . $e->getMessage().'!)');
-        $this->output->writeln("  Stack trace:");
         foreach ($e->getTrace() as $step) {
             $i++;
-            if (strpos($step['function'], $action) !== false) break;
-            $this->output->writeln(sprintf("   #%s ((%s)) %s:%s",
-                $i,
-                isset($step['function']) ? $step['function'] : '',
+//            if (strpos($step['function'], $action) !== false) break;
+            if (!isset($step['file'])) continue;
+            $this->output->writeln(sprintf("%s:%s",
                 isset($step['file']) ? $step['file'] : '',
                 isset($step['line']) ? $step['line'] : ''));
             if ($i == 1) {
@@ -203,7 +207,6 @@ class Console implements EventSubscriberInterface
                 }
             }
         }
-        $this->output->writeln("\nIf it's a Codeception bug, please report it to GitHub");
     }
 
     static function getSubscribedEvents()

@@ -28,6 +28,8 @@ class Codecept
      */
     protected $dispatcher;
 
+    protected $assertions = 0;
+
     /**
      * @var array
      */
@@ -84,6 +86,7 @@ class Codecept
 
     public function runSuite($suite, $test = null) {
         $settings = \Codeception\Configuration::suiteSettings($suite, $this->config);
+
         $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $suite, $settings);
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();

@@ -6,7 +6,9 @@ use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class Module implements EventSubscriberInterface {
 
     public function before(\Codeception\Event\Test $e) {
+
         foreach (\Codeception\SuiteManager::$modules as $module) {
+            $module->_cleanup();
             $module->_before($e->getTest());
         }
     }
