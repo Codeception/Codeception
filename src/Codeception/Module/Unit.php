@@ -419,8 +419,10 @@ class Unit extends \Codeception\Module
     protected function createMocks()
     {
         $scenario = $this->test->getScenario();
-        $scenario->getCurrentStep();
+
         $steps = $scenario->getSteps();
+        if (!isset($steps[$scenario->getCurrentStep()])) throw new \Exception("New steps were added to scenario in realtime. Can't proceed.\nRemove loops from your unit test to fix it");
+
         for ($i = $scenario->getCurrentStep()+1; $i < count($steps); $i++) {
             $step = $steps[$i];
             if (strpos($action = $step->getAction(), 'seeMethod') === 0) {
@@ -428,6 +430,12 @@ class Unit extends \Codeception\Module
                 $mock = array_shift($arguments);
                 $function = array_shift($arguments);
                 $params = array_shift($arguments);
+
+                foreach ($this->stubs as $stub) {
+                    if (get_class($stub) == get_class($mock)) {
+                        $mock = $stub;
+                    }
+                }
 
                 $invoke = false;
 
@@ -463,9 +471,8 @@ class Unit extends \Codeception\Module
                         $this->debug('with ' . json_encode($params));
                     }
                 }
-
-
             }
+
             if ($step->getAction() == 'executeTestedMethod') break;
             if ($step->getAction() == 'execute') break;
             if ($step->getAction() == 'executeTestedMethodOn') break;
@@ -559,10 +566,12 @@ class Unit extends \Codeception\Module
 
     protected function verifyMock($mock)
     {
+        if ($mock instanceof \Codeception\Maybe) $mock = $mock->__value();
         foreach ($this->stubs as $stubid => $stub) {
             if (spl_object_hash($stub) == spl_object_hash($mock)) {
                 if (!$mock->__phpunit_hasMatchers()) {
-                    throw new \Exception("Probably Internal Error. There is no matchers for current mock");
+                    continue;
+//                    throw new \Exception("Probably Internal Error. There is no matchers for current mock");
                 }
                 if (isset($stub->__mocked)) {
                     $this->debugSection('Triggered Stub', 'Stub_' . $stubid . ' {' . $stub->__mocked . '}');
@@ -643,7 +652,8 @@ class Unit extends \Codeception\Module
     public function seeResultIs($type)
     {
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $this->last_result);
+            \PHPUnit_Framework_Assert::assertInternalType($type, $this->last_result);
+            return;
         }
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $this->last_result);
     }
@@ -681,7 +691,8 @@ class Unit extends \Codeception\Module
     public function seePropertyIs($object, $property, $type) {
         $current = $this->retrieveProperty($object, $property);
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+            \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+            return;
         }
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
     }

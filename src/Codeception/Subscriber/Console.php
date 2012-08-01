@@ -142,8 +142,11 @@ class Console implements EventSubscriberInterface
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            $this->output->writeln("(!Action is not defined!)");
-            $this->printException($fail);
+            if (!$this->debug) {
+                $this->output->writeln($failToString);
+                return;
+            }
+            $this->output->writeln($this->printException('not an action', $fail));
             return;
         }
         $action = $last->getHumanizedAction();
@@ -153,11 +156,14 @@ class Console implements EventSubscriberInterface
 
         // it's exception
         if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            $this->errorFail($fail);
+            $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
+            $this->printException($fail);
+            $this->output->writeln("");
             return;
         };
 
         // it's assertion
+
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
             $this->output->writeln("\nGuy unexpectedly managed to $action {$failToString}");
@@ -176,13 +182,6 @@ class Console implements EventSubscriberInterface
         $this->printException($fail);
         $this->output->writeln("");
 
-    }
-
-    protected function errorFail($fail)
-    {
-        $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
-        $this->printException($fail);
-        $this->output->writeln("");
     }
 
     public function printException(\Exception $e)
