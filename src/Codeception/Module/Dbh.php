@@ -53,20 +53,20 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
 
     public function seeInDatabase($table, $criteria = array())
     {
-        $res = $this->proceedSeeInDatabase($table, $criteria);
+        $res = $this->proceedSeeInDatabase($table, "count(*)", $criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
     }
 
 
     public function dontSeeInDatabase($table, $criteria = array())
     {
-        $res = $this->proceedSeeInDatabase($table, $criteria);
+        $res = $this->proceedSeeInDatabase($table, "count(*)", $criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
     }
 
-    protected function proceedSeeInDatabase($table, $criteria)
+    protected function proceedSeeInDatabase($table, $column, $criteria)
     {
-        $query = "select count(*) from `%s` where %s";
+        $query = "select %s from `%s` where %s";
 
         $params = array();
         foreach ($criteria as $k => $v) {
@@ -74,7 +74,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
         }
         $params = implode('AND ',$params);
 
-        $query = sprintf($query, $table, $params);
+        $query = sprintf($query, $column, $table, $params);
 
         $this->debugSection('Query',$query, $params);
 
@@ -83,4 +83,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
         return $sth->fetchColumn();
     }
 
+    public function grabFromDatabase($table, $column, $criteria) {
+        return $this->proceedSeeInDatabase($table, $column, $criteria);
+    }
 }

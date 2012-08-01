@@ -52,4 +52,25 @@ interface DbInterface
      */
     public function dontSeeInDatabase($table, $criteria = array());
 
+
+    /**
+     * Fetches a single column value from a database.
+     * Provide table name, desired column and criteria.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $mail = $I->grabFromDatabase('users', array('name' => 'Davert'));
+     *
+     * ```
+     *
+     * @version 1.1
+     * @param $table
+     * @param $column
+     * @param array $criteria
+     * @return mixed
+     */
+    public function grabFromDatabase($table, $column, $criteria = array());
+
 }

@@ -36,6 +36,8 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/info');
         $this->module->see('valuable', 'p');
+        $this->module->see('valuable','descendant-or-self::body/p');
+
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable', 'h1');
     }
@@ -61,6 +63,14 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/');
         $this->module->click('More info');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('#link');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click("descendant-or-self::a[@id = 'link']");
         $this->module->seeInCurrentUrl('/info');
     }
 
@@ -212,6 +222,21 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->click('Sign in!');
     }
 
+    public function testGrabTextFrom() {
+        $result = $this->module->grabTextFrom('h1');
+        $this->assertEquals("Welcome to test app!", $result);
+        $result = $this->module->grabTextFrom('descendant-or-self::h1');
+        $this->assertEquals("Welcome to test app!", $result);
+    }
 
-
+    public function testGrabValueFrom() {
+        $this->module->amOnPage('/form/hidden');
+        $result = $this->module->grabValueFrom('#action');
+        $this->assertEquals("kill_people", $result);
+        $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
+        $this->assertEquals("kill_people", $result);
+        $this->module->amOnPage('/form/textarea');
+        $result = $this->module->grabValueFrom('Description');
+        $this->assertEquals("sunrise", $result);
+    }
 }

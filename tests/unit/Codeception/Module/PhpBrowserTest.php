@@ -12,7 +12,7 @@ class PhpBrowserTest extends TestsForMink
     protected $module;
 
     // this is my local config
-    protected $is_local = false;
+    protected $is_local = true;
 
     public function setUp() {
         $this->noPhpWebserver();
@@ -36,7 +36,7 @@ class PhpBrowserTest extends TestsForMink
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\TestCase', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
     protected function noPhpWebserver() {
