@@ -63,4 +63,9 @@ class Maybe implements \ArrayAccess
     {
         if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) unset($this->val[$offset]);
     }
+
+    public function __value()
+    {
+        return $this->val;
+    }
 }

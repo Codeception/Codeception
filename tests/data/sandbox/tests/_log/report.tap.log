@@ -1,3 +1,0 @@
-TAP version 13
-not ok 1 - Error: perform actions and see result (DummyCept.php)
-not ok 2 - Error: check config exists (FileExistsCept.php)

@@ -81,7 +81,7 @@ abstract class Step
 
     protected function formatClassName($classname)
     {
-        return '\\'.trim($classname,'\\');
+        return trim($classname,"\\");
     }
 
     abstract public function getName();

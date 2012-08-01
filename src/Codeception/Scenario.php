@@ -23,6 +23,8 @@ class Scenario {
 
     protected $running = false;
 
+    protected $preloadedSteps = array();
+
     /**
      * Constructor.
      *
@@ -56,10 +58,11 @@ class Scenario {
     public function runStep()
     {
         if (empty($this->steps)) return;
-        $this->currentStep++;
+
         $step = $this->lastStep();
         if (!$step->executed) {
             $result = $this->test->runStep($step);
+            $this->currentStep++;
             $step->executed = true;
             return $result;
         }
@@ -86,7 +89,8 @@ class Scenario {
      */
     public function getSteps()
     {
-        return $this->steps;
+        if (!$this->running) return $this->steps;
+        return $this->preloadedSteps;
     }
 
 	public function getFeature() {
@@ -99,11 +103,12 @@ class Scenario {
 
     public function getCurrentStep()
     {
-        return $this->runningStep;
+        return $this->currentStep;
     }
     
     public function run() {
         $this->running = true;
+        $this->preloadedSteps = $this->steps;
         $this->steps = array();
     }
 
