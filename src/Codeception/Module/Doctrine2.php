@@ -210,6 +210,38 @@ class Doctrine2 extends \Codeception\Module
     }
 
     /**
+     * Selects field value from repository.
+     * It builds query based on array of parameters.
+     * You can use entity associations to build complex queries.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @version 1.1
+     * @param $entity
+     * @param $field
+     * @param array $params
+     * @return array
+     */
+    protected function grabFromRepository($entity, $field, $params = array())
+    {
+        // we need to store to database...
+        self::$em->flush();
+        $data = self::$em->getClassMetadata($entity);
+        $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
+        $qb->select('s.'.$field);
+        $this->buildAssociationQuery($qb,$entity, 's', $params);
+        $this->debug($qb->getDQL());
+        $res = $qb->getQuery()->getSingleScalarResult();
+        return array('True', (count($res) > 0), "$entity with " . json_encode($params));
+    }
+
+    /**
      * It's Fuckin Recursive!
      *
      * @param $qb

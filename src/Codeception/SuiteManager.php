@@ -6,9 +6,6 @@ use Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 
-/**
- * @property \Codeception\PHPUnit\ResultPrinter\ printer
- */
 class SuiteManager {
 
     public static $modules = array();

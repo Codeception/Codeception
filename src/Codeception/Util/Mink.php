@@ -41,7 +41,11 @@ abstract class Mink extends \Codeception\Module
 
     protected function proceedSee($text, $selector = null) {
         if ($selector) {
-            $nodes = $this->session->getPage()->findAll('css', $selector);
+            try {
+                $nodes = $this->session->getPage()->findAll('css', $selector);
+            } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+                $nodes = $this->session->getPage()->findAll('xpath', $selector);
+            }
 		    $values = '';
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
@@ -153,7 +157,9 @@ abstract class Mink extends \Codeception\Module
             } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
         }
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS for '$link' not found'");
+        if (!$el) $el = @$page->find('xpath',$link);
+
+        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS or XPath for '$link' not found'");
         return $el;
     }
 
@@ -230,8 +236,14 @@ abstract class Mink extends \Codeception\Module
         $field = $page->find('named', array(
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)
         ));
-        if (!$field) $field = $page->find('css', $selector);
-        if (!$field) \PHPUnit_Framework_Assert::fail("Field matching id|name|label|value or css selector does not exists");
+
+        try {
+            if (!$field) $field = $page->find('css', $selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+
+        if (!$field) $field = @$page->find('xpath', $selector);
+
+        if (!$field) \PHPUnit_Framework_Assert::fail("Field matching id|name|label|value or css or xpath selector does not exist");
         return $field;
     }
 
@@ -319,16 +331,69 @@ abstract class Mink extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
     }
 
-    public function grabTextFromPage($cssOrXPathOrRegex) {
-        $el = $this->session->getPage()->find('css', $cssOrXPathOrRegex);
-        if ($el) {
-            return $el->getText();
+    /**
+     * Finds and returns text contents of element.
+     * Element is searched by CSS selector, XPath or matcher by regex.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $heading = $I->grabTextFrom('h1');
+     * $heading = $I->grabTextFrom('descendant-or-self::h1');
+     * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
+     * ?>
+     * ```
+     *
+     * @param $cssOrXPathOrRegex
+     * @return mixed
+     */
+    public function grabTextFrom($cssOrXPathOrRegex) {
+        $el = null;
+        try {
+            $el = $this->session->getPage()->find('css', $cssOrXPathOrRegex);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+
+        if ($el) return $el->getText();
+
+        if (!$el) $el = @$this->session->getPage()->find('xpath', $cssOrXPathOrRegex);
+
+        if ($el) return $el->getText();
+
+        if (@preg_match($cssOrXPathOrRegex, $this->session->getPage()->getContent(), $matches)) {
+            return $matches[1];
         }
+        $this->fail("Element that matches '$cssOrXPathOrRegex' not found");
+    }
+
+
+    /**
+     * Finds and returns field and returns it's value.
+     * Searches by field name, then by CSS, then by XPath
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $name = $I->grabValueFrom('Name');
+     * $name = $I->grabValueFrom('input[name=username]');
+     * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
+     * ?>
+     * ```
+     *
+     * @param $field
+     * @return mixed
+     */
+    public function grabValueFrom($field) {
+        $el = $this->findField($field);
+        if ($el) {
+            return $el->getValue();
+        }
+        $this->fail("Element '$field' not found");
     }
 
     protected function escape($string)
     {
-
         return $string;
     }
 
