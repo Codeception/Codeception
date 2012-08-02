@@ -23,7 +23,6 @@ use Codeception\Util\Stub;
     */
     protected $%s;
 
-
     // keep this setupUp and tearDown to enable proper work of Codeception modules
     protected function setUp()
     {
@@ -32,7 +31,7 @@ use Codeception\Util\Stub;
         \$this->%s = new %s(\$scenario = new \Codeception\Scenario(\$this));
         \$scenario->run();
 
-        // your own initialization code
+        // initialization code
     }
 
     protected function tearDown()
@@ -40,7 +39,7 @@ use Codeception\Util\Stub;
         \$this->dispatcher->dispatch('test.after', new \Codeception\Event\Test(\$this));
     }
 
-    // yourt tests
+    // tests
 
 }
 EOF;
