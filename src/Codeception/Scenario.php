@@ -117,13 +117,8 @@ class Scenario {
         return $this->running;
     }
 
-    public function prepare(\Closure $lambda) {
-        $res = call_user_func($lambda);
-        return $res;
-    }
-
-    public function finalize(\Closure $lambda) {
-        $this->finalizers[] = $lambda;
+    public function preload() {
+        return !$this->running;
     }
 
 }

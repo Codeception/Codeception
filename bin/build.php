@@ -5,3 +5,4 @@ system('php bin/build_site.php');
 system('php bin/build_git.php');
 system('php bin/build_pear.php');
 system('php bin/build_phar.php');
+system('php bin/release_phar.php');
