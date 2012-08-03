@@ -331,4 +331,42 @@ interface FrameworkInterface
      * @param $filename
      */
     public function attachFile($field, $filename);
+
+    /**
+     * Finds and returns text contents of element.
+     * Element is searched by CSS selector, XPath or matcher by regex.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $heading = $I->grabTextFrom('h1');
+     * $heading = $I->grabTextFrom('descendant-or-self::h1');
+     * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
+     * ?>
+     * ```
+     *
+     * @param $cssOrXPathOrRegex
+     * @return mixed
+     */
+    public function grabTextFrom($cssOrXPathOrRegex);
+
+    /**
+     * Finds and returns field and returns it's value.
+     * Searches by field name, then by CSS, then by XPath
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $name = $I->grabValueFrom('Name');
+     * $name = $I->grabValueFrom('input[name=username]');
+     * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
+     * ?>
+     * ```
+     *
+     * @param $field
+     * @return mixed
+     */
+    public function grabValueFrom($field);
 }

@@ -31,8 +31,11 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/info');
         $this->module->see('valuable','p');
+        $this->module->see('valuable','descendant-or-self::p');
+
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable','h1');
+        $this->module->dontSee('valuable','descendant-or-self::h1');
     }
 
     public function testSeeInCurrentUrl() {
@@ -62,9 +65,23 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/');
     }
 
+    public function testClickByXPath() {
+        $this->module->amOnPage('/info');
+        $this->module->click("descendant-or-self::input[@type='submit']");
+        $this->module->seeInCurrentUrl('/');
+    }
+
     public function testCheckboxByCss() {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testCheckboxByXPath() {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption("descendant-or-self::*[@id = 'checkin']");
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('agree', $form['terms']);
@@ -81,6 +98,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testSelectByCss() {
         $this->module->amOnPage('/form/select');
         $this->module->selectOption('form select[name=age]','adult');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('adult', $form['age']);
+    }
+
+    public function testSelectByXPath() {
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption("descendant-or-self::form/descendant::select[@name='age']",'adult');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('adult', $form['age']);
@@ -117,6 +142,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Nothing special', $form['description']);
     }
 
+    public function testTextareaByXpath() {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->fillField("descendant-or-self::form/descendant::textarea[@name='description']",'Nothing special');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('Nothing special', $form['description']);
+    }
+
     public function testTextareaByLabel() {
         $this->module->amOnPage('/form/textarea');
         $this->module->fillField('Description','Nothing special');
@@ -124,10 +157,18 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('Nothing special', $form['description']);
     }
-    
+
     public function testTextFieldByCss() {
         $this->module->amOnPage('/form/field');
         $this->module->fillField('#name','Nothing special');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('Nothing special', $form['name']);
+    }
+
+    public function testTextFieldByXPath() {
+        $this->module->amOnPage('/form/field');
+        $this->module->fillField("descendant-or-self::*[@id = 'name']",'Nothing special');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('Nothing special', $form['name']);
@@ -144,6 +185,16 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testFileFieldByCss() {
         $this->module->amOnPage('/form/file');
         $this->module->attachFile('#avatar', 'app/avatar.jpg');
+        $this->module->click('Submit');
+        $this->assertNotEmpty(data::get('files'));
+        $files = data::get('files');
+        $this->assertArrayHasKey('avatar', $files);
+        $this->assertEquals('avatar.jpg', $files['avatar']['name']);
+    }
+
+    public function testFileFieldByXPath() {
+        $this->module->amOnPage('/form/file');
+        $this->module->attachFile("descendant-or-self::*[@id = 'avatar']", 'app/avatar.jpg');
         $this->module->click('Submit');
         $this->assertNotEmpty(data::get('files'));
         $files = data::get('files');
@@ -218,7 +269,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/info');
         $this->module->seeLink('Ссылочка');
         $this->module->click('Ссылочка');
-
     }
 
     public function testFieldWithNonLatin() {
@@ -231,8 +281,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->submitForm('form#user_form_login', array('email' => 'miles@davis.com', 'password' => '111111'));
         $post = data::get('form');
         $this->assertEquals('miles@davis.com', $post['email']);
-
     }
-
+    
+    public function testComplexFormsAndXPath() {
+        $this->module->amOnPage('/login');
+        $this->module->submitForm("descendant-or-self::form[@id='user_form_login']", array('email' => 'miles@davis.com', 'password' => '111111'));
+        $post = data::get('form');
+        $this->assertEquals('miles@davis.com', $post['email']);
+    }
 
 }

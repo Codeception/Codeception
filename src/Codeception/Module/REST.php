@@ -202,6 +202,25 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue($this->arrayHasArray($json, $resp_json), "response JSON matches provided");
     }
 
+    /**
+     * Returns current response so that it can be used in next scenario steps.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $user_id = $I->grabResponse();
+     * $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @version 1.1
+     * @return string
+     */
+    public function grabResponse() {
+        return $this->response;
+    }
+
 	/**
 	 * @author nleippe@integr8ted.com
 	 * @author tiger.seo@gmail.com
@@ -242,7 +261,7 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks if response is exectly the same as provided.
+     * Checks if response is exactly the same as provided.
      *
      * @param $response
      */
