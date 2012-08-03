@@ -255,8 +255,8 @@ class SOAP extends \Codeception\Module
      * ```
      *
      * Use this method to check XML of valid structure is returned.
-     * This method doesn't use schema for validation.
-     * This method dosn't require whole response XML to match the structure.
+     * This method does not use schema for validation.
+     * This method does not require path from root to match the structure.
      *
      * @param $xml
      */
@@ -285,8 +285,56 @@ class SOAP extends \Codeception\Module
      * @param $code
      */
     public function seeResponseCodeIs($code) {
-        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatusCode(), "soap response code matches expected");
+        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatus(), "soap response code matches expected");
     }
+
+    /**
+     * Finds and returns text contents of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @version 1.1
+     * @param $cssOrXPath
+     * @return string
+     */
+    public function grabTextFrom($cssOrXPath) {
+        $el = $this->matchElement($cssOrXPath);
+        return $el->textContent;
+    }
+
+    /**
+     * Finds and returns attribute of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @version 1.1
+     * @param $cssOrXPath
+     * @param $attribute
+     * @return string
+     */
+    public function grabAttributeFrom($cssOrXPath, $attribute) {
+        $el = $this->matchElement($cssOrXPath);
+        if (!$el->hasAttribute($attribute)) $this->fail("Attribute not found in element matched by '$cssOrXPath'");
+        return $el->getAttribute($attribute);
+    }
+
+    /**
+     * @param $cssOrXPath
+     * @return \DOMElement
+     */
+    protected function matchElement($cssOrXPath)
+    {
+        $xpath = new \DOMXpath($this->xmlResponse);
+        try {
+            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($cssOrXPath);
+            $els = $xpath->query($selector);
+            if ($els) return $els->item(0);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+        $els = $xpath->query($cssOrXPath);
+        if ($els) {
+            return $els->item(0);
+        }
+        $this->fail("No node matched CSS or XPath '$cssOrXPath'");
+    }
+    
 
     protected function structureMatches($schema, $xml)
     {

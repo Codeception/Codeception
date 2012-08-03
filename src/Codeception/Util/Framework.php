@@ -47,7 +47,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function click($link)
     {
-        $link = $this->escape($link);
         $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
@@ -62,7 +61,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             return;
         }
 
-        $nodes = $this->crawler->filter($link);
+        $nodes = $this->match($link);
+
         if ($nodes->count()) {
             foreach ($nodes as $node) {
                 if ($node->nodeName == 'a') {
@@ -76,7 +76,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                 }
             }
         }
-
         \PHPUnit_Framework_Assert::fail("Link or button for '$link' was not found");
     }
 
@@ -100,14 +99,16 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         if (!$selector)
             return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text in\n" . self::formatResponse($this->client->getResponse()->getContent()));
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), " within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+        $nodes = $this->match($selector);
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $nodes->filter(':contains("' . $this->escape($text) . '")')->count(), " within selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . self::formatResponse($this->client->getResponse()->getContent()));
-        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+            return $this->assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . self::formatResponse($this->client->getResponse()->getContent()));
+        $nodes = $this->match($selector);
+        $this->assertEquals(0, $nodes->filter(':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function seeLink($text, $url = null)
@@ -165,29 +166,28 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function submitForm($selector, $params)
     {
-        $form = $this->crawler->filter($selector)->first();
+        $form = $this->match($selector)->first();
 
         if (!count($form)) return \PHPUnit_Framework_Assert::fail(', form does not exists');
 
         $url = '';
-        $fields = $this->crawler->filter($selector . ' input');
+        $fields = $form->filter('input');
         foreach ($fields as $field) {
             if ($field->getAttribute('type') == 'checkbox') continue;
             if ($field->getAttribute('type') == 'radio') continue;
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
         }
 
-        $fields = $this->crawler->filter($selector . ' textarea');
+        $fields = $form->filter('textarea');
         foreach ($fields as $field) {
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
         }
 
-        $fields = $this->crawler->filter($selector . ' select');
+        $fields = $form->filter('select');
         foreach ($fields as $field) {
             foreach ($field->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected')
                     $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-
             }
         }
 
@@ -248,7 +248,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
-        if (!isset($input)) $input = $this->crawler->filter($field);
+        if (!isset($input)) $input = $this->match($field);
         if (!count($input)) \PHPUnit_Framework_Assert::fail("Form field for '$field' not found on page");
         return $input->first();
     }
@@ -309,6 +309,15 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         return addslashes($string);
     }
 
+    protected function match($selector)
+    {
+        try {
+            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+        }
+        return @$this->crawler->filterXPath($selector);
+    }
+
     public static function formatResponse($response)
     {
         if (strlen($response) <= 500) {
@@ -327,6 +336,46 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             return $formatted. "]";
         }
         return "page.";
+    }
+
+    public function grabTextFrom($cssOrXPathOrRegex)
+    {
+        $nodes = $this->match($cssOrXPathOrRegex);
+        if ($nodes) {
+            return $nodes->first()->text();
+        }
+        if (@preg_match($cssOrXPathOrRegex, $this->client->getResponse()->getContent(), $matches)) {
+            return $matches[1];
+        }
+        $this->fail("Element that matches '$cssOrXPathOrRegex' not found");
+
+    }
+
+    public function grabValueFrom($field)
+    {
+        $nodes = $this->match($field);
+        if ($nodes) {
+
+           foreach ($fields as $field) {
+               if ($field->getAttribute('type') == 'checkbox') continue;
+               if ($field->getAttribute('type') == 'radio') continue;
+               $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
+           }
+
+           $fields = $form->filter('textarea');
+           foreach ($fields as $field) {
+               $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
+           }
+
+           $fields = $form->filter('select');
+           foreach ($fields as $field) {
+               foreach ($field->childNodes as $option) {
+                   if ($option->getAttribute('selected') == 'selected')
+                       $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+               }
+           }
+        }
+
     }
 
 
