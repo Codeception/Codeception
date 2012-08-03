@@ -146,7 +146,6 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findEl($link)
     {
-        $link = $this->escape($link);
         $page = $this->session->getPage();
         $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
