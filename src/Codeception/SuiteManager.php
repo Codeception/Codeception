@@ -66,14 +66,23 @@ class SuiteManager {
     }
 
     public function addTest($path) {
-        // bootstrap invokation is slightly different for PHPUnit
-        $this->suite->addTestFile($path);
-        $tests = $this->suite->testAt(0)->tests();
+        $loaded_classes = get_declared_classes();
+        require_once $path;
+        $extra_loaded_classes = get_declared_classes();
 
-        foreach ($tests as $test) {
-            if ($test instanceof \Codeception\TestCase\Test) {
-                $test->setDispatcher($this->dispatcher);
-                if (file_exists($this->settings['bootstrap'])) $test->setBootstrap($this->settings['bootstrap']);
+        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
+
+        foreach ($testClasses as $testClass) {
+            $reflected = new \ReflectionClass($testClass);
+            if ($reflected->isAbstract()) continue;
+            foreach ($reflected->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+                if (!\PHPUnit_Framework_TestSuite::isTestMethod($method) and (strpos($method->getName(),'should')!==0)) continue;
+                $test = \PHPUnit_Framework_TestSuite::createTest($reflected, $method->getName());
+                $this->suite->addTest($test);
+                if ($test instanceof \Codeception\TestCase\Test) {
+                    $test->setBootstrap($this->settings['bootstrap']);
+                    $test->setDispatcher($this->dispatcher);
+                }
             }
         }
     }

@@ -235,7 +235,6 @@ abstract class Mink extends \Codeception\Module
      */
     protected function findField($selector)
     {
-        $selector = $this->escape($selector);
         $page = $this->session->getPage();
         $field = $page->find('named', array(
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)

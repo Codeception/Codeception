@@ -10,7 +10,6 @@ class Cept extends \Codeception\TestCase
     protected $output;
     protected $debug;
     protected $features = array();
-    protected $scenario;
     protected $bootstrap = null;
     protected $stopped = false;
     protected $trace = array();
@@ -36,13 +35,6 @@ class Cept extends \Codeception\TestCase
         return $this->name;
     }
 
-    /**
-     * @return \Codeception\Scenario
-     */
-    public function getScenario()
-    {
-        return $this->scenario;
-    }
 
     public function getScenarioText()
     {

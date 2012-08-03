@@ -113,5 +113,9 @@ class Cest extends \Codeception\TestCase\Cept
         }
         return '';
     }
+    
+    public function getFileName() {
+        return get_class($this)."::".$this->getTestMethod();
+    }
 
 }
