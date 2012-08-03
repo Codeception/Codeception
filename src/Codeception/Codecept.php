@@ -46,6 +46,8 @@ class Codecept
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
+        $this->runner = new \Codeception\PHPUnit\Runner();
+
         $this->dispatcher = new EventDispatcher();
         $this->config = \Codeception\Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
@@ -89,7 +91,12 @@ class Codecept
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
 
-        $this->runner = $suiteManager->run($this->result, $this->options);
+        if (!$this->runner->getPrinter()) {
+            $printer = new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
+            $this->runner->setPrinter($printer);
+        }
+
+        $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
     }
