@@ -69,6 +69,7 @@ EOF;
 
         $guy = $suiteconf['class_name'];
 
+        $class = str_replace('/','\\', $class);
         $namespaces = explode('\\', $class);
         $classname = array_pop($namespaces);
 
@@ -80,9 +81,13 @@ EOF;
             @mkdir($path);
         }
 
-        if (!empty($namespaces)) $use = 'namespace '.implode('\\', $namespaces).";\n";
+        if (strpos(strrev($classname), strrev('Test')) === 0) $classname .= '.php';
+        if (strpos(strrev($classname), strrev('Test.php')) !== 0) $classname .= 'Test.php';
+        if (strpos(strrev($classname), strrev('.php')) !== 0) $classname .= '.php';
+        $filename = $classname;
+        $classname = str_replace('Test.php','', $classname);
 
-        $filename = $path.DIRECTORY_SEPARATOR.$classname.'Test.php';
+        $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");

@@ -4,12 +4,14 @@ namespace Codeception;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
 {
+    protected $scenario;
+
     public function getFeature() {
         return null;
     }
 
-    public function getFilename() {
-        return $this->getName();
+    public function getFileName() {
+        return get_class($this).'::'.$this->getName();
     }
 
     public function runStep(\Codeception\Step $step)
@@ -56,6 +58,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $this->trace[] = $step;
         $this->dispatcher->dispatch('comment.before', new \Codeception\Event\Step($this, $step));
         $this->dispatcher->dispatch('comment.after', new \Codeception\Event\Step($this, $step));
+    }
+
+    /**
+     * @return \Codeception\Scenario
+     */
+    public function getScenario()
+    {
+        return $this->scenario;
     }
 
 
