@@ -4,7 +4,6 @@ namespace Codeception\Util;
 class MinkJS extends Mink
 {
 
-    private $screenOrderCounter = 0;
     /**
      * Double clicks on link or button or any node found by css
      *
@@ -71,12 +70,18 @@ class MinkJS extends Mink
     /**
      * Checks element visibility.
      * Fails if element exists but is invisible to user.
+     * Eiter CSS or XPath can be used.
      *
-     * @param $css
+     * @param $selector
      */
-    public function seeElement($css) {
-        $el = $this->session->getPage()->find('css', $css);
-        if (!$el) \PHPUnit_Framework_Assert::fail("Element $css not found");
+    public function seeElement($selector) {
+        try {
+            $el = $this->session->getPage()->find('css', $selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            $el = @$this->session->getPage()->find('xpath', $selector);
+        }
+
+        if (!$el) \PHPUnit_Framework_Assert::fail("Element $selector not found");
         \PHPUnit_Framework_Assert::assertTrue($this->session->getDriver()->isVisible($el->getXpath()));
     }
 
@@ -89,7 +94,12 @@ class MinkJS extends Mink
      */
     protected function proceedSee($text, $selector = null) {
         if (!$selector) return parent::proceedSee($this->escape($text), $selector);
-        $nodes = $this->session->getPage()->findAll('css', $selector);
+        try {
+            $nodes = $this->session->getPage()->findAll('css', $selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            $nodes = @$this->session->getPage()->findAll('xpath', $selector);
+        }
+
 		$values = '';
 		foreach ($nodes as $node) {
             if (!$this->session->getDriver()->isVisible($node->getXpath())) continue;
