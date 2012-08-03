@@ -12,7 +12,7 @@ class PhpBrowserTest extends TestsForMink
     protected $module;
 
     // this is my local config
-    protected $is_local = true;
+    protected $is_local = false;
 
     public function setUp() {
         $this->noPhpWebserver();
