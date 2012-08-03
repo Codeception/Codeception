@@ -11,7 +11,7 @@ system('git clone git@github.com:Codeception/codeception.github.com.git package/
 
 copy('package/codecept.phar','package/site/codecept.phar');
 
-system('git add .');
+system('git add -A');
 system('git commit -m="auto-updated phar archive"');
 system('git push');
 chdir('package');
