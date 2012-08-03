@@ -23,9 +23,10 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $events = array();
         $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = $e->getName(); });
         $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $runner = $this->suiteman->run(new PHPUnit_Framework_TestResult(), array('colors' => false, 'steps' => true, 'debug' => false));
+        $runner = new \Codeception\PHPUnit\Runner;
+        $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($this->dispatcher));
+        $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, array('colors' => false, 'steps' => true, 'debug' => false));
         $this->assertEquals($events, array('suite.before', 'suite.after'));
-        $this->assertInstanceOf('\Codeception\PHPUnit\Runner', $runner);
     }
 
     public function testAddCest() {

@@ -119,6 +119,18 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
         $this->scenarios .= $scenarioTemplate->render();
     }
 
+    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    {
+        $suiteTemplate = new \Text_Template(
+          $this->templatePath . 'suite.html'
+        );
+        
+        $suiteTemplate->setVar(array('suite' => ucfirst($suite->getName())));
+
+        $this->scenarios .= $suiteTemplate->render();
+
+    }
+
     /**
      * Handler for 'end run' event.
      *

@@ -151,16 +151,12 @@ class SuiteManager {
     }
 
     
-    public function run(\PHPUnit_Framework_TestResult $result, $options) {
-        $runner = new \Codeception\PHPUnit\Runner();
-        if (!$this->printer) $this->printer = new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $options);
-        $runner->setPrinter($this->printer);
+    public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
         $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
         $runner->doEnhancedRun($this->suite, $result, $options);
         $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));
-
-        return $runner;
     }
+
     public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
         if (strrpos(strrev($path), strrev('Cept.php')) === 0) return $this->addCept($path);

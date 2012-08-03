@@ -141,12 +141,13 @@ abstract class Mink extends \Codeception\Module
     }
 
     /**
-     * @param $el
+     * @param $selector
      * @return \Behat\Mink\Element\NodeElement
      */
     protected function findEl($selector)
     {
         $page = $this->session->getPage();
+        $el = null;
         try {
             \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
             $el = $page->find('css', $selector);
