@@ -46,6 +46,29 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
  * param $xml
 
 
+### grabAttributeFrom
+
+
+Finds and returns attribute of element.
+Element is matched by either CSS or XPath
+
+ * version 1.1
+ * param $cssOrXPath
+ * param $attribute
+ * return string
+
+
+### grabTextContentFrom
+
+
+Finds and returns text contents of element.
+Element is matched by either CSS or XPath
+
+ * version 1.1
+ * param $cssOrXPath
+ * return string
+
+
 ### haveSoapHeader
 
 
@@ -101,8 +124,8 @@ $I->seeSoapResponseContainsStructure("<query><name></name></query>");
 ```
 
 Use this method to check XML of valid structure is returned.
-This method doesn't use schema for validation.
-This method dosn't require whole response XML to match the structure.
+This method does not use schema for validation.
+This method does not require path from root to match the structure.
 
  * param $xml
 
