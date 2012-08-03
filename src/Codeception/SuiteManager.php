@@ -137,7 +137,8 @@ class SuiteManager {
                     'static' => $method->isStatic(),
                     'signature' => $target,
                     'file' => $file,
-           	        'bootstrap' => $this->settings['bootstrap']
+           	        'bootstrap' => $this->settings['bootstrap'],
+                    'guy' => $this->settings['class_name']
                 )));
             }
             $this->suite->addTestSuite($cestSuite);
