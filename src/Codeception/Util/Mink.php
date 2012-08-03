@@ -132,7 +132,7 @@ abstract class Mink extends \Codeception\Module
      */
     public function click($link) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findEl($link);
+        $el = $this->findClickable($link);
         $el->click();
 
         if ($this->session->getCurrentUrl() != $url) {
@@ -141,24 +141,29 @@ abstract class Mink extends \Codeception\Module
     }
 
     /**
-     * @param $link
+     * @param $el
      * @return \Behat\Mink\Element\NodeElement
      */
-    protected function findEl($link)
+    protected function findEl($selector)
+    {
+        $page = $this->session->getPage();
+        try {
+            \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
+            $el = $page->find('css', $selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+
+        if (!$el) $el = @$page->find('xpath',$selector);
+
+        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS or XPath for '$selector' not found'");
+        return $el;
+    }
+
+    protected function findClickable($link)
     {
         $page = $this->session->getPage();
         $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
-        if (!$el)  {
-            try {
-                \Symfony\Component\CssSelector\CssSelector::toXPath($link);
-                $el = $page->find('css', $link);
-            } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
-        }
-
-        if (!$el) $el = @$page->find('xpath',$link);
-
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS or XPath for '$link' not found'");
+        if (!$el) $el = $this->findEl($link);
         return $el;
     }
 

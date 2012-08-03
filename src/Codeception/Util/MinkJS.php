@@ -5,7 +5,7 @@ class MinkJS extends Mink
 {
 
     /**
-     * Double clicks on link or button or any node found by css
+     * Double clicks on link or button or any node found by CSS or XPath
      *
      * @param $link
      */
@@ -15,7 +15,7 @@ class MinkJS extends Mink
     }
 
     /**
-     * Clicks with right button on link or button or any node found by css
+     * Clicks with right button on link or button or any node found by CSS or XPath
      *
      * @param $link
      */
@@ -26,7 +26,7 @@ class MinkJS extends Mink
     }
 
     /**
-     * Moves mouse over link or button or any node found by css
+     * Moves mouse over link or button or any node found by CSS or XPath
      *
      * @param $link
      */
@@ -36,7 +36,7 @@ class MinkJS extends Mink
     }
 
     /**
-     * Moves focus to link or button or any node found by css
+     * Moves focus to link or button or any node found by CSS or XPath
      *
      * @param $el
      */
@@ -46,7 +46,8 @@ class MinkJS extends Mink
     }
 
     /**
-     * Removes focus from link or button or any node found by css
+     * Removes focus from link or button or any node found by CSS or XPath
+     * XPath or CSS selectors are accepted.
      *
      * @param $el
      */
@@ -57,6 +58,7 @@ class MinkJS extends Mink
 
     /**
      * Drag first element to second
+     * XPath or CSS selectors are accepted.
      *
      * @param $el1
      * @param $el2
@@ -75,11 +77,7 @@ class MinkJS extends Mink
      * @param $selector
      */
     public function seeElement($selector) {
-        try {
-            $el = $this->session->getPage()->find('css', $selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
-            $el = @$this->session->getPage()->find('xpath', $selector);
-        }
+        $el = $this->findEl($selector);
 
         if (!$el) \PHPUnit_Framework_Assert::fail("Element $selector not found");
         \PHPUnit_Framework_Assert::assertTrue($this->session->getDriver()->isVisible($el->getXpath()));
@@ -110,14 +108,16 @@ class MinkJS extends Mink
     }
 
     /**
-     * Presses key on element found by css is focused
+     * Presses key on element found by css, xpath is focused
      * A char and modifier (ctrl, alt, shift, meta) can be provided.
      *
      * Example:
      *
      * ``` php
      * <?php
+     * $I->pressKey('#page','u');
      * $I->pressKey('#page','u','ctrl');
+     * $I->pressKey('descendant-or-self::*[@id='page']','u');
      * ?>
      * ```
      *
@@ -132,7 +132,7 @@ class MinkJS extends Mink
     }
 
     /**
-     * Presses key up on element found by CSS.
+     * Presses key up on element found by CSS or XPath.
      *
      * For example see 'pressKey'.
      *
@@ -146,7 +146,7 @@ class MinkJS extends Mink
     }
 
     /**
-     * Presses key down on element found by CSS.
+     * Presses key down on element found by CSS or XPath.
      *
      * For example see 'pressKey'.
      *
