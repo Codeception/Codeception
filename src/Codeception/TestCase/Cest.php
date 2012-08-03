@@ -6,6 +6,7 @@ class Cest extends \Codeception\TestCase\Cept
     protected $testClass = null;
     protected $testMethod = null;
     protected $signature;
+    protected $guy = 'CodeGuy';
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);
@@ -13,6 +14,7 @@ class Cest extends \Codeception\TestCase\Cept
         $this->testMethod = $data['method'];
         $this->static = $data['static'];
         $this->signature = $data['signature'];
+        $this->guy = $data['guy'];
     }
 
     public function testCodecept($run = true) {
@@ -25,7 +27,8 @@ class Cest extends \Codeception\TestCase\Cept
             }
         }
         // executing test
-        $I = new \CodeGuy($this->scenario);
+        $class_name = '\\'.$this->guy;
+        $I = new $class_name($this->scenario);
         if ($this->getCoveredMethod()) {
             $I->testMethod($this->signature);
         }
