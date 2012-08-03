@@ -102,9 +102,9 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
         $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?><doc><node>123</node></doc>');
-        $res = $this->module->grabTextFrom('doc node');
+        $res = $this->module->grabTextContentFrom('doc node');
         $this->assertEquals('123', $res);
-        $res = $this->module->grabTextFrom('descendant-or-self::doc/descendant::node');
+        $res = $this->module->grabTextContentFrom('descendant-or-self::doc/descendant::node');
         $this->assertEquals('123', $res);
 
 

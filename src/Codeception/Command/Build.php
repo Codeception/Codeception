@@ -71,11 +71,14 @@ EOF;
             $code = array();
             $methodCounter = 0;
 
+            $methods[] = array();
+
             foreach ($modules as $modulename => $module) {
                 $class = new \ReflectionClass($className = '\Codeception\\Module\\'.$modulename);
                 $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                 foreach ($methods as $method) {
                     if (strpos($method->name, '_') === 0) continue;
+                    if (in_array($method->name, $methods)) continue;
                     $params = array();
                     foreach ($method->getParameters() as $param) {
 
@@ -99,6 +102,7 @@ EOF;
                     $code[] = sprintf($this->methodTemplate, $className, $method->name, $method->name, $params, $type, $method->name);
 
                     $methodCounter++;
+                    $methods[] = $method->name;
                 }
             }
 

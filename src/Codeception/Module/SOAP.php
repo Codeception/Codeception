@@ -296,7 +296,7 @@ class SOAP extends \Codeception\Module
      * @param $cssOrXPath
      * @return string
      */
-    public function grabTextFrom($cssOrXPath) {
+    public function grabTextContentFrom($cssOrXPath) {
         $el = $this->matchElement($cssOrXPath);
         return $el->textContent;
     }
