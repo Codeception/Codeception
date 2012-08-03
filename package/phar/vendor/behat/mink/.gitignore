@@ -1,0 +1,5 @@
+*.tgz
+*.phar
+phpunit.xml
+composer.lock
+vendor
