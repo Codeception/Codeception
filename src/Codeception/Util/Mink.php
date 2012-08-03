@@ -396,6 +396,10 @@ abstract class Mink extends \Codeception\Module
         $this->fail("Element '$field' not found");
     }
 
+    public function grabAttribute() {
+
+    }
+
     protected function escape($string)
     {
         return $string;
