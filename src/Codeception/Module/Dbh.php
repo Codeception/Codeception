@@ -83,7 +83,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
         return $sth->fetchColumn();
     }
 
-    public function grabFromDatabase($table, $column, $criteria) {
+    public function grabFromDatabase($table, $column, $criteria = array()) {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
     }
 }

@@ -31,6 +31,26 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * mail.c
  * param array $values
 
 
+### grabFromTable
+
+
+Fetches single value from a database.
+Provide Doctrine model name, desired field, and criteria that can be passed to addWhere DQL
+
+Example:
+
+``` php
+<?php
+$mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
+
+```
+
+ * param $model
+ * param $column
+ * param array $values
+ * return mixed
+
+
 ### seeInTable
 
 

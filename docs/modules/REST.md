@@ -48,6 +48,24 @@ Opposite to seeResponseContainsJson
  * param array $json
 
 
+### grabResponse
+
+
+Returns current response so that it can be used in next scenario steps.
+
+Example:
+
+``` php
+<?php
+$user_id = $I->grabResponse();
+$I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
+?>
+```
+
+ * version 1.1
+ * return string
+
+
 ### haveHttpHeader
 
 
@@ -102,7 +120,7 @@ This method recursively checks if one array can be found inside of another.
 ### seeResponseEquals
 
 
-Checks if response is exectly the same as provided.
+Checks if response is exactly the same as provided.
 
  * param $response
 
@@ -149,7 +167,7 @@ Parameters and files (as array of filenames) can be provided.
 ### sendPUT
 
 
-Sends PUT request to gieven uri.
+Sends PUT request to given uri.
 
  * param $url
  * param array $params
