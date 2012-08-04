@@ -141,6 +141,7 @@ Full reference on stub util class can be [found here](/docs/reference/stubs).
 
 Less words, more code for better understanding.
 
+```php
 <?php
 use Codeception\Util\Stub;
 
@@ -175,7 +176,7 @@ class SimpleTest extends \Codeception\TestCase\Test
     }
 }
 ?>
-
+```
 
 ### Limitations
 
