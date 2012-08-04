@@ -11,10 +11,11 @@ system('git clone git@github.com:Codeception/codeception.github.com.git package/
 
 copy('package/codecept.phar','package/site/codecept.phar');
 
-system('git add -A');
+chdir('package/site');
+system('git add codecept.phar');
 system('git commit -m="auto-updated phar archive"');
 system('git push');
-chdir('package');
+chdir('..');
 sleep(2);
 @system('del /s /q /F site');
 @system('rd /s /q site');

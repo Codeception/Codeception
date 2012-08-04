@@ -2,7 +2,7 @@
 
 Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: Functional tests don't require a web server to run your scenarios. In other words, we will run your application inside the tests, emulating requests and response.
 
-In simple terms we set $_REQUEST, $_GET and $_POST variables, then we execute your script inside a test, we receive output, and then we test it. 
+In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables, then we execute your script inside a test, we receive output, and then we test it. 
 Functional testing may often be better then acceptance testing because it doesn't require a web server and may provide you with more detailed debug output. For example, if your site throws an exception it will be shown in the console. 
 
 There is an exception: If it was inside an acceptance test you would just see the error page, but here we see the actual exception with a stack trace. 

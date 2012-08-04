@@ -11,11 +11,13 @@ With Codeception you should describe your test in a scenario, as we did that for
 ```php
 <?php
 
-$I = new CodeGuy($scenario);
-$I->execute(function () {
-   return Validator::validateEmail('davert@mail.ua');
-});
-$I->seeResultEquals(true);
+function validateEmail(CodeGuy $I)
+{
+    $I->execute(function () {
+        return Validator::validateEmail('davert@mail.ua');
+    });
+    $I->seeResultEquals(true);    
+}
 ?>
 ```
 
@@ -29,7 +31,7 @@ public function testValidateEmail()
 ?>
 ```
 
-Well, PHPUnit wins here: its test is shorter and readable. There is no practical reason for using Codeception for testing simple methods. But not all functions can be executed and tested that way. Whenever a function has dependencies and it's results can't be so easily observable, Codeception will be quite useful.
+Well, PHPUnit wins here: its test is shorter and readable. **There is no practical reason for using Codeception for testing simple methods**. But not all functions can be executed and tested that way. Whenever a function has dependencies and it's results can't be so easily observable, Codeception will be quite useful.
 
 Using Codeception for unit testing is like using a framework for web development. Even if it's hard to create a 'hello world' page with Symfony, Zend, or Yii, they help you build complex web applications.
 

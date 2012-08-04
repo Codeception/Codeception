@@ -9,30 +9,27 @@ When we choose to clean up a database, we should make this cleaning as fast as p
 ## Manual Cleanup
 
 You could possibly create records at the begining of test and delete them afterwards. This is cool option if you don't have shared data between tests.
-
-Use following hooks to execute any code at the beginning and the end of test (new in 1.0.11).
+But you shouldn't put any code into your test file. Because test files are parsed two times: for analisys and execution, this may lead to unpredictable results. So, you should specify when do you want your code to be executed. It's a good idea to create data before the analisys and remove data after the test is finished. Use the special methods `running()` and `preload()` of `$scenario` object to determine the current object state.
 
 ``` php
 <?php
-$user = $scenario->prepare(function() {
+if ($scenario->preload()) {
     $user = new User();
     $user->name('davert');
     $user->save();
-    return $user;
-});
+}
 
 $I = new WebGuy($scenario);
 $I->amOnPage('/admin/users');
 $I->see('User: '. $user->name);
 
-$scenario->finalize(function() use ($user) {
+if ($scenario->running()) {
     $user->delete();
-});
-
+}
+?>
 ```
 
-We don't recommend using `$scenario->prepare`, `$scenario->finialize` too often, as they make your test less readable. Consider moving fixtures to bootsrtap file and using aoutmatical cleanup.
-
+Similarly you can insert any code before into your test. But please explicitly set the stage when you need it to be included, or the code will be executed twice!
 
 ## Automatical Cleanup
 
