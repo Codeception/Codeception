@@ -1,4 +1,4 @@
-# Writing Unit Tests
+# Unit Tests in CEST
 
 In this chapter we will lift up the curtains and show you a bit of the magic that Codeception does to simplify unit testing.
 Earlier we tested the Controller layer of the MVC pattern. In this chapter we will concentrate on testing the Models.
@@ -146,58 +146,22 @@ class ControllerCest {
 ?>
 ```
 
-### Native Asserts
+#### Is The Test Running?
 
-You are not limited to using asserts only in `see` actions. The native PHPUnit assert actions will work anywhere in your test code. 
-By default, `assert*` functions from the `PHPUnit/Framework/Assert/Functions.php` file are loaded in your bootstrap file. 
-If you have any conflicts with your own code, use the PHPUnit\_Framework\_Assert class for writing assertions.
+Scenario-based test is run in 2 phases: analisys and execution. Whenever you want to add any custom PHP code (which doesn't use the $I object) you probably want it to be xecuted in the runtime. Thus, you should always perform the check if the test is running:
 
 ```php
 <?php
-$I->haveStub($user = Stub::make('User', array(function ('setName' => function ($name) { assertEquals('davert', $name); }))));
-$I->execute(function() use($user) {
-	$user->name = 'davert'; // we assume updating property will execute setter.
-	$user->email = 'davert@mail.ua'
-	assertEquals('davert@mail.ua', $user->getEmail());
-});
+function save(\CodeGuy $I, \Codeception\Scenario $scenario)
+	$I->execute('Comment::save', array('post_id' => 5);
+	if ($scenario->running()) {
+		DB::updateCounters();		
+	}
+	$I->seeInDatabase('posts',array('id' => 5, 'comments_count' => 1));
 ?>
 ```
 
-Still, we don't recommend using asserts in test doubles, as it breaks the test logic. We must assume that all asserts are performed _after_ the rest of the code is executed. This can lead to misunderstanding while reading the test. 
-
-
-#### Test != Code
-
-One thing that you should understand very clearly: you are writing a scenario, not the test code which will actually be run. The methods of the Guy class just record the actions to be performed. The test actions defined by your scenario will be performed after the actual test code is fully written by Codeception and the environment has been prepared. So usage of PHP-specific operators can lead to unpredictable results. 
-
-This leads us to some limitations we should keep in mind:
-All of the code you write besides the `$I` object will be executed _before_ the test is run, no matter where in the test your code is written.
-
-```php
-<?php
-$I->testMethod('Comment::save');
-$I->executeTestedMethod(array('post_id' => 5);
-DB::updateCounters();
-$I->seeInDatabase('posts',array('id' => 5, 'comments_count' => 1));
-?>
-```
-
-This scenario will fail, because the developer expects the comment counter will be incremented by the `DB::updateCounters` call at a specific point in the test. But this method will be executed before the comment is saved, so the last assertion will fail. 
-
-_To perform actions inside the scenario add your code as an action into the CodeHelper module._
-
-This leads to another thing: No method of the Guy class is allowed to return values. It will return the current CodeGuy instance only. Reconsider your testing scenario every time you want to write something like this:
-
-```php
-<?php
-$I->testMethod('Post::insert');
-$I->executeTestedMethod(array('title' => 'Top 10 kitties');
-$post_id = $I->takeLastResult(); // this won't work
-$I->seeInDatabase('posts', array('id' => $post_id));
-?>
-```
-
-For testing the result we use `->seeResult*` actions. But you can't use data returned by the tested method inside your subsequent actions.
+In case you want to execute line on analisys step (to preload bootstrap values), you can use the `$scenario->preload()` method.
 
 #### Stubs
 
@@ -252,19 +216,21 @@ Various manipulations on tested objects can be performed:
 
 ```php
 <?php
-$post = new Post(array('title' => 'Top 10 kitties'));
-$I->testMethod('Post.save');
+function create(CodeGuy $I, Codeception\Scenario $scenario) {
+	$post = new Post(array('title' => 'Top 10 kitties'));
 
-$I->expect('post about kitties created')
-	->executeTestedMethodOn($post);
-	->seeInDatabase('posts', array('title' => 'Top 10 kitties'));
+	$I->expect('post about kitties created')
+	$I->executeMethod($post, 'create');
+	$I->seeInDatabase('posts', array('title' => 'Top 10 kitties'));
 
-$I->changeProperty($post, 'title', 'Top 10 doggies');
-
-$I->expect('the kitties post is updated')
-	->executeTestedMethodOn($post);
-	->seeInDatabase('posts', array('title' => 'Top 10 doggies'))
-	->dontSeeInDatabase('posts', array('title' => 'Top 10 kitties'));
+	if ($scenario->running()) {
+		$post->setTitle('Top 10 doggies');
+	}
+	$I->expect('the kitties post is updated')
+	$I->executeMethod($post, 'create');
+	$I->seeInDatabase('posts', array('title' => 'Top 10 doggies'))
+	$I->dontSeeInDatabase('posts', array('title' => 'Top 10 kitties'));
+}	
 ?>
 ```
 
@@ -272,14 +238,14 @@ If you need to use setters instead of changing properties, put your code inside 
 
 ### Making Mocks Dynamically
 
-We've seen the Codeception limits in code execution. But what do we have to benefit?
+Anyway, how does Codeception helps with complex test cases?
 Let's go back to the controller test example.
 
 ```php
 <?php
         $I->executeTestedMethodOn($controller, 1)
-            ->seeResultEquals(true)
-            ->seeMethodInvoked($controller, 'render');
+        $I->seeResultEquals(true)
+        $I->seeMethodInvoked($controller, 'render');
 ?>
 ```
 
