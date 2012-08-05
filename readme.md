@@ -45,9 +45,9 @@ class UserControllerCest {
     {
         $I->haveFakeClass($userController = Stub::makeEmptyExcept('UserController'));
         $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
-            ->seeResultEquals(true)
-            ->seeMethodInvoked($userController, 'renderHtml')
-            ->seeInDabatase('users', array('username' => 'MilesDavis'));
+        $I->seeResultEquals(true)
+        $I->seeMethodInvoked($userController, 'renderHtml')
+        $I->seeInDabatase('users', array('username' => 'MilesDavis'));
     }
 }
 ?>
