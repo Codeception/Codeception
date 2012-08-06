@@ -2,8 +2,8 @@
 
 Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test can be added to Codeception test suite and then executed. 
 If you ever wrote a PHPUnit test, then do it as well as you did before. Codeception will add you some cool helpers to simplify common tasks.
-If you don't have experinece in writing unit tests, please read the [PHPUnit manual](http://www.phpunit.de/manual/3.6/en/index.html) to start.
-The basics of unit tests are skipped here, but instead you will know what features Codeception adds to unit tests.
+If you don't have experience in writing unit tests, please read the [PHPUnit manual](http://www.phpunit.de/manual/3.6/en/index.html) to start.
+The basics of unit tests are skipped here, but instead you will get a basic knowledge on what features Codeception adds to unit tests.
 
 __To say it again: you don't need to install PHPUnit to run it's tests. Codeception can run them too.__
 
@@ -46,7 +46,7 @@ class SimpleTest extends \Codeception\TestCase\Test
 }
 ?>
 ```
-This class has predefined `setUp` and `tearDown` methods to start with. They are used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in acctpance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
+This class has predefined `setUp` and `tearDown` methods to start with. They are used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -76,7 +76,7 @@ After running the build command
 $ php codecept.phar build
 ```
 
-A new methods will be added into CodeGuy class. Thus, you can start using dabatase methods in your test:
+A new methods will be added into CodeGuy class. Thus, you can start using database methods in your test:
 
 ```php 
 <?php
@@ -133,7 +133,7 @@ And you can use it anywhere in your test. Use autoloader to set up the fixtures 
 
 ### Stubs
 
-The first line of generated class includes a Stub utlility class into a test file. This means you can easily create dummy classes instead of real one. Don't waste your time on adding many parameters to constructor, just run the `Stub::make` to create a new class.
+The first line of generated class includes a Stub utility class into a test file. This means you can easily create dummy classes instead of real one. Don't waste your time on adding many parameters to constructor, just run the `Stub::make` to create a new class.
 
 Full reference on stub util class can be [found here](/docs/reference/stubs).
 
