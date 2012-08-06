@@ -123,9 +123,11 @@ Write any setup preparations for the suite there.
 ## Tests
 Codeception supports three test formats. Besides the previously described scenario-based Cept format, Codeception can also execute PHPUnit test files for unit testing, and a hybrid scenario-unit Cest format. They are covered in later chapters. There is no difference in the way the tests of either format will be run in the suite.
 
-## How does it work?
+## Important Notes
 
-Codeception is pretty smart when test executing scenarios. But you should keep in mind that Codeception executes each scenario two times: one for analysis and one for execution. So, any custom PHP code put in the file will be executed two times! Surely, you don't need that. So, before injecting any php code (which is not recommended anyway) into your test, please specify the stage when it should be executed.
+Codeception is pretty smart when executing test scenarios. But you should keep in mind that Codeception executes each scenario two times: one for analysis and one for execution. So, any custom PHP code put in the file will be executed two times! Probably, you don't need that. Before injecting any custom php code (which is not using the `$I` object) into your test, please specify the stage when it should be executed.
+
+__To say it again: each test file is run two times: for analyses and execution.__
 
 For instance, this code will be run when the scenario is analyzed.
 

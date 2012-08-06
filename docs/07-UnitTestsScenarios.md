@@ -89,14 +89,14 @@ class UserControllerCest {
         $I->setProperty($controller, 'db', $db);
 
         $I->executeTestedMethodOn($controller, VALID_USER_ID)
-            ->seeResultEquals(true)
-            ->seeMethodInvoked($controller, 'render');
+        $I->seeResultEquals(true)
+        $I->seeMethodInvoked($controller, 'render');
 
         $I->expect('it will render 404 page for non existent user')
-            ->executeTestedMethodOn($controller, INVALID_USER_ID)
-            ->seeResultNotEquals(true)
-            ->seeMethodInvoked($controller, 'render404','User not found')
-            ->seeMethodNotInvoked($controller, 'render');
+        $I->executeTestedMethodOn($controller, INVALID_USER_ID)
+        $I->seeResultNotEquals(true)
+        $I->seeMethodInvoked($controller, 'render404','User not found')
+        $I->seeMethodNotInvoked($controller, 'render');
     }
 }
 ?>
