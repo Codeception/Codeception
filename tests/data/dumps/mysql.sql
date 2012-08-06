@@ -58,3 +58,16 @@ insert  into `users`(`id`,`name`,`email`,`created_at`) values (2,'nick','nick@ma
 insert  into `users`(`id`,`name`,`email`,`created_at`) values (3,'miles','miles@davis.com','2012-02-01 21:17:25');
 
 insert  into `users`(`id`,`name`,`email`,`created_at`) values (4,'bird','charlie@parker.com','2012-02-01 21:17:39');
+
+
+
+
+CREATE TABLE `order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+
