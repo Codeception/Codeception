@@ -62,10 +62,10 @@ class Cest extends \Codeception\TestCase\Cept
         if ($this->static) {
             $class = $this->testClass->class;
             if (!is_callable(array($class, $this->testMethod))) throw new \Exception("Method {$this->specName} can't be found in tested class");
-            call_user_func(array(get_class($this->testClass), $this->testMethod), $I);
+            call_user_func(array(get_class($this->testClass), $this->testMethod), $I, $this->scenario);
         } else {
             if (!is_callable(array($this->testClass, $this->testMethod))) throw new \Exception("Method {$this->specName} can't be found in tested class");
-            call_user_func(array($this->testClass, $this->testMethod), $I);
+            call_user_func(array($this->testClass, $this->testMethod), $I, $this->scenario);
         }
     }
 
