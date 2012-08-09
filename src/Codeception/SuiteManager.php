@@ -82,6 +82,8 @@ class SuiteManager {
                 if ($test instanceof \Codeception\TestCase\Test) {
                     $test->setBootstrap($this->settings['bootstrap']);
                     $test->setDispatcher($this->dispatcher);
+                } else {
+                    if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
                 }
             }
         }
