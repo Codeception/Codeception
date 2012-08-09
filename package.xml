@@ -11,7 +11,7 @@
     <active>yes</active>
   </lead>
   <date>2012-08-09</date>
-  <time>11:59:44</time>
+  <time>13:01:48</time>
   <version>
     <release>1.1.1</release>
     <api>1.1.1</api>
@@ -27,7 +27,7 @@
       <file name=".gitignore" role="php" md5sum="b62f0d49b28925cfbc26c8f7ee944ac7"/>
       <file name=".travis.yml" role="php" md5sum="04eaff048eddb23dfd80ebc23fb0c4d7"/>
       <file name="autoload.php" role="php" md5sum="e0fccb410a4e1340fa257a108bbcb0ab"/>
-      <file name="codecept" role="script" baseinstalldir="/" md5sum="d6d4f9c57236186671b920e520549ea7">
+      <file name="codecept" role="script" baseinstalldir="/" md5sum="856cb510637ea3bc9f4a47e3db5b63c4">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
