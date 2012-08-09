@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This file is part of the Behat\Mink.
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+/**
+ * Release script.
+ *
+ * Usage: bin/release 0.2.0 beta
+ *
+ * @author     Konstantin Kudryashov <ever.zet@gmail.com>
+ */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Behat\Mink\Compiler;
+
+system('rm *.phar *.tgz');
+
+if (!isset($argv[1])) {
+  throw new RuntimeException('You must provide version.');
+}
+$version = $argv[1];
+
+if (!isset($argv[2])) {
+  throw new RuntimeException('You must provide stability status (alpha/beta/stable).');
+}
+$stability = $argv[2];
+
+$ldr = new Compiler\MapFileCompiler($autoloaderFilename = 'autoload.php', $mapFilename = 'autoload_map.php');
+$ldr->compile();
+echo "Autoloader compiled\n";
+
+$pear = new Compiler\PearCompiler();
+$pear->compile($version, $stability);
+echo "PEAR package compiled: mink-$version.tgz\n";
+
+$phar = new Compiler\PharCompiler();
+$phar->compile($version);
+system("cp mink-$version.phar mink.phar");
+echo "PHAR package compiled: mink-$version.phar\n";
+
+unlink($autoloaderFilename);
+unlink($mapFilename);
+
+exit(0);
