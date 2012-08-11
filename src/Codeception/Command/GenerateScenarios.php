@@ -11,11 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateScenarios extends Base
 {
-
     protected function configure()
     {
         $this->setDefinition(array(
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite from which tests should be generated'),
+            new \Symfony\Component\Console\Input\InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
         ));
         parent::configure();
     }
@@ -32,7 +32,13 @@ class GenerateScenarios extends Base
         $config = \Codeception\Configuration::config();
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
-        @mkdir($path = \Codeception\Configuration::dataDir() . 'scenarios');
+        if ($input->getOption('path')) {
+            $path = $input->getOption('path');
+        } else {
+            $path = \Codeception\Configuration::dataDir() . 'scenarios';
+        }
+
+        @mkdir($path);
         @mkdir($path = $path . DIRECTORY_SEPARATOR . $suite);
 
         $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
