@@ -16,6 +16,7 @@ class GenerateScenarios extends Base
         $this->setDefinition(array(
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite from which tests should be generated'),
             new \Symfony\Component\Console\Input\InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
+            new \Symfony\Component\Console\Input\InputOption('single-file', '', InputOption::VALUE_NONE, 'Use specified path as destination instead of default'),
         ));
         parent::configure();
     }
@@ -39,7 +40,18 @@ class GenerateScenarios extends Base
         }
 
         @mkdir($path);
-        @mkdir($path = $path . DIRECTORY_SEPARATOR . $suite);
+
+        if (!is_writable($path)) {
+            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        }
+
+        $path = $path . DIRECTORY_SEPARATOR . $suite;
+
+        if ($input->getOption('single-file')) {
+            file_put_contents($path . '.txt', '');
+        } else {
+            @mkdir($path);
+        }
 
         $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 
@@ -58,10 +70,14 @@ class GenerateScenarios extends Base
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
             $test->testCodecept(false);
             $features = $test->getScenarioText();
-            $name = $this->underscore(substr($test->getFileName(), 0, -8));
 
-            $output->writeln("* $name generated");
-            file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
+            if ($input->getOption('single-file')) {
+                file_put_contents($path . '.txt', $features . PHP_EOL, FILE_APPEND);
+            } else {
+                $name = $this->underscore(substr($test->getFileName(), 0, -8));
+                file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
+                $output->writeln("* $name generated");
+            }
         }
     }
 
@@ -71,7 +87,6 @@ class GenerateScenarios extends Base
         $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
         $name = str_replace(array('/','\\'),array('.','.'), $name);
         return $name;
-
     }
 
 }
