@@ -19,6 +19,7 @@ class Build extends Base
 // You can change it manually, but it will be overwritten on next build
 
 use Codeception\Maybe;
+%s
 
 %s %s extends %s
 {
@@ -45,7 +46,7 @@ EOF;
     }
 EOF;
 
-    
+
     public function getDescription() {
         return 'Generates base classes for all suites';
     }
@@ -71,10 +72,13 @@ EOF;
             $code = array();
             $methodCounter = 0;
 
+	        $aliases = array();
             $methods[] = array();
 
             foreach ($modules as $modulename => $module) {
-                $class = new \ReflectionClass($className = '\Codeception\\Module\\'.$modulename);
+	            $className = '\Codeception\\Module\\'.$modulename;
+                $class = new \ReflectionClass($className);
+	            $aliases[] = 'use ' . ltrim($className, '\\') . ';';
                 $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
                 foreach ($methods as $method) {
                     if (strpos($method->name, '_') === 0) continue;
@@ -99,14 +103,19 @@ EOF;
                     }
 
                     $params = implode(', ', $params);
-                    $code[] = sprintf($this->methodTemplate, $className, $method->name, $method->name, $params, $type, $method->name);
+                    $code[] = sprintf($this->methodTemplate, $modulename, $method->name, $method->name, $params, $type, $method->name);
 
                     $methodCounter++;
                     $methods[] = $method->name;
                 }
             }
 
-            $contents = sprintf($this->template, 'class',$settings['class_name'], '\Codeception\AbstractGuy', implode("\r\n\r\n ", $code));
+            $contents = sprintf($this->template,
+	                            implode("\n", $aliases),
+	                            'class',
+	                            $settings['class_name'],
+	                            '\Codeception\AbstractGuy',
+	                            implode("\n\n ", $code));
 
             file_put_contents($file = $settings['path'].$settings['class_name'].'.php', $contents);
             $output->writeln("$file generated sucessfully. $methodCounter methods added");
