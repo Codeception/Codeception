@@ -16,7 +16,7 @@ class GenerateScenarios extends Base
         $this->setDefinition(array(
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite from which tests should be generated'),
             new \Symfony\Component\Console\Input\InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
-            new \Symfony\Component\Console\Input\InputOption('single-file', '', InputOption::VALUE_NONE, 'Use specified path as destination instead of default'),
+            new \Symfony\Component\Console\Input\InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
         ));
         parent::configure();
     }
