@@ -70,11 +70,12 @@ class GenerateScenarios extends Base
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
             $test->testCodecept(false);
             $features = $test->getScenarioText();
+            $name = $this->underscore(substr($test->getFileName(), 0, -8));
 
             if ($input->getOption('single-file')) {
                 file_put_contents($path . '.txt', $features . PHP_EOL, FILE_APPEND);
+                $output->writeln("* $name rendered");
             } else {
-                $name = $this->underscore(substr($test->getFileName(), 0, -8));
                 file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
                 $output->writeln("* $name generated");
             }
