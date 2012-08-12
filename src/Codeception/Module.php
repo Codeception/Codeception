@@ -6,7 +6,7 @@ abstract class Module {
 	protected $debugStack = array();
 
 	protected $storage = array();
-    
+
     protected $config = array();
 
     protected $requiredFields = array();
@@ -21,7 +21,7 @@ abstract class Module {
                 Update cunfiguration and set all required fields\n\n
         ");
     }
-	
+
 	public function _hasRequiredFields()
 	{
 		return !empty($this->requiredFields);
@@ -297,6 +297,16 @@ abstract class Module {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
+    protected function stringifyArray($array)
+    {
+        $typecastToString = function (& $value)
+        {
+            $value = (string)$value;
+        };
 
+        array_walk_recursive($array, $typecastToString);
+
+        return $array;
+    }
 
 }

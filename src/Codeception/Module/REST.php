@@ -36,7 +36,7 @@ class REST extends \Codeception\Module
     public $headers = array();
     public $params = array();
     public $response = "";
-    
+
     public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
@@ -140,6 +140,7 @@ class REST extends \Codeception\Module
             $this->client->setServerParameter("HTTP_$header", $val);
         }
         $url = $this->config['url'].$url;
+        $parameters = $this->stringifyArray($parameters);
         $this->debugSection("Request","$method $url?".http_build_query($parameters));
         $this->client->request($method, $url, $parameters, $files);
         $this->response = $this->client->getResponse()->getContent();
