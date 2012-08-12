@@ -69,6 +69,8 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
                               'cleanup'  => true,
                               'dump'     => null);
 
+	protected $populated = false;
+
     /**
      * @var \Codeception\Util\Driver\Db
      */
@@ -98,17 +100,25 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
         // starting with loading dump
         if ($this->config['populate']) {
-                $this->cleanup();
-                $this->loadDump();
+            $this->cleanup();
+            $this->loadDump();
+            $this->populated = true;
         }
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->config['cleanup'] && !$this->populated) {
+            $this->cleanup();
+            $this->loadDump();
+        }
+        parent::_before($test);
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup']) {
-                $this->cleanup();
-                $this->loadDump();
-        }
+        $this->populated = false;
+        parent::_after($test);
     }
 
     protected function cleanup()
