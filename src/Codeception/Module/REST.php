@@ -222,7 +222,46 @@ class REST extends \Codeception\Module
         return $this->response;
     }
 
-	/**
+    /**
+     * Returns data from the current JSON response using specified path
+     * so that it can be used in next scenario steps
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $user_id = $I->grabDataFromJsonResponse('user.user_id');
+     * $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @param string $path
+     *
+     * @version 1.1
+     * @return string
+     */
+    public function grabDataFromJsonResponse($path)
+    {
+        $data = $response = json_decode($this->response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->fail('Respose is not of JSON format or is malformed');
+            $this->debugSection('Response', $this->response);
+        }
+
+        foreach (explode('.', $path) as $key) {
+            if (!array_key_exists($key, $data)) {
+                $this->fail('Response does not have required data');
+                $this->debugSection('Response', $response);
+            }
+
+            $data = $data[$key];
+        }
+
+        return $data;
+    }
+
+    /**
 	 * @author nleippe@integr8ted.com
 	 * @author tiger.seo@gmail.com
 	 * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
