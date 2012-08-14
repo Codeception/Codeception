@@ -149,7 +149,7 @@ class SuiteManager {
 
     protected function relativeName($file)
     {
-        return $name = basename($file);
+        return $name = str_replace($this->path, '', $file);
     }
 
     
