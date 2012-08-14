@@ -3,6 +3,9 @@ namespace Codeception;
 
 abstract class Step
 {
+    const ACTION    = 'Action';
+    const COMMENT   = 'Comment';
+    const ASSERTION = 'Assertion';
 
     /**
      * @var    string

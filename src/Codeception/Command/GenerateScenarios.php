@@ -17,6 +17,7 @@ class GenerateScenarios extends Base
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite from which tests should be generated'),
             new \Symfony\Component\Console\Input\InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new \Symfony\Component\Console\Input\InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
+            new \Symfony\Component\Console\Input\InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)'),
         ));
         parent::configure();
     }
@@ -66,10 +67,16 @@ class GenerateScenarios extends Base
         $suiteManager->loadTests();
         $tests = $suiteManager->getSuite()->tests();
 
+        if ($input->getOption('format')) {
+            $format = $input->getOption('format');
+        } else {
+            $format = 'text';
+        }
+
         foreach ($tests as $test) {
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
             $test->testCodecept(false);
-            $features = $test->getScenarioText();
+            $features = $test->getScenarioText($format);
             $name = $this->underscore(substr($test->getFileName(), 0, -8));
 
             if ($input->getOption('single-file')) {
