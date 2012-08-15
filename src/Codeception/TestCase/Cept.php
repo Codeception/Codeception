@@ -2,6 +2,7 @@
 namespace Codeception\TestCase;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Step;
 
 class Cept extends \Codeception\TestCase
 {
@@ -36,11 +37,32 @@ class Cept extends \Codeception\TestCase
     }
 
 
-    public function getScenarioText()
+    public function getScenarioText($format = 'text')
     {
-        $text = implode("\r\n", $this->scenario->getSteps());
-        $text = str_replace(array('((', '))'), array('...', ''), $text);
-        return $text = strtoupper('I want to ' . $this->scenario->getFeature()) . "\n\n" . $text;
+        switch (strtolower($format))
+        {
+            case 'html':
+                $text = '';
+                foreach($this->scenario->getSteps() as $step) {
+                    /** @var Step $step */
+                    if ($step->getName() !== Step::COMMENT) {
+                        $text .= 'I ' . $step->getHtmlAction() . '<br/>';
+                    } else {
+                        $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
+                    }
+                }
+                $text = str_replace(array('((', '))'), array('...', ''), $text);
+                $text = "<h3>" . strtoupper('I want to ' . $this->scenario->getFeature()) . "</h3>" . $text;
+            break;
+
+            default:
+                $text = implode("\r\n", $this->scenario->getSteps());
+                $text = str_replace(array('((', '))'), array('...', ''), $text);
+                $text = strtoupper('I want to ' . $this->scenario->getFeature()) . "\r\n\r\n" . $text;
+            break;
+        }
+
+        return $text;
     }
 
     public function getFeature() {
