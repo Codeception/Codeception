@@ -85,10 +85,6 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
         $stepsBuffer  = '';
 
         foreach ($steps as $step) {
-            $currentStepName = $step->getName();
-
-            $stepText = $currentStepName;
-
             $stepTemplate = new \Text_Template(
               $this->templatePath . 'step.html'
             );
