@@ -239,8 +239,6 @@ class REST extends \Codeception\Module
      *
      * @version 1.1
      * @return string
-     *
-     * @todo create test
      */
     public function grabDataFromJsonResponse($path)
     {
