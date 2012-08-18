@@ -192,7 +192,8 @@ class Console implements EventSubscriberInterface
             $i++;
 //            if (strpos($step['function'], $action) !== false) break;
             if (!isset($step['file'])) continue;
-            $this->output->writeln(sprintf("%s:%s",
+            $this->output->writeln(sprintf("#%d %s(%s)",
+                $i,
                 isset($step['file']) ? $step['file'] : '',
                 isset($step['line']) ? $step['line'] : ''));
             if ($i == 1) {
