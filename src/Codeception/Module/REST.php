@@ -237,10 +237,10 @@ class REST extends \Codeception\Module
      *
      * @param string $path
      *
-     * @version 1.1
+     * @since 1.1.2
      * @return string
      *
-     * @todo create test
+     * @author tiger.seo@gmail.com
      */
     public function grabDataFromJsonResponse($path)
     {
