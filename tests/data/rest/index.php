@@ -5,7 +5,18 @@ include_once 'server.php';
 $GLOBALS['RESTmap'] = array();
 
 $GLOBALS['RESTmap']['GET'] = array('USER' => function() {
-    return array('name' => 'davert', 'email' => 'davert@mail.ua');
+    return array(
+        'name'    => 'davert',
+        'email'   => 'davert@mail.ua',
+        'aliases' => array(
+            'DavertMik',
+            'davert.ua'
+        ),
+        'address' => array(
+            'city'    => 'Kyiv',
+            'country' => 'Ukraine',
+        ),
+    );
 });
 
 $GLOBALS['RESTmap']['POST'] = array('USER' => function() {
@@ -18,7 +29,6 @@ $GLOBALS['RESTmap']['PUT'] = array('USER' => function() {
     $user = array('name' => 'davert', 'email' => 'davert@mail.ua');;
     $user['name'] = $name;
     return $user;
-
 });
 
 $GLOBALS['RESTmap']['DELETE'] = array('USER' => function() {
