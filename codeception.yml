@@ -16,3 +16,14 @@ modules:
             user: ''
             password: ''
             dump: tests/data/dump.sql
+        AMQP:
+            host: 'localhost'
+            port: '5672'
+            username: 'guest'
+            password: 'guest'
+            vhost: '/'
+            routes:
+                - exchange: Exchange1
+                  queue: Queue1
+                - exchange: Exchange1
+                  queue: Queue2
