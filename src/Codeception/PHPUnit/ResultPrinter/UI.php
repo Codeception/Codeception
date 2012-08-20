@@ -7,7 +7,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
      * @var
      */
     protected $dispatcher;
-    
+
     public function __construct(\Symfony\Component\EventDispatcher\EventDispatcher $dispatcher, $options, $out = null) {
         parent::__construct($out, $options['steps'], $options['colors'], $options['debug']);
         $this->dispatcher = $dispatcher;
@@ -18,6 +18,30 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
         $failedTest = $defect->failedTest();
         if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefect($defect, $count);
         $this->dispatcher->dispatch('fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException()));
+    }
+
+    /**
+     * @param \PHPUnit_Framework_TestFailure $defect
+     */
+    protected function printDefectTrace(\PHPUnit_Framework_TestFailure $defect)
+    {
+        $this->write($defect->getExceptionAsString());
+        $this->writeNewLine();
+
+        $stackTrace = \PHPUnit_Util_Filter::getFilteredStacktrace($defect->thrownException(), false);
+
+        foreach ($stackTrace as $i => $frame) {
+            if (! isset($frame['file'])) {
+                continue;
+            }
+
+            $this->write(sprintf("#%d %s(%s)",
+                $i,
+                $frame['file'],
+                isset($frame['line']) ? $frame['line'] : '?'));
+
+            $this->writeNewLine();
+        }
     }
 
     public function startTest(\PHPUnit_Framework_Test $test)

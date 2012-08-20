@@ -4,9 +4,10 @@ require_once 'vendor/UniversalClassLoader.php';
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
-    'Codeception' => __DIR__ . '/src',
-    'Monolog' => __DIR__ . '/vendor',
+    'Codeception'       => __DIR__ . '/src',
+    'Monolog'           => __DIR__ . '/vendor',
     'Symfony\Component' => __DIR__ . '/vendor',
+    'PhpAmqpLib'        => __DIR__ . '/vendor/php-amqplib',
 ));
 
 $loader->register(true);
@@ -26,5 +27,5 @@ if (stream_resolve_include_path('mink/autoload.php')) {
         $loader->registerNamespace('Goutte','vendor/fabpot/goutte');
         $loader->register(true);
     }
-   
+
 }

@@ -187,7 +187,6 @@ class Console implements EventSubscriberInterface
     public function printException(\Exception $e)
     {
         $i = 0;
-        $class = get_class($e);
         foreach ($e->getTrace() as $step) {
             $i++;
 //            if (strpos($step['function'], $action) !== false) break;
