@@ -1,0 +1,189 @@
+{
+    "hash": "2f45d9feb9b983170d1c384f2673e04f",
+    "packages": [
+        {
+            "package": "EHER/PHPUnit",
+            "version": "1.6"
+        },
+        {
+            "package": "alexandresalome/php-selenium",
+            "version": "dev-master",
+            "source-reference": "1.0.1",
+            "commit-date": "1341920360"
+        },
+        {
+            "package": "behat/mink",
+            "version": "v1.4.0"
+        },
+        {
+            "package": "behat/mink-browserkit-driver",
+            "version": "dev-master",
+            "source-reference": "97fa7d67ab5afb13d74515c15ef5c0cab12c0bc0",
+            "commit-date": "1341477260"
+        },
+        {
+            "package": "behat/mink-goutte-driver",
+            "version": "dev-master",
+            "source-reference": "192e58dfd26098385218d65637426c26d148d9b0",
+            "commit-date": "1343123643"
+        },
+        {
+            "package": "behat/mink-selenium-driver",
+            "version": "dev-master",
+            "source-reference": "v1.0.1",
+            "commit-date": "1341523098"
+        },
+        {
+            "package": "behat/mink-selenium2-driver",
+            "version": "dev-master",
+            "source-reference": "aad26bdb19f904b1990048750fc33c7b6f7f2e0e",
+            "commit-date": "1343748582"
+        },
+        {
+            "package": "behat/mink-zombie-driver",
+            "version": "dev-master",
+            "source-reference": "610c484c2a736533e076c05ddaa6098f42906c60",
+            "commit-date": "1344599890"
+        },
+        {
+            "package": "fabpot/goutte",
+            "version": "dev-master",
+            "alias-pretty-version": "1.0.x-dev",
+            "alias-version": "1.0.9999999.9999999-dev"
+        },
+        {
+            "package": "fabpot/goutte",
+            "version": "dev-master",
+            "source-reference": "6d26279344736f6983a969e46afef082ebf30a67",
+            "commit-date": "1345141401"
+        },
+        {
+            "package": "guzzle/common",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "guzzle/http",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "guzzle/parser",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "instaclick/php-webdriver",
+            "version": "dev-master",
+            "source-reference": "v1.0.5",
+            "commit-date": "1343829434"
+        },
+        {
+            "package": "monolog/monolog",
+            "version": "dev-master",
+            "source-reference": "1.2.0",
+            "commit-date": "1345310833"
+        },
+        {
+            "package": "symfony/browser-kit",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/browser-kit",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1343564266"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "source-reference": "3b66f1056f5ac37146d3b755964e8a43a205f2f5",
+            "commit-date": "1344349441"
+        },
+        {
+            "package": "symfony/css-selector",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/css-selector",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1342347231"
+        },
+        {
+            "package": "symfony/dom-crawler",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/dom-crawler",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1342347231"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "source-reference": "76c76f62702b09e0f182ae618be0f1d79e2a711f",
+            "commit-date": "1345066712"
+        },
+        {
+            "package": "symfony/finder",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/finder",
+            "version": "dev-master",
+            "source-reference": "1af11ab3a686f9c45f2a8d9d721d5717cdd5f1d6",
+            "commit-date": "1345026762"
+        },
+        {
+            "package": "symfony/process",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/process",
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1343512949"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "source-reference": "6b3eb66a7c4495dcaa35a64dd93c8ba8c29f35d8",
+            "commit-date": "1344325256"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "behat/mink": 0
+    }
+}
