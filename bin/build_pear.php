@@ -7,7 +7,9 @@ $root = __DIR__.'/../';
 chdir($root);
 @mkdir("package/pear");
 chdir('package/pear');
-// Clone GitHub
+
+// Clone from GitHub
+system('git clone git://github.com/Codeception/Codeception.git .');
 
 // install Codeception from Composer
 $composer = file_get_contents('http://getcomposer.org/installer');
@@ -34,7 +36,7 @@ sleep(2);
 
 // clean up
 chdir($root.'/package');
-@system('del /s /q /F pear');
+@system('del /s /q /F package/pear');
 @system('rd /s /q pear');
 @system('rm -rf pear');
 echo "\n\nPEAR BUILD SUCCESSFUL";
