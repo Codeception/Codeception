@@ -24,7 +24,7 @@
         "monolog/monolog": "*",
         "symfony/finder": "*",
         "symfony/console": "*",
-        "symfony/symfony/event-dispatcher": "*",
+        "symfony/event-dispatcher": "*",
         "symfony/yaml": "*"
 
     },

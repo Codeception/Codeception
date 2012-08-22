@@ -61,25 +61,34 @@ class Memcache extends \Codeception\Module
     }
 
     /**
-     * Checks item in Memcached is the same as expected.
+     * Checks item in Memcached exists and the same as expected.
      *
      * @param $key
      * @param $value
      */
-    public function seeInMemcached($key, $value = null)
+    public function seeInMemcached($key, $value = false)
     {
         $actual = $this->memcache->get($key);
         $this->debugSection("Value", $actual);
         $this->assertEquals($value, $actual);
     }
 
-    public function dontSeeInMemcached($key, $value = null)
+    /**
+     * Checks item in Memcached doesn't exist or is the same as expected.
+     *
+     * @param $key
+     * @param bool $value
+     */
+    public function dontSeeInMemcached($key, $value = false)
     {
         $actual = $this->memcache->get($key);
         $this->debugSection("Value", $actual);
         $this->assertNotEquals($value, $actual);
     }
 
+    /**
+     * Flushes all Memcached data.
+     */
     public function clearMemcache()
     {
         $this->memcache->flush();
