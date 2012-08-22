@@ -3,6 +3,8 @@
 // You can change it manually, but it will be overwritten on next build
 
 use Codeception\Maybe;
+use Codeception\Module\Filesystem;
+use Codeception\Module\TestHelper;
 
 class TestGuy extends \Codeception\AbstractGuy
 {
@@ -10,7 +12,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::amInPath()
+    * @see Filesystem::amInPath()
     */
     public function amInPath($path) {
         $this->scenario->condition('amInPath', func_get_args());
@@ -25,7 +27,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::openFile()
+    * @see Filesystem::openFile()
     */
     public function openFile($filename) {
         $this->scenario->action('openFile', func_get_args());
@@ -40,7 +42,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::deleteFile()
+    * @see Filesystem::deleteFile()
     */
     public function deleteFile($filename) {
         $this->scenario->action('deleteFile', func_get_args());
@@ -55,7 +57,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::deleteDir()
+    * @see Filesystem::deleteDir()
     */
     public function deleteDir($dirname) {
         $this->scenario->action('deleteDir', func_get_args());
@@ -70,7 +72,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::copyDir()
+    * @see Filesystem::copyDir()
     */
     public function copyDir($src, $dst) {
         $this->scenario->action('copyDir', func_get_args());
@@ -85,7 +87,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::seeInThisFile()
+    * @see Filesystem::seeInThisFile()
     */
     public function seeInThisFile($text) {
         $this->scenario->assertion('seeInThisFile', func_get_args());
@@ -100,7 +102,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
+    * @see Filesystem::dontSeeInThisFile()
     */
     public function dontSeeInThisFile($text) {
         $this->scenario->action('dontSeeInThisFile', func_get_args());
@@ -115,7 +117,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::deleteThisFile()
+    * @see Filesystem::deleteThisFile()
     */
     public function deleteThisFile() {
         $this->scenario->action('deleteThisFile', func_get_args());
@@ -130,7 +132,7 @@ class TestGuy extends \Codeception\AbstractGuy
    /**
     * This method is generated. DO NOT EDIT.
     *
-    * @see \Codeception\Module\Filesystem::seeFileFound()
+    * @see Filesystem::seeFileFound()
     */
     public function seeFileFound($filename, $path = null) {
         $this->scenario->assertion('seeFileFound', func_get_args());

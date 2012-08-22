@@ -2,20 +2,41 @@
 require_once __DIR__.'/../autoload.php';
 $version = \Codeception\Codecept::VERSION;
 
-chdir(__DIR__.'/../');
-system('pearfarm build');
+$root = __DIR__.'/../';
+
+chdir($root);
 @mkdir("package/pear");
-system('git clone git@github.com:Codeception/pear.git package/pear/');
-system('git branch gh-pages');
-system('pirum add package/pear Codeception-'.$version.'.tgz');
-@unlink("Codeception-$version.tgz");
 chdir('package/pear');
+
+// Clone from GitHub
+system('git clone git://github.com/Codeception/Codeception.git .');
+
+// install Codeception from Composer
+$composer = file_get_contents('http://getcomposer.org/installer');
+file_put_contents('composer.phar', $composer);
+system('php composer.phar install');
+system('php composer.phar install');
+
+// grab pear repository
+@mkdir("package/pear-site");
+system('git clone git@github.com:Codeception/pear.git package/pear-site');
+
+// build package
+system('pearfarm build');
+system('pirum add package/pear-site Codeception-'.$version.'.tgz');
+@unlink("Codeception-$version.tgz");
+
+// push new package
+chdir('package/pear-site');
 system('git add -A');
 system('git commit -m="version '.$version.'"');
 system('git push origin gh-pages');
 chdir('..');
 sleep(2);
-@system('del /s /q /F pear');
+
+// clean up
+chdir($root.'/package');
+@system('del /s /q /F package/pear');
 @system('rd /s /q pear');
 @system('rm -rf pear');
 echo "\n\nPEAR BUILD SUCCESSFUL";
