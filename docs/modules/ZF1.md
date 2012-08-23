@@ -241,7 +241,7 @@ Example:
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * name = 'username']');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
 ?>
 ```
 
