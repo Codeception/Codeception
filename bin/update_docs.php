@@ -10,7 +10,8 @@ function clean_doc($doc, $indent = 3)
         return substr($line, $indent);
     }, $lines);
     $doc = implode("\n", $lines);
-    $doc = str_replace('@', " * ", $doc);
+    //$doc = str_replace(' @', " * ", $doc);
+    $doc = preg_replace('~^\s?@~', " * ", $doc);
     return $doc;
 }
 
