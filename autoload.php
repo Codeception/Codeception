@@ -6,8 +6,7 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
     'Codeception'       => __DIR__ . '/src',
     'Monolog'           => __DIR__ . '/vendor',
-    'Symfony\Component' => __DIR__ . '/vendor',
-    'PhpAmqpLib'        => __DIR__ . '/vendor/php-amqplib',
+    'Symfony\Component' => __DIR__ . '/vendor'
 ));
 
 $loader->register(true);
