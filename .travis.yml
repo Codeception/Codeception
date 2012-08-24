@@ -8,9 +8,6 @@ branches:
   except:
     - gh-pages
 
-before_install:
-  - git submodule update --init --recursive
-
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
