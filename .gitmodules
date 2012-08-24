@@ -1,3 +1,0 @@
-[submodule "vendor/php-amqplib"]
-	path = vendor/php-amqplib
-	url = git://github.com/videlalvaro/php-amqplib.git
