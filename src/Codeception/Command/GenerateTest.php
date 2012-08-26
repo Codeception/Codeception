@@ -29,7 +29,6 @@ use Codeception\Util\Stub;
         if (\$this->bootstrap) require \$this->bootstrap;
         \$this->dispatcher->dispatch('test.before', new \Codeception\Event\Test(\$this));
         \$this->%s = new %s(\$scenario = new \Codeception\Scenario(\$this));
-        \$scenario->run();
 
         // initialization code
     }

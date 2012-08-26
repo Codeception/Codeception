@@ -29,4 +29,8 @@ class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescr
         return strtolower($text);
     }
 
+    public function getTrace()
+    {
+        return $this->trace;
+    }
 }
