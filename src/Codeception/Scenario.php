@@ -98,7 +98,7 @@ class Scenario {
 	}
 
 	public function comment($comment) {
-		$this->addStep(new \Codeception\Step\Comment("",$comment));
+		$this->addStep(new \Codeception\Step\Comment($comment,array()));
 	}
 
     public function getCurrentStep()
