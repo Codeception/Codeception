@@ -24,7 +24,6 @@ abstract class AbstractGuy
 
     public function wantTo($text)
     {
-        $this->scenario->comment(array('I want to ' . $text));
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -63,7 +62,7 @@ abstract class AbstractGuy
 
     public function expectTo($prediction)
     {
-        $this->scenario->comment(array('I expect to ' . $prediction));
+        $this->scenario->comment('I expect to ' . $prediction);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -73,7 +72,7 @@ abstract class AbstractGuy
 
     public function expect($prediction)
     {
-        $this->scenario->comment(array('I expect ' . $prediction));
+        $this->scenario->comment('I expect ' . $prediction);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -83,7 +82,7 @@ abstract class AbstractGuy
 
     public function amGoingTo($argumentation)
     {
-        $this->scenario->comment(array('I am going to ' . $argumentation));
+        $this->scenario->comment('I am going to ' . $argumentation);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -92,7 +91,7 @@ abstract class AbstractGuy
     }
 
     public function am($role) {
-        $this->scenario->comment(array('As a ' . $role));
+        $this->scenario->comment('As a ' . $role);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -102,7 +101,7 @@ abstract class AbstractGuy
 
 
     public function lookForwardTo($role) {
-        $this->scenario->comment(array('So that I ' . $role));
+        $this->scenario->comment('So that I ' . $role);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
