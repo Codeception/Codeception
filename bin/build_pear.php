@@ -24,7 +24,7 @@ system('git clone git@github.com:Codeception/pear.git package/pear-site');
 // build package
 system('pearfarm build');
 system('pirum add package/pear-site Codeception-'.$version.'.tgz');
-/*@unlink("Codeception-$version.tgz");
+@unlink("Codeception-$version.tgz");
 
 // push new package
 chdir('package/pear-site');
@@ -39,4 +39,4 @@ chdir($root.'/package');
 @system('del /s /q /F package/pear');
 @system('rd /s /q pear');
 @system('rm -rf pear');
-echo "\n\nPEAR BUILD SUCCESSFUL";*/
+echo "\n\nPEAR BUILD SUCCESSFUL";
