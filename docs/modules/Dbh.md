@@ -39,13 +39,13 @@ Example:
 
 ``` php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * mail.com'));
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * mail.com'
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
 ```
 Fails if such user was found.
 
@@ -84,13 +84,13 @@ Example:
 
 ``` php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * mail.com'));
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * mail.com'
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
 ```
 Fails if no such user found.
 
