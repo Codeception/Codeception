@@ -15,7 +15,7 @@
     "minimum-stability": "dev",
     "require":{
         "php":">=5.3.2",
-        "behat/mink": "*",
+        "behat/mink": "1.4@stable",
         "EHER/PHPUnit":">=1.2",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
@@ -25,8 +25,8 @@
         "symfony/finder": "*",
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
-        "symfony/yaml": "*"
-
+        "symfony/yaml": "*",
+        "videlalvaro/php-amqplib": "*"
     },
 
     "autoload":{
