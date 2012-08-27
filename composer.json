@@ -21,6 +21,11 @@
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "*",
+        "monolog/monolog": "*",
+        "symfony/finder": "*",
+        "symfony/console": "*",
+        "symfony/event-dispatcher": "*",
+        "symfony/yaml": "*",
         "videlalvaro/php-amqplib": "*"
     },
 
