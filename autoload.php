@@ -8,9 +8,9 @@ $loader->registerNamespaces(array(
 ));
 $loader->register(true);
 
-if (stream_resolve_include_path(__DIR__.'vendor/autoload.php')) {
-    include_once __DIR__.'vendor/EHER/PHPUnit/src/phpunit/PHPUnit/Autoload.php';
-    include_once __DIR__.'vendor/autoload.php';
+if (stream_resolve_include_path(__DIR__.'/vendor/autoload.php')) {
+    include_once __DIR__.'/vendor/EHER/PHPUnit/src/phpunit/PHPUnit/Autoload.php';
+    include_once __DIR__.'/vendor/autoload.php';
 }
 
 // hardcode fix to broken goutte. Fuck this composer and friends!
