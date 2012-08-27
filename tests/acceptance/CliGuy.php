@@ -3,15 +3,34 @@
 // You can change it manually, but it will be overwritten on next build
 
 use Codeception\Maybe;
+use Codeception\Module\Filesystem;
+use Codeception\Module\Cli;
+use Codeception\Module\CliHelper;
+
+/**
+ * Inherited methods
+ * @method void wantToTest($text)
+ * @method void wantTo($text)
+ * @method void amTesting($method)
+ * @method void amTestingMethod($method)
+ * @method void testMethod($signature)
+ * @method void expectTo($prediction)
+ * @method void expect($prediction)
+ * @method void amGoingTo($argumentation)
+ * @method void am($role)
+ * @method void lookForwardTo($role)
+*/
 
 class CliGuy extends \Codeception\AbstractGuy
 {
     
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::amInPath()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::amInPath()
+     */
     public function amInPath($path) {
         $this->scenario->condition('amInPath', func_get_args());
         if ($this->scenario->running()) {
@@ -22,11 +41,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::openFile()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::openFile()
+     */
     public function openFile($filename) {
         $this->scenario->action('openFile', func_get_args());
         if ($this->scenario->running()) {
@@ -37,11 +58,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::deleteFile()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::deleteFile()
+     */
     public function deleteFile($filename) {
         $this->scenario->action('deleteFile', func_get_args());
         if ($this->scenario->running()) {
@@ -52,11 +75,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::deleteDir()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::deleteDir()
+     */
     public function deleteDir($dirname) {
         $this->scenario->action('deleteDir', func_get_args());
         if ($this->scenario->running()) {
@@ -67,11 +92,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::copyDir()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::copyDir()
+     */
     public function copyDir($src, $dst) {
         $this->scenario->action('copyDir', func_get_args());
         if ($this->scenario->running()) {
@@ -82,11 +109,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::seeInThisFile()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::seeInThisFile()
+     */
     public function seeInThisFile($text) {
         $this->scenario->assertion('seeInThisFile', func_get_args());
         if ($this->scenario->running()) {
@@ -97,11 +126,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::dontSeeInThisFile()
+     */
     public function dontSeeInThisFile($text) {
         $this->scenario->action('dontSeeInThisFile', func_get_args());
         if ($this->scenario->running()) {
@@ -112,11 +143,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::deleteThisFile()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::deleteThisFile()
+     */
     public function deleteThisFile() {
         $this->scenario->action('deleteThisFile', func_get_args());
         if ($this->scenario->running()) {
@@ -127,11 +160,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Filesystem::seeFileFound()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Filesystem::seeFileFound()
+     */
     public function seeFileFound($filename, $path = null) {
         $this->scenario->assertion('seeFileFound', func_get_args());
         if ($this->scenario->running()) {
@@ -142,11 +177,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Cli::runShellCommmand()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Cli::runShellCommmand()
+     */
     public function runShellCommmand($command) {
         $this->scenario->action('runShellCommmand', func_get_args());
         if ($this->scenario->running()) {
@@ -157,11 +194,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Cli::seeInShellOutput()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Cli::seeInShellOutput()
+     */
     public function seeInShellOutput($text) {
         $this->scenario->assertion('seeInShellOutput', func_get_args());
         if ($this->scenario->running()) {
@@ -172,11 +211,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\Cli::dontSeeInShellOutput()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see Cli::dontSeeInShellOutput()
+     */
     public function dontSeeInShellOutput($text) {
         $this->scenario->action('dontSeeInShellOutput', func_get_args());
         if ($this->scenario->running()) {
@@ -187,11 +228,13 @@ class CliGuy extends \Codeception\AbstractGuy
     }
 
  
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see \Codeception\Module\CliHelper::executeCommand()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     *
+     * @see CliHelper::executeCommand()
+     */
     public function executeCommand($command) {
         $this->scenario->action('executeCommand', func_get_args());
         if ($this->scenario->running()) {

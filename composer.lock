@@ -1,0 +1,183 @@
+{
+    "hash": "bb31e1c2f6f412b5b00eaba942ac4e44",
+    "packages": [
+        {
+            "package": "EHER/PHPUnit",
+            "version": "1.6"
+        },
+        {
+            "package": "alexandresalome/php-selenium",
+            "version": "dev-master",
+            "source-reference": "1.0.1",
+            "commit-date": "1341920360"
+        },
+        {
+            "package": "behat/mink",
+            "version": "v1.4.0"
+        },
+        {
+            "package": "behat/mink-browserkit-driver",
+            "version": "dev-master",
+            "source-reference": "97fa7d67ab5afb13d74515c15ef5c0cab12c0bc0",
+            "commit-date": "1341477260"
+        },
+        {
+            "package": "behat/mink-goutte-driver",
+            "version": "dev-master",
+            "source-reference": "703a365a0f6c15f91f35c1cc30531b9de7f23a6d",
+            "commit-date": "1345633817"
+        },
+        {
+            "package": "behat/mink-selenium-driver",
+            "version": "dev-master",
+            "source-reference": "v1.0.1",
+            "commit-date": "1341523098"
+        },
+        {
+            "package": "behat/mink-selenium2-driver",
+            "version": "dev-master",
+            "source-reference": "aad26bdb19f904b1990048750fc33c7b6f7f2e0e",
+            "commit-date": "1343748582"
+        },
+        {
+            "package": "behat/mink-zombie-driver",
+            "version": "dev-master",
+            "source-reference": "610c484c2a736533e076c05ddaa6098f42906c60",
+            "commit-date": "1344599890"
+        },
+        {
+            "package": "fabpot/goutte",
+            "version": "dev-master",
+            "source-reference": "6d26279344736f6983a969e46afef082ebf30a67",
+            "commit-date": "1345141401"
+        },
+        {
+            "package": "guzzle/common",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "guzzle/http",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "guzzle/parser",
+            "version": "v2.8.4"
+        },
+        {
+            "package": "instaclick/php-webdriver",
+            "version": "dev-master",
+            "source-reference": "v1.0.6",
+            "commit-date": "1345642676"
+        },
+        {
+            "package": "monolog/monolog",
+            "version": "dev-master",
+            "source-reference": "75af99d3ceabe08e55f32d395f189fd807648950",
+            "commit-date": "1345916366"
+        },
+        {
+            "package": "symfony/browser-kit",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/browser-kit",
+            "version": "dev-master",
+            "source-reference": "6f2dc48d75ac9027bbea0f8e496f26613ad8b326",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/console",
+            "version": "dev-master",
+            "source-reference": "4d463e30faf03f793c7b7184d7482ccdf71e1a05",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/css-selector",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/css-selector",
+            "version": "dev-master",
+            "source-reference": "676a7fd9b5027da85b58dd11db5561fef01c6271",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/dom-crawler",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/dom-crawler",
+            "version": "dev-master",
+            "source-reference": "f70f7d88441f3d8f8942fe3417c6eb11f9eb79e9",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "source-reference": "421520fd35ace52106947b2d6c2d9db49cb5a866",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/finder",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/finder",
+            "version": "dev-master",
+            "source-reference": "e2e9f746294f60aed3bb5bc20da24e23b92f0479",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/process",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/process",
+            "version": "dev-master",
+            "source-reference": "ce83a652ec30e8dc4ef3ddbf722928899630df56",
+            "commit-date": "1345643321"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "dev-master",
+            "source-reference": "f18e004fc975707bb4695df1dbbe9b0d8c8b7715",
+            "commit-date": "1345643321"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": [
+
+    ]
+}

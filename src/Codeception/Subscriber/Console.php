@@ -95,7 +95,7 @@ class Console implements EventSubscriberInterface
     }
 
     public function beforeComment(\Codeception\Event\Step $e) {
-        if ($this->steps) $this->output->writeln("((".$e->getStep()->__toString()."))");
+        if ($this->steps) $this->output->writeln("\n((".$e->getStep()->__toString()."))");
     }
 
     public function afterComment(\Codeception\Event\Step $e) {
