@@ -134,8 +134,12 @@ class SOAP extends \Codeception\Module
         $call = $xml->createElement('ns:' . $action);
         if ($body) {
             $bodyXml = SoapUtils::toXml($body);
-            $bodyNode = $xml->importNode($bodyXml->documentElement, true);
-            $call->appendChild($bodyNode);
+            if ($bodyXml->hasChildNodes()) {
+                foreach ($bodyXml->childNodes as $bodyChildNode) {
+                    $bodyNode = $xml->importNode($bodyChildNode, true);
+                    $call->appendChild($bodyNode);
+                }
+            }
         }
 
         $xmlBody = $xml->getElementsByTagNameNS($soap_schema_url, 'Body')->item(0);

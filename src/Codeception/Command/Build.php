@@ -31,11 +31,13 @@ EOF;
 
     protected $methodTemplate = <<<EOF
 
-   /**
-    * This method is generated. DO NOT EDIT.
-    *
-    * @see %s::%s()
-    */
+    /**
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     *
+     %s
+     * @see %s::%s()
+     */
     public function %s(%s) {
         \$this->scenario->%s('%s', func_get_args());
         if (\$this->scenario->running()) {
@@ -45,6 +47,8 @@ EOF;
         return new Maybe();
     }
 EOF;
+
+    protected $inheritedMethodTemplate = ' * @method void %s(%s)';
 
 
     public function getDescription() {
@@ -102,13 +106,64 @@ EOF;
                         $type = 'action';
                     }
 
+                    $doc = $method->getDocComment();
+
+                    if (!$doc) {
+                        $interfaces = $class->getInterfaces();
+                        foreach ($interfaces as $interface) {
+                            $i = new \ReflectionClass($interface->name);
+                            if ($i->hasMethod($method->name)) {
+                                $doc = $i->getMethod($method->name)->getDocComment();
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!$doc) {
+                        $parent = new \ReflectionClass($class->getParentClass()->name);
+                        if ($parent->hasMethod($method->name)) {
+                            $doc = $parent->getMethod($method->name)->getDocComment();
+                        }
+                    }
+                    $doc = str_replace('/**', '', $doc);
+                    $doc = trim(str_replace('*/','',$doc));
+                    if (!$doc) $doc = "*";
+
                     $params = implode(', ', $params);
-                    $code[] = sprintf($this->methodTemplate, $modulename, $method->name, $method->name, $params, $type, $method->name);
+                    $code[] = sprintf($this->methodTemplate, $doc, $modulename, $method->name, $method->name, $params, $type, $method->name);
 
                     $methodCounter++;
                     $methods[] = $method->name;
                 }
             }
+
+            // append PHPDoc for abstractGuy methods
+            $className = '\Codeception\\AbstractGuy';
+            $class = new \ReflectionClass($className);
+            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+            $inherited = array();
+
+            foreach ($methods as $method) {
+                if (strpos($method->name, '_') === 0) continue;
+                if (in_array($method->name, $methods)) continue;
+                $params = array();
+                foreach ($method->getParameters() as $param) {
+
+                    if ($param->isOptional()) {
+                        $params[] = '$' . $param->name.' = null';
+                    } else {
+                        $params[] = '$' . $param->name;
+                    };
+
+                }
+                $params = implode(', ', $params);
+                $inherited[] = sprintf($this->inheritedMethodTemplate, $method->name, $params);
+            }
+            $aliases[] = "\n/**\n * Inherited methods";
+            $aliases[] = implode("\n",$inherited);
+            $aliases[] = '*/';
+
 
             $contents = sprintf($this->template,
 	                            implode("\n", $aliases),

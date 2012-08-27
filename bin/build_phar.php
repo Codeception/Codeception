@@ -11,11 +11,7 @@ file_put_contents('composer.phar', $composer);
 file_put_contents('composer.json','
 {
     "require": {
-        "codeception/codeception":  "*",
-        "behat/mink-goutte-driver": "*",
-        "behat/mink-selenium-driver": "*",
-        "behat/mink-selenium2-driver": "*",
-        "behat/mink-zombie-driver": "*"
+        "codeception/codeception":  "*"
     },
     "minimum-stability": "dev"
 }
