@@ -1,5 +1,5 @@
 {
-    "hash": "bb31e1c2f6f412b5b00eaba942ac4e44",
+    "hash": "4ab5858d24e9007d1b085dc5772d6844",
     "packages": [
         {
             "package": "EHER/PHPUnit",
@@ -170,6 +170,12 @@
             "version": "dev-master",
             "source-reference": "f18e004fc975707bb4695df1dbbe9b0d8c8b7715",
             "commit-date": "1345643321"
+        },
+        {
+            "package": "videlalvaro/php-amqplib",
+            "version": "dev-master",
+            "source-reference": "258573c6d264ccb06a3a4191bb529320579d21c6",
+            "commit-date": "1345726400"
         }
     ],
     "packages-dev": null,
