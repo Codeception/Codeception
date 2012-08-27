@@ -23,7 +23,7 @@ Example:
 
 ``` php
 <?php
-$I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * mail.com'));
+$I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 
@@ -61,7 +61,7 @@ Example:
 
 ``` php
 <?php
-$I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert * mail.com'));
+$I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 

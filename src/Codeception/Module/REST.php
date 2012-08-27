@@ -22,7 +22,6 @@ namespace Codeception\Module;
  *
  *
  */
-
 class REST extends \Codeception\Module
 {
 

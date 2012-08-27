@@ -11,9 +11,9 @@ This module sets $_SERVER['KOHANA_ENV'] = 'testing'
 1. Fix your bootstrap/index.php [like this](https://gist.github.com/2043592)
 2. You need install this module https://github.com/nike-17/codeception-kohana
   or just fix your Cookie class like this https://github.com/nike-17/codeception-kohana/blob/master/classes/cookie.php 
-3. if you have some problem pls feel free to ask me nike-17 * ya.ru
+3. if you have some problem pls feel free to ask me nike-17@ya.ru
 
-Module is created by [Nikita Groshin](nike-17 * ya.ru)
+Module is created by [Nikita Groshin](nike-17@ya.ru)
 
 
 ## Actions
@@ -211,7 +211,7 @@ Example:
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * name = 'username']');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
 ?>
 ```
 
