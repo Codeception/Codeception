@@ -33,8 +33,6 @@ $p->setStub(file_get_contents(__DIR__.'/../package/stub.php'));
 $p->stopBuffering();
 $p->compressFiles(Phar::GZ);
 
-echo "copying archive";
-
 copy('codecept.phar', __DIR__.'/../package/codecept.phar');
 
 chdir('..');
