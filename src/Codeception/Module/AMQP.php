@@ -9,6 +9,7 @@ use PhpAmqpLib\Exception\AMQPChannelException;
 /**
  * This module interacts with message broker software that implements
  * the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ.
+ * Use it to cleanup the queue between tests.
  *
  * ## Config
  *
@@ -56,6 +57,13 @@ class AMQP extends \Codeception\Module
             $this->cleanup();
         }
         parent::_before($test);
+    }
+
+    /**
+     * Cleans up queue.
+     */
+    public function cleanupAMQP() {
+        $this->cleanup();
     }
 
     protected function cleanup()
