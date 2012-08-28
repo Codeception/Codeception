@@ -146,7 +146,7 @@ class Console implements EventSubscriberInterface
                 $this->output->writeln($failToString);
                 return;
             }
-            $this->output->writeln($this->printException('not an action', $fail));
+            $this->printException($fail);
             return;
         }
         $action = $last->getHumanizedAction();

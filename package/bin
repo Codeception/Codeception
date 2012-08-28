@@ -6,7 +6,7 @@
 if (isset($argv[1])) {
     if (($argv[1] != 'run') && ($version = \Codeception\Codecept::checkLastVersion())) {
         if (version_compare($version, \Codeception\Codecept::VERSION) > 0) {
-            echo "UPDATE: version $version released. See changes on: http://codeception.com.\n";
+            echo "UPDATE: version $version released. See changes on: http://codeception.com.\n\n";
         }
     }
 }
@@ -21,7 +21,6 @@ use Symfony\Component\Console\Application,
  $app = new Application('Codeception', Codeception\Codecept::VERSION);
  $app->add(new Codeception\Command\Build('build'));
  $app->add(new Codeception\Command\Run('run'));
- $app->add(new Codeception\Command\Install('install'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
  $app->add(new Codeception\Command\GenerateCept('generate:cept'));
  $app->add(new Codeception\Command\GenerateCest('generate:cest'));

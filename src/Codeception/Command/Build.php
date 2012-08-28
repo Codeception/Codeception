@@ -32,11 +32,11 @@ EOF;
     protected $methodTemplate = <<<EOF
 
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      %s
      * @see %s::%s()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function %s(%s) {
         \$this->scenario->%s('%s', func_get_args());

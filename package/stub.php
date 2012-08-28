@@ -4,8 +4,8 @@ Phar::mapPhar();
 
 chdir(__DIR__);
 
-require_once 'phar://codecept.phar/Codeception/Codeception/autoload.php';
 require_once 'phar://codecept.phar/autoload.php';
+require_once 'phar://codecept.phar/Codeception/Codeception/autoload.php';
 
 if (!function_exists('phpunit_autoload')) {
     function phpunit_autoload() { return array(); };
