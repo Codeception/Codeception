@@ -2,12 +2,14 @@
 
 if (file_exists(__DIR__.'/../package/codecept.phar')) unlink(__DIR__.'/../package/codecept.phar');
 
+$root = __DIR__.'/../';
+require $root.'/autoload.php';
+
 // download composer
-$composer = file_get_contents('http://getcomposer.org/installer');
 chdir(__DIR__.'/../');
 @mkdir("package/phar");
 chdir('package/phar');
-file_put_contents('composer.phar', $composer);
+file_put_contents('composer.phar', file_get_contents('http://getcomposer.org/installer'));
 file_put_contents('composer.json','
 {
     "require": {
@@ -31,13 +33,13 @@ $p->setStub(file_get_contents(__DIR__.'/../package/stub.php'));
 $p->stopBuffering();
 $p->compressFiles(Phar::GZ);
 
-echo "copying archive";
-
 copy('codecept.phar', __DIR__.'/../package/codecept.phar');
 
 chdir('..');
+ob_start();
 @system('del /s /q /F phar');
 @system('rd /s /q phar');
 @system('rm -rf phar');
+ob_clean();
 
 echo "PHAR build succesfull";

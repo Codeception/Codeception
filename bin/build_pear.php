@@ -36,7 +36,9 @@ sleep(2);
 
 // clean up
 chdir($root.'/package');
+ob_start();
 @system('del /s /q /F package/pear');
 @system('rd /s /q pear');
 @system('rm -rf pear');
+ob_clean();
 echo "\n\nPEAR BUILD SUCCESSFUL";

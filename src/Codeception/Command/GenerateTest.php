@@ -56,7 +56,7 @@ EOF;
     }
 
     public function getDescription() {
-        return 'Generates empty Cest file in suite';
+        return 'Generates empty PHPUnit Test file in suite';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
