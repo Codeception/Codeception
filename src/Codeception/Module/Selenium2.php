@@ -67,4 +67,68 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     // please, add more custom Selenium functions here
 
+    /**
+     * Accept alert or confirm popup
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show alert popup');
+     * $I->acceptPopup();
+     *
+     * ```
+     */
+    public function acceptPopup() {
+        $this->session->getDriver()->wdSession()->accept_alert();
+    }
+
+    /**
+     * Dismiss alert or confirm popup
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show confirm popup');
+     * $I->cancelPopup();
+     *
+     * ```
+     */
+    public function cancelPopup() {
+        $this->session->getDriver()->wdSession()->dismiss_alert();
+    }
+
+    /**
+     * Checks if popup contains the $text
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show alert popup');
+     * $I->seeInPopup('Error message');
+     *
+     * ```
+     *
+     * @param string $text
+     */
+    public function seeInPopup($text) {
+        $this->assertContains($text, $this->session->getDriver()->wdSession()->alert_text());
+    }
+
+    /**
+     * Check if popup don't contains the $text
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click();
+     * $I->dontSeeInPopup('Error message');
+     *
+     * ```
+     *
+     * @param string $text
+     */
+    public function dontSeeInPopup($text) {
+        $this->assertNotContains($text, $this->session->getDriver()->wdSession()->alert_text());
+    }
+
 }
