@@ -79,7 +79,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * ```
      */
     public function acceptPopup() {
-        $this->session->getDriver()->wdSession()->accept_alert();
+        $this->session->getDriver()->wdSession->accept_alert();
     }
 
     /**
@@ -94,7 +94,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * ```
      */
     public function cancelPopup() {
-        $this->session->getDriver()->wdSession()->dismiss_alert();
+        $this->session->getDriver()->wdSession->dismiss_alert();
     }
 
     /**
@@ -111,7 +111,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * @param string $text
      */
     public function seeInPopup($text) {
-        $this->assertContains($text, $this->session->getDriver()->wdSession()->alert_text());
+        $this->assertContains($text, $this->session->getDriver()->wdSession->alert_text());
     }
 
     /**
@@ -128,7 +128,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * @param string $text
      */
     public function dontSeeInPopup($text) {
-        $this->assertNotContains($text, $this->session->getDriver()->wdSession()->alert_text());
+        $this->assertNotContains($text, $this->session->getDriver()->wdSession->alert_text());
     }
 
 }
