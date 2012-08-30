@@ -237,4 +237,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->assertEquals("kill_people", $result);
         $this->module->amOnPage('/form/textarea');
     }
+    
+    public function testLinksWithSimilarNames() {
+        $this->module->amOnPage('/');
+        $this->module->click('Test Link');
+        $this->module->seeInCurrentUrl('/form/file');
+        $this->module->amOnPage('/');
+        $this->module->click('Test');
+        $this->module->seeInCurrentUrl('/form/hidden');
+    }
 }

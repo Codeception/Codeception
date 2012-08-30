@@ -159,10 +159,17 @@ abstract class Mink extends \Codeception\Module
         return $el;
     }
 
+    protected function findLinkByContent($link)
+    {
+        $literal = $this->session->getSelectorsHandler()->xpathLiteral($link);
+        return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
+    }
+
     protected function findClickable($link)
     {
         $page = $this->session->getPage();
-        $el = $page->findLink($link);
+        $el = $this->findLinkByContent($link);
+        if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
         if (!$el) $el = $this->findEl($link);
         return $el;
