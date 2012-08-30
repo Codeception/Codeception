@@ -47,7 +47,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function click($link)
     {
-        $anchor = $this->crawler->selectLink($link);
+        $literal = Crawler::xpathLiteral($link);
+
+        $anchor = $this->crawler->filterXPath('//html/.//a[.='.$literal.']');
+        if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
             $this->debugResponse();

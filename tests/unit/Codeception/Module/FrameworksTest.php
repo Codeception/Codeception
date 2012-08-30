@@ -290,4 +290,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('miles@davis.com', $post['email']);
     }
 
+    public function testLinksWithSimilarNames() {
+        $this->module->amOnPage('/');
+        $this->module->click('Test Link');
+        $this->module->seeInCurrentUrl('/form/file');
+        $this->module->amOnPage('/');
+        $this->module->click('Test');
+        $this->module->seeInCurrentUrl('/form/hidden');
+    }
+
 }
