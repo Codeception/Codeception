@@ -28,6 +28,20 @@ Don't forget to turn on Db repopulation if you are using database.
 ## Actions
 
 
+### acceptPopup
+
+
+Accept alert or confirm popup
+
+Example:
+``` php
+<?php
+$I->click('Show alert popup');
+$I->acceptPopup();
+
+```
+
+
 ### amOnPage
 
 
@@ -53,6 +67,20 @@ Removes focus from link or button or any node found by CSS or XPath
 XPath or CSS selectors are accepted.
 
  * param $el
+
+
+### cancelPopup
+
+
+Dismiss alert or confirm popup
+
+Example:
+``` php
+<?php
+$I->click('Show confirm popup');
+$I->cancelPopup();
+
+```
 
 
 ### checkOption
@@ -103,6 +131,22 @@ Field is searched by its id|name|label|value or CSS selector.
 
  * param $field
  * param $value
+
+
+### dontSeeInPopup
+
+
+Check if popup don't contains the $text
+
+Example:
+``` php
+<?php
+$I->click();
+$I->dontSeeInPopup('Error message');
+
+```
+
+ * param string $text
 
 
 ### dontSeeLink
@@ -315,6 +359,22 @@ Checks the value of field is equal to value passed.
 
  * param $field
  * param $value
+
+
+### seeInPopup
+
+
+Checks if popup contains the $text
+
+Example:
+``` php
+<?php
+$I->click('Show alert popup');
+$I->seeInPopup('Error message');
+
+```
+
+ * param string $text
 
 
 ### seeLink
