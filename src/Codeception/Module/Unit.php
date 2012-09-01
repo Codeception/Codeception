@@ -340,7 +340,7 @@ class Unit extends \Codeception\Module
      * Can update even private and protected properties.
      * 
      * Properties to be updated and their values are passed in the second parameter as an array:
-     * array('theProprrty'     => 'some value',
+     * array('theProperty'     => 'some value',
      *      ('anotherProperty' => 'another value')
      *
      * @param $obj
@@ -348,12 +348,18 @@ class Unit extends \Codeception\Module
      */
 
     public function changeProperties($obj, $values = array()) {
-        $reflectedObj = new \ReflectionClass($obj);
-            foreach ($values as $key => $val) {
-                $property = $reflectedObj->getProperty($key);
-                $property->setAccessible(true);
-                $property->setValue($obj, $val);
-            }
+        //As for now, PHP cannot resolve properties of namespaced class if class instance passed to reflector
+        //In our case we have mocked class with original full classname stored in __mocked property
+        if(isset($obj->__mocked)) {
+            $reflectedObj = new \ReflectionClass($obj->__mocked);
+        } else {
+            $reflectedObj = new \ReflectionClass($obj);
+        }
+        foreach ($values as $key => $val) {
+            $property = $reflectedObj->getProperty($key);
+            $property->setAccessible(true);
+            $property->setValue($obj, $val);
+        }
 
     }
 
