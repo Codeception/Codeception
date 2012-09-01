@@ -4,8 +4,8 @@ Phar::mapPhar();
 
 chdir(__DIR__);
 
+require_once 'phar://codecept.phar/vendor/autoload.php';
 require_once 'phar://codecept.phar/autoload.php';
-require_once 'phar://codecept.phar/Codeception/Codeception/autoload.php';
 
 if (!function_exists('phpunit_autoload')) {
     function phpunit_autoload() { return array(); };
@@ -30,15 +30,15 @@ if (!function_exists('text_template_autoload')) {
 }
 
 $loader = new UniversalClassLoader();
-$loader->registerPrefix('PHPUnit_','phar://codecept.phar/EHER/PHPUnit/src/phpunit');
+$loader->registerPrefix('PHPUnit_','phar://codecept.phar/vendor/EHER/PHPUnit/src/phpunit');
 $loader->registerPrefixFallbacks(array(
-    'phar://codecept.phar/EHER/PHPUnit/src/phpunit-mock-objects',
-    'phar://codecept.phar/EHER/PHPUnit/src/php-code-coverage',
-    'phar://codecept.phar/EHER/PHPUnit/src/php-file-iterator',
-    'phar://codecept.phar/EHER/PHPUnit/src/php-text-template',
-    'phar://codecept.phar/EHER/PHPUnit/src/php-timer',
-    'phar://codecept.phar/EHER/PHPUnit/src/php-token-stream',
-    'phar://codecept.phar/EHER/PHPUnit/src/phpunit-skeleton-generator',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/phpunit-mock-objects',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/php-code-coverage',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/php-file-iterator',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/php-text-template',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/php-timer',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/php-token-stream',
+    'phar://codecept.phar/vendor/EHER/PHPUnit/src/phpunit-skeleton-generator',
 
 ));
 $loader->register(true);
