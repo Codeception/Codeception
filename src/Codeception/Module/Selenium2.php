@@ -131,4 +131,51 @@ class Selenium2 extends \Codeception\Util\MinkJS
         $this->assertNotContains($text, $this->session->getDriver()->wdSession->alert_text());
     }
 
+    /**
+     * Switch to another window
+     *
+     * Example:
+     * ``` html
+     * <input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
+     *
+     * ```
+     *
+     * ``` php
+     * <?php
+     * $I->click("Open window");
+     * # switch to another window
+     * $I->switchToWindow("another_window");
+     * # switch to parent window
+     * $I->switchToWindow();
+     *
+     * ```
+     *
+     * @param string|null $name
+     */
+    public function switchToWindow($name = null) {
+        $this->session->getDriver()->switchToWindow($name);
+    }
+
+    /**
+     * Switch to another frame
+     *
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     *
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIFrame("another_frame");
+     * # switch to parent page
+     * $I->switchToIFrame();
+     *
+     * @param string|null $name
+     */
+    public function switchToIFrame($name = null) {
+        $this->session->getDriver()->switchToIFrame($name);
+    }
+
 }
