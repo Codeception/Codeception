@@ -172,6 +172,8 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * # switch to parent page
      * $I->switchToIFrame();
      *
+     * ```
+     *
      * @param string|null $name
      */
     public function switchToIFrame($name = null) {
