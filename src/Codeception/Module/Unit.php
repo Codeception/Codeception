@@ -372,6 +372,8 @@ class Unit extends \Codeception\Module
 
     public function seeExceptionThrown($classname, $message = null) {
 
+        \PHPUnit_Framework_Assert::assertNotEmpty($this->thrownExceptions, "No exception was thrown");
+
         foreach ($this->thrownExceptions as $e) {
             if ($e instanceof $classname) {
                 \PHPUnit_Framework_Assert::assertInstanceOf($classname, $e);
