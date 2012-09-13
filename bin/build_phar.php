@@ -9,32 +9,15 @@ require $root.'/package/Compiler.php';
 
 // download composer
 chdir(__DIR__.'/../');
-@mkdir("package/phar");
-chdir('package/phar');
-@unlink('codecep.phar');
 file_put_contents('composer.phar', file_get_contents('http://getcomposer.org/installer'));
-file_put_contents('composer.json','
-{
-    "require": {
-        "codeception/codeception":  "*"
-    },
-    "minimum-stability": "dev"
-}
-');
-
 system('php composer.phar install');
-system('php composer.phar install');
+system('php composer.phar update');
 
+$compiler = new \Codeception\Compiler();
+$compiler->compile();
 
-$compiler = new \Codeception\Compiler($root.'/pacakge/phar');
-$compiler->compile($root.'/package/codecept.phar');
-
-chdir('..');
-ob_start();
-@system('del /s /q /F phar');
-@system('rd /s /q phar');
-@system('rm -rf phar');
-ob_clean();
+copy('codecept.phar', 'package/codecept.phar');
+unlink('codecept.phar');
 
 echo system('php codecept.phar');
 
