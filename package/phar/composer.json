@@ -1,7 +1,0 @@
-
-{
-    "require": {
-        "codeception/codeception":  "*"
-    },
-    "minimum-stability": "dev"
-}
