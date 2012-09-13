@@ -27,16 +27,16 @@ class Compiler
 
         $phar->startBuffering();
 
-        $finder = new Finder();
-        $finder->files()
-            ->ignoreVCS(true)
-            ->name('*.php')
-            ->in($this->compileDir . '/src')
-        ;
+            $finder = new Finder();
+            $finder->files()
+                    ->ignoreVCS(true)
+                    ->name('*.php')
+                    ->in($this->compileDir . '/src')
+            ;
 
-        foreach ($finder as $file) {
-            $this->addFile($phar, $file);
-        }
+            foreach ($finder as $file) {
+                $this->addFile($phar, $file);
+            }
 
         $finder = new Finder();
         $finder
@@ -65,6 +65,7 @@ class Compiler
             echo "Compressed\r\n";
             //do not use compressFiles as it has issue with temporary file when adding large amount of files
 //            $phar->compressFiles(\Phar::GZ);
+            if (file_exists('codecept.phar.gz')) unlink('codecept.phar.gz');
 
             $phar = $phar->compress(\Phar::GZ);
             $this->setMainExecutable($phar);
