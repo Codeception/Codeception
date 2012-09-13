@@ -15,13 +15,16 @@ namespace Codeception\Module;
  * * Install node.js by following instructions from the official site: http://nodejs.org/.
  * * Install npm (node package manager) by following instructions from the http://npmjs.org/.
  * * Install zombie.js with npm:
- * ``` $ npm install -g zombie ```
+ * ``` $ npm install -g zombie@0.13.0 ```
+ * Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
+ * says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
+ *
  * After installing npm and zombie.js, you’ll need to add npm libs to your **NODE_PATH**. The easiest way to do this is to add:
  *
  * ``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
  * into your **.bashrc**.
  *
- * Also not that this module requires php5-http PECL extension to parse returned headers properly
+ * Also note that this module requires php5-http PECL extension to parse returned headers properly
  *
  * Don't forget to turn on Db repopulation if you are using database.
  *
@@ -39,7 +42,10 @@ namespace Codeception\Module;
  * * session - contains Mink Session
  */
 
-use \Behat\Mink\Driver as MinkDriver;
+use Behat\Mink\Mink,
+    Behat\Mink\Session,
+    Behat\Mink\Driver\ZombieDriver,
+    Behat\Mink\Driver\NodeJS\Server\ZombieServer;
 
 class ZombieJS extends \Codeception\Util\MinkJS
 {
@@ -51,28 +57,40 @@ class ZombieJS extends \Codeception\Util\MinkJS
         'autostart' => true
     );
 
-    /** @var \Behat\Mink\Driver\Zombie\Connection */
-    protected $connection;
+    /** @var Session */
+    public $session;
+
+    /** @var ZombieServer */
+    protected $server;
+
+    /** @var ZombieDriver */
+    protected $driver;
 
     public function _cleanup()
     {
-        $this->connection = new MinkDriver\Zombie\Connection($this->config['host'],$this->config['port']);
-
-        $server = null;
-        if($this->config['autostart'] == true)
-        {
-            $server = new MinkDriver\Zombie\Server($this->config['host'], $this->config['port'],
-                $this->config['node_bin'], $this->config['script'], $this->config['threshold'] * 1000);
-        }
-
-        $this->session = new \Behat\Mink\Session(
-            new MinkDriver\ZombieDriver($this->connection, $server, $this->config['autostart'])
+        $this->server = new ZombieServer(
+            $this->config['host'],$this->config['port'],
+            $this->config['node_bin'],$this->config['script'],
+            $this->config['threshold'] * 1000
         );
+
+        $this->driver = new ZombieDriver($this->server);
+
+        $this->session = new Session($this->driver);
         $this->session->start();
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
+        $this->_after($test);
+    }
+
+    public function _after(\Codeception\TestCase $test) {
+        //that call does not really terminate node process
+        //@see https://github.com/symfony/symfony/issues/5499
         $this->session->stop();
+
+        //so we kill it ourselves
+        exec('killall '.pathinfo($this->server->getNodeBin(),PATHINFO_BASENAME).' > /dev/null 2>&1');
     }
 
     /**
@@ -80,7 +98,7 @@ class ZombieJS extends \Codeception\Util\MinkJS
      * @return array Header-Name => Value array
      */
     public function headRequest($url){
-        $headers = $this->connection->evalJS(sprintf(<<<JS
+        $headers = $this->server->evalJS(sprintf(<<<JS
         var http = new browser.window.XMLHttpRequest();
         http.open('HEAD', '%s');
         http.onreadystatechange = function(){
