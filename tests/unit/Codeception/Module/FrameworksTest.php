@@ -71,6 +71,15 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/');
     }
 
+    public function testRadioButton()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->selectOption('form input','disagree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }        
+
     public function testCheckboxByCss() {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
@@ -213,7 +222,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/checkbox');
         $this->module->dontSeeCheckboxIsChecked('#checkin');
     }
-    
+
     public function testSeeCheckboxChecked() {
         $this->module->amOnPage('/form/complex');
         $this->module->seeCheckboxIsChecked('#checkin');
@@ -298,5 +307,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->click('Test');
         $this->module->seeInCurrentUrl('/form/hidden');
     }
+
 
 }
