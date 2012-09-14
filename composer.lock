@@ -19,7 +19,7 @@
                 "php": ">=5.3.0",
                 "symfony/finder": "*"
             },
-            "time": "2012-05-23 22:46:24",
+            "time": "2012-05-23 19:46:24",
             "bin": [
                 "bin/dbunit",
                 "bin/phpcov",
@@ -106,7 +106,7 @@
                 "behat/mink-selenium2-driver": "to enable Selenium2 (webdriver support)",
                 "behat/mink-zombie-driver": "to enable Zombie.js support"
             },
-            "time": "2012-05-29 19:50:10",
+            "time": "2012-05-29 16:50:10",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -444,7 +444,7 @@
                 "php": ">=5.3.2",
                 "symfony/event-dispatcher": "2.1.*"
             },
-            "time": "2012-09-05 20:30:30",
+            "time": "2012-09-05 17:30:30",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -488,7 +488,7 @@
                 "guzzle/common": "self.version",
                 "guzzle/parser": "self.version"
             },
-            "time": "2012-09-02 16:01:34",
+            "time": "2012-09-02 13:01:34",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -527,7 +527,7 @@
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-08-17 02:22:25",
+            "time": "2012-08-16 23:22:25",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

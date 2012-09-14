@@ -91,6 +91,7 @@ $I->attachFile('prices.xls');
 
 
 Ticks a checkbox.
+For radio buttons use `selectOption` method.
 
  * param $option
 
@@ -116,6 +117,8 @@ $I->click('Logout');
 $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
+// XPath
+$I->click('//form/*[@type=submit]')
 ?>
 ```
  * param $link
@@ -133,7 +136,7 @@ Examples:
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-
+$I->dontSee('Sign Up','//body/h1'); // with XPath
 ```
 
  * param $text
@@ -170,6 +173,7 @@ Example:
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
+$I->dontSeeInField('//form/*[@name=search]','Search');
 ?>
 ```
 
@@ -261,6 +265,7 @@ Examples:
 <?php
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
+$I->see('Sign Up','//body/h1'); // with XPath
 
 ```
 
@@ -280,6 +285,7 @@ Example:
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ```
 
@@ -306,6 +312,7 @@ Example:
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
+$I->seeInField('//form/*[@name=search]','Search');
 ?>
 ```
 
@@ -343,6 +350,7 @@ Example:
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -432,5 +440,6 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
+For radio buttons use `selectOption` method.
 
  * param $option
