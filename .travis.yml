@@ -17,6 +17,5 @@ before_script:
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar install
   - "mysql -e 'create database codeception_test;'"
-  - wget -nc http://codeception.com/codecept.phar
 
-script: "php codecept.phar run"
+script: "php codecept run"
