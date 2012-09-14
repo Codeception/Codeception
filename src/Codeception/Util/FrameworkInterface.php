@@ -302,6 +302,7 @@ interface FrameworkInterface
 
     /**
      * Ticks a checkbox.
+     * For radio buttons use `selectOption` method.
      *
      * @param $option
      */
@@ -309,6 +310,7 @@ interface FrameworkInterface
 
     /**
      * Unticks a checkbox.
+     * For radio buttons use `selectOption` method.
      *
      * @param $option
      */

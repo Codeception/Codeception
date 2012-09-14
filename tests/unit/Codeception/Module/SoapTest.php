@@ -77,7 +77,24 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?>    <doc> <a a2="2" a1="1" >123</a>  </doc>');
         $this->module->seeSoapResponseIncludes('<a    a2="2"      a1="1" >123</a>');
     }
-    
+
+    public function testSeeXmlContainsXPath() {
+        $dom = new DOMDocument();
+        $this->module->xmlResponse = $dom;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?>    <doc> <a a2="2" a1="1" >123</a>  </doc>');
+        $this->module->seeSoapResponseContainsXPath('//doc/a[@a2=2 and @a1=1]');
+    }
+
+    public function testSeeXmlNotContainsXPath() {
+        $dom = new DOMDocument();
+        $this->module->xmlResponse = $dom;
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML('<?xml version="1.0" encoding="UTF-8"?>    <doc> <a a2="2" a1="1" >123</a>  </doc>');
+        $this->module->dontSeeSoapResponseContainsXPath('//doc/a[@a2=2 and @a31]');
+    }
+
+
     public function testSeeXmlEquals() {
         $dom = new DOMDocument();
         $this->module->xmlResponse = $dom;
@@ -106,8 +123,6 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('123', $res);
         $res = $this->module->grabTextContentFrom('descendant-or-self::doc/descendant::node');
         $this->assertEquals('123', $res);
-
-
     }
 
 }

@@ -193,6 +193,21 @@ function seeConfigFilesCreated()
 ?>
 ```
 
+### Undefined Actions in Helpers
+
+In case you have action in test is not defined yet, you can automatically create a stub method for it in corresponding helper. To do so, you can use a `analyse` command which scans all tests and searches for actions that does not exists in any of connected modules.
+
+So, you can assign writing tests to non-technical guys or QAs. In case they lack some actions they define them in test.
+
+``` php
+<?php
+$I->doManyCoolThings();
+?>
+```
+
+By running the `analyze` command you will be asked if you want to add `doManyCoolThings` to current Helper.
+
+
 ### Hooks
 
 Each module can handle events from the running test. A module can be executed before the test starts, or after the test is finished. This can be useful for bootstrap/cleanup actions.
