@@ -78,6 +78,10 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
             $scenarioStatus = 'scenarioIncomplete';
         }
 
+        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR){
+            $scenarioStatus = 'scenarioFailed';
+        }
+
         else {
             $scenarioStatus = 'scenarioSuccess';
         }
