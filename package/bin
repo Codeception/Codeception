@@ -21,6 +21,7 @@ use Symfony\Component\Console\Application,
  $app = new Application('Codeception', Codeception\Codecept::VERSION);
  $app->add(new Codeception\Command\Build('build'));
  $app->add(new Codeception\Command\Run('run'));
+ $app->add(new Codeception\Command\Analyze('analyze'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
  $app->add(new Codeception\Command\GenerateCept('generate:cept'));
  $app->add(new Codeception\Command\GenerateCest('generate:cest'));

@@ -112,6 +112,8 @@ abstract class AbstractGuy
         if ($this->scenario->running()) {
             $class = get_class($this);
             throw new \RuntimeException("Call to undefined method $class::$method");
+        } else {
+            $this->scenario->action($method, $arguments);
         }
     }
 }
