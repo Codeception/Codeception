@@ -34,6 +34,6 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanup()
     {
-        $this->markTestIncomplete();
+        // $this->markTestIncomplete();
     }
 }
