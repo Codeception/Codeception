@@ -122,7 +122,7 @@ class Doctrine1 extends \Codeception\Module
             $query->addWhere("$key = ?", $value);
             $string[] = "$key = '$value'";
         }
-        return $query->select($column)->fetchOne();;
+        return $query->select($column)->fetchOne();
     }
 
 }
