@@ -10,8 +10,8 @@
     <email>davert@mail.ua</email>
     <active>yes</active>
   </lead>
-  <date>2012-09-14</date>
-  <time>01:11:59</time>
+  <date>2012-09-15</date>
+  <time>11:42:16</time>
   <version>
     <release>1.1.4</release>
     <api>1.1.4</api>
@@ -26,8 +26,8 @@
     <dir name="/" baseinstalldir="Codeception">
       <file name=".gitignore" role="php" md5sum="4c77ffd55707c23e4ceb12c21915eb0b"/>
       <file name=".travis.yml" role="php" md5sum="86ebe805a302f57d5fd85e6dfd780289"/>
-      <file name="autoload.php" role="php" md5sum="fc636538a1d3702656898735dc91f134"/>
-      <file name="codecept" role="script" baseinstalldir="/" md5sum="490a23e94b5cbe405177af4137b4321e">
+      <file name="autoload.php" role="php" md5sum="df1d1826744bce58293bbe8044a15f69"/>
+      <file name="codecept" role="script" baseinstalldir="/" md5sum="afdd928f9ef1a5c3e1fe75223fd3a144">
         <tasks:replace type="pear-config" from="/usr/bin/env php" to="php_bin"/>
         <tasks:replace type="pear-config" from="@php_bin@" to="php_bin"/>
         <tasks:replace type="pear-config" from="@bin_dir@" to="bin_dir"/>
@@ -41,8 +41,8 @@
       </file>
       <file name="codeception.yml" role="php" md5sum="6abfcb9a2546f04f752d1ee0639646a9"/>
       <file name="composer.json" role="php" md5sum="3a02656bb1bbe61883d3acaa1767f1a2"/>
-      <file name="composer.lock" role="php" md5sum="b84b1dd5adea3b422340850e37576259"/>
-      <file name="pearfarm.spec" role="php" md5sum="1fe87052ffa32ceb28d5836994bfd2ec"/>
+      <file name="composer.lock" role="php" md5sum="6c9296045296bac7121611b96f94989b"/>
+      <file name="pearfarm.spec" role="php" md5sum="f30ac7f632c2af4af7cfcde510c8e1f5"/>
       <file name="pearfarm.spec~" role="php" md5sum="2c8e726eb86f854d2b27a53d3caf3208"/>
       <dir name="plugins">
         <dir name="DocBlox">
@@ -56,23 +56,24 @@
           </dir>
         </dir>
       </dir>
-      <file name="readme.md" role="php" md5sum="99a14a01ded546bf4f2a0bba0379a5ea"/>
+      <file name="readme.md" role="php" md5sum="e46ecfbc3e694d28233451c7f0d693b3"/>
       <dir name="src">
         <dir name="Codeception">
-          <file name="AbstractGuy.php" role="php" md5sum="8d34b188cab4e5e67eecb61a94d3ea47"/>
+          <file name="AbstractGuy.php" role="php" md5sum="0b2df1de35a6e8becea9222d7554980c"/>
           <file name="Codecept.php" role="php" md5sum="d6e3349f35d69a30ea2e5666754072c3"/>
           <dir name="Command">
+            <file name="Analyze.php" role="php" md5sum="01a07d44448c2e676a23daaa04d01d89"/>
             <file name="Base.php" role="php" md5sum="6564c34804014ac658d012737e2155cf"/>
             <file name="Bootstrap.php" role="php" md5sum="90842d511b483e63c14a6c73e9145ba0"/>
             <file name="Build.php" role="php" md5sum="18cbc93674f55e1830f55750ad69340f"/>
             <file name="GenerateCept.php" role="php" md5sum="d1429fe8614d91fe46ca0b5818026328"/>
-            <file name="GenerateCest.php" role="php" md5sum="00daa7d2e73eeccb30b2fb5f766f62f1"/>
-            <file name="GenerateScenarios.php" role="php" md5sum="3114db586271a8fb283f9403730e4e1a"/>
-            <file name="GenerateSuite.php" role="php" md5sum="30b9acf0ca499878035f9fd59fada7b9"/>
+            <file name="GenerateCest.php" role="php" md5sum="9206225d1c77f8283067ac005e693294"/>
+            <file name="GenerateScenarios.php" role="php" md5sum="29d8408a04a18241297081473a423870"/>
+            <file name="GenerateSuite.php" role="php" md5sum="f81505ce33000ee1cf8822aca47b0f99"/>
             <file name="GenerateTest.php" role="php" md5sum="ddd9a65b03f3a632a9bb23c31d60540e"/>
             <file name="Run.php" role="php" md5sum="fc62f54d8a2646c85d47c7bd3d712dba"/>
           </dir>
-          <file name="Configuration.php" role="php" md5sum="9a2fd80e8485a9054be4ba3555a4ed0c"/>
+          <file name="Configuration.php" role="php" md5sum="86cf850a736122b639b8fb9d619f6409"/>
           <dir name="Event">
             <file name="Fail.php" role="php" md5sum="aa808eb83f07cb882e6fbd3b00584305"/>
             <file name="Step.php" role="php" md5sum="7af213be46e292d9a57347852e62fd54"/>
@@ -91,15 +92,15 @@
             <file name="AMQP.php" role="php" md5sum="204451d7e2c92276fdfbb365654c065a"/>
             <file name="Cli.php" role="php" md5sum="019cfd2ef10e5885347dede0ae6f40f4"/>
             <file name="Db.php" role="php" md5sum="85663097404ca6f55a11203c116dd49a"/>
-            <file name="Dbh.php" role="php" md5sum="320b83ba9b54bcbc76b69c50e5346b15"/>
-            <file name="Doctrine1.php" role="php" md5sum="b5da33ba2af1ed17d23f2dcee8c3da0b"/>
+            <file name="Dbh.php" role="php" md5sum="4327e0e70c43097d7fea5c468a7cbf3d"/>
+            <file name="Doctrine1.php" role="php" md5sum="574442e4f5030a81488efa144229d4b2"/>
             <file name="Doctrine2.php" role="php" md5sum="faa77f92b04ef6cfa4b1287e16a38572"/>
             <file name="Filesystem.php" role="php" md5sum="e7322ad05a40ed7dcb1808b966bac002"/>
             <file name="Kohana.php" role="php" md5sum="858a22d3cb23345facd0557ec5adbfab"/>
-            <file name="Memcache.php" role="php" md5sum="baa1256589ace3143976dfc098e55191"/>
+            <file name="Memcache.php" role="php" md5sum="1e0f78a8c9ebb4e9999c73729c75131d"/>
             <file name="PhpBrowser.php" role="php" md5sum="20e8eb12022465c4dc8160a68be8276d"/>
             <file name="REST.php" role="php" md5sum="85fd92d837be1479be566bc653af87da"/>
-            <file name="SOAP.php" role="php" md5sum="083c792fb6a3b686e83f6b049f0b8377"/>
+            <file name="SOAP.php" role="php" md5sum="22a6f98717b7fc27d6ccb5a0cb3ba1dd"/>
             <file name="Selenium.php" role="php" md5sum="d1f881637ec0b8dcebee02083f921fef"/>
             <file name="Selenium2.php" role="php" md5sum="ce2dcde36aa606131da0dbfd87f5b737"/>
             <file name="SocialEngine.php" role="php" md5sum="bf13b57675974d09df6c08a84f8e4d36"/>
@@ -107,14 +108,14 @@
             <file name="Symfony2.php" role="php" md5sum="98e93db7ad2f61b35f9f99ab1184331e"/>
             <file name="Unit.php" role="php" md5sum="5a33d7f52969e8cc0bf504ea686c7514"/>
             <file name="WebDebug.php" role="php" md5sum="e3937739da82d64ebf62874ef384db6e"/>
-            <file name="ZF1.php" role="php" md5sum="04af1b756f7434fb4a9c874c4bb5e860"/>
+            <file name="ZF1.php" role="php" md5sum="29ba157e9a998ab976492d1ea98833f2"/>
             <file name="ZombieJS.php" role="php" md5sum="5bc84da3b9e4dd7ef34e163e08079a9c"/>
           </dir>
           <file name="Output.php" role="php" md5sum="4e5fc91b25c5241a398736d79d25b221"/>
           <dir name="PHPUnit">
             <file name="Assert.php" role="php" md5sum="5d7615ce8579e680fc7615d37c01870b"/>
             <dir name="Constraint">
-              <file name="Page.php" role="php" md5sum="73719880d3993ef9815f2c6ac244614d"/>
+              <file name="Page.php" role="php" md5sum="db24169c915b1122ceceed61b798a511"/>
             </dir>
             <file name="Listener.php" role="php" md5sum="d7b104080ee4f85b720622adccdb324b"/>
             <dir name="Log">
@@ -122,7 +123,7 @@
             </dir>
             <file name="ResultPrinter.php" role="php" md5sum="151d29d601460bb2f03f6088871e4735"/>
             <dir name="ResultPrinter">
-              <file name="HTML.php" role="php" md5sum="bbbc52beb3839f243c39410ba81cd722"/>
+              <file name="HTML.php" role="php" md5sum="6cc0cd4f6c10c13e438a00f657a22c40"/>
               <file name="Report.php" role="php" md5sum="b31016da7975521e3534de7a2483e47a"/>
               <file name="UI.php" role="php" md5sum="270012690813161467437e3dd4fe1617"/>
               <dir name="template">
@@ -144,14 +145,14 @@
             <file name="Condition.php" role="php" md5sum="5fae7e73f16ddae682fb3d72d6fdfe7a"/>
           </dir>
           <dir name="Subscriber">
-            <file name="Cest.php" role="php" md5sum="823f2f5aeaf808d0302b975c538b4289"/>
+            <file name="Cest.php" role="php" md5sum="48b1a7866f4f2274f8b93be2e8de9229"/>
             <file name="Console.php" role="php" md5sum="4b83e840f2c3f38c79d43f060dc5ad9f"/>
-            <file name="ErrorHandler.php" role="php" md5sum="b8af23e11035d587f9c5c3a1ef390924"/>
+            <file name="ErrorHandler.php" role="php" md5sum="ca5a580bdad8cd4534c5314b157900e6"/>
             <file name="Logger.php" role="php" md5sum="09e0ec5d22c07c477b9880a2da83d6e8"/>
-            <file name="Module.php" role="php" md5sum="0252a4673d4f6d1082ab9e75cec323d5"/>
+            <file name="Module.php" role="php" md5sum="145eff9f5a6371b433165639c48c49dc"/>
           </dir>
           <file name="SuiteManager.php" role="php" md5sum="15bc5438991f2c2e0384c7b31f6f8ca8"/>
-          <file name="TestCase.php" role="php" md5sum="670daa5b10eec6f350a30df87b0da7ad"/>
+          <file name="TestCase.php" role="php" md5sum="3246f4f47451394f6872c0615ee0d905"/>
           <dir name="TestCase">
             <file name="Cept.php" role="php" md5sum="9d3280c93d4d04493666cba02759d2b5"/>
             <file name="Cest.php" role="php" md5sum="367baa094a01dc09f3c3c19f6255e779"/>
@@ -160,27 +161,28 @@
           <dir name="Util">
             <dir name="Connector">
               <file name="Kohana.php" role="php" md5sum="df69ba195235eda74a72d95ec4109b20"/>
-              <file name="SocialEngine.php" role="php" md5sum="05706cf9213f455cc5fec17e57b00b21"/>
+              <file name="SocialEngine.php" role="php" md5sum="297abb5dfc4e01d3a45d8afa516b7932"/>
               <file name="Universal.php" role="php" md5sum="203a99d0bfeb280d707d051948209afe"/>
-              <file name="ZF1.php" role="php" md5sum="2ee2be3799e4e8479db7f0112a958c28"/>
+              <file name="ZF1.php" role="php" md5sum="ca691d517ebdce90762e473d5b68dfc4"/>
             </dir>
-            <file name="DbInterface.php" role="php" md5sum="89346498d02b97da2349f22e90d5b706"/>
+            <file name="DbInterface.php" role="php" md5sum="0c4e677a2eac79d83190ac78c9cee84e"/>
             <dir name="Driver">
-              <file name="Db.php" role="php" md5sum="8f35833890622192b891d944ad1bb884"/>
-              <file name="MsSql.php" role="php" md5sum="9fbffa93ee55f3e6717a8893a4c683ad"/>
+              <file name="Db.php" role="php" md5sum="2a4b1fae597bac1bbcedd15b76d523a0"/>
+              <file name="MsSql.php" role="php" md5sum="20ccf6d21b27d35086e20514df2e4462"/>
               <file name="MySql.php" role="php" md5sum="c3916fc00ec2e1be9b05954092b0e9c2"/>
               <file name="Oracle.php" role="php" md5sum="ed9616211657dc44c7cd0db9944847c5"/>
-              <file name="PostgreSql.php" role="php" md5sum="3bf0b1fc5b9782e5069f3f1cff4a52db"/>
+              <file name="PostgreSql.php" role="php" md5sum="2db5a4836e0eeb342e2121768f11f0ca"/>
               <file name="Sqlite.php" role="php" md5sum="ab764d2afd5267cebab7b1aced16b970"/>
-              <file name="SqliteGeneral.php" role="php" md5sum="c57aed5f24614e8873b7e983813409c2"/>
+              <file name="SqliteGeneral.php" role="php" md5sum="54a63a8861fe76b98e29d1b41ff65e40"/>
             </dir>
             <file name="Fixtures.php" role="php" md5sum="4bd48136b17f074c96e28b3048a63e24"/>
             <file name="Framework.php" role="php" md5sum="76fe3dacd110a60b5a4d6b5dc43efabb"/>
-            <file name="FrameworkInterface.php" role="php" md5sum="0526e120e3879a4fc1c1bc04c4f33430"/>
+            <file name="FrameworkInterface.php" role="php" md5sum="ea9518f122bc85141b62e4798e07784d"/>
+            <file name="Locator.php" role="php" md5sum="805870c029f16223a541f303703b41f7"/>
             <file name="Mink.php" role="php" md5sum="44981d859d41d67b73c9417b40d8d6ef"/>
             <file name="MinkJS.php" role="php" md5sum="a5b547170984d8d9359ff242cccbe511"/>
             <file name="Soap.php" role="php" md5sum="64f4b5973a9bbde58a3a7f6d0c0a9c7c"/>
-            <file name="Stub.php" role="php" md5sum="3bc174c04f5404bf1754818e3a428702"/>
+            <file name="Stub.php" role="php" md5sum="5431b1aa2094030ddaffecd679341918"/>
             <dir name="Stub">
               <file name="Builder.php" role="php" md5sum="549fa0345f7943c8b8e95b70c04e619f"/>
               <file name="Stub.php" role="php" md5sum="e8e63cec6bf0629ba25d451838c52bab"/>
@@ -373,7 +375,7 @@
                   </dir>
                 </dir>
                 <file name="dbunit.php" role="php" md5sum="3131f5e5e0adfb7a310cb0e120f5f25a"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="c5bce0167df006c7447d76f0e309ee75"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="c5bce0167df006c7447d76f0e309ee75"/>
               </dir>
               <dir name="fdomdocument">
                 <dir name="TheSeer">
@@ -425,18 +427,18 @@
                           <file name="Directory.php" role="php" md5sum="0e6745eaa0316e95a90deacdf5603d90"/>
                           <file name="File.php" role="php" md5sum="65847eb58fe1807ff34c454f81f98393"/>
                           <dir name="Template">
-                            <file name="container-min.js" role="script" md5sum="5511b676a4961a0dfb52e1f64ce65a7a"/>
-                            <file name="dashboard.html.dist" role="data" md5sum="3cafd87efba80182d77c238388d2c2bc"/>
-                            <file name="directory.html.dist" role="data" md5sum="dbba0b0b1c25806dce4b5c3053a9b994"/>
-                            <file name="directory_item.html.dist" role="data" md5sum="d262cc15439275a8b67286c9a9d7aebe"/>
-                            <file name="file.html.dist" role="data" md5sum="ab45b7483654fd8ad4af5a453f0ed160"/>
-                            <file name="file_item.html.dist" role="data" md5sum="a2bb5cee022e06cfa965e37ebd1e1f21"/>
-                            <file name="file_no_yui.html.dist" role="data" md5sum="fc4cde87691af188ef6a88fc69960ad4"/>
-                            <file name="highcharts.js" role="script" md5sum="08cdf43b4ba8ce789f86a30a09071ca8"/>
-                            <file name="jquery.min.js" role="script" md5sum="0efa3b9aa0f509043308e7c6e23538f8"/>
-                            <file name="method_item.html.dist" role="data" md5sum="25f759e37556bba10aa5676fa0e224b5"/>
-                            <file name="yahoo-dom-event.js" role="script" md5sum="366eac96e298168d2c923fcb556fa259"/>
-                            <file name="yui_item.js" role="script" md5sum="32c5c6a60f60136b454fe03e685776b3"/>
+                            <file name="container-min.js" role="php" md5sum="5511b676a4961a0dfb52e1f64ce65a7a"/>
+                            <file name="dashboard.html.dist" role="php" md5sum="3cafd87efba80182d77c238388d2c2bc"/>
+                            <file name="directory.html.dist" role="php" md5sum="dbba0b0b1c25806dce4b5c3053a9b994"/>
+                            <file name="directory_item.html.dist" role="php" md5sum="d262cc15439275a8b67286c9a9d7aebe"/>
+                            <file name="file.html.dist" role="php" md5sum="ab45b7483654fd8ad4af5a453f0ed160"/>
+                            <file name="file_item.html.dist" role="php" md5sum="a2bb5cee022e06cfa965e37ebd1e1f21"/>
+                            <file name="file_no_yui.html.dist" role="php" md5sum="fc4cde87691af188ef6a88fc69960ad4"/>
+                            <file name="highcharts.js" role="php" md5sum="08cdf43b4ba8ce789f86a30a09071ca8"/>
+                            <file name="jquery.min.js" role="php" md5sum="0efa3b9aa0f509043308e7c6e23538f8"/>
+                            <file name="method_item.html.dist" role="php" md5sum="25f759e37556bba10aa5676fa0e224b5"/>
+                            <file name="yahoo-dom-event.js" role="php" md5sum="366eac96e298168d2c923fcb556fa259"/>
+                            <file name="yui_item.js" role="php" md5sum="32c5c6a60f60136b454fe03e685776b3"/>
                           </dir>
                         </dir>
                       </dir>
@@ -454,7 +456,6 @@
                 </dir>
                 <dir name="Tests">
                   <dir name="PHP">
-                    <file name="CodeCoverageTest.php" role="php" md5sum="89ae2aa41826806a4a6ad7d1371b49b6"/>
                     <dir name="CodeCoverage">
                       <file name="FilterTest.php" role="php" md5sum="2e8c914cc53b826c41ce738d9c95b1c5"/>
                       <dir name="Report">
@@ -463,6 +464,7 @@
                       </dir>
                       <file name="UtilTest.php" role="php" md5sum="d6addbefa7d8bc7141f5c67bd3a7f21a"/>
                     </dir>
+                    <file name="CodeCoverageTest.php" role="php" md5sum="89ae2aa41826806a4a6ad7d1371b49b6"/>
                   </dir>
                   <file name="TestCase.php" role="php" md5sum="668a42e7afe4218534bd78467b7b72a1"/>
                   <dir name="_files">
@@ -510,7 +512,7 @@
                     </dir>
                   </dir>
                 </dir>
-                <file name="phpunit.xml.dist" role="data" md5sum="1badb1972c491d98e44e29e96408f947"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="1badb1972c491d98e44e29e96408f947"/>
                 <dir name="scripts">
                   <file name="auto_append.php" role="php" md5sum="1f894beb45e5f1af9d3b3f2e770b8898"/>
                   <file name="auto_prepend.php" role="php" md5sum="3864daef243ecda1ad504069528ea5f0"/>
@@ -580,7 +582,7 @@
                     </dir>
                   </dir>
                 </dir>
-                <file name="phpunit.xml.dist" role="data" md5sum="00e899592b2130c44d39feb3039ab1ec"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="00e899592b2130c44d39feb3039ab1ec"/>
               </dir>
               <dir name="php-token-stream">
                 <dir name="PHP">
@@ -594,7 +596,6 @@
                   </dir>
                 </dir>
                 <dir name="Tests">
-                  <file name="TokenTest.php" role="php" md5sum="a0d00dfccfb6d97b87403e3d8e542114"/>
                   <dir name="Token">
                     <file name="ClassTest.php" role="php" md5sum="8252d5ee69d34e8b7cd4d68b508a33d3"/>
                     <file name="FunctionTest.php" role="php" md5sum="60951c18fcb9bec1b377d98d03c50763"/>
@@ -602,6 +603,7 @@
                     <file name="InterfaceTest.php" role="php" md5sum="6301e253ae16f6c356b74e8a92e86016"/>
                     <file name="NamespaceTest.php" role="php" md5sum="4ce5e0607d007a9315ba9fc1d7269b2a"/>
                   </dir>
+                  <file name="TokenTest.php" role="php" md5sum="a0d00dfccfb6d97b87403e3d8e542114"/>
                   <dir name="_files">
                     <file name="classExtendsNamespacedClass.php" role="php" md5sum="22764f0b6de09293c3d4eaf55bc7163e"/>
                     <file name="classInNamespace.php" role="php" md5sum="1e6de40ec066648e61e0769485470523"/>
@@ -627,7 +629,7 @@
                     </dir>
                   </dir>
                 </dir>
-                <file name="phpunit.xml.dist" role="data" md5sum="258aabd45104b04d549e3158803b2367"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="258aabd45104b04d549e3158803b2367"/>
               </dir>
               <dir name="php">
                 <dir name="ezc">
@@ -856,7 +858,7 @@
                   </dir>
                 </dir>
                 <file name="phpdcd.php" role="php" md5sum="ba4b1e0f17d37c0db318ce2d779b601d"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="199dfa015cd247727916a0f3dd1ead98"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="199dfa015cd247727916a0f3dd1ead98"/>
               </dir>
               <dir name="phploc">
                 <dir name="PHPLOC">
@@ -892,7 +894,7 @@
                   </dir>
                 </dir>
                 <file name="phploc.php" role="php" md5sum="8cc3dae75db015d67c5f01cc30fbe71c"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="3e5c488e77f53def47ec662b9023c9b1"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="3e5c488e77f53def47ec662b9023c9b1"/>
               </dir>
               <dir name="phpunit-mock-objects">
                 <dir name="PHPUnit">
@@ -910,21 +912,21 @@
                       </dir>
                       <file name="Generator.php" role="php" md5sum="0272f43927a5ca902513b07606bbe85a"/>
                       <dir name="Generator">
-                        <file name="mocked_class.tpl.dist" role="data" md5sum="355f672a18f4e4dab3cf2a60103340a9"/>
-                        <file name="mocked_clone.tpl.dist" role="data" md5sum="747ca12ba8caa3b9d13436eb8c640a2c"/>
-                        <file name="mocked_object_method.tpl.dist" role="data" md5sum="3daec0214ac48f0e43966cf5b46dd8f2"/>
-                        <file name="mocked_static_method.tpl.dist" role="data" md5sum="0e3767817d440930fdcc5194a41f832f"/>
-                        <file name="trait_class.tpl.dist" role="data" md5sum="74db6e89cecc6344a5d83b178a50ca95"/>
-                        <file name="unmocked_clone.tpl.dist" role="data" md5sum="24ed5db5749b2d54f4c1ec88853ece55"/>
-                        <file name="wsdl_class.tpl.dist" role="data" md5sum="477a7f5cc54a0f18c2ff888684ec96d2"/>
-                        <file name="wsdl_method.tpl.dist" role="data" md5sum="b87ff1b355250565af7d5ec7c877c8d7"/>
+                        <file name="mocked_class.tpl.dist" role="php" md5sum="355f672a18f4e4dab3cf2a60103340a9"/>
+                        <file name="mocked_clone.tpl.dist" role="php" md5sum="747ca12ba8caa3b9d13436eb8c640a2c"/>
+                        <file name="mocked_object_method.tpl.dist" role="php" md5sum="3daec0214ac48f0e43966cf5b46dd8f2"/>
+                        <file name="mocked_static_method.tpl.dist" role="php" md5sum="0e3767817d440930fdcc5194a41f832f"/>
+                        <file name="trait_class.tpl.dist" role="php" md5sum="74db6e89cecc6344a5d83b178a50ca95"/>
+                        <file name="unmocked_clone.tpl.dist" role="php" md5sum="24ed5db5749b2d54f4c1ec88853ece55"/>
+                        <file name="wsdl_class.tpl.dist" role="php" md5sum="477a7f5cc54a0f18c2ff888684ec96d2"/>
+                        <file name="wsdl_method.tpl.dist" role="php" md5sum="b87ff1b355250565af7d5ec7c877c8d7"/>
                       </dir>
                       <file name="Invocation.php" role="php" md5sum="347b1f53f029d5ce2246536f3371237e"/>
-                      <file name="InvocationMocker.php" role="php" md5sum="c29e137cb6751363e1cc93b6bde5e816"/>
                       <dir name="Invocation">
                         <file name="Object.php" role="php" md5sum="da0d4e83d307e6c02f305d390c2613e5"/>
                         <file name="Static.php" role="php" md5sum="74184224917dc704064dbae36ad56f69"/>
                       </dir>
+                      <file name="InvocationMocker.php" role="php" md5sum="c29e137cb6751363e1cc93b6bde5e816"/>
                       <file name="Invokable.php" role="php" md5sum="bc81ddbcb06769ef31046ede15911a9c"/>
                       <file name="Matcher.php" role="php" md5sum="3cd51639f23258aa06426c7228b27000"/>
                       <dir name="Matcher">
@@ -959,13 +961,13 @@
                 <dir name="Tests">
                   <file name="GeneratorTest.php" role="php" md5sum="734ca046528c0ad06387cee87d6b790d"/>
                   <file name="MockBuilderTest.php" role="php" md5sum="de8e63406375c16d1f8b0ac1d364a486"/>
-                  <file name="MockObjectTest.php" role="php" md5sum="dcd6446e90ddd71fcdf400d4523ba248"/>
                   <dir name="MockObject">
                     <dir name="Invocation">
                       <file name="ObjectTest.php" role="php" md5sum="7bfdce7c0ef176e0c8fd85237487cef4"/>
                       <file name="StaticTest.php" role="php" md5sum="f72bf65fd6edd9aacc5e6a2cacd95e6b"/>
                     </dir>
                   </dir>
+                  <file name="MockObjectTest.php" role="php" md5sum="dcd6446e90ddd71fcdf400d4523ba248"/>
                   <dir name="_files">
                     <file name="AbstractMockTestClass.php" role="php" md5sum="4e550e2443f69d5c27a2fdf72b76c502"/>
                     <file name="AnInterface.php" role="php" md5sum="3fbb32606c934d3b2cf9269279e17bdb"/>
@@ -989,7 +991,7 @@
                     </dir>
                   </dir>
                 </dir>
-                <file name="phpunit.xml.dist" role="data" md5sum="4de70b772897c72c838a8fb263eaedee"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="4de70b772897c72c838a8fb263eaedee"/>
               </dir>
               <dir name="phpunit-selenium">
                 <dir name="PHPUnit">
@@ -1000,6 +1002,9 @@
                       <file name="CommandsHolder.php" role="php" md5sum="e59bf4db76b561381d1babec63ad4715"/>
                       <file name="Driver.php" role="php" md5sum="54f3a159e69e21431602d006189bbf3d"/>
                       <file name="Element.php" role="php" md5sum="cbc324ddca1d3b3d22b12b308cf92989"/>
+                      <dir name="Element">
+                        <file name="Select.php" role="php" md5sum="ecaeaeea1be7b4d0f7540f2a250113d1"/>
+                      </dir>
                       <dir name="ElementCommand">
                         <file name="Attribute.php" role="php" md5sum="8f369eb28d2e29c165d89181ae6e38fc"/>
                         <file name="Click.php" role="php" md5sum="de3a9e9e53d3569cf7138b5738444816"/>
@@ -1010,12 +1015,17 @@
                         <file name="Value.php" role="php" md5sum="ca36b42cc94d652ea3a495185bdf5883"/>
                       </dir>
                       <file name="ElementCriteria.php" role="php" md5sum="21f1f15e2590fcc61d460f1f7611b942"/>
-                      <dir name="Element">
-                        <file name="Select.php" role="php" md5sum="ecaeaeea1be7b4d0f7540f2a250113d1"/>
-                      </dir>
                       <file name="Exception.php" role="php" md5sum="f937e12d03fd1cd7a1e09254d33965ee"/>
                       <file name="Response.php" role="php" md5sum="4534f231eabd7e99c37cba683fa91558"/>
                       <file name="Session.php" role="php" md5sum="00211526ffbfe9e84f76580cacdbd098"/>
+                      <dir name="Session">
+                        <file name="Cookie.php" role="php" md5sum="9d14f1e3d02eff105666a93b51a29343"/>
+                        <dir name="Cookie">
+                          <file name="Builder.php" role="php" md5sum="4d2d25fecee7b76c116504d74568807f"/>
+                        </dir>
+                        <file name="Storage.php" role="php" md5sum="1cace00b5b1d7bddb982a460921287f0"/>
+                        <file name="Timeouts.php" role="php" md5sum="61644e7b026b48ae46da70b8844aba30"/>
+                      </dir>
                       <dir name="SessionCommand">
                         <file name="AcceptAlert.php" role="php" md5sum="0bf8c49064f1b39ea93e8c0a3e8b691e"/>
                         <file name="AlertText.php" role="php" md5sum="2e2e40a12b8f9e06423429f7d52729ed"/>
@@ -1029,14 +1039,6 @@
                       <dir name="SessionStrategy">
                         <file name="Isolated.php" role="php" md5sum="830eba6ecaab4583a8779a44afd9185b"/>
                         <file name="Shared.php" role="php" md5sum="2f06e0f8cb1c5701a2a86e98b87f045e"/>
-                      </dir>
-                      <dir name="Session">
-                        <file name="Cookie.php" role="php" md5sum="9d14f1e3d02eff105666a93b51a29343"/>
-                        <dir name="Cookie">
-                          <file name="Builder.php" role="php" md5sum="4d2d25fecee7b76c116504d74568807f"/>
-                        </dir>
-                        <file name="Storage.php" role="php" md5sum="1cace00b5b1d7bddb982a460921287f0"/>
-                        <file name="Timeouts.php" role="php" md5sum="61644e7b026b48ae46da70b8844aba30"/>
                       </dir>
                       <file name="StateCommand.php" role="php" md5sum="ce748e7f0391c5408e0a59fe9670fc11"/>
                       <file name="URL.php" role="php" md5sum="1e8f0df8dd3cb45beaae4d86c80fb724"/>
@@ -1055,14 +1057,13 @@
                   </dir>
                 </dir>
                 <dir name="Tests">
-                  <file name="Selenium2TestCaseTest.php" role="php" md5sum="326cf7b505239d61e7f663824bcf3871"/>
                   <dir name="Selenium2TestCase">
                     <file name="BaseTestCase.php" role="php" md5sum="f13b9a8980272ff22d93bbce7943f771"/>
                     <file name="FailuresTest.php" role="php" md5sum="fdc84c3a3d324516b1918428a2df5d83"/>
                     <file name="PageObjectTest.php" role="php" md5sum="7b22871648eee4a150aa1087de81eef6"/>
                     <file name="URLTest.php" role="php" md5sum="54b9540b022e839edba1590c9059f722"/>
                   </dir>
-                  <file name="SeleniumTestCaseTest.php" role="php" md5sum="0607938b6952308368c2a996846fd72a"/>
+                  <file name="Selenium2TestCaseTest.php" role="php" md5sum="326cf7b505239d61e7f663824bcf3871"/>
                   <dir name="SeleniumTestCase">
                     <file name="FailuresTest.php" role="php" md5sum="ecb55dbdfe34feaa0fd4ed78003b4bed"/>
                     <file name="MultipleBrowsersTest.php" role="php" md5sum="651542e74df3ceea376d553e08057367"/>
@@ -1071,6 +1072,7 @@
                     <file name="SuiteBuildingTest.php" role="php" md5sum="97b1a190a34037206009679d33447927"/>
                     <file name="Ticket114Test.php" role="php" md5sum="dfe83ba1a30cbc6e7d0baee43a777aee"/>
                   </dir>
+                  <file name="SeleniumTestCaseTest.php" role="php" md5sum="0607938b6952308368c2a996846fd72a"/>
                 </dir>
                 <dir name="build">
                   <dir name="PHPCS">
@@ -1082,7 +1084,7 @@
                   </dir>
                 </dir>
                 <file name="phpunit-selenium-bootstrap.php" role="php" md5sum="b099eee0efbc7d4411e18f1319792c85"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="247b69550d684e9bc81fe88044c99a9e"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="247b69550d684e9bc81fe88044c99a9e"/>
                 <file name="run-phpunit.php" role="php" md5sum="ac91f19fd2fb3ff094a50fa35e64748c"/>
               </dir>
               <dir name="phpunit-skeleton-generator">
@@ -1092,16 +1094,16 @@
                     <file name="Autoload.php" role="php" md5sum="d0fdbb3463bf63d715149e1b7930d1c6"/>
                     <file name="Class.php" role="php" md5sum="a0bcb9da4cfdd86c0f75816ab306ce59"/>
                     <dir name="Template">
-                      <file name="Class.tpl.dist" role="data" md5sum="c8d71b25abaa6b3a8252f603255b2c56"/>
-                      <file name="IncompleteTestMethod.tpl.dist" role="data" md5sum="27d51b4ed7374388557dffd76ea562f7"/>
-                      <file name="Method.tpl.dist" role="data" md5sum="0738157d50fe3c2a9b60a37d9a703088"/>
-                      <file name="TestClass.tpl.dist" role="data" md5sum="29f09d58b0c348b9d7d92b7e7ff34a4b"/>
-                      <file name="TestMethod.tpl.dist" role="data" md5sum="3921cf113e21639c4103725f1a5e9dbf"/>
-                      <file name="TestMethodBool.tpl.dist" role="data" md5sum="10473358a692996ff1dfa7fbb02d5219"/>
-                      <file name="TestMethodBoolStatic.tpl.dist" role="data" md5sum="5ca0f16e286b1c4a5e4a67c7c5f6b33d"/>
-                      <file name="TestMethodException.tpl.dist" role="data" md5sum="81e30872c9a4f4f820d25fe17a842bf5"/>
-                      <file name="TestMethodExceptionStatic.tpl.dist" role="data" md5sum="45ac1e1930cf93b7f2d5a891a8ef4bd0"/>
-                      <file name="TestMethodStatic.tpl.dist" role="data" md5sum="cbf624fc18b110ed4fc1397633344f9a"/>
+                      <file name="Class.tpl.dist" role="php" md5sum="c8d71b25abaa6b3a8252f603255b2c56"/>
+                      <file name="IncompleteTestMethod.tpl.dist" role="php" md5sum="27d51b4ed7374388557dffd76ea562f7"/>
+                      <file name="Method.tpl.dist" role="php" md5sum="0738157d50fe3c2a9b60a37d9a703088"/>
+                      <file name="TestClass.tpl.dist" role="php" md5sum="29f09d58b0c348b9d7d92b7e7ff34a4b"/>
+                      <file name="TestMethod.tpl.dist" role="php" md5sum="3921cf113e21639c4103725f1a5e9dbf"/>
+                      <file name="TestMethodBool.tpl.dist" role="php" md5sum="10473358a692996ff1dfa7fbb02d5219"/>
+                      <file name="TestMethodBoolStatic.tpl.dist" role="php" md5sum="5ca0f16e286b1c4a5e4a67c7c5f6b33d"/>
+                      <file name="TestMethodException.tpl.dist" role="php" md5sum="81e30872c9a4f4f820d25fe17a842bf5"/>
+                      <file name="TestMethodExceptionStatic.tpl.dist" role="php" md5sum="45ac1e1930cf93b7f2d5a891a8ef4bd0"/>
+                      <file name="TestMethodStatic.tpl.dist" role="php" md5sum="cbf624fc18b110ed4fc1397633344f9a"/>
                     </dir>
                     <file name="Test.php" role="php" md5sum="486dff823fc271c1a5bb71eb7b44bc78"/>
                     <dir name="TextUI">
@@ -1129,7 +1131,7 @@
                   </dir>
                 </dir>
                 <file name="phpunit-skelgen.php" role="php" md5sum="652c1316aa5fca7a831066804851b11f"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="9bc5a4ff43530aed0f8cfcf7fe9dcc37"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="9bc5a4ff43530aed0f8cfcf7fe9dcc37"/>
               </dir>
               <dir name="phpunit">
                 <dir name="PHPUnit">
@@ -1153,7 +1155,6 @@
                     </dir>
                     <file name="AssertionFailedError.php" role="php" md5sum="d738e2c686ca9938200bcb0e739aa29c"/>
                     <file name="Comparator.php" role="php" md5sum="9c695034cb46628c0415813ee3251781"/>
-                    <file name="ComparatorFactory.php" role="php" md5sum="7bf52fce06dae97ad7fd54acfad6ef5f"/>
                     <dir name="Comparator">
                       <file name="Array.php" role="php" md5sum="6dcc047b9fc23d72720d6ec6bf0c84c8"/>
                       <file name="DOMDocument.php" role="php" md5sum="6b6ba0ebcec9547d0a9c791ef013ec8d"/>
@@ -1167,6 +1168,7 @@
                       <file name="SplObjectStorage.php" role="php" md5sum="2b57ccd859ea4eb6d24960644826da77"/>
                       <file name="Type.php" role="php" md5sum="ba0e58c3c20083e6e2781f2462832fc1"/>
                     </dir>
+                    <file name="ComparatorFactory.php" role="php" md5sum="7bf52fce06dae97ad7fd54acfad6ef5f"/>
                     <file name="ComparisonFailure.php" role="php" md5sum="cbdb81e354d3cc93f0648b96d13bc0b4"/>
                     <file name="Constraint.php" role="php" md5sum="08ac6341345224f9fd860b0f8847de46"/>
                     <dir name="Constraint">
@@ -1217,7 +1219,7 @@
                     <file name="IncompleteTestError.php" role="php" md5sum="38095270d153d880bea65e63e8b2b464"/>
                     <file name="OutputError.php" role="php" md5sum="9895bcedc3f2920d89a74176d5d0b37c"/>
                     <dir name="Process">
-                      <file name="TestCaseMethod.tpl.dist" role="data" md5sum="3495fe0fb1b1a7077eb5e6bc8a6fefd4"/>
+                      <file name="TestCaseMethod.tpl.dist" role="php" md5sum="3495fe0fb1b1a7077eb5e6bc8a6fefd4"/>
                     </dir>
                     <file name="SelfDescribing.php" role="php" md5sum="7ab438b6d5b5243f06e261df674df24d"/>
                     <file name="SkippedTest.php" role="php" md5sum="e8a0c065e94d6d3173034a19c26bfca8"/>
@@ -1277,16 +1279,16 @@
                     <dir name="Skeleton">
                       <file name="Class.php" role="php" md5sum="aeb1249b5242e909550e5191d9bdc5cc"/>
                       <dir name="Template">
-                        <file name="Class.tpl.dist" role="data" md5sum="2bd8f3668d1c6523a24e5f65b5f6c2a2"/>
-                        <file name="IncompleteTestMethod.tpl.dist" role="data" md5sum="0d3e3457119cbd8e2b7e4046d86a4d49"/>
-                        <file name="Method.tpl.dist" role="data" md5sum="0738157d50fe3c2a9b60a37d9a703088"/>
-                        <file name="TestClass.tpl.dist" role="data" md5sum="1b5e42fb8d4b50b58b18319206ff8c2a"/>
-                        <file name="TestMethod.tpl.dist" role="data" md5sum="3921cf113e21639c4103725f1a5e9dbf"/>
-                        <file name="TestMethodBool.tpl.dist" role="data" md5sum="10473358a692996ff1dfa7fbb02d5219"/>
-                        <file name="TestMethodBoolStatic.tpl.dist" role="data" md5sum="5ca0f16e286b1c4a5e4a67c7c5f6b33d"/>
-                        <file name="TestMethodException.tpl.dist" role="data" md5sum="81e30872c9a4f4f820d25fe17a842bf5"/>
-                        <file name="TestMethodExceptionStatic.tpl.dist" role="data" md5sum="45ac1e1930cf93b7f2d5a891a8ef4bd0"/>
-                        <file name="TestMethodStatic.tpl.dist" role="data" md5sum="cbf624fc18b110ed4fc1397633344f9a"/>
+                        <file name="Class.tpl.dist" role="php" md5sum="2bd8f3668d1c6523a24e5f65b5f6c2a2"/>
+                        <file name="IncompleteTestMethod.tpl.dist" role="php" md5sum="0d3e3457119cbd8e2b7e4046d86a4d49"/>
+                        <file name="Method.tpl.dist" role="php" md5sum="0738157d50fe3c2a9b60a37d9a703088"/>
+                        <file name="TestClass.tpl.dist" role="php" md5sum="1b5e42fb8d4b50b58b18319206ff8c2a"/>
+                        <file name="TestMethod.tpl.dist" role="php" md5sum="3921cf113e21639c4103725f1a5e9dbf"/>
+                        <file name="TestMethodBool.tpl.dist" role="php" md5sum="10473358a692996ff1dfa7fbb02d5219"/>
+                        <file name="TestMethodBoolStatic.tpl.dist" role="php" md5sum="5ca0f16e286b1c4a5e4a67c7c5f6b33d"/>
+                        <file name="TestMethodException.tpl.dist" role="php" md5sum="81e30872c9a4f4f820d25fe17a842bf5"/>
+                        <file name="TestMethodExceptionStatic.tpl.dist" role="php" md5sum="45ac1e1930cf93b7f2d5a891a8ef4bd0"/>
+                        <file name="TestMethodStatic.tpl.dist" role="php" md5sum="cbf624fc18b110ed4fc1397633344f9a"/>
                       </dir>
                       <file name="Test.php" role="php" md5sum="f118989062ca5f3a7b09b873701c649c"/>
                     </dir>
@@ -1431,7 +1433,7 @@
                   <file name="create-phar.php" role="php" md5sum="c190fdbb275f8bf965f8eb23efc4d1b8"/>
                 </dir>
                 <file name="phpunit.php" role="php" md5sum="79176c2851ea7ade0909f8060a92f285"/>
-                <file name="phpunit.xml.dist" role="data" md5sum="03bfe1ad0ab40d50b80c59548cd51bd4"/>
+                <file name="phpunit.xml.dist" role="php" md5sum="03bfe1ad0ab40d50b80c59548cd51bd4"/>
               </dir>
             </dir>
           </dir>
@@ -1489,15 +1491,15 @@
             </dir>
           </dir>
           <dir name="mink-goutte-driver">
-            <file name="phpunit.xml.dist" role="data" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
             <dir name="src">
               <dir name="Behat">
                 <dir name="Mink">
                   <dir name="Driver">
-                    <file name="GoutteDriver.php" role="php" md5sum="ace5e54097736cdada33a65ff2a36fc9"/>
                     <dir name="Goutte">
                       <file name="Client.php" role="php" md5sum="371375e79ab35cdc5e3a8980e8d2eec4"/>
                     </dir>
+                    <file name="GoutteDriver.php" role="php" md5sum="ace5e54097736cdada33a65ff2a36fc9"/>
                   </dir>
                 </dir>
               </dir>
@@ -1514,7 +1516,7 @@
             </dir>
           </dir>
           <dir name="mink-selenium-driver">
-            <file name="phpunit.xml.dist" role="data" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
             <dir name="src">
               <dir name="Behat">
                 <dir name="Mink">
@@ -1536,15 +1538,15 @@
             </dir>
           </dir>
           <dir name="mink-selenium2-driver">
-            <file name="phpunit.xml.dist" role="data" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
             <dir name="src">
               <dir name="Behat">
                 <dir name="Mink">
                   <dir name="Driver">
-                    <file name="Selenium2Driver.php" role="php" md5sum="7bb4f7a9bc128ee20c298e3389624490"/>
                     <dir name="Selenium2">
-                      <file name="syn.js" role="script" md5sum="aa0c89240a1bbfd7f5a591a03b72bbd1"/>
+                      <file name="syn.js" role="php" md5sum="aa0c89240a1bbfd7f5a591a03b72bbd1"/>
                     </dir>
+                    <file name="Selenium2Driver.php" role="php" md5sum="7bb4f7a9bc128ee20c298e3389624490"/>
                   </dir>
                 </dir>
               </dir>
@@ -1561,7 +1563,7 @@
             </dir>
           </dir>
           <dir name="mink-zombie-driver">
-            <file name="phpunit.xml.dist" role="data" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="5dd747418f868d6e08df2a5ed7c32ab4"/>
             <dir name="src">
               <dir name="Behat">
                 <dir name="Mink">
@@ -1585,8 +1587,8 @@
                     <dir name="NodeJS">
                       <file name="ServerTest.php" role="php" md5sum="ffda45abb8be29d39a4a7fc660a3529c"/>
                       <dir name="server-fixtures">
-                        <file name="empty_server.js" role="script" md5sum="6ccc5d34e33380e6a209dc38ee1c5ceb"/>
-                        <file name="test_server.js" role="script" md5sum="352d0449051c31ee90291e772446102d"/>
+                        <file name="empty_server.js" role="php" md5sum="6ccc5d34e33380e6a209dc38ee1c5ceb"/>
+                        <file name="test_server.js" role="php" md5sum="352d0449051c31ee90291e772446102d"/>
                       </dir>
                     </dir>
                     <file name="ZombieDriverTest.php" role="php" md5sum="41964dd85e39a94aeb194e64ac5586c2"/>
@@ -1597,8 +1599,8 @@
             </dir>
           </dir>
           <dir name="mink">
-            <file name="phpdoc.ini.dist" role="data" md5sum="99d8cf60003439de5cbc506b1d29dccb"/>
-            <file name="phpunit.xml.dist" role="data" md5sum="468879006ff44d12fde0bd6acb5fdcc9"/>
+            <file name="phpdoc.ini.dist" role="php" md5sum="99d8cf60003439de5cbc506b1d29dccb"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="468879006ff44d12fde0bd6acb5fdcc9"/>
             <dir name="src">
               <dir name="Behat">
                 <dir name="Mink">
@@ -1672,8 +1674,8 @@
                       <file name="issue212.php" role="php" md5sum="d2c431c2354aa838ee8766c5fc42c826"/>
                       <file name="issue225.php" role="php" md5sum="e0474626096f0fd0911c34b14b18429f"/>
                       <dir name="js">
-                        <file name="jquery-1.6.2-min.js" role="script" md5sum="c408cff969bc586646e1ab199b74a037"/>
-                        <file name="jquery-ui-1.8.14.custom.min.js" role="script" md5sum="409628ecea41b99c8468f321fb8bb506"/>
+                        <file name="jquery-1.6.2-min.js" role="php" md5sum="c408cff969bc586646e1ab199b74a037"/>
+                        <file name="jquery-ui-1.8.14.custom.min.js" role="php" md5sum="409628ecea41b99c8468f321fb8bb506"/>
                       </dir>
                       <file name="js_test.php" role="php" md5sum="a46d825179a5f3c46aa010ce45fee052"/>
                       <file name="json.php" role="php" md5sum="a55ae704c7d298581f6e2811c77002a6"/>
@@ -1710,7 +1712,7 @@
         <dir name="composer">
           <file name="ClassLoader.php" role="php" md5sum="e901f681c93fd4b921c7c5c0db179723"/>
           <file name="autoload_classmap.php" role="php" md5sum="5201607a6898f87b66dbfd2ac7d81743"/>
-          <file name="autoload_namespaces.php" role="php" md5sum="c89566f9a010ac02019e576e0e0acb41"/>
+          <file name="autoload_namespaces.php" role="php" md5sum="db6febdc29d76297ce369cfb0cc6b364"/>
           <file name="autoload_real.php" role="php" md5sum="fdd4d34dd39c3117fbd46ff69c8da86a"/>
         </dir>
         <dir name="fabpot">
@@ -1722,7 +1724,7 @@
                 <file name="ClientTest.php" role="php" md5sum="4e0595e63c15277afecfeaf2e2ac4086"/>
               </dir>
             </dir>
-            <file name="phpunit.xml.dist" role="data" md5sum="d0f9d4fe826fa4c319b59136c4245043"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="d0f9d4fe826fa4c319b59136c4245043"/>
           </dir>
         </dir>
         <dir name="guzzle">
@@ -1922,11 +1924,11 @@
                   <file name="Capability.php" role="php" md5sum="3ec91ea7bbf6b90bef1c473091f41d55"/>
                   <file name="SauceRest.php" role="php" md5sum="efd93b1ebd87ed97751512fc0816b186"/>
                 </dir>
-                <file name="ServiceFactory.php" role="php" md5sum="fe32a187a93788f4dc7d1209804d8e46"/>
                 <dir name="Service">
                   <file name="CurlService.php" role="php" md5sum="f8e2d346ff7e47598097f4ec7f4c7ddd"/>
                   <file name="CurlServiceInterface.php" role="php" md5sum="6e2859e26c1c380d7b0e9aa1a2a5dbed"/>
                 </dir>
+                <file name="ServiceFactory.php" role="php" md5sum="fe32a187a93788f4dc7d1209804d8e46"/>
                 <file name="Session.php" role="php" md5sum="1e42831743df956a7430ba45b74ae0c0"/>
                 <file name="Storage.php" role="php" md5sum="ce08706938fbdf7861d8fa0471631b0a"/>
                 <file name="Timeouts.php" role="php" md5sum="f5f538a8f20eb40867046d8bb7b567e3"/>
@@ -1939,7 +1941,7 @@
                 <file name="Window.php" role="php" md5sum="8c3302c9b1c674d033c1ed690a3928c4"/>
               </dir>
             </dir>
-            <file name="phpunit.xml.dist" role="data" md5sum="8e81582908f4e8706c16eb66452255e7"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="8e81582908f4e8706c16eb66452255e7"/>
             <dir name="test">
               <dir name="Test">
                 <dir name="WebDriver">
@@ -1952,7 +1954,7 @@
         </dir>
         <dir name="monolog">
           <dir name="monolog">
-            <file name="phpunit.xml.dist" role="data" md5sum="95d6f5549715ccf35f15cbd77a62dcb5"/>
+            <file name="phpunit.xml.dist" role="php" md5sum="95d6f5549715ccf35f15cbd77a62dcb5"/>
             <dir name="src">
               <dir name="Monolog">
                 <dir name="Formatter">
@@ -1971,11 +1973,11 @@
                   <file name="BufferHandler.php" role="php" md5sum="489853f5a4a634cd05cd647ea7c7a9f0"/>
                   <file name="ChromePHPHandler.php" role="php" md5sum="dea82a03a52df1eb386a2912beb3fd75"/>
                   <file name="CubeHandler.php" role="php" md5sum="a58c596af0e8204c1410bb50b376ed7e"/>
-                  <file name="FingersCrossedHandler.php" role="php" md5sum="c0459f208d2d85331636454ad841ed87"/>
                   <dir name="FingersCrossed">
                     <file name="ActivationStrategyInterface.php" role="php" md5sum="6bf84f27f4b7a0016afa63430cf6f8be"/>
                     <file name="ErrorLevelActivationStrategy.php" role="php" md5sum="bdf746aa0bc5b2eea3cabcbcc2a7d355"/>
                   </dir>
+                  <file name="FingersCrossedHandler.php" role="php" md5sum="c0459f208d2d85331636454ad841ed87"/>
                   <file name="FirePHPHandler.php" role="php" md5sum="dace0833a4392fbdc4f95234ebde3e27"/>
                   <file name="GelfHandler.php" role="php" md5sum="7b80722808be4f049f6a6a955fd42e0f"/>
                   <file name="GroupHandler.php" role="php" md5sum="afb65911a4112fa4e0406b3eb11518ce"/>
@@ -2070,7 +2072,7 @@
                     <file name="ResponseTest.php" role="php" md5sum="f98c55b4b8ee0a190e78c95a20c8a14d"/>
                     <file name="bootstrap.php" role="php" md5sum="029f450dfba83588e9906499985154a1"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="94aa3c87a9b128950a0eac9510775556"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="94aa3c87a9b128950a0eac9510775556"/>
                 </dir>
               </dir>
             </dir>
@@ -2166,7 +2168,7 @@
                     </dir>
                     <file name="bootstrap.php" role="php" md5sum="1dcb30e688c50fca0dbd233a4bead8d5"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="de90604ffa3f222f3539d7c29857c93c"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="de90604ffa3f222f3539d7c29857c93c"/>
                 </dir>
               </dir>
             </dir>
@@ -2211,7 +2213,7 @@
                   <file name="Tokenizer.php" role="php" md5sum="139a135f50fd129e24ea04660022401b"/>
                   <file name="XPathExpr.php" role="php" md5sum="bf7b2d85192b85baf790be0e8e2aeae9"/>
                   <file name="XPathExprOr.php" role="php" md5sum="98dd5620d30855140169d2602411472b"/>
-                  <file name="phpunit.xml.dist" role="data" md5sum="9576e6dfddbca9afdab14db50019efba"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="9576e6dfddbca9afdab14db50019efba"/>
                 </dir>
               </dir>
             </dir>
@@ -2244,7 +2246,7 @@
                     <file name="LinkTest.php" role="php" md5sum="37c1b4afecbf0a42c3c7ab86be604840"/>
                     <file name="bootstrap.php" role="php" md5sum="afb37bbf51ab39b5d8a81cddcb9232a8"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="8c7f1aad948eecdb59ee0c30e13e476a"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="8c7f1aad948eecdb59ee0c30e13e476a"/>
                 </dir>
               </dir>
             </dir>
@@ -2271,7 +2273,7 @@
                     <file name="ImmutableEventDispatcherTest.php" role="php" md5sum="5904287d821662a2259f7576abe4998d"/>
                     <file name="bootstrap.php" role="php" md5sum="c06e9d6e216dd65be65660409e0cf5d4"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="ade92071d034bda255f6f7b63a33a1ae"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="ade92071d034bda255f6f7b63a33a1ae"/>
                 </dir>
               </dir>
             </dir>
@@ -2328,7 +2330,7 @@
                     </dir>
                     <file name="bootstrap.php" role="php" md5sum="e9152f7e72ff06ccc30c8de05beab7d0"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="87fab3314ef1d9843d53ce66f48ba3b0"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="87fab3314ef1d9843d53ce66f48ba3b0"/>
                 </dir>
               </dir>
             </dir>
@@ -2355,7 +2357,7 @@
                     <file name="ProcessTestHelper.php" role="php" md5sum="65b231e1ae6e93b74ca8904715d230e9"/>
                     <file name="bootstrap.php" role="php" md5sum="e00fa3f0ee753c1a609e32eeae4d7880"/>
                   </dir>
-                  <file name="phpunit.xml.dist" role="data" md5sum="c5b0a13a9de7b60154a2121c72a7dbe6"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="c5b0a13a9de7b60154a2121c72a7dbe6"/>
                 </dir>
               </dir>
             </dir>
@@ -2382,7 +2384,7 @@
                   </dir>
                   <file name="Unescaper.php" role="php" md5sum="8b8cc7ad02b73b6f297634f0c520c155"/>
                   <file name="Yaml.php" role="php" md5sum="f08ddf81842e3bbc9a5b27ee86975454"/>
-                  <file name="phpunit.xml.dist" role="data" md5sum="389725b7d1c343a22f30878669dd98aa"/>
+                  <file name="phpunit.xml.dist" role="php" md5sum="389725b7d1c343a22f30878669dd98aa"/>
                 </dir>
               </dir>
             </dir>
@@ -2424,10 +2426,10 @@
                       <file name="FrameBuilderTest.php" role="php" md5sum="c5d1a481ad0dd8beb086e3e9bb098395"/>
                     </dir>
                   </dir>
-                  <file name="WireTest.php" role="php" md5sum="55d7dda186ede0691d17e195ad9a146f"/>
                   <dir name="Wire">
                     <file name="AMQPWriterTest.php" role="php" md5sum="586ba53782ffa1188929fe08af5271dc"/>
                   </dir>
+                  <file name="WireTest.php" role="php" md5sum="55d7dda186ede0691d17e195ad9a146f"/>
                 </dir>
                 <file name="bootstrap.php" role="php" md5sum="d25c47fea1967b645b9aed141804cb0e"/>
                 <file name="config.php" role="php" md5sum="e572aef25ae19d42456731d18718ee7f"/>
