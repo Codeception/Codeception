@@ -57,7 +57,7 @@ class GenerateScenarios extends Base
             @mkdir($path);
         }
 
-        $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+            $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 
         $suiteManager = new \Codeception\SuiteManager($dispatcher, $suite, $suiteconf);
 

@@ -38,6 +38,7 @@ interface FrameworkInterface
      * <?php
      * $I->see('Logout'); // I can suppose user is logged in
      * $I->see('Sign Up','h1'); // I can suppose it's a signup page
+     * $I->see('Sign Up','//body/h1'); // with XPath
      *
      * ```
      *
@@ -56,7 +57,7 @@ interface FrameworkInterface
      * <?php
      * $I->dontSee('Login'); // I can suppose user is already logged in
      * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     *
+     * $I->dontSee('Sign Up','//body/h1'); // with XPath
      * ```
      *
      * @param $text
@@ -83,6 +84,8 @@ interface FrameworkInterface
      * $I->click('Submit');
      * // CSS button
      * $I->click('#form input[type=submit]');
+     * // XPath
+     * $I->click('//form/*[@type=submit]')
      * ?>
      * ```
      * @param $link
@@ -216,6 +219,7 @@ interface FrameworkInterface
      * <?php
      * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
      * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+     * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
      *
      * ```
      *
@@ -250,6 +254,7 @@ interface FrameworkInterface
      * $I->seeInField('form textarea[name=body]','Type your comment here');
      * $I->seeInField('form input[type=hidden]','hidden_value');
      * $I->seeInField('#searchform input','Search');
+     * $I->seeInField('//form/*[@name=search]','Search');
      * ?>
      * ```
      *
@@ -268,6 +273,7 @@ interface FrameworkInterface
      * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
      * $I->dontSeeInField('form input[type=hidden]','hidden_value');
      * $I->dontSeeInField('#searchform input','Search');
+     * $I->dontSeeInField('//form/*[@name=search]','Search');
      * ?>
      * ```
      *
@@ -285,6 +291,7 @@ interface FrameworkInterface
      * <?php
      * $I->selectOption('form select[name=account]', 'Premium');
      * $I->selectOption('form input[name=payment]', 'Monthly');
+     * $I->selectOption('//form/select[@name=account]', 'Monthly');
      * ?>
      * ```
      *
@@ -295,6 +302,7 @@ interface FrameworkInterface
 
     /**
      * Ticks a checkbox.
+     * For radio buttons use `selectOption` method.
      *
      * @param $option
      */
@@ -302,6 +310,7 @@ interface FrameworkInterface
 
     /**
      * Unticks a checkbox.
+     * For radio buttons use `selectOption` method.
      *
      * @param $option
      */

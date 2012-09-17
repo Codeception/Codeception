@@ -24,11 +24,11 @@ class TestGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::amInPath()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function amInPath($path) {
         $this->scenario->condition('amInPath', func_get_args());
@@ -41,11 +41,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::openFile()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function openFile($filename) {
         $this->scenario->action('openFile', func_get_args());
@@ -58,11 +58,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::deleteFile()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function deleteFile($filename) {
         $this->scenario->action('deleteFile', func_get_args());
@@ -75,11 +75,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::deleteDir()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function deleteDir($dirname) {
         $this->scenario->action('deleteDir', func_get_args());
@@ -92,11 +92,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::copyDir()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function copyDir($src, $dst) {
         $this->scenario->action('copyDir', func_get_args());
@@ -109,11 +109,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::seeInThisFile()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeInThisFile($text) {
         $this->scenario->assertion('seeInThisFile', func_get_args());
@@ -126,11 +126,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::dontSeeInThisFile()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function dontSeeInThisFile($text) {
         $this->scenario->action('dontSeeInThisFile', func_get_args());
@@ -143,11 +143,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::deleteThisFile()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function deleteThisFile() {
         $this->scenario->action('deleteThisFile', func_get_args());
@@ -160,11 +160,11 @@ class TestGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Filesystem::seeFileFound()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeFileFound($filename, $path = null) {
         $this->scenario->assertion('seeFileFound', func_get_args());

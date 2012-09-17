@@ -20,8 +20,8 @@ $spec = Pearfarm_PackageSpec::create(array(Pearfarm_PackageSpec::OPT_BASEDIR => 
              ->addExcludeFilesRegex('~^docs\/*~')
              ->addExcludeFilesRegex('~^bin\/*~')
              ->addFilesRegex('~^vendor.*php$~', Pearfarm_PackageSpec::ROLE_PHP)
-             ->addFilesRegex('~^vendor.*js$~', Pearfarm_PackageSpec::ROLE_SCRIPT)
-             ->addFilesRegex('~^vendor.*dist$~', Pearfarm_PackageSpec::ROLE_DATA)
+             ->addFilesRegex('~^vendor.*js$~', Pearfarm_PackageSpec::ROLE_PHP)
+             ->addFilesRegex('~^vendor.*dist$~', Pearfarm_PackageSpec::ROLE_PHP)
              ->addExecutable('codecept')
              ->addExecutable('codecept.bat')
              ;
