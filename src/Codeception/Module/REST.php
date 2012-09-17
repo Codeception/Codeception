@@ -138,10 +138,18 @@ class REST extends \Codeception\Module
         foreach ($this->headers as $header => $val) {
             $this->client->setServerParameter("HTTP_$header", $val);
         }
-        $url = $this->config['url'].$url;
-        $parameters = $this->stringifyArray($parameters);
-        $this->debugSection("Request","$method $url?".http_build_query($parameters));
-        $this->client->request($method, $url, $parameters, $files);
+
+        $url = $this->config['url'] . $url;
+
+        if (is_array($parameters) || $method == 'GET') {
+            $parameters = $this->stringifyArray($parameters);
+            $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
+            $this->client->request($method, $url, $parameters, $files);
+        } else {
+            $this->debugSection("Request", "$method $url " . $parameters);
+            $this->client->request($method, $url, array(), $files, array(), $parameters);
+        }
+
         $this->response = $this->client->getResponse()->getContent();
         $this->debugSection("Response", $this->response);
     }
