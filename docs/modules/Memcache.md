@@ -1,6 +1,7 @@
 # Memcache Module
 
-Connects to [memcached](http://www.memcached.org/) using [PECL](http://www.php.net/manual/en/intro.memcache.php) extension.
+Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ exitnsion.
+
 Performs a cleanup by flushing all values after each test run.
 
 ## Configuration

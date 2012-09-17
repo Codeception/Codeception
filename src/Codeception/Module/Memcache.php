@@ -2,7 +2,8 @@
 namespace Codeception\Module;
 
 /**
- * Connects to [memcached](http://www.memcached.org/) using [PECL](http://www.php.net/manual/en/intro.memcache.php) extension.
+ * Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ exitnsion.
+ *
  * Performs a cleanup by flushing all values after each test run.
  *
  * ## Configuration
@@ -29,14 +30,21 @@ class Memcache extends \Codeception\Module
 
     public function _before()
     {
-        $this->memcache = new \Memcache;
-        $this->memcache->connect($this->config['host'], $this->config['port']);
+        if (class_exists('\Memcache')) {
+            $this->memcache = new \Memcache;
+            $this->memcache->close();
+            $this->memcache->connect($this->config['host'], $this->config['port']);
+        } elseif (class_exists('\Memcached')) {
+            $this->memcache = new \Memcached;
+            $this->memcache->addServer($this->config['host'], $this->config['port']);
+        } else {
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__,'Memcache classess not loaded');
+        }
     }
 
     public function _after()
     {
         $this->memcache->flush();
-        $this->memcache->close();
     }
 
     /**

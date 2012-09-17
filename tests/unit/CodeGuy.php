@@ -25,9 +25,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Registers a class/method which will be tested.
      * When you run 'execute' this method will be invoked.
      * Please, note that it also updates the feature section of the scenario.
@@ -48,6 +45,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $signature
      * @see Unit::testMethod()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function testMethod($signature) {
         $this->scenario->action('testMethod', func_get_args());
@@ -60,15 +60,15 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Adds a stub to the internal registry.
      * Use this command if you need to convert this stub to a mock.
      * Without adding the stub to registry you can't trace it's method invocations.
      *
      * @param $instance
      * @see Unit::haveFakeClass()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function haveFakeClass($instance) {
         $this->scenario->action('haveFakeClass', func_get_args());
@@ -81,14 +81,14 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Alias for haveFakeClass
      *
      * @alias haveFakeClass
      * @param $instance
      * @see Unit::haveStub()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function haveStub($instance) {
         $this->scenario->action('haveStub', func_get_args());
@@ -101,9 +101,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Execute The tested method on an object (a stub can be passed).
      * First argument is an object, the rest are supposed to be parameters passed to method.
      *
@@ -124,6 +121,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $object
      * @see Unit::executeTestedMethodOn()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethodOn($object) {
         $this->scenario->action('executeTestedMethodOn', func_get_args());
@@ -136,9 +136,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes the tested static method with parameters provided.
      *
      * ```
@@ -153,6 +150,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $params
      * @throws \Codeception\Exception\Module
      * @see Unit::executeTestedMethodWith()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethodWith($params) {
         $this->scenario->action('executeTestedMethodWith', func_get_args());
@@ -165,9 +165,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes the method which is being tested.
      * If the method is not static, the class instance should be provided.
      *
@@ -177,6 +174,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @throws \InvalidArgumentException
      * @see Unit::executeTestedMethod()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethod() {
         $this->scenario->action('executeTestedMethod', func_get_args());
@@ -189,9 +189,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes a code block. The result of execution will be stored.
      * Parameter should be a valid Closure. The returned value can be checked with seeResult actions.
      *
@@ -228,6 +225,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param \Closure $code
      * @see Unit::execute()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function execute($code) {
         $this->scenario->action('execute', func_get_args());
@@ -240,9 +240,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes a method of an object.
      * Additional parameters can be provided.
      *
@@ -265,6 +262,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $object
      * @param $method
      * @see Unit::executeMethod()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function executeMethod($object, $method) {
         $this->scenario->action('executeMethod', func_get_args());
@@ -277,19 +277,19 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Updates multiple properties of the selected object.
      * Can update even private and protected properties.
      * 
      * Properties to be updated and their values are passed in the second parameter as an array:
-     * array('theProprrty'     => 'some value',
+     * array('theProperty'     => 'some value',
      *      ('anotherProperty' => 'another value')
      *
      * @param $obj
      * @param array $values
      * @see Unit::changeProperties()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function changeProperties($obj, $values = null) {
         $this->scenario->action('changeProperties', func_get_args());
@@ -302,9 +302,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Updates a single property of the selected object
      * Can update even private and protected properties.
      *
@@ -312,6 +309,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @see Unit::changeProperty()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function changeProperty($obj, $property, $value) {
         $this->scenario->action('changeProperty', func_get_args());
@@ -324,11 +324,11 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Unit::seeExceptionThrown()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeExceptionThrown($classname, $message = null) {
         $this->scenario->assertion('seeExceptionThrown', func_get_args());
@@ -341,9 +341,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that a method of a stub was invoked after the last execution.
      * Requires a stub as the first parameter, the method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -369,6 +366,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodInvoked()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvoked($mock, $method, $params = null) {
         $this->scenario->assertion('seeMethodInvoked', func_get_args());
@@ -381,9 +381,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that a method of a stub was invoked *only once* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -396,6 +393,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodInvokedOnce()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvokedOnce($mock, $method, $params = null) {
         $this->scenario->assertion('seeMethodInvokedOnce', func_get_args());
@@ -408,9 +408,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that a method of a stub *was not invoked* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -421,6 +418,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodNotInvoked()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodNotInvoked($mock, $method, $params = null) {
         $this->scenario->assertion('seeMethodNotInvoked', func_get_args());
@@ -433,9 +433,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that a method of a stub was invoked *multiple times* after the last execution.
      * Requires a stub as the first parameter, a method name as the second and the expected number of executions.
      * Optionally pass the arguments which are expected by the executed method.
@@ -449,6 +446,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $times
      * @param array $params
      * @see Unit::seeMethodInvokedMultipleTimes()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvokedMultipleTimes($mock, $method, $times, $params = null) {
         $this->scenario->assertion('seeMethodInvokedMultipleTimes', func_get_args());
@@ -461,13 +461,13 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Asserts that the last result from the tested method is equal to value
      *
      * @param $value
      * @see Unit::seeResultEquals()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeResultEquals($value) {
         $this->scenario->assertion('seeResultEquals', func_get_args());
@@ -480,11 +480,11 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see Unit::seeResultContains()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeResultContains($value) {
         $this->scenario->assertion('seeResultContains', func_get_args());
@@ -497,13 +497,13 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the result of the last execution doesn't contain a value.
      *
      * @param $value
      * @see Unit::dontSeeResultContains()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function dontSeeResultContains($value) {
         $this->scenario->action('dontSeeResultContains', func_get_args());
@@ -516,13 +516,13 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the result of the last execution is not equal to a value.
      *
      * @param $value
      * @see Unit::dontSeeResultEquals()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function dontSeeResultEquals($value) {
         $this->scenario->action('dontSeeResultEquals', func_get_args());
@@ -535,11 +535,11 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the result of the last execution is empty.
      * @see Unit::seeEmptyResult()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeEmptyResult() {
         $this->scenario->assertion('seeEmptyResult', func_get_args());
@@ -552,9 +552,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the result of the last execution is a specific type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
      * Otherwise the parameter must be a class and the result must be an instance of that class.
@@ -570,6 +567,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $type
      * @see Unit::seeResultIs()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeResultIs($type) {
         $this->scenario->assertion('seeResultIs', func_get_args());
@@ -582,9 +582,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the property of an object equals the value provided.
      * Can check even protected or private properties.
      *
@@ -595,6 +592,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @see Unit::seePropertyEquals()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seePropertyEquals($object, $property, $value) {
         $this->scenario->assertion('seePropertyEquals', func_get_args());
@@ -607,9 +607,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Checks that the property is a passed type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
      * Otherwise the parameter must be a class and the property must be an instance of that class.
@@ -621,6 +618,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $type
      * @see Unit::seePropertyIs()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seePropertyIs($object, $property, $type) {
         $this->scenario->assertion('seePropertyIs', func_get_args());
@@ -633,9 +633,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes a method and checks that the result is equal to a value.
      * Good for testing values taken from getters.
      *
@@ -654,6 +651,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @see Unit::seeMethodReturns()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodReturns($object, $method, $value, $params = null) {
         $this->scenario->assertion('seeMethodReturns', func_get_args());
@@ -666,9 +666,6 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      * Executes a method and checks that the result is NOT equal to a value.
      * Good for testing values taken from getters.
      *
@@ -679,6 +676,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @see Unit::seeMethodNotReturns()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeMethodNotReturns($object, $method, $value, $params = null) {
         $this->scenario->assertion('seeMethodNotReturns', func_get_args());
@@ -691,11 +691,11 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see EmulateModuleHelper::seeEquals()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeEquals($expected, $actual) {
         $this->scenario->assertion('seeEquals', func_get_args());
@@ -708,11 +708,11 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     *
      *
      * @see EmulateModuleHelper::seeFeaturesEquals()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
      */
     public function seeFeaturesEquals($expected) {
         $this->scenario->assertion('seeFeaturesEquals', func_get_args());

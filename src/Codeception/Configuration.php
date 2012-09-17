@@ -11,6 +11,7 @@ class Configuration
 
     protected static $logDir = null;
     protected static $dataDir = null;
+    protected static $helpersDir = null;
 
     protected static $dir = null;
 
@@ -52,6 +53,7 @@ class Configuration
         self::$config = $config;
         self::$dataDir = $config['paths']['data'];
         self::$logDir = $config['paths']['log'];
+        self::$helpersDir = $config['paths']['helpers'];
         self::$dir = getcwd();
 
         return $config;
@@ -61,6 +63,11 @@ class Configuration
     {
         if (!self::$dataDir) throw new \Codeception\Exception\Configuration("Path for data not specified. Please, set data path in global config");
         return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function helpersDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR . self::$helpersDir . DIRECTORY_SEPARATOR;
     }
 
     public static function logDir()

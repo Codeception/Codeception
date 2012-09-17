@@ -22,7 +22,7 @@ Updates multiple properties of the selected object.
 Can update even private and protected properties.
 
 Properties to be updated and their values are passed in the second parameter as an array:
-array('theProprrty'     => 'some value',
+array('theProperty'     => 'some value',
      ('anotherProperty' => 'another value')
 
  * param $obj

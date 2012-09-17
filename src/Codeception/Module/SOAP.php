@@ -284,6 +284,46 @@ class SOAP extends \Codeception\Module
     }
 
     /**
+     * Checks XML response with XPath locator
+     *
+     * ``` php
+     * <?php
+     * $I->seeSoapResponseContainsXPath('//root/user[@id=1]');
+     * ?>
+     * ```
+     *
+     * @param $xpath
+     */
+    public function seeSoapResponseContainsXPath($xpath)
+    {
+        $path = new \DOMXPath($this->xmlResponse);
+        $res = $path->query($xpath);
+        if ($res === false) $this->fail("XPath selector is malformed");
+        $this->assertGreaterThen(0, $res->length);
+    }
+
+    /**
+     * Checks XML response doesn't contain XPath locator
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
+     * ?>
+     * ```
+     *
+     * @param $xpath
+     */
+    public function dontSeeSoapResponseContainsXPath($xpath)
+    {
+        $path = new \DOMXPath($this->xmlResponse);
+        $res = $path->query($xpath);
+        if ($res === false) $this->fail("XPath selector is malformed");
+        $this->assertEquals(0, $res->length);
+    }
+
+
+
+    /**
      * Checks response code from server.
      *
      * @param $code
