@@ -1,8 +1,3 @@
----
-layout: doc
-title: Codeception - Documentation
----
-
 # Testing WebServices
 
 The same way we tested a web site Codeception allows you to test web services. They are very hard to test manually, so it's really good idea to automate web service testing. As a standards we have SOAP and REST which are represented in corresponding modules. We will cover them in this chapter.
