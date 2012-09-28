@@ -5,7 +5,7 @@ The same way we tested a web site Codeception allows you to test web services. T
 You should start with creating a new test suite, which was not provided by the `bootstrap` command. We recommend to call it **api** and use the ApiGuy class for it. 
 
 ```
-php codecept.phar generate:suite api ApiGuy
+$ php codecept.phar generate:suite api ApiGuy
 ```
 
 We will put all the api tests there.
