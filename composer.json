@@ -12,11 +12,12 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require":{
         "php":">=5.3.2",
-        "behat/mink": "1.4@stable",
+        "behat/mink": "1.4",
         "EHER/PHPUnit":">=1.2",
+        "fabpot/goutte": "dev-master",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
@@ -26,7 +27,7 @@
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
         "symfony/yaml": "*",
-        "videlalvaro/php-amqplib": "*"
+        "videlalvaro/php-amqplib": "@dev"
     },
 
     "autoload":{
