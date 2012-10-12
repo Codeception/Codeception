@@ -60,6 +60,7 @@ class REST extends \Codeception\Module
         $this->params = array();
         $this->response = "";
 
+        $this->client->setServerParameters(array());
     }
 
     /**
