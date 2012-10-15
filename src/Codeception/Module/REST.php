@@ -142,8 +142,16 @@ class REST extends \Codeception\Module
 
         $url = $this->config['url'] . $url;
 
-        if (is_array($parameters) || $method == 'GET') {
+        if (is_array($parameters)) {
             $parameters = $this->stringifyArray($parameters);
+            if (array_key_exists('Content-Type', $this->headers)
+                && $this->headers['Content-Type'] === 'application/json'
+                && $method != 'GET') {
+                $parameters = json_encode($parameters);
+            }
+        }
+
+        if (is_array($parameters) || $method == 'GET') {
             $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
             $this->client->request($method, $url, $parameters, $files);
         } else {
