@@ -16,7 +16,7 @@
     "require":{
         "php":">=5.3.2",
         "behat/mink": "1.4",
-        "EHER/PHPUnit":">=1.2",
+        "phpunit/phpunit": "3.7.*",
         "fabpot/goutte": "dev-master",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
@@ -27,8 +27,7 @@
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
         "symfony/yaml": "*",
-        "videlalvaro/php-amqplib": "@dev",
-        "webvariants/sfyaml": "dev-default"
+        "videlalvaro/php-amqplib": "@dev"
     },
 
     "autoload":{
