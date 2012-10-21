@@ -21,7 +21,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
 
-        // $this->module->_cleanup();
+        $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
     }
@@ -223,6 +223,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     }
 
     public function testGrabTextFrom() {
+        $this->module->amOnPage('/');
         $result = $this->module->grabTextFrom('h1');
         $this->assertEquals("Welcome to test app!", $result);
         $result = $this->module->grabTextFrom('descendant-or-self::h1');
