@@ -161,17 +161,8 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
     {
-        $query = "select %s from \"%s\" where %s";
-
-        $params = array();
-        foreach ($criteria as $k => $v) {
-            $params[] = "$k = ? ";
-        }
-        $params = implode('AND ', $params);
-
-        $query = sprintf($query, $column, $table, $params);
-
-        $this->debugSection('Query', $query, $params);
+        $query = $this->driver->select($column, $table, $criteria);
+        $this->debugSection('Query', $query, json_encode($criteria));
 
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");

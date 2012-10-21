@@ -81,6 +81,17 @@ class Db
         }
     }
 
+    public function select($column, $table, array $criteria) {
+        $query = "select %s from %s where %s";
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "$k = ? ";
+        }
+        $params = implode('AND ', $params);
+
+        return sprintf($query, $column, $table, $params);
+    }
+
     protected function sqlLine($sql)
     {
         if (trim($sql) == "") return true;
