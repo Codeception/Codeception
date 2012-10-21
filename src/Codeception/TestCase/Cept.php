@@ -85,7 +85,7 @@ class Cept extends \Codeception\TestCase
         $scenario = $this->scenario;
         // preload and parse steps
         $testfile = $this->testfile;
-        $initialize = function() use ($testfile, &$scenario, $bootstrap) {
+        $initialize = function() use ($testfile, $scenario, $bootstrap) {
             if (file_exists($bootstrap)) require $bootstrap;
             require $testfile;
         };

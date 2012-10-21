@@ -27,7 +27,8 @@
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
         "symfony/yaml": "*",
-        "videlalvaro/php-amqplib": "@dev"
+        "videlalvaro/php-amqplib": "@dev",
+        "webvariants/sfyaml": "dev-default"
     },
 
     "autoload":{
