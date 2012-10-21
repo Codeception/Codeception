@@ -13,14 +13,13 @@ abstract class Mink extends \Codeception\Module
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
-            $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
         }
     }
     
     public function _cleanup() {
-        $this->session->start();
+        $this->session->restart();
     }
 
     public function _after(\Codeception\TestCase $test) {
