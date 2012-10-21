@@ -297,11 +297,11 @@ abstract class Module {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
-    protected function stringifyArray($array)
-    {
-        $typecastToString = function (& $value)
-        {
-            $value = (string)$value;
+    protected function scalarizeArray($array) {
+        $typecastToString = function (& $value) {
+            if (! is_scalar($value)) {
+                $value = (string)$value;
+            }
         };
 
         array_walk_recursive($array, $typecastToString);
