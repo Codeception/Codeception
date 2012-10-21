@@ -88,12 +88,6 @@ php codecept.phar
 If you successfully installed Codeception, run this command:
 
 ```
-codecept install
-```
-
-this will install all dependency tools like PHPUnit and Mink
-
-```
 codecept bootstrap
 ```
 
@@ -111,4 +105,4 @@ See Documentation for more information.
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011
+2011-2012

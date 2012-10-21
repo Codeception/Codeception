@@ -10,7 +10,7 @@ class ErrorHandler implements EventSubscriberInterface
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
             if (strpos($errstr, 'Cannot modify header information')!==false) return false;
-            if (error_reporting()) throw new \ErrorException($errno . " ".$errstr, 0, $errno, $errfile, $errline); }
+            if (error_reporting()) throw new \ErrorException($errstr, 0, $errno, $errfile, $errline); }
         );
         register_shutdown_function(function () {
 
@@ -24,7 +24,7 @@ class ErrorHandler implements EventSubscriberInterface
     static function getSubscribedEvents()
     {
         return array(
-            'test.before' => 'handle'
+            'suite.before' => 'handle'
         );
     }
 }

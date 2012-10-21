@@ -132,11 +132,16 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        if ($fail instanceof \PHPUnit_Framework_SelfDescribing) {
+            $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        } else {
+            $failToString = sprintf("%s (%s:%d)", $fail->getMessage(), $fail->getFile(), $fail->getLine());
+        }
 
         $feature = $failedTest->getScenario()->getFeature();
-        if ($feature) $this->output->put("Couldn't $feature in ");
-        $this->output->put($failedTest->getFilename()."\n");
+        $this->output->writeln("\n---------");
+        if ($feature) $this->output->put("Couldn't [[$feature]] in ");
+        $this->output->writeln('(('.$failedTest->getFilename().'))');
 
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
@@ -156,9 +161,7 @@ class Console implements EventSubscriberInterface
 
         // it's exception
         if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
             $this->printException($fail);
-            $this->output->writeln("");
             return;
         };
 
@@ -166,31 +169,35 @@ class Console implements EventSubscriberInterface
 
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
-            $this->output->writeln("\nGuy unexpectedly managed to $action {$failToString}");
+            $this->output->writeln("Guy unexpectedly managed to $action: {$failToString}");
         } else {
-            $this->output->writeln("Guy couldn't $action $failToString");
+            $this->output->writeln("Guy couldn't $action: $failToString");
         }
 
+
+        $this->output->writeln("Scenario Steps:");
         $this->output->writeln("$i. (!$last!)");
         foreach ($trace as $step) {
             $i--;
             $this->output->writeln("$i. " . $step);
             if (($length - $i - 1) >= $this->traceLength) break;
         }
-        $this->output->writeln("");
-        $this->output->writeln(get_class($fail).': '.$fail->getMessage()."\n");
-        $this->printException($fail);
-        $this->output->writeln("");
+        if ($this->debug) {
+            $this->printException($fail);
+        }
 
     }
 
     public function printException(\Exception $e)
     {
+        $this->output->writeln("(!".get_class($e).': '.$e->getMessage()."!)\n");
         $i = 0;
         foreach ($e->getTrace() as $step) {
             $i++;
 //            if (strpos($step['function'], $action) !== false) break;
             if (!isset($step['file'])) continue;
+            $step['file'] = $this->highlightLocalFiles($step['file']);
+
             $this->output->writeln(sprintf("#%d %s(%s)",
                 $i,
                 isset($step['file']) ? $step['file'] : '',
@@ -206,6 +213,21 @@ class Console implements EventSubscriberInterface
                 }
             }
         }
+        $this->output->writeln("");
+    }
+
+    private function highlightLocalFiles($file)
+    {
+        if (strpos($file, \Codeception\Configuration::projectDir()) === 0) {
+            if (strpos($file, \Codeception\Configuration::projectDir() . 'codecept.phar') === 0) {
+                return $file;
+            }
+            if (strpos($file, \Codeception\Configuration::projectDir() . 'vendor') === 0) {
+                return $file;
+            }
+            return "((".$file."))";
+        }
+        return $file;
     }
 
     static function getSubscribedEvents()

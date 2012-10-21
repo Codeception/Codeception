@@ -66,7 +66,7 @@ class ZombieJS extends \Codeception\Util\MinkJS
     /** @var ZombieDriver */
     protected $driver;
 
-    public function _cleanup()
+    public function _initialize()
     {
         $this->server = new ZombieServer(
             $this->config['host'],$this->config['port'],
@@ -77,7 +77,7 @@ class ZombieJS extends \Codeception\Util\MinkJS
         $this->driver = new ZombieDriver($this->server);
 
         $this->session = new Session($this->driver);
-        $this->session->start();
+        parent::_initialize();
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
