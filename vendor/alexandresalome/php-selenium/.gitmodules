@@ -1,6 +1,0 @@
-[submodule "vendor/Symfony/Component/ClassLoader"]
-	path = vendor/Symfony/Component/ClassLoader
-	url = https://github.com/symfony/ClassLoader.git
-[submodule "vendor/Symfony/Component/DomCrawler"]
-	path = vendor/Symfony/Component/DomCrawler
-	url = https://github.com/symfony/DomCrawler
