@@ -190,6 +190,22 @@ Fills a text field or textarea with value.
 __not documented__
 
 
+### grabServiceFromContainer
+
+
+Grabs a service from Symfony DIC container.
+Recommended to use for unit testing.
+
+``` php
+<?php
+$em = $I->grabServiceFromContainer('doctrine');
+?>
+```
+
+ * param $service
+ * return mixed
+
+
 ### grabTextFrom
 
 
