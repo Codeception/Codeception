@@ -18,4 +18,15 @@ class MySql extends Db
         parent::sqlQuery($query);
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1;');
     }
+
+    public function select($column, $table, array $criteria) {
+        $query = "select %s from `%s` where %s";
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "`$k` = ? ";
+        }
+        $params = implode('AND ', $params);
+
+        return sprintf($query, $column, $table, $params);
+    }
 }
