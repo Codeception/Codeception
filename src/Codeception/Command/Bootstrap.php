@@ -92,6 +92,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         $firstline = $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($conf, 2);
 
         file_put_contents('tests/unit.suite.yml', $str);
@@ -108,6 +109,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
         $str .= "# (tip: better to use with frameworks).\n\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents('tests/functional.suite.yml', $str);
@@ -142,13 +144,15 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= "# powered by Mink (http://mink.behat.org).\n";
         $str .= "# (tip: that's what your customer will see).\n";
         $str .= "# (tip: test your ajax and javascript by one of Mink drivers).\n\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
         file_put_contents('tests/acceptance.suite.yml', $str);
         $output->writeln("tests/acceptance.suite.yml written - acceptance tests suite configuration");
 
+        $output->writeln("<info>Building initial Guy classes</info>");
+        $this->getApplication()->find('build')->run(new \Symfony\Component\Console\Input\ArrayInput(array('command' => 'build')), $output);
         $output->writeln("<info>\nBootstrap is done. Check out /tests directory</info>");
-        $output->writeln("<comment>To complete initialization run 'build' command</comment>");
 
     }
 

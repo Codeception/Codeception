@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="false"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false"
+         bootstrap="tests/bootstrap.php"
+>
+    <testsuites>
+        <testsuite name="Driver test suite">
+            <directory>./tests/Behat/Mink/Driver</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <!--server name="WEB_FIXTURES_HOST" value="http://test.mink.dev" /-->
+        <!--server name="WEB_FIXTURES_BROWSER" value="firefox" /-->
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory>./src/Behat/Mink/Driver</directory>
+        </whitelist>
+    </filter>
+</phpunit>

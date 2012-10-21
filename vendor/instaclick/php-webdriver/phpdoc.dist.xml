@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>PHP WebDriver for Selenium 2</title>
+    <parser>
+        <target>doc</target>
+        <markers>
+            <item>TODO</item>
+            <item>FIXME</item>
+        </markers>
+        <extensions>
+            <extension>php</extension>
+        </extensions>
+        <visibility></visibility>
+    </parser>
+    <transformer>
+        <target>doc</target>
+    </transformer>
+    <logging>
+        <level>warn</level>
+        <paths>
+            <default>logs/phpdoc.log</default>
+            <errors>logs/phpdoc.errors.log</errors>
+        </paths>
+    </logging>
+    <transformations>
+        <template name="responsive" />
+    </transformations>
+    <files>
+        <directory>lib</directory>
+    </files>
+</phpdoc>

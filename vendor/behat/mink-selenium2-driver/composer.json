@@ -1,0 +1,28 @@
+{
+    "name":         "behat/mink-selenium2-driver",
+    "description":  "Selenium2 (WebDriver) driver for Mink framework",
+    "keywords":     ["selenium", "webdriver", "javascript", "ajax", "testing", "browser"],
+    "homepage":     "http://mink.behat.org/",
+    "type":         "mink-driver",
+    "license":      "MIT",
+
+    "authors": [
+        {
+            "name":      "Konstantin Kudryashov",
+            "email":     "ever.zet@gmail.com",
+            "homepage":  "http://everzet.com"
+        }
+    ],
+
+    "require": {
+        "php":                       ">=5.3.1",
+        "behat/mink":                ">=1.4.0,<1.5.0",
+        "instaclick/php-webdriver":  "@dev"
+    },
+
+    "autoload": {
+        "psr-0": {
+            "Behat\\Mink\\Driver": "src/"
+        }
+    }
+}

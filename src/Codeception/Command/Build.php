@@ -83,12 +83,12 @@ EOF;
 	            $className = '\Codeception\\Module\\'.$modulename;
                 $class = new \ReflectionClass($className);
 	            $aliases[] = 'use ' . ltrim($className, '\\') . ';';
-                $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-                foreach ($methods as $method) {
-                    if (strpos($method->name, '_') === 0) continue;
-                    if (in_array($method->name, $methods)) continue;
+                $refMethods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+                foreach ($refMethods as $refMethod) {
+                    if (strpos($refMethod->name, '_') === 0) continue;
+                    if (in_array($refMethod->name, $methods)) continue;
                     $params = array();
-                    foreach ($method->getParameters() as $param) {
+                    foreach ($refMethod->getParameters() as $param) {
 
                         if ($param->isOptional()) {
                             $params[] = '$' . $param->name.' = null';
@@ -98,22 +98,22 @@ EOF;
 
                     }
 
-                    if (0 === strpos($method->name, 'see')) {
+                    if (0 === strpos($refMethod->name, 'see')) {
                         $type = 'assertion';
-                    } elseif (0 === strpos($method->name, 'am')) {
+                    } elseif (0 === strpos($refMethod->name, 'am')) {
                         $type = 'condition';
                     } else {
                         $type = 'action';
                     }
 
-                    $doc = $method->getDocComment();
+                    $doc = $refMethod->getDocComment();
 
                     if (!$doc) {
                         $interfaces = $class->getInterfaces();
                         foreach ($interfaces as $interface) {
                             $i = new \ReflectionClass($interface->name);
-                            if ($i->hasMethod($method->name)) {
-                                $doc = $i->getMethod($method->name)->getDocComment();
+                            if ($i->hasMethod($refMethod->name)) {
+                                $doc = $i->getMethod($refMethod->name)->getDocComment();
                                 break;
                             }
                         }
@@ -121,8 +121,8 @@ EOF;
 
                     if (!$doc) {
                         $parent = new \ReflectionClass($class->getParentClass()->name);
-                        if ($parent->hasMethod($method->name)) {
-                            $doc = $parent->getMethod($method->name)->getDocComment();
+                        if ($parent->hasMethod($refMethod->name)) {
+                            $doc = $parent->getMethod($refMethod->name)->getDocComment();
                         }
                     }
                     $doc = str_replace('/**', '', $doc);
@@ -130,10 +130,10 @@ EOF;
                     if (!$doc) $doc = "*";
 
                     $params = implode(', ', $params);
-                    $code[] = sprintf($this->methodTemplate, $doc, $modulename, $method->name, $method->name, $params, $type, $method->name);
+                    $code[] = sprintf($this->methodTemplate, $doc, $modulename, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
 
                     $methodCounter++;
-                    $methods[] = $method->name;
+                    $methods[] = $refMethod->name;
                 }
             }
 
