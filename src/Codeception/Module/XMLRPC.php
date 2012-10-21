@@ -11,6 +11,10 @@ namespace Codeception\Module;
  * Whether framework is used it operates via standard framework modules.
  * Otherwise sends raw HTTP requests to url via PHPBrowser.
  *
+ * ## Requirements
+ *
+ * * Module requires installed php_xmlrpc extension
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api
@@ -37,6 +41,14 @@ class XMLRPC extends \Codeception\Module
     public $headers = array();
     public $params = array();
     public $response = "";
+
+    public function _initialize()
+    {
+        if (!function_exists('xmlrpc_encode_request')) {
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "XMLRPC module requires installed php_xmlrpc extension");
+        }
+        parent::_initialize();
+    }
 
     public function _before(\Codeception\TestCase $test)
     {
