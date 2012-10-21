@@ -1,3 +1,4 @@
 .idea
 tests/log
 composer.phar
+vendor
