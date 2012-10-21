@@ -2,6 +2,9 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleRequire as ModuleRequireException;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
+
 /**
  * Module for testing XMLRPC WebService.
  *
@@ -45,7 +48,7 @@ class XMLRPC extends \Codeception\Module
     public function _initialize()
     {
         if (!function_exists('xmlrpc_encode_request')) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "XMLRPC module requires installed php_xmlrpc extension");
+            throw new ModuleRequireException(__CLASS__, "XMLRPC module requires installed php_xmlrpc extension");
         }
         parent::_initialize();
     }
@@ -64,12 +67,12 @@ class XMLRPC extends \Codeception\Module
                 }
             } else {
                 if (!$this->hasModule('PhpBrowser')) {
-                    throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For XMLRPC testing via HTTP please enable PhpBrowser module");
+                    throw new ModuleConfigException(__CLASS__, "For XMLRPC testing via HTTP please enable PhpBrowser module");
                 }
                 $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
             }
             if (!$this->client) {
-                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for XMLRPC requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
+                throw new ModuleConfigException(__CLASS__, "Client for XMLRPC requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
             }
         }
 
