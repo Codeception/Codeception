@@ -18,7 +18,7 @@ abstract class Mink extends \Codeception\Module
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
         }
     }
-
+    
     public function _cleanup() {
         $this->session->start();
     }
@@ -165,7 +165,7 @@ abstract class Mink extends \Codeception\Module
 
         if (!$el) $el = @$page->find('xpath',$selector);
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS or XPath for '$selector' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("Link | button | CSS | XPath for '$selector' not found'");
         return $el;
     }
 
