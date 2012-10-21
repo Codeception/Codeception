@@ -12,7 +12,7 @@ $I->executeCommand('generate:cept dummy path/DummyCept');
 $I->seeFileFound('DummyCept.php','tests/dummy/path');
 $I->deleteThisFile();
 
-$I->amGoingTo('create file with Cest.php suffix');
+$I->amGoingTo('create file with Cept.php suffix');
 $I->executeCommand('generate:cept dummy DummyCept.php');
 $I->seeFileFound('DummyCept.php');
 $I->deleteThisFile();

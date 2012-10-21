@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.1.4";
+    const VERSION = "1.1.5";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -77,11 +77,11 @@ class Codecept
     }
 
     public function registerSubscribers() {
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
     }
 
     public function runSuite($suite, $test = null) {

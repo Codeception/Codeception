@@ -8,9 +8,18 @@ abstract class Mink extends \Codeception\Module
      */
     public $session = null;
 
-    public function _before(\Codeception\TestCase $test) {
-        // should be done to have request and response not empty
-        $this->session->visit($this->config['url'].'/');
+    public function _initialize() {
+        if (!$this->session) throw new \Codeception\Exception\Module(__CLASS__, "Module is not initialized. Mink session is not started in _initialize method of module.");;
+        try {
+            $this->session->start();
+            $this->session->visit($this->config['url'].'/');
+        } catch (\Exception $e) {
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
+        }
+    }
+    
+    public function _cleanup() {
+        $this->session->restart();
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -155,7 +164,7 @@ abstract class Mink extends \Codeception\Module
 
         if (!$el) $el = @$page->find('xpath',$selector);
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link or Button or CSS or XPath for '$selector' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("Link | button | CSS | XPath for '$selector' not found'");
         return $el;
     }
 
