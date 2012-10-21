@@ -19,7 +19,7 @@ abstract class Mink extends \Codeception\Module
     }
     
     public function _cleanup() {
-        $this->session->restart();
+        $this->session->reset();
     }
 
     public function _after(\Codeception\TestCase $test) {

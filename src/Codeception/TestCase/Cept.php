@@ -83,17 +83,11 @@ class Cept extends \Codeception\TestCase
     {
         $bootstrap = $this->bootstrap;
         $scenario = $this->scenario;
-        // preload and parse steps
-        $testfile = $this->testfile;
-        $initialize = function() use ($testfile, $scenario, $bootstrap) {
-            if (file_exists($bootstrap)) require $bootstrap;
-            require $testfile;
-        };
-        $initialize();
-
-        if (!$run) return;
 
         if (file_exists($bootstrap)) require $bootstrap;
+        require $this->testfile;
+
+        if (!$run) return;
 
         $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         $scenario->run();
