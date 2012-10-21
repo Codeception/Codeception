@@ -24,9 +24,10 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
     protected $requiredFields = array('url');
 
-    public function _cleanup() {
+    public function _initialize() {
         $driver = new \Behat\Mink\Driver\GoutteDriver();
         $this->session = new \Behat\Mink\Session($driver);
+        parent::_initialize();
     }
 
     public function submitForm($selector, $params) {

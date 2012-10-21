@@ -8,9 +8,19 @@ abstract class Mink extends \Codeception\Module
      */
     public $session = null;
 
-    public function _before(\Codeception\TestCase $test) {
-        // should be done to have request and response not empty
-        $this->session->visit($this->config['url'].'/');
+    protected $startSession = null;
+
+    public function _initialize() {
+        if (!$this->session) throw new \Codeception\Exception\Module(__CLASS__, "Module is not initialized. Mink session is not started in _initialize method of module.");;
+        try {
+            $this->session->visit($this->config['url'].'/');
+        } catch (\Exception $e) {
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
+        }
+    }
+
+    public function _cleanup() {
+        $this->session->start();
     }
 
     public function _after(\Codeception\TestCase $test) {

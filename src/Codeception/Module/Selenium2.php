@@ -34,14 +34,14 @@ class Selenium2 extends \Codeception\Util\MinkJS
     protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0);
 
 
-    public function _cleanup() {
+    public function _initialize() {
         $driver = new \Behat\Mink\Driver\Selenium2Driver(
             $this->config['browser'],
             null,
             sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
-        $this->session->start();
+        parent::_initialize();
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {

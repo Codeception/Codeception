@@ -40,14 +40,14 @@ class Selenium extends \Codeception\Util\MinkJS
     protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0);
 
 
-    public function _cleanup() {
+    public function _initialize() {
         $client = new \Selenium\Client($this->config['host'], $this->config['port']);
         $driver = new \Behat\Mink\Driver\SeleniumDriver(
             $this->config['browser'], $this->config['url'], $client
         );
 
         $this->session = new \Behat\Mink\Session($driver);
-        $this->session->start();
+        parent::_initialize();
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {

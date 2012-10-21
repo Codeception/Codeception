@@ -31,6 +31,8 @@ class Compiler
             $finder->files()
                     ->ignoreVCS(true)
                     ->name('*.php')
+                    ->name('*.tpl.dist')
+                    ->name('*.html.dist')
                     ->in($this->compileDir . '/src')
             ;
 
