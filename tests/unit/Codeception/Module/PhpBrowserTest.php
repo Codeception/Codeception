@@ -56,6 +56,7 @@ class PhpBrowserTest extends TestsForMink
     }
 
     public function testAjax() {
+        $this->module->amOnPage('/');
         $this->module->sendAjaxGetRequest('/info');
         $this->assertNotNull(data::get('ajax'));
 

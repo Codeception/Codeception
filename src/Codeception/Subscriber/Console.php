@@ -132,7 +132,11 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        if ($fail instanceof \PHPUnit_Framework_SelfDescribing) {
+            $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        } else {
+            $failToString = sprintf("%s (%s:%d)", $fail->getMessage(), $fail->getFile(), $fail->getLine());
+        }
 
         $feature = $failedTest->getScenario()->getFeature();
         $this->output->writeln("\n---------");
