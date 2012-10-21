@@ -139,7 +139,8 @@ class Console implements EventSubscriberInterface
         }
 
         $feature = $failedTest->getScenario()->getFeature();
-        $this->output->writeln("\n---------");
+        if ($e->getCount()) $this->output->put($e->getCount().") ");
+
         if ($feature) $this->output->put("Couldn't [[$feature]] in ");
         $this->output->writeln('(('.$failedTest->getFilename().'))');
 
