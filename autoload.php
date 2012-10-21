@@ -5,9 +5,9 @@ require_once 'vendor/UniversalClassLoader.php';
 if (stream_resolve_include_path(__DIR__.'vendor/autoload.php')) {
     $namespaceMap = require_once __DIR__.'vendor/composer/autoload_namespaces.php';
     $classesMap = require_once __DIR__.'vendor/composer/autoload_classmap.php';
-} elseif (stream_resolve_include_path(__DIR__.'/../autoload.php')) {
-    $namespaceMap = require_once __DIR__.'/../composer/autoload_namespaces.php';
-    $classesMap = require_once __DIR__.'/../composer/autoload_classmap.php';
+} elseif (stream_resolve_include_path(__DIR__.'/../../autoload.php')) {
+    $namespaceMap = require_once __DIR__.'/../../composer/autoload_namespaces.php';
+    $classesMap = require_once __DIR__.'/../../composer/autoload_classmap.php';
 }
 
 $loader = new UniversalClassLoader();
