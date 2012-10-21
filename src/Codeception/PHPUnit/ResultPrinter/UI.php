@@ -16,7 +16,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
     protected function printDefect(\PHPUnit_Framework_TestFailure $defect, $count)
     {
         $failedTest = $defect->failedTest();
-        $this->write("---------\n");
+        $this->write("\n---------\n");
         if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefect($defect, $count);
         $this->dispatcher->dispatch('fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException(), $count));
     }

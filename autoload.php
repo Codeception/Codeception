@@ -2,8 +2,8 @@
 
 require_once 'vendor/UniversalClassLoader.php';
 
-$namespaceMap = require_once __DIR__ . '/vendor/composer/autoload_namespaces.php';
-$classesMap = require_once __DIR__ . '/vendor/composer/autoload_classmap.php';
+$namespaceMap = require_once 'vendor/composer/autoload_namespaces.php';
+$classesMap = require_once 'vendor/composer/autoload_classmap.php';
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
