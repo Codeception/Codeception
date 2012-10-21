@@ -24,7 +24,8 @@ class GenerateSuite extends Base
         parent::configure();
     }
 
-    public function getDescription() {
+    public function getDescription() 
+    {
         return 'Generates new test suite';
     }
 
