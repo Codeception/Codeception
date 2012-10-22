@@ -167,7 +167,7 @@ class REST extends \Codeception\Module
         }
 
         if (is_array($parameters) || $method == 'GET') {
-            if ($method == 'GET') {
+            if ($method == 'GET' && ! empty($parameters)) {
                 $url .= '?' . http_build_query($parameters);
                 $this->debugSection("Request", "$method $url");
             } else {
