@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Module;
+use Symfony\Component\BrowserKit\Cookie;
 
 /**
  * Module for testing REST WebService.
@@ -25,9 +26,13 @@ namespace Codeception\Module;
 class REST extends \Codeception\Module
 {
 
-    protected $config = array('url' => "");
+    protected $config = array(
+        'url' => '',
+        'xdebug_remote' => false
+    );
+
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var \Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
     public $is_functional = false;
@@ -61,6 +66,16 @@ class REST extends \Codeception\Module
         $this->response = "";
 
         $this->client->setServerParameters(array());
+
+        if ($this->config['xdebug_remote']
+            && function_exists('xdebug_is_enabled')
+            && xdebug_is_enabled()
+            && ini_get('xdebug.remote_enable')) {
+
+            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
+            $this->client->getCookieJar()->set($cookie);
+            $this->client->getClient()->getConfig()->add('curl.CURLOPT_TIMEOUT', 0);
+        }
     }
 
     /**
@@ -152,7 +167,13 @@ class REST extends \Codeception\Module
         }
 
         if (is_array($parameters) || $method == 'GET') {
-            $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
+            if ($method == 'GET') {
+                $url .= '?' . http_build_query($parameters);
+                $this->debugSection("Request", "$method $url");
+            } else {
+                $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
+            }
+
             $this->client->request($method, $url, $parameters, $files);
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
