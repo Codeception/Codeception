@@ -25,10 +25,10 @@ use Symfony\Component\BrowserKit\Cookie;
  */
 class REST extends \Codeception\Module
 {
-
     protected $config = array(
         'url' => '',
-        'xdebug_remote' => false
+        'xdebug_remote' => false,
+        'xdebug_codecoverage' => false,
     );
 
     /**
@@ -76,9 +76,26 @@ class REST extends \Codeception\Module
             $this->client->getCookieJar()->set($cookie);
             $this->client->getClient()->getConfig()->add('curl.CURLOPT_TIMEOUT', 0);
         }
+
+        if ($this->config['xdebug_codecoverage'])
+        {
+            $this->codeCoverageToken = time();
+            $this->headers['X-Codeception-CodeCoverage'] = $this->codeCoverageToken;
+        }
     }
 
-    /**
+	public function _after(\Codeception\TestCase $test)
+	{
+		if ($this->config['xdebug_codecoverage'])
+		{
+			$this->sendGET('/?report');
+			var_dump($this->response);
+		}
+
+		parent::_after($test);
+	}
+
+	/**
      * Sets HTTP header
      *
      * @param $name
