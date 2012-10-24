@@ -38,6 +38,23 @@ class Module implements EventSubscriberInterface {
         }
     }
 
+    public function beforeSuite(\Codeception\Event\Suite $e)
+    {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            if (method_exists($module, '_beforeSuite')) {
+                $module->_beforeSuite($e);
+            }
+        }
+    }
+
+    public function afterSuite(\Codeception\Event\Suite $e)
+    {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            if (method_exists($module, '_afterSuite')) {
+                $module->_afterSuite($e);
+            }
+        }
+    }
 
     static function getSubscribedEvents()
     {
@@ -47,6 +64,8 @@ class Module implements EventSubscriberInterface {
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
             'test.fail' => 'failed',
+            'suite.before' => 'beforeSuite',
+            'suite.after' => 'afterSuite',
         );
     }
 }

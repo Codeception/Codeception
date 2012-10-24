@@ -5,14 +5,25 @@
  * @author tiger
  */
 
+define('C3_CODECOVERAGE_DEBUG', PHP_SAPI === 'cli');
+
+if (C3_CODECOVERAGE_DEBUG)
+{
+	$_GET['report'] = 1;
+	$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE'] = 'test';
+}
+
 if (! array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER))
 {
 	return;
 }
 
+// workaround for 'zend_mm_heap corrupted' problem
+gc_disable();
+
 define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/../c3tmp');
 define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__ . '/..');
-define('C3_CODECOVERAGE_TOKEN', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
+define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
 if (! class_exists('PHP_CodeCoverage', true))
 {
@@ -30,105 +41,129 @@ if (! is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE))
 }
 
 // evaluate base path for c3-related files
-$path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . C3_CODECOVERAGE_TOKEN;
+$path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
 
 if (is_readable($path))
 {
-	$codeCoverage = unserialize(file_get_contents($path));
+	$codeCoverage = new PHP_CodeCoverage;
+	$codeCoverage->merge(unserialize(file_get_contents($path)));
 }
 else
 {
 	$codeCoverage = new PHP_CodeCoverage;
+}
 
-	$base = C3_CODECOVERAGE_PROJECT_ROOT . DIRECTORY_SEPARATOR;
+$base = C3_CODECOVERAGE_PROJECT_ROOT . DIRECTORY_SEPARATOR;
 
-	if (file_exists($base . 'phpunit.xml'))
+if (file_exists($base . 'phpunit.xml'))
+{
+	$phpunitConfiguration = realpath($base . 'phpunit.xml');
+}
+elseif (file_exists($base . 'phpunit.xml.dist'))
+{
+	$phpunitConfiguration = realpath($base . 'phpunit.xml.dist');
+}
+
+if (isset($phpunitConfiguration))
+{
+	$config = PHPUnit_Util_Configuration::getInstance($phpunitConfiguration);
+	$filterConfiguration = $config->getFilterConfiguration();
+
+	$addUncoveredFilesFromWhitelist = $filterConfiguration['whitelist']['addUncoveredFilesFromWhitelist'];
+	$processUncoveredFilesFromWhitelist = $filterConfiguration['whitelist']['processUncoveredFilesFromWhitelist'];
+
+	$codeCoverage->setAddUncoveredFilesFromWhitelist($addUncoveredFilesFromWhitelist);
+	$codeCoverage->setProcessUncoveredFilesFromWhitelist($processUncoveredFilesFromWhitelist);
+
+	$codeCoverageFilter = $codeCoverage->filter();
+
+	foreach ($filterConfiguration['blacklist']['include']['directory'] as $dir)
 	{
-		$phpunitConfiguration = realpath($base . 'phpunit.xml');
+		$codeCoverageFilter->addDirectoryToBlacklist(
+			$dir['path'], $dir['suffix'], $dir['prefix'], $dir['group']
+		);
 	}
-	elseif (file_exists($base . 'phpunit.xml.dist'))
+
+	foreach ($filterConfiguration['blacklist']['include']['file'] as $file)
 	{
-		$phpunitConfiguration = realpath($base . 'phpunit.xml.dist');
+		$codeCoverageFilter->addFileToBlacklist($file);
 	}
 
-	if (isset($phpunitConfiguration))
+	foreach ($filterConfiguration['blacklist']['exclude']['directory'] as $dir)
 	{
-		$config = PHPUnit_Util_Configuration::getInstance($phpunitConfiguration);
-		$filterConfiguration = $config->getFilterConfiguration();
+		$codeCoverageFilter->removeDirectoryFromBlacklist(
+			$dir['path'], $dir['suffix'], $dir['prefix'], $dir['group']
+		);
+	}
 
-		$addUncoveredFilesFromWhitelist = $filterConfiguration['whitelist']['addUncoveredFilesFromWhitelist'];
-		$processUncoveredFilesFromWhitelist = $filterConfiguration['whitelist']['processUncoveredFilesFromWhitelist'];
+	foreach ($filterConfiguration['blacklist']['exclude']['file'] as $file)
+	{
+		$codeCoverageFilter->removeFileFromBlacklist($file);
+	}
 
-		$codeCoverage->setAddUncoveredFilesFromWhitelist($addUncoveredFilesFromWhitelist);
-		$codeCoverage->setProcessUncoveredFilesFromWhitelist($processUncoveredFilesFromWhitelist);
+	foreach ($filterConfiguration['whitelist']['include']['directory'] as $dir)
+	{
+		$codeCoverageFilter->addDirectoryToWhitelist(
+			$dir['path'], $dir['suffix'], $dir['prefix']
+		);
+	}
 
-		$codeCoverageFilter = $codeCoverage->filter();
+	foreach ($filterConfiguration['whitelist']['include']['file'] as $file)
+	{
+		$codeCoverageFilter->addFileToWhitelist($file);
+	}
 
-		foreach ($filterConfiguration['blacklist']['include']['directory'] as $dir)
-		{
-			$codeCoverageFilter->addDirectoryToBlacklist(
-				$dir['path'], $dir['suffix'], $dir['prefix'], $dir['group']
-			);
-		}
+	foreach ($filterConfiguration['whitelist']['exclude']['directory'] as $dir)
+	{
+		$codeCoverageFilter->removeDirectoryFromWhitelist(
+			$dir['path'], $dir['suffix'], $dir['prefix']
+		);
+	}
 
-		foreach ($filterConfiguration['blacklist']['include']['file'] as $file)
-		{
-			$codeCoverageFilter->addFileToBlacklist($file);
-		}
-
-		foreach ($filterConfiguration['blacklist']['exclude']['directory'] as $dir)
-		{
-			$codeCoverageFilter->removeDirectoryFromBlacklist(
-				$dir['path'], $dir['suffix'], $dir['prefix'], $dir['group']
-			);
-		}
-
-		foreach ($filterConfiguration['blacklist']['exclude']['file'] as $file)
-		{
-			$codeCoverageFilter->removeFileFromBlacklist($file);
-		}
-
-		foreach ($filterConfiguration['whitelist']['include']['directory'] as $dir)
-		{
-			$codeCoverageFilter->addDirectoryToWhitelist(
-				$dir['path'], $dir['suffix'], $dir['prefix']
-			);
-		}
-
-		foreach ($filterConfiguration['whitelist']['include']['file'] as $file)
-		{
-			$codeCoverageFilter->addFileToWhitelist($file);
-		}
-
-		foreach ($filterConfiguration['whitelist']['exclude']['directory'] as $dir)
-		{
-			$codeCoverageFilter->removeDirectoryFromWhitelist(
-				$dir['path'], $dir['suffix'], $dir['prefix']
-			);
-		}
-
-		foreach ($filterConfiguration['whitelist']['exclude']['file'] as $file)
-		{
-			$codeCoverageFilter->removeFileFromWhitelist($file);
-		}
+	foreach ($filterConfiguration['whitelist']['exclude']['file'] as $file)
+	{
+		$codeCoverageFilter->removeFileFromWhitelist($file);
 	}
 }
 
 if (array_key_exists('report', $_GET))
 {
+	set_time_limit(0);
+
 	$writer = new PHP_CodeCoverage_Report_Clover();
 	$writer->process($codeCoverage, $path . '.clover.xml');
 
-	$writer = new PHP_CodeCoverage_Report_HTML();
-	$writer->process($codeCoverage, $path . 'html');
+	buildReport($codeCoverage, $path);
 }
 else
 {
-	$codeCoverage->start(C3_CODECOVERAGE_TOKEN);
+	$codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
 
 	register_shutdown_function(function () use ($codeCoverage, $path)
 	{
 		$codeCoverage->stop();
 		file_put_contents($path, serialize($codeCoverage));
 	});
+}
+
+function buildReport(PHP_CodeCoverage $codeCoverage, $path)
+{
+	$writer = new PHP_CodeCoverage_Report_HTML();
+	$writer->process($codeCoverage, $path . 'html');
+
+	$phar = new PharData($path . '.tar');
+	$phar->setSignatureAlgorithm(Phar::SHA1);
+	$files = $phar->buildFromDirectory($path . 'html');
+
+	if (in_array('GZ', Phar::getSupportedCompression()))
+	{
+		$phar = $phar->compress(\Phar::GZ);
+		unlink($path . '.tar');
+		rename($path . '.tar.gz', $path . '.tar');
+	}
+
+	readfile($path . '.tar');
+
+	unlink($path . '.tar');
+	array_map('unlink', $files);
 }

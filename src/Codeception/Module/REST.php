@@ -1,6 +1,9 @@
 <?php
+
 namespace Codeception\Module;
+
 use Symfony\Component\BrowserKit\Cookie;
+use Codeception\Event\Suite;
 
 /**
  * Module for testing REST WebService.
@@ -41,7 +44,7 @@ class REST extends \Codeception\Module
     public $params = array();
     public $response = "";
 
-    public function _before(\Codeception\TestCase $test)
+	public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
             if (!strpos($this->config['url'], '://')) {
@@ -79,20 +82,37 @@ class REST extends \Codeception\Module
 
         if ($this->config['xdebug_codecoverage'])
         {
-            $this->codeCoverageToken = time();
-            $this->headers['X-Codeception-CodeCoverage'] = $this->codeCoverageToken;
+            $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
         }
     }
 
-	public function _after(\Codeception\TestCase $test)
+	public function _afterSuite($suite)
 	{
 		if ($this->config['xdebug_codecoverage'])
 		{
-			$this->sendGET('/?report');
-			var_dump($this->response);
-		}
+			// Create a stream
+			$options = array(
+				'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
+			);
+			$context = stream_context_create($options);
+			$url     = $this->config['url'] . '/?report';
 
-		parent::_after($test);
+			$tempFile = tempnam(sys_get_temp_dir(), 'C3');
+			file_put_contents($tempFile, file_get_contents($url, null, $context));
+
+			$destDir = \Codeception\Configuration::logDir() . 'codecoverage';
+
+			if (! is_dir($destDir))
+			{
+				mkdir($destDir, 0777, true);
+			}
+
+			$phar = new \PharData($tempFile);
+			$phar->decompress('.tar')->extractTo($destDir);
+
+			unlink($tempFile);
+			//unlink($tempFile . '.tar');
+		}
 	}
 
 	/**
