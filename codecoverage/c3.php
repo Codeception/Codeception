@@ -1,4 +1,6 @@
 <?php
+// @codeCoverageIgnoreStart
+
 /**
  * C3 - Codeception Code Coverage
  *
@@ -167,3 +169,5 @@ function buildReport(PHP_CodeCoverage $codeCoverage, $path)
 	unlink($path . '.tar');
 	array_map('unlink', $files);
 }
+
+// @codeCoverageIgnoreEnd
