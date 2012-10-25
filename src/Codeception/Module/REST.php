@@ -97,7 +97,7 @@ class REST extends \Codeception\Module
 			$context = stream_context_create($options);
 			$url     = $this->config['url'] . '/?report';
 
-			$tempFile = tempnam(sys_get_temp_dir(), 'C3');
+			$tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
 			file_put_contents($tempFile, file_get_contents($url, null, $context));
 
 			$destDir = \Codeception\Configuration::logDir() . 'codecoverage';
@@ -108,10 +108,9 @@ class REST extends \Codeception\Module
 			}
 
 			$phar = new \PharData($tempFile);
-			$phar->decompress('.tar')->extractTo($destDir);
+			$phar->extractTo($destDir);
 
 			unlink($tempFile);
-			//unlink($tempFile . '.tar');
 		}
 	}
 
