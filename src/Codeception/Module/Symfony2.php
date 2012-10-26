@@ -108,7 +108,23 @@ class Symfony2 extends \Codeception\Util\Framework
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
     }
 
-
+    /**
+     * Grabs a service from Symfony DIC container.
+     * Recommended to use for unit testing.
+     *
+     * ``` php
+     * <?php
+     * $em = $I->grabServiceFromContainer('doctrine');
+     * ?>
+     * ```
+     *
+     * @param $service
+     * @return mixed
+     */
+    public function grabServiceFromContainer($service) {
+        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not avaible in container");
+        return $this->kernel->getContainer()->get($service);
+    }
 
     /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile

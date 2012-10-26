@@ -28,7 +28,7 @@ class Memcache extends \Codeception\Module
 
     protected $config = array('host' => 'localhost', 'port' => 11211);
 
-    public function _before()
+    public function _before(\Codeception\TestCase $test)
     {
         if (class_exists('\Memcache')) {
             $this->memcache = new \Memcache;
@@ -42,7 +42,7 @@ class Memcache extends \Codeception\Module
         }
     }
 
-    public function _after()
+    public function _after(\Codeception\TestCase $test)
     {
         $this->memcache->flush();
     }

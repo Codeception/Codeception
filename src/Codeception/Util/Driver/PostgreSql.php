@@ -48,4 +48,15 @@ class PostgreSql extends Db
             $this->dbh->exec($query);
         }
     }
+
+    public function select($column, $table, array $criteria) {
+        $query = 'select %s from "%s" where %s';
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "$k = ? ";
+        }
+        $params = implode('AND ', $params);
+
+        return sprintf($query, $column, $table, $params);
+    }
 }
