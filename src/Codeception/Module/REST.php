@@ -106,7 +106,7 @@ class REST extends \Codeception\Module
             if (!is_dir($destDir)) {
                 mkdir($destDir, 0777, true);
             } else {
-                FileSystem::doEmptyDir($destDir);
+                \Codeception\Util\FileSystem::doEmptyDir($destDir);
             }
 
             $phar = new \PharData($tempFile);
