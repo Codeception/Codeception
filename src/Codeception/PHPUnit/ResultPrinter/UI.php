@@ -16,8 +16,9 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
     protected function printDefect(\PHPUnit_Framework_TestFailure $defect, $count)
     {
         $failedTest = $defect->failedTest();
+        $this->write("\n---------\n");
         if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefect($defect, $count);
-        $this->dispatcher->dispatch('fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException()));
+        $this->dispatcher->dispatch('fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException(), $count));
     }
 
     /**
@@ -36,7 +37,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
             }
 
             $this->write(sprintf("#%d %s(%s)",
-                $i,
+                $i+1,
                 $frame['file'],
                 isset($frame['line']) ? $frame['line'] : '?'));
 

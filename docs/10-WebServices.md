@@ -25,7 +25,7 @@ modules:
 		PhpBrowser: 
 			url: http://serviceapp/
 		REST:
-		    url: api/v1/ # optional
+		    url: http://serviceapp/api/v1/
 ```
 
 The REST module will automatically connect to PhpBrowser. In case you provide it with Symfony2, Zend, or other framework module, it will connect to them as well. Don't forget to run the `build` command once you finished editing configuration.
@@ -85,7 +85,7 @@ modules:
 		PhpBrowser: 
 			url: http://serviceapp/
 		SOAP:
-		    endpoint: api/v1/		    		   
+		    endpoint: http://serviceapp/api/v1/		    		   
 ```
 
 SOAP request may contain application specific information, like authentication or payment. This information is provided with SOAP header inside the `<soap:Header>` element of XML request. In case you need to submit such header you can use `haveSoapHeader` action. For example, next line of code
