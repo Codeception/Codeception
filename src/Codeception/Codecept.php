@@ -127,7 +127,7 @@ class Codecept
         if (!class_exists('SimpleXMLElement')) return false;
         $file = @file_get_contents("http://codeception.com/pear/feed.xml");
         if (!$file) return '';
-        $feed = new \SimpleXMLElement($file);
+        $feed = new \SimpleXMLElement($file, LIBXML_NOERROR);
         @$codeception = $feed->entry[0]->title;
         if (!$codeception) return '';
         preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
