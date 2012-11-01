@@ -12,7 +12,7 @@ define('C3_CODECOVERAGE_DEBUG', PHP_SAPI === 'cli');
 
 if (C3_CODECOVERAGE_DEBUG)
 {
-	$_GET['report'] = 1;
+	$_SERVER['REQUEST_URI'] = 'c3/report/html';
 	$_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE'] = 'test';
 }
 
@@ -27,6 +27,11 @@ gc_disable();
 define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/../c3tmp');
 define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__ . '/..');
 define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
+
+if (stream_resolve_include_path('PHPUnit/Autoload.php') !== false)
+{
+	include_once 'PHPUnit/Autoload.php';
+}
 
 if (! class_exists('PHP_CodeCoverage', true))
 {
@@ -129,14 +134,21 @@ if (isset($phpunitConfiguration))
 	}
 }
 
-if (array_key_exists('report', $_GET))
+if (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false)
 {
 	set_time_limit(0);
 
-	$writer = new PHP_CodeCoverage_Report_Clover();
-	$writer->process($codeCoverage, $path . '.clover.xml');
+	switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/'))
+	{
+		case 'html':
+			buildHTMLReport($codeCoverage, $path);
+			break;
 
-	buildReport($codeCoverage, $path);
+		case 'clover':
+			$writer = new PHP_CodeCoverage_Report_Clover();
+			$writer->process($codeCoverage, $path . '.clover.xml');
+			break;
+	}
 }
 else
 {
@@ -149,10 +161,15 @@ else
 	});
 }
 
-function buildReport(PHP_CodeCoverage $codeCoverage, $path)
+function buildHTMLReport(PHP_CodeCoverage $codeCoverage, $path)
 {
 	$writer = new PHP_CodeCoverage_Report_HTML();
 	$writer->process($codeCoverage, $path . 'html');
+
+	if (file_exists($path . '.tar'))
+	{
+		unlink($path . '.tar');
+	}
 
 	$phar = new PharData($path . '.tar');
 	$phar->setSignatureAlgorithm(Phar::SHA1);
@@ -160,12 +177,24 @@ function buildReport(PHP_CodeCoverage $codeCoverage, $path)
 
 	if (in_array('GZ', Phar::getSupportedCompression()))
 	{
-		$phar = $phar->compress(\Phar::GZ);
+		if (file_exists($path . '.tar.gz'))
+		{
+			unlink($path . '.tar.gz');
+		}
+
+		$phar->compress(\Phar::GZ);
+
+		// close the file so that we can rename it
+		unset($phar);
+
 		unlink($path . '.tar');
 		rename($path . '.tar.gz', $path . '.tar');
 	}
 
-	readfile($path . '.tar');
+	if (! headers_sent())
+	{
+		readfile($path . '.tar');
+	}
 
 	unlink($path . '.tar');
 	array_map('unlink', $files);
