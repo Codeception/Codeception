@@ -96,7 +96,7 @@ class REST extends \Codeception\Module
                 'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
             );
             $context = stream_context_create($options);
-            $url = $this->config['url'] . '/?report';
+            $url = $this->config['url'] . '/c3/report/html';
 
             $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
             file_put_contents($tempFile, file_get_contents($url, null, $context));
