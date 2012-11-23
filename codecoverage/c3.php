@@ -1,6 +1,6 @@
 <?php
+// @codingStandardsIgnoreFile
 // @codeCoverageIgnoreStart
-// @codingStandardsIgnoreStart
 
 /**
  * C3 - Codeception Code Coverage
@@ -23,6 +23,11 @@ if (! array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER))
 
 // workaround for 'zend_mm_heap corrupted' problem
 gc_disable();
+
+if ((integer)ini_get('memory_limit') < 384)
+{
+	ini_set('memory_limit', '384M');
+}
 
 define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/../c3tmp');
 define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__ . '/..');
@@ -51,30 +56,88 @@ if (! is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE))
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
 
-if (is_readable($path))
+if (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false)
 {
-	$codeCoverage = new PHP_CodeCoverage;
-	$codeCoverage->merge(unserialize(file_get_contents($path)));
+	set_time_limit(0);
+
+	if (file_exists($path))
+	{
+		if (file_exists($path . '.serialied'))
+		{
+			unlink($path . '.serialized');
+		}
+
+		rename($path, $path . '.serialized');
+	}
+
+	$codeCoverage = codeCoverageFactory($path . '.serialized');
+
+	switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/'))
+	{
+		case 'html':
+			sendFile(buildHTMLReport($codeCoverage, $path));
+			break;
+
+		case 'clover':
+			sendFile(buildCloverReport($codeCoverage, $path));
+			break;
+
+		case 'serialized':
+			sendFile($path . '.serialized');
+			break;
+	}
 }
 else
 {
-	$codeCoverage = new PHP_CodeCoverage;
+	if (file_exists($path . '.serialied'))
+	{
+		unlink($path . '.serialized');
+	}
+
+	$codeCoverage = codeCoverageFactory($path);
+	$codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
+
+	register_shutdown_function(function () use ($codeCoverage, $path)
+	{
+		$codeCoverage->stop();
+		file_put_contents($path, serialize($codeCoverage));
+	});
 }
 
-$base = C3_CODECOVERAGE_PROJECT_ROOT . DIRECTORY_SEPARATOR;
+function codeCoverageFactory($filename)
+{
+	if (is_readable($filename))
+	{
+		$codeCoverage = unserialize(file_get_contents($filename));
+	}
+	else
+	{
+		$codeCoverage = new PHP_CodeCoverage;
+	}
 
-if (file_exists($base . 'phpunit.xml'))
-{
-	$phpunitConfiguration = realpath($base . 'phpunit.xml');
-}
-elseif (file_exists($base . 'phpunit.xml.dist'))
-{
-	$phpunitConfiguration = realpath($base . 'phpunit.xml.dist');
+	loadPhpunitConfiguration($codeCoverage);
+
+	return $codeCoverage;
 }
 
-if (isset($phpunitConfiguration))
+function loadPhpunitConfiguration(PHP_CodeCoverage $codeCoverage)
 {
-	$config = PHPUnit_Util_Configuration::getInstance($phpunitConfiguration);
+	$base = C3_CODECOVERAGE_PROJECT_ROOT . DIRECTORY_SEPARATOR;
+
+	if (file_exists($base . 'phpunit.xml'))
+	{
+		$pathToConfigFile = realpath($base . 'phpunit.xml');
+	}
+	elseif (file_exists($base . 'phpunit.xml.dist'))
+	{
+		$pathToConfigFile = realpath($base . 'phpunit.xml.dist');
+	}
+	else
+	{
+		return false;
+	}
+
+	$config = PHPUnit_Util_Configuration::getInstance($pathToConfigFile);
 	$filterConfiguration = $config->getFilterConfiguration();
 
 	$addUncoveredFilesFromWhitelist = $filterConfiguration['whitelist']['addUncoveredFilesFromWhitelist'];
@@ -134,33 +197,6 @@ if (isset($phpunitConfiguration))
 	}
 }
 
-if (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false)
-{
-	set_time_limit(0);
-
-	switch (ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/'))
-	{
-		case 'html':
-			buildHTMLReport($codeCoverage, $path);
-			break;
-
-		case 'clover':
-			$writer = new PHP_CodeCoverage_Report_Clover();
-			$writer->process($codeCoverage, $path . '.clover.xml');
-			break;
-	}
-}
-else
-{
-	$codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-
-	register_shutdown_function(function () use ($codeCoverage, $path)
-	{
-		$codeCoverage->stop();
-		file_put_contents($path, serialize($codeCoverage));
-	});
-}
-
 function buildHTMLReport(PHP_CodeCoverage $codeCoverage, $path)
 {
 	$writer = new PHP_CodeCoverage_Report_HTML();
@@ -174,6 +210,7 @@ function buildHTMLReport(PHP_CodeCoverage $codeCoverage, $path)
 	$phar = new PharData($path . '.tar');
 	$phar->setSignatureAlgorithm(Phar::SHA1);
 	$files = $phar->buildFromDirectory($path . 'html');
+	array_map('unlink', $files);
 
 	if (in_array('GZ', Phar::getSupportedCompression()))
 	{
@@ -191,16 +228,25 @@ function buildHTMLReport(PHP_CodeCoverage $codeCoverage, $path)
 		rename($path . '.tar.gz', $path . '.tar');
 	}
 
+	return $path . '.tar';
+}
+
+function buildCloverReport(PHP_CodeCoverage $codeCoverage, $path)
+{
+	$writer = new PHP_CodeCoverage_Report_Clover();
+	$writer->process($codeCoverage, $path . '.clover.xml');
+
+	return $path . '.clover.xml';
+}
+
+function sendFile($filename)
+{
 	if (! headers_sent())
 	{
-		readfile($path . '.tar');
+		readfile($filename);
 	}
-
-	unlink($path . '.tar');
-	array_map('unlink', $files);
 
 	exit;
 }
 
 // @codeCoverageIgnoreEnd
-// @codingStandardsIgnoreEnd
