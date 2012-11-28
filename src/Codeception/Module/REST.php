@@ -1,5 +1,9 @@
 <?php
+
 namespace Codeception\Module;
+
+use Symfony\Component\BrowserKit\Cookie;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 
 /**
  * Module for testing REST WebService.
@@ -24,10 +28,14 @@ namespace Codeception\Module;
  */
 class REST extends \Codeception\Module
 {
+    protected $config = array(
+        'url' => '',
+        'xdebug_remote' => false,
+        'xdebug_codecoverage' => false,
+    );
 
-    protected $config = array('url' => "");
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var \Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
     public $is_functional = false;
@@ -49,11 +57,14 @@ class REST extends \Codeception\Module
                     }
                 }
             } else {
-                if (!$this->hasModule('PhpBrowser'))
-                    throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For REST testing via HTTP please enable PhpBrowser module");
+                if (!$this->hasModule('PhpBrowser')) {
+                    throw new ModuleConfigException(__CLASS__, "For REST testing via HTTP please enable PhpBrowser module");
+                }
                 $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
             }
-            if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for REST requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
+            if (!$this->client) {
+                throw new ModuleConfigException(__CLASS__, "Client for REST requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
+            }
         }
 
         $this->headers = array();
@@ -61,6 +72,48 @@ class REST extends \Codeception\Module
         $this->response = "";
 
         $this->client->setServerParameters(array());
+
+        if ($this->config['xdebug_remote']
+            && function_exists('xdebug_is_enabled')
+            && xdebug_is_enabled()
+            && ini_get('xdebug.remote_enable')
+        ) {
+            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
+            $this->client->getCookieJar()->set($cookie);
+            $this->client->getClient()->getConfig()->add('curl.CURLOPT_TIMEOUT', 0);
+        }
+
+        if ($this->config['xdebug_codecoverage']) {
+            $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
+        }
+    }
+
+    public function _afterSuite($suite)
+    {
+        if ($this->config['xdebug_codecoverage']) {
+            // Create a stream
+            $options = array(
+                'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
+            );
+            $context = stream_context_create($options);
+            $url = $this->config['url'] . '/c3/report/html';
+
+            $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
+            file_put_contents($tempFile, file_get_contents($url, null, $context));
+
+            $destDir = \Codeception\Configuration::logDir() . 'codecoverage';
+
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0777, true);
+            } else {
+                \Codeception\Util\FileSystem::doEmptyDir($destDir);
+            }
+
+            $phar = new \PharData($tempFile);
+            $phar->extractTo($destDir);
+
+            unlink($tempFile);
+        }
     }
 
     /**
@@ -69,7 +122,8 @@ class REST extends \Codeception\Module
      * @param $name
      * @param $value
      */
-    public function haveHttpHeader($name, $value) {
+    public function haveHttpHeader($name, $value)
+    {
         $this->headers[$name] = $value;
     }
 
@@ -80,7 +134,8 @@ class REST extends \Codeception\Module
      * @param $username
      * @param $password
      */
-    public function amHttpAuthenticated($username, $password) {
+    public function amHttpAuthenticated($username, $password)
+    {
         if ($this->is_functional) {
             $this->client->setServerParameter('PHP_AUTH_USER', $username);
             $this->client->setServerParameter('PHP_AUTH_PW', $password);
@@ -98,7 +153,8 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendPOST($url, $params = array(), $files = array()) {
+    public function sendPOST($url, $params = array(), $files = array())
+    {
         $this->execute('POST', $url, $params, $files);
     }
 
@@ -108,7 +164,8 @@ class REST extends \Codeception\Module
      * @param $url
      * @param array $params
      */
-    public function sendGET($url, $params = array()) {
+    public function sendGET($url, $params = array())
+    {
         $this->execute('GET', $url, $params);
     }
 
@@ -119,7 +176,8 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendPUT($url, $params = array(), $files = array()) {
+    public function sendPUT($url, $params = array(), $files = array())
+    {
         $this->execute('PUT', $url, $params, $files);
     }
 
@@ -130,11 +188,12 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendDELETE($url, $params = array(), $files = array()) {
+    public function sendDELETE($url, $params = array(), $files = array())
+    {
         $this->execute('DELETE', $url, $params, $files);
     }
 
-    protected function execute($method='GET', $url, $parameters=array(), $files = array())
+    protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
     {
         foreach ($this->headers as $header => $val) {
             $this->client->setServerParameter("HTTP_$header", $val);
@@ -146,13 +205,20 @@ class REST extends \Codeception\Module
             $parameters = $this->scalarizeArray($parameters);
             if (array_key_exists('Content-Type', $this->headers)
                 && $this->headers['Content-Type'] === 'application/json'
-                && $method != 'GET') {
+                && $method != 'GET'
+            ) {
                 $parameters = json_encode($parameters);
             }
         }
 
         if (is_array($parameters) || $method == 'GET') {
-            $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
+            if ($method == 'GET' && !empty($parameters)) {
+                $url .= '?' . http_build_query($parameters);
+                $this->debugSection("Request", "$method $url");
+            } else {
+                $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
+            }
+
             $this->client->request($method, $url, $parameters, $files);
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
@@ -168,9 +234,14 @@ class REST extends \Codeception\Module
      * This is done with json_last_error function.
      *
      */
-    public function seeResponseIsJson() {
+    public function seeResponseIsJson()
+    {
         json_decode($this->response);
-        \PHPUnit_Framework_Assert::assertEquals(0, $num = json_last_error(),"json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php");
+        \PHPUnit_Framework_Assert::assertEquals(
+            0,
+            $num = json_last_error(),
+            "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
+        );
     }
 
     /**
@@ -178,7 +249,8 @@ class REST extends \Codeception\Module
      *
      * @param $text
      */
-    public function seeResponseContains($text) {
+    public function seeResponseContains($text)
+    {
         \PHPUnit_Framework_Assert::assertContains($text, $this->response, "REST response contains");
     }
 
@@ -187,7 +259,8 @@ class REST extends \Codeception\Module
      *
      * @param $text
      */
-    public function dontSeeResponseContains($text) {
+    public function dontSeeResponseContains($text)
+    {
         \PHPUnit_Framework_Assert::assertNotContains($text, $this->response, "REST response contains");
     }
 
@@ -214,9 +287,13 @@ class REST extends \Codeception\Module
      *
      * @param array $json
      */
-    public function seeResponseContainsJson($json = array()) {
-        $resp_json = json_decode($this->response,true);
-        \PHPUnit_Framework_Assert::assertTrue($this->arrayHasArray($json, $resp_json), "response JSON matches provided");
+    public function seeResponseContainsJson($json = array())
+    {
+        $resp_json = json_decode($this->response, true);
+        \PHPUnit_Framework_Assert::assertTrue(
+            $this->arrayHasArray($json, $resp_json),
+            "response JSON matches provided"
+        );
     }
 
     /**
@@ -234,7 +311,8 @@ class REST extends \Codeception\Module
      * @version 1.1
      * @return string
      */
-    public function grabResponse() {
+    public function grabResponse()
+    {
         return $this->response;
     }
 
@@ -280,31 +358,33 @@ class REST extends \Codeception\Module
     }
 
     /**
-	 * @author nleippe@integr8ted.com
-	 * @author tiger.seo@gmail.com
-	 * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
-	 *
-	 * @param mixed $arr1
-	 * @param mixed $arr2
-	 *
-	 * @return array|bool
-	 */
-	private function arrayIntersectAssocRecursive($arr1, $arr2) {
-		if (! is_array($arr1) || ! is_array($arr2)) {
-			return $arr1 == $arr2 ? $arr1 : null;
-		}
-		$commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
-		$ret        = array();
-		foreach ($commonkeys as $key) {
-			$_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
-			if ($_return !== null) {
-				$ret[$key] = $_return;
-			}
-		}
-		return $ret;
-	}
+     * @author nleippe@integr8ted.com
+     * @author tiger.seo@gmail.com
+     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
+     *
+     * @param mixed $arr1
+     * @param mixed $arr2
+     *
+     * @return array|bool
+     */
+    private function arrayIntersectAssocRecursive($arr1, $arr2)
+    {
+        if (!is_array($arr1) || !is_array($arr2)) {
+            return $arr1 == $arr2 ? $arr1 : null;
+        }
+        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
+        $ret = array();
+        foreach ($commonkeys as $key) {
+            $_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
+            if ($_return !== null) {
+                $ret[$key] = $_return;
+            }
+        }
+        return $ret;
+    }
 
-	protected function arrayHasArray(array $needle, array $haystack) {
+    protected function arrayHasArray(array $needle, array $haystack)
+    {
         return $needle == $this->arrayIntersectAssocRecursive($needle, $haystack);
     }
 
@@ -313,9 +393,13 @@ class REST extends \Codeception\Module
      *
      * @param array $json
      */
-    public function dontSeeResponseContainsJson($json = array()) {
-        $resp_json = json_decode($this->response,true);
-        \PHPUnit_Framework_Assert::assertFalse($this->arrayHasArray($json, $resp_json), "response JSON matches provided");
+    public function dontSeeResponseContainsJson($json = array())
+    {
+        $resp_json = json_decode($this->response, true);
+        \PHPUnit_Framework_Assert::assertFalse(
+            $this->arrayHasArray($json, $resp_json),
+            "response JSON matches provided"
+        );
     }
 
     /**
@@ -323,7 +407,8 @@ class REST extends \Codeception\Module
      *
      * @param $response
      */
-    public function seeResponseEquals($response) {
+    public function seeResponseEquals($response)
+    {
         \PHPUnit_Framework_Assert::assertEquals($response, $this->$response);
     }
 
@@ -332,8 +417,8 @@ class REST extends \Codeception\Module
      *
      * @param $num
      */
-    public function seeResponseCodeIs($num) {
+    public function seeResponseCodeIs($num)
+    {
         \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
     }
-
 }

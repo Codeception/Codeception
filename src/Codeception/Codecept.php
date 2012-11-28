@@ -104,7 +104,7 @@ class Codecept
     public static function versionString() {
    	    return 'Codeception PHP Testing Framework v'.self::VERSION;
    	}
-    
+
     public function printResult() {
         $result = $this->getResult();
         $result->flushListeners();
@@ -123,16 +123,30 @@ class Codecept
         return $this->options;
     }
 
-    public static function checkLastVersion() {
-        if (!class_exists('SimpleXMLElement')) return false;
-        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
-        if (!$file) return '';
-        $feed = new \SimpleXMLElement($file);
-        @$codeception = $feed->entry[0]->title;
-        if (!$codeception) return '';
-        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
-        if (!isset($version[0])) return '';
-        return $version[0];
-    }
+    public static function checkLastVersion()
+    {
+        if (! class_exists('SimpleXMLElement')) {
+            return false;
+        }
 
+        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
+        if (! $file) {
+            return '';
+        }
+
+        try {
+            $feed = new \SimpleXMLElement($file, LIBXML_NOERROR);
+            @$codeception = $feed->entry[0]->title;
+        } catch (\Exception $e) {
+            $codeception = false;
+        }
+
+        if (! $codeception) {
+            return '';
+        }
+
+        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
+
+        return isset($version[0]) ? $version[0] : '';
+    }
 }
