@@ -15,8 +15,7 @@ before_script:
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.16.1.jar
   - java -jar selenium-server-standalone-2.16.1.jar &
   - php -S localhost:8000 -t tests/data/app &
-  - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install
+  - composer install --dev --verbose
   - "mysql -e 'create database codeception_test;'"
 
 script: "php codecept run"
