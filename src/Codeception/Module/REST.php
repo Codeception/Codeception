@@ -199,7 +199,8 @@ class REST extends \Codeception\Module
             $this->client->setServerParameter("HTTP_$header", $val);
         }
 
-        $url = $this->config['url'] . $url;
+        // allow full url to be requested
+        $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
         if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
             $parameters = $this->scalarizeArray($parameters);
