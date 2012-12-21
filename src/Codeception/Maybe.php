@@ -197,3 +197,10 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return $this->__value();
     }
 }
+
+/** spike-fix for PHP 5.3 */
+if (! interface_exists('JsonSerializable')) {
+    interface JsonSerializable {
+        function jsonSerialize();
+    }
+}
