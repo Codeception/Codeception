@@ -347,12 +347,21 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Goutte",
+<<<<<<< HEAD
                 "reference": "70c036b3ffe33521b95b8223bf062ae007da619f"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/fabpot/Goutte/archive/70c036b3ffe33521b95b8223bf062ae007da619f.zip",
                 "reference": "70c036b3ffe33521b95b8223bf062ae007da619f",
+=======
+                "reference": "36b8fef6e78bda9200b952e714ed75b35ec94b9b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/fabpot/Goutte/archive/36b8fef6e78bda9200b952e714ed75b35ec94b9b.zip",
+                "reference": "36b8fef6e78bda9200b952e714ed75b35ec94b9b",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
@@ -365,7 +374,11 @@
                 "ext-curl": "*",
                 "guzzle/guzzle": "3.0.*"
             },
+<<<<<<< HEAD
             "time": "1354541912",
+=======
+            "time": "2012-12-17 21:16:28",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "type": "application",
             "extra": {
                 "branch-alias": {
@@ -378,6 +391,7 @@
                     "Goutte": "."
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -394,6 +408,7 @@
             ]
         },
         {
+<<<<<<< HEAD
             "name": "guzzle/common",
             "version": "v2.8.8",
             "target-dir": "Guzzle/Common",
@@ -406,20 +421,79 @@
                 "type": "zip",
                 "url": "https://github.com/guzzle/common/zipball/v2.8.8",
                 "reference": "v2.8.8",
+=======
+            "name": "guzzle/guzzle",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle",
+                "reference": "v3.0.7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/guzzle/guzzle/archive/v3.0.7.zip",
+                "reference": "v3.0.7",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
+<<<<<<< HEAD
                 "symfony/event-dispatcher": "2.1.*"
             },
             "time": "2012-10-15 17:42:47",
+=======
+                "ext-curl": "*",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/common": "*",
+                "symfony/class-loader": "*",
+                "monolog/monolog": "1.*",
+                "zendframework/zend-cache": "2.0.*",
+                "zendframework/zend-log": "2.0.*",
+                "zend/zend-log1": "1.12",
+                "zend/zend-cache1": "1.12",
+                "phpunit/phpunit": "3.7.*"
+            },
+            "time": "2012-12-19 23:06:35",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
             "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Guzzle\\Common": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -518,6 +592,7 @@
         },
         {
             "name": "instaclick/php-webdriver",
+<<<<<<< HEAD
             "version": "dev-master",
             "source": {
                 "type": "git",
@@ -528,12 +603,28 @@
                 "type": "zip",
                 "url": "https://github.com/instaclick/php-webdriver/zipball/v1.0.6",
                 "reference": "v1.0.6",
+=======
+            "version": "1.0.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/instaclick/php-webdriver",
+                "reference": "1.0.11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/instaclick/php-webdriver/archive/1.0.11.zip",
+                "reference": "1.0.11",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
+<<<<<<< HEAD
             "time": "1345642676",
+=======
+            "time": "2012-12-02 22:08:47",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -541,6 +632,7 @@
                     "WebDriver": "lib/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache"
             ],
@@ -653,6 +745,7 @@
                     "PHP/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 ""
             ],
@@ -901,6 +994,7 @@
                     "PHPUnit/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "include-path": [
                 "",
                 "../../symfony/yaml/"
@@ -974,17 +1068,30 @@
         },
         {
             "name": "symfony/browser-kit",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/BrowserKit",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/BrowserKit",
+<<<<<<< HEAD
                 "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/BrowserKit/zipball/v2.1.1",
                 "reference": "v2.1.1",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/BrowserKit/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
@@ -998,6 +1105,7 @@
             "suggest": {
                 "symfony/process": "2.1.*"
             },
+<<<<<<< HEAD
             "time": "1347274422",
             "type": "library",
             "extra": {
@@ -1006,11 +1114,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-06 10:00:55",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\BrowserKit": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1029,22 +1143,36 @@
         },
         {
             "name": "symfony/console",
+<<<<<<< HEAD
             "version": "dev-master",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
+<<<<<<< HEAD
                 "reference": "c8dc6870f1375b43dc8fe0df30bb47abc350076b"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/Console/zipball/c8dc6870f1375b43dc8fe0df30bb47abc350076b",
                 "reference": "c8dc6870f1375b43dc8fe0df30bb47abc350076b",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Console/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+<<<<<<< HEAD
             "time": "1346957130",
             "type": "library",
             "extra": {
@@ -1053,11 +1181,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-13 17:42:00",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Console": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1076,22 +1210,36 @@
         },
         {
             "name": "symfony/css-selector",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/CssSelector",
+<<<<<<< HEAD
                 "reference": "v2.1.0-RC2"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/CssSelector/zipball/v2.1.0-RC2",
                 "reference": "v2.1.0-RC2",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/CssSelector/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+<<<<<<< HEAD
             "time": "1345643321",
             "type": "library",
             "extra": {
@@ -1100,11 +1248,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-11 10:33:11",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\CssSelector": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1123,17 +1277,30 @@
         },
         {
             "name": "symfony/dom-crawler",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/DomCrawler",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DomCrawler",
+<<<<<<< HEAD
                 "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/DomCrawler/zipball/v2.1.1",
                 "reference": "v2.1.1",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/DomCrawler/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
@@ -1145,6 +1312,7 @@
             "suggest": {
                 "symfony/css-selector": "2.1.*"
             },
+<<<<<<< HEAD
             "time": "1347274422",
             "type": "library",
             "extra": {
@@ -1153,11 +1321,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-06 10:00:55",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\DomCrawler": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1176,17 +1350,30 @@
         },
         {
             "name": "symfony/event-dispatcher",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
+<<<<<<< HEAD
                 "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/EventDispatcher/zipball/v2.1.1",
                 "reference": "v2.1.1",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/EventDispatcher/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
@@ -1199,6 +1386,7 @@
                 "symfony/dependency-injection": "2.1.*",
                 "symfony/http-kernel": "2.1.*"
             },
+<<<<<<< HEAD
             "time": "1347274422",
             "type": "library",
             "extra": {
@@ -1207,11 +1395,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-06 10:00:55",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\EventDispatcher": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1230,22 +1424,36 @@
         },
         {
             "name": "symfony/finder",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder",
+<<<<<<< HEAD
                 "reference": "v2.1.0-RC2"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/Finder/zipball/v2.1.0-RC2",
                 "reference": "v2.1.0-RC2",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Finder/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+<<<<<<< HEAD
             "time": "1345643321",
             "type": "library",
             "extra": {
@@ -1254,11 +1462,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-10 12:46:54",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Finder": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1277,22 +1491,36 @@
         },
         {
             "name": "symfony/process",
+<<<<<<< HEAD
             "version": "2.1.x-dev",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process",
+<<<<<<< HEAD
                 "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/Process/zipball/v2.1.1",
                 "reference": "v2.1.1",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Process/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+<<<<<<< HEAD
             "time": "1346330945",
             "type": "library",
             "extra": {
@@ -1301,11 +1529,17 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-19 13:27:19",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1324,22 +1558,36 @@
         },
         {
             "name": "symfony/yaml",
+<<<<<<< HEAD
             "version": "dev-master",
+=======
+            "version": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml",
+<<<<<<< HEAD
                 "reference": "826fe43a6e3b330d79e711d2fc02540af8d10f61"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://github.com/symfony/Yaml/zipball/826fe43a6e3b330d79e711d2fc02540af8d10f61",
                 "reference": "826fe43a6e3b330d79e711d2fc02540af8d10f61",
+=======
+                "reference": "v2.1.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/symfony/Yaml/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+<<<<<<< HEAD
             "time": "1346957130",
             "type": "library",
             "extra": {
@@ -1348,6 +1596,11 @@
                 }
             },
             "installation-source": "source",
+=======
+            "time": "2012-12-06 10:00:55",
+            "type": "library",
+            "installation-source": "dist",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Yaml": ""
@@ -1386,7 +1639,11 @@
             "require": {
                 "php": ">=5.3.0"
             },
+<<<<<<< HEAD
             "time": "1354633718",
+=======
+            "time": "2012-12-04 15:08:38",
+>>>>>>> 18a396dc98d0a2578aa2b26e5527d3b8cfa155a1
             "type": "library",
             "installation-source": "source",
             "autoload": {
@@ -1394,6 +1651,7 @@
                     "PhpAmqpLib": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "authors": [
                 {
                     "name": "Alvaro Videla"

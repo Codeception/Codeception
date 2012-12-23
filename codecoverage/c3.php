@@ -29,8 +29,12 @@ if ((integer)ini_get('memory_limit') < 384)
 	ini_set('memory_limit', '384M');
 }
 
-define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/../c3tmp');
-define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__ . '/..');
+defined('C3_CODECOVERAGE_MEDIATE_STORAGE')
+    || define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/../c3tmp');
+
+defined('C3_CODECOVERAGE_PROJECT_ROOT')
+    || define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__ . '/..');
+
 define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
 if (stream_resolve_include_path('PHPUnit/Autoload.php') !== false)
