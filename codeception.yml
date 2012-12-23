@@ -27,3 +27,14 @@ modules:
                   queue: Queue1
                 - exchange: Exchange1
                   queue: Queue2
+coverage:
+    enabled: true
+    include:
+        - src/*
+    exclude:
+        - vendor/*
+        - src/Codeception/Module/Symfony1
+        - src/Codeception/Module/Symfony2
+        - src/Codeception/Module/Doctrine1
+        - src/Codeception/Module/Doctrine2
+        - src/Codeception/Module/Kohana

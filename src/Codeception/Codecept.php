@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.1.5";
+    const VERSION = "2.0.0";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -17,6 +17,11 @@ class Codecept
      * @var \PHPUnit_Framework_TestResult
      */
     protected $result;
+
+    /**
+     * @var \Codeception\CodeCoverage
+     */
+    protected $coverage;
 
     /**
      * @var \Monolog\Handler\StreamHandler
@@ -42,11 +47,15 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
+        'coverage' => false
     );
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->runner = new \Codeception\PHPUnit\Runner();
+
+        $this->coverage = new \Codeception\CodeCoverage();
+        $this->coverage->attachToResult($this->result);
 
         $this->dispatcher = new EventDispatcher();
         $this->config = \Codeception\Configuration::config($options['config']);
@@ -109,6 +118,10 @@ class Codecept
         $result = $this->getResult();
         $result->flushListeners();
         $this->runner->getPrinter()->printResult($result);
+
+        if ($this->options['xml']) $this->coverage->printXml();
+        if ($this->options['html']) $this->coverage->printHtml();
+        $this->coverage->printText($this->runner->getPrinter());
     }
 
     /**

@@ -73,19 +73,6 @@ class REST extends \Codeception\Module
 
         $this->client->setServerParameters(array());
 
-        if ($this->config['xdebug_remote']
-            && function_exists('xdebug_is_enabled')
-            && xdebug_is_enabled()
-            && ini_get('xdebug.remote_enable')
-        ) {
-            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
-            $this->client->getCookieJar()->set($cookie);
-            $this->client->getClient()->getConfig()->add('curl.CURLOPT_TIMEOUT', 0);
-        }
-
-        if ($this->config['xdebug_codecoverage']) {
-            $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
-        }
     }
 
     public function _afterSuite($suite)

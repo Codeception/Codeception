@@ -3,7 +3,7 @@
     "packages": [
         {
             "name": "alexandresalome/php-selenium",
-            "version": "1.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alexandresalome/PHP-Selenium.git",
@@ -18,9 +18,9 @@
             "require-dev": {
                 "symfony/dom-crawler": "dev-master"
             },
-            "time": "2012-07-10 04:39:20",
+            "time": "1341920360",
             "type": "library",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Selenium": "src/"
@@ -74,7 +74,7 @@
                 "behat/mink-selenium2-driver": "to enable Selenium2 (webdriver support)",
                 "behat/mink-zombie-driver": "to enable Zombie.js support"
             },
-            "time": "2012-05-29 15:50:10",
+            "time": "2012-05-28 22:50:10",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -102,26 +102,26 @@
         },
         {
             "name": "behat/mink-browserkit-driver",
-            "version": "v1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/Behat/MinkBrowserKitDriver.git",
-                "reference": "v1.0.0"
+                "reference": "97fa7d67ab5afb13d74515c15ef5c0cab12c0bc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Behat/MinkBrowserKitDriver/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://github.com/Behat/MinkBrowserKitDriver/zipball/97fa7d67ab5afb13d74515c15ef5c0cab12c0bc0",
+                "reference": "97fa7d67ab5afb13d74515c15ef5c0cab12c0bc0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "symfony/browser-kit": ">=2.0.0,<2.2.0-dev",
-                "symfony/dom-crawler": ">=2.0.0,<2.2.0-dev"
+                "symfony/browser-kit": ">=2.0.0,<2.2.0",
+                "symfony/dom-crawler": ">=2.0.0,<2.2.0"
             },
-            "time": "2012-06-14 06:23:48",
+            "time": "1341477260",
             "type": "mink-driver",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Behat\\Mink\\Driver": "src/"
@@ -147,32 +147,32 @@
         },
         {
             "name": "behat/mink-goutte-driver",
-            "version": "v1.0.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/Behat/MinkGoutteDriver.git",
-                "reference": "v1.0.3"
+                "reference": "703a365a0f6c15f91f35c1cc30531b9de7f23a6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Behat/MinkGoutteDriver/zipball/v1.0.3",
-                "reference": "v1.0.3",
+                "url": "https://github.com/Behat/MinkGoutteDriver/zipball/703a365a0f6c15f91f35c1cc30531b9de7f23a6d",
+                "reference": "703a365a0f6c15f91f35c1cc30531b9de7f23a6d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "behat/mink": ">=1.4.0,<1.5.0-dev",
                 "behat/mink-browserkit-driver": "*",
-                "fabpot/goutte": "@dev",
+                "behat/mink": ">=1.4.0,<1.5.0-dev",
                 "symfony/browser-kit": "2.1.*@dev",
                 "symfony/css-selector": "2.1.*@dev",
                 "symfony/dom-crawler": "2.1.*@dev",
                 "symfony/finder": "2.1.*@dev",
-                "symfony/process": "2.1.*@dev"
+                "symfony/process": "2.1.*@dev",
+                "fabpot/goutte": "@dev"
             },
-            "time": "2012-07-05 01:30:36",
+            "time": "1345633817",
             "type": "mink-driver",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Behat\\Mink\\Driver": "src/"
@@ -199,7 +199,7 @@
         },
         {
             "name": "behat/mink-selenium-driver",
-            "version": "v1.0.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/Behat/MinkSeleniumDriver.git",
@@ -217,9 +217,9 @@
                 "symfony/dom-crawler": ">=2.0.0,<2.2.0",
                 "alexandresalome/php-selenium": "@dev"
             },
-            "time": "2012-07-05 14:18:18",
+            "time": "1341523098",
             "type": "mink-driver",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Behat\\Mink\\Driver": "src/"
@@ -247,26 +247,26 @@
         },
         {
             "name": "behat/mink-selenium2-driver",
-            "version": "v1.0.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/Behat/MinkSelenium2Driver.git",
-                "reference": "v1.0.2"
+                "reference": "11fd094d7b5809b265cd336316d7e4ce7e4f5fe6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Behat/MinkSelenium2Driver/zipball/v1.0.2",
-                "reference": "v1.0.2",
+                "url": "https://github.com/Behat/MinkSelenium2Driver/zipball/11fd094d7b5809b265cd336316d7e4ce7e4f5fe6",
+                "reference": "11fd094d7b5809b265cd336316d7e4ce7e4f5fe6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "behat/mink": ">=1.4.0,<1.5.0",
-                "instaclick/php-webdriver": "@dev"
+                "instaclick/php-webdriver": "@dev",
+                "behat/mink": "1.4.*"
             },
-            "time": "2012-07-05 01:32:03",
+            "time": "1347022643",
             "type": "mink-driver",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Behat\\Mink\\Driver": "src/"
@@ -295,26 +295,26 @@
         },
         {
             "name": "behat/mink-zombie-driver",
-            "version": "v1.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "git://github.com/Behat/MinkZombieDriver.git",
-                "reference": "v1.0.0"
+                "reference": "da126d693af53daab1c7dd41b0053686fcd5e484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Behat/MinkZombieDriver/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://github.com/Behat/MinkZombieDriver/zipball/da126d693af53daab1c7dd41b0053686fcd5e484",
+                "reference": "da126d693af53daab1c7dd41b0053686fcd5e484",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "behat/mink": ">=1.4.0,<1.5.0-dev",
-                "symfony/process": ">=2.1.0,<2.2.0-dev"
+                "behat/mink": ">=1.4.0,<1.5.0",
+                "symfony/process": ">=2.1.0,<2.2.0"
             },
-            "time": "2012-06-18 13:15:02",
+            "time": "1347616700",
             "type": "mink-driver",
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Behat\\Mink\\Driver": "src/"
@@ -347,12 +347,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Goutte",
-                "reference": "7e87fd73ffd644ba0fe6c7ac01a9e1abd4105d99"
+                "reference": "70c036b3ffe33521b95b8223bf062ae007da619f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/fabpot/Goutte/archive/7e87fd73ffd644ba0fe6c7ac01a9e1abd4105d99.zip",
-                "reference": "7e87fd73ffd644ba0fe6c7ac01a9e1abd4105d99",
+                "url": "https://github.com/fabpot/Goutte/archive/70c036b3ffe33521b95b8223bf062ae007da619f.zip",
+                "reference": "70c036b3ffe33521b95b8223bf062ae007da619f",
                 "shasum": ""
             },
             "require": {
@@ -365,7 +365,7 @@
                 "ext-curl": "*",
                 "guzzle/guzzle": "3.0.*"
             },
-            "time": "2012-11-19 07:09:26",
+            "time": "1354541912",
             "type": "application",
             "extra": {
                 "branch-alias": {
@@ -394,112 +394,148 @@
             ]
         },
         {
-            "name": "guzzle/guzzle",
-            "version": "v3.0.5",
+            "name": "guzzle/common",
+            "version": "v2.8.8",
+            "target-dir": "Guzzle/Common",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/guzzle",
-                "reference": "v3.0.5"
+                "url": "git://github.com/guzzle/common.git",
+                "reference": "v2.8.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/guzzle/guzzle/archive/v3.0.5.zip",
-                "reference": "v3.0.5",
+                "url": "https://github.com/guzzle/common/zipball/v2.8.8",
+                "reference": "v2.8.8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2",
-                "ext-curl": "*",
                 "symfony/event-dispatcher": "2.1.*"
             },
-            "replace": {
-                "guzzle/batch": "self.version",
-                "guzzle/cache": "self.version",
-                "guzzle/common": "self.version",
-                "guzzle/http": "self.version",
-                "guzzle/inflection": "self.version",
-                "guzzle/iterator": "self.version",
-                "guzzle/log": "self.version",
-                "guzzle/parser": "self.version",
-                "guzzle/plugin": "self.version",
-                "guzzle/plugin-async": "self.version",
-                "guzzle/plugin-backoff": "self.version",
-                "guzzle/plugin-cache": "self.version",
-                "guzzle/plugin-cookie": "self.version",
-                "guzzle/plugin-curlauth": "self.version",
-                "guzzle/plugin-history": "self.version",
-                "guzzle/plugin-log": "self.version",
-                "guzzle/plugin-md5": "self.version",
-                "guzzle/plugin-mock": "self.version",
-                "guzzle/plugin-oauth": "self.version",
-                "guzzle/service": "self.version",
-                "guzzle/stream": "self.version"
-            },
-            "require-dev": {
-                "doctrine/common": "*",
-                "symfony/class-loader": "*",
-                "monolog/monolog": "1.*",
-                "zendframework/zend-cache": "2.0.*",
-                "zendframework/zend-log": "2.0.*",
-                "zend/zend-log1": "1.12",
-                "zend/zend-cache1": "1.12",
-                "phpunit/phpunit": "3.7.*"
-            },
-            "time": "2012-11-19 00:15:33",
+            "time": "2012-10-15 17:42:47",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-0": {
-                    "Guzzle\\Tests": "tests/",
-                    "Guzzle": "src/"
+                    "Guzzle\\Common": ""
                 }
             },
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Michael Dowling",
-                    "email": "mtdowling@gmail.com",
-                    "homepage": "https://github.com/mtdowling"
-                },
-                {
-                    "name": "Guzzle Community",
-                    "homepage": "https://github.com/guzzle/guzzle/contributors"
-                }
-            ],
-            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "description": "Common libraries used by Guzzle",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
-                "framework",
-                "curl",
-                "http",
-                "rest",
-                "http client",
-                "client",
-                "web service"
+                "log",
+                "event",
+                "cache",
+                "validation",
+                "Socket",
+                "common",
+                "batch",
+                "inflection"
             ]
         },
         {
-            "name": "instaclick/php-webdriver",
-            "version": "1.0.9",
+            "name": "guzzle/http",
+            "version": "v2.8.8",
+            "target-dir": "Guzzle/Http",
             "source": {
                 "type": "git",
-                "url": "https://github.com/instaclick/php-webdriver",
-                "reference": "1.0.9"
+                "url": "git://github.com/guzzle/http.git",
+                "reference": "v2.8.8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/instaclick/php-webdriver/archive/1.0.9.zip",
-                "reference": "1.0.9",
+                "url": "https://github.com/guzzle/http/zipball/v2.8.8",
+                "reference": "v2.8.8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "guzzle/common": "self.version",
+                "guzzle/parser": "self.version"
+            },
+            "time": "2012-10-15 17:42:47",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Http": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "HTTP libraries used by Guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "curl",
+                "http",
+                "http client",
+                "client",
+                "Guzzle"
+            ]
+        },
+        {
+            "name": "guzzle/parser",
+            "version": "v2.8.8",
+            "target-dir": "Guzzle/Parser",
+            "source": {
+                "type": "git",
+                "url": "git://github.com/guzzle/parser.git",
+                "reference": "v2.8.8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/guzzle/parser/zipball/v2.8.8",
+                "reference": "v2.8.8",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
-            "time": "2012-11-20 19:48:34",
+            "time": "2012-09-20 13:28:06",
             "type": "library",
             "installation-source": "dist",
+            "autoload": {
+                "psr-0": {
+                    "Guzzle\\Parser": ""
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Interchangeable parsers used by Guzzle",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "http",
+                "url",
+                "message",
+                "cookie",
+                "URI Template"
+            ]
+        },
+        {
+            "name": "instaclick/php-webdriver",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/instaclick/php-webdriver",
+                "reference": "v1.0.6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/instaclick/php-webdriver/zipball/v1.0.6",
+                "reference": "v1.0.6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "time": "1345642676",
+            "type": "library",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "WebDriver": "lib/"
@@ -516,7 +552,7 @@
                 },
                 {
                     "name": "Anthon Pang",
-                    "email": "apang@softwaredevelopment.ca",
+                    "email": "anthonp@nationalfibre.net",
                     "role": "Fork Maintainer"
                 }
             ],
@@ -531,16 +567,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.2.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog",
-                "reference": "1.2.1"
+                "reference": "0f3dc95c4a0ed7d17bec237d07af3da6c0c1071a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/Seldaek/monolog/zipball/1.2.1",
-                "reference": "1.2.1",
+                "url": "https://github.com/Seldaek/monolog/zipball/0f3dc95c4a0ed7d17bec237d07af3da6c0c1071a",
+                "reference": "0f3dc95c4a0ed7d17bec237d07af3da6c0c1071a",
                 "shasum": ""
             },
             "require": {
@@ -554,14 +590,14 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server"
             },
-            "time": "2012-08-29 04:53:20",
+            "time": "1347363321",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.3.x-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Monolog": "src/"
@@ -587,16 +623,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.6",
+            "version": "1.2.7",
             "source": {
                 "type": "git",
                 "url": "git://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1.2.6"
+                "reference": "1.2.7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/php-code-coverage/zipball/1.2.6",
-                "reference": "1.2.6",
+                "url": "https://github.com/sebastianbergmann/php-code-coverage/archive/1.2.7.zip",
+                "reference": "1.2.7",
                 "shasum": ""
             },
             "require": {
@@ -609,7 +645,7 @@
                 "ext-dom": "*",
                 "ext-xdebug": ">=2.0.5"
             },
-            "time": "2012-10-16 22:34:13",
+            "time": "2012-12-02 14:54:55",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -818,16 +854,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.9",
+            "version": "3.7.10",
             "source": {
                 "type": "git",
                 "url": "git://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.9"
+                "reference": "3.7.10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/phpunit/archive/3.7.9.zip",
-                "reference": "3.7.9",
+                "url": "https://github.com/sebastianbergmann/phpunit/archive/3.7.10.zip",
+                "reference": "3.7.10",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +872,7 @@
                 "phpunit/php-text-template": ">=1.1.1",
                 "phpunit/php-code-coverage": ">=1.2.1",
                 "phpunit/php-timer": ">=1.0.2",
-                "phpunit/phpunit-mock-objects": ">=1.2.0",
+                "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
                 "symfony/yaml": ">=2.1.0",
                 "ext-dom": "*",
                 "ext-pcre": "*",
@@ -849,7 +885,7 @@
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*"
             },
-            "time": "2012-11-06 19:49:38",
+            "time": "2012-12-02 14:56:55",
             "bin": [
                 "composer/bin/phpunit"
             ],
@@ -938,17 +974,17 @@
         },
         {
             "name": "symfony/browser-kit",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/BrowserKit",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/BrowserKit",
-                "reference": "v2.1.3"
+                "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/BrowserKit/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/BrowserKit/zipball/v2.1.1",
+                "reference": "v2.1.1",
                 "shasum": ""
             },
             "require": {
@@ -962,14 +998,14 @@
             "suggest": {
                 "symfony/process": "2.1.*"
             },
-            "time": "2012-10-25 06:11:50",
+            "time": "1347274422",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\BrowserKit": ""
@@ -993,30 +1029,30 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.1.3",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console",
-                "reference": "v2.1.3"
+                "reference": "c8dc6870f1375b43dc8fe0df30bb47abc350076b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Console/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/Console/zipball/c8dc6870f1375b43dc8fe0df30bb47abc350076b",
+                "reference": "c8dc6870f1375b43dc8fe0df30bb47abc350076b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-10-22 07:37:12",
+            "time": "1346957130",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Console": ""
@@ -1040,30 +1076,30 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/CssSelector",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/CssSelector",
-                "reference": "v2.1.3"
+                "reference": "v2.1.0-RC2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/CssSelector/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/CssSelector/zipball/v2.1.0-RC2",
+                "reference": "v2.1.0-RC2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-10-04 08:17:57",
+            "time": "1345643321",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\CssSelector": ""
@@ -1087,17 +1123,17 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/DomCrawler",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/DomCrawler",
-                "reference": "v2.1.3"
+                "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/DomCrawler/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/DomCrawler/zipball/v2.1.1",
+                "reference": "v2.1.1",
                 "shasum": ""
             },
             "require": {
@@ -1109,14 +1145,14 @@
             "suggest": {
                 "symfony/css-selector": "2.1.*"
             },
-            "time": "2012-10-18 14:16:01",
+            "time": "1347274422",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\DomCrawler": ""
@@ -1140,17 +1176,17 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/EventDispatcher",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher",
-                "reference": "v2.1.3"
+                "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/EventDispatcher/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/EventDispatcher/zipball/v2.1.1",
+                "reference": "v2.1.1",
                 "shasum": ""
             },
             "require": {
@@ -1163,14 +1199,14 @@
                 "symfony/dependency-injection": "2.1.*",
                 "symfony/http-kernel": "2.1.*"
             },
-            "time": "2012-10-04 08:17:57",
+            "time": "1347274422",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\EventDispatcher": ""
@@ -1194,30 +1230,30 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder",
-                "reference": "v2.1.3"
+                "reference": "v2.1.0-RC2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Finder/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/Finder/zipball/v2.1.0-RC2",
+                "reference": "v2.1.0-RC2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-10-20 00:10:30",
+            "time": "1345643321",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Finder": ""
@@ -1241,30 +1277,30 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.1.3",
+            "version": "2.1.x-dev",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process",
-                "reference": "v2.1.3"
+                "reference": "v2.1.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Process/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/Process/zipball/v2.1.1",
+                "reference": "v2.1.1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-10-20 00:10:30",
+            "time": "1346330945",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
@@ -1288,30 +1324,30 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.1.3",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml",
-                "reference": "v2.1.3"
+                "reference": "826fe43a6e3b330d79e711d2fc02540af8d10f61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Yaml/zipball/v2.1.3",
-                "reference": "v2.1.3",
+                "url": "https://github.com/symfony/Yaml/zipball/826fe43a6e3b330d79e711d2fc02540af8d10f61",
+                "reference": "826fe43a6e3b330d79e711d2fc02540af8d10f61",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-10-29 04:15:41",
+            "time": "1346957130",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Yaml": ""
@@ -1339,18 +1375,18 @@
             "source": {
                 "type": "git",
                 "url": "git://github.com/videlalvaro/php-amqplib.git",
-                "reference": "bdf9f66dd918ffbb314c7ea0f810a39dcb25942e"
+                "reference": "6ce5a028496a5c68371bd571d47467c583d17154"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/videlalvaro/php-amqplib/archive/bdf9f66dd918ffbb314c7ea0f810a39dcb25942e.zip",
-                "reference": "bdf9f66dd918ffbb314c7ea0f810a39dcb25942e",
+                "url": "https://github.com/videlalvaro/php-amqplib/archive/6ce5a028496a5c68371bd571d47467c583d17154.zip",
+                "reference": "6ce5a028496a5c68371bd571d47467c583d17154",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-11-28 13:25:21",
+            "time": "1354633718",
             "type": "library",
             "installation-source": "source",
             "autoload": {

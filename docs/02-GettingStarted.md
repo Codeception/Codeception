@@ -23,7 +23,7 @@ Let's say, we created a file `tests/acceptance/SigninCept.php`
 We can do that by running command:
 
 ```
-$ php codecept.phar generate:cept Signin
+$ php codecept.phar generate:cept acceptance Signin
 ```
 
 ``` php
