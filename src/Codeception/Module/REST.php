@@ -83,10 +83,14 @@ class REST extends \Codeception\Module
                 'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
             );
             $context = stream_context_create($options);
-            $url = $this->config['url'] . '/c3/report/html';
+            $url = $this->config['url'] . '/c3/report/';
+
+            /**
+             * Get html code coverage report
+             */
 
             $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
-            file_put_contents($tempFile, file_get_contents($url, null, $context));
+            file_put_contents($tempFile, file_get_contents($url . 'html', null, $context));
 
             $destDir = \Codeception\Configuration::logDir() . 'codecoverage';
 
@@ -100,6 +104,14 @@ class REST extends \Codeception\Module
             $phar->extractTo($destDir);
 
             unlink($tempFile);
+
+            /**
+             * Get clover code coverage report
+             */
+
+            $destFile = \Codeception\Configuration::logDir() . 'codeception.clover.xml';
+
+            file_put_contents($destFile, file_get_contents($url . 'clover', null, $context));
         }
     }
 

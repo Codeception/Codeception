@@ -16,7 +16,11 @@ class FileSystem
 
         foreach ($iterator as $path) {
             if ($path->isDir()) {
-                rmdir($path->__toString());
+                $dir = (string) $path;
+                if (basename($dir) === '.' || basename($dir) === '..') {
+                    continue;
+                }
+                rmdir($dir);
             } else {
                 unlink($path->__toString());
             }
