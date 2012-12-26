@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "2.0.0";
+    const VERSION = "1.5.0";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -119,15 +119,14 @@ class Codecept
         $result->flushListeners();
         $this->runner->getPrinter()->printResult($result);
 
+        $this->coverage->printText($this->runner->getPrinter());
         if ($this->options['xml']) $this->coverage->printXml();
         if ($this->options['html']) $this->coverage->printHtml();
-        $this->coverage->printText($this->runner->getPrinter());
     }
 
     /**
      * @return \PHPUnit_Framework_TestResult
-     */
-    public function getResult()
+     */    public function getResult()
     {
         return $this->result;
     }
