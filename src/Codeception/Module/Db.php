@@ -88,7 +88,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
                     Please, check path for sql file: " . $this->config['dump']);
             }
             $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
-            $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+            $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
             $this->sql = explode("\n", $sql);
         }
 
