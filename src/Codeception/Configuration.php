@@ -21,11 +21,11 @@ class Configuration
 
         if ($config === null) {
             $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-            $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-            $config = array_merge($distConfig, $config);
         } else {
             $config = file_exists($config) ? Yaml::parse($config) : array();
         }
+        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
+        $config = array_merge($distConfig, $config);
 
         if (empty($config)) throw new \Codeception\Exception\Configuration("Configuration file is invalid");
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
