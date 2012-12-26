@@ -13,11 +13,11 @@ class CodeCoverage
     /**
      * @var \PHP_CodeCoverage
      */
-    protected $coverage = null;
+    protected $phpCodeCoverage = null;
 
     protected $config;
 
-    function __construct()
+    function __construct(\PHP_CodeCoverage $phpCoverage = null)
     {
         $this->config = \Codeception\Configuration::config();
         if (!isset($this->config['coverage'])) {
@@ -29,18 +29,29 @@ class CodeCoverage
         }
         if (!$this->enabled) return;
 
-        $filter = new \PHP_CodeCoverage_Filter();
+        $this->phpCodeCoverage = $phpCoverage
+            ? $phpCoverage
+            : new \PHP_CodeCoverage;
+
+        $filter = $this->phpCodeCoverage->filter();
+
         $this->filterWhiteList($filter);
         $this->filterBlackList($filter);
         $this->applySettings();
+    }
 
-        $this->coverage = new \PHP_CodeCoverage(null, $filter);
+    /**
+     * @return null|\PHP_CodeCoverage
+     */
+    public function getPhpCodeCoverage()
+    {
+        return $this->phpCodeCoverage;
     }
 
     public function attachToResult(\PHPUnit_Framework_TestResult $result)
     {
         if (!$this->enabled) return;
-        $result->setCodeCoverage($this->coverage);
+        $result->setCodeCoverage($this->phpCodeCoverage);
     }
 
     public function printText($printer)
@@ -49,7 +60,7 @@ class CodeCoverage
         $writer = new \PHP_CodeCoverage_Report_Text(
             $printer, $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
         );
-        $writer->process($this->coverage, $this->config['settings']['colors']);
+        $writer->process($this->phpCodeCoverage, $this->config['settings']['colors']);
     }
 
     function printHtml()
@@ -65,14 +76,14 @@ class CodeCoverage
         );
 
         @mkdir(Configuration::logDir().'coverage');
-        $writer->process($this->coverage, Configuration::logDir().'coverage');
+        $writer->process($this->phpCodeCoverage, Configuration::logDir().'coverage');
     }
 
     public function printXml()
     {
         if (!$this->enabled) return;
         $writer = new \PHP_CodeCoverage_Report_Clover;
-        $writer->process($this->coverage, Configuration::logDir().'coverage.xml');
+        $writer->process($this->phpCodeCoverage, Configuration::logDir().'coverage.xml');
     }
 
     protected function filterWhiteList(\PHP_CodeCoverage_Filter $filter)
