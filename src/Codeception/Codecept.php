@@ -47,19 +47,19 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
-        'coverage' => false
     );
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->runner = new \Codeception\PHPUnit\Runner();
 
+        $this->config = \Codeception\Configuration::config($options['config']);
+        $this->options = $this->mergeOptions($options);
+
         $this->coverage = new \Codeception\CodeCoverage();
         $this->coverage->attachToResult($this->result);
 
         $this->dispatcher = new EventDispatcher();
-        $this->config = \Codeception\Configuration::config($options['config']);
-        $this->options = $this->mergeOptions($options);
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
         $this->registerListeners();
@@ -91,6 +91,7 @@ class Codecept
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
     }
 
     public function runSuite($suite, $test = null) {
