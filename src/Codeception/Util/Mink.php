@@ -1,12 +1,13 @@
 <?php
 namespace Codeception\Util;
 
-abstract class Mink extends \Codeception\Module
+abstract class Mink extends \Codeception\Module implements \Codeception\Util\RemoteInterface
 {
     /**
      * @var \Behat\Mink\Session
      */
     public $session = null;
+
 
     public function _initialize() {
         if (!$this->session) throw new \Codeception\Exception\Module(__CLASS__, "Module is not initialized. Mink session is not started in _initialize method of module.");;
@@ -24,6 +25,12 @@ abstract class Mink extends \Codeception\Module
 
     public function _after(\Codeception\TestCase $test) {
         if ($this->session) $this->session->stop();
+    }
+
+    public function _getUrl()
+    {
+        if (!isset($this->config['url']))
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Module connection failure. The URL for client can't bre retrieved");
     }
 
     /**
@@ -420,5 +427,6 @@ abstract class Mink extends \Codeception\Module
     {
         return $string;
     }
+
 
 }

@@ -8,7 +8,7 @@ class CodeCoverage
     protected $enabled = false;
 
     // defaults
-    protected $settings = array('low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false);
+    protected $settings = array('low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false, 'remote' => false);
 
     /**
      * @var \PHP_CodeCoverage
@@ -24,8 +24,6 @@ class CodeCoverage
             $this->enabled = false;
         } elseif (isset($this->config['coverage']['enabled'])) {
             $this->enabled = (boolean)$this->config['coverage']['enabled'];
-        } else {
-            $this->enabled = true;
         }
         if (!$this->enabled) return;
 
@@ -46,6 +44,11 @@ class CodeCoverage
     public function getPhpCodeCoverage()
     {
         return $this->phpCodeCoverage;
+    }
+
+    public function isEnabled()
+    {
+        return $this->enabled;
     }
 
     public function attachToResult(\PHPUnit_Framework_TestResult $result)
@@ -178,6 +181,4 @@ class CodeCoverage
             }
         }
     }
-
-
 }
