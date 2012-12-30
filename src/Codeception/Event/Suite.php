@@ -7,10 +7,13 @@ class Suite extends Event
 {
     protected $suite;
     protected $result;
+    protected $settings;
 
-    public function __construct(\PHPUnit_Framework_TestSuite $suite, \PHPUnit_Framework_TestResult $result = null) {
+
+    public function __construct(\PHPUnit_Framework_TestSuite $suite, $settings = array(), \PHPUnit_Framework_TestResult $result = null) {
         $this->suite = $suite;
         $this->result = $result;
+        $this->settings = $settings;
     }
 
     /**
@@ -28,6 +31,10 @@ class Suite extends Event
         return $this->result;
     }
 
+    public function getSettings()
+    {
+        return $this->settings;
+    }
 
 
 }

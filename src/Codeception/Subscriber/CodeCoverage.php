@@ -2,6 +2,7 @@
 namespace Codeception\Subscriber;
 
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Codeception\Configuration;
 
 /**
  * Retrieves CodeCoverage data from remote server
@@ -12,97 +13,141 @@ class CodeCoverage implements EventSubscriberInterface
     /**
      * @var \Codeception\Util\RemoteInterface
      */
-    protected $client = null;
     protected $coverage = null;
     protected $options = array();
 
-    function __construct(\Codeception\CodeCoverage $coverage, $options = array())
+    protected $enabled = null;
+    protected $remote = null;
+    protected $module = null;
+
+    // defaults
+    protected $settings = array('enabled' => false, 'remote' => false, 'low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false);
+
+
+    function __construct($options = array())
     {
-        $this->coverage = $coverage;
         $this->options = $options;
+        $this->coverage = new \PHP_CodeCoverage();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function getRemoteConnectionModule()
+    {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            if ($module instanceof \Codeception\Util\RemoteInterface) {
+                return $module;
+            }
+        }
+        return null;
     }
 
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
-        // if not disabled
-        $settings = \Codeception\Configuration::suiteSettings($e->getSuite()->getName(), \Codeception\Configuration::config());
+        $settings = $e->getSettings();
+        $this->applySettings($settings);
 
-        if (isset($settings['coverage'])) {
-            if (isset($settings['coverage']['enabled'])) {
-                if (!$settings['coverage']['enabled']) $e->getResult()->setCodeCoverage(null);
-            }
-        }
+        $e->getResult()->setCodeCoverage(null);
 
+        if (!$this->enabled or $this->remote) return;
 
+        \Codeception\CodeCoverageSettings::setup($this->coverage)
+            ->filterWhiteList($settings)
+            ->filterBlackList($settings);
+
+        $e->getResult()->setCodeCoverage($this->coverage);
     }
 
+    /**
+     * merge local code coverages
+     * skip code coverage on remote server
+     * fetch and merge
+     *
+     * @param \Codeception\Event\Suite $e
+     */
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        if (!$this->coverage->isRemote()) return;
-        foreach (\Codeception\SuiteManager::$modules as $module) {
-            if ($module instanceof \Codeception\Util\RemoteInterface) {
-                $this->client = $module;
-            }
+        if (!$this->enabled or $this->remote) return;
 
-        }
-        if (!$this->client) return;
+        $coverage = $e->getResult()->getCodeCoverage();
 
-        $suite = $e->getName();
+        $remoteModule = $this->getRemoteConnectionModule();
+        if (!$remoteModule) {
+            $this->coverage->merge($coverage);
+            return;
+        };
 
-        // if remote && html -> print html
-        // if remote && clover -> print xml
-        // if local -> merge
+        $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
+        if (!$externalCoverage) return;
+        $coverage = unserialize($externalCoverage);
+        $this->coverage->merge($coverage);
+    }
 
-        // Create a stream
-        $options = array(
-            'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
+    protected function getRemoteCoverageFile($module, $type)
+    {
+        $headers = array('http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n"));
+        $context = stream_context_create($headers);
+        $url = $module->_getUrl() . '/c3/report/'.$type;
+        return file_get_contents($url, null, $context);
+    }
+
+
+    public function printResult(\Codeception\Event\PrintResult $e)
+    {
+        $this->printText($e->getPrinter());
+        if ($this->options['html']) $this->printHtml();
+        if ($this->options['xml']) $this->printXml();
+    }
+
+    protected function printText($printer)
+    {
+
+        $writer = new \PHP_CodeCoverage_Report_Text(
+            $printer, $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
+        );
+        $writer->process($this->phpCodeCoverage, $this->config['settings']['colors']);
+    }
+
+    protected function printHtml()
+    {
+        $writer = new \PHP_CodeCoverage_Report_HTML(
+            'UTF-8',
+            true,
+            $this->settings['low_limit'],
+            $this->settings['high_limit'],
+            sprintf(', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>', \PHPUnit_Runner_Version::id()
+            )
         );
 
-        if ($this->coverage->isLocal()) {
-
-            return;
-        }
-
-        if ($this->options['xml']) $this->retrieveAndPrintXml($suite, $options);
-        if ($this->options['html']) $this->retrieveAndPrintHtml($suite, $options);
-    }
-
-    protected function mergeLocal()
-    {
-
-    }
-
-    protected function retrieveAndPrintHtml($suite, $headers)
-    {
-        $context = stream_context_create($headers);
-        $url = $this->client->_getUrl() . '/c3/report/html';
-
-        $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
-        file_put_contents($tempFile, file_get_contents($url, null, $context));
-
-        $destDir = \Codeception\Configuration::logDir() . $suite . '.remote.codecoverage';
-
-        if (!is_dir($destDir)) {
-            mkdir($destDir, 0777, true);
-        } else {
-            \Codeception\Util\FileSystem::doEmptyDir($destDir);
-        }
-
-        $phar = new \PharData($tempFile);
-        $phar->extractTo($destDir);
-
-        unlink($tempFile);
+        @mkdir(Configuration::logDir() . 'coverage');
+        $writer->process($this->coverage, Configuration::logDir() . 'coverage');
     }
 
     protected function printXml()
     {
+        $writer = new \PHP_CodeCoverage_Report_Clover;
+        $writer->process($this->coverage, Configuration::logDir() . 'coverage.xml');
+    }
 
+    protected function applySettings($settings)
+    {
+        $keys = array_keys($this->settings);
+        foreach ($keys as $key) {
+            if (isset($config['coverage'][$key])) {
+                $this->settings[$key] = $settings['coverage'][$key];
+            }
+        }
+        $this->enabled = $this->settings['enabled'];
+        $this->remote = $this->settings['remote'];
     }
 
     static function getSubscribedEvents()
     {
         return array(
+            'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
+            'result.print.after' => 'printResult'
         );
     }
 

@@ -66,16 +66,26 @@ class Db
 
     public function load($sql)
     {
-        $query = "";
-        foreach ($sql as $sql_line) {
+        $query           = '';
+        $delimiter       = ';';
+        $delimiterLength = 1;
 
-            $parsed = $this->sqlLine($sql_line);
-            if ($parsed) continue;
+        foreach ($sql as $sqlLine) {
+            if (preg_match('/DELIMITER ([\;\$\|\\\\]+)/i', $sqlLine, $match)) {
+                $delimiter       = $match[1];
+                $delimiterLength = strlen($delimiter);
+                continue;
+            }
 
-            $query .= $sql_line;
+            $parsed = $this->sqlLine($sqlLine);
+            if ($parsed) {
+                continue;
+            }
 
-            if (substr(rtrim($query), -1, 1) == ';') {
-                $this->sqlQuery($query);
+            $query .= rtrim($sqlLine);
+
+            if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
+                $this->sqlQuery(substr($query, 0, - 1 * $delimiterLength));
                 $query = "";
             }
         }
