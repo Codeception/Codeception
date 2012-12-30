@@ -2,40 +2,37 @@
 namespace Codeception;
 use \Symfony\Component\Finder\Finder;
 
-class CodeCoverage
+class CodeCoverageSettings
 {
-
-    protected $enabled = false;
-
-    // defaults
-    protected $settings = array('low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false, 'remote' => false);
 
     /**
      * @var \PHP_CodeCoverage
      */
     protected $phpCodeCoverage = null;
 
-    protected $config;
+    /**
+     * @var CodeCoverageSettings
+     */
+    protected static $c3;
 
-    function __construct(\PHP_CodeCoverage $phpCoverage = null)
+    /**
+     * @var \PHP_CodeCoverage_Filter
+     */
+    protected $filter = null;
+
+    function __construct($phpCoverage)
     {
-        $this->config = \Codeception\Configuration::config();
-        if (!isset($this->config['coverage'])) {
-            $this->enabled = false;
-        } elseif (isset($this->config['coverage']['enabled'])) {
-            $this->enabled = (boolean)$this->config['coverage']['enabled'];
-        }
-        if (!$this->enabled) return;
-
         $this->phpCodeCoverage = $phpCoverage
             ? $phpCoverage
             : new \PHP_CodeCoverage;
 
-        $filter = $this->phpCodeCoverage->filter();
+        $this->filter = $this->phpCodeCoverage->filter();
+    }
 
-        $this->filterWhiteList($filter);
-        $this->filterBlackList($filter);
-        $this->applySettings();
+    public static function setup(\PHP_CodeCoverage $phpCoverage)
+    {
+        self::$c3 = new self($phpCoverage);
+        return self::$c3;
     }
 
     /**
@@ -46,52 +43,9 @@ class CodeCoverage
         return $this->phpCodeCoverage;
     }
 
-    public function isEnabled()
+    public function filterWhiteList($config)
     {
-        return $this->enabled;
-    }
-
-    public function attachToResult(\PHPUnit_Framework_TestResult $result)
-    {
-        if (!$this->enabled) return;
-        $result->setCodeCoverage($this->phpCodeCoverage);
-    }
-
-    public function printText($printer)
-    {
-        if (!$this->enabled) return;
-        $writer = new \PHP_CodeCoverage_Report_Text(
-            $printer, $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
-        );
-        $writer->process($this->phpCodeCoverage, $this->config['settings']['colors']);
-    }
-
-    function printHtml()
-    {
-        if (!$this->enabled) return;
-        $writer = new \PHP_CodeCoverage_Report_HTML(
-          'UTF-8',
-          true,
-          $this->settings['low_limit'],
-          $this->settings['high_limit'],
-          sprintf(', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>', \PHPUnit_Runner_Version::id()
-          )
-        );
-
-        @mkdir(Configuration::logDir().'coverage');
-        $writer->process($this->phpCodeCoverage, Configuration::logDir().'coverage');
-    }
-
-    public function printXml()
-    {
-        if (!$this->enabled) return;
-        $writer = new \PHP_CodeCoverage_Report_Clover;
-        $writer->process($this->phpCodeCoverage, Configuration::logDir().'coverage.xml');
-    }
-
-    protected function filterWhiteList(\PHP_CodeCoverage_Filter $filter)
-    {
-        $config = $this->config;
+        $filter = $this->filter;
         $coverage = $config['coverage'];
         if (!isset($coverage['whitelist'])) {
             $coverage['whitelist'] = array();
@@ -121,11 +75,12 @@ class CodeCoverage
                 }
             }
         }
+        return $this;
     }
 
-    protected function filterBlackList(\PHP_CodeCoverage_Filter $filter)
+    public function filterBlackList($config)
     {
-        $config = $this->config;
+        $filter = $this->filter;
         $coverage = $config['coverage'];
         if (isset($coverage['blacklist'])) {
             if (isset($coverage['blacklist']['include'])) {
@@ -151,6 +106,7 @@ class CodeCoverage
                 }
             }
         }
+        return $this;
     }
 
     protected function matchWildcardPattern($pattern)
@@ -172,13 +128,4 @@ class CodeCoverage
         return $finder;
     }
 
-    protected function applySettings()
-    {
-        $keys = array_keys($this->settings);
-        foreach ($keys as $key) {
-            if (isset($this->config['coverage'][$key])) {
-                $this->settings[$key] = $this->config['coverage'][$key];
-            }
-        }
-    }
 }
