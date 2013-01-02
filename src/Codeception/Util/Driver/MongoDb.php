@@ -41,10 +41,15 @@ class MongoDb
         $this->host = rtrim(str_replace($this->dbName, '', $this->host), '/');
 
         $options = array(
-            'connect' => TRUE,
-            'username' => $user,
-            'password' => $password
+            'connect' => TRUE
         );
+
+        if ($user !== false && $password !== false) {
+            $options += array(
+                'username' => $user,
+                'password' => $password
+            );
+        }
 
         try {
             $m = new \Mongo($dsn, $options);
@@ -94,7 +99,11 @@ class MongoDb
      * @param $dumpFile
      */
     public function load($dumpFile) {
-        $cmd = sprintf('mongo %s --username %s --password %s %s', $this->host . '/' . $this->dbName, $this->user, $this->password, $dumpFile);
+        if ($this->user !== false && $this->password !== false ) {
+            $cmd = sprintf('mongo %s --username %s --password %s %s', $this->host . '/' . $this->dbName, $this->user, $this->password, $dumpFile);
+        } else {
+            $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, $dumpFile);
+        }
         shell_exec($cmd);
     }
 
