@@ -63,7 +63,6 @@ class Codecept
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
         $this->registerListeners();
-
     }
 
     private function mergeOptions($options) {
