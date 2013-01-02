@@ -29,6 +29,7 @@ class Run extends Base
             new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new \Symfony\Component\Console\Input\InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new \Symfony\Component\Console\Input\InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new \Symfony\Component\Console\Input\InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
             new \Symfony\Component\Console\Input\InputOption('no-exit', '', InputOption::VALUE_NONE, 'Dont\'t finish with exit code')
         ));
         parent::configure();

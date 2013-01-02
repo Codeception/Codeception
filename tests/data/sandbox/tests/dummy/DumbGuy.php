@@ -4,7 +4,7 @@
 
 use Codeception\Maybe;
 use Codeception\Module\Filesystem;
-use Codeception\Module\TestHelper;
+use Codeception\Module\DumbHelper;
 
 /**
  * Inherited methods
@@ -20,7 +20,7 @@ use Codeception\Module\TestHelper;
  * @method void lookForwardTo($role)
 */
 
-class TestGuy extends \Codeception\AbstractGuy
+class DumbGuy extends \Codeception\AbstractGuy
 {
     
     /**

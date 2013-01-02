@@ -6,6 +6,13 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
 {
     protected $options = array();
     protected $enabled = false;
+    protected $remote = false;
+
+    protected $settings = array('enabled' => false, 'remote' => false, 'xdebug_session' => 'codeception');
+
+    /**
+     * @var \Codeception\Util\RemoteInterface
+     */
     protected $module = null;
 
     function __construct($options)
@@ -13,12 +20,30 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $this->options = $options;
     }
 
-    public function afterSuite(\Codeception\Event\Suite $e)
+    public function beforeSuite(\Codeception\Event\Suite $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled or !$this->remote) return;
+        if (!$this->enabled) return;
 
         $this->module = $this->getRemoteConnectionModule();
+
+        if (function_exists('xdebug_is_enabled')
+            && xdebug_is_enabled()
+            && ini_get('xdebug.remote_enable')
+        ) {
+            $this->module->_setCookie('XDEBUG_SESSION', $this->settings['xdebug_session']);
+        }
+    }
+
+    public function beforeTest(\Codeception\Event\Test $e)
+    {
+        if (!$this->enabled or !$this->remote) return;
+        $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->toString());
+    }
+
+    public function afterSuite(\Codeception\Event\Suite $e)
+    {
+        if (!$this->enabled or !$this->remote) return;
 
         $suite = $e->getName();
         if ($this->options['xml']) $this->retrieveAndPrintXml($suite);
@@ -54,16 +79,20 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     {
         $keys = array_keys($this->settings);
         foreach ($keys as $key) {
-            if (isset($config['coverage'][$key])) {
+            if (isset($settings['coverage'][$key])) {
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
+        $this->enabled = $this->settings['enabled'];
+        $this->remote = $this->settings['remote'];
     }
 
     static function getSubscribedEvents()
     {
         return array(
             'suite.after' => 'afterSuite',
+            'suite.before' => 'beforeSuite',
+            'test.before' => 'beforeTest',
         );
     }
 }

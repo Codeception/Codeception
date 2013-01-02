@@ -47,6 +47,7 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
+        'coverage' => false
     );
 
     public function __construct($options = array()) {
@@ -88,8 +89,11 @@ class Codecept
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+
+        if ($this->options['coverage']) {
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+        }
     }
 
     public function runSuite($suite, $test = null) {
