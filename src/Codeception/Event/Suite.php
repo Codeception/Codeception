@@ -10,7 +10,7 @@ class Suite extends Event
     protected $settings;
 
 
-    public function __construct(\PHPUnit_Framework_TestSuite $suite, $settings = array(), \PHPUnit_Framework_TestResult $result = null) {
+    public function __construct(\PHPUnit_Framework_TestSuite $suite, \PHPUnit_Framework_TestResult $result = null, $settings = array()) {
         $this->suite = $suite;
         $this->result = $result;
         $this->settings = $settings;

@@ -31,6 +31,17 @@ abstract class Mink extends \Codeception\Module implements \Codeception\Util\Rem
     {
         if (!isset($this->config['url']))
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Module connection failure. The URL for client can't bre retrieved");
+        return $this->config['url'];
+    }
+
+    public function _setHeader($header, $value)
+    {
+        $this->session->setRequestHeader($header, $value);
+    }
+
+    public function _setCookie($cookie, $value)
+    {
+        $this->session->setCookie($cookie, $value);
     }
 
     /**

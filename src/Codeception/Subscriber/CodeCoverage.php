@@ -31,7 +31,7 @@ class CodeCoverage implements EventSubscriberInterface
     }
 
     /**
-     * @return bool
+     * @return \Codeception\Util\RemoteInterface|null
      */
     protected function getRemoteConnectionModule()
     {
@@ -48,7 +48,7 @@ class CodeCoverage implements EventSubscriberInterface
         $settings = $e->getSettings();
         $this->applySettings($settings);
 
-        $e->getResult()->setCodeCoverage(null);
+        $e->getResult()->setCodeCoverage(new \Codeception\PHPUnit\DummyCodeCoverage);
 
         if (!$this->enabled or $this->remote) return;
 
@@ -95,6 +95,7 @@ class CodeCoverage implements EventSubscriberInterface
 
     public function printResult(\Codeception\Event\PrintResult $e)
     {
+        if ($this->options['steps']) return;
         $this->printText($e->getPrinter());
         if ($this->options['html']) $this->printHtml();
         if ($this->options['xml']) $this->printXml();
@@ -102,11 +103,10 @@ class CodeCoverage implements EventSubscriberInterface
 
     protected function printText($printer)
     {
-
         $writer = new \PHP_CodeCoverage_Report_Text(
             $printer, $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
         );
-        $writer->process($this->phpCodeCoverage, $this->config['settings']['colors']);
+        $writer->process($this->coverage, $this->options['colors']);
     }
 
     protected function printHtml()
@@ -134,7 +134,7 @@ class CodeCoverage implements EventSubscriberInterface
     {
         $keys = array_keys($this->settings);
         foreach ($keys as $key) {
-            if (isset($config['coverage'][$key])) {
+            if (isset($settings['coverage'][$key])) {
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }

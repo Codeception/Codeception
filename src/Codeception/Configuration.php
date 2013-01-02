@@ -88,6 +88,10 @@ class Configuration
     {
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
         $globalConf = $config['settings'];
+        $globalConf['coverage'] = isset($config['coverage'])
+            ? $config['coverage']
+            : array();
+
         $moduleConf = array('modules' => isset($config['modules']) ? $config['modules'] : array());
         $path = $config['paths']['tests'];
 
