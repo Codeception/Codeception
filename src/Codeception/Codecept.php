@@ -51,19 +51,22 @@ class Codecept
     );
 
     public function __construct($options = array()) {
-        $this->result = new \PHPUnit_Framework_TestResult;
-        $this->runner = new \Codeception\PHPUnit\Runner();
+        try {
+            $this->result = new \PHPUnit_Framework_TestResult;
+            $this->runner = new \Codeception\PHPUnit\Runner();
 
-        $this->coverage = new \Codeception\CodeCoverage();
-        $this->coverage->attachToResult($this->result);
+            $this->coverage = new \Codeception\CodeCoverage();
+            $this->coverage->attachToResult($this->result);
 
-        $this->dispatcher = new EventDispatcher();
-        $this->config = \Codeception\Configuration::config($options['config']);
-        $this->options = $this->mergeOptions($options);
-        $this->path = $this->config['paths']['tests'];
-        $this->registerSubscribers();
-        $this->registerListeners();
-
+            $this->dispatcher = new EventDispatcher();
+            $this->config = \Codeception\Configuration::config($options['config']);
+            $this->options = $this->mergeOptions($options);
+            $this->path = $this->config['paths']['tests'];
+            $this->registerSubscribers();
+            $this->registerListeners();
+        } catch(\Codeception\Exception\Configuration $e) {
+            var_dump($e->getTrace());
+        }
     }
 
     private function mergeOptions($options) {
