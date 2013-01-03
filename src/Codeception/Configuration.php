@@ -77,7 +77,10 @@ class Configuration
     {
         if (!self::$logDir) throw new \Codeception\Exception\Configuration("Path for logs not specified. Please, set log path in global config");
         $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
-        if (!is_writable($dir)) throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        if (!is_writable($dir)) @mkdir($dir);
+        if (!is_writable($dir)) {
+            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        }
         return $dir;
     }
 

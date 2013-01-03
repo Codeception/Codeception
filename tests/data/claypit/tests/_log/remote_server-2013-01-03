@@ -13,3 +13,9 @@
 [2013-01-03 02:38:53] DemoCept.php.INFO: am on page "/" [] []
 [2013-01-03 02:38:53] DemoCept.php.INFO: see "Welcome to test app" [] []
 [2013-01-03 02:38:53] DemoCept.php.INFO: PASSED [] []
+[2013-01-03 03:00:09] DemoCept.php.INFO: am on page "/" [] []
+[2013-01-03 03:00:09] DemoCept.php.INFO: see "Welcome to test app" [] []
+[2013-01-03 03:00:09] DemoCept.php.ALERT: 'Welcome to test app' in 1.
+Failed asserting that response contains "welcome to test app". Response was saved to 'log' directory. [] []
+[2013-01-03 03:00:09] DemoCept.php.INFO: # FAILED # [] []
+[2013-01-03 03:00:09] DemoCept.php.INFO: PASSED [] []
