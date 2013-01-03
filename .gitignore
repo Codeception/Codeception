@@ -1,5 +1,4 @@
 .idea
 tests/log
 composer.phar
-composer.lock
 vendor
