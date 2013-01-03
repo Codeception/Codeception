@@ -46,6 +46,7 @@ class CodeCoverageSettings
     public function filterWhiteList($config)
     {
         $filter = $this->filter;
+        if (!isset($config['coverage'])) return;
         $coverage = $config['coverage'];
         if (!isset($coverage['whitelist'])) {
             $coverage['whitelist'] = array();
@@ -81,6 +82,7 @@ class CodeCoverageSettings
     public function filterBlackList($config)
     {
         $filter = $this->filter;
+        if (!isset($config['coverage'])) return;
         $coverage = $config['coverage'];
         if (isset($coverage['blacklist'])) {
             if (isset($coverage['blacklist']['include'])) {

@@ -3,5 +3,7 @@ $I = new CliGuy($scenario);
 $I->wantTo('try generate remote codecoverage xml report');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run remote --coverage --xml');
-$I->seeFileFound('clover.xml','tests/data/log');
+$I->seeInShellOutput('Code Coverage Report');
+$I->seeInShellOutput('Methods: 100.00% ( 1/ 1)');
+$I->seeFileFound('coverage.xml','tests/_log');
 

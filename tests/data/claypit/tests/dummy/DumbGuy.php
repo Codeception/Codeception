@@ -24,7 +24,10 @@ class DumbGuy extends \Codeception\AbstractGuy
 {
     
     /**
+     * Enters a directory In local filesystem.
+     * Project root directory is used by default
      *
+     * @param $path
      * @see Filesystem::amInPath()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -41,7 +44,18 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Opens a file and stores it's content.
      *
+     * Usage:
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeInThisFile('codeception/codeception');
+     * ?>
+     * ```
+     *
+     * @param $filename
      * @see Filesystem::openFile()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -58,7 +72,15 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Deletes a file
      *
+     * ``` php
+     * <?php
+     * $I->deleteFile('composer.lock');
+     * ?>
+     * ```
+     *
+     * @param $filename
      * @see Filesystem::deleteFile()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -75,7 +97,15 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Deletes directory with all subdirectories
      *
+     * ``` php
+     * <?php
+     * $I->deleteDir('vendor');
+     * ?>
+     * ```
+     *
+     * @param $dirname
      * @see Filesystem::deleteDir()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -92,7 +122,16 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Copies directory with all contents
      *
+     * ``` php
+     * <?php
+     * $I->copyDir('vendor','old_vendor');
+     * ?>
+     * ```
+     *
+     * @param $src
+     * @param $dst
      * @see Filesystem::copyDir()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -109,7 +148,18 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks If opened file has `text` in it.
      *
+     * Usage:
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeInThisFile('codeception/codeception');
+     * ?>
+     * ```
+     *
+     * @param $text
      * @see Filesystem::seeInThisFile()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -126,7 +176,16 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks If opened file doesn't contain `text` in it
      *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeInThisFile('codeception/codeception');
+     * ?>
+     * ```
+     *
+     * @param $text
      * @see Filesystem::dontSeeInThisFile()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -143,7 +202,7 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
-     *
+     * Deletes a file
      * @see Filesystem::deleteThisFile()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -160,7 +219,17 @@ class DumbGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks if file exists in path.
+     * Opens a file when it's exists
      *
+     * ``` php
+     * <?php
+     * $I->seeFileFound('UserModel.php','app/models');
+     * ?>
+     * ```
+     *
+     * @param $filename
+     * @param string $path
      * @see Filesystem::seeFileFound()
      *
      * ! This method is generated. DO NOT EDIT. !

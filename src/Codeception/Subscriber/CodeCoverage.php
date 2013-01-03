@@ -86,12 +86,19 @@ class CodeCoverage implements EventSubscriberInterface
 
     protected function getRemoteCoverageFile($module, $type)
     {
-        $headers = array('http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n"));
+        $headers = array('http' => array('header' => "X-Codeception-CodeCoverage: remote-access\r\n"));
         $context = stream_context_create($headers);
         $url = $module->_getUrl() . '/c3/report/'.$type;
-        return file_get_contents($url, null, $context);
+        $contents = @file_get_contents($url, null, $context);
+        if ($contents === false) $this->getRemoteError($module);
+        return $contents;
     }
 
+    protected function getRemoteError($module)
+    {
+        $error = $module->_getResponseHeader('X-Codeception-CodeCoverage-Error');
+        if ($error) throw new \Codeception\Exception\RemoteException($error[0]);
+    }
 
     public function printResult(\Codeception\Event\PrintResult $e)
     {
@@ -132,6 +139,10 @@ class CodeCoverage implements EventSubscriberInterface
 
     protected function applySettings($settings)
     {
+        if (!function_exists('xdebug_is_enabled') or !xdebug_is_enabled())
+            throw new \Exception('XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini');
+
+
         $keys = array_keys($this->settings);
         foreach ($keys as $key) {
             if (isset($settings['coverage'][$key])) {
