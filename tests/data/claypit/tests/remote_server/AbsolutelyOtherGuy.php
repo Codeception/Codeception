@@ -21,7 +21,7 @@ use Codeception\Module\OtherHelper;
  * @method void lookForwardTo($role)
 */
 
-class OtherGuy extends \Codeception\AbstractGuy
+class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
 {
     
     /**

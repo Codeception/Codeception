@@ -7,8 +7,9 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     protected $options = array();
     protected $enabled = false;
     protected $remote = false;
+    protected $suite_name = "";
 
-    protected $settings = array('enabled' => false, 'remote' => false, 'xdebug_session' => 'codeception');
+    protected $settings = array('enabled' => false, 'remote' => false, 'xdebug_session' => 'codeception', 'remote_config' => '');
 
     /**
      * @var \Codeception\Util\RemoteInterface
@@ -25,27 +26,52 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $this->applySettings($e->getSettings());
         if (!$this->enabled) return;
 
+        $this->suite_name = $e->getSuite()->getName();
         $this->module = $this->getRemoteConnectionModule();
+        if (!$this->module) return;
 
-        if (function_exists('xdebug_is_enabled')
-            && xdebug_is_enabled()
-            && ini_get('xdebug.remote_enable')
-        ) {
-            $this->module->_setCookie('XDEBUG_SESSION', $this->settings['xdebug_session']);
+        if ($this->module and !ini_get('xdebug.remote_enable')) {
+            throw new \Exception('
+            To collect CodeCoverage for acceptance tests,
+            you need to enable xdebug remote option.
+            Please, update your php.ini file with line:
+            "xdebug.remote_enable=1"
+            ');
+        }
+
+        $knock = $this->getRemoteCoverageFile($this->module, 'clear');
+        if ($knock === false) {
+            throw new \Codeception\Exception\RemoteException('
+                Remote CodeCoverage error.
+                Check the file "c3.php" is included in your application.
+                We tried to access "/c3/report/clear" but this URI was not accessible.
+                You can review actual error messages in c3tmp dir.
+                '
+            );
         }
     }
 
-    public function beforeTest(\Codeception\Event\Test $e)
+    public function beforeStep(\Codeception\Event\Step $e)
     {
-        if (!$this->enabled or !$this->remote) return;
-        $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->toString());
+        if (!$this->module) return;
+        $this->module->_setCookie('XDEBUG_SESSION', $this->settings['xdebug_session']);
+        $this->module->_setHeader('X-Codeception-CodeCoverage', $this->suite_name);
+        if ($this->settings['remote_config'])
+            $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+    }
+
+    public function afterStep(\Codeception\Event\Step $e)
+    {
+        if (!$this->module) return;
+        $this->getRemoteError($this->module);
     }
 
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        if (!$this->enabled or !$this->remote) return;
+        if (!$this->module) return;
+        if (!$this->remote) return;
 
-        $suite = $e->getName();
+        $suite = $e->getSuite()->getName();
         if ($this->options['xml']) $this->retrieveAndPrintXml($suite);
         if ($this->options['html']) $this->retrieveAndPrintHtml($suite);
     }
@@ -55,7 +81,7 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
         file_put_contents($tempFile, $this->getRemoteCoverageFile($this->module, 'html'));
 
-        $destDir = \Codeception\Configuration::logDir() . $suite . '.remote.codecoverage';
+        $destDir = \Codeception\Configuration::logDir() . $suite . '.remote.coverage';
 
         if (!is_dir($destDir)) {
             mkdir($destDir, 0777, true);
@@ -71,7 +97,7 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
 
     protected function retrieveAndPrintXml($suite)
     {
-        $destFile = \Codeception\Configuration::logDir() . $suite . '.remote.codeception.xml';
+        $destFile = \Codeception\Configuration::logDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->getRemoteCoverageFile($this->module, 'clover'));
     }
 
@@ -83,7 +109,10 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
-        $this->enabled = $this->settings['enabled'];
+        $this->enabled = $this->settings['enabled']
+                    && function_exists('xdebug_is_enabled')
+                    && xdebug_is_enabled();
+
         $this->remote = $this->settings['remote'];
     }
 
@@ -92,7 +121,8 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         return array(
             'suite.after' => 'afterSuite',
             'suite.before' => 'beforeSuite',
-            'test.before' => 'beforeTest',
+            'step.before' => 'beforeStep',
+            'step.after' => 'afterStep',
         );
     }
 }

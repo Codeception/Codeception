@@ -44,6 +44,13 @@ abstract class Mink extends \Codeception\Module implements \Codeception\Util\Rem
         $this->session->setCookie($cookie, $value);
     }
 
+    public function _getResponseHeader($header)
+    {
+        $headers = $this->session->getResponseHeaders();
+        if (!isset($headers[$header])) return false;
+        return $headers[$header];
+    }
+
     /**
      * Opens the page.
      *

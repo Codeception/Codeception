@@ -8,4 +8,5 @@ class OtherHelper extends \Codeception\Module
     {
         if (strpos(PHP_VERSION, '5.3')===0) $test->markTestSkipped();
     }
+
 }

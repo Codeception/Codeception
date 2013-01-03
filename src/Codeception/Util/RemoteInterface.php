@@ -9,4 +9,6 @@ interface RemoteInterface
 
     public function _setHeader($header, $value);
 
+    public function _getResponseHeader($header);
+
 }
