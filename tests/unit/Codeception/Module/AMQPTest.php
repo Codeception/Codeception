@@ -8,6 +8,7 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         'host'     => 'localhost',
         'username' => 'guest',
         'password' => 'guest',
+        'port' => '5672',
         'vhost'    => '/',
         'routes'   => array(
             array('exchange' => 'Test', 'queue' => 'Test')
@@ -23,11 +24,9 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
     {
         $this->module = new \Codeception\Module\AMQP;
         $this->module->_setConfig($this->config);
-        try {
-            stream_socket_client('tcp://localhost:5672');
-        } catch (\ErrorException $e) {
-            $this->markTestSkipped('AMQP is not running');
-        }
+        $res = stream_socket_client('tcp://localhost:5672');
+        if ($res === false) $this->markTestSkipped('AMQP is not running');
+
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
     }
