@@ -93,6 +93,10 @@ class ZombieJS extends \Codeception\Util\MinkJS
         exec('killall '.pathinfo($this->server->getNodeBin(),PATHINFO_BASENAME).' > /dev/null 2>&1');
     }
 
+    public function _getUrl() {
+        return 'http://'.$this->config['host'].':'.$this->config['port'];
+    }
+
     /**
      * @param string $url The URL to make HEAD request to
      * @return array Header-Name => Value array

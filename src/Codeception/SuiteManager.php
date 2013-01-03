@@ -154,9 +154,10 @@ class SuiteManager {
 
     
     public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
-        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
+
+        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));
         $runner->doEnhancedRun($this->suite, $result, $options);
-        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));
+        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite, $result, $this->settings));
     }
 
     public function loadTest($path) {

@@ -1,0 +1,11 @@
+class_name: AbsolutelyOtherGuy
+modules:
+    enabled: [PhpBrowser, Filesystem, OtherHelper]
+    config:
+        PhpBrowser:
+            url: http://localhost:8000
+coverage:
+    enabled: true
+    remote: true
+    include:
+        - '/../app/*'

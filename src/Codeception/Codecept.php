@@ -54,12 +54,10 @@ class Codecept
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->runner = new \Codeception\PHPUnit\Runner();
 
-        $this->coverage = new \Codeception\CodeCoverage();
-        $this->coverage->attachToResult($this->result);
-
-        $this->dispatcher = new EventDispatcher();
         $this->config = \Codeception\Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
+
+        $this->dispatcher = new EventDispatcher();
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
         $this->registerListeners();
@@ -90,6 +88,11 @@ class Codecept
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+
+        if ($this->options['coverage']) {
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+        }
     }
 
     public function runSuite($suite, $test = null) {
@@ -116,11 +119,11 @@ class Codecept
     public function printResult() {
         $result = $this->getResult();
         $result->flushListeners();
-        $this->runner->getPrinter()->printResult($result);
 
-        $this->coverage->printText($this->runner->getPrinter());
-        if ($this->options['xml']) $this->coverage->printXml();
-        if ($this->options['html']) $this->coverage->printHtml();
+        $printer = $this->runner->getPrinter();
+        $printer->printResult($result);
+
+        $this->dispatcher->dispatch('result.print.after', new \Codeception\Event\PrintResult($result, $printer));
     }
 
     /**
