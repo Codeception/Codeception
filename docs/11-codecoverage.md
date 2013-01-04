@@ -75,4 +75,45 @@ codecept run --coverage --xml --html
 XML and HTML reports are stored to the `_logs` directory. The best way to review report is to open `index.html` from `tests/_logs/coverage` in your browser.
 XML clover reports are used by IDEs (like PHPStorm) or Conitinious Integration servers (Like Jenkins).
 
+## Remote CodeCoverage
+
+If you run your application via Webserver (Apache, Nginx, PHP WebServer) you don't have a direct access to tested code, 
+so collecting coverage becomes a non-trivial task. The same goes to scripts that are tested on different node. 
+To get access to this code you need `xdebug` installed with `remote_enable` option turned on. 
+Codeception also requires a little spy to interact  with your application. As your application run standalone, 
+without even knowing it is being tested, a small file should be included in order to collecto coverage info. 
+
+This file is called `c3.php` and is [available on GitHub](https://github.com/Codeception/c3). 
+`c3.php` should be downloaded and included in your application in a very first line of it's from controller. 
+By sending special headers Codeception will command your appliaction when to start codecoverage collection and when to stop it.
+After the suite is finished, a report will be stored and Codeception will grab it from your application. 
+
+Please, follow installation instructions described in a [readme file](https://github.com/Codeception/c3).
+
+After the `c3.php` file is included in application you can start gather coverage. 
+In case you execute your application locally there is nothing to be changed in config.
+All codecoverage reports will be collected as usual and marged afterwards.
+Think of it: Codeception runs remote coverage in the same way as local. 
+
+It's never been easier to setup remote codecoverage for your application. In ay other framework. Really.
+
+But if you run tests on different server (or your webserver doesn't use code from current directory) a single option `remote` should be added to config.
+For example, let's turn on remote coverage for acceptance suite in `acceptance.suite.yml`
+
+```
+coverage:
+    enabled: true
+    remote: true
+```
+
+In this case remote Code Coverage results wont't be merged with local ones if this option is enabled. 
+Merging is possible only in case a remote and local file have th same path. 
+But in case of running tests on a remote server we are not sure of it.
+
+## Conclusion
+
+It's never been easier to setup local and remote code coverage. Just one config and one additional file to incldue! 
+**With Codeception you can easily genrate CodeCoverage reports for your Selenium tests** or PhpBrowser tests. Mixing reports for `acceptance`, `functional`, and `unit` suites provides 
+you the most complete information on which parts of your applications are tested and which are not.
+
 
