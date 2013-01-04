@@ -16,14 +16,14 @@ supports remote codecoverage as well as local.
 
 To enable codecoverge put these lines to the global configuration file `codeception.yml`:
 
-```
+``` yml
 coverage:
     enabled: true
 ```
 
 that's ok for now. But what files should be present in final coverage report? You can filter files by providing blacklist and whitelist filters.
 
-```
+``` yml
 coverage:
     enabled: true
     whitelist:
