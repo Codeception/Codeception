@@ -12,6 +12,7 @@ class Configuration
     protected static $logDir = null;
     protected static $dataDir = null;
     protected static $helpersDir = null;
+    protected static $testsDir = null;
 
     protected static $dir = null;
 
@@ -31,6 +32,7 @@ class Configuration
 
         if (empty($config)) throw new \Codeception\Exception\Configuration("Configuration file is invalid");
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
+        if (!isset($config['paths']['tests'])) throw new \Codeception\Exception\Configuration('Tests directory path is not defined');
         if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
         if (!isset($config['paths']['log'])) throw new \Codeception\Exception\Configuration('Log path is not defined');
 
