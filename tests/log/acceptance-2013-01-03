@@ -1,0 +1,432 @@
+[2013-01-03 01:59:20] Cli/BuildCept.php.INFO: run shell commmand "php codecept build" [] []
+[2013-01-03 01:59:21] Cli/BuildCept.php.INFO: see in shell output "generated sucessfully" [] []
+[2013-01-03 01:59:21] Cli/BuildCept.php.INFO: see file found "CodeGuy.php","tests/unit" [] []
+[2013-01-03 01:59:21] Cli/BuildCept.php.INFO: see file found "CliGuy.php","tests/acceptance" [] []
+[2013-01-03 01:59:21] Cli/BuildCept.php.INFO: see in this file "seeFileFound(" [] []
+[2013-01-03 01:59:21] Cli/BuildCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:21] Cli/GenerateCeptCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:21] Cli/GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept" [] []
+[2013-01-03 01:59:22] Cli/GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy" [] []
+[2013-01-03 01:59:22] Cli/GenerateCeptCept.php.INFO: see in this file "$I = new DumbGuy($scenario);" [] []
+[2013-01-03 01:59:22] Cli/GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-03 01:59:22] Cli/GenerateCeptCept.php.INFO: execute command "generate:cept dummy path/DummyCept" [] []
+[2013-01-03 01:59:23] Cli/GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy/path" [] []
+[2013-01-03 01:59:23] Cli/GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-03 01:59:23] Cli/GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept.php" [] []
+[2013-01-03 01:59:24] Cli/GenerateCeptCept.php.INFO: see file found "DummyCept.php" [] []
+[2013-01-03 01:59:24] Cli/GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-03 01:59:24] Cli/GenerateCeptCept.php.INFO: execute command "generate:cept dummy Dummy" [] []
+[2013-01-03 01:59:24] Cli/GenerateCeptCept.php.INFO: see file found "DummyCept.php" [] []
+[2013-01-03 01:59:24] Cli/GenerateCeptCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:24] Cli/GenerateCestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:24] Cli/GenerateCestCept.php.INFO: execute command "generate:cest dummy DummyClass" [] []
+[2013-01-03 01:59:25] Cli/GenerateCestCept.php.INFO: see file found "DummyClassCest.php" [] []
+[2013-01-03 01:59:25] Cli/GenerateCestCept.php.INFO: see in this file "$class = 'DummyClass'" [] []
+[2013-01-03 01:59:25] Cli/GenerateCestCept.php.INFO: see in this file "public function helloWorld" [] []
+[2013-01-03 01:59:25] Cli/GenerateCestCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:25] Cli/GenerateScenariosCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:25] Cli/GenerateScenariosCept.php.INFO: execute command "generate:scenarios dummy" [] []
+[2013-01-03 01:59:26] Cli/GenerateScenariosCept.php.INFO: see file found "File_Exists.txt","tests/_data/scenarios" [] []
+[2013-01-03 01:59:26] Cli/GenerateScenariosCept.php.INFO: see in this file "I WANT TO CHECK CONFIG EXISTS" [] []
+[2013-01-03 01:59:26] Cli/GenerateScenariosCept.php.INFO: see in this file "I see file found "codeception.yml"" [] []
+[2013-01-03 01:59:26] Cli/GenerateScenariosCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:26] Cli/GenerateSuiteCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:26] Cli/GenerateSuiteCept.php.INFO: execute command "generate:suite house HouseGuy" [] []
+[2013-01-03 01:59:27] Cli/GenerateSuiteCept.php.INFO: see file found "house.suite.yml" [] []
+[2013-01-03 01:59:27] Cli/GenerateSuiteCept.php.INFO: see in this file "class_name: HouseGuy" [] []
+[2013-01-03 01:59:27] Cli/GenerateSuiteCept.php.INFO: see file found "HouseHelper.php" [] []
+[2013-01-03 01:59:27] Cli/GenerateSuiteCept.php.INFO: see file found "_bootstrap.php","tests/house" [] []
+[2013-01-03 01:59:27] Cli/GenerateSuiteCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:27] Cli/GenerateTestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:27] Cli/GenerateTestCept.php.INFO: execute command "generate:test dummy Dummy" [] []
+[2013-01-03 01:59:28] Cli/GenerateTestCept.php.INFO: see file found "DummyTest.php" [] []
+[2013-01-03 01:59:28] Cli/GenerateTestCept.php.INFO: see in this file "class DummyTest extends \Codeception\TestCase\Test" [] []
+[2013-01-03 01:59:28] Cli/GenerateTestCept.php.INFO: see in this file "$this->dumbGuy" [] []
+[2013-01-03 01:59:28] Cli/GenerateTestCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:28] Cli/RunWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:28] Cli/RunWithHtmlCept.php.INFO: execute command "run --html" [] []
+[2013-01-03 01:59:28] Cli/RunWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 5.25Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(362)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(90)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(72)
+#6 /home/davert/Codeception/src/Codeception/TestCase.php(43)
+#7 /home/davert/Codeception/src/Codeception/Scenario.php(64)
+#8 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(211)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#10 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(95)
+#12 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(969)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(824)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(769)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#18 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#19 /home/davert/Codeception/src/Codeception/SuiteManager.php(159)
+#20 /home/davert/Codeception/src/Codeception/Codecept.php(111)
+#21 /home/davert/Codeception/src/Codeception/Command/Run.php(64)
+#22 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(239)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#25 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 2, Assertions: 1, Errors: 1. [] []
+[2013-01-03 01:59:28] Cli/RunWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 01:59:28] Cli/RunWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:28] Cli/RunWithJsonCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:28] Cli/RunWithJsonCept.php.INFO: execute command "run --json" [] []
+[2013-01-03 01:59:28] Cli/RunWithJsonCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 5.50Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(362)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(90)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(72)
+#6 /home/davert/Codeception/src/Codeception/TestCase.php(43)
+#7 /home/davert/Codeception/src/Codeception/Scenario.php(64)
+#8 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(211)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#10 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(95)
+#12 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(969)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(824)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(769)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#18 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#19 /home/davert/Codeception/src/Codeception/SuiteManager.php(159)
+#20 /home/davert/Codeception/src/Codeception/Codecept.php(111)
+#21 /home/davert/Codeception/src/Codeception/Command/Run.php(64)
+#22 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(239)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#25 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 2, Assertions: 1, Errors: 1. [] []
+[2013-01-03 01:59:28] Cli/RunWithJsonCept.php.INFO: # FAILED # [] []
+[2013-01-03 01:59:28] Cli/RunWithJsonCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:28] Cli/RunWithTapCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:28] Cli/RunWithTapCept.php.INFO: execute command "run --tap" [] []
+[2013-01-03 01:59:28] Cli/RunWithTapCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 5.00Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(362)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(90)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(72)
+#6 /home/davert/Codeception/src/Codeception/TestCase.php(43)
+#7 /home/davert/Codeception/src/Codeception/Scenario.php(64)
+#8 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(211)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#10 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(95)
+#12 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(969)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(824)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(769)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#18 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#19 /home/davert/Codeception/src/Codeception/SuiteManager.php(159)
+#20 /home/davert/Codeception/src/Codeception/Codecept.php(111)
+#21 /home/davert/Codeception/src/Codeception/Command/Run.php(64)
+#22 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(239)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#25 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 2, Assertions: 1, Errors: 1. [] []
+[2013-01-03 01:59:28] Cli/RunWithTapCept.php.INFO: # FAILED # [] []
+[2013-01-03 01:59:28] Cli/RunWithTapCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:28] Cli/RunWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:28] Cli/RunWithXmlCept.php.INFO: execute command "run --xml" [] []
+[2013-01-03 01:59:28] Cli/RunWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 5.50Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(362)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(90)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(72)
+#6 /home/davert/Codeception/src/Codeception/TestCase.php(43)
+#7 /home/davert/Codeception/src/Codeception/Scenario.php(64)
+#8 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(211)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#10 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(95)
+#12 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(969)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(824)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(769)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#18 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#19 /home/davert/Codeception/src/Codeception/SuiteManager.php(159)
+#20 /home/davert/Codeception/src/Codeception/Codecept.php(111)
+#21 /home/davert/Codeception/src/Codeception/Command/Run.php(64)
+#22 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(239)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#25 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 2, Assertions: 1, Errors: 1. [] []
+[2013-01-03 01:59:28] Cli/RunWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 01:59:28] Cli/RunWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 01:59:28] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 01:59:28] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 01:59:29] Coverage/RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite remote started [] []
+[2013-01-03 01:59:29] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 01:59:29] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:01:57] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:01:57] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:01:57] Coverage/RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite remote started [] []
+[2013-01-03 02:01:57] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:01:57] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:07:21] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:07:21] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:07:22] Coverage/RemoteWithXmlCept.php.INFO: see file found "clover.xml","tests/data/log" [] []
+[2013-01-03 02:07:22] Coverage/RemoteWithXmlCept.php.ALERT: Directory does not exist: /home/davert/Codeception//tests/data/sandbox/tests/data/log [] []
+[2013-01-03 02:07:22] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:07:22] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.INFO: see file found "clover.xml","tests/_data/log" [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.ALERT: Directory does not exist: /home/davert/Codeception//tests/data/sandbox/tests/_data/log [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:07:45] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.INFO: see file found "clover.xml","tests/_data/log" [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.ALERT: Directory does not exist: /home/davert/Codeception//tests/data/sandbox/tests/_data/log [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:09:20] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:10:41] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:10:41] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:10:41] Coverage/RemoteWithXmlCept.php.INFO: see file found "coverage.xml","tests/_log" [] []
+[2013-01-03 02:10:41] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Code Coverage Report" [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Methods: 100.00% ( 1/ 1)" [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: see file found "coverage.xml","tests/_log" [] []
+[2013-01-03 02:13:17] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:13:22] Coverage/RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:13:22] Coverage/RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-01-03 02:13:22] Coverage/RemoteWithHtmlCept.php.INFO: see file found "index.html","tests/_log/coverage" [] []
+[2013-01-03 02:13:22] Coverage/RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.ALERT: remote_server.remote.codeception.xml in /home/davert/Codeception//tests/data/sandbox/tests/_log [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:33:50] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:35:01] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:35:01] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:35:02] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:35:02] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:36:40] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:36:40] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:36:41] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:36:41] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:36:45] Coverage/RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:36:45] Coverage/RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-01-03 02:36:46] Coverage/RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite remote_server started
+Running DemoCept.php - Ok [] []
+[2013-01-03 02:36:46] Coverage/RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:36:46] Coverage/RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:37:17] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:37:17] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:37:17] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:37:17] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:37:47] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:37:47] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:37:47] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:37:47] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:37:59] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:37:59] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:38:00] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:38:00] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "<coverage generated" [] []
+[2013-01-03 02:38:00] Coverage/RemoteServerWithXmlCept.php.ALERT: text <coverage generated in currently opened file
+Failed asserting that '' contains "<coverage generated". [] []
+[2013-01-03 02:38:00] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:38:00] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:38:18] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:38:36] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:38:59] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.codeception.xml","tests/_log" [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:39:27] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.coverage.xml","tests/_log" [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 02:47:19] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 03:38:52] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 03:38:52] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 03:38:52] Coverage/RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite remote_server started [] []
+[2013-01-03 03:38:52] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 03:38:52] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: see file found "remote_server.remote.coverage.xml","tests/_log" [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: see in this file "coverage generated" [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.ALERT: text coverage generated in currently opened file
+Failed asserting that '' contains "coverage generated". [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 03:49:29] Coverage/RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 03:51:03] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 03:51:03] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 03:51:04] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Code Coverage Report" [] []
+[2013-01-03 03:51:04] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Methods: 100.00% ( 1/ 1)" [] []
+[2013-01-03 03:51:04] Coverage/RemoteWithXmlCept.php.ALERT: Failed asserting that 'Codeception PHP Testing Framework v1.5.0
+Powered by PHPUnit 3.7.10 by Sebastian Bergmann.
+
+Suite remote started
+Running DemoCept.php - Ok
+
+
+Time: 0 seconds, Memory: 6.00Mb
+
+OK (1 test, 1 assertion)
+
+
+Code Coverage Report
+  2013-01-03 03:51:03
+
+ Summary:
+  Classes: 0.00% (0/6)
+  Methods: 0.00% (0/14)
+  Lines:   0.00% (0/297)
+' contains "Methods: 100.00% ( 1/ 1)". [] []
+[2013-01-03 03:51:04] Coverage/RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-03 03:51:04] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-01-03 23:13:49] Coverage/RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-03 23:13:49] Coverage/RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-01-03 23:13:50] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Code Coverage Report" [] []
+[2013-01-03 23:13:50] Coverage/RemoteWithXmlCept.php.INFO: see in shell output "Methods: 100.00% ( 1/ 1)" [] []
+[2013-01-03 23:13:50] Coverage/RemoteWithXmlCept.php.INFO: see file found "coverage.xml","tests/_log" [] []
+[2013-01-03 23:13:50] Coverage/RemoteWithXmlCept.php.INFO: PASSED [] []
