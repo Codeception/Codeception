@@ -57,7 +57,7 @@ coverage:
         - app/cache/*
 ```
 
-`include` and `exclude` options add or remove files from whitelist. We will stay with them in this scena
+These `include` and `exclude` options are to add or remove files from a whitelist.
 
 All these settings can be redefined for each suite in their config files. 
 
