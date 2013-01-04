@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="unit" tests="126" assertions="263" failures="0" errors="0" time="5.001944">
+    <testsuite name="Codeception\Command\GenerateCestCest " tests="2" assertions="0" failures="0" errors="0" time="0.007154">
+      <testcase file="/home/davert/Codeception/tests/unit/Codeception/Command/GenerateCestCest.php" class="Codeception\Command\GenerateCestCest" line="8" name=" (Codeception\TestCase\Cest::_before)" assertions="0" time="0.003349"/>
+      <testcase file="/home/davert/Codeception/tests/unit/Codeception/Command/GenerateCestCest.php" class="Codeception\Command\GenerateCestCest" line="13" name=" (Codeception\TestCase\Cest::execute)" assertions="0" time="0.003805"/>
+    </testsuite>
+    <testsuite name="WebDebugCest " tests="2" assertions="4" failures="0" errors="0" time="0.073448">
+      <testcase file="/home/davert/Codeception/tests/unit/Codeception/Module/WebDebugCest.php" class="WebDebugCest" line="7" name="save screenshot (Codeception\TestCase\Cest::makeAScreenshot)" assertions="2" time="0.066041"/>
+      <testcase file="/home/davert/Codeception/tests/unit/Codeception/Module/WebDebugCest.php" class="WebDebugCest" line="19" name=" (Codeception\TestCase\Cest::generateFilename)" assertions="2" time="0.007407"/>
+    </testsuite>
+    <testsuite name="PhpTestCest " tests="3" assertions="3" failures="0" errors="0" time="0.015855">
+      <testcase file="/home/davert/Codeception/tests/unit/SimpleWithNoClassCest.php" class="PhpTestCest" line="5" name=" (Codeception\TestCase\Cest::phpFuntions)" assertions="1" time="0.003132"/>
+      <testcase file="/home/davert/Codeception/tests/unit/SimpleWithNoClassCest.php" class="PhpTestCest" line="10" name="write shoulds (Codeception\TestCase\Cest::shouldWriteShoulds)" assertions="1" time="0.003063"/>
+      <testcase file="/home/davert/Codeception/tests/unit/SimpleWithNoClassCest.php" class="PhpTestCest" line="14" name="use cest (Codeception\TestCase\Cest::shouldUseCest)" assertions="1" time="0.009660"/>
+    </testsuite>
+    <testcase name="testModules" class="ConfigurationTest" file="/home/davert/Codeception/tests/unit/Codeception/ConfigurationTest.php" line="10" assertions="2" time="0.002101"/>
+    <testcase name="testActions" class="ConfigurationTest" file="/home/davert/Codeception/tests/unit/Codeception/ConfigurationTest.php" line="17" assertions="2" time="0.001947"/>
+    <testcase name="MaybeTest::testMaybe" assertions="1" time="0.002978"/>
+    <testcase name="testSeeInDatabase" class="DbTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/DbTest.php" line="23" assertions="1" time="0.003651"/>
+    <testcase name="testDontSeeInDatabase" class="DbTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/DbTest.php" line="27" assertions="1" time="0.003759"/>
+    <testcase name="testGrabFromDatabase" class="DbTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/DbTest.php" line="31" assertions="1" time="0.003096"/>
+    <testcase name="testAmOnPage" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="17" assertions="2" time="0.011786"/>
+    <testcase name="testSee" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="25" assertions="7" time="0.015461"/>
+    <testcase name="testSeeInCurrentUrl" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="41" assertions="1" time="0.004167"/>
+    <testcase name="testSeeLink" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="46" assertions="8" time="0.004673"/>
+    <testcase name="testClick" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="56" assertions="1" time="0.004062"/>
+    <testcase name="testClickByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="62" assertions="1" time="0.012785"/>
+    <testcase name="testClickByXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="68" assertions="1" time="0.007860"/>
+    <testcase name="testRadioButton" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="74" assertions="1" time="0.008745"/>
+    <testcase name="testCheckboxByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="83" assertions="1" time="0.008424"/>
+    <testcase name="testCheckboxByXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="91" assertions="1" time="0.013254"/>
+    <testcase name="testChecxboxByLabel" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="99" assertions="1" time="0.007208"/>
+    <testcase name="testSelectByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="107" assertions="1" time="0.009208"/>
+    <testcase name="testSelectByXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="115" assertions="1" time="0.009514"/>
+    <testcase name="testSelectByLabel" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="123" assertions="1" time="0.008688"/>
+    <testcase name="testSelectByLabelAndOptionText" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="131" assertions="1" time="0.009185"/>
+    <testcase name="testHidden" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="139" assertions="1" time="0.006868"/>
+    <testcase name="testTextareaByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="146" assertions="1" time="0.008184"/>
+    <testcase name="testTextareaByXpath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="154" assertions="1" time="0.008590"/>
+    <testcase name="testTextareaByLabel" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="162" assertions="1" time="0.008336"/>
+    <testcase name="testTextFieldByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="170" assertions="1" time="0.007424"/>
+    <testcase name="testTextFieldByXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="178" assertions="1" time="0.008774"/>
+    <testcase name="testTextFieldByLabel" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="186" assertions="1" time="0.007626"/>
+    <testcase name="testFileFieldByCss" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="194" assertions="3" time="0.008530"/>
+    <testcase name="testFileFieldByXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="204" assertions="3" time="0.008778"/>
+    <testcase name="testFileFieldByLabel" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="214" assertions="1" time="0.008201"/>
+    <testcase name="testSeeCheckboxIsNotChecked" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="221" assertions="1" time="0.003993"/>
+    <testcase name="testSeeCheckboxChecked" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="226" assertions="1" time="0.003401"/>
+    <testcase name="testSubmitForm" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="231" assertions="2" time="0.005224"/>
+    <testcase name="testSubmitFormWithNoSubmitButton" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="239" assertions="1" time="0.004065"/>
+    <testcase name="testSubmitFormByButton" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="246" assertions="1" time="0.007337"/>
+    <testcase name="testAjax" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="253" assertions="4" time="0.004896"/>
+    <testcase name="testSeeWithNonLatin" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="265" assertions="1" time="0.005390"/>
+    <testcase name="testSeeWithNonLatinAndSelectors" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="270" assertions="3" time="0.005116"/>
+    <testcase name="testLinksWithNonLatin" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="277" assertions="2" time="0.004584"/>
+    <testcase name="testFieldWithNonLatin" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="283" assertions="1" time="0.004198"/>
+    <testcase name="testComplexSelectorsAndForms" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="288" assertions="1" time="0.006481"/>
+    <testcase name="testComplexFormsAndXPath" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="295" assertions="1" time="0.005413"/>
+    <testcase name="testLinksWithSimilarNames" class="FrameworksTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/FrameworksTest.php" line="302" assertions="2" time="0.005557"/>
+    <testcase name="testSubmitForm" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="49" assertions="2" time="0.041990"/>
+    <testcase name="testAjax" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="58" assertions="3" time="0.017719"/>
+    <testcase name="testLinksWithNonLatin" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="69" assertions="1" time="0.013870"/>
+    <testcase name="testAmOnPage" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="18" assertions="2" time="0.012261"/>
+    <testcase name="testSee" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="29" assertions="6" time="0.018385"/>
+    <testcase name="testSeeInCurrentUrl" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="45" assertions="1" time="0.009345"/>
+    <testcase name="testSeeLink" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="51" assertions="4" time="0.015102"/>
+    <testcase name="testClick" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="62" assertions="3" time="0.032404"/>
+    <testcase name="testCheckboxByCss" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="77" assertions="1" time="0.015692"/>
+    <testcase name="testChecxboxByLabel" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="86" assertions="1" time="0.018077"/>
+    <testcase name="testSelectByCss" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="95" assertions="1" time="0.016907"/>
+    <testcase name="testSelectByLabel" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="104" assertions="1" time="0.017859"/>
+    <testcase name="testSelectByLabelAndOptionText" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="113" assertions="1" time="0.017948"/>
+    <testcase name="testHidden" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="122" assertions="1" time="0.014450"/>
+    <testcase name="testTextareaByCss" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="130" assertions="1" time="0.015508"/>
+    <testcase name="testTextareaByLabel" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="139" assertions="1" time="0.014252"/>
+    <testcase name="testTextFieldByCss" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="148" assertions="1" time="0.014921"/>
+    <testcase name="testTextFieldByLabel" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="157" assertions="1" time="0.014642"/>
+    <testcase name="testFileFieldByCss" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="166" assertions="2" time="1.088206"/>
+    <testcase name="testFileFieldByLabel" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="176" assertions="1" time="1.018142"/>
+    <testcase name="testSeeCheckboxIsNotChecked" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="184" assertions="1" time="0.009437"/>
+    <testcase name="testSeeCheckboxChecked" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="190" assertions="1" time="0.013816"/>
+    <testcase name="testSeeWithNonLatin" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="197" assertions="1" time="0.010353"/>
+    <testcase name="testSeeWithNonLatinAndSelectors" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="202" assertions="1" time="0.009631"/>
+    <testcase name="testFieldWithNonLatin" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="207" assertions="1" time="0.009913"/>
+    <testcase name="testApostrophesInText" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="212" assertions="2" time="0.012889"/>
+    <testcase name="testSign" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="218" assertions="1" time="0.015342"/>
+    <testcase name="testGrabTextFrom" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="225" assertions="2" time="0.012222"/>
+    <testcase name="testGrabValueFrom" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="233" assertions="2" time="0.013679"/>
+    <testcase name="testLinksWithSimilarNames" class="PhpBrowserTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/PhpBrowserTest.php" line="242" assertions="2" time="0.019980"/>
+    <testcase name="testGet" class="RestTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/RestTest.php" line="26" assertions="3" time="0.043930"/>
+    <testcase name="testPost" class="RestTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/RestTest.php" line="33" assertions="2" time="0.002608"/>
+    <testcase name="testPut" class="RestTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/RestTest.php" line="39" assertions="3" time="0.002635"/>
+    <testcase name="testGrabDataFromJsonResponse" class="RestTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/RestTest.php" line="46" assertions="5" time="0.003412"/>
+    <testcase name="testXmlIsBuilt" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="25" assertions="7" time="0.016642"/>
+    <testcase name="testBuildHeaders" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="33" assertions="12" time="0.003493"/>
+    <testcase name="testBuildRequest" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="44" assertions="15" time="0.003573"/>
+    <testcase name="testBuildRequestWithDomNode" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="59" assertions="14" time="0.005789"/>
+    <testcase name="testSeeXmlIncludes" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="73" assertions="1" time="0.002961"/>
+    <testcase name="testSeeXmlContainsXPath" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="81" assertions="1" time="0.002815"/>
+    <testcase name="testSeeXmlNotContainsXPath" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="89" assertions="1" time="0.002164"/>
+    <testcase name="testSeeXmlEquals" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="98" assertions="1" time="0.002190"/>
+    <testcase name="testSeeXmlIncludesWithBuilder" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="107" assertions="1" time="0.002331"/>
+    <testcase name="testGrabTextFrom" class="SoapTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/SoapTest.php" line="118" assertions="2" time="0.002965"/>
+    <testcase name="testExecute" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="47" assertions="2" time="0.003569"/>
+    <testcase name="testStaticExecuteTestedMethod" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="58" assertions="2" time="0.004786"/>
+    <testcase name="testExecuteTestedMethod" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="71" assertions="4" time="0.005559"/>
+    <testcase name="testExecuteMethod" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="84" assertions="1" time="0.002428"/>
+    <testcase name="testSeeMethodResult" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="94" assertions="1" time="0.002209"/>
+    <testcase name="testMocks" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="102" assertions="4" time="0.011709"/>
+    <testcase name="testExceptions" class="UnitTest" file="/home/davert/Codeception/tests/unit/Codeception/Module/UnitTest.php" line="116" assertions="2" time="0.004936"/>
+    <testcase name="testRun" class="SuiteManagerTest" file="/home/davert/Codeception/tests/unit/Codeception/SuiteManagerTest.php" line="22" assertions="1" time="0.003497"/>
+    <testcase name="testAddCest" class="SuiteManagerTest" file="/home/davert/Codeception/tests/unit/Codeception/SuiteManagerTest.php" line="32" assertions="2" time="0.004661"/>
+    <testcase name="testAddCept" class="SuiteManagerTest" file="/home/davert/Codeception/tests/unit/Codeception/SuiteManagerTest.php" line="42" assertions="1" time="0.002014"/>
+    <testcase name="testAddTest" class="SuiteManagerTest" file="/home/davert/Codeception/tests/unit/Codeception/SuiteManagerTest.php" line="48" assertions="1" time="0.006097"/>
+    <testcase name="testRunStepEvents" class="TestCaseTest" file="/home/davert/Codeception/tests/unit/Codeception/TestCaseTest.php" line="22" assertions="2" time="0.006533"/>
+    <testcase name="testRunStep" class="TestCaseTest" file="/home/davert/Codeception/tests/unit/Codeception/TestCaseTest.php" line="40" assertions="5" time="0.004923"/>
+    <testcase name="testRunStepAddsTrace" class="TestCaseTest" file="/home/davert/Codeception/tests/unit/Codeception/TestCaseTest.php" line="54" assertions="2" time="0.003239"/>
+    <testcase name="testCleanupDatabase" class="SqliteTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/Driver/SqliteTest.php" line="28" assertions="2" time="0.124964"/>
+    <testcase name="testLoadDump" class="SqliteTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/Driver/SqliteTest.php" line="36" assertions="6" time="1.722412"/>
+    <testcase name="testCombine" class="LocatorTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/LocatorTest.php" line="8" assertions="4" time="0.003893"/>
+    <testcase name="testHref" class="LocatorTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/LocatorTest.php" line="22" assertions="1" time="0.001891"/>
+    <testcase name="testTabIndex" class="LocatorTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/LocatorTest.php" line="27" assertions="1" time="0.001852"/>
+    <testcase name="testFind" class="LocatorTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/LocatorTest.php" line="32" assertions="2" time="0.002063"/>
+    <testcase name="testMakeEmpty" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="17" assertions="3" time="0.003402"/>
+    <testcase name="testMakeEmptyMethodReplaced" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="24" assertions="3" time="0.002598"/>
+    <testcase name="testMakeEmptyExcept" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="31" assertions="2" time="0.003405"/>
+    <testcase name="testMakeEmptyExceptProperyRepalced" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="37" assertions="1" time="0.003659"/>
+    <testcase name="testFactory" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="42" assertions="2" time="0.003058"/>
+    <testcase name="testMake" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="48" assertions="2" time="0.003031"/>
+    <testcase name="testCopy" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="54" assertions="1" time="0.001906"/>
+    <testcase name="testConstruct" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="59" assertions="3" time="0.003477"/>
+    <testcase name="testConstructEmpty" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="69" assertions="1" time="0.001861"/>
+    <testcase name="testConstructEmptyExcept" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="75" assertions="2" time="0.002001"/>
+    <testcase name="testUpdate" class="StubTest" file="/home/davert/Codeception/tests/unit/Codeception/Util/StubTest.php" line="82" assertions="1" time="0.001885"/>
+  </testsuite>
+</testsuites>
