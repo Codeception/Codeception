@@ -150,7 +150,7 @@ $I->fillField('Name', 'Miles');
 // we can use input name, or id
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
-$I->press('Update');
+$I->click('Update');
 ?>
 ```
 

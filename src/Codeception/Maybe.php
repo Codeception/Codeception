@@ -7,15 +7,7 @@
  * Represents either empty values or defined from results.
  *
  */
-
 namespace Codeception;
-
-/** spike-fix for PHP 5.3 */
-if (! interface_exists('JsonSerializable')) {
-    interface JsonSerializable {
-        function jsonSerialize();
-    }
-}
 
 class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 {
