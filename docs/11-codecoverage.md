@@ -6,7 +6,7 @@ you will receive statisitcs of all classes, methods, and lines triggered by thes
 The ratio between all lines in script and all touched lines is a main coverage criteria. In the ideal world you should get a 100% code coverage,
 but in reality 80% are just enough. And even 100% code coverage rate doesn't save you from fatal errors and crashes. 
 
-Codeception has codecoverage tools since 1.5. To collect coverage information `xdebug` is required.
+**Codeception has CodeCoverage tools since 1.5. To collect coverage information `xdebug` is required**.
 
 Coverage data can be collected manually for local tests and remote tests. Remote tests may be executed on different node, 
 or locally, but behind the web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception
