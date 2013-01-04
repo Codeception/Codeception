@@ -10,7 +10,7 @@ Codeception has codecoverage tools since 1.5. To collect coverage information `x
 
 Coverage data can be collected manually for local tests and remote tests. Remote tests may be executed on different node, 
 or locally, but behind the web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception
-supports remote codecoverage as well as local. If your tests are run locally coverage reports are merged.
+supports remote codecoverage as well as local.
 
 ### Configuration
 
