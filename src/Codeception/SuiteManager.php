@@ -163,9 +163,13 @@ class SuiteManager {
     public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
         if (strrpos(strrev($path), strrev('Cept.php')) === 0) return $this->addCept($path);
-        if (strrpos(strrev($path), strrev('Spec.php')) === 0) return $this->addCept($path);
         if (strrpos(strrev($path), strrev('Cest.php')) === 0) return $this->addCest($path);
         if (strrpos(strrev($path), strrev('Test.php')) === 0) return $this->addTest($path);
+        if (is_dir($path)) {
+            $this->path = $path;
+            $this->loadTests();
+            return;
+        }
         throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
     }
 
