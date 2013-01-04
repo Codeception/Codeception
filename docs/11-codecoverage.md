@@ -14,7 +14,7 @@ supports remote codecoverage as well as local.
 
 ### Configuration
 
-To enable global codecoverge put these lines to the global configuration file `codeception.yml`:
+To enable codecoverge put these lines to the global configuration file `codeception.yml`:
 
 ```
 coverage:
@@ -63,4 +63,16 @@ All these settings can be redefined for each suite in their config files.
 
 ## Local CodeCoverage
 
-The basic codecoverage can be collected for functional and unit tests. This requires some configuration.
+The basic codecoverage can be collected for functional and unit tests.
+If you performed configurations steps from above you are ready to go.
+All you need is to execute codeception with `--coverage` option.
+To generate a clover xml report or a tasty html report append also `--xml` and `--html` options.
+
+```
+codecept run --coverage --xml --html
+```
+
+XML and HTML reports are stored to the `_logs` directory. The best way to review report is to open `index.html` from `tests/_logs/coverage` in your browser.
+XML clover reports are used by IDEs (like PHPStorm) or Conitinious Integration servers (Like Jenkins).
+
+
