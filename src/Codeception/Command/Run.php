@@ -42,6 +42,7 @@ class Run extends Base
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
         if ($input->getOption('debug')) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         if ($input->getArgument('test')) $options['steps'] = true;
@@ -50,10 +51,15 @@ class Run extends Base
         $test = $input->getArgument('test');
 
         $codecept = new \Codeception\Codecept((array) $options);
+        $config = \Codeception\Configuration::config();
+
+        if (strpos($suite, $config['paths']['tests'])===0) {
+            $matches = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+            $suite = $matches[1];
+            $test = $matches[2];
+        }
 
         $suites = $suite ? array($suite) : \Codeception\Configuration::suites();
-
-        $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
 
         if ($suite and $test) {
             $codecept->runSuite($suite, $test);
@@ -71,4 +77,14 @@ class Run extends Base
             if ($codecept->getResult()->failureCount() or $codecept->getResult()->errorCount()) exit(1);
         }
     }
+
+
+    protected function matchTestFromFilename($filename,$tests_path)
+    {
+        $filename = str_replace('\/','/', $filename);
+        $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
+        if (!$res) throw new \InvalidArgumentException("Test file can't be matched");
+        return $matches;
+    }
+
 }

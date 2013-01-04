@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1357257123">
-  <project timestamp="1357257123">
+<coverage generated="1357258848">
+  <project timestamp="1357258848">
     <package name="Codeception">
       <file name="/home/davert/Codeception/src/Codeception/AbstractGuy.php">
         <class name="AbstractGuy" namespace="Codeception">
@@ -291,12 +291,11 @@
       </file>
       <file name="/home/davert/Codeception/src/Codeception/Configuration.php">
         <class name="Configuration" namespace="Codeception">
-          <metrics methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="128" coveredstatements="0" elements="138" coveredelements="0"/>
+          <metrics methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="132" coveredstatements="0" elements="142" coveredelements="0"/>
         </class>
-        <line num="18" type="method" name="config" crap="240" count="0"/>
-        <line num="19" type="stmt" count="0"/>
+        <line num="19" type="method" name="config" crap="272" count="0"/>
         <line num="20" type="stmt" count="0"/>
-        <line num="22" type="stmt" count="0"/>
+        <line num="21" type="stmt" count="0"/>
         <line num="23" type="stmt" count="0"/>
         <line num="24" type="stmt" count="0"/>
         <line num="25" type="stmt" count="0"/>
@@ -305,98 +304,98 @@
         <line num="28" type="stmt" count="0"/>
         <line num="29" type="stmt" count="0"/>
         <line num="30" type="stmt" count="0"/>
-        <line num="32" type="stmt" count="0"/>
+        <line num="31" type="stmt" count="0"/>
         <line num="33" type="stmt" count="0"/>
         <line num="34" type="stmt" count="0"/>
         <line num="35" type="stmt" count="0"/>
-        <line num="38" type="stmt" count="0"/>
+        <line num="36" type="stmt" count="0"/>
+        <line num="37" type="stmt" count="0"/>
         <line num="40" type="stmt" count="0"/>
-        <line num="41" type="stmt" count="0"/>
         <line num="42" type="stmt" count="0"/>
+        <line num="43" type="stmt" count="0"/>
         <line num="44" type="stmt" count="0"/>
-        <line num="45" type="stmt" count="0"/>
         <line num="46" type="stmt" count="0"/>
         <line num="47" type="stmt" count="0"/>
         <line num="48" type="stmt" count="0"/>
         <line num="49" type="stmt" count="0"/>
         <line num="50" type="stmt" count="0"/>
         <line num="51" type="stmt" count="0"/>
+        <line num="52" type="stmt" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="55" type="stmt" count="0"/>
-        <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="0"/>
         <line num="58" type="stmt" count="0"/>
         <line num="59" type="stmt" count="0"/>
         <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
         <line num="62" type="stmt" count="0"/>
-        <line num="63" type="stmt" count="0"/>
-        <line num="65" type="method" name="dataDir" crap="6" count="0"/>
-        <line num="66" type="stmt" count="0"/>
-        <line num="67" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <line num="67" type="method" name="dataDir" crap="6" count="0"/>
         <line num="68" type="stmt" count="0"/>
         <line num="69" type="stmt" count="0"/>
-        <line num="71" type="method" name="helpersDir" crap="2" count="0"/>
-        <line num="72" type="stmt" count="0"/>
-        <line num="73" type="stmt" count="0"/>
+        <line num="70" type="stmt" count="0"/>
+        <line num="71" type="stmt" count="0"/>
+        <line num="73" type="method" name="helpersDir" crap="2" count="0"/>
         <line num="74" type="stmt" count="0"/>
-        <line num="76" type="method" name="logDir" crap="12" count="0"/>
-        <line num="77" type="stmt" count="0"/>
-        <line num="78" type="stmt" count="0"/>
+        <line num="75" type="stmt" count="0"/>
+        <line num="76" type="stmt" count="0"/>
+        <line num="78" type="method" name="logDir" crap="20" count="0"/>
         <line num="79" type="stmt" count="0"/>
         <line num="80" type="stmt" count="0"/>
         <line num="81" type="stmt" count="0"/>
         <line num="82" type="stmt" count="0"/>
-        <line num="84" type="method" name="projectDir" crap="2" count="0"/>
+        <line num="83" type="stmt" count="0"/>
+        <line num="84" type="stmt" count="0"/>
         <line num="85" type="stmt" count="0"/>
         <line num="86" type="stmt" count="0"/>
         <line num="87" type="stmt" count="0"/>
-        <line num="90" type="method" name="suiteSettings" crap="42" count="0"/>
+        <line num="89" type="method" name="projectDir" crap="2" count="0"/>
+        <line num="90" type="stmt" count="0"/>
         <line num="91" type="stmt" count="0"/>
         <line num="92" type="stmt" count="0"/>
-        <line num="93" type="stmt" count="0"/>
-        <line num="94" type="stmt" count="0"/>
-        <line num="95" type="stmt" count="0"/>
+        <line num="95" type="method" name="suiteSettings" crap="42" count="0"/>
         <line num="96" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
         <line num="98" type="stmt" count="0"/>
         <line num="99" type="stmt" count="0"/>
+        <line num="100" type="stmt" count="0"/>
         <line num="101" type="stmt" count="0"/>
-        <line num="102" type="stmt" count="0"/>
+        <line num="103" type="stmt" count="0"/>
         <line num="104" type="stmt" count="0"/>
-        <line num="105" type="stmt" count="0"/>
         <line num="106" type="stmt" count="0"/>
-        <line num="108" type="stmt" count="0"/>
+        <line num="107" type="stmt" count="0"/>
+        <line num="109" type="stmt" count="0"/>
         <line num="110" type="stmt" count="0"/>
         <line num="111" type="stmt" count="0"/>
-        <line num="113" type="method" name="suites" crap="2" count="0"/>
-        <line num="114" type="stmt" count="0"/>
+        <line num="113" type="stmt" count="0"/>
         <line num="115" type="stmt" count="0"/>
         <line num="116" type="stmt" count="0"/>
-        <line num="118" type="method" name="modules" crap="42" count="0"/>
+        <line num="118" type="method" name="suites" crap="2" count="0"/>
         <line num="119" type="stmt" count="0"/>
         <line num="120" type="stmt" count="0"/>
         <line num="121" type="stmt" count="0"/>
-        <line num="123" type="stmt" count="0"/>
+        <line num="123" type="method" name="modules" crap="42" count="0"/>
+        <line num="124" type="stmt" count="0"/>
+        <line num="125" type="stmt" count="0"/>
         <line num="126" type="stmt" count="0"/>
         <line num="128" type="stmt" count="0"/>
-        <line num="130" type="stmt" count="0"/>
         <line num="131" type="stmt" count="0"/>
-        <line num="132" type="stmt" count="0"/>
         <line num="133" type="stmt" count="0"/>
-        <line num="134" type="stmt" count="0"/>
+        <line num="135" type="stmt" count="0"/>
         <line num="136" type="stmt" count="0"/>
         <line num="137" type="stmt" count="0"/>
         <line num="138" type="stmt" count="0"/>
         <line num="139" type="stmt" count="0"/>
-        <line num="140" type="stmt" count="0"/>
         <line num="141" type="stmt" count="0"/>
+        <line num="142" type="stmt" count="0"/>
         <line num="143" type="stmt" count="0"/>
         <line num="144" type="stmt" count="0"/>
-        <line num="146" type="method" name="actions" crap="20" count="0"/>
-        <line num="147" type="stmt" count="0"/>
+        <line num="145" type="stmt" count="0"/>
+        <line num="146" type="stmt" count="0"/>
         <line num="148" type="stmt" count="0"/>
         <line num="149" type="stmt" count="0"/>
-        <line num="150" type="stmt" count="0"/>
-        <line num="151" type="stmt" count="0"/>
+        <line num="151" type="method" name="actions" crap="20" count="0"/>
         <line num="152" type="stmt" count="0"/>
         <line num="153" type="stmt" count="0"/>
         <line num="154" type="stmt" count="0"/>
@@ -405,23 +404,28 @@
         <line num="157" type="stmt" count="0"/>
         <line num="158" type="stmt" count="0"/>
         <line num="159" type="stmt" count="0"/>
-        <line num="161" type="method" name="mergeConfigs" crap="42" count="0"/>
+        <line num="160" type="stmt" count="0"/>
+        <line num="161" type="stmt" count="0"/>
         <line num="162" type="stmt" count="0"/>
         <line num="163" type="stmt" count="0"/>
         <line num="164" type="stmt" count="0"/>
-        <line num="165" type="stmt" count="0"/>
-        <line num="166" type="stmt" count="0"/>
+        <line num="166" type="method" name="mergeConfigs" crap="42" count="0"/>
         <line num="167" type="stmt" count="0"/>
+        <line num="168" type="stmt" count="0"/>
         <line num="169" type="stmt" count="0"/>
         <line num="170" type="stmt" count="0"/>
         <line num="171" type="stmt" count="0"/>
         <line num="172" type="stmt" count="0"/>
-        <line num="173" type="stmt" count="0"/>
         <line num="174" type="stmt" count="0"/>
+        <line num="175" type="stmt" count="0"/>
         <line num="176" type="stmt" count="0"/>
         <line num="177" type="stmt" count="0"/>
         <line num="178" type="stmt" count="0"/>
-        <metrics loc="182" ncloc="174" classes="1" methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="128" coveredstatements="0" elements="138" coveredelements="0"/>
+        <line num="179" type="stmt" count="0"/>
+        <line num="181" type="stmt" count="0"/>
+        <line num="182" type="stmt" count="0"/>
+        <line num="183" type="stmt" count="0"/>
+        <metrics loc="187" ncloc="179" classes="1" methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="132" coveredstatements="0" elements="142" coveredelements="0"/>
       </file>
       <file name="/home/davert/Codeception/src/Codeception/Maybe.php">
         <class name="Maybe" namespace="Codeception">
@@ -5452,6 +5456,6 @@
     <file name="/home/davert/Codeception/tests/data/claypit/c3.php">
       <metrics loc="219" ncloc="195" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
-    <metrics files="95" loc="9709" ncloc="7147" classes="85" methods="607" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4878" coveredstatements="0" elements="5485" coveredelements="0"/>
+    <metrics files="95" loc="9714" ncloc="7152" classes="85" methods="607" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4882" coveredstatements="0" elements="5489" coveredelements="0"/>
   </project>
 </coverage>
