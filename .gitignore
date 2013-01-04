@@ -1,3 +1,5 @@
 .idea
+tests/log/coverage
+tests/log/debug
 composer.phar
 vendor
