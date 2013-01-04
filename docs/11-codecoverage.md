@@ -106,7 +106,7 @@ coverage:
     remote: true
 ```
 
-In this case remote Code Coverage results wont't be merged with local ones if this option is enabled. 
+In this case remote Code Coverage results won't be merged with local ones if this option is enabled. 
 Merging is possible only in case a remote and local file have th same path. 
 But in case of running tests on a remote server we are not sure of it.
 
