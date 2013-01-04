@@ -40,8 +40,8 @@ coverage:
 ```
 What are whitelists and blacklists?
 
-* A whitelist is a list of files that should be included in report even they were not touched.
-* A blacklist is a list of files that should be excluded from report even they were touched.
+* A **whitelist** is a list of files that should be included in report even they were not touched.
+* A **blacklist** is a list of files that should be excluded from report even they were touched.
 
 Pass an array of files or directory to include/exclude sections. The path ending with '*' matches the directory.
 Also you can use '*' mask in a file name, i.e. `app/models/*Model.php` to match all models.
@@ -113,7 +113,7 @@ But in case of running tests on a remote server we are not sure of it.
 ## Conclusion
 
 It's never been easier to setup local and remote code coverage. Just one config and one additional file to incldue! 
-**With Codeception you can easily genrate CodeCoverage reports for your Selenium tests** or PhpBrowser tests. Mixing reports for `acceptance`, `functional`, and `unit` suites provides 
+**With Codeception you can easily generate CodeCoverage reports for your Selenium tests** (or other acceptance or api tests). Mixing reports for `acceptance`, `functional`, and `unit` suites provides 
 you the most complete information on which parts of your applications are tested and which are not.
 
 
