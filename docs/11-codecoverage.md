@@ -59,6 +59,8 @@ coverage:
 
 `include` and `exclude` options add or remove files from whitelist. We will stay with them in this scena
 
+All these settings can be redefined for each suite in their config files. 
+
 ## Local CodeCoverage
 
 The basic codecoverage can be collected for functional and unit tests. This requires some configuration.
