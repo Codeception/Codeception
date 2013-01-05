@@ -18,7 +18,7 @@ class Output {
 
 	private function write($text)
 	{
-        while (@ob_end_flush());
+        while (ob_get_level()) ob_end_flush();
         print $text;
         ob_start();
 	}

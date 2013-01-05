@@ -43,10 +43,14 @@ class CodeCoverageSettings
         return $this->phpCodeCoverage;
     }
 
+    /**
+     * @param $config
+     * @return CodeCoverageSettings
+     */
     public function filterWhiteList($config)
     {
         $filter = $this->filter;
-        if (!isset($config['coverage'])) return;
+        if (!isset($config['coverage'])) return $this;
         $coverage = $config['coverage'];
         if (!isset($coverage['whitelist'])) {
             $coverage['whitelist'] = array();
@@ -79,10 +83,14 @@ class CodeCoverageSettings
         return $this;
     }
 
+    /**
+     * @param $config
+     * @return CodeCoverageSettings
+     */
     public function filterBlackList($config)
     {
         $filter = $this->filter;
-        if (!isset($config['coverage'])) return;
+        if (!isset($config['coverage'])) return $this;
         $coverage = $config['coverage'];
         if (isset($coverage['blacklist'])) {
             if (isset($coverage['blacklist']['include'])) {

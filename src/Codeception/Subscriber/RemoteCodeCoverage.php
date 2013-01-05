@@ -42,7 +42,7 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $knock = $this->getRemoteCoverageFile($this->module, 'clear');
         if ($knock === false) {
             throw new \Codeception\Exception\RemoteException('
-                Remote CodeCoverage error.
+                CodeCoverage Error.
                 Check the file "c3.php" is included in your application.
                 We tried to access "/c3/report/clear" but this URI was not accessible.
                 You can review actual error messages in c3tmp dir.
@@ -55,7 +55,8 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     {
         if (!$this->module) return;
         $this->module->_setCookie('XDEBUG_SESSION', $this->settings['xdebug_session']);
-        $this->module->_setHeader('X-Codeception-CodeCoverage', $this->suite_name);
+        $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
+        $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
         if ($this->settings['remote_config'])
             $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
     }

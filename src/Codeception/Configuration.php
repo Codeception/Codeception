@@ -12,6 +12,7 @@ class Configuration
     protected static $logDir = null;
     protected static $dataDir = null;
     protected static $helpersDir = null;
+    protected static $testsDir = null;
 
     protected static $dir = null;
 
@@ -34,6 +35,7 @@ class Configuration
             throw new \Codeception\Exception\Configuration("Configuration file is invalid");
         }
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
+        if (!isset($config['paths']['tests'])) throw new \Codeception\Exception\Configuration('Tests directory path is not defined');
         if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
         if (!isset($config['paths']['log'])) throw new \Codeception\Exception\Configuration('Log path is not defined');
 
@@ -80,7 +82,13 @@ class Configuration
     {
         if (!self::$logDir) throw new \Codeception\Exception\Configuration("Path for logs not specified. Please, set log path in global config");
         $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
-        if (!is_writable($dir)) throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        if (!is_writable($dir)) {
+            @mkdir($dir);
+            @chmod($dir, 777);
+        }
+        if (!is_writable($dir)) {
+            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        }
         return $dir;
     }
 
