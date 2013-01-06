@@ -44,7 +44,7 @@ class MongoDb
             'connect' => TRUE
         );
 
-        if ($user !== false && $password !== false) {
+        if ($user && $password) {
             $options += array(
                 'username' => $user,
                 'password' => $password
@@ -99,7 +99,7 @@ class MongoDb
      * @param $dumpFile
      */
     public function load($dumpFile) {
-        if ($this->user !== false && $this->password !== false ) {
+        if ($this->user && $this->password) {
             $cmd = sprintf('mongo %s --username %s --password %s %s', $this->host . '/' . $this->dbName, $this->user, $this->password, $dumpFile);
         } else {
             $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, $dumpFile);

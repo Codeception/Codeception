@@ -1,28 +1,33 @@
 <?php
-/**
- * @author judgedim
- */
 
 namespace Codeception\Module;
 
+use Codeception\Exception\Module as ModuleException;
 use \Codeception\Util\Driver\Redis as RedisDriver;
 
+/**
+ * Works with Redis database.
+ *
+ * ## Configuration
+ *
+ * * host *required* - redis host to connect
+ * * port *required* - redis port.
+ * * database *required* - redis database.
+ * * cleanup: true - defined data will be purged before running every test.
+ *
+ * ## Public Properties
+ * * driver - contains Connection Driver
+ *
+ * @author judgedim
+ */
 class Redis extends \Codeception\Module
 {
-    /**
-     * @api
-     * @var
-     */
-    public $dbh;
-
-    protected $isDumpFileEmpty = false;
-
     protected $config = array(
         'cleanup' => true
     );
 
     /**
-     * @var \Codeception\Util\Driver\Redis
+     * @var RedisDriver
      */
     public $driver;
 
@@ -34,7 +39,7 @@ class Redis extends \Codeception\Module
             $this->driver = new RedisDriver($this->config['host'], $this->config['port']);
             $this->driver->select_db($this->config['database']);
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(__CLASS__, $e->getMessage());
         }
 
     }
@@ -52,13 +57,19 @@ class Redis extends \Codeception\Module
         parent::_after($test);
     }
 
+    /**
+     * Cleans up Redis database.
+     */
+    public function cleanupRedis() {
+        $this->cleanup();
+    }
+
     protected function cleanup()
     {
         try {
             $this->driver->flushdb();
-
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(__CLASS__, $e->getMessage());
         }
     }
 
