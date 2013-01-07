@@ -30,15 +30,6 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $this->module = $this->getRemoteConnectionModule();
         if (!$this->module) return;
 
-        if ($this->module and !ini_get('xdebug.remote_enable')) {
-            throw new \Exception('
-            To collect CodeCoverage for acceptance tests,
-            you need to enable xdebug remote option.
-            Please, update your php.ini file with line:
-            "xdebug.remote_enable=1"
-            ');
-        }
-
         $knock = $this->getRemoteCoverageFile($this->module, 'clear');
         if ($knock === false) {
             throw new \Codeception\Exception\RemoteException('
@@ -54,7 +45,6 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     public function beforeStep(\Codeception\Event\Step $e)
     {
         if (!$this->module) return;
-        $this->module->_setCookie('XDEBUG_SESSION', $this->settings['xdebug_session']);
         $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
         $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
         if ($this->settings['remote_config'])
