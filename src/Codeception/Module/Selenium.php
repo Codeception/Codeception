@@ -2,7 +2,11 @@
 namespace Codeception\Module;
 
 /**
+ *
  * Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
+ *
+ * But we recommend you to use **Selenium 2 WebDriver** as it is an evolution of SeleniumRC and grants you more stable results.
+ * For manipulation with Selenium WebDriver use [Selenium2](/docs/modules/Selenium2) module
  *
  * Note, all method takes CSS selectors to fetch elements.
  * For links, buttons, fields you can use names/values/ids of elements.

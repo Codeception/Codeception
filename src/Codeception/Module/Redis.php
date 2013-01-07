@@ -8,6 +8,8 @@ use \Codeception\Util\Driver\Redis as RedisDriver;
 /**
  * Works with Redis database.
  *
+ * Cleans up Redis database after each run.
+ *
  * ## Configuration
  *
  * * host *required* - redis host to connect

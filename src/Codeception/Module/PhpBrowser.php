@@ -3,8 +3,7 @@
 namespace Codeception\Module;
 
 /**
- * Uses Mink (http://mink.behat.org) with Goutte Driver to interact with your application.
- * Contains all Mink actions and additional ones, listed below.
+ * Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
  *
  * Use to perform web acceptance tests with non-javascript browser.
  *

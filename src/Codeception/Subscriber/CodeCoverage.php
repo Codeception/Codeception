@@ -81,6 +81,7 @@ class CodeCoverage implements EventSubscriberInterface
         $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
         if (!$externalCoverage) return;
         $coverage = unserialize($externalCoverage);
+        if (!$coverage) return;
         $this->coverage->merge($coverage);
     }
 
@@ -139,7 +140,8 @@ class CodeCoverage implements EventSubscriberInterface
 
     protected function applySettings($settings)
     {
-        if (!function_exists('xdebug_is_enabled') or !xdebug_is_enabled())
+
+        if (!function_exists('xdebug_is_enabled'))
             throw new \Exception('XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini');
 
 
