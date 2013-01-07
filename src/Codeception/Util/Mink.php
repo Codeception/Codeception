@@ -15,7 +15,7 @@ abstract class Mink extends \Codeception\Module implements \Codeception\Util\Rem
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
     

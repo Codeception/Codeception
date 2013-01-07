@@ -15,10 +15,6 @@ namespace Codeception\Module;
  * - clean database
  * - system collection system.users should contain the user which will be authenticated while script performs DB operations
  *
- * Performance may dramatically change when using SQLite file database storage.
- * Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
- * While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
- *
  * Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
  * Check out the driver if you get problems loading dumps and cleaning databases.
  *
@@ -34,7 +30,7 @@ namespace Codeception\Module;
 
 use \Codeception\Util\Driver\MongoDb as MongoDbDriver;
 
-class MongoDb extends \Codeception\Module implements \Codeception\Util\DbInterface
+class MongoDb extends \Codeception\Module
 {
     /**
      * @api
@@ -139,21 +135,36 @@ class MongoDb extends \Codeception\Module implements \Codeception\Util\DbInterfa
         }
     }
 
-    public function seeInDatabase($collection, $criteria = array())
+    /**
+     *
+     *
+     * @param $collection
+     * @param array $criteria
+     */
+    public function seeInCollection($collection, $criteria = array())
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
     }
 
-    public function dontSeeInDatabase($collection, $criteria = array())
+    /**
+     * @param $collection
+     * @param array $criteria
+     */
+    public function dontSeeInCollection($collection, $criteria = array())
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
     }
 
-    public function grabFromDatabase($collection, $key, $criteria = array()) {
+    /**
+     * @param $collection
+     * @param array $criteria
+     * @return \MongoCursor
+     */
+    public function grabFromCollection($collection, $criteria = array()) {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         return $collection->find($criteria);
     }
