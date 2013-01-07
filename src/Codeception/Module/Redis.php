@@ -20,6 +20,10 @@ use \Codeception\Util\Driver\Redis as RedisDriver;
  * ## Public Properties
  * * driver - contains Connection Driver
  *
+ * ### Beta Version
+ *
+ * Report an issue if this module doesn't work for you.
+ *
  * @author judgedim
  */
 class Redis extends \Codeception\Module

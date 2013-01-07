@@ -26,6 +26,10 @@ namespace Codeception\Module;
  * * dump - path to database dump
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
+ *
+ * ### Beta Version
+ *
+ * Report an issue if this module doesn't work for you.
  */
 
 use \Codeception\Util\Driver\MongoDb as MongoDbDriver;
