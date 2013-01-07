@@ -101,8 +101,7 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
             }
         }
         $this->enabled = $this->settings['enabled']
-                    && function_exists('xdebug_is_enabled')
-                    && xdebug_is_enabled();
+                    && function_exists('xdebug_is_enabled');
 
         $this->remote = $this->settings['remote'];
     }

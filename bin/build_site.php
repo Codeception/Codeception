@@ -37,17 +37,19 @@ foreach ($docs as $doc) {
     file_put_contents($newfile, $contents);
 }
 
-$content = '<h2>Guides</h2><ul>';
+$content = '';
 foreach ($api as $name => $url) {
     $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-$content.= '<h2 class="prepend-top">Modules</h2><ul>';
+file_put_contents('_includes/guides.html', $content);
+
+$content = '';
 foreach ($modules as $name => $url) {
     $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-file_put_contents('_includes/toc.html', $content);
+file_put_contents('_includes/modules.html', $content);
 
 system('git add .');
 system('git commit -m="auto-updated documentation"');

@@ -136,7 +136,12 @@ class MongoDb extends \Codeception\Module
     }
 
     /**
+     * Checks if collection contains an item.
      *
+     * ``` php
+     * <?php
+     * $I->seeInCollection('users', array('name' => 'miles'));
+     * ```
      *
      * @param $collection
      * @param array $criteria
@@ -149,6 +154,13 @@ class MongoDb extends \Codeception\Module
     }
 
     /**
+     * Checks if collection doesn't contain an item.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInCollection('users', array('name' => 'miles'));
+     * ```
+     *
      * @param $collection
      * @param array $criteria
      */
@@ -160,6 +172,13 @@ class MongoDb extends \Codeception\Module
     }
 
     /**
+     * Grabs a data from collection
+     *
+     * ``` php
+     * <?php
+     * $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
+     * ```
+     *
      * @param $collection
      * @param array $criteria
      * @return \MongoCursor
