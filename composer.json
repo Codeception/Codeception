@@ -1,7 +1,7 @@
 {
     "name":"Codeception/Codeception",
     "description":"BDD-style testing framework",
-    "keywords":["BDD", "accetpance testing", "functional testing", "unit testing", "tdd"],
+    "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
     "homepage":"http://codeception.com/",
     "type":"library",
     "license":"MIT",
@@ -12,10 +12,10 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require":{
         "php":">=5.3.3",
-        "behat/mink": "1.4",
+        "behat/mink": "1.4@stable",
         "phpunit/phpunit": "3.7.*",
         "fabpot/goutte": "dev-master",
         "behat/mink-goutte-driver": "*",
