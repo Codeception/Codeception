@@ -16,7 +16,7 @@ foreach ($docs as $doc) {
     $newfile = str_replace('.md','.markdown', $doc->getFilename());
     $name = str_replace('.markdown','', $newfile);
     $contents = file_get_contents($doc->getPathname());
-    if (strpos($doc->getPathname(),'modules')) {
+    if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
         $newfile = 'docs/modules/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $modules[$name] = '/docs/modules/'.$url;
@@ -39,6 +39,8 @@ foreach ($docs as $doc) {
 
 $guides_list = '';
 foreach ($api as $name => $url) {
+    $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
+    $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
     $guides.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
