@@ -51,7 +51,7 @@ foreach ($modules as $name => $url) {
     $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-file_put_contents('_includes/toc.html', $content);
+file_put_contents('_includes/modules.html', $content);
 
 system('git add .');
 system('git commit -m="auto-updated documentation"');
