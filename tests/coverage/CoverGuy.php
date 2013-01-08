@@ -5,7 +5,7 @@
 use Codeception\Maybe;
 use Codeception\Module\Filesystem;
 use Codeception\Module\Cli;
-use Codeception\Module\CliHelper;
+use Codeception\Module\CoverHelper;
 
 /**
  * Inherited methods
@@ -21,7 +21,7 @@ use Codeception\Module\CliHelper;
  * @method void lookForwardTo($role)
 */
 
-class CliGuy extends \Codeception\AbstractGuy
+class CoverGuy extends \Codeception\AbstractGuy
 {
     
     /**
@@ -289,23 +289,6 @@ class CliGuy extends \Codeception\AbstractGuy
      */
     public function dontSeeInShellOutput($text) {
         $this->scenario->action('dontSeeInShellOutput', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     *
-     * @see CliHelper::executeCommand()
-     *
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function executeCommand($command) {
-        $this->scenario->action('executeCommand', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

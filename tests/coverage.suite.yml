@@ -1,0 +1,6 @@
+class_name: CoverGuy
+modules:
+    enabled:
+        - Filesystem
+        - Cli
+        - CoverHelper
