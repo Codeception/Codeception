@@ -8,6 +8,8 @@ but in reality 80% are just enough. And even 100% code coverage rate doesn't sav
 
 **Codeception has CodeCoverage tools since 1.5. To collect coverage information `xdebug` is required**.
 
+![Code Coverage Example](http://codeception.com/images/coverage.png)
+
 Coverage data can be collected manually for local tests and remote tests. Remote tests may be executed on different node, 
 or locally, but behind the web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception
 supports remote codecoverage as well as local.
