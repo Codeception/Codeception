@@ -3,4 +3,5 @@ modules:
     enabled:
         - Filesystem
         - Cli
+        - CliHelper
         - CoverHelper

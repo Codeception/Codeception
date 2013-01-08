@@ -295,5 +295,22 @@ class CliGuy extends \Codeception\AbstractGuy
         }
         return new Maybe();
     }
+
+ 
+    /**
+     *
+     * @see CliHelper::executeCommand()
+     *
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function executeCommand($command) {
+        $this->scenario->action('executeCommand', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
 }
 
