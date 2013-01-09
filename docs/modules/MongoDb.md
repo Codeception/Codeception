@@ -25,6 +25,10 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
+### Beta Version
+
+Report an issue if this module doesn't work for you.
+
 ## Actions
 
 

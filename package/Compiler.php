@@ -61,26 +61,23 @@ class Compiler
 
         $this->addFile($phar, new \SplFileInfo($this->compileDir.'/autoload.php'));
 
-        $phar->stopBuffering();
+        $this->setMainExecutable($phar);
+        $this->setStub($phar);
+        $phar->stopBuffering();        
 
         if(in_array('GZ', \Phar::getSupportedCompression())) {
             echo "Compressed\r\n";
             //do not use compressFiles as it has issue with temporary file when adding large amount of files
 //            $phar->compressFiles(\Phar::GZ);
-            if (file_exists('codecept.phar.gz')) unlink('codecept.phar.gz');
+            if (file_exists($this->compileDir.'codecept.phar.gz')) unlink($this->compileDir.'codecept.phar.gz');
 
             $phar = $phar->compress(\Phar::GZ);
-            $this->setMainExecutable($phar);
-            $this->setStub($phar);
-
-            unlink('codecept.phar');
-            rename('codecept.phar.gz', 'codecept.phar');
 
         } else {
-            $this->setMainExecutable($phar);
-            $this->setStub($phar);
-        }
 
+            $phar = $phar->compress(\Phar::NONE);
+
+        }
 
         unset($phar);
     }
@@ -110,7 +107,7 @@ class Compiler
     public function setStub($phar)
     {
         $contents = file_get_contents($this->compileDir.'/package/stub.php');
-        $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
+//        $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
         $phar->setStub($contents);
     }
 

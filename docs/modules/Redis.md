@@ -14,6 +14,10 @@ Cleans up Redis database after each run.
 ## Public Properties
 * driver - contains Connection Driver
 
+### Beta Version
+
+Report an issue if this module doesn't work for you.
+
  * author judgedim
 
 ## Actions

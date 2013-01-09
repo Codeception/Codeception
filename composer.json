@@ -16,7 +16,7 @@
     "require":{
         "php":">=5.3.3",
         "behat/mink": "1.4@stable",
-        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit": "3.7.*@stable",
         "fabpot/goutte": "dev-master",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium-driver": "*",
