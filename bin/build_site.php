@@ -41,17 +41,17 @@ $guides_list = '';
 foreach ($api as $name => $url) {
     $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
     $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
-    $guides.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+    $guides_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-file_put_contents('_includes/guides.html', $guides);
+file_put_contents('_includes/guides.html', $guides_list);
 
 $modules_list.= '';
 foreach ($modules as $name => $url) {
-    $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+    $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-file_put_contents('_includes/modules.html', $content);
+file_put_contents('_includes/modules.html', $modules_list);
 
 system('git add .');
 system('git commit -m="auto-updated documentation"');
