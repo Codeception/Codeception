@@ -46,7 +46,7 @@ foreach ($api as $name => $url) {
 
 file_put_contents('_includes/guides.html', $guides_list);
 
-$modules_list.= '';
+$modules_list = '';
 foreach ($modules as $name => $url) {
     $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
