@@ -329,7 +329,7 @@ class WebHelper extends \Codeception\Module {
 
     function seeResponseIsPrettyLong($size = 3000) {
         $session = $this->getModule('PhpBrowser')->session;
-        $content = $session->getPage()->getConetent();
+        $content = $session->getPage()->getContent();
         $this->assertGreaterThen($size, strlen($content));
     }
 }
