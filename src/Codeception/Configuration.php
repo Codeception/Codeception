@@ -91,14 +91,14 @@ class Configuration
         $moduleConf = array('modules' => isset($config['modules']) ? $config['modules'] : array());
         $path = $config['paths']['tests'];
 
-        $suiteConf = file_exists(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "/$suite.suite.yml") : array();
-        $suiteDistconf = file_exists(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "/$suite.suite.dist.yml") : array();
+        $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
+        $suiteDistconf = file_exists( self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
 
         $settings = self::mergeConfigs($globalConf, $moduleConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
 
-        $settings['path'] = getcwd() . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
     }
