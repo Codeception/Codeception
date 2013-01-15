@@ -47,9 +47,10 @@ class MongoDb extends \Codeception\Module
      */
 
     protected $dumpFile;
-    protected $isDumpFileEmpty = false;
+    protected $isDumpFileEmpty = true;
 
-    protected $config = array('populate' => true,
+    protected $config = array(
+        'populate' => true,
         'cleanup'  => true,
         'dump'     => null);
 
@@ -72,6 +73,7 @@ class MongoDb extends \Codeception\Module
                     Please, check path for dump file: " . $this->config['dump']);
             }
             $this->dumpFile = getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'];
+            $this->isDumpFileEmpty = false;
 
             $content = file_get_contents($this->dumpFile);
             $content = trim(preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $content));
@@ -100,13 +102,11 @@ class MongoDb extends \Codeception\Module
             $this->cleanup();
             $this->loadDump();
         }
-        parent::_before($test);
     }
 
     public function _after(\Codeception\TestCase $test)
     {
         $this->populated = false;
-        parent::_after($test);
     }
 
     protected function cleanup()
@@ -116,10 +116,6 @@ class MongoDb extends \Codeception\Module
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
         }
         try {
-            // don't clear database for empty dump
-            if ($this->isDumpFileEmpty) {
-                return;
-            }
             $this->driver->cleanup();
 
         } catch (\Exception $e) {
@@ -189,7 +185,7 @@ class MongoDb extends \Codeception\Module
      */
     public function grabFromCollection($collection, $criteria = array()) {
         $collection = $this->driver->getDbh()->selectCollection($collection);
-        return $collection->find($criteria);
+        return $collection->findOne($criteria);
     }
 
 }
