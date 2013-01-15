@@ -17,7 +17,7 @@ before_script:
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.16.1.jar
   - java -jar selenium-server-standalone-2.16.1.jar &
   - php -S localhost:8000 -t tests/data/app &
-  - composer install --dev
+  - composer install
   - "mysql -e 'create database codeception_test;'"
 
 script: "php -dxdebug.remote_enable=1 -dxdebug.remote_host=127.0.0.1 -dxdebug.remote_port=9000 -dxdebug.remote_mode=req codecept run"
