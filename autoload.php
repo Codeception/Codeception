@@ -2,7 +2,9 @@
 
 require_once __DIR__ .'/vendor/UniversalClassLoader.php';
 
-if (stream_resolve_include_path(__DIR__.'/vendor/autoload.php')) {
+// for PHAR/PEAR/Git
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
+
     $namespaceMap = require_once __DIR__.'/vendor/composer/autoload_namespaces.php';
     $classesMap = require_once __DIR__.'/vendor/composer/autoload_classmap.php';
 
@@ -24,6 +26,7 @@ if (stream_resolve_include_path(__DIR__.'/vendor/autoload.php')) {
         true
     );
 
+// for Composer
 } elseif (stream_resolve_include_path(__DIR__.'/../../autoload.php')) {
     require_once __DIR__ . '/../../autoload.php';
 }
