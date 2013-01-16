@@ -16,7 +16,6 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.16.1.jar
   - java -jar selenium-server-standalone-2.16.1.jar &
-  - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - php -S localhost:8000 -t tests/data/app &
   - composer install -n
   - "mysql -e 'create database codeception_test;'"
