@@ -9,8 +9,7 @@ branches:
   except:
     - gh-pages
 
-services:
-  - mongodb
+services: mongodb
 
 before_script:
   - export DISPLAY=:99.0
