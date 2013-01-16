@@ -20,14 +20,16 @@ foreach ($docs as $doc) {
         $newfile = 'docs/modules/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $modules[$name] = '/docs/modules/'.$url;
-        $contents = str_replace('# ','## ', $contents);
+
+        $contents = str_replace('## ','### ', $contents);
+
     } else {
         $newfile = 'docs/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $api[substr($name,3)] = '/docs/'.$url;
     }
 
-    copy($doc->getPathname(), $newfile);    
+    copy($doc->getPathname(), $newfile);
 
     $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
@@ -36,6 +38,32 @@ foreach ($docs as $doc) {
 
     file_put_contents($newfile, $contents);
 }
+
+$guides = array_keys($api);
+foreach ($api as $name => $url) {
+    $filename = substr($url, 6);
+    $doc = file_get_contents('docs/'.$filename.'.markdown');
+
+    $doc .= "\n\n\n";
+    $i = array_search($name, $guides);
+
+    $i = array_search($name, $guides);
+    if (isset($guides[$i+1])) {
+        $next_title = $guides[$i+1];
+        $next_url = $api[$guides[$i+1]];
+        $doc .= "\n* **Next Chapter: [$next_title >]($next_url)**";
+    }
+
+    if (isset($guides[$i-1])) {
+        $prev_title = $guides[$i-1];
+        $prev_url = $api[$guides[$i-1]];
+        $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
+    }
+
+
+    file_put_contents('docs/'.$filename.'.markdown', $doc);
+}
+
 
 $guides_list = '';
 foreach ($api as $name => $url) {
