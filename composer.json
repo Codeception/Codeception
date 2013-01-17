@@ -12,7 +12,7 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "dev",
+
     "require":{
         "php":">=5.3.3",
         "behat/mink": "1.4@stable",
@@ -27,7 +27,7 @@
         "symfony/console": "*",
         "symfony/event-dispatcher": "*",
         "symfony/yaml": "*",
-        "videlalvaro/php-amqplib": "dev-master"
+        "videlalvaro/php-amqplib": "2.*"
     },
 
     "autoload":{
