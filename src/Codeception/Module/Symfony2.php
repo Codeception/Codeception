@@ -35,7 +35,7 @@ class Symfony2 extends \Codeception\Util\Framework
 
 
     public function _initialize() {
-        $cache = getcwd().DIRECTORY_SEPARATOR.$this->config['app_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
+        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
         if (!file_exists($cache)) throw new \RuntimeException('Symfony2 bootstrap file not found in '.$cache);
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
