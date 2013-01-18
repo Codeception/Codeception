@@ -14,6 +14,33 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return get_class($this).'::'.$this->getName();
     }
 
+    protected  final function setUp()
+    {
+        if ($this->bootstrap) require $this->bootstrap;
+        $this->scenario = new \Codeception\Scenario($this);
+        $this->codeGuy = new \CodeGuy($this->scenario);
+        $this->scenario->run();
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
+        $this->_before();
+    }
+
+    protected function _before()
+    {
+
+    }
+
+    protected final function tearDown()
+    {
+        $this->_after();
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+    }
+
+    protected function _after()
+    {
+
+    }
+
+
     public function runStep(\Codeception\Step $step)
     {
         $this->trace[] = $step;
@@ -68,5 +95,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->scenario;
     }
 
+    public function getTrace()
+    {
+        return $this->trace;
+    }
 
 }

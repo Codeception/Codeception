@@ -76,10 +76,13 @@ class Doctrine2 extends \Codeception\Module
     protected function clean()
     {
         $em = self::$em;
+
         $reflectedEm = new \ReflectionClass($em);
-        $property = $reflectedEm->getProperty('repositories');
-        $property->setAccessible(true);
-        $property->setValue($em, array());
+        if ($reflectedEm->hasProperty('repositories')) {
+            $property = $reflectedEm->getProperty('repositories');
+            $property->setAccessible(true);
+            $property->setValue($em, array());
+        }
         self::$em->clear();
     }
 
@@ -155,9 +158,13 @@ class Doctrine2 extends \Codeception\Module
                                                                           '_class'      => $metadata), $methods));
         $em->clear();
         $reflectedEm = new \ReflectionClass($em);
-        $property = $reflectedEm->getProperty('repositories');
-        $property->setAccessible(true);
-        $property->setValue($em, array_merge($property->getValue($em), array($classname => $mock)));
+        if ($reflectedEm->hasProperty('repositories')) {
+            $property = $reflectedEm->getProperty('repositories');
+            $property->setAccessible(true);
+            $property->setValue($em, array_merge($property->getValue($em), array($classname => $mock)));
+        } else {
+            $this->debugSection('Warning','Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property');
+        }
     }
 
     /**

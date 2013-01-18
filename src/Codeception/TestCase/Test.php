@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\TestCase;
 
+use Codeception\Exception\TestRuntime;
+
 class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescribing
 {
     /**
@@ -29,9 +31,17 @@ class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescr
         return strtolower($text);
     }
 
-    public function getTrace()
+    /**
+     * @param $module
+     * @return \Codeception\Module
+     * @throws \Codeception\Exception\TestRuntime
+     */
+    public function getModule($module)
     {
-        return $this->trace;
+        if (isset(\Codeception\SuiteManager::$modules[$module])) {
+            return \Codeception\SuiteManager::$modules[$module];
+        }
+        throw new TestRuntime("Module $module is not enabled for this test suite");
     }
 
 }
