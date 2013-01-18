@@ -74,11 +74,6 @@ class Cept extends \Codeception\TestCase
         return $this->scenario->getFeature() . ' (' . $this->getFileName() . ')';
     }
 
-    public function getTrace()
-    {
-        return $this->trace;
-    }
-    
     public function testCodecept($run = true)
     {
         $scenario = $this->scenario;
