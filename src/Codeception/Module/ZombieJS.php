@@ -114,7 +114,7 @@ JS
         );
 
         if (method_exists('http\Header', 'parse')) {
-            return http\Header::parse(str_replace("\n","\r\n",$headers));
+            return \http\Header::parse(str_replace("\n","\r\n",$headers));
         } else {
             return http_parse_headers(str_replace("\n","\r\n",$headers));
         }
