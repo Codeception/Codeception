@@ -12,7 +12,6 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "stable",
     "require":{
         "php":">=5.3.3",
         "behat/mink": "1.4@stable",
@@ -22,12 +21,12 @@
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "*",
-        "monolog/monolog": "@stable",
-        "symfony/finder": "@stable",
-        "symfony/console": "@stable",
-        "symfony/event-dispatcher": "@stable",
-        "symfony/yaml": "@stable",
-        "videlalvaro/php-amqplib": "@stable"
+        "monolog/monolog": "*",
+        "symfony/finder": "*",
+        "symfony/console": "*",
+        "symfony/event-dispatcher": "*",
+        "symfony/yaml": "*",
+        "videlalvaro/php-amqplib": "2.*"
     },
 
     "autoload":{
