@@ -3,3 +3,4 @@ tests/log/debug
 composer.phar
 vendor
 tests/data/claypit/c3tmp'
+composer.lock
