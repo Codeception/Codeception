@@ -30,23 +30,24 @@ class SimpleTest extends \Codeception\TestCase\Test
     */
     protected $codeGuy;
 
-    // keep this setupUp and tearDown to enable proper work of Codeception modules
-    protected function setUp()
+    // executed before each test
+    protected function _before()
     {
-        if ($this->bootstrap) require $this->bootstrap;
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
-        $this->codeGuy = new CodeGuy($scenario = new \Codeception\Scenario($this));
-        $scenario->run();
     }
 
-    protected function tearDown()
+    // executed after each test
+    protected function _after()
     {
-        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 }
 ?>
 ```
-This class has predefined `setUp` and `tearDown` methods to start with. They are used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
+This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
+
+As you see unlike in PHPUnit setUp/tearDown methods are replaced with their aliases: `_before`, `_after`.
+The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and is used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
+So If you implement `setUp` and `tearDown` be sure, that you will call their parent method.
+
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -90,46 +91,30 @@ function testSavingUser()
 ?>
 ```
 
-The setUp and tearDown methods of your test will perform all initialization and cleanup actions for modules included into CodeGuy class. For instance, while using the database module will make it clean up the database after each run. If you don't need this cleanup to performed you can either update the suite configuration file or just remove this lines for your test:
+Database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
+If it's not your required behavior, please change the settings of `Db` module for current suite.
+
+### Modules
+
+*new in 1.5.2*
+
+Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the CodeGuy class for this purpose, using module directly grants you access to all public properties of that module.
+
+For example, if you use `Symfony2` module here is the way you can access Symfony container:
 
 ```php
 <?php
-// in setUp
-$this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
-// in tearDown
-$this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
-?>
+/**
+ * @var Symfony\Component\DependencyInjection\Container
+ */
+$container = $this->getModule('Symfony2')->container;
 ```
+
+All public variables are listed in references for corresponding modules.
 
 ### Bootstrap
 
-The bootstrap file is located in suite directory and is named `_bootstrap`. It's widely used in acceptance and functional tests to initialze the predefined variables. In unit tests it can be used for sharing share same data among the different tests. But the main purpose of is to set up an autoloader for your project inside this class. Otherwise Codeception will not find the testing classes and fail.
-
-Example bootstrap file may look like this:
-
-``` php
-<?php
-require_once 'app/autoload.php';
-Autoloader::initialize();
-
-$demoUser = User::find(1);
-?>
-```
-
-The `$demoUser` varible now can be accessed in setUp method of a test class.
-
-``` php
-<?php
-    protected function setUp()
-    {
-        if ($this->bootstrap) require $this->bootstrap;
-        $this->user = $demoUser;
-        // ...
-    }
-?>
-```
-
-And you can use it anywhere in your test. Use autoloader to set up the fixtures for your tests. For more information on working with data in tests - read the _Data_ chapter. 
+The bootstrap file is located in suite directory and is named `_bootstrap` and is **included before each test** (with `setUp` method in parent class). It's widely used in acceptance and functional tests to initialize the predefined variables. In unit tests it can be used for sharing share same data among the different tests. But the main purpose of is to set up an autoloader for your project inside this class. Otherwise Codeception will not find the testing classes and fail.
 
 ### Stubs
 
@@ -152,19 +137,9 @@ class SimpleTest extends \Codeception\TestCase\Test
     */
     protected $codeGuy;
 
-    // keep this setupUp and tearDown to enable proper work of Codeception modules
-    protected function setUp()
+    function _before()
     {
-        if ($this->bootstrap) require $this->bootstrap;
-        $this->user = new DemoUser;
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
-        $this->codeGuy = new CodeGuy($scenario = new \Codeception\Scenario($this));
-        $scenario->run();
-    }
-
-    protected function tearDown()
-    {
-        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+        $this->user = new User();
     }
 
     function testUserCanBeBanned()
