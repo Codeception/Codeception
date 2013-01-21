@@ -1,5 +1,5 @@
 {
-    "hash": "af7cade6266b3770e6481317e75ccf25",
+    "hash": "6dcabfa5842d70ccdddfa1e41be7569d",
     "packages": [
         {
             "name": "alexandresalome/php-selenium",
@@ -1414,6 +1414,10 @@
         "behat/mink": 0,
         "phpunit/phpunit": 0,
         "fabpot/goutte": 0,
+        "symfony/finder": 0,
+        "symfony/console": 0,
+        "symfony/event-dispatcher": 0,
+        "symfony/yaml": 0,
         "videlalvaro/php-amqplib": 0
     }
 }

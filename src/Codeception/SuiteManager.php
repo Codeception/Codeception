@@ -66,11 +66,8 @@ class SuiteManager {
     }
 
     public function addTest($path) {
-        $loaded_classes = get_declared_classes();
-        require_once $path;
-        $extra_loaded_classes = get_declared_classes();
 
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
+        $testClasses = $this->getClassesFromFile($path);
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
@@ -82,6 +79,7 @@ class SuiteManager {
                 if ($test instanceof \Codeception\TestCase\Test) {
                     $test->setBootstrap($this->settings['bootstrap']);
                     $test->setDispatcher($this->dispatcher);
+                    $test->setGuyClass($this->settings['class_name']);
                 } else {
                     if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
                 }
@@ -102,16 +100,12 @@ class SuiteManager {
    	}
 
 
+
     public function addCest($file) {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
-        $loaded_classes = get_declared_classes();
-        require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
-
+        $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
             $unit = new $testClass;
@@ -201,5 +195,13 @@ class SuiteManager {
      */
     public function getSuite() {
         return $this->suite;
+    }
+
+    protected function getClassesFromFile($file)
+    {
+        $loaded_classes = get_declared_classes();
+        require_once $file;
+        $extra_loaded_classes = get_declared_classes();
+        return array_diff($extra_loaded_classes,$loaded_classes);
     }
 }

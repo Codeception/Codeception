@@ -23,20 +23,14 @@ use Codeception\Util\Stub;
     */
     protected $%s;
 
-    // keep this setupUp and tearDown to enable proper work of Codeception modules
-    protected function setUp()
+    // before
+    protected function _before()
     {
-        if (\$this->bootstrap) require \$this->bootstrap;
-        \$this->dispatcher->dispatch('test.before', new \Codeception\Event\Test(\$this));
-        \$this->%s = new %s(\$scenario = new \Codeception\Scenario(\$this));
-        \$scenario->run();
-
-        // initialization code
     }
 
-    protected function tearDown()
+    // after test
+    protected function _after()
     {
-        \$this->dispatcher->dispatch('test.after', new \Codeception\Event\Test(\$this));
     }
 
     // tests
@@ -69,17 +63,8 @@ EOF;
 
         $guy = $suiteconf['class_name'];
 
-        $class = str_replace('/','\\', $class);
-        $namespaces = explode('\\', $class);
-        $classname = array_pop($namespaces);
-
-        $use = '';
-
-        $path = $suiteconf['path'];
-        foreach ($namespaces as $namespace) {
-            $path .= DIRECTORY_SEPARATOR.$namespace;
-            @mkdir($path);
-        }
+        $classname = $this->getClassName($class);
+        $path = $this->buildPath($suiteconf['path'], $class);
 
         if (strpos(strrev($classname), strrev('Test')) === 0) $classname .= '.php';
         if (strpos(strrev($classname), strrev('Test.php')) !== 0) $classname .= 'Test.php';
@@ -94,7 +79,7 @@ EOF;
             exit;
         }
 
-        file_put_contents($filename, sprintf($this->template, $use, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
+        file_put_contents($filename, sprintf($this->template, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
 
         $output->writeln("<info>Test for $class was created in $filename</info>");
 
