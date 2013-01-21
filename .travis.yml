@@ -18,6 +18,7 @@ before_script:
   - pecl install mongo
   - echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - php -S localhost:8000 -t tests/data/app &
+  - composer self-update
   - composer install -n
   - "mysql -e 'create database codeception_test;'"
 

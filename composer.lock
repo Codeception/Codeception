@@ -1,5 +1,5 @@
 {
-    "hash": "6dcabfa5842d70ccdddfa1e41be7569d",
+    "hash": "f04d0dd2ce95263a2c86fea0c205ee4b",
     "packages": [
         {
             "name": "alexandresalome/php-selenium",
@@ -1414,6 +1414,7 @@
         "behat/mink": 0,
         "phpunit/phpunit": 0,
         "fabpot/goutte": 0,
+        "monolog/monolog": 0,
         "symfony/finder": 0,
         "symfony/console": 0,
         "symfony/event-dispatcher": 0,
