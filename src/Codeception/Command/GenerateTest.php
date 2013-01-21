@@ -23,12 +23,12 @@ use Codeception\Util\Stub;
     */
     protected $%s;
 
-    // before
+    // executed before each test
     protected function _before()
     {
     }
 
-    // after test
+    // executed after each test
     protected function _after()
     {
     }
