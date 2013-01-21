@@ -1,0 +1,399 @@
+[2013-01-21 16:34:44] BuildCept.php.INFO: run shell commmand "php codecept build" [] []
+[2013-01-21 16:34:45] BuildCept.php.INFO: see in shell output "generated sucessfully" [] []
+[2013-01-21 16:34:45] BuildCept.php.INFO: see file found "CodeGuy.php","tests/unit" [] []
+[2013-01-21 16:34:45] BuildCept.php.INFO: see file found "CliGuy.php","tests/cli" [] []
+[2013-01-21 16:34:45] BuildCept.php.INFO: see in this file "seeFileFound(" [] []
+[2013-01-21 16:34:45] BuildCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:45] GenerateCeptCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:45] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept" [] []
+[2013-01-21 16:34:45] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy" [] []
+[2013-01-21 16:34:46] GenerateCeptCept.php.ALERT: DummyCept.php in /home/davert/Downloads/code/Codeception//tests/data/sandbox/tests/dummy [] []
+[2013-01-21 16:34:46] GenerateCeptCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:46] GenerateCeptCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: execute command "generate:cest dummy DummyClass" [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: see file found "DummyClassCest.php" [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: see in this file "$class = 'DummyClass'" [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.ALERT: text $class = 'DummyClass' in currently opened file
+Failed asserting that '<?php
+class DummyClassCest
+{
+    // the class name you want to test
+    public $class = '';
+
+    // sample test
+    public function shouldBe(\DumbGuy $I) {
+    
+    }
+}
+' contains "$class = 'DummyClass'". [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:46] GenerateCestCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:46] GenerateScenariosCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:46] GenerateScenariosCept.php.INFO: execute command "generate:scenarios dummy" [] []
+[2013-01-21 16:34:47] GenerateScenariosCept.php.INFO: see file found "File_Exists.txt","tests/_data/scenarios" [] []
+[2013-01-21 16:34:47] GenerateScenariosCept.php.INFO: see in this file "I WANT TO CHECK CONFIG EXISTS" [] []
+[2013-01-21 16:34:47] GenerateScenariosCept.php.INFO: see in this file "I see file found "codeception.yml"" [] []
+[2013-01-21 16:34:47] GenerateScenariosCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:47] GenerateSuiteCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:47] GenerateSuiteCept.php.INFO: execute command "generate:suite house HouseGuy" [] []
+[2013-01-21 16:34:48] GenerateSuiteCept.php.INFO: see file found "house.suite.yml" [] []
+[2013-01-21 16:34:48] GenerateSuiteCept.php.INFO: see in this file "class_name: HouseGuy" [] []
+[2013-01-21 16:34:48] GenerateSuiteCept.php.INFO: see file found "HouseHelper.php" [] []
+[2013-01-21 16:34:48] GenerateSuiteCept.php.INFO: see file found "_bootstrap.php","tests/house" [] []
+[2013-01-21 16:34:48] GenerateSuiteCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: execute command "generate:test dummy Dummy" [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: see file found "DummyTest.php" [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: see in this file "class DummyTest extends \Codeception\TestCase\Test" [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.ALERT: text class DummyTest extends \Codeception\TestCase\Test in currently opened file
+Failed asserting that '<?php
+class
+use Codeception\Util\Stub;
+
+Dummy DumbGuyTest extends \Codeception\TestCase\Test
+{
+   /**
+    * @var dumbGuy
+    */
+    protected $dumbGuy;
+
+    // executed before each test
+    protected function _before()
+    {
+    }
+
+    // executed after each test
+    protected function _after()
+    {
+    }
+
+    // tests
+
+}' contains "class DummyTest extends \Codeception\TestCase\Test". [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:48] GenerateTestCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:48] RunWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:48] RunWithHtmlCept.php.INFO: execute command "run --html" [] []
+[2013-01-21 16:34:49] RunWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:34:49] RunWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:49] RunWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:49] RunWithJsonCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:49] RunWithJsonCept.php.INFO: execute command "run --json" [] []
+[2013-01-21 16:34:49] RunWithJsonCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:34:49] RunWithJsonCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:49] RunWithJsonCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:49] RunWithTapCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:49] RunWithTapCept.php.INFO: execute command "run --tap" [] []
+[2013-01-21 16:34:49] RunWithTapCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:34:49] RunWithTapCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:49] RunWithTapCept.php.INFO: PASSED [] []
+[2013-01-21 16:34:49] RunWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:34:49] RunWithXmlCept.php.INFO: execute command "run --xml" [] []
+[2013-01-21 16:34:49] RunWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:34:49] RunWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:34:49] RunWithXmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: run shell commmand "php codecept build" [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: see in shell output "generated sucessfully" [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: see file found "CodeGuy.php","tests/unit" [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: see file found "CliGuy.php","tests/cli" [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: see in this file "seeFileFound(" [] []
+[2013-01-21 16:41:09] BuildCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:09] GenerateCeptCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:09] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept" [] []
+[2013-01-21 16:41:10] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy" [] []
+[2013-01-21 16:41:10] GenerateCeptCept.php.ALERT: DummyCept.php in /home/davert/Downloads/code/Codeception//tests/data/sandbox/tests/dummy [] []
+[2013-01-21 16:41:10] GenerateCeptCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:10] GenerateCeptCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:10] GenerateCestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:10] GenerateCestCept.php.INFO: execute command "generate:cest dummy DummyClass" [] []
+[2013-01-21 16:41:11] GenerateCestCept.php.INFO: see file found "DummyClassCest.php" [] []
+[2013-01-21 16:41:11] GenerateCestCept.php.INFO: see in this file "class DummyClassCest" [] []
+[2013-01-21 16:41:11] GenerateCestCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: execute command "generate:scenarios dummy" [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: see file found "File_Exists.txt","tests/_data/scenarios" [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: see in this file "I WANT TO CHECK CONFIG EXISTS" [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: see in this file "I see file found "codeception.yml"" [] []
+[2013-01-21 16:41:11] GenerateScenariosCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:11] GenerateSuiteCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:11] GenerateSuiteCept.php.INFO: execute command "generate:suite house HouseGuy" [] []
+[2013-01-21 16:41:12] GenerateSuiteCept.php.INFO: see file found "house.suite.yml" [] []
+[2013-01-21 16:41:12] GenerateSuiteCept.php.INFO: see in this file "class_name: HouseGuy" [] []
+[2013-01-21 16:41:12] GenerateSuiteCept.php.INFO: see file found "HouseHelper.php" [] []
+[2013-01-21 16:41:12] GenerateSuiteCept.php.INFO: see file found "_bootstrap.php","tests/house" [] []
+[2013-01-21 16:41:12] GenerateSuiteCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:12] GenerateTestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:12] GenerateTestCept.php.INFO: execute command "generate:test dummy Dummy" [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.INFO: see file found "DummyTest.php" [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.INFO: see in this file "class DummyTest extends \Codeception\TestCase\Test" [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.INFO: see in this file "$this->dumbGuy" [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.ALERT: text $this->dumbGuy in currently opened file
+Failed asserting that '<?php
+use Codeception\Util\Stub;
+
+class DummyTest extends \Codeception\TestCase\Test
+{
+   /**
+    * @var DumbGuy
+    */
+    protected $dumbGuy;
+
+    // executed before each test
+    protected function _before()
+    {
+    }
+
+    // executed after each test
+    protected function _after()
+    {
+    }
+
+    // tests
+
+}' contains "$this->dumbGuy". [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:13] GenerateTestCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:13] RunWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:13] RunWithHtmlCept.php.INFO: execute command "run --html" [] []
+[2013-01-21 16:41:13] RunWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:41:13] RunWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:13] RunWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:13] RunWithJsonCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:13] RunWithJsonCept.php.INFO: execute command "run --json" [] []
+[2013-01-21 16:41:13] RunWithJsonCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:41:13] RunWithJsonCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:13] RunWithJsonCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:13] RunWithTapCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:13] RunWithTapCept.php.INFO: execute command "run --tap" [] []
+[2013-01-21 16:41:13] RunWithTapCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:41:13] RunWithTapCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:13] RunWithTapCept.php.INFO: PASSED [] []
+[2013-01-21 16:41:13] RunWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:41:13] RunWithXmlCept.php.INFO: execute command "run --xml" [] []
+[2013-01-21 16:41:13] RunWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:41:13] RunWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:41:13] RunWithXmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:07] BuildCept.php.INFO: run shell commmand "php codecept build" [] []
+[2013-01-21 16:46:08] BuildCept.php.INFO: see in shell output "generated sucessfully" [] []
+[2013-01-21 16:46:08] BuildCept.php.INFO: see file found "CodeGuy.php","tests/unit" [] []
+[2013-01-21 16:46:08] BuildCept.php.INFO: see file found "CliGuy.php","tests/cli" [] []
+[2013-01-21 16:46:08] BuildCept.php.INFO: see in this file "seeFileFound(" [] []
+[2013-01-21 16:46:08] BuildCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept" [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy" [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: see in this file "$I = new DumbGuy($scenario);" [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-21 16:46:08] GenerateCeptCept.php.INFO: execute command "generate:cept dummy path/DummyCept" [] []
+[2013-01-21 16:46:09] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy/path" [] []
+[2013-01-21 16:46:09] GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-21 16:46:09] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept.php" [] []
+[2013-01-21 16:46:10] GenerateCeptCept.php.INFO: see file found "DummyCept.php" [] []
+[2013-01-21 16:46:10] GenerateCeptCept.php.ALERT: DummyCept.php in /home/davert/Downloads/code/Codeception//tests/data/sandbox/ [] []
+[2013-01-21 16:46:10] GenerateCeptCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:46:10] GenerateCeptCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:10] GenerateCestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:10] GenerateCestCept.php.INFO: execute command "generate:cest dummy DummyClass" [] []
+[2013-01-21 16:46:10] GenerateCestCept.php.INFO: see file found "DummyClassCest.php" [] []
+[2013-01-21 16:46:10] GenerateCestCept.php.INFO: see in this file "class DummyClassCest" [] []
+[2013-01-21 16:46:10] GenerateCestCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:10] GenerateScenariosCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:10] GenerateScenariosCept.php.INFO: execute command "generate:scenarios dummy" [] []
+[2013-01-21 16:46:11] GenerateScenariosCept.php.INFO: see file found "File_Exists.txt","tests/_data/scenarios" [] []
+[2013-01-21 16:46:11] GenerateScenariosCept.php.INFO: see in this file "I WANT TO CHECK CONFIG EXISTS" [] []
+[2013-01-21 16:46:11] GenerateScenariosCept.php.INFO: see in this file "I see file found "codeception.yml"" [] []
+[2013-01-21 16:46:11] GenerateScenariosCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:11] GenerateSuiteCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:11] GenerateSuiteCept.php.INFO: execute command "generate:suite house HouseGuy" [] []
+[2013-01-21 16:46:12] GenerateSuiteCept.php.INFO: see file found "house.suite.yml" [] []
+[2013-01-21 16:46:12] GenerateSuiteCept.php.INFO: see in this file "class_name: HouseGuy" [] []
+[2013-01-21 16:46:12] GenerateSuiteCept.php.INFO: see file found "HouseHelper.php" [] []
+[2013-01-21 16:46:12] GenerateSuiteCept.php.INFO: see file found "_bootstrap.php","tests/house" [] []
+[2013-01-21 16:46:12] GenerateSuiteCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: execute command "generate:test dummy Dummy" [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: see file found "DummyTest.php" [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: see in this file "class DummyTest extends \Codeception\TestCase\Test" [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: see in this file "protected $dumbGuy" [] []
+[2013-01-21 16:46:12] GenerateTestCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:12] RunWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:12] RunWithHtmlCept.php.INFO: execute command "run --html" [] []
+[2013-01-21 16:46:12] RunWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:46:12] RunWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:46:12] RunWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:12] RunWithJsonCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:12] RunWithJsonCept.php.INFO: execute command "run --json" [] []
+[2013-01-21 16:46:13] RunWithJsonCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:46:13] RunWithJsonCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:46:13] RunWithJsonCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:13] RunWithTapCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:13] RunWithTapCept.php.INFO: execute command "run --tap" [] []
+[2013-01-21 16:46:13] RunWithTapCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:46:13] RunWithTapCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:46:13] RunWithTapCept.php.INFO: PASSED [] []
+[2013-01-21 16:46:13] RunWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:46:13] RunWithXmlCept.php.INFO: execute command "run --xml" [] []
+[2013-01-21 16:46:13] RunWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:46:13] RunWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:46:13] RunWithXmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:52] BuildCept.php.INFO: run shell commmand "php codecept build" [] []
+[2013-01-21 16:48:53] BuildCept.php.INFO: see in shell output "generated sucessfully" [] []
+[2013-01-21 16:48:53] BuildCept.php.INFO: see file found "CodeGuy.php","tests/unit" [] []
+[2013-01-21 16:48:53] BuildCept.php.INFO: see file found "CliGuy.php","tests/cli" [] []
+[2013-01-21 16:48:53] BuildCept.php.INFO: see in this file "seeFileFound(" [] []
+[2013-01-21 16:48:53] BuildCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:53] GenerateCeptCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:53] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept" [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy" [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: see in this file "$I = new DumbGuy($scenario);" [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: execute command "generate:cept dummy path/DummyCept" [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: see file found "DummyCept.php","tests/dummy/path" [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-21 16:48:54] GenerateCeptCept.php.INFO: execute command "generate:cept dummy DummyCept.php" [] []
+[2013-01-21 16:48:55] GenerateCeptCept.php.INFO: see file found "DummyCept.php" [] []
+[2013-01-21 16:48:55] GenerateCeptCept.php.INFO: delete this file  [] []
+[2013-01-21 16:48:55] GenerateCeptCept.php.INFO: execute command "generate:cept dummy Dummy" [] []
+[2013-01-21 16:48:56] GenerateCeptCept.php.INFO: see file found "DummyCept.php" [] []
+[2013-01-21 16:48:56] GenerateCeptCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:56] GenerateCestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:56] GenerateCestCept.php.INFO: execute command "generate:cest dummy DummyClass" [] []
+[2013-01-21 16:48:56] GenerateCestCept.php.INFO: see file found "DummyClassCest.php" [] []
+[2013-01-21 16:48:56] GenerateCestCept.php.INFO: see in this file "class DummyClassCest" [] []
+[2013-01-21 16:48:56] GenerateCestCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:56] GenerateScenariosCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:56] GenerateScenariosCept.php.INFO: execute command "generate:scenarios dummy" [] []
+[2013-01-21 16:48:57] GenerateScenariosCept.php.INFO: see file found "File_Exists.txt","tests/_data/scenarios" [] []
+[2013-01-21 16:48:57] GenerateScenariosCept.php.INFO: see in this file "I WANT TO CHECK CONFIG EXISTS" [] []
+[2013-01-21 16:48:57] GenerateScenariosCept.php.INFO: see in this file "I see file found "codeception.yml"" [] []
+[2013-01-21 16:48:57] GenerateScenariosCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:57] GenerateSuiteCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:57] GenerateSuiteCept.php.INFO: execute command "generate:suite house HouseGuy" [] []
+[2013-01-21 16:48:58] GenerateSuiteCept.php.INFO: see file found "house.suite.yml" [] []
+[2013-01-21 16:48:58] GenerateSuiteCept.php.INFO: see in this file "class_name: HouseGuy" [] []
+[2013-01-21 16:48:58] GenerateSuiteCept.php.INFO: see file found "HouseHelper.php" [] []
+[2013-01-21 16:48:58] GenerateSuiteCept.php.INFO: see file found "_bootstrap.php","tests/house" [] []
+[2013-01-21 16:48:58] GenerateSuiteCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: execute command "generate:test dummy Dummy" [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: see file found "DummyTest.php" [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: see in this file "class DummyTest extends \Codeception\TestCase\Test" [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: see in this file "protected $dumbGuy" [] []
+[2013-01-21 16:48:58] GenerateTestCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:58] RunWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:58] RunWithHtmlCept.php.INFO: execute command "run --html" [] []
+[2013-01-21 16:48:59] RunWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:48:59] RunWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:48:59] RunWithHtmlCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:59] RunWithJsonCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:59] RunWithJsonCept.php.INFO: execute command "run --json" [] []
+[2013-01-21 16:48:59] RunWithJsonCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:48:59] RunWithJsonCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:48:59] RunWithJsonCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:59] RunWithTapCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:59] RunWithTapCept.php.INFO: execute command "run --tap" [] []
+[2013-01-21 16:48:59] RunWithTapCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:48:59] RunWithTapCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:48:59] RunWithTapCept.php.INFO: PASSED [] []
+[2013-01-21 16:48:59] RunWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-01-21 16:48:59] RunWithXmlCept.php.INFO: execute command "run --xml" [] []
+[2013-01-21 16:48:59] RunWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.2
+Powered by PHPUnit 3.7.13 by Sebastian Bergmann.
+
+Suite dummy started
+Trying to check config exists (FileExistsCept.php) - Ok [] []
+[2013-01-21 16:48:59] RunWithXmlCept.php.INFO: # FAILED # [] []
+[2013-01-21 16:48:59] RunWithXmlCept.php.INFO: PASSED [] []
