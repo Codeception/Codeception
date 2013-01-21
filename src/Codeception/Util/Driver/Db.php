@@ -59,6 +59,14 @@ class Db
     public function getDbh() {
         return $this->dbh;
     }
+    
+    public function getDb()
+    {
+        $matches = array();
+        $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
+        if (!$matched) return false;
+        return $matches[1];
+    }        
 
     public function cleanup()
     {
