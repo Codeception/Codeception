@@ -127,7 +127,8 @@ class Compiler
             if (is_string($token)) {
                 $output .= $token;
             } elseif (in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
-                $output .= str_repeat("\n", substr_count($token[1], "\n"));
+                $output .= $token[1];
+                // $output .= str_repeat("\n", substr_count($token[1], "\n"));
             } elseif (T_WHITESPACE === $token[0]) {
                 // reduce wide spaces
                 $whitespace = preg_replace('{[ \t]+}', ' ', $token[1]);
