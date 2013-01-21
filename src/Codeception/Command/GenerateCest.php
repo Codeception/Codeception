@@ -42,7 +42,9 @@ class GenerateCest extends Base
 
         $path = $this->buildPath($suiteconf['path'], $testName);
 
-        $filename = $path.DIRECTORY_SEPARATOR.$testName.'Cest.php';
+        $filename = $this->completeSuffix($testName, 'Cest');
+
+        $filename = $path.DIRECTORY_SEPARATOR . $filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");

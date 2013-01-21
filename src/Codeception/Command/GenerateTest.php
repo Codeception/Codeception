@@ -13,7 +13,6 @@ class GenerateTest extends Base
 {
     protected $template  = <<<EOF
 <?php
-%s
 use Codeception\Util\Stub;
 
 %s %sTest extends \Codeception\TestCase\Test
@@ -66,12 +65,7 @@ EOF;
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
 
-        if (strpos(strrev($classname), strrev('Test')) === 0) $classname .= '.php';
-        if (strpos(strrev($classname), strrev('Test.php')) !== 0) $classname .= 'Test.php';
-        if (strpos(strrev($classname), strrev('.php')) !== 0) $classname .= '.php';
-        $filename = $classname;
-        $classname = str_replace('Test.php','', $classname);
-
+        $filename = $this->completeSuffix($classname, 'Test');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         if (file_exists($filename)) {
