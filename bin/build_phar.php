@@ -15,12 +15,19 @@ system('php composer.phar update');
 $compiler = new Compiler();
 $compiler->compile();
 
+@unlink('package/codecept.phar');
 
-chmod('codecept.phar', 755);
-copy('codecept.phar', 'package/codecept.phar');
+if (file_exists('codecept.phar.gz')) {
+    chmod('codecept.phar.gz', 755);
+    copy('codecept.phar.gz', 'package/codecept.phar');
+} else {
+    chmod('codecept.phar', 755);
+    copy('codecept.phar', 'package/codecept.phar');
+}
+@unlink('codecept.phar');
+@unlink('codecept.phar.gz');
 
-unlink('codecept.phar');
-unlink('codecept.phar.gz');
+chmod('package/codecept.phar', "+x");
 
 echo system('php package/codecept.phar');
 
