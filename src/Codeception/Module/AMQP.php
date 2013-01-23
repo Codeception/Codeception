@@ -29,6 +29,7 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  *
  * @since 1.1.2
  * @author tiger.seo@gmail.com
+ * @author davert
  */
 class AMQP extends \Codeception\Module
 {
@@ -116,6 +117,7 @@ class AMQP extends \Codeception\Module
             ? $message
             : new AMQPMessage($message);
 
+        $this->channel->queue_declare($queue);
         $this->channel->basic_publish(new AMQPMessage($message), '',$queue);
     }
 
