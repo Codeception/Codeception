@@ -63,21 +63,19 @@ class Compiler
 
         $this->setMainExecutable($phar);
         $this->setStub($phar);
-        $phar->stopBuffering();        
+        $phar->stopBuffering();
 
         if(in_array('GZ', \Phar::getSupportedCompression())) {
-            echo "Compressed\r\n";
             //do not use compressFiles as it has issue with temporary file when adding large amount of files
 //            $phar->compressFiles(\Phar::GZ);
-            if (file_exists($this->compileDir.'codecept.phar.gz')) unlink($this->compileDir.'codecept.phar.gz');
-
-            $phar = $phar->compress(\Phar::GZ);
+            $phar = $phar->compressFiles(\Phar::GZ);
+            echo "Compressed\r\n";
 
         } else {
-
             $phar = $phar->compress(\Phar::NONE);
-
         }
+
+              
 
         unset($phar);
     }
@@ -94,7 +92,10 @@ class Compiler
 //        var_dump($path);
 
         $content = file_get_contents($file);
-        $content = $this->stripWhitespace($content);
+
+        if (strpos($file, 'Codeception') === false) {
+            $content = $this->stripWhitespace($content);
+        }
 
         $phar->addFromString($path, $content);
     }
@@ -107,7 +108,7 @@ class Compiler
     public function setStub($phar)
     {
         $contents = file_get_contents($this->compileDir.'/package/stub.php');
-//        $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
+        // $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
         $phar->setStub($contents);
     }
 
@@ -127,8 +128,8 @@ class Compiler
             if (is_string($token)) {
                 $output .= $token;
             } elseif (in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
-                $output .= $token[1];
-                // $output .= str_repeat("\n", substr_count($token[1], "\n"));
+                // $output .= $token[1];
+                $output .= str_repeat("\n", substr_count($token[1], "\n"));
             } elseif (T_WHITESPACE === $token[0]) {
                 // reduce wide spaces
                 $whitespace = preg_replace('{[ \t]+}', ' ', $token[1]);

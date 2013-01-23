@@ -6,6 +6,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 {
     protected $scenario;
 
+    protected $trace = array();
+
     public function getFeature() {
         return null;
     }

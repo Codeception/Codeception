@@ -7,6 +7,8 @@ class Cest extends \Codeception\TestCase\Cept
     protected $testMethod = null;
     protected $signature;
     protected $guy = 'CodeGuy';
+    protected $dispatcher;
+    protected $bootstrap;
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);

@@ -2,7 +2,6 @@
 namespace Codeception\TestCase;
 
 use Codeception\Exception\TestRuntime;
-use Codeception\AbstractGuy;
 
 class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescribing
 {

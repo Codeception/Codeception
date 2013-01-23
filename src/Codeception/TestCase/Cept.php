@@ -13,7 +13,6 @@ class Cept extends \Codeception\TestCase
     protected $features = array();
     protected $bootstrap = null;
     protected $stopped = false;
-    protected $trace = array();
 
     protected $dispatcher;
 
