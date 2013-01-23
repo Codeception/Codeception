@@ -46,8 +46,8 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 	public function doRequest($request)
 	{
 		$this->_headers = array();
-		$_COOKIE = $request->getCookies();
-		$_SERVER = $request->getServer();
+		$_COOKIE = array_merge($_COOKIE,$request->getCookies());
+		$_SERVER = array_merge($_SERVER,$request->getServer());
 		$_FILES = $request->getFiles();
 		$_REQUEST = $request->getParameters();
 
@@ -78,7 +78,6 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		$_SERVER['SCRIPT_FILENAME'] = $this->appPath;
 
 		ob_start();
-
 		Yii::setApplication(null);
 		Yii::createApplication($this->appSettings['class'],$this->appSettings['config']);
 		Yii::app()->onEndRequest->add(array($this,'setHeaders'));
@@ -90,11 +89,18 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		return $response;
 	}
 
+	/**
+	 * Set current client headers when terminating yii application (onEndRequest)
+	 */
 	public function setHeaders()
 	{
-		$this->_headers = Yii::app()->request->getHeaders();
+		$this->_headers = Yii::app()->request->getAllHeaders();
 	}
 
+	/**
+	 * Returns current client headers
+	 * @return array headers
+	 */
 	public function getHeaders()
 	{
 		return $this->_headers;

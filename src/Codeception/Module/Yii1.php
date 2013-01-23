@@ -2,6 +2,8 @@
 
 namespace Codeception\Module;
 
+use Yii;
+
 /**
  * This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
  *
@@ -40,17 +42,9 @@ namespace Codeception\Module;
  *             url: 'http://localhost/path/to/index.php'
  * </pre>
  *
- * You need to fix your CHttpRequest (or your component that you use for it) in this way:
- * <ul>
- * <li>Add private property $_headers; in your component</li>
- * <li>Add public method getHeaders() in your component that will simply return $_headers</li>
- * <li>Replace header() function by adding header to your $_headers: $this->_header['yourHeaderName']='Header value';</li>
- * <li>Check your code that it does not use exit(), because then script execution will be interrupted</li>
- * </ul>
- *
- * In CHttpRequest if you use it, do this:
- * - replace header('Location: '.$url, true, $statusCode); with $this->_headers['Location'] = $url;
- * - replace Yii::app()->end(); with Yii::app()->end(0,false); // false - do not call exit()
+ * You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web) on the codeception github repo.
+ * This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
+ * modify it to be extended from your custom http-request component.
  *
  * You can test this module by creating new empty Yii application and creating this scenario:
  * <pre>
@@ -69,8 +63,10 @@ namespace Codeception\Module;
  * $I->seeLink('Login');
  * </pre>
  * Then run codeception: php codecept.phar --steps run functional
- * You must see "OK" and that all steps are marked with asteriks (*).
- * Do not foget that afte adding module in your functional.suite.yml you must run codeception "build" command.
+ * You must see "OK" and that all steps are marked with asterisk (*).
+ * Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
+ *
+ * @property Codeception\Util\Connector\Yii1 $client
  */
 class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {
@@ -87,13 +83,25 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 	 */
 	private $appSettings;
 
+	private $_appConfig;
+
 	public function _initialize()
 	{
-		$this->appSettings = require_once($this->config['appPath']);
+		$this->appSettings = require_once($this->config['appPath']); //get application settings in the entry script
+		$this->_appConfig = require_once($this->appSettings['config']);
+
+		$_SERVER['SCRIPT_NAME'] = str_replace('http://localhost','',$this->config['url']);
+		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
+
+		Yii::createApplication($this->appSettings['class'],$this->_appConfig);
+
 		$this->client = new \Codeception\Util\Connector\Yii1();
-		$this->client->url = $this->config['url'];
-		$this->client->appSettings = $this->appSettings;
 		$this->client->appPath = $this->config['appPath'];
+		$this->client->url = $this->config['url'];
+		$this->client->appSettings = array(
+			'class' => $this->appSettings['class'],
+			'config' => $this->_appConfig,
+		);
 	}
 
 	public function _before(\Codeception\TestCase $test)
