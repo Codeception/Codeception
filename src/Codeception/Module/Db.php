@@ -31,6 +31,19 @@ namespace Codeception\Module;
  * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
  * Check out drivers if you get problems loading dumps and cleaning databases.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability:
+ *     - Mysql: stable
+ *     - SQLite: stable
+ *     - Postgres: beta
+ *     - MSSQL: alpha
+ *     - Oracle: alpha
+ * * Contact: codecept@davert.mail.ua
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Config
  *
  * * dsn *required* - PDO DSN

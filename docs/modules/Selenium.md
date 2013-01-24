@@ -1,5 +1,5 @@
 # Selenium Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium)**
 
 Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
 
@@ -21,6 +21,13 @@ Execute it: `java -jar selenium-server-standalone-x.xx.xxx.jar`
 Best used with Firefox browser.
 
 Don't forget to turn on Db repopulation if you are using database.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
+* relies on [Mink](http://mink.behat.org)
 
 ## Configuration
 

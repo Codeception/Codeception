@@ -6,6 +6,12 @@ namespace Codeception\Module;
  *
  * Performs a cleanup by flushing all values after each test run.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: beta
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Configuration
  *
  * * host: localhost - memcached host to connect

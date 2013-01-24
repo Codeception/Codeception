@@ -9,6 +9,15 @@ namespace Codeception\Module;
  *
  * If test fails stores last shown page in 'output' dir.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Configuration
  *
  * * url *required* - start url of your app

@@ -1,8 +1,14 @@
 # Redis Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis)**
 Works with Redis database.
 
 Cleans up Redis database after each run.
+
+## Status
+
+* Maintainer: **judgedim**
+* stability: beta
+* Contact: https://github.com/judgedim
 
 ## Configuration
 

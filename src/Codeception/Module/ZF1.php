@@ -9,6 +9,12 @@ namespace Codeception\Module;
  * It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
  * and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Config
  *
  * * env  - environment used for testing ('testing' by default).

@@ -1,8 +1,14 @@
 # Symfony2 Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2)**
 This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
 
 It implements common Framework interface.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
 
 ## Config
 

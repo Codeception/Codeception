@@ -1,5 +1,5 @@
 # Doctrine2 Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2)**
 Allows integration and testing for projects with Doctrine2 ORM.
 
 Doctrine2 uses EntityManager to perform all database operations.
@@ -13,6 +13,11 @@ It can be done in bootstrap file, by setting static $em property:
 \Codeception\Module\Doctrine2::$em = $em
 
 ```
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
 
 ## Config
 
