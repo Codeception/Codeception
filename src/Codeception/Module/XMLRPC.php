@@ -21,7 +21,7 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * ## Status
  *
  * * Maintainer: **tiger-seo**
- * * stability: beta
+ * * Stability: **beta**
  * * Contact: tiger.seo@gmail.com
  *
  * ## Configuration

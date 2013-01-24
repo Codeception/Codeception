@@ -9,7 +9,7 @@ use Codeception\Util\FileSystem as Util;
  * ## Status
  *
  * * Maintainer: **davert**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  *
  * Module was developed to test Codeception itself.

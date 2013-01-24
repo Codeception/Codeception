@@ -27,7 +27,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **davert**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  * * relies on [Mink](http://mink.behat.org)
  *

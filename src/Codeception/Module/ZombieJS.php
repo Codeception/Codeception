@@ -11,7 +11,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **synchrone**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: https://github.com/synchrone
  * * relies on [Mink](http://mink.behat.org)
  *

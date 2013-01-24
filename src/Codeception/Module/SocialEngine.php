@@ -9,7 +9,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **Artem Kovradin**
- * * stability: beta
+ * * Stability: **beta**
  * * Contact: https://github.com/horechek
  * * URL: http://tvorzasp.com
  *

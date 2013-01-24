@@ -18,7 +18,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **davert**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  *
  * ## Configuration

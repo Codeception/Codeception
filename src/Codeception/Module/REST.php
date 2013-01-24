@@ -17,7 +17,7 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * ## Status
  *
  * * Maintainer: **tiger-seo**, **davert**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  * * Contact: tiger.seo@gmail.com
  *
