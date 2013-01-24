@@ -6,6 +6,13 @@ namespace Codeception\Module;
  *
  * Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
  *
+ * ## Status
+ *
+ * * Maintainer: **Artem Kovradin**
+ * * stability: beta
+ * * Contact: https://github.com/horechek
+ * * URL: http://tvorzasp.com
+ *
  * ## Config
  *
  * * host *required* - a host in which your application is registered, according to your license.
@@ -15,12 +22,10 @@ namespace Codeception\Module;
  * * client - BrowserKit client
  * * bootstrap - current bootstrap file.
  *
- *
  * Module is created by [Artem Kovradin](http://tvorzasp.com)
- *
  */
 
-class SocialEngine extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
+class SocialEngine extends \Codeception\Util\Framework
 {
 
     protected $requiredFields = array('host');

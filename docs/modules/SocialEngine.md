@@ -1,8 +1,15 @@
 # SocialEngine Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SocialEngine)**
 This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
 
 Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Artem Kovradin**
+* stability: beta
+* Contact: https://github.com/horechek
+* URL: http://tvorzasp.com
 
 ## Config
 
@@ -13,9 +20,7 @@ Functional tests can be run inside Social Engine. All commands of this module ar
 * client - BrowserKit client
 * bootstrap - current bootstrap file.
 
-
 Module is created by [Artem Kovradin](http://tvorzasp.com)
-
 
 ## Actions
 

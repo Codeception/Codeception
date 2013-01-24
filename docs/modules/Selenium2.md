@@ -1,5 +1,5 @@
 # Selenium2 Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2)**
 Uses Mink to manipulate Selenium2 WebDriver
 
 Note that all method take CSS selectors to fetch elements.
@@ -12,6 +12,13 @@ Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
 Don't forget to turn on Db repopulation if you are using database.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
+* relies on [Mink](http://mink.behat.org)
 
 ## Configuration
 

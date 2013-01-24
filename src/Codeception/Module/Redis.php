@@ -10,6 +10,12 @@ use \Codeception\Util\Driver\Redis as RedisDriver;
  *
  * Cleans up Redis database after each run.
  *
+ * ## Status
+ *
+ * * Maintainer: **judgedim**
+ * * stability: beta
+ * * Contact: https://github.com/judgedim
+ *
  * ## Configuration
  *
  * * host *required* - redis host to connect

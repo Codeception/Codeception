@@ -2,14 +2,22 @@
 namespace Codeception\Module;
 
 /**
- * * Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
- * *
- * * Note, all methods take CSS selectors to fetch elements.
- * * For links, buttons, fields you can use names/values/ids of elements.
- * * For form fields you can use input[name=fieldname] notation.
- * *
- * * ## Installation
- * *
+ * Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
+ *
+ * Note, all methods take CSS selectors to fetch elements.
+ * For links, buttons, fields you can use names/values/ids of elements.
+ * For form fields you can use input[name=fieldname] notation.
+ *
+ * ## Status
+ *
+ * * Maintainer: **synchrone**
+ * * stability: stable
+ * * Contact: https://github.com/synchrone
+ * * relies on [Mink](http://mink.behat.org)
+ *
+ *
+ * ## Installation
+ *
  * In order to talk with zombie.js server, you should install and configure zombie.js first:
  *
  * * Install node.js by following instructions from the official site: http://nodejs.org/.

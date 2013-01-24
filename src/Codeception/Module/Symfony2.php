@@ -7,6 +7,12 @@ use Symfony\Component\Finder\Finder;
  *
  * It implements common Framework interface.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Config
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.

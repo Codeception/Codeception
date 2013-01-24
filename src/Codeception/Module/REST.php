@@ -14,6 +14,13 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * Whether framework is used it operates via standard framework modules.
  * Otherwise sends raw HTTP requests to url via PHPBrowser.
  *
+ * ## Status
+ *
+ * * Maintainer: **tiger-seo**, **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ * * Contact: tiger.seo@gmail.com
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api

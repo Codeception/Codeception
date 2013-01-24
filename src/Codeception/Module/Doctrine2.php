@@ -15,6 +15,11 @@ namespace Codeception\Module;
  * \Codeception\Module\Doctrine2::$em = $em
  *
  * ```
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *

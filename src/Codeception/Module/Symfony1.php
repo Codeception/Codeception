@@ -13,6 +13,12 @@ use Codeception\Util\Framework as Framework;
  *
  * Please note, this module doesn't implement standard frameworks interface.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Configuration
  *
  * * app *required* - application you want to test. In most cases it will be 'frontend'

@@ -1,7 +1,13 @@
 # Filesystem Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Filesystem)**
 Module for testing local filesystem.
 Fork it to extend the module for FTP, Amazon S3, others.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
 
 Module was developed to test Codeception itself.
 

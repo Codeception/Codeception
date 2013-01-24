@@ -1,5 +1,5 @@
 # MongoDb Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb)**
 Works with MongoDb database.
 
 The most important function of this module is cleaning database before each test.
@@ -16,6 +16,14 @@ The DB preparation should as following:
 Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
 Check out the driver if you get problems loading dumps and cleaning databases.
 
+## Status
+
+* Maintainer: **judgedim**, **davert**
+* stability: beta
+* Contact: codecept@davert.mail.ua
+
+*Please review the code of non-stable modules and provide patches if you have issues.*
+
 ## Config
 
 * dsn *required* - MongoDb DSN with the db name specified at the end of the host after slash
@@ -25,9 +33,6 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
-### Beta Version
-
-Report an issue if this module doesn't work for you.
 
 ## Actions
 

@@ -10,9 +10,16 @@ namespace Codeception\Module;
  * If a endpoint is a full url then it uses PHPBrowser.
  *
  * ### Using Inside Framework
+ *
  * Please note, that PHP SoapServer::handle method sends additional headers.
  * This may trigger warning: "Cannot modify header information"
  * If you use PHP SoapServer with framework, try to block call to this method in testing environment.
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Configuration
  *

@@ -1,5 +1,5 @@
 # Dbh Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Dbh)**
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
 Be default it will cover all database queries into transaction and rollback it afterwards.
 The database should support nested transactions, in order to make cleanup work as expected.
@@ -18,6 +18,16 @@ This will make all queries in this connection run withing transaction and rolled
 
 Note, that you can't use this module with MySQL. Or perhaps you don't use transactions in your project, then it's ok.
 Otherwise consider using ORMs like Doctrine, that emulate nested transactions, or switch to Db module.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
+
+This module despite of it's stability may act unstable because of transactions issue. If test fails with fatal error and transaction is not finished, it may affect other transactions.
+
+*Please review the code of non-stable modules and provide patches if you have issues.*
 
 ### Configuration
 

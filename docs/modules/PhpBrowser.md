@@ -1,10 +1,19 @@
 # PhpBrowser Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/PhpBrowser)**
 Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
 
 Use to perform web acceptance tests with non-javascript browser.
 
 If test fails stores last shown page in 'output' dir.
+
+## Status
+
+* Maintainer: **davert**
+* stability: stable
+* Contact: codecept@davert.mail.ua
+* relies on [Mink](http://mink.behat.org)
+
+*Please review the code of non-stable modules and provide patches if you have issues.*
 
 ## Configuration
 

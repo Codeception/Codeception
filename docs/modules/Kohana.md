@@ -1,8 +1,13 @@
 # Kohana Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Kohana)**
 This module provides integration with [Kohana](http://kohanaframework.org/) v3.
-Current status is PRE ALFA=)
 Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Nikita Groshin**
+* stability: alpha
+* Contact: nike-17@ya.ru
 
 ### Installation
 

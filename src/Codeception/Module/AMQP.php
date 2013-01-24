@@ -13,6 +13,14 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  * the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
  * Use it to cleanup the queue between tests.
  *
+ * ## Status
+ * * Maintainer: **davert**, **tiger-seo**
+ * * Stability: **alpha**
+ * * Contact: codecept@davert.mail.ua
+ * * Contact: tiger.seo@gmail.com
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Config
  *
  * * host: localhost - host to connect
@@ -21,6 +29,19 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  * * vhost: '/' - vhost to connect
  * * cleanup: true - defined queues will be purged before running every test.
  * * queues: [mail, twitter] - queues to cleanup
+ *
+ * Example:
+ *
+ * modules:
+ *      enabled: [AMQP]
+ *      config:
+ *         AMQP:
+ *            host: 'localhost'
+ *            port: '5672'
+ *            username: 'guest'
+ *            password: 'guest'
+ *            vhost: '/'
+ *            queues: [queue1, queue2]
  *
  * ## Public Properties
  *
@@ -126,26 +147,38 @@ class AMQP extends \Codeception\Module
      *
      * **This method drops message from queue**
      * **This method will wait for message. If none is sent the script will stuck**.
-     * **Purges queue in the end**
      *
      * ``` php
      * <?php
      * $I->pushToQueue('queue.emails', 'Hello, davert');
-     * $I->seeMessageInQueue('queue.emails','davert');
+     * $I->seeMessageInQueueContainsText('queue.emails','davert');
      * ?>
      * ```
      *
      * @param $queue
-     * @param $message
+     * @param $text
      */
-    public function seeMessageInQueue($queue, $message)
+    public function seeMessageInQueueContainsText($queue, $text)
     {
-        $this->channel->basic_consume($queue, '', false, false, false, false, function (AMQPMessage $msg) use ($message) {
-            \PHPUnit_Framework_Assert::assertContains($message, $msg->body);
-        });
-        $this->debug("waiting for messages in queue '$queue''");
-        $this->channel->wait();
-        $this->channel->queue_purge($queue);
+        $msg = $this->channel->basic_get($queue);
+        if (!$msg) $this->fail("Message was not received");
+        if (!$msg instanceof AMQPMessage) $this->fail("Received message is not format of AMQPMessage");
+        $this->debugSection("Message",$msg->body);
+        $this->assertContains($text, $msg->body);
+    }
+
+    /**
+     * Takes last message from queue.
+     *
+     * $message = $I->grabMessageFromQueue('queue.emails');
+     *
+     * @param $queue
+     * @return AMQPQueue
+     */
+    public function grabMessageFromQueue($queue)
+    {
+        $message = $this->channel->basic_get($queue);
+        return $message;
     }
 
     protected function cleanup()

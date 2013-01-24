@@ -15,6 +15,13 @@ namespace Codeception\Module;
  *
  * Don't forget to turn on Db repopulation if you are using database.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
+ *
  * ## Configuration
  *
  * * url *required* - start url for your app

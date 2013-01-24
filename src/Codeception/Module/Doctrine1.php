@@ -8,6 +8,12 @@ namespace Codeception\Module;
  *
  * This module cleans all cached data after each test.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability: stable
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Config
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  *
