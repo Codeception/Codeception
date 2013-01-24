@@ -21,7 +21,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **judgedim**, **davert**
- * * stability: beta
+ * * Stability: **beta**
  * * Contact: codecept@davert.mail.ua
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*

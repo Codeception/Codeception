@@ -8,7 +8,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **Nikita Groshin**
- * * stability: alpha
+ * * Stability: **alpha**
  * * Contact: nike-17@ya.ru
  *
  * ### Installation

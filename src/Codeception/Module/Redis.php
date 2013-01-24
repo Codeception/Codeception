@@ -13,7 +13,7 @@ use \Codeception\Util\Driver\Redis as RedisDriver;
  * ## Status
  *
  * * Maintainer: **judgedim**
- * * stability: beta
+ * * Stability: **beta**
  * * Contact: https://github.com/judgedim
  *
  * ## Configuration

@@ -16,7 +16,7 @@ use Codeception\Util\Framework as Framework;
  * ## Status
  *
  * * Maintainer: **davert**
- * * stability: stable
+ * * Stability: **stable**
  * * Contact: codecept@davert.mail.ua
  *
  * ## Configuration

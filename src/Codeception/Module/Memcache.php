@@ -9,7 +9,7 @@ namespace Codeception\Module;
  * ## Status
  *
  * * Maintainer: **davert**
- * * stability: beta
+ * * Stability: **beta**
  * * Contact: codecept@davert.mail.ua
  *
  * ## Configuration

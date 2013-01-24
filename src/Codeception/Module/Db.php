@@ -35,11 +35,11 @@ namespace Codeception\Module;
  *
  * * Maintainer: **davert**
  * * stability:
- *     - Mysql: stable
- *     - SQLite: stable
- *     - Postgres: beta
- *     - MSSQL: alpha
- *     - Oracle: alpha
+ *     - Mysql: **stable**
+ *     - SQLite: **stable**
+ *     - Postgres: **beta**
+ *     - MSSQL: **alpha**
+ *     - Oracle: **alpha**
  * * Contact: codecept@davert.mail.ua
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
