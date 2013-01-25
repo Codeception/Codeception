@@ -14,6 +14,8 @@ class GenerateCest extends Base
     protected $template  = "<?php\n%s %sCest\n{\n    // the class name you want to test\n    public %s = '';\n\n%s\n}\n";
     protected $methodTemplate = "    // sample test\n    public function %s(\\%s %s) {\n    \n    }";
 
+    const SUFFIX = 'Cest';
+
     protected function configure()
     {
         $this->setDefinition(array(
@@ -42,7 +44,13 @@ class GenerateCest extends Base
 
         $path = $this->buildPath($suiteconf['path'], $testName);
 
-        $filename = $this->completeSuffix($testName, 'Cest');
+        $file = pathinfo($testName);
+        $filename = $file['filename'];
+        // filename already ends with Cest
+        if (strpos($filename, $this::SUFFIX, strlen($filename) - strlen($this::SUFFIX)) === false) {
+            $filename .= $this::SUFFIX;
+        }
+        $filename .= '.' . empty($file['extension']) ? '.php' : $file['extension'];
 
         $filename = $path.DIRECTORY_SEPARATOR . $filename;
 
