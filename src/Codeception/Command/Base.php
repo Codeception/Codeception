@@ -9,13 +9,13 @@ class Base extends \Symfony\Component\Console\Command\Command
     protected function buildPath($basePath, $testName)
     {
         $testName = str_replace('/',DIRECTORY_SEPARATOR, $testName);
-        $dirs = explode(DIRECTORY_SEPARATOR, $testName);
-        array_pop($dirs);
+        $dir = pathinfo($testName, PATHINFO_DIRNAME);
 
-        $path = $basePath;
-        foreach ($dirs as $dir) {
-            $path .= DIRECTORY_SEPARATOR.$dir;
-            @mkdir($path);
+
+        $path = $basePath.$dir;
+        if (!file_exists($path)) {
+            // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
+            mkdir($path, 0775, true); // Third parameter commands to create directories recursively
         }
         return $path;
     }
