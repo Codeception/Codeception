@@ -194,6 +194,18 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Sends PATCH request to given uri.
+     *
+     * @param       $url
+     * @param array $params
+     * @param array $files
+     */
+    public function sendPATCH($url, $params = array(), $files = array())
+    {
+        $this->execute('PATCH', $url, $params, $files);
+    }
+
+    /**
      * Sends DELETE request to given uri.
      *
      * @param $url
