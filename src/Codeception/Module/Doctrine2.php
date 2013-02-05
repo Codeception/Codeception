@@ -238,7 +238,7 @@ class Doctrine2 extends \Codeception\Module
      * @param $entity
      * @param $field
      * @param array $params
-     * @return array
+     * @return mixed
      */
     public function grabFromRepository($entity, $field, $params = array())
     {
@@ -249,8 +249,7 @@ class Doctrine2 extends \Codeception\Module
         $qb->select('s.'.$field);
         $this->buildAssociationQuery($qb,$entity, 's', $params);
         $this->debug($qb->getDQL());
-        $res = $qb->getQuery()->getSingleScalarResult();
-        return array('True', (count($res) > 0), "$entity with " . json_encode($params));
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
