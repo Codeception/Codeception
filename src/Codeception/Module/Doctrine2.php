@@ -240,7 +240,7 @@ class Doctrine2 extends \Codeception\Module
      * @param array $params
      * @return array
      */
-    protected function grabFromRepository($entity, $field, $params = array())
+    public function grabFromRepository($entity, $field, $params = array())
     {
         // we need to store to database...
         self::$em->flush();
