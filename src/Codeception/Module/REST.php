@@ -217,6 +217,30 @@ class REST extends \Codeception\Module
         $this->execute('DELETE', $url, $params, $files);
     }
 
+    /**
+     * Sends LINK request to given uri.
+     *
+     * @param       $url
+     * @param array $links
+     */
+    public function sendLINK($url, array $links)
+    {
+        $this->headers['Link'] = join(', ', $links);
+        $this->execute('LINK', $url);
+    }
+
+    /**
+     * Sends UNLINK request to given uri.
+     *
+     * @param       $url
+     * @param array $links
+     */
+    public function sendUNLINK($url, array $links)
+    {
+        $this->headers['Unlink'] = join(', ', $links);
+        $this->execute('UNLINK', $url);
+    }
+
     protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
     {
         foreach ($this->headers as $header => $val) {
