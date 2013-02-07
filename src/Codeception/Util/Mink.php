@@ -20,10 +20,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         }
     }
     
-    public function _cleanup() {
-        $this->session->reset();
-    }
-
     public function _before(\Codeception\TestCase $test)
     {
         if ($this->session) $this->session->start();
