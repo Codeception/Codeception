@@ -14,6 +14,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
+            $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
@@ -21,6 +22,11 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     
     public function _cleanup() {
         $this->session->reset();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) $this->session->start();
     }
 
     public function _after(\Codeception\TestCase $test) {
