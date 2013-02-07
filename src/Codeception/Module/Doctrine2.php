@@ -249,8 +249,7 @@ class Doctrine2 extends \Codeception\Module
         $qb->select('s.'.$field);
         $this->buildAssociationQuery($qb,$entity, 's', $params);
         $this->debug($qb->getDQL());
-        $res = $qb->getQuery()->getSingleScalarResult();
-        return array('True', (count($res) > 0), "$entity with " . json_encode($params));
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
