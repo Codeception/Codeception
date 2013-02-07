@@ -23,7 +23,7 @@ namespace Codeception\Module;
  * * Install node.js by following instructions from the official site: http://nodejs.org/.
  * * Install npm (node package manager) by following instructions from the http://npmjs.org/.
  * * Install zombie.js with npm:
- * ``` $ npm install -g zombie@0.13.0 ```
+ * ``` $ npm install -g zombie@0.13.0 @```
  * Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
  * says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
  *
