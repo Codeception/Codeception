@@ -81,6 +81,7 @@ class ZombieJS extends \Codeception\Util\MinkJS
             $this->config['node_bin'],$this->config['script'],
             $this->config['threshold'] * 1000
         );
+        $this->config['url'] = '';
 
         $this->driver = new ZombieDriver($this->server);
 
