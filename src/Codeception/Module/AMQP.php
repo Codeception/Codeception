@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\Module as ModuleException;
+use Exception;
 use PhpAmqpLib\Message\AMQPMessage;
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -186,17 +187,15 @@ class AMQP extends \Codeception\Module
         if (! isset($this->config['queues'])) {
             throw new ModuleException(__CLASS__, "please set queues for cleanup");
         }
-
         $channel = $this->channel;
-        
         foreach ($this->config['queues'] as $queue) {
             try {
                 $channel->queue_purge($queue);
             } catch (AMQPChannelException $e) {
                 # ignore if exchange/queue doesn't exist and rethrow exception if it's something else
-                if ($e->getCode() !== 404) {
-                    throw $e;
-                }
+//                if ($e->getCode() !== 404) {
+//                    throw $e;
+//                }
             }
         }
     }
