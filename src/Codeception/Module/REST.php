@@ -218,14 +218,47 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Sets Headers "Link" as one header "Link" based on linkEntries
+     *
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
+     */
+    private function setHeaderLink(array $linkEntries)
+    {
+        $values = [];
+        foreach ($linkEntries as $linkEntry) {
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
+                'uri',
+                $linkEntry,
+                'linkEntry should contain property "uri"'
+            );
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
+                'link-param',
+                $linkEntry,
+                'linkEntry should contain property "link-param"'
+            );
+            $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
+        }
+
+        $this->headers['Link'] = join(', ', $values);
+    }
+
+    /**
      * Sends LINK request to given uri.
      *
      * @param       $url
-     * @param array $links
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
      */
-    public function sendLINK($url, array $links)
+    public function sendLINK($url, array $linkEntries)
     {
-        $this->headers['Link'] = join(', ', $links);
+        $this->setHeaderLink($linkEntries);
         $this->execute('LINK', $url);
     }
 
@@ -233,11 +266,15 @@ class REST extends \Codeception\Module
      * Sends UNLINK request to given uri.
      *
      * @param       $url
-     * @param array $links
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
      */
-    public function sendUNLINK($url, array $links)
+    public function sendUNLINK($url, array $linkEntries)
     {
-        $this->headers['Unlink'] = join(', ', $links);
+        $this->setHeaderLink($linkEntries);
         $this->execute('UNLINK', $url);
     }
 
