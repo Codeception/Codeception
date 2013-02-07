@@ -3,7 +3,7 @@ namespace Codeception\TestCase;
 
 use Codeception\Exception\TestRuntime;
 
-class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescribing
+class Test extends \Codeception\TestCase
 {
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
