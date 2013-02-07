@@ -75,4 +75,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->trace;
     }
 
+    public function toString()
+    {
+        $this->getFeature();
+    }
+
 }
