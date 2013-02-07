@@ -189,7 +189,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testSeeCheckboxChecked()
     {
-        $this->module->_initialize();
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
     }
