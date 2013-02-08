@@ -9,7 +9,7 @@ If test fails stores last shown page in 'output' dir.
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 * relies on [Mink](http://mink.behat.org)
 

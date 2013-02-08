@@ -16,7 +16,7 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Configuration

@@ -15,7 +15,7 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 ## Status
 
 * Maintainer: **tiger-seo**
-* stability: beta
+* Stability: **beta**
 * Contact: tiger.seo@gmail.com
 
 ## Configuration

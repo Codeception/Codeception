@@ -1,10 +1,10 @@
-# 
+# Cest Unit Testing Format
 
 In this chapter we will lift up the curtains and show you a bit of the magic that Codeception does to simplify unit testing.
 Earlier we tested the Controller layer of the MVC pattern. In this chapter we will concentrate on testing the Models.
 
 Let's define what goals we are going to achieve by using the Codeception BDD in unit tests.
-With Codeception we separate the environment preparation, action execution, and assertions. 
+With Codeception we separate the environment preparation, action execution, and assertions.
 The tested code is not mixed with testing double definitions and assertions. By looking into the test you can get an idea of how the tested code is being used and what results are expected. We can test any piece of code in Codeception by using the `execute` action. Let's take a look:
 
 ```php
@@ -65,7 +65,7 @@ class PostCest {
 
 Note, the CodeGuy object is passed as a parameter into each test.
 
-To redefine the target of the test, consider using the `testMethod` action. Note that you can't change the method you are testing inside the test. That's just simply wrong. So the `testMethod` call should be put in the very beginning, or ignored. 
+To redefine the target of the test, consider using the `testMethod` action. Note that you can't change the method you are testing inside the test. That's just simply wrong. So the `testMethod` call should be put in the very beginning, or ignored.
 
 ```php
 <?php
@@ -140,7 +140,7 @@ MyApplication::cleanCaches();
 
 ### setUp and tearDown
 
-Cest files have analogs for PHPUnit's setUp and tearDown methods. 
+Cest files have analogs for PHPUnit's setUp and tearDown methods.
 You can use `_before` and `_after` methods of the Cest class to prepare and then clean the environment.
 
 ```php
@@ -162,7 +162,7 @@ class ControllerCest {
 		// ...
 	}
 
-	public function _after() {		
+	public function _after() {
 	}
 }
 ?>
@@ -177,7 +177,7 @@ Scenario-based test is run in 2 phases: analisys and execution. Whenever you wan
 function save(\CodeGuy $I, \Codeception\Scenario $scenario)
 	$I->execute('Comment::save', array('post_id' => 5);
 	if ($scenario->running()) {
-		DB::updateCounters();		
+		DB::updateCounters();
 	}
 	$I->seeInDatabase('posts',array('id' => 5, 'comments_count' => 1));
 ?>
@@ -188,7 +188,7 @@ In case you want to execute line on analisys step (to preload bootstrap values),
 #### Stubs
 
 The specially designed class `\Codeception\Util\Stub` is used for creating test doubles. It's just a simple wrapper on top of PHPUnit's Mock Builder.
-It can generate any stub with just a single factory method. 
+It can generate any stub with just a single factory method.
 
 Let's see how we can create stubs for a User class:
 
@@ -216,7 +216,7 @@ $user->getName(); // returns 'davert'
 // similar to $user = new User($con, $is_new);
 $user = Stub::construct('User', array($con, $is_new), array('name' => 'davert'));
 
-// similar is constructEmpty 
+// similar is constructEmpty
 $user = Stub::constructEmpty('User', array($con, $is_new), array('getName' => function () { return 'davert'; }));
 
 // and constructEmptyExcept
@@ -228,7 +228,7 @@ $user->getName(); // returns 'davert'
 $user2 = Stub::copy($user, array('name' => 'davert2'));
 $user->getName(); // returns 'davert2'
 ?>
-``` 
+```
 
 Let's briefly summarize: if you want to create a stub using a constructor use `Stub::construct*`, if you want to bypass the constructor use `Stub::make*`.
 
@@ -252,7 +252,7 @@ function create(CodeGuy $I, Codeception\Scenario $scenario) {
 	$I->executeMethod($post, 'create');
 	$I->seeInDatabase('posts', array('title' => 'Top 10 doggies'))
 	$I->dontSeeInDatabase('posts', array('title' => 'Top 10 kitties'));
-}	
+}
 ?>
 ```
 
@@ -275,7 +275,7 @@ We are testing the invocation of the `render` method without the mock definition
 
 But how can we define a mock and perform an assertion at the same time? We don't. The action `seeMethodInvoked` only performs the assertion on the mocked method that was run. The mock was created by `executeTestedMethodOn` command. It looked through the scenario and created mocks for executing the method we want to test.
 
-You no longer have to think about creating mocks! 
+You no longer have to think about creating mocks!
 
 Still, you have to use stub classes, in order to make dynamic mocking work.
 
@@ -287,16 +287,16 @@ Still, you have to use stub classes, in order to make dynamic mocking work.
 ?>
 ```
 
-Only the objects defined by one of those methods can be turned into mocks. 
+Only the objects defined by one of those methods can be turned into mocks.
 For stubs that won't become mocks, using the `haveFakeClass` method is not required.
 
 ## Working with a Database
 
 We used the Db module widely in our examples. As we tested methods of the Model, it was natural to test the result inside the database.
-Connect the Db module to your unit suite to perform `seeInDatabase` calls. 
-But before each test, the database should be cleaned. Deleting all of the tables and loading a dump may take quite a lot of time. For unit tests that are supposed to be run fast that's a catastrophe. 
+Connect the Db module to your unit suite to perform `seeInDatabase` calls.
+But before each test, the database should be cleaned. Deleting all of the tables and loading a dump may take quite a lot of time. For unit tests that are supposed to be run fast that's a catastrophe.
 
-We could perform all of our database interactions within a transaction. If you are using PostgreSQL include the [Dbh](http://codeception.com/docs/modules/Dbh) module in your suite configuration. 
+We could perform all of our database interactions within a transaction. If you are using PostgreSQL include the [Dbh](http://codeception.com/docs/modules/Dbh) module in your suite configuration.
 
 MySQL doesn't support nested transactions, so running this module can lead to unpredictable results. ORMs like Doctrine or Doctrine2 can emulate nested transactions. Thus, If you use such ORMs you should connect their modules to your suite.  In order to not conflict with the Db module, they have slightly different actions for looking into the database.
 
@@ -309,8 +309,8 @@ MySQL doesn't support nested transactions, so running this module can lead to un
 ?>
 ```
 
-If you don't use ORMs and MySQL, consider using SQLite for testing instead. 
+If you don't use ORMs and MySQL, consider using SQLite for testing instead.
 
 ## Conclusion
 
-Codeception has it's powers and it's limits. We believe Codeception's limitations keep your tests clean and narrative. Codeception makes writing bad code for tests more difficult. Codeception has simple but powerful tools to create stubs and mocks. Different modules can be attached to unit tests which, just for an example, will simplify database interactions. 
+Codeception has it's powers and it's limits. We believe Codeception's limitations keep your tests clean and narrative. Codeception makes writing bad code for tests more difficult. Codeception has simple but powerful tools to create stubs and mocks. Different modules can be attached to unit tests which, just for an example, will simplify database interactions.

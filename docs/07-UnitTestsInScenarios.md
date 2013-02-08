@@ -1,6 +1,6 @@
 # Unit Tests Inside Scenario
 
-Each function is like a little a little application in itself. It's the simplest and least divisible part of the program. It's natural to test it the way we test the application as a whole. Codeception unit tests are very similar to acceptance tests, with some additional features that simplify code testing. 
+Each function is like a little a little application in itself. It's the simplest and least divisible part of the program. It's natural to test it the way we test the application as a whole. Codeception unit tests are very similar to acceptance tests, with some additional features that simplify code testing.
 
 Unit tests are required to be as readable as possible. They should be clean and easy to understand. Codeception helps the developer to follow these practices.
 
@@ -16,7 +16,7 @@ function validateEmail(CodeGuy $I)
     $I->execute(function () {
         return Validator::validateEmail('davert@mail.ua');
     });
-    $I->seeResultEquals(true);    
+    $I->seeResultEquals(true);
 }
 ?>
 ```
@@ -37,8 +37,8 @@ Using Codeception for unit testing is like using a framework for web development
 
 ## Testing the Controller
 
-It's natural to assume that you are using PHP for web development. 
-Generally, web applications use the MVC (Model-View-Controller) pattern. 
+It's natural to assume that you are using PHP for web development.
+Generally, web applications use the MVC (Model-View-Controller) pattern.
 Let's show how Codeception simplifies unit testing for controller classes.
 
 We have a controller class of an imaginary MVC framework:
@@ -89,14 +89,14 @@ class UserControllerCest {
         $I->setProperty($controller, 'db', $db);
 
         $I->executeTestedMethodOn($controller, VALID_USER_ID)
-        $I->seeResultEquals(true)
-        $I->seeMethodInvoked($controller, 'render');
+            ->seeResultEquals(true)
+            ->seeMethodInvoked($controller, 'render');
 
         $I->expect('it will render 404 page for non existent user')
-        $I->executeTestedMethodOn($controller, INVALID_USER_ID)
-        $I->seeResultNotEquals(true)
-        $I->seeMethodInvoked($controller, 'render404','User not found')
-        $I->seeMethodNotInvoked($controller, 'render');
+            ->executeTestedMethodOn($controller, INVALID_USER_ID)
+            ->seeResultNotEquals(true)
+            ->seeMethodInvoked($controller, 'render404','User not found')
+            ->seeMethodNotInvoked($controller, 'render');
     }
 }
 ?>
@@ -104,7 +104,7 @@ class UserControllerCest {
 
 This test is written as a simple scenario. Every command of the scenario clearly describes the action being taken. Let's review this code.
 
-First of all, take a look at the `Cest` suffix. By it, Codeception knows it's a Cest testing class. The public property `$class` is just as important. It defines the class which is being tested. Each public method of `$class` will be treated as a test. Please note, that the name of each test method is the same as the method which is actually being tested. In other words, to test `UserController->show` we use `UserControllerCest->show`, `UserController->edit => UserControllerCest->edit`, etc. The only parameter of the test method is the CodeGuy class instance. 
+First of all, take a look at the `Cest` suffix. By it, Codeception knows it's a Cest testing class. The public property `$class` is just as important. It defines the class which is being tested. Each public method of `$class` will be treated as a test. Please note, that the name of each test method is the same as the method which is actually being tested. In other words, to test `UserController->show` we use `UserControllerCest->show`, `UserController->edit => UserControllerCest->edit`, etc. The only parameter of the test method is the CodeGuy class instance.
 
 With the CodeGuy we write a scenario for unit testing. The action `haveFakeClass` declares that we will use a stub in our testing. By using this command Codeception will dynamically create a mock for this class.
 Codeception uses a wrapper over PHPUnit's mocking library. It can create various stubs in a simple way. Later we will review this tool more deeply.
@@ -122,7 +122,7 @@ Next we connect both stubbed classes. We'd normally use:
 
 But the `$controller->db` property might be protected. By using the`setProperty` command we can even set the values of protected and private properties! This can be done with the power of [Reflection](http://php.net/manual/en/book.reflection.php).
 
-The environment has been prepared. There are no dependencies left. Now we can concentrate on the actual testing. 
+The environment has been prepared. There are no dependencies left. Now we can concentrate on the actual testing.
 
 First test case -- we execute the `show` action for an existing user.
 We see that the tested method returns true and the method `render` was invoked.
@@ -132,11 +132,11 @@ To ensure 100% code coverage of this method we should test the negative scenario
 Our second test case is running the `show` action for a non-existent user. The 404 page should be rendered in this case.
 
 The `expect` command we use here is as good as a comment. We describe the expected result if it's not obvious. Actually we can guess that the `UserController->show` method would show a user. But we can't be sure what would happen if the user doesn't exist.
-That's why we use 'expect' to describe the function description. 
+That's why we use 'expect' to describe the function description.
 
 ### PHPUnit Example
 
-To prove Codeception was useful for testing the controller, we will write the same test in PHPUnit. 
+To prove Codeception was useful for testing the controller, we will write the same test in PHPUnit.
 Remember, it can be run with Codeception too.
 
 ```php
@@ -177,13 +177,13 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
 ?>
 ```
 This test is 1.5 times longer. One test is split into two. Mocking requires strong knowledge of the PHPUnit API. It's hard to understand the behavior of the tested method `show` without looking into its code.
-Nevertheless this test is quite readable. 
+Nevertheless this test is quite readable.
 
 Let's analyze why we split the one test into two.
 We are testing one feature, but two different behaviors. This can be argued, but we suppose that showing a "404 page" can't be treated as a feature of your product.
 
-Having two tests instead of one is a technical, not a logical, limitation of PHPUnit. 
-That's because you can't test the method `render` invoked once and not invoked in a single test. All mocked methods invocations are checked at the very end of the test. Thus, having expectations for both 'render once' and 'render never', we will only see that the last one has been performed. 
+Having two tests instead of one is a technical, not a logical, limitation of PHPUnit.
+That's because you can't test the method `render` invoked once and not invoked in a single test. All mocked methods invocations are checked at the very end of the test. Thus, having expectations for both 'render once' and 'render never', we will only see that the last one has been performed.
 
 ## Conclusion
 

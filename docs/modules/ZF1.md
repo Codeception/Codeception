@@ -10,7 +10,7 @@ and LIBRARY_PATH set to './library'. If it's not redefine this constants in boot
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Config

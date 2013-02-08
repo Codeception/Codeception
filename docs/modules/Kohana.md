@@ -6,7 +6,7 @@ Functional tests can be run inside Kohana. All commands of this module are just 
 ## Status
 
 * Maintainer: **Nikita Groshin**
-* stability: alpha
+* Stability: **alpha**
 * Contact: nike-17@ya.ru
 
 ### Installation

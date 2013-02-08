@@ -16,7 +16,7 @@ It can be done in bootstrap file, by setting static $em property:
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Config
@@ -40,6 +40,28 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
 
 
 Performs $em->flush();
+
+
+### grabFromRepository
+
+
+Selects field value from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+?>
+```
+
+ * version 1.1
+ * param $entity
+ * param $field
+ * param array $params
+ * return array
 
 
 ### haveFakeRepository

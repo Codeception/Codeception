@@ -7,7 +7,7 @@ Whenever none of this modules are connected the exception is thrown.
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Configuration:
