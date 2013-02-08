@@ -7,7 +7,7 @@ Cleans up Redis database after each run.
 ## Status
 
 * Maintainer: **judgedim**
-* stability: beta
+* Stability: **beta**
 * Contact: https://github.com/judgedim
 
 ## Configuration

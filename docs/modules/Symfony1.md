@@ -12,7 +12,7 @@ Please note, this module doesn't implement standard frameworks interface.
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Configuration

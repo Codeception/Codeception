@@ -8,7 +8,7 @@ By providing a unique set of features Unit, the module makes your tests cleaner,
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 ## Features

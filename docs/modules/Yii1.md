@@ -1,51 +1,67 @@
-# ZombieJS Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS)**
-Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
+# Yii1 Module
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii1)**
+This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
 
-Note, all methods take CSS selectors to fetch elements.
-For links, buttons, fields you can use names/values/ids of elements.
-For form fields you can use input[name=fieldname] notation.
+ The following configurations are available for session:
+<ul>
+<li>appPath - full path to the application, include index.php</li>
+<li>url - full url to the index.php entry script</li>
+</ul>
+In your index.php you must return array with correct configuration for the application:
 
-## Status
+For the simple created yii application index.php will be like this:
+<pre>
+// change the following paths if necessary
+$yii=dirname(__FILE__).'/../yii/framework/yii.php';
+$config=dirname(__FILE__).'/protected/config/main.php';
 
-* Maintainer: **synchrone**
-* Stability: **stable**
-* Contact: https://github.com/synchrone
-* relies on [Mink](http://mink.behat.org)
+// remove the following lines when in production mode
+defined('YII_DEBUG') or define('YII_DEBUG',true);
+// specify how many levels of call stack should be shown in each log message
+defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+require_once($yii);
+return array(
+	'class' => 'CWebApplication',
+	'config' => $config,
+);
+</pre>
 
+You can use this module by setting params in your functional.suite.yml:
+<pre>
+class_name: TestGuy
+modules:
+    enabled: [Yii1, TestHelper]
+    config:
+        Yii1:
+            appPath: '/path/to/index.php'
+            url: 'http://localhost/path/to/index.php'
+</pre>
 
-## Installation
+You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web) on the codeception github repo.
+This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
+modify it to be extended from your custom http-request component.
 
-In order to talk with zombie.js server, you should install and configure zombie.js first:
+You can test this module by creating new empty Yii application and creating this scenario:
+<pre>
+$I = new TestGuy($scenario);
+$I->wantTo('Test index page');
+$I->amOnPage('/index.php');
+$I->see('My Web Application','#header #logo');
+$I->click('Login');
+$I->see('Login','h1');
+$I->see('Username');
+$I->fillField('#LoginForm_username','demo');
+$I->fillField('#LoginForm_password','demo');
+$I->click('#login-form input[type="submit"]');
+$I->seeLink('Logout (demo)');
+$I->click('Logout (demo)');
+$I->seeLink('Login');
+</pre>
+Then run codeception: php codecept.phar --steps run functional
+You must see "OK" and that all steps are marked with asterisk (*).
+Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
 
-* Install node.js by following instructions from the official site: http://nodejs.org/.
-* Install npm (node package manager) by following instructions from the http://npmjs.org/.
-* Install zombie.js with npm:
-``` $ npm install -g zombie@0.13.0  * ```
-Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
-says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
-
-After installing npm and zombie.js, you’ll need to add npm libs to your **NODE_PATH**. The easiest way to do this is to add:
-
-``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
-into your **.bashrc**.
-
-Also note that this module requires php5-http PECL extension to parse returned headers properly
-
-Don't forget to turn on Db repopulation if you are using database.
-
-## Configuration
-
-* host - simply defines the host on which zombie.js will be started. It’s **127.0.0.1** by default.
-* port - defines a zombie.js port. Default one is **8124**.
-* node_bin - defines full path to node.js binary. Default one is just **node**
-* script - defines a node.js script to start zombie.js server. If you pass a **null** the default script will be used. Use this option carefully!
-* threshold - amount of milliseconds (1/1000 of second) for the process to wait  (as of \Behat\Mink\Driver\Zombie\Server)
-* autostart - whether zombie.js should be started automatically. Defaults to **true**
-
-## Public Properties
-
-* session - contains Mink Session
+ * property Codeception\Util\Connector\Yii1 $client
 
 ## Actions
 
@@ -54,6 +70,18 @@ Don't forget to turn on Db repopulation if you are using database.
 
 
 Opens the page.
+Requires relative uri as parameter
+
+Example:
+
+``` php
+<?php
+// opens front page
+$I->amOnPage('/');
+// opens /register page
+$I->amOnPage('/register');
+?>
+```
 
  * param $page
 
@@ -74,15 +102,6 @@ $I->attachFile('prices.xls');
 
  * param $field
  * param $filename
-
-
-### blur
-
-
-Removes focus from link or button or any node found by CSS or XPath
-XPath or CSS selectors are accepted.
-
- * param $el
 
 
 ### checkOption
@@ -127,14 +146,6 @@ $I->click('#form input[type=submit]');
 $I->click('//form/*[@type=submit]')
 ?>
 ```
- * param $link
-
-
-### clickWithRightButton
-
-
-Clicks with right button on link or button or any node found by CSS or XPath
-
  * param $link
 
 
@@ -213,32 +224,6 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
  * param null $url
 
 
-### doubleClick
-
-
-Double clicks on link or button or any node found by CSS or XPath
-
- * param $link
-
-
-### dragAndDrop
-
-
-Drag first element to second
-XPath or CSS selectors are accepted.
-
- * param $el1
- * param $el2
-
-
-### executeJs
-
-
-Executes any JS code.
-
- * param $jsCode
-
-
 ### fillField
 
 
@@ -248,15 +233,7 @@ Fills a text field or textarea with value.
  * param $value
 
 
-### focus
-
-
-Moves focus to link or button or any node found by CSS or XPath
-
- * param $el
-
-
-### grabAttribute
+### formatResponse
 
 __not documented__
 
@@ -301,84 +278,6 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
  * return mixed
 
 
-### headRequest
-
-
- * param string $url The URL to make HEAD request to
- * return array Header-Name => Value array
-
-
-### moveBack
-
-
-Moves back in history
-
-
-### moveForward
-
-
-Moves forward in history
-
-
-### moveMouseOver
-
-
-Moves mouse over link or button or any node found by CSS or XPath
-
- * param $link
-
-
-### pressKey
-
-
-Presses key on element found by css, xpath is focused
-A char and modifier (ctrl, alt, shift, meta) can be provided.
-
-Example:
-
-``` php
-<?php
-$I->pressKey('#page','u');
-$I->pressKey('#page','u','ctrl');
-$I->pressKey('descendant-or-self::*[@id='page']','u');
-?>
-```
-
- * param $element
- * param $char char can be either char ('b') or char-code (98)
- * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
-
-
-### pressKeyDown
-
-
-Presses key down on element found by CSS or XPath.
-
-For example see 'pressKey'.
-
- * param $element
- * param $char char can be either char ('b') or char-code (98)
- * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
-
-
-### pressKeyUp
-
-
-Presses key up on element found by CSS or XPath.
-
-For example see 'pressKey'.
-
- * param $element
- * param $char char can be either char ('b') or char-code (98)
- * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
-
-
-### reloadPage
-
-
-Reloads current page
-
-
 ### see
 
 
@@ -416,16 +315,6 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 ```
 
  * param $checkbox
-
-
-### seeElement
-
-
-Checks element visibility.
-Fails if element exists but is invisible to user.
-Eiter CSS or XPath can be used.
-
- * param $selector
 
 
 ### seeInCurrentUrl
@@ -494,6 +383,84 @@ $I->selectOption('//form/select[@name=account]', 'Monthly');
  * param $option
 
 
+### sendAjaxGetRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends a GET ajax request with specified params.
+
+See ->sendAjaxPostRequest for examples.
+
+ * param $uri
+ * param $params
+
+
+### sendAjaxPostRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends a POST ajax request with specified params.
+Additional params can be passed as array.
+
+Example:
+
+Imagine that by clicking checkbox you trigger ajax request which updates user settings.
+We emulate that click by running this ajax request manually.
+
+``` php
+<?php
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
+
+```
+
+ * param $uri
+ * param $params
+
+
+### submitForm
+
+
+Submits a form located on page.
+Specify the form by it's css or xpath selector.
+Fill the form fields values as array.
+
+Skipped fields will be filled by their values from page.
+You don't need to click the 'Submit' button afterwards.
+This command itself triggers the request to form's action.
+
+Examples:
+
+``` php
+<?php
+$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+
+```
+
+For sample Sign Up form:
+
+``` html
+<form action="/sign_up">
+    Login: <input type="text" name="user[login]" /><br/>
+    Password: <input type="password" name="user[password]" /><br/>
+    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
+    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+    <input type="submit" value="Submit" />
+</form>
+```
+I can write this:
+
+``` php
+<?php
+$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+
+```
+Note, that pricing plan will be set to Paid, as it's selected on page.
+
+ * param $selector
+ * param $params
+
+
 ### uncheckOption
 
 
@@ -508,20 +475,3 @@ $I->uncheckOption('#notify');
 ```
 
  * param $option
-
-
-### wait
-
-
-Wait for x miliseconds
-
- * param $miliseconds
-
-
-### waitForJS
-
-
-Waits for x miliseconds or until JS condition turns true.
-
- * param $miliseconds
- * param $jsCondition

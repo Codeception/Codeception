@@ -22,7 +22,7 @@ Otherwise consider using ORMs like Doctrine, that emulate nested transactions, o
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 This module despite of it's stability may act unstable because of transactions issue. If test fails with fatal error and transaction is not finished, it may affect other transactions.

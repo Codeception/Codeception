@@ -7,7 +7,7 @@ Functional tests can be run inside Social Engine. All commands of this module ar
 ## Status
 
 * Maintainer: **Artem Kovradin**
-* stability: beta
+* Stability: **beta**
 * Contact: https://github.com/horechek
 * URL: http://tvorzasp.com
 

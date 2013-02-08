@@ -46,6 +46,17 @@ modules:
 ## Actions
 
 
+### grabMessageFromQueue
+
+
+Takes last message from queue.
+
+$message = $I->grabMessageFromQueue('queue.emails');
+
+ * param $queue
+ * return AMQPQueue
+
+
 ### pushToExchange
 
 
@@ -78,21 +89,20 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
  * param $message string|AMQPMessage
 
 
-### seeMessageInQueue
+### seeMessageInQueueContainsText
 
 
 Checks if message containing text received.
 
 **This method drops message from queue**
 **This method will wait for message. If none is sent the script will stuck**.
-**Purges queue in the end**
 
 ``` php
 <?php
 $I->pushToQueue('queue.emails', 'Hello, davert');
-$I->seeMessageInQueue('queue.emails','davert');
+$I->seeMessageInQueueContainsText('queue.emails','davert');
 ?>
 ```
 
  * param $queue
- * param $message
+ * param $text

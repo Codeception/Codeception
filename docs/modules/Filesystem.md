@@ -6,7 +6,7 @@ Fork it to extend the module for FTP, Amazon S3, others.
 ## Status
 
 * Maintainer: **davert**
-* stability: stable
+* Stability: **stable**
 * Contact: codecept@davert.mail.ua
 
 Module was developed to test Codeception itself.

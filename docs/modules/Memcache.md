@@ -7,7 +7,7 @@ Performs a cleanup by flushing all values after each test run.
 ## Status
 
 * Maintainer: **davert**
-* stability: beta
+* Stability: **beta**
 * Contact: codecept@davert.mail.ua
 
 ## Configuration

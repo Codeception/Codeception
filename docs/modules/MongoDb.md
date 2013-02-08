@@ -19,7 +19,7 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 ## Status
 
 * Maintainer: **judgedim**, **davert**
-* stability: beta
+* Stability: **beta**
 * Contact: codecept@davert.mail.ua
 
 *Please review the code of non-stable modules and provide patches if you have issues.*

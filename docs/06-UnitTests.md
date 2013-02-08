@@ -1,6 +1,6 @@
 # Unit Tests
 
-Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test can be added to Codeception test suite and then executed. 
+Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test can be added to Codeception test suite and then executed.
 If you ever wrote a PHPUnit test, then do it as well as you did before. Codeception will add you some cool helpers to simplify common tasks.
 If you don't have experience in writing unit tests, please read the [PHPUnit manual](http://www.phpunit.de/manual/3.6/en/index.html) to start.
 The basics of unit tests are skipped here, but instead you will get a basic knowledge on what features Codeception adds to unit tests.
@@ -9,15 +9,24 @@ __To say it again: you don't need to install PHPUnit to run it's tests. Codecept
 
 ## Creating Test
 
-Test is created by running a simgle command
+Codeception have nice generators to simplify test creation.
+You can start with generating a classical PHPUnit test extending `\PHPUnit_Framework_TestCase` class.
+This can be done by this command:
+
+```bash
+$ php codecept.phar generate:phpunit unit Simple
+```
+
+Codeception has it's addons to standard unit tests. So let's try them.
+We need another command to create Codecption-powered unit tests.
 
 ```bash
 $ php codecept.phar generate:test unit Simple
 ```
 
-This will create a new `SimpleTest` file located in `tests/unit` directory.
+Both tests will create a new `SimpleTest` file located in `tests/unit` directory.
 
-It will look like this:
+A test created by `generate:test` command will look like this:
 
 ```php
 <?php
@@ -55,7 +64,7 @@ So If you implement `setUp` and `tearDown` be sure, that you will call their par
 # suite for unit (internal) tests.
 class_name: CodeGuy
 modules:
-    enabled: [Unit, CodeHelper] 
+    enabled: [Unit, CodeHelper]
 ```
 
 ### Testing Database
@@ -68,7 +77,7 @@ Probably, there is no very useful modules set up by default for CodeGuy class. T
 # suite for unit (internal) tests.
 class_name: CodeGuy
 modules:
-    enabled: [Unit, Db, CodeHelper] 
+    enabled: [Unit, Db, CodeHelper]
 ```
 
 After running the build command
@@ -79,14 +88,14 @@ $ php codecept.phar build
 
 A new methods will be added into CodeGuy class. Thus, you can start using database methods in your test:
 
-```php 
+```php
 <?php
 function testSavingUser()
 {
 	$user = new User();
 	$user->setName('Miles');
 	$user->save();
-	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles'));	
+	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles'));
 }
 ?>
 ```
@@ -147,7 +156,7 @@ class SimpleTest extends \Codeception\TestCase\Test
     	$this->user->setIsBanned(true);
     	$this->user->setUpdatedBy(Stub::make('User', array('name' => 'admin')));
     	$this->user->save();
-    	$this->codeGuy->seeInDatabase('users', array('name' => 'Miles', 'is_banned' => true));    	
+    	$this->codeGuy->seeInDatabase('users', array('name' => 'Miles', 'is_banned' => true));
     }
 }
 ?>
