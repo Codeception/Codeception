@@ -17,6 +17,7 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * ## Configuration
  *
  * * url *optional* - the url of api
+ * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
  *
  * ## Public Properties
  *
@@ -29,8 +30,9 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
 class REST extends \Codeception\Module
 {
     protected $config = array(
-        'url' => '',
-        'xdebug_remote' => false,
+        'url'                 => '',
+        'timeout'             => 30,
+        'xdebug_remote'       => false,
         'xdebug_codecoverage' => false,
     );
 
@@ -73,6 +75,8 @@ class REST extends \Codeception\Module
 
         $this->client->setServerParameters(array());
 
+        $timeout = $this->config['timeout'];
+
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
             && xdebug_is_enabled()
@@ -81,11 +85,14 @@ class REST extends \Codeception\Module
             $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
             $this->client->getCookieJar()->set($cookie);
 
-            $clientConfig = $this->client->getClient()->getConfig();
-            $curlOptions = $clientConfig->get('curl.options');
-            $curlOptions[CURLOPT_TIMEOUT] = 0;
-            $clientConfig->set('curl.options', $curlOptions);
+            // timeout is disabled, so we can debug gently :)
+            $timeout = 0;
         }
+
+        $clientConfig = $this->client->getClient()->getConfig();
+        $curlOptions = $clientConfig->get('curl.options');
+        $curlOptions[CURLOPT_TIMEOUT] = $timeout;
+        $clientConfig->set('curl.options', $curlOptions);
 
         if ($this->config['xdebug_codecoverage']) {
             $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
