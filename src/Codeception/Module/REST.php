@@ -80,7 +80,11 @@ class REST extends \Codeception\Module
         ) {
             $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
             $this->client->getCookieJar()->set($cookie);
-            $this->client->getClient()->getConfig()->add('curl.CURLOPT_TIMEOUT', 0);
+
+            $clientConfig = $this->client->getClient()->getConfig();
+            $curlOptions = $clientConfig->get('curl.options');
+            $curlOptions[CURLOPT_TIMEOUT] = 0;
+            $clientConfig->set('curl.options', $curlOptions);
         }
 
         if ($this->config['xdebug_codecoverage']) {

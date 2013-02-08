@@ -12,6 +12,12 @@
             "homepage":"http://codegyre.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "http://github.com/tiger-seo/Goutte"
+        }
+    ],
     "minimum-stability": "stable",
     "require":{
         "php":">=5.3.3",
