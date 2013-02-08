@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Command;
 
 use Symfony\Component\Console\Application;
@@ -9,36 +10,28 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
-class GenerateTest extends Base
-{
+class GeneratePhpUnit extends Base {
+
     protected $template  = <<<EOF
 <?php
-%suse Codeception\Util\Stub;
-
-%s %sTest extends \Codeception\TestCase\Test
+%s
+%s %sTest extends \PHPUnit_Framework_TestCase
 {
-   /**
-    * @var \%s
-    */
-    protected $%s;
-
-    protected function _before()
+    protected function setUp()
     {
     }
 
-    protected function _after()
+    protected function tearDown()
     {
     }
 
     // tests
     public function testMe()
     {
-
     }
 
 }
 EOF;
-
 
     protected function configure()
     {
@@ -51,7 +44,7 @@ EOF;
     }
 
     public function getDescription() {
-        return 'Generates empty unit test file in suite';
+        return 'Generates empty PHPUnit test without Codeception additions';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -62,23 +55,22 @@ EOF;
         $config = \Codeception\Configuration::config();
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
-        $guy = $suiteconf['class_name'];
-
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
         $ns = $this->getNamespaceString($class);
 
         $filename = $this->completeSuffix($classname, 'Test');
-        $filename = $path.$filename;
+        $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");
             exit;
         }
 
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
+        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname));
 
         $output->writeln("<info>Test for $class was created in $filename</info>");
-
     }
+
 }
+

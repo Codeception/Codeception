@@ -247,7 +247,9 @@ class CliGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Executes a shell command
      *
+     * @param $command
      * @see Cli::runShellCommmand()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -264,7 +266,9 @@ class CliGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks that output from last executed command contains text
      *
+     * @param $text
      * @see Cli::seeInShellOutput()
      *
      * ! This method is generated. DO NOT EDIT. !
@@ -281,6 +285,9 @@ class CliGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks that output from latest command doesn't contain text
+     *
+     * @param $text
      *
      * @see Cli::dontSeeInShellOutput()
      *
