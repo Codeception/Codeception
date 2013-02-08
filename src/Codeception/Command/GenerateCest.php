@@ -11,17 +11,36 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateCest extends Base
 {
-    protected $template  = "<?php\n%s %sCest\n{\n    // the class name you want to test\n    public %s = '';\n\n%s\n}\n";
-    protected $methodTemplate = "    // sample test\n    public function %s(\\%s %s) {\n    \n    }";
+    protected $template  = <<<EOF
+<?php
+%suse Codeception\Util\Stub;
 
-    const SUFFIX = 'Cest';
+%s %sCest
+{
+    protected $%s = '%s';
+
+    protected function _before()
+    {
+    }
+
+    protected function _after()
+    {
+    }
+
+    // tests
+    %s
+
+}
+EOF;
+
+    protected $methodTemplate = "public function %s(\\%s %s) {\n    \n    }";
 
     protected function configure()
     {
         $this->setDefinition(array(
 
             new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-            new \Symfony\Component\Console\Input\InputArgument('name', InputArgument::REQUIRED, 'test name'),
+            new \Symfony\Component\Console\Input\InputArgument('class', InputArgument::REQUIRED, 'test name'),
         ));
         parent::configure();
     }
@@ -33,43 +52,28 @@ class GenerateCest extends Base
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $suite = $input->getArgument('suite');
-        $testName = $input->getArgument('name');
+        $class = $input->getArgument('class');
 
         $config = \Codeception\Configuration::config();
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $guy = $suiteconf['class_name'];
 
-        $classname = $this->getClassName($testName);
+        $classname = $this->getClassName($class);
+        $path = $this->buildPath($suiteconf['path'], $class);
+        $ns = $this->getNamespaceString($class);
 
-        $path = $this->buildPath($suiteconf['path'], $testName);
-
-        $file = pathinfo($testName);
-        $filename = $file['filename'];
-        // filename already ends with Cest
-        if (strpos($filename, $this::SUFFIX, strlen($filename) - strlen($this::SUFFIX)) === false) {
-            $filename .= $this::SUFFIX;
-        }
-        $filename .= '.' . empty($file['extension']) ? '.php' : $file['extension'];
-
-        $filename = $path.DIRECTORY_SEPARATOR . $filename;
+        $filename = $this->completeSuffix($classname, 'Cest');
+        $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");
             exit;
         }
 
-//        $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
-//        foreach ($methods as $method) {
-//            if ($method->getDeclaringClass()->name != $class) continue;
-//            if ($method->isConstructor() or $method->isDestructor()) continue;
-//
-//            $tests[] = sprintf($this->methodTemplate, $classname, $method->name,$method->name, $guy, '$I');
-//        }
-
         $tests = sprintf($this->methodTemplate, "shouldBe", $guy, '$I');
 
-        file_put_contents($filename, sprintf($this->template, 'class', $classname,'$class', $tests));
+        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, 'class', $class, $tests));
 
         $output->writeln("<info>Cest was created in $filename</info>");
 
