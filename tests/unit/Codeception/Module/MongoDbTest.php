@@ -5,7 +5,7 @@ use PHPUnit_Framework_TestCase;
 class MongoDbTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var type 
+     * @var array 
      */
     private $mongoConfig = array(
         'dsn' => 'mongodb://localhost:27017/test',
@@ -30,7 +30,7 @@ class MongoDbTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        if (!class_exists('\Mongo')) {
+        if (!class_exists('Mongo')) {
             $this->markTestSkipped('Mongo is not installed');
         }
 
