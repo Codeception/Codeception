@@ -26,6 +26,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             return;
         }
 
+        if ($step->getName() == 'Skip') $this->markTestSkipped($step->getAction());
+        if ($step->getName() == 'Incomplete') $this->markTestIncomplete($step->getAction());
+
         $action = $step->getAction();
         $arguments = $step->getArguments();
 
