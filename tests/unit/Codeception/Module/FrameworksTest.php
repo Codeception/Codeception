@@ -280,11 +280,27 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->click('Ссылочка');
     }
 
+    public function testSeeInField()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeInField('Name','OLD_VALUE');
+        $this->module->seeInField('input[name=name]','OLD_VALUE');
+        $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
+    }
+
+    public function testDontSeeInField()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeInField('Name','Davert');
+        $this->module->dontSeeInField('input[name=name]','Davert');
+        $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
     public function testFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('input[name=rus]','Верно');
     }
-    
+
     public function testComplexSelectorsAndForms() {
         $this->module->amOnPage('/login');
         $this->module->submitForm('form#user_form_login', array('email' => 'miles@davis.com', 'password' => '111111'));

@@ -203,7 +203,23 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Текст', 'p');
     }
 
-    public function testFieldWithNonLatin() {
+    public function testSeeInField()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeInField('Name','OLD_VALUE');
+        $this->module->seeInField('#name','OLD_VALUE');
+        $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
+    }
+
+    public function testDontSeeInField()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeInField('Name','Davert');
+        $this->module->dontSeeInField('input[name=name]','Davert');
+        $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
+    public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }

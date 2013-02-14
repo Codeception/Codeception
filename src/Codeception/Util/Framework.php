@@ -159,12 +159,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function proceedSeeInField($field, $value)
     {
-        $fields = $this->crawler->filter($field);
-        $values1 = $fields->filter('input')->extract(array('value'));
-        $values2 = $fields->filter('textarea')->extract(array('_text'));
-        if (empty($values1) && empty($values2)) \PHPUnit_Framework_Assert::fail('field not found');
-        $values = array_merge($values1, $values2);
-        return array('Contains', $this->escape($value), $values);
+        $input = $this->getFieldByLabelOrCss($field);
+        $currentValue = $input->tagName == 'textarea' ?
+            $input->extract(array('_text')) :
+            $input->extract(array('value'));
+        return array('Contains', $this->escape($value), $currentValue);
     }
 
     public function submitForm($selector, $params)
