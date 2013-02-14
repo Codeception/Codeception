@@ -280,7 +280,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->click('Ссылочка');
     }
 
-    public function testSeeInField()
+    public function testSeeInFieldOnInput()
     {
         $this->module->amOnPage('/form/field');
         $this->module->seeInField('Name','OLD_VALUE');
@@ -288,12 +288,28 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
     }
 
-    public function testDontSeeInField()
+    public function testSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->seeInField('Description','sunrise');
+        $this->module->seeInField('textarea','sunrise');
+        $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
+    }
+
+    public function testDontSeeInFieldOnInput()
     {
         $this->module->amOnPage('/form/field');
         $this->module->dontSeeInField('Name','Davert');
         $this->module->dontSeeInField('input[name=name]','Davert');
         $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
+    public function testDontSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunset');
+        $this->module->dontSeeInField('textarea','sunset');
+        $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
     }
 
     public function testFieldWithNonLatin() {
