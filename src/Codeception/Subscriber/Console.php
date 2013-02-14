@@ -135,7 +135,7 @@ class Console implements EventSubscriberInterface
         if ($fail instanceof \PHPUnit_Framework_SelfDescribing) {
             $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
         } else {
-            $failToString = sprintf("%s (%s:%d)", $fail->getMessage(), $fail->getFile(), $fail->getLine());
+            $failToString = sprintf("[%s]\n%s", get_class($fail),$fail->getMessage());
         }
 
         $feature = $failedTest->getScenario()->getFeature();
@@ -148,10 +148,6 @@ class Console implements EventSubscriberInterface
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            if (!$this->debug) {
-                $this->output->writeln($failToString);
-                return;
-            }
             $this->printException($fail);
             return;
         }
@@ -167,7 +163,6 @@ class Console implements EventSubscriberInterface
         };
 
         // it's assertion
-
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
             $this->output->writeln("Guy unexpectedly managed to $action: {$failToString}");

@@ -234,7 +234,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('textarea','sunset');
         $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
     }
-    
+
     public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
