@@ -123,12 +123,12 @@ class Scenario {
 
     public function skip($reason = "")
     {
-        $this->addStep(new Step\Skip($reason, array()));
+        if (!$this->running) $this->addStep(new Step\Skip($reason, array()));
     }
 
     public function incomplete($reason = "")
     {
-        $this->addStep(new Step\Incomplete($reason, array()));
+        if (!$this->running) $this->addStep(new Step\Incomplete($reason, array()));
     }
 
 
