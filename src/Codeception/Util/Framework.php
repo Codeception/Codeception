@@ -159,10 +159,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function proceedSeeInField($field, $value)
     {
-        $input = $this->getFieldByLabelOrCss($field);
-        $currentValue = $input->tagName == 'textarea' ?
-            $input->extract(array('_text')) :
-            $input->extract(array('value'));
+        $field = $this->getFieldByLabelOrCss($field);
+        if (empty($field)) $this->fail("input field not found");
+        $currentValue = $field->filter('textarea')->extract(array('_text'));
+        if (!$currentValue) $currentValue = $field->extract(array('value'));
         return array('Contains', $this->escape($value), $currentValue);
     }
 
@@ -308,7 +308,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function escape($string)
     {
-        return addslashes($string);
+        return $string;// addslashes($string);
     }
 
     protected function match($selector)

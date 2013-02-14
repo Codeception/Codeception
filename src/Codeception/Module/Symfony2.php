@@ -63,6 +63,7 @@ class Symfony2 extends \Codeception\Util\Framework
     }
     
     public function _before(\Codeception\TestCase $test) {
+        $this->kernel->boot();
         $this->client = new $this->clientClass($this->kernel);
         $this->client->followRedirects(true);
     }
