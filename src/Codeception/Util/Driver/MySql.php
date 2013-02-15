@@ -23,9 +23,13 @@ class MySql extends Db
         $query = "select %s from `%s` where %s";
         $params = array();
         foreach ($criteria as $k => $v) {
-            $params[] = "`$k` = ? ";
+            if ($v === null) {
+                $params[] = "$k IS ?";
+            } else {
+                $params[] = "$k = ?";
+            }
         }
-        $params = implode('AND ', $params);
+        $params = implode(' AND ', $params);
 
         return sprintf($query, $column, $table, $params);
     }
