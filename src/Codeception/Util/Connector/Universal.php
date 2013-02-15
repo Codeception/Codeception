@@ -1,10 +1,11 @@
 <?php
 namespace Codeception\Util\Connector;
 
+use Goutte\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
-class Universal extends \Symfony\Component\BrowserKit\Client
+class Universal extends Client
 {
     public function setIndex($index) {
         $this->index = $index;
