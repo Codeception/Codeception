@@ -107,6 +107,7 @@ class Scenario {
     }
     
     public function run() {
+        if ($this->running()) return;
         $this->running = true;
         $this->preloadedSteps = $this->steps;
         $this->steps = array();
