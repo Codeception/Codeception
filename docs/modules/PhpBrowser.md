@@ -1,11 +1,19 @@
 # PhpBrowser Module
-
-Uses Mink (http://mink.behat.org) with Goutte Driver to interact with your application.
-Contains all Mink actions and additional ones, listed below.
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/PhpBrowser)**
+Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
 
 Use to perform web acceptance tests with non-javascript browser.
 
 If test fails stores last shown page in 'output' dir.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
+* relies on [Mink](http://mink.behat.org)
+
+*Please review the code of non-stable modules and provide patches if you have issues.*
 
 ## Configuration
 
@@ -30,8 +38,16 @@ Opens the page.
 ### attachFile
 
 
-Attaches file stored in Codeception data directory to field specified.
-Field is searched by its id|name|label|value or CSS selector.
+Attaches file from Codeception data directory to upload field.
+
+Example:
+
+``` php
+<?php
+// file is stored in 'tests/data/tests.xls'
+$I->attachFile('prices.xls');
+?>
+```
 
  * param $field
  * param $filename
@@ -40,8 +56,16 @@ Field is searched by its id|name|label|value or CSS selector.
 ### checkOption
 
 
-Check matched checkbox or radiobutton.
-Field is searched by its id|name|label|value or CSS selector.
+Ticks a checkbox.
+For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -49,9 +73,28 @@ Field is searched by its id|name|label|value or CSS selector.
 ### click
 
 
-Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
-Link text or css selector can be passed.
+Perform a click on link or button.
+Link or button are found by their names or CSS selector.
+Submits a form if button is a submit type.
 
+If link is an image it's found by alt attribute value of image.
+If button is image button is found by it's value
+If link or button can't be found by name they are searched by CSS selector.
+
+Examples:
+
+``` php
+<?php
+// simple link
+$I->click('Logout');
+// button of form
+$I->click('Submit');
+// CSS button
+$I->click('#form input[type=submit]');
+// XPath
+$I->click('//form/*[@type=submit]')
+?>
+```
  * param $link
 
 
@@ -77,8 +120,17 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 ### dontSeeCheckboxIsChecked
 
 
-Asserts that checbox is not checked
-Field is searched by its id|name|label|value or CSS selector.
+Assert if the specified checkbox is unchecked.
+Use css selector or xpath to match.
+
+Example:
+
+``` php
+<?php
+$I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
+$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
+
+```
 
  * param $checkbox
 
@@ -86,8 +138,18 @@ Field is searched by its id|name|label|value or CSS selector.
 ### dontSeeInField
 
 
-Checks the value in field is not equal to value passed.
-Field is searched by its id|name|label|value or CSS selector.
+Checks that an input field or textarea doesn't contain value.
+
+Example:
+
+``` php
+<?php
+$I->dontSeeInField('form textarea[name=body]','Type your comment here');
+$I->dontSeeInField('form input[type=hidden]','hidden_value');
+$I->dontSeeInField('#searchform input','Search');
+$I->dontSeeInField('//form/*[@name=search]','Search');
+?>
+```
 
  * param $field
  * param $value
@@ -96,19 +158,25 @@ Field is searched by its id|name|label|value or CSS selector.
 ### dontSeeLink
 
 
-Checks if the document hasn't link that contains specified
-text (or text and url)
+Checks if page doesn't contain the link with text specified.
+Specify url to narrow the results.
 
- * param  string $text
- * param  string $url (Default: null)
- * return mixed
+Examples:
+
+``` php
+<?php
+$I->dontSeeLink('Logout'); // I suppose user is not logged in
+
+```
+
+ * param $text
+ * param null $url
 
 
 ### fillField
 
 
-Fill the field with given value.
-Field is searched by its id|name|label|value or CSS selector.
+Fills a text field or textarea with value.
 
  * param $field
  * param $value
@@ -200,8 +268,18 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ### seeCheckboxIsChecked
 
 
-Asserts the checkbox is checked.
-Field is searched by its id|name|label|value or CSS selector.
+Assert if the specified checkbox is checked.
+Use css selector or xpath to match.
+
+Example:
+
+``` php
+<?php
+$I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
+$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
+
+```
 
  * param $checkbox
 
@@ -209,7 +287,7 @@ Field is searched by its id|name|label|value or CSS selector.
 ### seeInCurrentUrl
 
 
-Checks if current url contains the $uri.
+Checks that current uri contains value
 
  * param $uri
 
@@ -217,7 +295,18 @@ Checks if current url contains the $uri.
 ### seeInField
 
 
-Checks the value of field is equal to value passed.
+Checks that an input field or textarea contains value.
+
+Example:
+
+``` php
+<?php
+$I->seeInField('form textarea[name=body]','Type your comment here');
+$I->seeInField('form input[type=hidden]','hidden_value');
+$I->seeInField('#searchform input','Search');
+$I->seeInField('//form/*[@name=search]','Search');
+?>
+```
 
  * param $field
  * param $value
@@ -226,20 +315,36 @@ Checks the value of field is equal to value passed.
 ### seeLink
 
 
-Checks if the document has link that contains specified
-text (or text and url)
+Checks if there is a link with text specified.
+Specify url to match link with exact this url.
 
- * param  string $text
- * param  string $url (Default: null)
- * return mixed
+Examples:
+
+``` php
+<?php
+$I->seeLink('Logout'); // matches <a href="#">Logout</a>
+$I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
+
+```
+
+ * param $text
+ * param null $url
 
 
 ### selectOption
 
 
-Selects opition from selectbox.
-Use field name|label|value|id or CSS selector to match selectbox.
-Either values or text of options can be used to fetch option.
+Selects an option in select tag or in radio button group.
+
+Example:
+
+``` php
+<?php
+$I->selectOption('form select[name=account]', 'Premium');
+$I->selectOption('form input[name=payment]', 'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
+?>
+```
 
  * param $select
  * param $option
@@ -326,7 +431,14 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 ### uncheckOption
 
 
-Uncheck matched checkbox or radiobutton.
-Field is searched by its id|name|label|value or CSS selector.
+Unticks a checkbox.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

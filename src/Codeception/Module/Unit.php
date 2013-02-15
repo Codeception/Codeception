@@ -7,6 +7,12 @@ namespace Codeception\Module;
  * This is the heart of the CodeGuy testing framework.
  * By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Features
  * * Descriptive - simply write what you are testing and how you are testing.
  * * Execution limit - only 'execute* methods actually execute your code. It's easy to see where tested methods are invoked.

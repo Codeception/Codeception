@@ -218,6 +218,7 @@ class UniversalClassLoader
             // namespaced class name
             $namespace = substr($class, 0, $pos);
             foreach ($this->namespaces as $ns => $dirs) {
+                $ns = trim($ns, '\\');
                 if (0 !== strpos($namespace, $ns)) {
                     continue;
                 }

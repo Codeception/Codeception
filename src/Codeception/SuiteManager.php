@@ -66,11 +66,8 @@ class SuiteManager {
     }
 
     public function addTest($path) {
-        $loaded_classes = get_declared_classes();
-        require_once $path;
-        $extra_loaded_classes = get_declared_classes();
 
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
+        $testClasses = $this->getClassesFromFile($path);
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
@@ -82,6 +79,7 @@ class SuiteManager {
                 if ($test instanceof \Codeception\TestCase\Test) {
                     $test->setBootstrap($this->settings['bootstrap']);
                     $test->setDispatcher($this->dispatcher);
+                    $test->setGuyClass($this->settings['class_name']);
                 } else {
                     if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
                 }
@@ -102,16 +100,12 @@ class SuiteManager {
    	}
 
 
+
     public function addCest($file) {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
-        $loaded_classes = get_declared_classes();
-        require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
-
+        $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
             $unit = new $testClass;
@@ -154,40 +148,43 @@ class SuiteManager {
 
     
     public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
-        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite));
+
+        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));
         $runner->doEnhancedRun($this->suite, $result, $options);
-        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite));
+        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite, $result, $this->settings));
     }
 
     public function loadTest($path) {
         if (!file_exists($path)) throw new \Exception("File $path not found");
         if (strrpos(strrev($path), strrev('Cept.php')) === 0) return $this->addCept($path);
-        if (strrpos(strrev($path), strrev('Spec.php')) === 0) return $this->addCept($path);
         if (strrpos(strrev($path), strrev('Cest.php')) === 0) return $this->addCest($path);
         if (strrpos(strrev($path), strrev('Test.php')) === 0) return $this->addTest($path);
+        if (is_dir($path)) {
+            $this->path = $path;
+            $this->loadTests();
+            return;
+        }
         throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
     }
 
     public function loadTests()
     {
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cept.php')->sortByName()->depth('>= 0')->in($this->path);
-        foreach ($testFiles as $test) {
-            $this->addCept($test->getPathname());
-        }
-        // old-style namings, right?
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Spec.php')->sortByName()->depth('>= 0')->in($this->path);
+        $finder = Finder::create()->files()->sortByName()->depth('>= 0')->in($this->path);
+        $ceptFinder = clone($finder);
+        $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
             $this->addCept($test->getPathname());
         }
 
-        // tests inside classes
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Cest.php')->sortByName()->depth('>= 0')->in($this->path);
+        $cestFinder = clone($finder);
+        $testFiles = $cestFinder->name('*Cest.php');
         foreach ($testFiles as $test) {
             $this->addCest($test->getPathname());
         }
 
         // PHPUnit tests
-        $testFiles = \Symfony\Component\Finder\Finder::create()->files()->name('*Test.php')->sortByName()->depth('>= 0')->in($this->path);
+        $testFinder = clone($finder);
+        $testFiles = $testFinder->name('*Test.php');
         foreach ($testFiles as $test) {
             $this->addTest($test->getPathname());
         }
@@ -200,5 +197,11 @@ class SuiteManager {
         return $this->suite;
     }
 
-
+    protected function getClassesFromFile($file)
+    {
+        $loaded_classes = get_declared_classes();
+        require_once $file;
+        $extra_loaded_classes = get_declared_classes();
+        return array_diff($extra_loaded_classes,$loaded_classes);
+    }
 }

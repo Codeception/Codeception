@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.1.5";
+    const VERSION = "1.5.4";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -17,6 +17,11 @@ class Codecept
      * @var \PHPUnit_Framework_TestResult
      */
     protected $result;
+
+    /**
+     * @var \Codeception\CodeCoverage
+     */
+    protected $coverage;
 
     /**
      * @var \Monolog\Handler\StreamHandler
@@ -42,19 +47,20 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
+        'coverage' => false
     );
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->runner = new \Codeception\PHPUnit\Runner();
 
-        $this->dispatcher = new EventDispatcher();
         $this->config = \Codeception\Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
+
+        $this->dispatcher = new EventDispatcher();
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
         $this->registerListeners();
-
     }
 
     private function mergeOptions($options) {
@@ -82,6 +88,11 @@ class Codecept
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+
+        if ($this->options['coverage']) {
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+        }
     }
 
     public function runSuite($suite, $test = null) {
@@ -108,13 +119,16 @@ class Codecept
     public function printResult() {
         $result = $this->getResult();
         $result->flushListeners();
-        $this->runner->getPrinter()->printResult($result);
+
+        $printer = $this->runner->getPrinter();
+        $printer->printResult($result);
+
+        $this->dispatcher->dispatch('result.print.after', new \Codeception\Event\PrintResult($result, $printer));
     }
 
     /**
      * @return \PHPUnit_Framework_TestResult
-     */
-    public function getResult()
+     */    public function getResult()
     {
         return $this->result;
     }

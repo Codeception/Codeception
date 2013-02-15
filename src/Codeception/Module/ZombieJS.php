@@ -2,20 +2,28 @@
 namespace Codeception\Module;
 
 /**
- * * Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
- * *
- * * Note, all methods take CSS selectors to fetch elements.
- * * For links, buttons, fields you can use names/values/ids of elements.
- * * For form fields you can use input[name=fieldname] notation.
- * *
- * * ## Installation
- * *
+ * Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
+ *
+ * Note, all methods take CSS selectors to fetch elements.
+ * For links, buttons, fields you can use names/values/ids of elements.
+ * For form fields you can use input[name=fieldname] notation.
+ *
+ * ## Status
+ *
+ * * Maintainer: **synchrone**
+ * * Stability: **stable**
+ * * Contact: https://github.com/synchrone
+ * * relies on [Mink](http://mink.behat.org)
+ *
+ *
+ * ## Installation
+ *
  * In order to talk with zombie.js server, you should install and configure zombie.js first:
  *
  * * Install node.js by following instructions from the official site: http://nodejs.org/.
  * * Install npm (node package manager) by following instructions from the http://npmjs.org/.
  * * Install zombie.js with npm:
- * ``` $ npm install -g zombie@0.13.0 ```
+ * ``` $ npm install -g zombie@0.13.0 @```
  * Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
  * says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
  *
@@ -73,6 +81,7 @@ class ZombieJS extends \Codeception\Util\MinkJS
             $this->config['node_bin'],$this->config['script'],
             $this->config['threshold'] * 1000
         );
+        $this->config['url'] = '';
 
         $this->driver = new ZombieDriver($this->server);
 
@@ -93,6 +102,10 @@ class ZombieJS extends \Codeception\Util\MinkJS
         exec('killall '.pathinfo($this->server->getNodeBin(),PATHINFO_BASENAME).' > /dev/null 2>&1');
     }
 
+    public function _getUrl() {
+        return 'http://'.$this->config['host'].':'.$this->config['port'];
+    }
+
     /**
      * @param string $url The URL to make HEAD request to
      * @return array Header-Name => Value array
@@ -109,6 +122,10 @@ JS
             ,addslashes($url))
         );
 
-        return http_parse_headers(str_replace("\n","\r\n",$headers));
+        if (method_exists('\http\Header', 'parse')) {
+            return \http\Header::parse(str_replace("\n","\r\n",$headers));
+        } else {
+            return http_parse_headers(str_replace("\n","\r\n",$headers));
+        }
     }
 }

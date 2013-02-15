@@ -6,6 +6,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 {
     protected $scenario;
 
+    protected $trace = array();
+
     public function getFeature() {
         return null;
     }
@@ -23,6 +25,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             $this->dispatcher->dispatch('comment.after', new \Codeception\Event\Step($this, $step));
             return;
         }
+
+        if ($step->getName() == 'Skip') $this->markTestSkipped($step->getAction());
+        if ($step->getName() == 'Incomplete') $this->markTestIncomplete($step->getAction());
 
         $action = $step->getAction();
         $arguments = $step->getArguments();
@@ -68,5 +73,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->scenario;
     }
 
+    public function getTrace()
+    {
+        return $this->trace;
+    }
+
+    public function toString()
+    {
+        $this->getFeature();
+    }
 
 }

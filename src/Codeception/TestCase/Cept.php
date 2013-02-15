@@ -13,7 +13,6 @@ class Cept extends \Codeception\TestCase
     protected $features = array();
     protected $bootstrap = null;
     protected $stopped = false;
-    protected $trace = array();
 
     protected $dispatcher;
 
@@ -74,11 +73,6 @@ class Cept extends \Codeception\TestCase
         return $this->scenario->getFeature() . ' (' . $this->getFileName() . ')';
     }
 
-    public function getTrace()
-    {
-        return $this->trace;
-    }
-    
     public function testCodecept($run = true)
     {
         $scenario = $this->scenario;

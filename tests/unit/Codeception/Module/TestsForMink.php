@@ -54,7 +54,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('More info');
         $this->module->dontSeeLink('/info');
         $this->module->dontSeeLink('#info');
-
         $this->module->amOnPage('/info');
         $this->module->seeLink('Back');
     }
@@ -189,7 +188,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testSeeCheckboxChecked()
     {
-        $this->module->_initialize();
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
     }
@@ -204,7 +202,39 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Текст', 'p');
     }
 
-    public function testFieldWithNonLatin() {
+    public function testSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeInField('Name','OLD_VALUE');
+        $this->module->seeInField('input[name=name]','OLD_VALUE');
+        $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
+    }
+
+    public function testSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->seeInField('Description','sunrise');
+        $this->module->seeInField('textarea','sunrise');
+        $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
+    }
+
+    public function testDontSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeInField('Name','Davert');
+        $this->module->dontSeeInField('input[name=name]','Davert');
+        $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
+    public function testDontSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunset');
+        $this->module->dontSeeInField('textarea','sunset');
+        $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
+    }
+
+    public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }

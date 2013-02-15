@@ -1,29 +1,56 @@
 <?php
 namespace Codeception\Util;
 
-abstract class Mink extends \Codeception\Module
+abstract class Mink extends \Codeception\Module implements RemoteInterface, WebInterface
 {
     /**
      * @var \Behat\Mink\Session
      */
     public $session = null;
 
+
     public function _initialize() {
         if (!$this->session) throw new \Codeception\Exception\Module(__CLASS__, "Module is not initialized. Mink session is not started in _initialize method of module.");;
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
+            $this->session->stop();
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver.");
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
     
-    public function _cleanup() {
-        $this->session->reset();
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) $this->session->start();
     }
 
     public function _after(\Codeception\TestCase $test) {
         if ($this->session) $this->session->stop();
+    }
+
+    public function _getUrl()
+    {
+        if (!isset($this->config['url']))
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Module connection failure. The URL for client can't bre retrieved");
+        return $this->config['url'];
+    }
+
+    public function _setHeader($header, $value)
+    {
+        $this->session->setRequestHeader($header, $value);
+    }
+
+    public function _setCookie($cookie, $value)
+    {
+        $this->session->setCookie($cookie, $value);
+    }
+
+    public function _getResponseHeader($header)
+    {
+        $headers = $this->session->getResponseHeaders();
+        if (!isset($headers[$header])) return false;
+        return $headers[$header];
     }
 
     /**
@@ -69,14 +96,7 @@ abstract class Mink extends \Codeception\Module
         return array('pageContains', $this->escape($text), $response, "'$text' in ".$output.'.');
     }
 
-    /**
-     * Checks if the document has link that contains specified
-     * text (or text and url)
-     *
-     * @param  string $text
-     * @param  string $url (Default: null)
-     * @return mixed
-     */
+
     public function seeLink($text, $url = null)
     {
         $text = $this->escape($text);
@@ -88,7 +108,7 @@ abstract class Mink extends \Codeception\Module
         );
 
         if (!$url) {
-            return \PHPUnit_Framework_Assert::assertNotNull($nodes);
+            return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         }
 
         foreach ($nodes as $node) {
@@ -102,14 +122,7 @@ abstract class Mink extends \Codeception\Module
         return \PHPUnit_Framework_Assert::fail("with url '{$url}'");
     }
 
-    /**
-     * Checks if the document hasn't link that contains specified
-     * text (or text and url)
-     *
-     * @param  string $text
-     * @param  string $url (Default: null)
-     * @return mixed
-     */
+
     public function dontSeeLink($text, $url = null)
     {
         if (!$url) {
@@ -133,12 +146,7 @@ abstract class Mink extends \Codeception\Module
         return \PHPUnit_Framework_Assert::assertTrue(true, "with url '$url'");
     }
 
-    /**
-     * Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
-     * Link text or css selector can be passed.
-     *
-     * @param $link
-     */
+
     public function click($link) {
         $url = $this->session->getCurrentUrl();
         $el = $this->findClickable($link);
@@ -207,39 +215,21 @@ abstract class Mink extends \Codeception\Module
         $this->debug($this->session->getCurrentUrl());
     }
 
-    /**
-     * Fill the field with given value.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $field
-     * @param $value
-     */
+
     public function fillField($field, $value)
     {
         $field = $this->findField($field);
         $field->setValue($value);
     }
 
-    /**
-     * Selects opition from selectbox.
-     * Use field name|label|value|id or CSS selector to match selectbox.
-     * Either values or text of options can be used to fetch option.
-     *
-     * @param $select
-     * @param $option
-     */
+
     public function selectOption($select, $option)
     {
         $field = $this->findField($select);
         $field->selectOption($option);
     }
 
-    /**
-     * Check matched checkbox or radiobutton.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $option
-     */
+
     public function checkOption($option)
     {
         $field = $this->findField($option);
@@ -267,34 +257,17 @@ abstract class Mink extends \Codeception\Module
         return $field;
     }
 
-    /**
-     * Uncheck matched checkbox or radiobutton.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $option
-     */
+
     public function uncheckOption($option)
     {
         $field = $this->findField($option);
         $field->uncheck();
     }
 
-    /**
-     * Checks if current url contains the $uri.
-     *
-     * @param $uri
-     */
     public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
     }
 
-    /**
-     * Attaches file stored in Codeception data directory to field specified.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $field
-     * @param $filename
-     */
     public function attachFile($field, $filename) {
         $field = $this->findField($field);
         $path = \Codeception\Configuration::dataDir().$filename;
@@ -302,72 +275,31 @@ abstract class Mink extends \Codeception\Module
         $field->attachFile($path);
     }
 
-    /**
-     * Asserts the checkbox is checked.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $checkbox
-     */
     public function seeCheckboxIsChecked($checkbox) {
        $node = $this->findField($checkbox);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         \PHPUnit_Framework_Assert::assertTrue($node->isChecked());
     }
 
-    /**
-     * Asserts that checbox is not checked
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $checkbox
-     */
     public function dontSeeCheckboxIsChecked($checkbox) {
         $node = $this->findField($checkbox);
          if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
          \PHPUnit_Framework_Assert::assertFalse($node->isChecked());
     }
 
-    /**
-     * Checks the value of field is equal to value passed.
-     *
-     * @param $field
-     * @param $value
-     */
     public function seeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertEquals($this->escape($value), $node->getValue());
+        $this->assertEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
     }
 
-    /**
-     * Checks the value in field is not equal to value passed.
-     * Field is searched by its id|name|label|value or CSS selector.
-     *
-     * @param $field
-     * @param $value
-     */
+
     public function dontSeeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
+        $this->assertNotEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
     }
 
-    /**
-     * Finds and returns text contents of element.
-     * Element is searched by CSS selector, XPath or matcher by regex.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $heading = $I->grabTextFrom('h1');
-     * $heading = $I->grabTextFrom('descendant-or-self::h1');
-     * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
-     * ?>
-     * ```
-     *
-     * @param $cssOrXPathOrRegex
-     * @return mixed
-     */
     public function grabTextFrom($cssOrXPathOrRegex) {
         $el = null;
         try {
@@ -387,23 +319,6 @@ abstract class Mink extends \Codeception\Module
     }
 
 
-    /**
-     * Finds and returns field and returns it's value.
-     * Searches by field name, then by CSS, then by XPath
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $name = $I->grabValueFrom('Name');
-     * $name = $I->grabValueFrom('input[name=username]');
-     * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @return mixed
-     */
     public function grabValueFrom($field) {
         $el = $this->findField($field);
         if ($el) {
@@ -420,5 +335,6 @@ abstract class Mink extends \Codeception\Module
     {
         return $string;
     }
+
 
 }

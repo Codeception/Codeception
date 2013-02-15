@@ -107,6 +107,7 @@ class Scenario {
     }
     
     public function run() {
+        if ($this->running()) return;
         $this->running = true;
         $this->preloadedSteps = $this->steps;
         $this->steps = array();
@@ -120,5 +121,17 @@ class Scenario {
     public function preload() {
         return !$this->running;
     }
+
+    public function skip($reason = "")
+    {
+        if (!$this->running) $this->addStep(new Step\Skip($reason, array()));
+    }
+
+    public function incomplete($reason = "")
+    {
+        if (!$this->running) $this->addStep(new Step\Incomplete($reason, array()));
+    }
+
+
 
 }

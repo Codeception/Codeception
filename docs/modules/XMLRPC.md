@@ -1,5 +1,5 @@
 # XMLRPC Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/XMLRPC)**
 Module for testing XMLRPC WebService.
 
 This module can be used either with frameworks or PHPBrowser.
@@ -11,6 +11,12 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 ## Requirements
 
 * Module requires installed php_xmlrpc extension
+
+## Status
+
+* Maintainer: **tiger-seo**
+* Stability: **beta**
+* Contact: tiger.seo@gmail.com
 
 ## Configuration
 
