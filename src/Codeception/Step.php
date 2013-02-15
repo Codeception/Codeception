@@ -65,7 +65,11 @@ abstract class Step
                 }
                 // if (settype($argument, 'string') === false) throw new \InvalidArgumentException('Argument can\'t be converted to string or serialized');
             }
-            return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE),'[]'));
+            if (defined('JSON_UNESCAPED_UNICODE')) {
+                return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE),'[]'));
+            }
+            return stripcslashes(trim(json_encode($arguments),'[]'));
+
         }
     }
 
