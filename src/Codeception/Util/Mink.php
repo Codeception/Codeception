@@ -108,7 +108,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         );
 
         if (!$url) {
-            return \PHPUnit_Framework_Assert::assertNotNull($nodes);
+            return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         }
 
         foreach ($nodes as $node) {
