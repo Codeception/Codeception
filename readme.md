@@ -1,6 +1,6 @@
 # Codeception
 
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
+[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception)
 
 Codeception is a new PHP full-stack testing framework.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.

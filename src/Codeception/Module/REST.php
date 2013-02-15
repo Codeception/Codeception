@@ -14,6 +14,13 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * Whether framework is used it operates via standard framework modules.
  * Otherwise sends raw HTTP requests to url via PHPBrowser.
  *
+ * ## Status
+ *
+ * * Maintainer: **tiger-seo**, **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * Contact: tiger.seo@gmail.com
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api
@@ -32,8 +39,7 @@ class REST extends \Codeception\Module
     protected $config = array(
         'url'                 => '',
         'timeout'             => 30,
-        'xdebug_remote'       => false,
-        'xdebug_codecoverage' => false,
+        'xdebug_remote'       => false
     );
 
     /**
@@ -93,50 +99,6 @@ class REST extends \Codeception\Module
         $curlOptions = $clientConfig->get('curl.options');
         $curlOptions[CURLOPT_TIMEOUT] = $timeout;
         $clientConfig->set('curl.options', $curlOptions);
-
-        if ($this->config['xdebug_codecoverage']) {
-            $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
-        }
-    }
-
-    public function _afterSuite($suite)
-    {
-        if ($this->config['xdebug_codecoverage']) {
-            // Create a stream
-            $options = array(
-                'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
-            );
-            $context = stream_context_create($options);
-            $url = $this->config['url'] . '/c3/report/';
-
-            /**
-             * Get html code coverage report
-             */
-
-            $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
-            file_put_contents($tempFile, file_get_contents($url . 'html', null, $context));
-
-            $destDir = \Codeception\Configuration::logDir() . 'codecoverage';
-
-            if (!is_dir($destDir)) {
-                mkdir($destDir, 0777, true);
-            } else {
-                \Codeception\Util\FileSystem::doEmptyDir($destDir);
-            }
-
-            $phar = new \PharData($tempFile);
-            $phar->extractTo($destDir);
-
-            unlink($tempFile);
-
-            /**
-             * Get clover code coverage report
-             */
-
-            $destFile = \Codeception\Configuration::logDir() . 'codeception.clover.xml';
-
-            file_put_contents($destFile, file_get_contents($url . 'clover', null, $context));
-        }
     }
 
     /**
@@ -438,7 +400,7 @@ class REST extends \Codeception\Module
         $data = $response = json_decode($this->response, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->fail('Respose is not of JSON format or is malformed');
+            $this->fail('Response is not of JSON format or is malformed');
             $this->debugSection('Response', $this->response);
         }
 

@@ -1,11 +1,18 @@
 <?php
 namespace Codeception\Module;
+use Codeception\Exception\ModuleRequire;
 use Symfony\Component\Finder\Finder;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
  *
  * It implements common Framework interface.
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
@@ -25,6 +32,11 @@ class Symfony2 extends \Codeception\Util\Framework
      */
     public $kernel;
 
+    /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    public $container;
+
     public $config = array('app_path' => 'app');
     /**
      * @var
@@ -35,21 +47,20 @@ class Symfony2 extends \Codeception\Util\Framework
 
 
     public function _initialize() {
-        $cache = getcwd().DIRECTORY_SEPARATOR.$this->config['app_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
-        if (!file_exists($cache)) throw new \RuntimeException('Symfony2 bootstrap file not found in '.$cache);
+        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
+        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__,'Symfony2 bootstrap file not found in '.$cache);
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass('test', true);
         $this->kernel->boot();
-
-        $dispatcher = $this->kernel->getContainer()->get('event_dispatcher');
-        $dispatcher->addListener('kernel.exception', function ($event) {
-            throw $event->getException();
-        });
-
+        if (!($this->kernel->getContainer() instanceof \Symfony\Component\DependencyInjection\ContainerInterface)) {
+            throw new ModuleRequire(__CLASS__,"Wrong container in Kernel (not implements ContainerInterface)");
+        }
     }
     
     public function _before(\Codeception\TestCase $test) {
+        $this->kernel->boot();
+        $this->container = $this->kernel->getContainer();
         $this->client = new $this->clientClass($this->kernel);
         $this->client->followRedirects(true);
     }
@@ -69,10 +80,10 @@ class Symfony2 extends \Codeception\Util\Framework
     protected function getKernelClass()
     {
         $finder = new Finder();
-        $finder->name('*Kernel.php')->depth('0')->in($this->config['app_path']);
+        $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new \RuntimeException('Provide kernel_dir as parameter for Symfony2 module');
+            throw new ModuleRequire(__CLASS__,'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_dir" parameter.');
         }
 
         $file = current($results);
@@ -125,6 +136,8 @@ class Symfony2 extends \Codeception\Util\Framework
         if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not avaible in container");
         return $this->kernel->getContainer()->get($service);
     }
+
+
 
     /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile

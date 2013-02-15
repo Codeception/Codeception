@@ -12,8 +12,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class GenerateSuite extends Base
 {
-    protected $template  = "<?php\n\$I = new %s(\$scenario);\n\$I->wantTo('perform actions and see result');\n";
-
     protected function configure()
     {
         $this->setDefinition(array(
@@ -50,7 +48,7 @@ class GenerateSuite extends Base
         $guyname = substr($guy,0,-3);
 
         // generate helper
-        file_put_contents(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
 
         $conf = array(
             'class_name' => $guy,

@@ -1,8 +1,13 @@
 # Kohana Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Kohana)**
 This module provides integration with [Kohana](http://kohanaframework.org/) v3.
-Current status is PRE ALFA=)
 Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Nikita Groshin**
+* Stability: **alpha**
+* Contact: nike-17@ya.ru
 
 ### Installation
 
@@ -62,6 +67,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -410,6 +423,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

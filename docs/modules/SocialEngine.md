@@ -1,8 +1,15 @@
 # SocialEngine Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SocialEngine)**
 This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
 
 Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Artem Kovradin**
+* Stability: **beta**
+* Contact: https://github.com/horechek
+* URL: http://tvorzasp.com
 
 ## Config
 
@@ -13,9 +20,7 @@ Functional tests can be run inside Social Engine. All commands of this module ar
 * client - BrowserKit client
 * bootstrap - current bootstrap file.
 
-
 Module is created by [Artem Kovradin](http://tvorzasp.com)
-
 
 ## Actions
 
@@ -63,6 +68,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -411,6 +424,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

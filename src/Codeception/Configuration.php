@@ -12,6 +12,7 @@ class Configuration
     protected static $logDir = null;
     protected static $dataDir = null;
     protected static $helpersDir = null;
+    protected static $testsDir = null;
 
     protected static $dir = null;
 
@@ -20,26 +21,30 @@ class Configuration
         if (self::$config) return self::$config;
 
         if ($config === null) {
+            $dir = getcwd();
             $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-            $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-            $config = array_merge($distConfig, $config);
         } else {
+            $dir = dirname($config);
             $config = file_exists($config) ? Yaml::parse($config) : array();
         }
+        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
+        $config = array_merge($distConfig, $config);
 
         if (empty($config)) throw new \Codeception\Exception\Configuration("Configuration file is invalid");
         if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
+        if (!isset($config['paths']['tests'])) throw new \Codeception\Exception\Configuration('Tests directory path is not defined');
         if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
         if (!isset($config['paths']['log'])) throw new \Codeception\Exception\Configuration('Log path is not defined');
 
+
         if (isset($config['paths']['helpers'])) {
             // Helpers
-            $helpers = Finder::create()->files()->name('*Helper.php')->in($config['paths']['helpers']);
+            $helpers = Finder::create()->files()->name('*Helper.php')->in($dir . DIRECTORY_SEPARATOR .$config['paths']['helpers']);
             foreach ($helpers as $helper) include_once($helper);
         }
 
         if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($config['paths']['tests'])->depth(0);
+            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR .$config['paths']['tests'])->depth(0);
             $config['suites'] = array();
             foreach ($suites as $suite) {
                 preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
@@ -54,7 +59,7 @@ class Configuration
         self::$dataDir = $config['paths']['data'];
         self::$logDir = $config['paths']['log'];
         self::$helpersDir = $config['paths']['helpers'];
-        self::$dir = getcwd();
+        self::$dir = $dir;
 
         return $config;
     }
@@ -74,7 +79,13 @@ class Configuration
     {
         if (!self::$logDir) throw new \Codeception\Exception\Configuration("Path for logs not specified. Please, set log path in global config");
         $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
-        if (!is_writable($dir)) throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        if (!is_writable($dir)) {
+            @mkdir($dir);
+            @chmod($dir, 777);
+        }
+        if (!is_writable($dir)) {
+            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        }
         return $dir;
     }
 
@@ -88,11 +99,15 @@ class Configuration
     {
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
         $globalConf = $config['settings'];
+        $globalConf['coverage'] = isset($config['coverage'])
+            ? $config['coverage']
+            : array();
+
         $moduleConf = array('modules' => isset($config['modules']) ? $config['modules'] : array());
         $path = $config['paths']['tests'];
 
         $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
-        $suiteDistconf = file_exists( self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
+        $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
 
         $settings = self::mergeConfigs($globalConf, $moduleConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);

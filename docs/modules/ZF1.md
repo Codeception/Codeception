@@ -1,11 +1,17 @@
 # ZF1 Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF1)**
 This module allows you to run tests inside Zend Framework.
 It acts just like ControllerTestCase, but with usage of Codeception syntax.
 Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
 
 It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
 and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Config
 
@@ -92,6 +98,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -440,6 +454,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

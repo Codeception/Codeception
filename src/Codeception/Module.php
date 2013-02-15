@@ -18,7 +18,7 @@ abstract class Module {
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
             throw new \Codeception\Exception\ModuleConfig(get_class($this),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
-                Update cunfiguration and set all required fields\n\n
+                Update configuration and set all required fields\n\n
         ");
     }
 

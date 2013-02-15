@@ -1,8 +1,14 @@
 # Symfony2 Module
-
+**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2)**
 This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
 
 It implements common Framework interface.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Config
 
@@ -69,6 +75,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -441,6 +455,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

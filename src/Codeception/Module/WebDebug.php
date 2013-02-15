@@ -6,6 +6,12 @@ namespace Codeception\Module;
  * Use it with Selenium, Selenium2, ZombieJS, or PhpBrowser module.
  * Whenever none of this modules are connected the exception is thrown.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Configuration:
  *
  * * disable: false (optional) - stop making dumps and screenshots. Useful when you don't need debug anymore but you don't wanna change the code of your tests.

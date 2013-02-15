@@ -10,14 +10,15 @@ class ErrorHandler implements EventSubscriberInterface
 
         set_error_handler(function ($errno, $errstr, $errfile, $errline ) {
             if (strpos($errstr, 'Cannot modify header information')!==false) return false;
-            if (error_reporting()) throw new \ErrorException($errstr, 0, $errno, $errfile, $errline); }
+            if ($errno > 8) throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+            }
         );
         register_shutdown_function(function () {
 
              $error = error_get_last();
-             if ($error['type'] == 1) {
-                 echo 'FATAL ERROR OCCURRED. TESTS NOT FINISHED.';
-             }
+             if (!is_array($error)) return;
+             echo "\n\n\nFATAL ERROR OCCURRED. TESTS NOT FINISHED.\n";
+             echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
          });
     }
 

@@ -16,18 +16,20 @@ foreach ($docs as $doc) {
     $newfile = str_replace('.md','.markdown', $doc->getFilename());
     $name = str_replace('.markdown','', $newfile);
     $contents = file_get_contents($doc->getPathname());
-    if (strpos($doc->getPathname(),'modules')) {
+    if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
         $newfile = 'docs/modules/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $modules[$name] = '/docs/modules/'.$url;
-        $contents = str_replace('# ','## ', $contents);
+
+        $contents = str_replace('## ','### ', $contents);
+
     } else {
         $newfile = 'docs/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $api[substr($name,3)] = '/docs/'.$url;
     }
 
-    copy($doc->getPathname(), $newfile);    
+    copy($doc->getPathname(), $newfile);
 
     $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
@@ -37,17 +39,47 @@ foreach ($docs as $doc) {
     file_put_contents($newfile, $contents);
 }
 
-$content = '<h2>Guides</h2><ul>';
+$guides = array_keys($api);
 foreach ($api as $name => $url) {
-    $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+    $filename = substr($url, 6);
+    $doc = file_get_contents('docs/'.$filename.'.markdown');
+
+    $doc .= "\n\n\n";
+    $i = array_search($name, $guides);
+
+    $i = array_search($name, $guides);
+    if (isset($guides[$i+1])) {
+        $next_title = $guides[$i+1];
+        $next_url = $api[$guides[$i+1]];
+        $doc .= "\n* **Next Chapter: [$next_title >]($next_url)**";
+    }
+
+    if (isset($guides[$i-1])) {
+        $prev_title = $guides[$i-1];
+        $prev_url = $api[$guides[$i-1]];
+        $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
+    }
+
+
+    file_put_contents('docs/'.$filename.'.markdown', $doc);
 }
 
-$content.= '<h2 class="prepend-top">Modules</h2><ul>';
+
+$guides_list = '';
+foreach ($api as $name => $url) {
+    $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
+    $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
+    $guides_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+}
+
+file_put_contents('_includes/guides.html', $guides_list);
+
+$modules_list = '';
 foreach ($modules as $name => $url) {
-    $content.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+    $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
 }
 
-file_put_contents('_includes/toc.html', $content);
+file_put_contents('_includes/modules.html', $modules_list);
 
 system('git add .');
 system('git commit -m="auto-updated documentation"');

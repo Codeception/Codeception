@@ -10,10 +10,17 @@ namespace Codeception\Module;
  *
  * ## Installation
  *
- * Download Selenium2 [WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+ * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
  * Don't forget to turn on Db repopulation if you are using database.
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
  *
  * ## Configuration
  *

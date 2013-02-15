@@ -150,7 +150,7 @@ $I->fillField('Name', 'Miles');
 // we can use input name, or id
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
-$I->press('Update');
+$I->click('Update');
 ?>
 ```
 
@@ -329,7 +329,7 @@ class WebHelper extends \Codeception\Module {
 
     function seeResponseIsPrettyLong($size = 3000) {
         $session = $this->getModule('PhpBrowser')->session;
-        $content = $session->getPage()->getConetent();
+        $content = $session->getPage()->getContent();
         $this->assertGreaterThen($size, strlen($content));
     }
 }
