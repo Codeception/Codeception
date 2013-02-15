@@ -201,7 +201,7 @@ class REST extends \Codeception\Module
      */
     private function setHeaderLink(array $linkEntries)
     {
-        $values = [];
+        $values = array();
         foreach ($linkEntries as $linkEntry) {
             \PHPUnit_Framework_Assert::assertArrayHasKey(
                 'uri',
