@@ -19,7 +19,7 @@ class ErrorHandler implements EventSubscriberInterface
          * There are some other nasty constants and PHP likes to chanhge their meanings with updates.
          * @see http://www.php.net/manual/ru/errorfunc.constants.php
          */
-        self::$fatalErrors = E_ALL ^ (E_NOTICE & E_WARNING & E_STRICT & E_CORE_WARNING & E_COMPILE_WARNING & E_USER_WARNING & E_DEPRECATED);
+        self::$fatalErrors = E_ALL & ~(E_NOTICE | E_WARNING | E_STRICT | E_CORE_WARNING | E_COMPILE_WARNING | E_USER_WARNING | E_DEPRECATED);
         error_reporting(E_ERROR | E_PARSE);
         set_error_handler(array(__CLASS__, 'errorHandler'), self::$fatalErrors);
         register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
