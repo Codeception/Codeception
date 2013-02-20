@@ -96,17 +96,15 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-
-            if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    "\nFile with dump deesn't exist.
-                    Please, check path for sql file: " . $this->config['dump']
-                );
+            if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+                if (is_array($this->config['dump'])) {
+                    foreach ($this->config['dump'] as $dump) {
+                        $this->append_to_sql($dump);
+                    }
+                } else {
+                    $this->append_to_sql($this->config['dump']);
+                }
             }
-            $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
-            $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
-            $this->sql = explode("\n", $sql);
         }
 
         try {
@@ -137,6 +135,27 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $this->populated = false;
         parent::_after($test);
     }
+
+    /**
+     * @param string $dump sql dump filename
+     *
+     * @throws \Codeception\Exception\ModuleConfig
+     */
+    protected function append_to_sql($dump)
+    {
+        if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $dump)) {
+            throw new ModuleConfigException(
+                __CLASS__,
+              "\nFile with dump doesn't exist.
+                    Please, check path for sql file: " . $dump
+            );
+        }
+
+        $sql       = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $dump);
+        $sql       = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
+        $this->sql = array_merge($this->sql, explode("\n", $sql));
+    }
+
 
     protected function cleanup()
     {
