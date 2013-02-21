@@ -10,6 +10,8 @@ namespace Codeception\Module;
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
+ * If you need you could use multimple dumps. All you have to do is to specify their paths in sequence
+ * of execution as an array in the config.
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
  *
@@ -49,7 +51,7 @@ namespace Codeception\Module;
  * * dsn *required* - PDO DSN
  * * user *required* - user to access database
  * * password *required* - password
- * * dump - path to database dump.
+ * * dump - path to database dump. More dumps can be given in the form of an array. Dumps are merged/executed in sequence of declaration.
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
  *
