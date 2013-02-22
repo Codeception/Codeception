@@ -9,7 +9,7 @@ When we choose to clean up a database, we should make this cleaning as fast as p
 ## Manual Cleanup
 
 You could possibly create records at the begining of test and delete them afterwards. This is cool option if you don't have shared data between tests.
-But you shouldn't put any code into your test file. Because test files are parsed two times: for analisys and execution, this may lead to unpredictable results. So, you should specify when do you want your code to be executed. It's a good idea to create data before the analisys and remove data after the test is finished. Use the special methods `running()` and `preload()` of `$scenario` object to determine the current object state.
+But you shouldn't put any code into your test file. Because test files are parsed two times: for analysis and execution, this may lead to unpredictable results. So, you should specify when do you want your code to be executed. It's a good idea to create data before the analysis and remove data after the test is finished. Use the special methods `running()` and `preload()` of `$scenario` object to determine the current object state.
 
 ``` php
 <?php
