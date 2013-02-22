@@ -45,7 +45,7 @@ We have a controller class of an imaginary MVC framework:
 
 ```php
 <?php
-class UserController extends AbtractController {
+class UserController extends AbstractController {
 
     public function show($id)
     {
