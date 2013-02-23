@@ -26,6 +26,15 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * * url *optional* - the url of api
  * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
  *
+ * Example:
+ *
+ *   modules: 
+ *      enabled: [REST]
+ *      config:
+ *         REST:
+ *            url: 'http://serviceapp/api/v1/' 
+ *            timeout: 90
+ *
  * ## Public Properties
  *
  * * headers - array of headers going to be sent.

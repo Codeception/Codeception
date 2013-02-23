@@ -33,7 +33,7 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  *
  * Example:
  *
- * modules:
+ *   modules:
  *      enabled: [AMQP]
  *      config:
  *         AMQP:
