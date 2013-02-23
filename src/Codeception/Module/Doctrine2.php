@@ -26,11 +26,13 @@ namespace Codeception\Module;
  * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  *
- *   modules: 
- *      enabled: [Doctrine2]
- *      config:
- *         Doctrine2:
- *            cleanup: false
+ *  ### Example (`functional.suite.yml`)
+ * 
+ *      modules:
+ *         enabled: [Doctrine2]
+ *         config:
+ *            Doctrine2:
+ *               cleanup: false
  */
 
 class Doctrine2 extends \Codeception\Module

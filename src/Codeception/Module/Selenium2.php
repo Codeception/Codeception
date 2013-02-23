@@ -30,14 +30,14 @@ namespace Codeception\Module;
  * * port - Selenium server port (4444 by default)
  * * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
  *
- * Example:
+ * ### Example (`acceptance.suite.yml`)
  *
- *   modules: 
- *      enabled: [Selenium2]
- *      config:
- *         Selenium2:
- *            url: 'http://localhost/' 
- *            browser: firefox
+ *     modules: 
+ *        enabled: [Selenium2]
+ *        config:
+ *           Selenium2:
+ *              url: 'http://localhost/' 
+ *              browser: firefox
  *
  * ## Public Properties
  *

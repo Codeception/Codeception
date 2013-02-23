@@ -18,13 +18,13 @@ use Symfony\Component\Finder\Finder;
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
 * 
- * Example:
+ * ### Example (`functional.suite.yml`)
  *
- *   modules: 
- *      enabled: [Symfony2]
- *      config:
- *         Symfony2:
- *            app_path: 'app/front' 
+ *     modules: 
+ *        enabled: [Symfony2]
+ *        config:
+ *           Symfony2:
+ *              app_path: 'app/front' 
  *
  * ## Public Properties
  *

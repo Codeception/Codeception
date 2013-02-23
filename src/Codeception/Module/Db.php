@@ -50,18 +50,18 @@ namespace Codeception\Module;
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
  * 
- * Example
+ * ### Example
  * 
- *   modules: 
- *      enabled: [Db]
- *      config:
- *         Db:
- *            dsn: 'mysql:host=localhost;dbname=testdb'
- *            username: 'root'
- *            password: ''
- *            dump: 'tests/_data/dump.sql'
- *            populate: true
- *            cleanup: false
+ *     modules: 
+ *        enabled: [Db]
+ *        config:
+ *           Db:
+ *              dsn: 'mysql:host=localhost;dbname=testdb'
+ *              username: 'root'
+ *              password: ''
+ *              dump: 'tests/_data/dump.sql'
+ *              populate: true
+ *              cleanup: false
  *
  * ## Public Properties
  * * dbh - contains PDO connection.

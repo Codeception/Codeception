@@ -8,9 +8,22 @@ Functional testing may often be better then acceptance testing because it doesn'
 Good integration can allow you to perform additional operations, like checking if an email was sent or authenticating users.
 Codeception can connect to different web frameworks which support functional testing. For example you can run a functional test for an application built on top of the Zend Framework, Symfony or Symfony2 with just the modules provided by Codeception! The list of supported frameworks will be extended in the future.
 
-Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them!
-You can even run your acceptance tests as a functional test and vice versa.
+Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them! This is a sample functional test.
 
+```
+<?php
+$I = new TestGuy($scenatio);
+$I->amOnPage('/');
+$I->click('Login');
+$I->fillField('Username','Miles');
+$I->fillField('Password','Davis');
+$I->click('Enter');
+$I->see('Hello, Miles', 'h1');
+// $I->seeEmailIsSent() - special for Symfony2
+?>
+```
+
+That was just as acceptance test. As you see you can use same tests for functional and acceptance testing. 
 We recommend writing tests on unstable parts of your application as functional tests, and testing the stable parts with acceptance tests.
 
 ## Pitfalls

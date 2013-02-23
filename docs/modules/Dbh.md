@@ -33,6 +33,12 @@ This module despite of it's stability may act unstable because of transactions i
 
 * cleanup: true - enable cleanups by covering all queries inside transaction.
 
+  modules: 
+     enabled: [Dbh]
+     config:
+        Dbh:
+           cleanup: false
+
 
 ## Actions
 

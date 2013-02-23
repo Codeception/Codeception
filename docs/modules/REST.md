@@ -18,6 +18,16 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 ## Configuration
 
 * url *optional* - the url of api
+* timeout *optional* - the maximum number of seconds to allow cURL functions to execute
+
+Example:
+
+  modules: 
+     enabled: [REST]
+     config:
+        REST:
+           url: 'http://serviceapp/api/v1/' 
+           timeout: 90
 
 ## Public Properties
 
@@ -182,6 +192,29 @@ Sends a GET request to given uri.
  * param array $params
 
 
+### sendLINK
+
+
+Sends LINK request to given uri.
+
+ * param       $url
+ * param array $linkEntries (entry is array with keys "uri" and "link-param")
+
+ * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+
+ * author samva.ua@gmail.com
+
+
+### sendPATCH
+
+
+Sends PATCH request to given uri.
+
+ * param       $url
+ * param array $params
+ * param array $files
+
+
 ### sendPOST
 
 
@@ -202,3 +235,16 @@ Sends PUT request to given uri.
  * param $url
  * param array $params
  * param array $files
+
+
+### sendUNLINK
+
+
+Sends UNLINK request to given uri.
+
+ * param       $url
+ * param array $linkEntries (entry is array with keys "uri" and "link-param")
+
+ * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+
+ * author samva.ua@gmail.com

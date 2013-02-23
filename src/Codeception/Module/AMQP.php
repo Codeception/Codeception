@@ -31,18 +31,18 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  * * cleanup: true - defined queues will be purged before running every test.
  * * queues: [mail, twitter] - queues to cleanup
  *
- * Example:
+ * ### Example
  *
- *   modules:
- *      enabled: [AMQP]
- *      config:
- *         AMQP:
- *            host: 'localhost'
- *            port: '5672'
- *            username: 'guest'
- *            password: 'guest'
- *            vhost: '/'
- *            queues: [queue1, queue2]
+ *     modules:
+ *         enabled: [AMQP]
+ *         config:
+ *             AMQP:
+ *                 host: 'localhost'
+ *                 port: '5672'
+ *                 username: 'guest'
+ *                 password: 'guest'
+ *                 vhost: '/'
+ *                 queues: [queue1, queue2]
  *
  * ## Public Properties
  *
