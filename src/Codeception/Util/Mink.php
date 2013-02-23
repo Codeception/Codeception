@@ -108,7 +108,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         );
 
         if (!$url) {
-            return \PHPUnit_Framework_Assert::assertNotNull($nodes);
+            return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         }
 
         foreach ($nodes as $node) {
@@ -288,16 +288,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
     public function seeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertEquals($this->escape($value), $node->getValue());
+        $this->assertEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
     }
 
 
     public function dontSeeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
+        $this->assertNotEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
     }
 
     public function grabTextFrom($cssOrXPathOrRegex) {

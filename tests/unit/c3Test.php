@@ -1,15 +1,30 @@
 <?php
-use Codeception\Util\Stub;
 
-class c3Test extends \PHPUnit_Framework_TestCase
+use Codeception\Configuration;
+use PHPUnit_Framework_TestCase;
+
+class c3Test extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
     public $c3 = null;
+
+    /**
+     * @var string
+     */
     public $c3_dir = null;
 
     protected function setUp()
     {
-        $this->c3 = \Codeception\Configuration::dataDir().'claypit/c3.php';
-        $this->c3_dir = \Codeception\Configuration::dataDir().'claypit/c3tmp/';
+        
+        if (!class_exists('xdebug')) {
+            $this->markTestSkipped('xdebug extension required for c3test.');
+        }
+        
+        $this->c3 = Configuration::dataDir() . 'claypit/c3.php';
+        $this->c3_dir = Configuration::dataDir() . 'claypit/c3tmp/';
+
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE'] = 'test';
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 'debug';
     }
@@ -38,19 +53,19 @@ class c3Test extends \PHPUnit_Framework_TestCase
     public function testCodeCoverageCleanup()
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/clear';
-        $cc_file = $this->c3_dir.'dummy.txt';
-        file_put_contents($cc_file,'nothing');
+        $cc_file = $this->c3_dir . 'dummy.txt';
+        file_put_contents($cc_file, 'nothing');
         include $this->c3;
         $this->assertEquals('clear', $route);
         $this->assertFileNotExists($cc_file);
     }
-    
+
     public function testCodeCoverageHtmlReport()
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/html';
         include $this->c3;
         $this->assertEquals('html', $route);
-        $this->assertFileExists($this->c3_dir.'codecoverage.tar');
+        $this->assertFileExists($this->c3_dir . 'codecoverage.tar');
     }
 
     public function testCodeCoverageXmlReport()
@@ -58,9 +73,9 @@ class c3Test extends \PHPUnit_Framework_TestCase
         $_SERVER['REQUEST_URI'] = '/c3/report/clover';
         include $this->c3;
         $this->assertEquals('clover', $route);
-        $this->assertFileExists($this->c3_dir.'codecoverage.clover.xml');
+        $this->assertFileExists($this->c3_dir . 'codecoverage.clover.xml');
     }
-    
+
     public function testCodeCoverageSerializedReport()
     {
         $_SERVER['REQUEST_URI'] = '/c3/report/serialized';

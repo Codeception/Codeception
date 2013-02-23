@@ -48,6 +48,8 @@ class Compiler
             ->name('*.css')
             ->name('*.png')
             ->name('*.js')
+            ->name('*.css')
+            ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->exclude('Tests')

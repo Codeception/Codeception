@@ -40,7 +40,7 @@ class Doctrine2 extends \Codeception\Module
     public function _before(\Codeception\TestCase $test)
     {
         // trying to connect to Symfony2 and get event manager
-        if (!self::$em && $this->config['auto_connect']) {
+        if ($this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
                 $kernel = $this->getModule('Symfony2')->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
