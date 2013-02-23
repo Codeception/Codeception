@@ -5,7 +5,7 @@ It acts just like ControllerTestCase, but with usage of Codeception syntax.
 Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
 
 It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
-and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
+and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
 
 ## Status
 
@@ -17,6 +17,8 @@ and LIBRARY_PATH set to './library'. If it's not redefine this constants in boot
 
 * env  - environment used for testing ('testing' by default).
 * config - relative path to your application config ('application/configs/application.ini' by default).
+* app_path - relative path to your application folder ('applicaiton' by default).
+* lib_path - relative path to your library folder ('library' by default).
 
 ## API
 
@@ -179,11 +181,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -318,11 +321,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');

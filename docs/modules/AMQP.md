@@ -23,7 +23,7 @@ Use it to cleanup the queue between tests.
 
 Example:
 
-modules:
+  modules:
      enabled: [AMQP]
      config:
         AMQP:

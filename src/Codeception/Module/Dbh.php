@@ -35,11 +35,13 @@ namespace Codeception\Module;
  *
  * * cleanup: true - enable cleanups by covering all queries inside transaction.
  *
- *   modules: 
- *      enabled: [Dbh]
- *      config:
- *         Dbh:
- *            cleanup: false
+ * ### Examlple
+ *
+ *     modules: 
+ *        enabled: [Dbh]
+ *        config:
+ *           Dbh:
+ *              cleanup: false
  *
  */
 
