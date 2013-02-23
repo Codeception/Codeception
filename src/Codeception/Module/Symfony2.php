@@ -17,6 +17,14 @@ use Symfony\Component\Finder\Finder;
  * ## Config
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+* 
+ * Example:
+ *
+ *   modules: 
+ *      enabled: [Symfony2]
+ *      config:
+ *         Symfony2:
+ *            app_path: 'app/front' 
  *
  * ## Public Properties
  *
