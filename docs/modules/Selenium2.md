@@ -1,5 +1,7 @@
 # Selenium2 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2.php)**
+
+
 Uses Mink to manipulate Selenium2 WebDriver
 
 Note that all method take CSS selectors to fetch elements.
@@ -28,14 +30,14 @@ Don't forget to turn on Db repopulation if you are using database.
 * port - Selenium server port (4444 by default)
 * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
 
-Example:
+### Example (`acceptance.suite.yml`)
 
-  modules: 
-     enabled: [Selenium2]
-     config:
-        Selenium2:
-           url: 'http://localhost/' 
-           browser: firefox
+    modules: 
+       enabled: [Selenium2]
+       config:
+          Selenium2:
+             url: 'http://localhost/' 
+             browser: firefox
 
 ## Public Properties
 

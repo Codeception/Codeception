@@ -1,5 +1,7 @@
 # Yii1 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii1)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii1.php)**
+
+
 This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
 
  The following configurations are available for session:
