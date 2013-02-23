@@ -1,5 +1,7 @@
 # PhpBrowser Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/PhpBrowser)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/PhpBrowser.php)**
+
+
 Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
 
 Use to perform web acceptance tests with non-javascript browser.

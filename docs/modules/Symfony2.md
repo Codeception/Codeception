@@ -1,5 +1,7 @@
 # Symfony2 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2.php)**
+
+
 This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
 
 It implements common Framework interface.
@@ -14,13 +16,13 @@ It implements common Framework interface.
 
 * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
 
-Example:
+### Example (`functional.suite.yml`)
 
-  modules: 
-     enabled: [Symfony2]
-     config:
-        Symfony2:
-           app_path: 'app/front' 
+    modules: 
+       enabled: [Symfony2]
+       config:
+          Symfony2:
+             app_path: 'app/front' 
 
 ## Public Properties
 

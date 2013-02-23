@@ -1,5 +1,7 @@
 # REST Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
+
+
 Module for testing REST WebService.
 
 This module can be used either with frameworks or PHPBrowser.
@@ -20,14 +22,14 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 * url *optional* - the url of api
 * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
 
-Example:
+### Example
 
-  modules: 
-     enabled: [REST]
-     config:
-        REST:
-           url: 'http://serviceapp/api/v1/' 
-           timeout: 90
+    modules: 
+       enabled: [REST]
+       config:
+          REST:
+             url: 'http://serviceapp/api/v1/' 
+             timeout: 90
 
 ## Public Properties
 

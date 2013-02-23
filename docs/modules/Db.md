@@ -1,5 +1,7 @@
 # Db Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
+
+
 Works with SQL dabatase.
 
 The most important function of this module is cleaning database before each test.
@@ -48,18 +50,18 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
-Example
+### Example
 
-  modules: 
-     enabled: [Db]
-     config:
-        Db:
-           dsn: 'mysql:host=localhost;dbname=testdb'
-           username: 'root'
-           password: ''
-           dump: 'tests/_data/dump.sql'
-           populate: true
-           cleanup: false
+    modules: 
+       enabled: [Db]
+       config:
+          Db:
+             dsn: 'mysql:host=localhost;dbname=testdb'
+             username: 'root'
+             password: ''
+             dump: 'tests/_data/dump.sql'
+             populate: true
+             cleanup: false
 
 ## Public Properties
 * dbh - contains PDO connection.

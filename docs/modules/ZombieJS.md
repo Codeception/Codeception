@@ -1,5 +1,7 @@
 # ZombieJS Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS.php)**
+
+
 Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
 
 Note, all methods take CSS selectors to fetch elements.
