@@ -45,6 +45,8 @@ class Compiler
             ->files()
             ->ignoreVCS(true)
             ->name('*.php')
+            ->name('*.css')
+            ->name('*.png')
             ->name('*.js')
             ->name('*.tpl.dist')
             ->name('*.html.dist')

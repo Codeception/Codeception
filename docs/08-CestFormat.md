@@ -23,6 +23,12 @@ class UserCest {
 ?>
 ```
 
+Before proceeding, please make sure you executed `build` command that creats a `CodeGuy` class with methods from [Unit](http://codeception.com/docs/modules/Unit) module.
+
+```
+php codecept.phar build
+```
+
 Let's create first test with `generate:cest` command:
 
 ```bash
