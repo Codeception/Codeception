@@ -166,11 +166,13 @@ interface WebInterface
 
     /**
      * Checks that an input field or textarea contains value.
+     * Field is matched either by label or CSS or Xpath
      *
      * Example:
      *
      * ``` php
      * <?php
+     * $I->seeInField('Body','Type your comment here');
      * $I->seeInField('form textarea[name=body]','Type your comment here');
      * $I->seeInField('form input[type=hidden]','hidden_value');
      * $I->seeInField('#searchform input','Search');
@@ -185,11 +187,12 @@ interface WebInterface
 
     /**
      * Checks that an input field or textarea doesn't contain value.
-     *
+     * Field is matched either by label or CSS or Xpath
      * Example:
      *
      * ``` php
      * <?php
+     * $I->dontSeeInField('Body','Type your comment here');
      * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
      * $I->dontSeeInField('form input[type=hidden]','hidden_value');
      * $I->dontSeeInField('#searchform input','Search');
