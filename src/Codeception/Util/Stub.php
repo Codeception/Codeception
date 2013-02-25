@@ -3,6 +3,40 @@ namespace Codeception\Util;
 
 class Stub
 {
+    /**
+     * Instantiates a class without executing a constructor.
+     * Properties and methods can be set as a second parameter.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::make('User');
+     * Stub::make('User', array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * Stub::make(new User, array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::make('User', array('save' => function () { return true; }));
+     * Stub::make('User', array('save' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class - A class to be mocked
+     * @param array $params - properties and methods to set
+     * @return object - mock
+     * @throws \RuntimeException when class not exists
+     */
     public static function make($class, $params = array())
     {
         $class = self::getClassname($class);
@@ -28,6 +62,14 @@ class Stub
         return $mock;
     }
 
+    /**
+     * Creates $num instances of class through `Stub::make`.
+     *
+     * @param $class
+     * @param int $num
+     * @param array $params
+     * @return array
+     */
     public static function factory($class, $num = 1, $params = array())
     {
         $objs = array();
@@ -35,6 +77,41 @@ class Stub
         return $objs;
     }
 
+    /**
+     * Instantiates class having all methods replaced with dummies except one.
+     * Constructor is not triggered.
+     * Properties and methods can be replaced.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::makeEmptyExcept('User', 'save');
+     * Stub::makeEmptyExcept('User', 'save', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * * Stub::makeEmptyExcept(new User, 'save');
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::makeEmptyExcept('User', 'save', array('isValid' => function () { return true; }));
+     * Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class
+     * @param $method
+     * @param array $params
+     * @return object
+     */
     public static function makeEmptyExcept($class, $method, $params = array())
     {
         $class = self::getClassname($class);
@@ -52,6 +129,40 @@ class Stub
         return $mock;
     }
 
+    /**
+     * Instantiates class having all methods replaced with dummies.
+     * Constructor is not triggered.
+     * Properties and methods can be set as a second parameter.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::makeEmpty('User');
+     * Stub::makeEmpty('User', array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * Stub::makeEmpty(new User, array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::makeEmpty('User', array('save' => function () { return true; }));
+     * Stub::makeEmpty('User', array('save' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class
+     * @param array $params
+     * @return object
+     */
     public static function makeEmpty($class, $params = array())
     {
         $class = self::getClassname($class);
@@ -61,6 +172,13 @@ class Stub
         return $mock;
     }
 
+    /**
+     * Clones an object and redefines it's properties (even protected and private)
+     *
+     * @param $obj
+     * @param array $params
+     * @return mixed
+     */
     public static function copy($obj, $params = array())
     {
         $copy = clone($obj);
@@ -68,6 +186,41 @@ class Stub
         return $copy;
     }
 
+    /**
+     * Instantiates a class instance by running constructor.
+     * Parameters for constructor passed as second argument
+     * Properties and methods can be set in third argument.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::construct('User', array('autosave' => false));
+     * Stub::construct('User', array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * Stub::construct(new User, array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::construct('User', array(), array('save' => function () { return true; }));
+     * Stub::construct('User', array(), array('save' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class
+     * @param array $constructorParams
+     * @param array $params
+     * @return object
+     */
     public static function construct($class, $constructorParams = array(), $params = array())
     {
         $class = self::getClassname($class);
@@ -84,6 +237,41 @@ class Stub
 
     }
 
+    /**
+     * Instantiates a class instance by running constructor with all methods replaced with dummies.
+     * Parameters for constructor passed as second argument
+     * Properties and methods can be set in third argument.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmpty('User', array('autosave' => false));
+     * Stub::constructEmpty('User', array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmpty(new User, array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmpty('User', array(), array('save' => function () { return true; }));
+     * Stub::constructEmpty('User', array(), array('save' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class
+     * @param array $constructorParams
+     * @param array $params
+     * @return object
+     */
     public static function constructEmpty($class, $constructorParams = array(), $params = array())
     {
         $class = self::getClassname($class);
@@ -93,6 +281,42 @@ class Stub
         return $mock;
     }
 
+    /**
+     * Instantiates a class instance by running constructor with all methods replaced with dummies, except one.
+     * Parameters for constructor passed as second argument
+     * Properties and methods can be set in third argument.
+     * Even protected and private properties can be set.
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmptyExcept('User', 'save');
+     * Stub::constructEmptyExcept('User', 'save', array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * Accepts either name of class or object of that class
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmptyExcept(new User, 'save', array('autosave' => false), array('name' => 'davert));
+     * ?>
+     * ```
+     *
+     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     *
+     * ``` php
+     * <?php
+     * Stub::constructEmptyExcept('User', 'save', array(), array('save' => function () { return true; }));
+     * Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
+     * ?>
+     * ```
+     *
+     * @param $class
+     * @param $method
+     * @param array $constructorParams
+     * @param array $params
+     * @return object
+     */
     public static function constructEmptyExcept($class, $method, $constructorParams = array(), $params = array())
     {
         $class = self::getClassname($class);
@@ -110,6 +334,14 @@ class Stub
         return $mock;
     }
 
+    /**
+     * Replaces properties and methods of current stub
+     *
+     * @param $mock
+     * @param array $params
+     * @return mixed
+     * @throws \LogicException
+     */
     public static function update($mock, array $params)
     {
         if (!$mock->__mocked) throw new \LogicException('You can update only stubbed objects');
