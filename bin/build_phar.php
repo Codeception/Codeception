@@ -27,7 +27,7 @@ if (file_exists('codecept.phar.gz')) {
 @unlink('codecept.phar');
 @unlink('codecept.phar.gz');
 
-chmod('package/codecept.phar', "+x");
+chmod('package/codecept.phar', 755);
 
 echo system('php package/codecept.phar');
 

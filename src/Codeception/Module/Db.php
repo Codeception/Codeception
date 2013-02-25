@@ -7,15 +7,12 @@ namespace Codeception\Module;
  * The most important function of this module is cleaning database before each test.
  * That's why this module was added into global configuration file: codeception.yml.
  * To have your database properly cleaned you should configure it to access the database.
+ * Also provides actions to perform checks in database.
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
- *
- * Performance may dramatically change when using SQLite file database storage.
- * Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
- * While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
  *
  * Supported and tested databases are:
  *
@@ -52,8 +49,19 @@ namespace Codeception\Module;
  * * dump - path to database dump.
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
- *
- * Also provides actions to perform checks in database.
+ * 
+ * ### Example
+ * 
+ *     modules: 
+ *        enabled: [Db]
+ *        config:
+ *           Db:
+ *              dsn: 'mysql:host=localhost;dbname=testdb'
+ *              username: 'root'
+ *              password: ''
+ *              dump: 'tests/_data/dump.sql'
+ *              populate: true
+ *              cleanup: false
  *
  * ## Public Properties
  * * dbh - contains PDO connection.
@@ -61,7 +69,9 @@ namespace Codeception\Module;
  *
  */
 
-use \Codeception\Util\Driver\Db as Driver;
+use Codeception\Util\Driver\Db as Driver;
+use Codeception\Exception\Module as ModuleException;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 
 class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 {
@@ -96,9 +106,11 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
             if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
-                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "
-                    File with dump deesn't exist.\n
-                    Please, check path for sql file: " . $this->config['dump']);
+                throw new ModuleConfigException(
+                    __CLASS__,
+                    "\nFile with dump deesn't exist.
+                    Please, check path for sql file: " . $this->config['dump']
+                );
             }
             $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
             $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
@@ -108,7 +120,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         try {
             $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage() . ' while creating PDO connection');
+            throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating PDO connection');
         }
 
         // starting with loading dump
@@ -137,26 +149,35 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     protected function cleanup()
     {
         $dbh = $this->driver->getDbh();
-        if (!$dbh) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
+        if (! $dbh) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "No connection to database. Remove this module from config if you don't need database repopulation"
+            );
         }
         try {
             // don't clear database for empty dump
-            if (!count($this->sql)) return;
+            if (! count($this->sql)) {
+                return;
+            }
             $this->driver->cleanup();
-
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(__CLASS__, $e->getMessage());
         }
     }
 
     protected function loadDump()
     {
-        if (!$this->sql) return;
+        if (! $this->sql) {
+            return;
+        }
         try {
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(
+                __CLASS__,
+                $e->getMessage() . "\nSQL query being executed: " . $this->sql
+            );
         }
     }
 

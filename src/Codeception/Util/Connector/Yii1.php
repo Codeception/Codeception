@@ -56,11 +56,11 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		else
 			$_POST = $request->getParameters();
 
-		$queryString = parse_url($uri,PHP_URL_QUERY);
-		parse_str($queryString,$params);
-
 		$uri = str_replace('http://localhost','',$request->getUri());
 		$scriptName =  str_replace('http://localhost','',$this->url);
+
+		$queryString = parse_url($uri,PHP_URL_QUERY);
+		parse_str($queryString,$params);
 
 		if (strpos($uri,$scriptName) === false)
 			$uri = $scriptName.$queryString;

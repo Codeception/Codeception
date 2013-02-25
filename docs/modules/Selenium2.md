@@ -1,5 +1,7 @@
 # Selenium2 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2.php)**
+
+
 Uses Mink to manipulate Selenium2 WebDriver
 
 Note that all method take CSS selectors to fetch elements.
@@ -27,6 +29,15 @@ Don't forget to turn on Db repopulation if you are using database.
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
 * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+
+### Example (`acceptance.suite.yml`)
+
+    modules: 
+       enabled: [Selenium2]
+       config:
+          Selenium2:
+             url: 'http://localhost/' 
+             browser: firefox
 
 ## Public Properties
 
@@ -192,11 +203,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -462,11 +474,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
