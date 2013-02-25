@@ -1,19 +1,18 @@
 # Db Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
+
+
 Works with SQL dabatase.
 
 The most important function of this module is cleaning database before each test.
 That's why this module was added into global configuration file: codeception.yml.
 To have your database properly cleaned you should configure it to access the database.
+Also provides actions to perform checks in database.
 
 In order to have your database populated with data you need a raw SQL dump.
 Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
 Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
-
-Performance may dramatically change when using SQLite file database storage.
-Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
-While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
 
 Supported and tested databases are:
 
@@ -51,7 +50,18 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
-Also provides actions to perform checks in database.
+### Example
+
+    modules: 
+       enabled: [Db]
+       config:
+          Db:
+             dsn: 'mysql:host=localhost;dbname=testdb'
+             username: 'root'
+             password: ''
+             dump: 'tests/_data/dump.sql'
+             populate: true
+             cleanup: false
 
 ## Public Properties
 * dbh - contains PDO connection.

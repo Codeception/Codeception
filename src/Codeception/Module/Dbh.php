@@ -35,6 +35,14 @@ namespace Codeception\Module;
  *
  * * cleanup: true - enable cleanups by covering all queries inside transaction.
  *
+ * ### Examlple
+ *
+ *     modules: 
+ *        enabled: [Dbh]
+ *        config:
+ *           Dbh:
+ *              cleanup: false
+ *
  */
 
 class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface

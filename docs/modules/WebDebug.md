@@ -1,5 +1,7 @@
 # WebDebug Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/WebDebug)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/WebDebug.php)**
+
+
 This is a mini-module with helper actions to debug acceptance tests.
 Use it with Selenium, Selenium2, ZombieJS, or PhpBrowser module.
 Whenever none of this modules are connected the exception is thrown.
