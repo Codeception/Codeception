@@ -5,11 +5,11 @@ class Stub
 {
     public static function make($class, $params = array())
     {
+        $class = self::getClassname($class);
         if (!class_exists($class)) throw new \RuntimeException("Stubbed class $class doesn't exist.");
         $reflection = new \ReflectionClass($class);
 
-        $callables = array_filter($params, function ($a) { return is_callable($a); });
-
+        $callables = self::getMethodsToReplace($reflection, $params);
         if (!empty($callables)) {
             if ($reflection->isAbstract()) {
                 $mock = \PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array_keys($callables), '', false);
@@ -35,11 +35,17 @@ class Stub
         return $objs;
     }
 
-    public static function makeEmptyExcept($class, $method, $params = array()) {
+    public static function makeEmptyExcept($class, $method, $params = array())
+    {
+        $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
         $methods = $reflectionClass->getMethods();
-        $methods = array_filter($methods, function ($m) use ($method) { return $method != $m->name; });
-        $methods = array_map(function ($m) { return $m->name; }, $methods);
+        $methods = array_filter($methods, function ($m) use ($method) {
+            return $method != $m->name;
+        });
+        $methods = array_map(function ($m) {
+            return $m->name;
+        }, $methods);
         $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, $methods, array(), '', false);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -48,6 +54,7 @@ class Stub
 
     public static function makeEmpty($class, $params = array())
     {
+        $class = self::getClassname($class);
         $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), array(), '', false);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -63,12 +70,13 @@ class Stub
 
     public static function construct($class, $constructorParams = array(), $params = array())
     {
-        $callables = array_filter($params, function ($a) { return is_callable($a); });
+        $class = self::getClassname($class);
+        $callables = self::getMethodsToReplace(new \ReflectionClass($class), $params);
 
         if (!empty($callables)) {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), $constructorParams);
+            $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), $constructorParams);
         } else {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, $constructorParams);
+            $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, $constructorParams);
         }
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -78,6 +86,7 @@ class Stub
 
     public static function constructEmpty($class, $constructorParams = array(), $params = array())
     {
+        $class = self::getClassname($class);
         $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), $constructorParams);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -86,10 +95,15 @@ class Stub
 
     public static function constructEmptyExcept($class, $method, $constructorParams = array(), $params = array())
     {
+        $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
         $methods = $reflectionClass->getMethods();
-        $methods = array_filter($methods, function ($m) use ($method) { return $method != $m->name; });
-        $methods = array_map(function ($m) { return $m->name; }, $methods);
+        $methods = array_filter($methods, function ($m) use ($method) {
+            return $method != $m->name;
+        });
+        $methods = array_map(function ($m) {
+            return $m->name;
+        }, $methods);
         $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, $methods, $constructorParams);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -108,18 +122,42 @@ class Stub
         $reflectionClass = new \ReflectionClass($mock);
 
         foreach ($params as $param => $value) {
-            if (!($value instanceof \Closure)) {
+            // redefine method
+            if ($reflectionClass->hasMethod($param)) {
+                if ($value instanceof \Closure) {
+                    $mock->
+                        expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
+                        method($param)->
+                        will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($value));
+                } else {
+                    $mock->
+                        expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
+                        method($param)->
+                        will(new \PHPUnit_Framework_MockObject_Stub_Return($value));
+                }
+            } elseif ($reflectionClass->hasProperty($param)) {
                 $reflectionProperty = $reflectionClass->getProperty($param);
                 $reflectionProperty->setAccessible(true);
                 $reflectionProperty->setValue($mock, $value);
                 continue;
             }
-            $mock->
-                    expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
-                    method($param)->
-                    will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($value));
         }
+    }
 
+    protected static function getClassname($object)
+    {
+        if (is_object($object)) return get_class($object);
+        if (is_callable($object)) return call_user_func($object);
+        return $object;
+    }
+
+    protected static function getMethodsToReplace($reflection, $params)
+    {
+        $callables = array();
+        foreach ($params as $method => $value) {
+            if ($reflection->hasMethod($method)) $callables[$method] = $value;
+        }
+        return $callables;
     }
 
 }
