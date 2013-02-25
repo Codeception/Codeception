@@ -124,14 +124,12 @@ class Scenario {
 
     public function skip($reason = "")
     {
-        if (!$this->running) $this->addStep(new Step\Skip($reason, array()));
+        if ($this->running) throw new \PHPUnit_Framework_SkippedTestError($reason);
     }
 
     public function incomplete($reason = "")
     {
-        if (!$this->running) $this->addStep(new Step\Incomplete($reason, array()));
+        if ($this->running) throw new \PHPUnit_Framework_IncompleteTestError($reason);
     }
-
-
 
 }
