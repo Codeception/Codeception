@@ -13,7 +13,7 @@ namespace Codeception\Module;
  */
 class Cli extends \Codeception\Module
 {
-    protected $output = '';
+    public $output = '';
 
     public function _cleanup()
     {
