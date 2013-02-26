@@ -135,6 +135,7 @@ class Console implements EventSubscriberInterface
         $feature = $failedTest->getScenario()->getFeature();
         if ($e->getCount()) $this->output->put($e->getCount().") ");
 
+        // skip test
         // Sample Message: create user in CreateUserCept.php is not ready for release
         if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
             if ($feature) $this->output->put("[[$feature]] in ");
