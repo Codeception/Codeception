@@ -38,12 +38,23 @@ namespace Codeception\Module;
  *
  * ## Configuration
  *
+ * * url  *required*- url of your site
  * * host - simply defines the host on which zombie.js will be started. It’s **127.0.0.1** by default.
  * * port - defines a zombie.js port. Default one is **8124**.
  * * node_bin - defines full path to node.js binary. Default one is just **node**
  * * script - defines a node.js script to start zombie.js server. If you pass a **null** the default script will be used. Use this option carefully!
  * * threshold - amount of milliseconds (1/1000 of second) for the process to wait  (as of \Behat\Mink\Driver\Zombie\Server)
  * * autostart - whether zombie.js should be started automatically. Defaults to **true**
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ *     modules:
+ *        enabled: [ZombieJS]
+ *        config:
+ *           ZombieJS:
+ *              url: 'http://localhost/'
+ *              host: '127.0.0.1'
+ *              port: 8124
  *
  * ## Public Properties
  *
@@ -57,7 +68,7 @@ use Behat\Mink\Mink,
 
 class ZombieJS extends \Codeception\Util\MinkJS
 {
-    protected $requiredFields = array();
+    protected $requiredFields = array('url');
     protected $config = array(
         'host' => '127.0.0.1', 'port' => 8124,
         'node_bin' => null, 'script' => null,
@@ -81,10 +92,8 @@ class ZombieJS extends \Codeception\Util\MinkJS
             $this->config['node_bin'],$this->config['script'],
             $this->config['threshold'] * 1000
         );
-        $this->config['url'] = 'http://'.$this->config['host'].':'.$this->config['port'];
 
         $this->driver = new ZombieDriver($this->server);
-
         $this->session = new Session($this->driver);
         parent::_initialize();
     }
