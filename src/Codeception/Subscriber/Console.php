@@ -83,7 +83,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
 
-        if (!($test instanceof \Codeception\TestCase)) {
+        if (!($test instanceof \Codeception\TestCase\Cept)) {
             $this->output->writeln('- ' . $long);
         } elseif (!$this->steps) {
             $this->output->writeln(" - $long");
