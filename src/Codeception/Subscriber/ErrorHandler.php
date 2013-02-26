@@ -26,9 +26,10 @@ class ErrorHandler implements EventSubscriberInterface
     }
 
     public static function errorHandler($errno, $errstr, $errfile, $errline) {
+        if (error_reporting() === 0) return false;
         if (strpos($errstr, 'Cannot modify header information')!==false)
             return false;
-        if ($errno > 8) throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
     public static function shutdownHandler() {
