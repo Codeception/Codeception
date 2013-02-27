@@ -1,7 +1,6 @@
 <?php
 
 use Codeception\Configuration;
-use PHPUnit_Framework_TestCase;
 
 class c3Test extends PHPUnit_Framework_TestCase
 {

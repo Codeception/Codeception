@@ -40,9 +40,8 @@ class Cest extends \Codeception\TestCase\Cept
         }
 
         // preload everything
-        $this->dispatcher->dispatch('test.parse.before', new \Codeception\Event\Test($this));
         $this->executeTestMethod($I);
-        $this->dispatcher->dispatch('test.parse.after', new \Codeception\Event\Test($this));
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
 
         if (!$run) return;
         $this->scenario->run();
