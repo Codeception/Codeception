@@ -1,10 +1,17 @@
 <?php
 namespace Codeception\Command;
 
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use \Symfony\Component\Yaml\Yaml;
 
 class Base extends \Symfony\Component\Console\Command\Command
 {
+
+    public function addStyles($output)
+    {
+        $style = new OutputFormatterStyle('white', 'green', array('bold'));
+        $output->getFormatter()->setStyle('notice', $style);
+    }
 
     protected function buildPath($basePath, $testName)
     {

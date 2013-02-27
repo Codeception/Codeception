@@ -16,9 +16,8 @@ class GenerateCept extends Base
     protected function configure()
     {
         $this->setDefinition(array(
-
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
-            new \Symfony\Component\Console\Input\InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
+            new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
         ));
         parent::configure();
     }
