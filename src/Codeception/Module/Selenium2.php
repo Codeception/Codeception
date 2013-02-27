@@ -83,6 +83,19 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     // please, add more custom Selenium functions here
 
+
+    /**
+     * Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
+     * Link text or css selector can be passed.
+     *
+     * @param $link
+     */
+    public function click($link) {
+        $url = $this->session->getCurrentUrl();
+        $el = $this->findClickable($link);
+        $el->click();
+    }
+
     /**
      * Accept alert or confirm popup
      *
