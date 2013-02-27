@@ -54,7 +54,7 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $guy = $suiteconf['class_name'];
