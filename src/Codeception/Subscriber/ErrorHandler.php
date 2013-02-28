@@ -13,15 +13,13 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var int stores bitmask for fatal errors
      */
-    private static $fatalErrors;
+    private static $errorLevel;
     public function handle() {
-        /**
-         * There are some other nasty constants and PHP likes to chanhge their meanings with updates.
-         * @see http://www.php.net/manual/ru/errorfunc.constants.php
-         */
-        self::$fatalErrors = E_ALL & ~(E_NOTICE | E_WARNING | E_STRICT | E_CORE_WARNING | E_COMPILE_WARNING | E_USER_WARNING | E_DEPRECATED);
-        error_reporting(E_ERROR | E_PARSE);
-        set_error_handler(array(__CLASS__, 'errorHandler'), self::$fatalErrors);
+        $config = \Codeception\Configuration::config();
+        self::$errorLevel = eval("return {$config['settings']['error_level']};");
+
+        error_reporting(self::$errorLevel);
+        set_error_handler(array(__CLASS__, 'errorHandler'), self::$errorLevel);
         register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
     }
 
@@ -40,7 +38,7 @@ class ErrorHandler implements EventSubscriberInterface
         if (!is_array($error)) return;
 
         // Non-fatal warnings occured in process shouldn't make codecept rant after completion.
-        if (!($error['type'] & self::$fatalErrors))
+        if (!($error['type'] & self::$errorLevel))
             return;
 
         echo "\n\n\nFATAL ERROR OCCURRED. TESTS NOT FINISHED.\n";
