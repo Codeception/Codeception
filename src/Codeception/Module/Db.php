@@ -11,6 +11,8 @@ namespace Codeception\Module;
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
+ * If you need you could use multimple dumps. All you have to do is to specify their paths in sequence
+ * of execution as an array in the config.
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
  *
@@ -46,7 +48,7 @@ namespace Codeception\Module;
  * * dsn *required* - PDO DSN
  * * user *required* - user to access database
  * * password *required* - password
- * * dump - path to database dump.
+ * * dump - path to database dump. More dumps can be given in the form of an array. Dumps are merged/executed in sequence of declaration.
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
  * 
@@ -104,17 +106,15 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _initialize()
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
-
-            if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
-                throw new ModuleConfigException(
-                    __CLASS__,
-                    "\nFile with dump deesn't exist.
-                    Please, check path for sql file: " . $this->config['dump']
-                );
+            if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+                if (is_array($this->config['dump'])) {
+                    foreach ($this->config['dump'] as $dump) {
+                        $this->append_to_sql($dump);
+                    }
+                } else {
+                    $this->append_to_sql($this->config['dump']);
+                }
             }
-            $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
-            $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
-            $this->sql = explode("\n", $sql);
         }
 
         try {
@@ -145,6 +145,27 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $this->populated = false;
         parent::_after($test);
     }
+
+    /**
+     * @param string $dump sql dump filename
+     *
+     * @throws \Codeception\Exception\ModuleConfig
+     */
+    protected function append_to_sql($dump)
+    {
+        if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $dump)) {
+            throw new ModuleConfigException(
+                __CLASS__,
+              "\nFile with dump doesn't exist.
+                    Please, check path for sql file: " . $dump
+            );
+        }
+
+        $sql       = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $dump);
+        $sql       = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
+        $this->sql = array_merge($this->sql, explode("\n", $sql));
+    }
+
 
     protected function cleanup()
     {
