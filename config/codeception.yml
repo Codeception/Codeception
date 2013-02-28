@@ -10,3 +10,4 @@ settings:
     silent: false
     memory_limit: 1024M
     silent: false
+    error_level: E_ALL | E_STRICT
