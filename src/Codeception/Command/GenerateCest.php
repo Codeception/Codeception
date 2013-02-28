@@ -39,8 +39,9 @@ EOF;
     {
         $this->setDefinition(array(
 
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-            new \Symfony\Component\Console\Input\InputArgument('class', InputArgument::REQUIRED, 'test name'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
+            new InputArgument('class', InputArgument::REQUIRED, 'test name'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
