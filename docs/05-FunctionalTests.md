@@ -5,12 +5,11 @@ Now that we've written some acceptance tests, functional tests are almost the sa
 In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables, then we execute your script inside a test, we receive output, and then we test it. 
 Functional testing may often be better then acceptance testing because it doesn't require a web server and may provide you with more detailed debug output. For example, if your site throws an exception it will be shown in the console.
 
-Good integration can allow you to perform additional operations, like checking if an email was sent or authenticating users.
 Codeception can connect to different web frameworks which support functional testing. For example you can run a functional test for an application built on top of the Zend Framework, Symfony or Symfony2 with just the modules provided by Codeception! The list of supported frameworks will be extended in the future.
 
 Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them! This is a sample functional test.
 
-```
+``` php
 <?php
 $I = new TestGuy($scenatio);
 $I->amOnPage('/');
@@ -28,20 +27,20 @@ We recommend writing tests on unstable parts of your application as functional t
 
 ## Pitfalls
 
-Acceptance tests are usually much slower then functional tests, since they require database repopulation on each run. For sites that are using the Doctrine ORM, all operations are performed inside a transaction, which will be rolled back at the end. This will work much faster then rebuilding the database from a dump on each test.
-The other side of it, the functional tests may be less stable, as they run testing framework and application itself in one environment.
+Acceptance tests are usually much slower then functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
 
 #### Headers, Cookies, Sessions
 
-One of the common issues problems with functional tests are `headers`, `sessions`, `cookies`.
-If you use the `header` function (also session or cookie PHP functions) in your application, you should wrap them out.
-Because header function will cause error on executing it second time. In functional tests we run application multiple times, so we don't have a choice for that.
+One of the common issues problems with functional tests are usage of PHP functions that deal with `headers`, `sessions`, `cookies`.
+As you know, `header` function triggers an error if it is executed more then once. In functional tests we run application multiple times thus, we will get lots of trash errors in the result.
 
 #### Shared Memory
 
-**If you see that your tests are mysteriously failing when they shouldn't - try to execute a single test.**
+In functional testing unlike the traditional way, PHP application does not stop after it finished processing a request. 
+As all requests run in one memory conrainer they are not isolated. 
+So **if you see that your tests are mysteriously failing when they shouldn't - try to execute a single test.**
 This will check if tests were isolated during run. Because it's realy easy to spoil environment as all tests are run in shared memory.
-So keep your memory clean, avoid memory leaks and clean global variables.
+Keep your memory clean, avoid memory leaks and clean global and static variables.
 
 ## Starting Functional
 
@@ -64,7 +63,7 @@ php codecept.phar generate:cept functional myFirstFunctional
 And execute them with `run`:
 
 ```
-php codecept.phar generate:cept run functional
+php codecept.phar run functional
 ```
 
 Use `--debug` option for more detailed output.
@@ -139,20 +138,20 @@ modules:
 
 [See the full reference](http://codeception.com/docs/modules/Symfony1)
 
-## Integrating Unsupported Frameworks
+## Integrating Other Frameworks
 
 Codeception doesn't provide any generic functional testing module because there are a lot of details we can't implement in general.
 We already discussed the common pitfalls for functional testing. And there is no one single recipe how to solve them for all PHP applications.
 So if you don't use any of the frameworks listed above, you might want to integrate your framework into Codeception. That task requires some knowledge of Codeception internals and some time. Probably, you are ok with just acceptance tests, but any help in extending Codeception functionality will be appreciated. We will review what should be done to have your framework integrated.
 
-### HttpKernel Framework
+#### With HttpKernel
 
 If you have a framework that uses Symfony's `HttpKernel`, using it with Codeception will be like a piece of cake.
 You will need to create a module for it and test it on your application.
 We already have a [guide for such integration](http://codeception.com/01-24-2013/connecting-php-frameworks-1.html).
 Develop a module, try it and share with community.
 
-### Other Frameworks
+#### Any Other
 
 Integration is a bit harder if your framework is not using HttpKernel component.
 The hardest part of it is resolving commong pitfalls: memory management, and usage of `headers` function.
@@ -202,6 +201,7 @@ This can be done in the _before and _after methods of the helper module. Check t
 After you get your module stabilized, share it with the community. Fork a Codeception repository, add your module and make a Pull Request.
 
 There are some requirements for modules:
+
 * It should be easy to configure
 * It should contain proper documentation.
 * It should extend basic operations by using framework internals.
