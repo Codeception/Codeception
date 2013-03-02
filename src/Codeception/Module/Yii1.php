@@ -7,7 +7,7 @@ use Yii;
 /**
  * This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
  *
-  * The following configurations are available for this module:
+ * The following configurations are available for this module:
  * <ul>
  * <li>appPath - full path to the application, include index.php</li>
  * <li>url - full url to the index.php entry script</li>
