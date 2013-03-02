@@ -26,7 +26,7 @@ $I->see('New Page');
 $I->submitForm('form#new_page', array('title' => 'Tree of Life Movie Review','body' => "Next time don't let Hollywood create art-house!"));
 $I->see('page created'); // notice generated
 $I->see('Tree of Life Movie Review','h1'); // head of page of is our title
-$I->seeInCurrentUrl('pages/tree-of-life-mobie-review'); // slug is generated
+$I->seeInCurrentUrl('pages/tree-of-life-movie-review'); // slug is generated
 $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // data is stored in database
 ?>
 ```
@@ -47,7 +47,7 @@ class UserControllerCest {
         $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
         $I->seeResultEquals(true)
         $I->seeMethodInvoked($userController, 'renderHtml')
-        $I->seeInDabatase('users', array('username' => 'MilesDavis'));
+        $I->seeInDatabase('users', array('username' => 'MilesDavis'));
     }
 }
 ?>

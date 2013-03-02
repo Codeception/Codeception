@@ -8,7 +8,7 @@ When we choose to clean up a database, we should make this cleaning as fast as p
 
 ## Manual Cleanup
 
-You could possibly create records at the begining of test and delete them afterwards. This is cool option if you don't have shared data between tests.
+You could possibly create records at the beginning of test and delete them afterwards. This is cool option if you don't have shared data between tests.
 But you shouldn't put any code into your test file. Because test files are parsed two times: for analysis and execution, this may lead to unpredictable results. So, you should specify when do you want your code to be executed. It's a good idea to create data before the analysis and remove data after the test is finished. Use the special methods `running()` and `preload()` of `$scenario` object to determine the current object state.
 
 ``` php
@@ -31,7 +31,7 @@ if ($scenario->running()) {
 
 Similarly you can insert any code before into your test. But please explicitly set the stage when you need it to be included, or the code will be executed twice!
 
-## Automatical Cleanup
+## Automatic Cleanup
 
 Codeception has a Db module, which takes on most of the tasks of database interaction. By default it will try to repopulate the database from a dump and clean it up after each test. This module expects a database dump in SQL format. It's already prepared for configuration in codeception.yml
 
@@ -51,7 +51,7 @@ The Db module is a rough tool. It works for any type of database supported by PD
 
 ## Separate connections
 
-In acceptance tests, your test is interacting with the application through a web server. There is no way to receive a database connection from the web server. This means that the test and the application will work with the same database but on different connections. Provide in the Db module the same credentials that your application uses, and then you can access the database for assertions (`seeInDabatase` actions) and perform automatic cleanups.
+In acceptance tests, your test is interacting with the application through a web server. There is no way to receive a database connection from the web server. This means that the test and the application will work with the same database but on different connections. Provide in the Db module the same credentials that your application uses, and then you can access the database for assertions (`seeInDatabase` actions) and perform automatic cleanups.
 
 ### Speedup with SQLite
 
@@ -76,7 +76,7 @@ Before the test suite is started, the SQLite database is created and copied. Aft
 ## Shared connections
 
 When an application or it's parts are run within the Codeception process, you can use your application connection in your tests. 
-If you can access the connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written tothe database at the end, thus no database repopulation is actually needed.
+If you can access the connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written to the database at the end, thus no database repopulation is actually needed.
 
 ### ORM modules
 
@@ -131,7 +131,7 @@ $davert = Doctrine::getTable('User')->findOneBy('name', 'davert');
 ?>
 ```
 
-Fixture usage in a sample accetpance or functional test.
+Fixture usage in a sample acceptance or functional test.
 
 ```php
 <?php

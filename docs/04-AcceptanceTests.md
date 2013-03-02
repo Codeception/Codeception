@@ -337,7 +337,7 @@ class WebHelper extends \Codeception\Module {
 ```
 
 We [connected a module](http://codeception.com/docs/03-ModulesAndHelpers#Connecting-Modules), then we retrieved content from Mink session class.
-You should definetely learn Mink to dig deeper.
+You should definitely learn Mink to dig deeper.
 And in the end we performed assertion on current content.
 
 ## Conclusion

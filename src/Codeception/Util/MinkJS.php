@@ -161,22 +161,22 @@ class MinkJS extends Mink
     }
 
     /**
-     * Wait for x miliseconds
+     * Wait for x milliseconds
      *
-     * @param $miliseconds
+     * @param $milliseconds
      */
-    public function wait($miliseconds) {
-        $this->session->getDriver()->wait($miliseconds, null);
+    public function wait($milliseconds) {
+        $this->session->getDriver()->wait($milliseconds, null);
     }
 
     /**
-     * Waits for x miliseconds or until JS condition turns true.
+     * Waits for x milliseconds or until JS condition turns true.
      *
-     * @param $miliseconds
+     * @param $milliseconds
      * @param $jsCondition
      */
-    public function waitForJS($miliseconds, $jsCondition) {
-        $this->session->getDriver()->wait($miliseconds, $jsCondition);
+    public function waitForJS($milliseconds, $jsCondition) {
+        $this->session->getDriver()->wait($milliseconds, $jsCondition);
     }
 
     /**

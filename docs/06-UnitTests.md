@@ -18,7 +18,7 @@ $ php codecept.phar generate:phpunit unit Simple
 ```
 
 Codeception has it's addons to standard unit tests. So let's try them.
-We need another command to create Codecption-powered unit tests.
+We need another command to create Codeception-powered unit tests.
 
 ```bash
 $ php codecept.phar generate:test unit Simple
@@ -69,7 +69,7 @@ modules:
 
 ### Testing Database
 
-Probably, there is no very useful modules set up by default for CodeGuy class. Thet's because the CodeGuy class is mostly used for scenario-driven unit tests, described in next chapters. But that's ok, we can get a use of it by adding modules we need. For example, we can add a Db module to test updates in database.
+Probably, there is no very useful modules set up by default for CodeGuy class. That's because the CodeGuy class is mostly used for scenario-driven unit tests, described in next chapters. But that's ok, we can get a use of it by adding modules we need. For example, we can add a Db module to test updates in database.
 
 ```yaml
 # Codeception Test Suite Configuration

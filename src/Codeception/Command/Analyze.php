@@ -111,7 +111,7 @@ EOF;
             }
         }
 
-        $output->writeln("<info>Analisys finished. $analyzed tests analyzed. $replaced methods added</info>");
+        $output->writeln("<info>Analysis finished. $analyzed tests analyzed. $replaced methods added</info>");
         $output->writeln("Run the 'build' command to finish");
     }
 

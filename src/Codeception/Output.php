@@ -30,7 +30,7 @@ class Output {
     }
 
 	protected function colorize($message) {
-		// magent colors
+		// magenta colors
 		$message = str_replace(array('[[',']]'), array("\033[35;1m","\033[0m"), $message);
 		$message = str_replace(array('(%','%)'), array("\033[45;37m","\033[0m"), $message);
 		// grey

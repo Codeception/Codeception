@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ exitnsion.
+ * Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
  *
  * Performs a cleanup by flushing all values after each test run.
  *
@@ -44,7 +44,7 @@ class Memcache extends \Codeception\Module
             $this->memcache = new \Memcached;
             $this->memcache->addServer($this->config['host'], $this->config['port']);
         } else {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__,'Memcache classess not loaded');
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__,'Memcache classes not loaded');
         }
     }
 
