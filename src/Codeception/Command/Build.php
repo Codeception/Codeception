@@ -175,7 +175,7 @@ EOF;
 	                            implode("\n\n ", $code));
 
             file_put_contents($file = $settings['path'].$settings['class_name'].'.php', $contents);
-            $output->writeln("$file generated sucessfully. $methodCounter methods added");
+            $output->writeln("$file generated successfully. $methodCounter methods added");
         }
     }
 }

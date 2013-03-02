@@ -141,7 +141,7 @@ class Symfony2 extends \Codeception\Util\Framework
      * @return mixed
      */
     public function grabServiceFromContainer($service) {
-        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not avaible in container");
+        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not available in container");
         return $this->kernel->getContainer()->get($service);
     }
 

@@ -128,7 +128,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that two vraibles are not equal
+     * Checks that two variables are not equal
      *
      * @param $expected
      * @param $actual
@@ -152,7 +152,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that expected is gretaer or equal then actual
+     * Checks that expected is greater or equal then actual
      *
      * @param $expected
      * @param $actual
@@ -177,7 +177,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that expected is lower or euqal then actual
+     * Checks that expected is lower or equal then actual
      *
      * @param $expected
      * @param $actual

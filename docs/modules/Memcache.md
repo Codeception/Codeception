@@ -2,7 +2,7 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
 
 
-Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ exitnsion.
+Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
 
 Performs a cleanup by flushing all values after each test run.
 

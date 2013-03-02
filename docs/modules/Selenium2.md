@@ -457,7 +457,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 Checks element visibility.
 Fails if element exists but is invisible to user.
-Eiter CSS or XPath can be used.
+Either CSS or XPath can be used.
 
  * param $selector
 
@@ -612,15 +612,15 @@ $I->uncheckOption('#notify');
 ### wait
 
 
-Wait for x miliseconds
+Wait for x milliseconds
 
- * param $miliseconds
+ * param $milliseconds
 
 
 ### waitForJS
 
 
-Waits for x miliseconds or until JS condition turns true.
+Waits for x milliseconds or until JS condition turns true.
 
- * param $miliseconds
+ * param $milliseconds
  * param $jsCondition
