@@ -35,7 +35,7 @@ namespace Codeception\Module;
  *
  * * cleanup: true - enable cleanups by covering all queries inside transaction.
  *
- * ### Examlple
+ * ### Example
  *
  *     modules: 
  *        enabled: [Dbh]
@@ -52,7 +52,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _before(\Codeception\TestCase $test) {
 
         if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Transaction module requires PDO instance explictly set.\n" .
+            "Transaction module requires PDO instance explicitly set.\n" .
             "You can use your bootstrap file to assign the dbh:\n\n" .
             '\Codeception\Module\Transaction::$dbh = $dbh');
 
@@ -62,7 +62,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _after(\Codeception\TestCase $test) {
 
         if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Transaction module requires PDO instance explictly set.\n" .
+            "Transaction module requires PDO instance explicitly set.\n" .
             "You can use your bootstrap file to assign the dbh:\n\n" .
             '\Codeception\Module\Transaction::$dbh = $dbh');
 

@@ -37,7 +37,7 @@ class ErrorHandler implements EventSubscriberInterface
         $error = error_get_last();
         if (!is_array($error)) return;
 
-        // Non-fatal warnings occured in process shouldn't make codecept rant after completion.
+        // Non-fatal warnings occurred in process shouldn't make codecept rant after completion.
         if (!($error['type'] & self::$errorLevel))
             return;
 
