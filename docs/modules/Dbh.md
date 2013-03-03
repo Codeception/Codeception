@@ -35,7 +35,7 @@ This module despite of it's stability may act unstable because of transactions i
 
 * cleanup: true - enable cleanups by covering all queries inside transaction.
 
-### Examlple
+### Example
 
     modules: 
        enabled: [Dbh]
