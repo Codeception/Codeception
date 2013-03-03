@@ -20,7 +20,7 @@ namespace Codeception\Module;
  *
  * * env  - environment used for testing ('testing' by default).
  * * config - relative path to your application config ('application/configs/application.ini' by default).
- * * app_path - relative path to your application folder ('applicaiton' by default).
+ * * app_path - relative path to your application folder ('application' by default).
  * * lib_path - relative path to your library folder ('library' by default).
  *
  * ## API
@@ -37,7 +37,7 @@ namespace Codeception\Module;
  * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
  *
  * If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
- * Use a generated helper TestHelper. Usse this code inside of it.
+ * Use a generated helper TestHelper. Use this code inside of it.
  *
  * ``` php
  * <?php

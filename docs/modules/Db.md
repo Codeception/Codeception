@@ -2,7 +2,7 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
 
 
-Works with SQL dabatase.
+Works with SQL database.
 
 The most important function of this module is cleaning database before each test.
 That's why this module was added into global configuration file: codeception.yml.
@@ -23,7 +23,7 @@ Supported and tested databases are:
 Supported but not tested.
 
 * MSSQL
-* Orcale
+* Oracle
 
 Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
 Check out drivers if you get problems loading dumps and cleaning databases.

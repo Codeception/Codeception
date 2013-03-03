@@ -11,7 +11,7 @@ Modules for all of these frameworks share the same interface, and thus your test
 
 ``` php
 <?php
-$I = new TestGuy($scenatio);
+$I = new TestGuy($scenario);
 $I->amOnPage('/');
 $I->click('Login');
 $I->fillField('Username','Miles');
@@ -37,14 +37,14 @@ As you know, `header` function triggers an error if it is executed more then onc
 #### Shared Memory
 
 In functional testing unlike the traditional way, PHP application does not stop after it finished processing a request. 
-As all requests run in one memory conrainer they are not isolated. 
+As all requests run in one memory container they are not isolated.
 So **if you see that your tests are mysteriously failing when they shouldn't - try to execute a single test.**
-This will check if tests were isolated during run. Because it's realy easy to spoil environment as all tests are run in shared memory.
+This will check if tests were isolated during run. Because it's really easy to spoil environment as all tests are run in shared memory.
 Keep your memory clean, avoid memory leaks and clean global and static variables.
 
 ## Starting Functional
 
-You have a functional testtiin suite in `tests/functional` dir.
+You have a functional testing suite in `tests/functional` dir.
 To start you need to include one of the framework's module in suite config file: `tests/functional.suite.yml`.
 Examples on framework configurations you will find below th this chapter.
 
@@ -154,7 +154,7 @@ Develop a module, try it and share with community.
 #### Any Other
 
 Integration is a bit harder if your framework is not using HttpKernel component.
-The hardest part of it is resolving commong pitfalls: memory management, and usage of `headers` function.
+The hardest part of it is resolving common pitfalls: memory management, and usage of `headers` function.
 Codeception uses [BrowserKit](https://github.com/symfony/BrowserKit) from the Symfony Components to interact with applications in functional tests. This component provides all of the common actions we see in modules: click, fillField, see, etc... So you don't need to write these methods in your module. For the integration you should provide a bridge from BrowserKit to your application.
 
 We will start with writing a helper class for framework integration.
