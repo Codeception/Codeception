@@ -1,11 +1,12 @@
 <?php
 namespace Codeception;
 
-abstract class Module {
+abstract class Module
+{
 
-	protected $debugStack = array();
+    protected $debugStack = array();
 
-	protected $storage = array();
+    protected $storage = array();
 
     protected $config = array();
 
@@ -22,72 +23,71 @@ abstract class Module {
         ");
     }
 
-	public function _hasRequiredFields()
-	{
-		return !empty($this->requiredFields);
-	}
+    public function _hasRequiredFields()
+    {
+        return !empty($this->requiredFields);
+    }
 
     // HOOK: used after configuration is loaded
     public function _initialize() {
     }
 
-	// HOOK: on every Guy class initialization
-	public function _cleanup() {
-	}
+    // HOOK: on every Guy class initialization
+    public function _cleanup() {
+    }
 
-	// HOOK: before every step
-	public function _beforeStep(\Codeception\Step $step) {
-	}
+    // HOOK: before every step
+    public function _beforeStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: after every  step
-	public function _afterStep(\Codeception\Step $step) {
-	}
+    // HOOK: after every  step
+    public function _afterStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: before scenario
-	public function _before(\Codeception\TestCase $test) {
-	}
+    // HOOK: before scenario
+    public function _before(\Codeception\TestCase $test) {
+    }
 
-	// HOOK: after scenario
-	public function _after(\Codeception\TestCase $test) {
-	}
+    // HOOK: after scenario
+    public function _after(\Codeception\TestCase $test) {
+    }
 
-	// HOOK: on fail
-	public function _failed(\Codeception\TestCase $test, $fail) {
-	}
+    // HOOK: on fail
+    public function _failed(\Codeception\TestCase $test, $fail) {
+    }
 
+    protected function debug($message) {
+        $this->debugStack[] = $message;
+    }
 
-	protected function debug($message) {
-	    $this->debugStack[] = $message;
-	}
+    protected function debugSection($title, $message) {
+        $this->debug("[$title] $message");
+    }
 
-	protected function debugSection($title, $message) {
-		$this->debug("[$title] $message");
-	}
+    public function _clearDebugOutput() {
+        $this->debugStack = array();
+    }
 
-	public function _clearDebugOutput() {
-		$this->debugStack = array();
-	}
+    public function _getDebugOutput() {
+        $debugStack = $this->debugStack;
+        $this->_clearDebugOutput();
+        return $debugStack;
+    }
 
-	public function _getDebugOutput() {
-		$debugStack = $this->debugStack;
-		$this->_clearDebugOutput();
-	    return $debugStack;
-	}
+    protected function assert($arguments, $not = false) {
+        $not = $not ? 'Not' : '';
+        $method = ucfirst(array_shift($arguments));
+        if (($method === 'True') && $not) {
+            $method = 'False';
+            $not = '';
+        }
+        if (($method === 'False') && $not) {
+            $method = 'True';
+            $not = '';
+        }
 
-	protected function assert($arguments, $not = false) {
-		$not = $not ? 'Not' : '';
-		$method = ucfirst(array_shift($arguments));
-		if (($method === 'True') && $not) {
-			$method = 'False';
-			$not = '';
-		}
-		if (($method === 'False') && $not) {
-			$method = 'True';
-			$not = '';
-		}
-
-		call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
-	}
+        call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
+    }
 
     /**
      * Checks that two variables are equal.
@@ -278,9 +278,9 @@ abstract class Module {
         return \PHPUnit_Framework_Assert::fail($message);
     }
 
-	protected function assertNot($arguments) {
-		$this->assert($arguments, true);
-	}
+    protected function assertNot($arguments) {
+        $this->assert($arguments, true);
+    }
 
     protected function hasModule($name)
     {
