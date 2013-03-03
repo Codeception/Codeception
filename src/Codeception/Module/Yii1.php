@@ -122,6 +122,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 		$_POST    = array();
 		$_COOKIE  = array();
 		$_REQUEST = array();
+		Yii::app()->session->close();
 		parent::_after($test);
 	}
 
