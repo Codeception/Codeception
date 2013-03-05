@@ -8,7 +8,7 @@ require_once __DIR__ . '/TestsForMink.php';
 class Selenium2Test extends TestsForMink
 {
     /**
-     * @var \Codeception\Module\Selenium
+     * @var \Codeception\Module\Selenium2
      */
     protected $module;
 
@@ -77,6 +77,29 @@ class Selenium2Test extends TestsForMink
     public function testSelectByLabel()
     {
         // In Selenium you can't select option by it's value
+    }
+
+    public function testAcceptPopup()
+    {
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Confirm');
+        $this->module->acceptPopup();
+        $this->module->see('Yes', '#result');
+    }
+
+    public function testCancelPopup()
+    {
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Confirm');
+        $this->module->cancelPopup();
+        $this->module->see('No', '#result');
+    }
+
+    public function testSeeInPopup()
+    {
+        $this->module->amOnPage('/form/popup');
+        $this->module->click('Alert');
+        $this->module->seeInPopup('Really?');
     }
 
 }

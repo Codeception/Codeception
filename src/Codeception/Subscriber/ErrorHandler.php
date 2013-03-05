@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\Event\Suite;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ErrorHandler implements EventSubscriberInterface
@@ -13,11 +14,13 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var int stores bitmask for fatal errors
      */
-    private static $errorLevel;
-    public function handle() {
-        $config = \Codeception\Configuration::config();
-        self::$errorLevel = eval("return {$config['settings']['error_level']};");
+    private static $errorLevel = E_ALL;
 
+    public function handle(Suite $e) {
+        $settings = $e->getSettings();
+        if ($settings['error_level']) {
+            self::$errorLevel = eval("return {$settings['error_level']};");
+        }
         error_reporting(self::$errorLevel);
         set_error_handler(array(__CLASS__, 'errorHandler'), self::$errorLevel);
         register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
