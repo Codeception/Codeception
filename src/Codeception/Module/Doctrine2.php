@@ -23,7 +23,7 @@ namespace Codeception\Module;
  *
  * ## Config
  *
- * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
+ * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  *
  *  ### Example (`functional.suite.yml`)
@@ -58,7 +58,7 @@ class Doctrine2 extends \Codeception\Module
        }
 
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
@@ -76,7 +76,7 @@ class Doctrine2 extends \Codeception\Module
     public function _after(\Codeception\TestCase $test)
     {
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 

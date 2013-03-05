@@ -3,7 +3,7 @@ namespace Codeception\Util;
 
 /**
  * Interface for all Framework connectors.
- * PhpBrowser acts similarly, as universal connectorm thus implements it too.
+ * PhpBrowser acts similarly, as universal connector thus implements it too.
  *
  */
 
