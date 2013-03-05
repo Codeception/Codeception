@@ -35,7 +35,8 @@ class SuiteManager {
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'colors' => true,
         'memory_limit' => '1024M',
-        'path' => ''
+        'path' => '',
+        'error_level' => 'E_ALL'
     );
 
     protected $settings = array();

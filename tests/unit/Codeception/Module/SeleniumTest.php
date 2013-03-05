@@ -77,6 +77,7 @@ class SeleniumTest extends TestsForMink
     public function testSelectByLabel()
     {
         // In Selenium you can't select option by it's value
+
     }
 
 }
