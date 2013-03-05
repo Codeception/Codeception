@@ -1,8 +1,8 @@
 ## Code Coverage
 
-At some point you want to review which parts of your appliaction are tested well and which are not. 
+At some point you want to review which parts of your application are tested well and which are not.
 Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage) is used. When you execute your tests to collect coverage report, 
-you will receive statisitcs of all classes, methods, and lines triggered by these tests. 
+you will receive statistics of all classes, methods, and lines triggered by these tests.
 The ratio between all lines in script and all touched lines is a main coverage criteria. In the ideal world you should get a 100% code coverage,
 but in reality 80% are just enough. And even 100% code coverage rate doesn't save you from fatal errors and crashes. 
 
@@ -75,7 +75,7 @@ codecept run --coverage --xml --html
 ```
 
 XML and HTML reports are stored to the `_logs` directory. The best way to review report is to open `index.html` from `tests/_logs/coverage` in your browser.
-XML clover reports are used by IDEs (like PHPStorm) or Conitinious Integration servers (Like Jenkins).
+XML clover reports are used by IDEs (like PHPStorm) or Continuous Integration servers (Like Jenkins).
 
 ## Remote CodeCoverage
 
@@ -83,18 +83,18 @@ If you run your application via Webserver (Apache, Nginx, PHP WebServer) you don
 so collecting coverage becomes a non-trivial task. The same goes to scripts that are tested on different node. 
 To get access to this code you need `xdebug` installed with `remote_enable` option turned on. 
 Codeception also requires a little spy to interact  with your application. As your application run standalone, 
-without even knowing it is being tested, a small file should be included in order to collecto coverage info. 
+without even knowing it is being tested, a small file should be included in order to collect coverage info.
 
 This file is called `c3.php` and is [available on GitHub](https://github.com/Codeception/c3). 
 `c3.php` should be downloaded and included in your application in a very first line of it's from controller. 
-By sending special headers Codeception will command your appliaction when to start codecoverage collection and when to stop it.
+By sending special headers Codeception will command your application when to start codecoverage collection and when to stop it.
 After the suite is finished, a report will be stored and Codeception will grab it from your application. 
 
 Please, follow installation instructions described in a [readme file](https://github.com/Codeception/c3).
 
 After the `c3.php` file is included in application you can start gather coverage. 
 In case you execute your application locally there is nothing to be changed in config.
-All codecoverage reports will be collected as usual and marged afterwards.
+All codecoverage reports will be collected as usual and merged afterwards.
 Think of it: Codeception runs remote coverage in the same way as local. 
 
 It's never been easier to setup remote codecoverage for your application. In ay other framework. Really.
@@ -114,7 +114,7 @@ But in case of running tests on a remote server we are not sure of it.
 
 ## Conclusion
 
-It's never been easier to setup local and remote code coverage. Just one config and one additional file to incldue! 
+It's never been easier to setup local and remote code coverage. Just one config and one additional file to include!
 **With Codeception you can easily generate CodeCoverage reports for your Selenium tests** (or other acceptance or api tests). Mixing reports for `acceptance`, `functional`, and `unit` suites provides 
 you the most complete information on which parts of your applications are tested and which are not.
 

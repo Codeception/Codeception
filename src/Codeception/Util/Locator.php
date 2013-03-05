@@ -67,7 +67,7 @@ class Locator
     }
 
     /**
-     * Finds element by it's attrubte(s)
+     * Finds element by it's attribute(s)
      *
      * @static
      * @param $element

@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * Works with SQL dabatase.
+ * Works with SQL database.
  *
  * The most important function of this module is cleaning database before each test.
  * That's why this module was added into global configuration file: codeception.yml.
@@ -108,7 +108,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
             if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
-                    "\nFile with dump deesn't exist.
+                    "\nFile with dump doesn't exist.
                     Please, check path for sql file: " . $this->config['dump']
                 );
             }

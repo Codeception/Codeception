@@ -7,7 +7,7 @@ use Yii;
 /**
  * This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
  *
-  * The following configurations are available for session:
+ * The following configurations are available for this module:
  * <ul>
  * <li>appPath - full path to the application, include index.php</li>
  * <li>url - full url to the index.php entry script</li>
@@ -42,7 +42,12 @@ use Yii;
  *             url: 'http://localhost/path/to/index.php'
  * </pre>
  *
- * You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web) on the codeception github repo.
+ * You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web), this component will be
+ * imported when you include Yii1 module. There is also an alias "codeceptionsrc" available in Yii that points to the
+ * codeception source directory, you can use it as always:
+ * <pre>
+ * Yii::getPathOfAlias('codeceptionsrc');
+ * </pre>
  * This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
  * modify it to be extended from your custom http-request component.
  *
@@ -90,6 +95,10 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 		$this->appSettings = require_once($this->config['appPath']); //get application settings in the entry script
 		$this->_appConfig = require_once($this->appSettings['config']);
 
+		Yii::setPathOfAlias('codeceptionsrc',dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
+
+		require_once(Yii::getPathOfAlias('codeceptionsrc').'/plugins/frameworks/yii/yiit.php');
+
 		$_SERVER['SCRIPT_NAME'] = str_replace('http://localhost','',$this->config['url']);
 		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
@@ -101,13 +110,13 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 	 */
 	public function createClient()
 	{
-                $this->client = new \Codeception\Util\Connector\Yii1();
-                $this->client->appPath = $this->config['appPath'];
-                $this->client->url = $this->config['url'];
-                $this->client->appSettings = array(
-                        'class' => $this->appSettings['class'],
-                        'config' => $this->_appConfig,
-                );
+		$this->client = new \Codeception\Util\Connector\Yii1();
+		$this->client->appPath = $this->config['appPath'];
+		$this->client->url = $this->config['url'];
+		$this->client->appSettings = array(
+			'class' => $this->appSettings['class'],
+			'config' => $this->_appConfig,
+		);
 	}
 
 	public function _before(\Codeception\TestCase $test)
@@ -122,6 +131,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 		$_POST    = array();
 		$_COOKIE  = array();
 		$_REQUEST = array();
+		Yii::app()->session->close();
 		parent::_after($test);
 	}
 
