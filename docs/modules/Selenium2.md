@@ -129,28 +129,9 @@ $I->checkOption('#agree');
 ### click
 
 
-Perform a click on link or button.
-Link or button are found by their names or CSS selector.
-Submits a form if button is a submit type.
+Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
+Link text or css selector can be passed.
 
-If link is an image it's found by alt attribute value of image.
-If button is image button is found by it's value
-If link or button can't be found by name they are searched by CSS selector.
-
-Examples:
-
-``` php
-<?php
-// simple link
-$I->click('Logout');
-// button of form
-$I->click('Submit');
-// CSS button
-$I->click('#form input[type=submit]');
-// XPath
-$I->click('//form/*[@type=submit]')
-?>
-```
  * param $link
 
 

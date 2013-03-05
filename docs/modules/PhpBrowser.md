@@ -21,11 +21,13 @@ If test fails stores last shown page in 'output' dir.
 
 * url *required* - start url of your app
 
-  modules: 
-     enabled: [PhpBrowser]
-     config:
-        PhpBrowser:
-           url: 'http://localhost'
+### Example (`acceptance.suite.yml`)
+
+    modules: 
+       enabled: [PhpBrowser]
+       config:
+          PhpBrowser:
+             url: 'http://localhost'
 
 ## Public Properties
 
