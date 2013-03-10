@@ -36,6 +36,16 @@ abstract class Module
     public function _cleanup() {
     }
 
+    // HOOK: before each suite
+    public function beforeSuite($settings = array())
+    {
+    }
+
+    // HOOK: after suite
+    public function afterSuite()
+    {
+    }
+
     // HOOK: before every step
     public function _beforeStep(\Codeception\Step $step) {
     }

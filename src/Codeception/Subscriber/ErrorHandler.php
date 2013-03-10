@@ -45,8 +45,6 @@ class ErrorHandler implements EventSubscriberInterface
         self::$stopped = true;
         $error = error_get_last();
         if (!is_array($error)) return;
-        echo error_reporting();
-        print_r($error);
         if (error_reporting() === 0) return;
 
         echo "\n\n\nFATAL ERROR. TESTS NOT FINISHED.\n";
