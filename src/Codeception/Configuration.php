@@ -156,7 +156,6 @@ class Configuration
     {
         $actions = array();
         foreach ($modules as $modulename => $module) {
-            $module->_initialize();
             $class = new \ReflectionClass('\Codeception\Module\\' . $modulename);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
