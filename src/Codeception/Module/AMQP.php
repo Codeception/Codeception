@@ -174,7 +174,7 @@ class AMQP extends \Codeception\Module
      * $message = $I->grabMessageFromQueue('queue.emails');
      *
      * @param $queue
-     * @return AMQPQueue
+     * @return AMQPMessage
      */
     public function grabMessageFromQueue($queue)
     {
