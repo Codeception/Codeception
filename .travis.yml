@@ -8,7 +8,9 @@ branches:
   except:
     - gh-pages
 
-services: mongodb
+services:
+  - mongodb
+  - rabbitmq
 
 before_script:
   - export DISPLAY=:99.0
@@ -17,7 +19,6 @@ before_script:
   - java -jar selenium-server-standalone-2.16.1.jar -port 4444 &
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.31.0.jar
   - java -jar selenium-server-standalone-2.31.0.jar -port 4455 &
-#  - pecl -q install mongo && echo "extension=mongo.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - php -S localhost:8000 -t tests/data/app &
   - composer self-update
   - composer install -n --prefer-source
