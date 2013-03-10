@@ -210,6 +210,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
     }
 
+    public function testSeeInFieldForEmptyInput()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_input','');
+    }
+
     public function testSeeInFieldOnTextarea()
     {
         $this->module->amOnPage('/form/textarea');
@@ -217,6 +223,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('textarea','sunrise');
         $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
     }
+
+    public function testSeeInFieldForEmptyTextarea()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','');
+    }
+
 
     public function testDontSeeInFieldOnInput()
     {
