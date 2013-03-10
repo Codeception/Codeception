@@ -70,7 +70,14 @@ class Selenium2 extends \Codeception\Util\MinkJS
             sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
-        $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) {
+            $this->session->start();
+            $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
+        }
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
