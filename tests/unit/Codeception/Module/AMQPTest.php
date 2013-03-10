@@ -10,9 +10,8 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         'password' => 'guest',
         'port' => '5672',
         'vhost'    => '/',
-        'routes'   => array(
-            array('exchange' => 'Test', 'queue' => 'Test')
-        )
+        'cleanup' => true,        
+        'queues' => array('queue1') 
     );
 
     /**
@@ -28,11 +27,16 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         if ($res === false) $this->markTestSkipped('AMQP is not running');
 
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cept'));
     }
 
-    public function testCleanup()
+    public function testQueueUsage()
     {
-        // $this->markTestIncomplete();
+        $this->module->pushToQueue('queue1', 'hello');
+        $this->module->seeMessageInQueueContainsText('queue1','hello');
+        $msg = $this->module->grabMessageFromQueue('queue1');
+        $this->assertEquals('hello', $msg->body);
     }
+
+
 }
