@@ -275,9 +275,9 @@ class Unit extends \Codeception\Module
     public function execute(\Closure $code)
     {
         // cleanup mocks
-        foreach ($this->stubs as $mock) {
-            $mock->__phpunit_cleanup();
-        }
+//        foreach ($this->stubs as $mock) {
+//            $mock->__phpunit_cleanup();
+//        }
 
         $this->createMocks();
         $this->predictExceptions();
