@@ -67,7 +67,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
         $driver = new Selenium2Driver(
             $this->config['browser'],
             $capabilities,
-            sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
+            sprintf('http://%s:%d/node/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
         $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
