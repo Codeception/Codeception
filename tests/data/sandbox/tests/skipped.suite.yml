@@ -1,3 +1,0 @@
-class_name: SkipGuy
-modules:
-  enabled: [SkipHelper]

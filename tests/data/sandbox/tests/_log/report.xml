@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuites>
-  <testsuite name="remote" tests="1" assertions="1" failures="0" errors="0" time="0.105324">
-    <testcase file="DemoCept.php" name=" (DemoCept.php)" assertions="1" time="0.105324"/>
-  </testsuite>
-</testsuites>
