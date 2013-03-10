@@ -245,9 +245,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function getFieldByLabelOrCss($field)
     {
-        $label = $this->crawler->filterXPath(sprintf('descendant-or-self::label[text()="%s"]', $field))->first();
-        if (count($label) && $label->attr('for')) {
-            $input = $this->crawler->filter('#' . $label->attr('for'));
+        $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
+        if (count($label)) {
+            $label = $label->first();
+            if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
         if (!isset($input)) $input = $this->match($field);
