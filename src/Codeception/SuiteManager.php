@@ -36,7 +36,7 @@ class SuiteManager {
         'colors' => true,
         'memory_limit' => '1024M',
         'path' => '',
-        'error_level' => 'E_ALL'
+        'error_level' => 'E_ALL & ~(E_CORE_WARNING & E_COMPILE_WARNING & E_USER_WARNING & E_DEPRECATED & E_STRICT)'
     );
 
     protected $settings = array();

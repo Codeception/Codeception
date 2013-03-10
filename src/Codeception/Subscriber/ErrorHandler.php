@@ -12,17 +12,18 @@ class ErrorHandler implements EventSubscriberInterface
     private static $stopped = false;
 
     /**
-     * @var int stores bitmask for fatal errors
+     * @var int stores bitmask for errors
      */
-    private static $errorLevel = E_ALL;
+    private $errorLevel = 'E_ALL';
 
     public function handle(Suite $e) {
+
         $settings = $e->getSettings();
         if ($settings['error_level']) {
-            self::$errorLevel = eval("return {$settings['error_level']};");
+            $this->errorLevel = eval("return {$settings['error_level']};");
         }
-        error_reporting(self::$errorLevel);
-        set_error_handler(array(__CLASS__, 'errorHandler'), self::$errorLevel);
+        error_reporting($this->errorLevel);
+        set_error_handler(array(__CLASS__, 'errorHandler'), $this->errorLevel);
         register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
     }
 
@@ -40,11 +41,7 @@ class ErrorHandler implements EventSubscriberInterface
         $error = error_get_last();
         if (!is_array($error)) return;
 
-        // Non-fatal warnings occurred in process shouldn't make codecept rant after completion.
-        if (!($error['type'] & self::$errorLevel))
-            return;
-
-        echo "\n\n\nFATAL ERROR OCCURRED. TESTS NOT FINISHED.\n";
+        echo "\n\n\nFATAL ERROR. TESTS NOT FINISHED.\n";
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
     }
 
