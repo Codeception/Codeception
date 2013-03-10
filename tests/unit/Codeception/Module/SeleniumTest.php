@@ -17,6 +17,7 @@ class SeleniumTest extends TestsForMink
 
     public function setUp()
     {
+        $this->markTestSkipped('lets test selenium2 instead');
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module = new \Codeception\Module\Selenium();

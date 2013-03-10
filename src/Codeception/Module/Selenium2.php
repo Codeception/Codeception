@@ -29,6 +29,7 @@ namespace Codeception\Module;
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
  * * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+ * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -38,26 +39,38 @@ namespace Codeception\Module;
  *           Selenium2:
  *              url: 'http://localhost/' 
  *              browser: firefox
+ *              capabilities:
+ *                  unexpectedAlertBehaviour: 'accept'
  *
  * ## Public Properties
  *
  * * session - contains Mink Session
+ * * webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
  */
+
+use Behat\Mink\Driver\Selenium2Driver;
 
 class Selenium2 extends \Codeception\Util\MinkJS
 {
     protected $requiredFields = array('browser', 'url');
-    protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0);
+    protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0, 'capabilities' => array());
+
+    /**
+     * @var \WebDriver\Session
+     */
+    public $webDriverSession;
 
 
     public function _initialize() {
-        $driver = new \Behat\Mink\Driver\Selenium2Driver(
+        $capabilities = array_merge(Selenium2Driver::getDefaultCapabilities(), $this->config['capabilities']);
+        $capabilities['name'] = 'Codeception Test';
+        $driver = new Selenium2Driver(
             $this->config['browser'],
-            null,
+            $capabilities,
             sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
-        parent::_initialize();
+        $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
@@ -72,12 +85,11 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     public function _saveScreenshot($filename)
     {
-        if (!isset($this->session->getDriver()->wdSession)) {
+        if (!isset($this->webDriver)) {
             $this->debug("Can't make screenshot, no web driver");
             return;
         }
-        $wd = $this->session->getDriver()->wdSession;
-        $imgData = base64_decode($wd->screenshot());
+        $imgData = base64_decode($this->webDriverSession->screenshot());
         file_put_contents($filename, $imgData);
     }
 
@@ -108,7 +120,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * ```
      */
     public function acceptPopup() {
-        $this->session->getDriver()->wdSession->accept_alert();
+        $this->webDriverSession->accept_alert();
     }
 
     /**
@@ -123,7 +135,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * ```
      */
     public function cancelPopup() {
-        $this->session->getDriver()->wdSession->dismiss_alert();
+        $this->webDriverSession->dismiss_alert();
     }
 
     /**
@@ -140,7 +152,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * @param string $text
      */
     public function seeInPopup($text) {
-        $this->assertContains($text, $this->session->getDriver()->wdSession->alert_text());
+        $this->assertContains($text, $this->webDriverSession->alert_text());
     }
 
     /**
@@ -157,7 +169,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
      * @param string $text
      */
     public function dontSeeInPopup($text) {
-        $this->assertNotContains($text, $this->session->getDriver()->wdSession->alert_text());
+        $this->assertNotContains($text, $this->webDriverSession->alert_text());
     }
 
     /**
