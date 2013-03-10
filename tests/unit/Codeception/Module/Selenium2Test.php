@@ -102,4 +102,13 @@ class Selenium2Test extends TestsForMink
         $this->module->seeInPopup('Really?');
     }
 
+    public function testScreenshot()
+    {
+        $this->module->amOnPage('/');
+        @unlink(\Codeception\Configuration::logDir().'testshot.png');
+        $this->module->_saveScreenshot(\Codeception\Configuration::logDir().'testshot.png');
+        $this->assertFileExists(\Codeception\Configuration::logDir().'testshot.png');
+        @unlink(\Codeception\Configuration::logDir().'testshot.png');
+    }
+
 }
