@@ -317,4 +317,16 @@ interface WebInterface
      */
     public function grabValueFrom($field);
 
+    /**
+     * Checks if element exists on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->seeElement('.error');
+     * $I->seeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     */
+    public function seeElement($selector);
 }

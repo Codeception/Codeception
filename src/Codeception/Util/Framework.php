@@ -381,5 +381,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    public function seeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertGreaterThen(0, $nodes->count());
+    }
 
 }

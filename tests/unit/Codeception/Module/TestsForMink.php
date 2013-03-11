@@ -290,4 +290,11 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->click('Test');
         $this->module->seeInCurrentUrl('/form/hidden');
     }
+
+    public function testSeeElementOnPage()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeElement('input[name=name]');
+        $this->module->seeElement('descendant-or-self::input[@id="name"]');
+    }
 }

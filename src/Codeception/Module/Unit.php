@@ -322,9 +322,9 @@ class Unit extends \Codeception\Module
         $method = array_shift($params);
 
         // cleanup mocks
-        foreach ($this->stubs as $mock) {
-            $mock->__phpunit_cleanup();
-        }
+//        foreach ($this->stubs as $mock) {
+//            $mock->__phpunit_cleanup();
+//        }
 
         $this->createMocks();
         $this->predictExceptions();

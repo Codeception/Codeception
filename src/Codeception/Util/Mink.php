@@ -157,6 +157,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         }
     }
 
+    public function seeElement($selector)
+    {
+        $el = $this->findEl($selector);
+        $this->assertNotEmpty($el);
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -172,7 +178,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
         if (!$el) $el = @$page->find('xpath',$selector);
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link | button | CSS | XPath for '$selector' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
         return $el;
     }
 
