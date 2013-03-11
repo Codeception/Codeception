@@ -479,7 +479,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->$response);
+        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
     }
 
     /**

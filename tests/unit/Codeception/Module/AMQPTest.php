@@ -28,6 +28,8 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
 
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cept'));
+        $connection = $this->module->connection;
+        $connection->channel()->queue_declare('queue1');
     }
 
     public function testQueueUsage()

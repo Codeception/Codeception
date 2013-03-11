@@ -181,6 +181,32 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         }
     }
 
+    /**
+     * Inserts SQL record into database
+     *
+     * ``` php
+     * <?php
+     * $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param $table
+     * @param array $data
+     */
+    public function haveInDatabase($table, array $data)
+    {
+        $query = $this->driver->insert($table, $data);
+        $this->debugSection('Query', $query);
+
+        $sth = $this->driver->getDbh()->prepare($query);
+        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
+
+        foreach ($data as $k => $val) {
+            $sth->bindParam($k+1, $val);
+        }
+        $sth->execute();
+    }
+
     public function seeInDatabase($table, $criteria = array())
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);

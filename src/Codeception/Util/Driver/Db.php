@@ -99,6 +99,12 @@ class Db
         }
     }
 
+    public function insert($table, array $data)
+    {
+        $query = "insert into %s (%s) values (%s)";
+        return sprintf($query, $table, implode(', ', array_keys($data)), implode(', ', array_fill(0, count($data),'?')));
+    }
+
     public function select($column, $table, array $criteria) {
         $query = "select %s from %s where %s";
         $params = array();
