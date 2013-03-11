@@ -61,6 +61,12 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInCollection('users', array('email' => 'davert@davert.com'));
     }
 
+    public function testHaveAndSeeInCollection()
+    {
+        $this->module->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+        $this->module->seeInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+    }
+
     public function testGrabFromCollection()
     {
         $user = $this->module->grabFromCollection('users', array('id' => 1));

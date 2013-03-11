@@ -116,6 +116,7 @@ class Doctrine2 extends \Codeception\Module
      *
      * ``` php
      * <?php
+     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
      * $I->persistEntity($user, array('name' => 'Miles'));
      * ```
      *
@@ -178,6 +179,14 @@ class Doctrine2 extends \Codeception\Module
         } else {
             $this->debugSection('Warning','Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property');
         }
+    }
+
+    /**
+     * Saves data in repository
+     */
+    public function haveInRepository($repository, array $data)
+    {
+
     }
 
     /**

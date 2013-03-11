@@ -92,7 +92,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     public function _saveScreenshot($filename)
     {
-        if (!isset($this->webDriver)) {
+        if (!$this->webDriverSession) {
             $this->debug("Can't make screenshot, no web driver");
             return;
         }
