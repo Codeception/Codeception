@@ -33,7 +33,7 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
 
     public function testQueueUsage()
     {
-        $this->module->pushToQueue('queue1', 'hello');
+        $this->module->pushToQueue('queue1', Amqp'hello');
         $this->module->seeMessageInQueueContainsText('queue1','hello');
         $msg = $this->module->grabMessageFromQueue('queue1');
         $this->assertEquals('hello', $msg->body);
