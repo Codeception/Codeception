@@ -56,7 +56,7 @@ Takes last message from queue.
 $message = $I->grabMessageFromQueue('queue.emails');
 
  * param $queue
- * return AMQPQueue
+ * return AMQPMessage
 
 
 ### pushToExchange
