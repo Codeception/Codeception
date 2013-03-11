@@ -116,6 +116,12 @@ class Db
         return sprintf($query, $column, $table, $params);
     }
 
+    public function deleteQuery($table, $id)
+    {
+        $query = "delete from $table where id = $id";
+        $this->sqlQuery($query);
+    }
+
     protected function sqlLine($sql)
     {
         if (trim($sql) == "") return true;
