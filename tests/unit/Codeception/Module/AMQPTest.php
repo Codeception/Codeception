@@ -10,7 +10,7 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         'password' => 'guest',
         'port' => '5672',
         'vhost'    => '/',
-        'cleanup' => true,        
+        'cleanup' => false,
         'queues' => array('queue1') 
     );
 
@@ -27,7 +27,6 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
         if ($res === false) $this->markTestSkipped('AMQP is not running');
 
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cept'));
         $connection = $this->module->connection;
         $connection->channel()->queue_declare('queue1');
     }
