@@ -140,7 +140,7 @@ class AMQP extends \Codeception\Module
             : new AMQPMessage($message);
 
         $this->channel->queue_declare($queue);
-        $this->channel->basic_publish(new AMQPMessage($message), '',$queue);
+        $this->channel->basic_publish($message, '',$queue);
     }
 
     /**
