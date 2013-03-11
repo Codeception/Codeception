@@ -30,7 +30,7 @@ class SeleniumTest extends TestsForMink
         }
 
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox'));
-        $this->markTestSkipped('lets test selenium2 instead');
+        // $this->markTestSkipped('lets test selenium2 instead');
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
