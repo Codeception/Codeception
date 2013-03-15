@@ -117,7 +117,7 @@ $I->cancelPopup();
 
 
 Ticks a checkbox.
-For radio buttons use `click`.
+For radio buttons use the `click` method.
 
 Example:
 
