@@ -117,7 +117,7 @@ $I->cancelPopup();
 
 
 Ticks a checkbox.
-For radio buttons use `selectOption` method.
+For radio buttons use the `click` method.
 
 Example:
 
@@ -515,7 +515,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ### selectOption
 
 
-Selects an option in select tag or in radio button group.
+Selects an option in select tag.
 
 Example:
 
