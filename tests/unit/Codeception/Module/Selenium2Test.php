@@ -79,6 +79,15 @@ class Selenium2Test extends TestsForMink
         // In Selenium you can't select option by it's value
     }
 
+    public function testClickEventOnCheckbox()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->uncheckOption('#checkin');
+        $this->module->dontSee('ticked','#notice');
+        $this->module->checkOption('#checkin');
+        $this->module->see('ticked','#notice');
+    }
+
     public function testAcceptPopup()
     {
         $this->module->amOnPage('/form/popup');

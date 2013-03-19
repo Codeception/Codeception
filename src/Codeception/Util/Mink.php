@@ -242,6 +242,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->check();
     }
 
+    public function uncheckOption($option)
+    {
+        $field = $this->findField($option);
+        $field->uncheck();
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -264,11 +270,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function uncheckOption($option)
-    {
-        $field = $this->findField($option);
-        $field->uncheck();
-    }
 
     public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
