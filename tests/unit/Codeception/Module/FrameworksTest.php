@@ -71,6 +71,17 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/');
     }
 
+    public function testClickOnContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('More info','p');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('More info','body>p');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testRadioButton()
     {
         $this->module->amOnPage('/form/radio');

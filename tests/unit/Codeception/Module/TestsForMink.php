@@ -73,6 +73,17 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/info');
     }
 
+    public function testClickOnContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('More info','p');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('More info','body>p');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testCheckboxByCss()
     {
         $this->module->amOnPage('/form/checkbox');

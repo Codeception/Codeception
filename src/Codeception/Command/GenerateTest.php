@@ -75,7 +75,6 @@ EOF;
             $output->writeln("<error>Test $filename already exists</error>");
             exit;
         }
-
         file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
 
         $output->writeln("<info>Test for $class was created in $filename</info>");
