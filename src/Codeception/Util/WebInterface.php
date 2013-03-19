@@ -69,6 +69,8 @@ interface WebInterface
      * If button is image button is found by it's value
      * If link or button can't be found by name they are searched by CSS selector.
      *
+     * The second parameter is a context: CSS or XPath locator to narrow the search.
+     *
      * Examples:
      *
      * ``` php
@@ -81,11 +83,14 @@ interface WebInterface
      * $I->click('#form input[type=submit]');
      * // XPath
      * $I->click('//form/*[@type=submit]')
+     * // link in context
+     * $I->click('Logout', '#nav');
      * ?>
      * ```
      * @param $link
+     * @param $context
      */
-    public function click($link);
+    public function click($link, $context = null);
 
     /**
      * Checks if there is a link with text specified.
