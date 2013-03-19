@@ -246,7 +246,7 @@ class Console implements EventSubscriberInterface
             'fail.error' => 'testError',
             'fail.incomplete' => 'testIncomplete',
             'fail.skipped' => 'testSkipped',
-            'fail.print' => 'printFail'
+            'fail.print' => 'printFail',
         );
     }
 

@@ -25,6 +25,8 @@ class Scenario {
 
     protected $blocker = null;
 
+    protected $tags = array();
+
     /**
      * Constructor.
      *
@@ -33,6 +35,27 @@ class Scenario {
     public function __construct(\Codeception\TestCase $test)
     {
 		$this->test = $test;
+    }
+
+    public function tag($tag)
+    {
+        if (is_array($tag)) {
+            foreach ($tag as $t) {
+                $this->tag($t);
+            }
+        } else {
+            $this->tags[] = $tag;
+        }
+    }
+
+    public function tags()
+    {
+        $this->tag(func_get_args());
+    }
+
+    public function getTags()
+    {
+        return $this->tags;
     }
 
 

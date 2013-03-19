@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\TestCase;
 
+use Codeception\Event\Fail;
+use Codeception\Event\Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Step;
 
@@ -15,7 +17,6 @@ class Cept extends \Codeception\TestCase
     protected $stopped = false;
 
     protected $dispatcher;
-
 
     public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
@@ -55,19 +56,20 @@ class Cept extends \Codeception\TestCase
         $scenario = $this->scenario;
         $this->preload();
         if (!$run) return;
-        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
+        $this->fire('test.parsed', new Test($this));
 
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
         $scenario->run();
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
+        $this->fire('test.before', new Test($this));
+        
         try {
             require $this->testfile;
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
-            $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
+            $this->fire('test.fail', new Fail($this, $e));
             throw $e;
         }
-        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+        $this->fire('test.after', new Test($this));
     }
 
     protected function preload()
