@@ -1,16 +1,11 @@
 <?php
-namespace Codeception;
+namespace Codeception\Platform;
 
 use Codeception\Event\Test;
 
-class Extension {
+class Tag extends Extension {
 
     public static $tag;
-
-    static function events()
-    {
-        return array();
-    }
 
     public function before(Test $e)
     {
@@ -32,5 +27,4 @@ class Extension {
         $events = array_merge($events, self::events());
         return $events;
     }
-
 }
