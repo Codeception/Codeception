@@ -36,18 +36,15 @@ class GenerateCept extends Base
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $guy = $suiteconf['class_name'];
-
         $file = sprintf($this->template, $guy);
-
-        if (file_exists($suiteconf['path'].DIRECTORY_SEPARATOR.$filename)) {
-            $output->writeln("<comment>Test $filename already exists</comment>");
-            return;
-        }
-
         $filename = $this->completeSuffix($filename, 'Cept');
         $this->buildPath($suiteconf['path'], $filename);
 
-        file_put_contents($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
+        $res = $this->save($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
+        if (!$res) {
+            $output->writeln("<error>Test $filename already exists</error>");
+            exit;
+        }
         $output->writeln("<info>Test was generated in $filename</info>");
     }
 

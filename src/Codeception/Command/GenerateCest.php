@@ -67,14 +67,13 @@ EOF;
         $filename = $this->completeSuffix($classname, 'Cest');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
-        if (file_exists($filename)) {
+        $tests = sprintf($this->methodTemplate, "shouldBe", $guy, '$I');
+
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, 'class', $class, $tests));
+        if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             exit;
         }
-
-        $tests = sprintf($this->methodTemplate, "shouldBe", $guy, '$I');
-
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, 'class', $class, $tests));
 
         $output->writeln("<info>Cest was created in $filename</info>");
 
