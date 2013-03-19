@@ -27,18 +27,37 @@ class Compiler
 
         $phar->startBuffering();
 
-            $finder = new Finder();
-            $finder->files()
-                    ->ignoreVCS(true)
-                    ->name('*.php')
-                    ->name('*.tpl.dist')
-                    ->name('*.html.dist')
-                    ->in($this->compileDir . '/src')
-            ;
+        $finder = new Finder();
+        $finder->files()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->name('*.tpl.dist')
+            ->name('*.html.dist')
+            ->in($this->compileDir . '/src');
 
-            foreach ($finder as $file) {
-                $this->addFile($phar, $file);
-            }
+        foreach ($finder as $file) {
+            $this->addFile($phar, $file);
+        }
+
+	    $finder = new Finder();
+        $finder
+            ->files()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->name('*.js')
+            ->name('*.css')
+            ->name('*.png')
+            ->name('*.tpl.dist')
+            ->name('*.html.dist')
+            ->exclude('Tests')
+            ->exclude('tests')
+            ->exclude('benchmark')
+            ->exclude('demo')
+            ->in($this->compileDir.'/plugins/frameworks');
+
+        foreach($finder as $file) {
+            $this->addFile($phar, $file);
+        }
 
         $finder = new Finder();
         $finder
@@ -79,7 +98,7 @@ class Compiler
             $phar = $phar->compress(\Phar::NONE);
         }
 
-              
+
 
         unset($phar);
     }

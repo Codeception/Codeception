@@ -108,7 +108,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 	/*
 	 * Create the client connector. Called before each test
 	 */
-	public function createClient()
+	public function _createClient()
 	{
 		$this->client = new \Codeception\Util\Connector\Yii1();
 		$this->client->appPath = $this->config['appPath'];
@@ -121,7 +121,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 
 	public function _before(\Codeception\TestCase $test)
 	{
-		$this->createClient();
+		$this->_createClient();
 	}
 
 	public function _after(\Codeception\TestCase $test)
