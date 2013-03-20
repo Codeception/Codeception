@@ -53,6 +53,17 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $headers[$header];
     }
 
+    public function _getResponseCode()
+    {
+        return $this->session->getStatusCode();
+    }
+
+    public function _sendRequest($url)
+    {
+        $this->session->visit($url);
+        return $this->session->getDriver()->getContent();
+    }
+
     /**
      * Opens the page.
      *

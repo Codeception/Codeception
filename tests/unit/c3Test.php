@@ -16,8 +16,7 @@ class c3Test extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        
-        if (!class_exists('xdebug')) {
+        if (!extension_loaded('xdebug')) {
             $this->markTestSkipped('xdebug extension required for c3test.');
         }
         
