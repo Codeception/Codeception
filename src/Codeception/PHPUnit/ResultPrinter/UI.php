@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 class UI extends \PHPUnit_TextUI_ResultPrinter {
 
     /**
@@ -8,8 +10,8 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
      */
     protected $dispatcher;
 
-    public function __construct(\Symfony\Component\EventDispatcher\EventDispatcher $dispatcher, $options, $out = null) {
-        parent::__construct($out, $options['steps'], $options['colors'], $options['debug']);
+    public function __construct(EventDispatcher $dispatcher, $options, $out = null) {
+        parent::__construct($out, $options['steps'] || $options['debug'], $options['colors']);
         $this->dispatcher = $dispatcher;
     }
 

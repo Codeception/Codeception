@@ -37,6 +37,7 @@ class Test extends \Codeception\TestCase
         $this->scenario = new \Codeception\Scenario($this);
         $guy = $this->guyClass;
         if ($guy) $this->codeGuy = new $guy($this->scenario);
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
         $this->scenario->run();
         $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         $this->_before();

@@ -158,14 +158,20 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function click($link) {
+    public function click($link, $context = null) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link);
+        $el = $this->findClickable($link, $context);
         $el->click();
 
         if ($this->session->getCurrentUrl() != $url) {
             $this->debug('moved to page '. $this->session->getCurrentUrl());
         }
+    }
+
+    public function seeElement($selector)
+    {
+        $el = $this->findEl($selector);
+        $this->assertNotEmpty($el);
     }
 
     /**
@@ -183,7 +189,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
         if (!$el) $el = @$page->find('xpath',$selector);
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link | button | CSS | XPath for '$selector' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
         return $el;
     }
 
@@ -193,9 +199,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
     }
 
-    protected function findClickable($link)
+    protected function findClickable($link, $context = null)
     {
-        $page = $this->session->getPage();
+        $page = $context
+            ? $this->findEl($context)
+            : $this->session->getPage();
+
+        if (!$page) {
+            $this->fail("Context element $context not found");
+        }
         $el = $this->findLinkByContent($link);
         if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
@@ -247,6 +259,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->check();
     }
 
+    public function uncheckOption($option)
+    {
+        $field = $this->findField($option);
+        $field->uncheck();
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -269,11 +287,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function uncheckOption($option)
-    {
-        $field = $this->findField($option);
-        $field->uncheck();
-    }
 
     public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
@@ -301,14 +314,14 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function seeInField($field, $value) {
         $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        $this->assertEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
+        $this->assertEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getAttribute('value'));
     }
 
 
     public function dontSeeInField($field, $value) {
         $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        $this->assertNotEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getValue());
+        $this->assertNotEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getAttribute('value'));
     }
 
     public function grabTextFrom($cssOrXPathOrRegex) {

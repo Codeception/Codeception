@@ -22,7 +22,7 @@ foreach ($modules as $module) {
     $moduleName = basename(substr($module, 0, -4));
     $text = '# ' . $moduleName . " Module\n";
 
-    $text .= "**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName)**";
+    $text .= "**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**\n\n";
 
     $className = '\Codeception\Module\\' . $moduleName;
     $class = new ReflectionClass($className);

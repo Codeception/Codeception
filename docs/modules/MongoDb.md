@@ -1,5 +1,7 @@
 # MongoDb Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
+
+
 Works with MongoDb database.
 
 The most important function of this module is cleaning database before each test.
@@ -64,6 +66,19 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
  * param $collection
  * param array $criteria
  * return \MongoCursor
+
+
+### haveInCollection
+
+
+Inserts data into collection
+
+``` php
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+```
+
+ * param $collection
+ * param array $data
 
 
 ### seeInCollection

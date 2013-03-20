@@ -31,18 +31,18 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  * * cleanup: true - defined queues will be purged before running every test.
  * * queues: [mail, twitter] - queues to cleanup
  *
- * Example:
+ * ### Example
  *
- * modules:
- *      enabled: [AMQP]
- *      config:
- *         AMQP:
- *            host: 'localhost'
- *            port: '5672'
- *            username: 'guest'
- *            password: 'guest'
- *            vhost: '/'
- *            queues: [queue1, queue2]
+ *     modules:
+ *         enabled: [AMQP]
+ *         config:
+ *             AMQP:
+ *                 host: 'localhost'
+ *                 port: '5672'
+ *                 username: 'guest'
+ *                 password: 'guest'
+ *                 vhost: '/'
+ *                 queues: [queue1, queue2]
  *
  * ## Public Properties
  *
@@ -140,7 +140,7 @@ class AMQP extends \Codeception\Module
             : new AMQPMessage($message);
 
         $this->channel->queue_declare($queue);
-        $this->channel->basic_publish(new AMQPMessage($message), '',$queue);
+        $this->channel->basic_publish($message, '',$queue);
     }
 
     /**
@@ -174,7 +174,7 @@ class AMQP extends \Codeception\Module
      * $message = $I->grabMessageFromQueue('queue.emails');
      *
      * @param $queue
-     * @return AMQPQueue
+     * @return AMQPMessage
      */
     public function grabMessageFromQueue($queue)
     {

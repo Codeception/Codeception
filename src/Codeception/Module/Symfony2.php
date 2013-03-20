@@ -17,6 +17,14 @@ use Symfony\Component\Finder\Finder;
  * ## Config
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+* 
+ * ### Example (`functional.suite.yml`)
+ *
+ *     modules: 
+ *        enabled: [Symfony2]
+ *        config:
+ *           Symfony2:
+ *              app_path: 'app/front' 
  *
  * ## Public Properties
  *
@@ -133,7 +141,7 @@ class Symfony2 extends \Codeception\Util\Framework
      * @return mixed
      */
     public function grabServiceFromContainer($service) {
-        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not avaible in container");
+        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not available in container");
         return $this->kernel->getContainer()->get($service);
     }
 

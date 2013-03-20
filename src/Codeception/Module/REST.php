@@ -26,6 +26,15 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * * url *optional* - the url of api
  * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
  *
+ * ### Example
+ *
+ *     modules: 
+ *        enabled: [REST]
+ *        config:
+ *           REST:
+ *              url: 'http://serviceapp/api/v1/' 
+ *              timeout: 90
+ *
  * ## Public Properties
  *
  * * headers - array of headers going to be sent.
@@ -43,7 +52,7 @@ class REST extends \Codeception\Module
     );
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
+     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
     public $is_functional = false;
@@ -95,10 +104,12 @@ class REST extends \Codeception\Module
             $timeout = 0;
         }
 
-        $clientConfig = $this->client->getClient()->getConfig();
-        $curlOptions = $clientConfig->get('curl.options');
-        $curlOptions[CURLOPT_TIMEOUT] = $timeout;
-        $clientConfig->set('curl.options', $curlOptions);
+        if (method_exists($this->client, 'getClient')) {
+            $clientConfig = $this->client->getClient()->getConfig();
+            $curlOptions = $clientConfig->get('curl.options');
+            $curlOptions[CURLOPT_TIMEOUT] = $timeout;
+            $clientConfig->set('curl.options', $curlOptions);
+        }
     }
 
     /**
@@ -468,7 +479,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->$response);
+        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
     }
 
     /**
@@ -478,6 +489,10 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($num)
     {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+        } else {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        }
     }
 }

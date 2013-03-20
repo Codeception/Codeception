@@ -1,5 +1,7 @@
 # AMQP Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/AMQP)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/AMQP.php)**
+
+
 This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
 Use it to cleanup the queue between tests.
@@ -21,18 +23,18 @@ Use it to cleanup the queue between tests.
 * cleanup: true - defined queues will be purged before running every test.
 * queues: [mail, twitter] - queues to cleanup
 
-Example:
+### Example
 
-modules:
-     enabled: [AMQP]
-     config:
-        AMQP:
-           host: 'localhost'
-           port: '5672'
-           username: 'guest'
-           password: 'guest'
-           vhost: '/'
-           queues: [queue1, queue2]
+    modules:
+        enabled: [AMQP]
+        config:
+            AMQP:
+                host: 'localhost'
+                port: '5672'
+                username: 'guest'
+                password: 'guest'
+                vhost: '/'
+                queues: [queue1, queue2]
 
 ## Public Properties
 
@@ -54,7 +56,7 @@ Takes last message from queue.
 $message = $I->grabMessageFromQueue('queue.emails');
 
  * param $queue
- * return AMQPQueue
+ * return AMQPMessage
 
 
 ### pushToExchange

@@ -1,0 +1,225 @@
+[2013-03-06 00:29:55] Codeception.INFO: PASSED [] []
+[2013-03-06 00:30:13] Codeception.ALERT: Link | button | CSS | XPath for 'Confirm' not found' [] []
+[2013-03-06 00:30:13] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:30:13] Codeception.INFO: PASSED [] []
+[2013-03-06 00:30:29] Codeception.ALERT: Link | button | CSS | XPath for 'Confirm' not found' [] []
+[2013-03-06 00:30:29] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:30:29] Codeception.INFO: PASSED [] []
+[2013-03-06 00:30:47] Codeception.ALERT: Link | button | CSS | XPath for 'Alert' not found' [] []
+[2013-03-06 00:30:47] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:30:47] Codeception.INFO: PASSED [] []
+[2013-03-06 00:31:06] Codeception.ALERT: Element not found with xpath, //html
+
+Unable to locate element: {"method":"xpath","selector":"//html"}
+Command duration or timeout: 15 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 9545168f-5aeb-4201-8830-9fd6522b8d0b
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:31:06] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:31:06] Codeception.INFO: PASSED [] []
+[2013-03-06 00:31:25] Codeception.ALERT: Element not found with xpath, //html
+
+Unable to locate element: {"method":"xpath","selector":"//html"}
+Command duration or timeout: 15 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: b4219044-671a-410a-bda7-898a449f0862
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:31:25] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:31:25] Codeception.INFO: PASSED [] []
+[2013-03-06 00:31:41] Codeception.INFO: PASSED [] []
+[2013-03-06 00:31:58] Codeception.ALERT: Failed asserting that an array is not empty. [] []
+[2013-03-06 00:31:58] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:31:58] Codeception.INFO: PASSED [] []
+[2013-03-06 00:32:16] Codeception.ALERT: The given selector //html/More info is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/More info because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous8618124050389104452webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 129 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 07633f93-a275-4d51-b17f-2b74b7faecef
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:32:16] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:32:16] Codeception.INFO: PASSED [] []
+[2013-03-06 00:32:34] Codeception.ALERT: The given selector //html/#checkin is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/#checkin because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous2934003790958359890webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 25 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: d80e12d0-6cce-440e-8d1d-c2a2cb386b6c
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:32:34] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:32:34] Codeception.INFO: PASSED [] []
+[2013-03-06 00:32:51] Codeception.ALERT: The given selector //html/I Agree is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/I Agree because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous4910806659533635196webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 31 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: aa9ad226-dae2-4f34-8e94-aaecae4ae5b9
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:32:51] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:32:51] Codeception.INFO: PASSED [] []
+[2013-03-06 00:33:08] Codeception.ALERT: The given selector //html/form select[name=age] is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/form select[name=age] because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous2863891934076979584webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 16 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: fa5ab308-1662-43ae-ba08-1470261c5954
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:33:08] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:33:08] Codeception.INFO: PASSED [] []
+[2013-03-06 00:33:26] Codeception.ALERT: The given selector //html/Select your age is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/Select your age because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous957783724665819378webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 15 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 44c57ef5-fabb-449c-9fd3-1d3fac4952e2
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:33:26] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:33:26] Codeception.INFO: PASSED [] []
+[2013-03-06 00:33:43] Codeception.ALERT: Link | button | CSS | XPath for 'Submit' not found' [] []
+[2013-03-06 00:33:43] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:33:43] Codeception.INFO: PASSED [] []
+[2013-03-06 00:33:59] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:33:59] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:33:59] Codeception.INFO: PASSED [] []
+[2013-03-06 00:34:16] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:34:16] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:34:16] Codeception.INFO: PASSED [] []
+[2013-03-06 00:34:33] Codeception.ALERT: The given selector //html/#name is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/#name because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous2717414508940525145webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 42 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: b9cb2986-0af0-4e15-8601-fc56014eb568
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:34:33] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:34:33] Codeception.INFO: PASSED [] []
+[2013-03-06 00:34:49] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:34:49] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:34:49] Codeception.INFO: PASSED [] []
+[2013-03-06 00:35:06] Codeception.ALERT: The given selector //html/#avatar is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/#avatar because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous3414868077802161660webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 41 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 1fc0dd6d-68b4-4307-8fd5-1701df9f8bde
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:35:06] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:35:06] Codeception.INFO: PASSED [] []
+[2013-03-06 00:35:24] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:35:24] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:35:24] Codeception.INFO: PASSED [] []
+[2013-03-06 00:35:43] Codeception.ALERT: The given selector //html/#checkin is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/#checkin because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous6125403600137724506webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 13 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 479d091e-07b3-4858-81b0-3a718fad08db
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:35:43] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:35:43] Codeception.INFO: PASSED [] []
+[2013-03-06 00:35:52] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:35:52] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:35:52] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:02] Codeception.ALERT: Element not found with xpath, //html
+
+Unable to locate element: {"method":"xpath","selector":"//html"}
+Command duration or timeout: 17 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 7f19969c-3d23-4faf-a205-7dc3d81ee502
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:36:02] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:36:02] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:12] Codeception.ALERT: 'p' selector For more details look for page snapshot in the log directory
+Failed asserting that '' contains "Текст". [] []
+[2013-03-06 00:36:12] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:36:12] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:22] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:36:22] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:36:22] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:32] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:36:32] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:36:32] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:41] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:36:41] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:36:41] Codeception.INFO: PASSED [] []
+[2013-03-06 00:36:51] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:36:51] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:36:51] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:01] Codeception.ALERT: Field matching id|name|label|value or css or xpath selector does not exist [] []
+[2013-03-06 00:37:01] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:37:01] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:11] Codeception.ALERT: Element not found with xpath, //html
+
+Unable to locate element: {"method":"xpath","selector":"//html"}
+Command duration or timeout: 21 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: bc9c65d6-4f8e-4efe-ac42-0191cf27f6fe
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:37:11] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:37:11] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:22] Codeception.ALERT: Failed asserting that an array is not empty. [] []
+[2013-03-06 00:37:22] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:37:22] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:32] Codeception.ALERT: Element that matches 'h1' not found [] []
+[2013-03-06 00:37:32] Codeception.INFO: # FAILED # [] []
+[2013-03-06 00:37:32] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:43] Codeception.ALERT: The given selector //html/#action is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/#action because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous7909107516579005642webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 28 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 804aca67-791d-4b03-959f-2fcad98679c2
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:37:43] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:37:43] Codeception.INFO: PASSED [] []
+[2013-03-06 00:37:53] Codeception.ALERT: The given selector //html/Test Link is either invalid or does not result in a WebElement. The following error occurred:
+InvalidSelectorError: Unable to locate an element with the xpath expression //html/Test Link because of the following error:
+[Exception... "The expression is not a legal expression."  code: "12" nsresult: "0x805b0033 (SyntaxError)"  location: "file:///tmp/anonymous2918789177194329392webdriver-profile/extensions/fxdriver@googlecode.com/components/driver_component.js Line: 5696"]
+Command duration or timeout: 14 milliseconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/invalid_selector_exception.html
+Build info: version: '2.31.0', revision: '1bd294d', time: '2013-02-27 20:52:59'
+System info: os.name: 'Linux', os.arch: 'i386', os.version: '3.5.0-25-generic', java.version: '1.7.0_15'
+Session ID: 3c53966d-dc56-414f-823e-aa70d9aeb0cd
+Driver info: org.openqa.selenium.firefox.FirefoxDriver
+Capabilities [{platform=LINUX, databaseEnabled=true, cssSelectorsEnabled=true, javascriptEnabled=true, acceptSslCerts=true, handlesAlerts=true, browserName=firefox, browserConnectionEnabled=true, nativeEvents=false, webStorageEnabled=true, rotatable=false, locationContextEnabled=true, applicationCacheEnabled=true, takesScreenshot=true, version=19.0}] [] []
+[2013-03-06 00:37:53] Codeception.INFO: # ERROR # [] []
+[2013-03-06 00:37:53] Codeception.INFO: PASSED [] []

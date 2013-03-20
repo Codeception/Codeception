@@ -37,8 +37,9 @@ EOF;
     {
         $this->setDefinition(array(
 
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-            new \Symfony\Component\Console\Input\InputArgument('class', InputArgument::REQUIRED, 'class name'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
+            new InputArgument('class', InputArgument::REQUIRED, 'class name'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
@@ -52,7 +53,7 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $classname = $this->getClassName($class);

@@ -14,15 +14,15 @@ class SuiteManager {
     /**
      * @var \PHPUnit_Framework_TestSuite
      */
-	protected $suite = null;
+    protected $suite = null;
 
     /**
      * @var null|\Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher = null;
 
-	protected $tests = array();
-	protected $debug = false;
+    protected $tests = array();
+    protected $debug = false;
     protected $path = '';
     protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
@@ -35,7 +35,8 @@ class SuiteManager {
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'colors' => true,
         'memory_limit' => '1024M',
-        'path' => ''
+        'path' => '',
+        'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
     );
 
     protected $settings = array();
@@ -88,7 +89,7 @@ class SuiteManager {
     }
 
     public function addCept($file)
-   	{
+    {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
@@ -97,9 +98,7 @@ class SuiteManager {
             'file' => $file,
    	        'bootstrap' => $this->settings['bootstrap']
         )));
-   	}
-
-
+    }
 
     public function addCest($file) {
         $name = $this->relativeName($file);
@@ -146,7 +145,6 @@ class SuiteManager {
         return $name = str_replace($this->path, '', $file);
     }
 
-    
     public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
 
         $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));

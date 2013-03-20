@@ -141,6 +141,22 @@ class MongoDb extends \Codeception\Module
     }
 
     /**
+     * Inserts data into collection
+     *
+     * ``` php
+     * $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+     * ```
+     *
+     * @param $collection
+     * @param array $data
+     */
+    public function haveInCollection($collection, array $data)
+    {
+        $collection = $this->driver->getDbh()->selectCollection($collection);
+        $collection->insert($data);
+    }
+
+    /**
      * Checks if collection contains an item.
      *
      * ``` php

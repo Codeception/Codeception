@@ -86,7 +86,7 @@ class WebDebug extends \Codeception\Module
         try {
             $this->module->_saveScreenshot($filename.'.png');
         } catch (\Exception $e) {
-            $this->debugSection('Warning', "Screenshot coudn't be saved. HTML dump will be stored instead. ");
+            $this->debugSection('Warning', "Screenshot couldn't be saved. HTML dump will be stored instead. ");
             $this->debug('Screenshot saving error:'. $e->getMessage());
         }
 

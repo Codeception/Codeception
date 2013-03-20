@@ -3,10 +3,6 @@ namespace Codeception;
 
 abstract class Step
 {
-    const ACTION    = 'Action';
-    const COMMENT   = 'Comment';
-    const ASSERTION = 'Assertion';
-
     /**
      * @var    string
      */
@@ -17,6 +13,9 @@ abstract class Step
      */
     protected $arguments;
 
+    protected $debugOutput;
+
+
     public $executed = false;
 
     public function __construct($action, array $arguments)
@@ -25,22 +24,18 @@ abstract class Step
         $this->arguments = $arguments;
     }
 
-    /**
-     * Returns this step's action.
-     *
-     * @return string
-     */
+    public function pullDebugOutput()
+    {
+        $output = $this->debugOutput;
+        $this->debugOutput = null;
+        return $output;
+    }
+
     public function getAction()
     {
         return $this->action;
     }
 
-    /**
-     * Returns this step's arguments.
-     *
-     * @param  boolean $asString
-     * @return array|string
-     */
     public function getArguments($asString = FALSE)
     {
         if (!$asString) {
@@ -66,16 +61,15 @@ abstract class Step
                 // if (settype($argument, 'string') === false) throw new \InvalidArgumentException('Argument can\'t be converted to string or serialized');
             }
             if (defined('JSON_UNESCAPED_UNICODE')) {
-                return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE),'[]'));
+                return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
             }
-            return stripcslashes(trim(json_encode($arguments),'[]'));
-
+            return stripcslashes(trim(json_encode($arguments), '[]'));
         }
     }
 
     protected function formatClassName($classname)
     {
-        return trim($classname,"\\");
+        return trim($classname, "\\");
     }
 
     abstract public function getName();
@@ -87,26 +81,29 @@ abstract class Step
 
     public function getHumanizedAction()
     {
-        return $this->humanize($this->getAction()). ' ' . $this->getHumanizedArguments();
+        return $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
     }
 
-    public function getHtmlAction() {
+    public function getHtmlAction()
+    {
         $args = $this->getHumanizedArguments();
-        $args = preg_replace('~\$(.*?)\s~','$<span style="color: #3C3C89; font-weight: bold;">$1</span>', $args);
-        return $this->humanize($this->getAction()). ' <span style="color: #732E81;">'.$args.'</span>';
+        $args = preg_replace('~\$(.*?)\s~', '$<span style="color: #3C3C89; font-weight: bold;">$1</span>', $args);
+        return $this->humanize($this->getAction()) . ' <span style="color: #732E81;">' . $args . '</span>';
     }
 
-    public function getHumanizedActionWithoutArguments() {
+    public function getHumanizedActionWithoutArguments()
+    {
         return $this->humanize($this->getAction());
     }
-    
-    public function getHumanizedArguments() {
+
+    public function getHumanizedArguments()
+    {
         return $this->clean($this->getArguments(true));
     }
 
     protected function clean($text)
     {
-        return str_replace('\/','',$text);
+        return str_replace('\/', '', $text);
     }
 
     protected function humanize($text)
@@ -116,6 +113,19 @@ abstract class Step
         $text = preg_replace('~\bdont\b~', 'don\'t', $text);
         return strtolower($text);
     }
-    
+
+    public function run()
+    {
+        $this->executed = true;
+        $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$this->action]];
+
+        if (is_callable(array($activeModule, $this->action))) {
+            $result = call_user_func_array(array($activeModule, $this->action), $this->arguments);
+        } else {
+            throw new \RuntimeException("Action can't be called");
+        }
+        $this->debugOutput = $activeModule->_getDebugOutput();
+        return $result;
+    }
 
 }

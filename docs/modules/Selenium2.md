@@ -1,5 +1,7 @@
 # Selenium2 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Selenium2.php)**
+
+
 Uses Mink to manipulate Selenium2 WebDriver
 
 Note that all method take CSS selectors to fetch elements.
@@ -27,10 +29,23 @@ Don't forget to turn on Db repopulation if you are using database.
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
 * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+* capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+
+### Example (`acceptance.suite.yml`)
+
+    modules: 
+       enabled: [Selenium2]
+       config:
+          Selenium2:
+             url: 'http://localhost/' 
+             browser: firefox
+             capabilities:
+                 unexpectedAlertBehaviour: 'accept'
 
 ## Public Properties
 
 * session - contains Mink Session
+* webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
 
 ## Actions
 
@@ -102,7 +117,7 @@ $I->cancelPopup();
 
 
 Ticks a checkbox.
-For radio buttons use `selectOption` method.
+For radio buttons use the `click` method.
 
 Example:
 
@@ -118,28 +133,9 @@ $I->checkOption('#agree');
 ### click
 
 
-Perform a click on link or button.
-Link or button are found by their names or CSS selector.
-Submits a form if button is a submit type.
+Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
+Link text or css selector can be passed.
 
-If link is an image it's found by alt attribute value of image.
-If button is image button is found by it's value
-If link or button can't be found by name they are searched by CSS selector.
-
-Examples:
-
-``` php
-<?php
-// simple link
-$I->click('Logout');
-// button of form
-$I->click('Submit');
-// CSS button
-$I->click('#form input[type=submit]');
-// XPath
-$I->click('//form/*[@type=submit]')
-?>
-```
  * param $link
 
 
@@ -192,11 +188,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -462,11 +459,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
@@ -516,7 +515,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ### selectOption
 
 
-Selects an option in select tag or in radio button group.
+Selects an option in select tag.
 
 Example:
 
@@ -598,15 +597,15 @@ $I->uncheckOption('#notify');
 ### wait
 
 
-Wait for x miliseconds
+Wait for x milliseconds
 
- * param $miliseconds
+ * param $milliseconds
 
 
 ### waitForJS
 
 
-Waits for x miliseconds or until JS condition turns true.
+Waits for x milliseconds or until JS condition turns true.
 
- * param $miliseconds
+ * param $milliseconds
  * param $jsCondition

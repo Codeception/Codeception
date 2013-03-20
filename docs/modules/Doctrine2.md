@@ -1,5 +1,7 @@
 # Doctrine2 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
+
+
 Allows integration and testing for projects with Doctrine2 ORM.
 
 Doctrine2 uses EntityManager to perform all database operations.
@@ -21,8 +23,16 @@ It can be done in bootstrap file, by setting static $em property:
 
 ## Config
 
-* auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
+* auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
 * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+
+ ### Example (`functional.suite.yml`)
+
+     modules:
+        enabled: [Doctrine2]
+        config:
+           Doctrine2:
+              cleanup: false
 
 ## Actions
 
@@ -87,6 +97,12 @@ This creates a stub class for Entity\User repository with redefined method findB
  * param array $methods
 
 
+### haveInRepository
+
+
+Saves data in repository
+
+
 ### persistEntity
 
 
@@ -96,6 +112,7 @@ Example:
 
 ``` php
 <?php
+$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
 $I->persistEntity($user, array('name' => 'Miles'));
 ```
 
