@@ -1,5 +1,7 @@
 # ZombieJS Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS.php)**
+
+
 Uses Mink to manipulate Zombie.js headless browser (http://zombie.labnotes.org/)
 
 Note, all methods take CSS selectors to fetch elements.
@@ -36,12 +38,23 @@ Don't forget to turn on Db repopulation if you are using database.
 
 ## Configuration
 
+* url  *required*- url of your site
 * host - simply defines the host on which zombie.js will be started. It’s **127.0.0.1** by default.
 * port - defines a zombie.js port. Default one is **8124**.
 * node_bin - defines full path to node.js binary. Default one is just **node**
 * script - defines a node.js script to start zombie.js server. If you pass a **null** the default script will be used. Use this option carefully!
 * threshold - amount of milliseconds (1/1000 of second) for the process to wait  (as of \Behat\Mink\Driver\Zombie\Server)
 * autostart - whether zombie.js should be started automatically. Defaults to **true**
+
+### Example (`acceptance.suite.yml`)
+
+    modules:
+       enabled: [ZombieJS]
+       config:
+          ZombieJS:
+             url: 'http://localhost/'
+             host: '127.0.0.1'
+             port: 8124
 
 ## Public Properties
 
@@ -179,11 +192,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -440,11 +454,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
@@ -513,15 +529,15 @@ $I->uncheckOption('#notify');
 ### wait
 
 
-Wait for x miliseconds
+Wait for x milliseconds
 
- * param $miliseconds
+ * param $milliseconds
 
 
 ### waitForJS
 
 
-Waits for x miliseconds or until JS condition turns true.
+Waits for x milliseconds or until JS condition turns true.
 
- * param $miliseconds
+ * param $milliseconds
  * param $jsCondition

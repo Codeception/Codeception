@@ -23,13 +23,19 @@ class UserCest {
 ?>
 ```
 
+Before proceeding, please make sure you executed `build` command that creates a `CodeGuy` class with methods from [Unit](http://codeception.com/docs/modules/Unit) module.
+
+```
+php codecept.phar build
+```
+
 Let's create first test with `generate:cest` command:
 
 ```bash
 $ php codecept.phar generate:cest unit Post
 ```
 
-At first we need to define with `$class` preoperty the class which is being actually tested.
+At first we need to define with `$class` property the class which is being actually tested.
 
 ```php
 <?php
@@ -47,7 +53,7 @@ class PostCest {
 
 This will create an empty Cest file for us.
 
-There are many cases whre we test only one method of a class. As we discovered, it's quite easy to define the class and method you are going to test. We take the `$class` parameter of the Cest class, and the method's name as a target method.
+There are many cases where we test only one method of a class. As we discovered, it's quite easy to define the class and method you are going to test. We take the `$class` parameter of the Cest class, and the method's name as a target method.
 
 ```php
 <?php
@@ -170,7 +176,7 @@ class ControllerCest {
 
 #### Is The Test Running?
 
-Scenario-based test is run in 2 phases: analisys and execution. Whenever you want to add any custom PHP code (which doesn't use the $I object) you probably want it to be xecuted in the runtime. Thus, you should always perform the check if the test is running:
+Scenario-based test is run in 2 phases: analysis and execution. Whenever you want to add any custom PHP code (which doesn't use the $I object) you probably want it to be executed in the runtime. Thus, you should always perform the check if the test is running:
 
 ```php
 <?php
@@ -183,7 +189,7 @@ function save(\CodeGuy $I, \Codeception\Scenario $scenario)
 ?>
 ```
 
-In case you want to execute line on analisys step (to preload bootstrap values), you can use the `$scenario->preload()` method.
+In case you want to execute line on analysis step (to preload bootstrap values), you can use the `$scenario->preload()` method.
 
 #### Stubs
 

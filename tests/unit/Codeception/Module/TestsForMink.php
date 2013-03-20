@@ -73,6 +73,17 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/info');
     }
 
+    public function testClickOnContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('More info','p');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('More info','body>p');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testCheckboxByCss()
     {
         $this->module->amOnPage('/form/checkbox');
@@ -210,6 +221,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
     }
 
+    public function testSeeInFieldForEmptyInput()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_input','');
+    }
+
     public function testSeeInFieldOnTextarea()
     {
         $this->module->amOnPage('/form/textarea');
@@ -217,6 +234,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('textarea','sunrise');
         $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
     }
+
+    public function testSeeInFieldForEmptyTextarea()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','');
+    }
+
 
     public function testDontSeeInFieldOnInput()
     {
@@ -276,5 +300,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/');
         $this->module->click('Test');
         $this->module->seeInCurrentUrl('/form/hidden');
+    }
+
+    public function testSeeElementOnPage()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeElement('input[name=name]');
+        $this->module->seeElement('descendant-or-self::input[@id="name"]');
     }
 }

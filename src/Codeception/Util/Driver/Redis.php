@@ -96,7 +96,7 @@ class Redis
                 return $res;
                 break;
             default :
-                throw new RedisException ('Unknown responce line: ' . $s);
+                throw new RedisException ('Unknown response line: ' . $s);
                 break;
         }
     }
@@ -410,7 +410,7 @@ class Redis
     }
 
     /**
-     * rename the old key in the new one, destroing the newname key if it already exists if if $preserve - if the dst does not already exist
+     * rename the old key in the new one, destroying the newname key if it already exists if if $preserve - if the dst does not already exist
      *
      * Time complexity: O(1)
      * Atomically renames the key oldkey to newkey. If the source and destination name are the same an error is returned. If newkey already exists it is overwritten.
@@ -888,13 +888,13 @@ class Redis
      * Change the replication settings
      *
      * The SLAVEOF command can change the replication settings of a slave on the fly.
-     * If a Redis server is arleady acting as slave, the command SLAVEOF NO ONE will turn
-     * off the replicaiton turning the Redis server into a MASTER. In the proper form SLAVEOF
+     * If a Redis server is already acting as slave, the command SLAVEOF NO ONE will turn
+     * off the replication turning the Redis server into a MASTER. In the proper form SLAVEOF
      * hostname port will make the server a slave of the specific server listening at the
      * specified hostname and port.
      *
      * If a server is already a slave of some master, SLAVEOF hostname port will stop
-     * the replication against the old server and start the synchrnonization against the
+     * the replication against the old server and start the synchronization against the
      *  new one discarding the old dataset.
      *
      * The form SLAVEOF no one will stop replication turning the server into a MASTER

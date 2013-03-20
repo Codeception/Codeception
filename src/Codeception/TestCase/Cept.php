@@ -35,33 +35,10 @@ class Cept extends \Codeception\TestCase
         return $this->name;
     }
 
-
     public function getScenarioText($format = 'text')
     {
-        switch (strtolower($format))
-        {
-            case 'html':
-                $text = '';
-                foreach($this->scenario->getSteps() as $step) {
-                    /** @var Step $step */
-                    if ($step->getName() !== Step::COMMENT) {
-                        $text .= 'I ' . $step->getHtmlAction() . '<br/>';
-                    } else {
-                        $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
-                    }
-                }
-                $text = str_replace(array('((', '))'), array('...', ''), $text);
-                $text = "<h3>" . strtoupper('I want to ' . $this->scenario->getFeature()) . "</h3>" . $text;
-            break;
-
-            default:
-                $text = implode("\r\n", $this->scenario->getSteps());
-                $text = str_replace(array('((', '))'), array('...', ''), $text);
-                $text = strtoupper('I want to ' . $this->scenario->getFeature()) . "\r\n\r\n" . $text;
-            break;
-        }
-
-        return $text;
+        if ($format == 'html') return $this->scenario->getHtml();
+        return $this->scenario->getText();
     }
 
     public function getFeature() {
@@ -76,15 +53,14 @@ class Cept extends \Codeception\TestCase
     public function testCodecept($run = true)
     {
         $scenario = $this->scenario;
-
         $this->preload();
         if (!$run) return;
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
 
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         $scenario->run();
-
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         try {
             require $this->testfile;
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {

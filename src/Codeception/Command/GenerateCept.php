@@ -16,9 +16,9 @@ class GenerateCept extends Base
     protected function configure()
     {
         $this->setDefinition(array(
-
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
-            new \Symfony\Component\Console\Input\InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
+            new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
@@ -32,7 +32,7 @@ class GenerateCept extends Base
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('test');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $guy = $suiteconf['class_name'];

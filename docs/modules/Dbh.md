@@ -1,5 +1,7 @@
 # Dbh Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Dbh)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Dbh.php)**
+
+
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
 Be default it will cover all database queries into transaction and rollback it afterwards.
 The database should support nested transactions, in order to make cleanup work as expected.
@@ -32,6 +34,14 @@ This module despite of it's stability may act unstable because of transactions i
 ### Configuration
 
 * cleanup: true - enable cleanups by covering all queries inside transaction.
+
+### Example
+
+    modules: 
+       enabled: [Dbh]
+       config:
+          Dbh:
+             cleanup: false
 
 
 ## Actions

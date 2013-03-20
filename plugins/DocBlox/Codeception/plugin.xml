@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <author>Michael Bodnarchuk "Davert"</author>
     <email>codeception@davert.mail.ua</email>
-    <description>Adds documenation generated from Codeception tests</description>
+    <description>Adds documentation generated from Codeception tests</description>
     <website>http://www.codeception.com</website>
     <class-prefix>DocBlox_Plugin_Codeception</class-prefix>
     <listener>Listener</listener>

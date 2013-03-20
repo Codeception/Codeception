@@ -151,7 +151,7 @@ For `dontSeeClassExist`, the `assertFalse` will be called.
 
 ### Resolving Collisions
 
-What happens if you have two modules which conatins the same named actions?
+What happens if you have two modules which contains the same named actions?
 Codeception allows you to override actions by changing the module order.
 The action from the second module will be loaded and the action from the first will be ignored.
 The order of the modules can be defined in the suite config.
@@ -175,7 +175,7 @@ function reconnectToDatabase() {
 ?>
 ```
 By using the `getModule` function you get access to all of the public methods and properties of the requested module.
-The dbh property was defined as public specificallty to be available to other modules.
+The dbh property was defined as public specifically to be available to other modules.
 
 That technique may be also useful if you need to perform a sequence of actions taken from other modules.
 

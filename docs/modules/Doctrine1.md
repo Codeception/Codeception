@@ -1,5 +1,7 @@
 # Doctrine1 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
+
+
 Performs DB operations with Doctrine ORM 1.x
 
 Uses active Doctrine connection. If none can be found will fail.

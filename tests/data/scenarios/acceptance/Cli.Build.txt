@@ -1,7 +1,7 @@
 I WANT TO TEST BUILD COMMAND
 
 I run shell commmand "php codecept build"
-I see in shell output "generated sucessfully"
+I see in shell output "generated successfully"
 I see file found ["TestGuy.php","tests/functional"]
 I see file found ["CodeGuy.php","tests/unit"]
 I see file found ["CliGuy.php","tests/acceptance"]

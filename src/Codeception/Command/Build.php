@@ -59,14 +59,15 @@ EOF;
     protected function configure()
     {
         $this->setDefinition(array(
-            new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Don\'t ask for rebuild')
+            new InputOption('silent', '', InputOption::VALUE_NONE, 'Don\'t ask for rebuild'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
         $suites = \Codeception\Configuration::suites();
 
         foreach ($suites as $suite) {
@@ -174,7 +175,7 @@ EOF;
 	                            implode("\n\n ", $code));
 
             file_put_contents($file = $settings['path'].$settings['class_name'].'.php', $contents);
-            $output->writeln("$file generated sucessfully. $methodCounter methods added");
+            $output->writeln("$file generated successfully. $methodCounter methods added");
         }
     }
 }

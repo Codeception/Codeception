@@ -41,11 +41,12 @@ class Cest extends \Codeception\TestCase\Cept
 
         // preload everything
         $this->executeTestMethod($I);
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
 
         if (!$run) return;
+        $this->scenario->run();
         $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
 
-        $this->scenario->run();
 
         if ($this->getCoveredMethod()) {
             $I->testMethod($this->signature);

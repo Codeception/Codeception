@@ -1,9 +1,11 @@
 # Symfony1 Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony1)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony1.php)**
+
+
 Module that interacts with Symfony 1.4 applications.
 
 Replaces functional testing framework from symfony. Authorization features uses Doctrine and sfDoctrineGuardPlugin.
-Uses native symfony connections and test classes. Provides additional invormations on every actions.
+Uses native symfony connections and test classes. Provides additional informations on every actions.
 
 If test fails stores last shown page in 'log' dir.
 

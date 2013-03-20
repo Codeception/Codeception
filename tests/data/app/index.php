@@ -16,7 +16,7 @@
         '/' => 'index',
         '/info' => 'info',
         '/login' => 'login',
-        '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|empty)(#)?' => 'form'
+        '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|empty|popup)(#)?' => 'form'
     );
 
     glue::stick($urls);

@@ -1,5 +1,7 @@
 # Redis Module
-**For additional reference,, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis.php)**
+
+
 Works with Redis database.
 
 Cleans up Redis database after each run.
