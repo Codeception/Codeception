@@ -4,7 +4,7 @@
 
 This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
 
- The following configurations are available for session:
+The following configurations are available for this module:
 <ul>
 <li>appPath - full path to the application, include index.php</li>
 <li>url - full url to the index.php entry script</li>
@@ -39,7 +39,12 @@ modules:
             url: 'http://localhost/path/to/index.php'
 </pre>
 
-You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web) on the codeception github repo.
+You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web), this component will be
+imported when you include Yii1 module. There is also an alias "codeceptionsrc" available in Yii that points to the
+codeception source directory, you can use it as always:
+<pre>
+Yii::getPathOfAlias('codeceptionsrc');
+</pre>
 This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
 modify it to be extended from your custom http-request component.
 

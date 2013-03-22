@@ -29,6 +29,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
 * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+* capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
 ### Example (`acceptance.suite.yml`)
 
@@ -38,10 +39,13 @@ Don't forget to turn on Db repopulation if you are using database.
           Selenium2:
              url: 'http://localhost/' 
              browser: firefox
+             capabilities:
+                 unexpectedAlertBehaviour: 'accept'
 
 ## Public Properties
 
 * session - contains Mink Session
+* webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
 
 ## Actions
 
@@ -113,7 +117,7 @@ $I->cancelPopup();
 
 
 Ticks a checkbox.
-For radio buttons use `selectOption` method.
+For radio buttons use the `click` method.
 
 Example:
 
@@ -438,7 +442,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 Checks element visibility.
 Fails if element exists but is invisible to user.
-Either CSS or XPath can be used.
+Eiter CSS or XPath can be used.
 
  * param $selector
 
@@ -511,7 +515,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ### selectOption
 
 
-Selects an option in select tag or in radio button group.
+Selects an option in select tag.
 
 Example:
 

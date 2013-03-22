@@ -97,6 +97,12 @@ This creates a stub class for Entity\User repository with redefined method findB
  * param array $methods
 
 
+### haveInRepository
+
+
+Saves data in repository
+
+
 ### persistEntity
 
 
@@ -106,6 +112,7 @@ Example:
 
 ``` php
 <?php
+$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
 $I->persistEntity($user, array('name' => 'Miles'));
 ```
 

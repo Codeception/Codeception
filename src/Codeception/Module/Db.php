@@ -98,6 +98,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
      * @var \Codeception\Util\Driver\Db
      */
     public $driver;
+    protected $insertedIds = array();
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
@@ -136,6 +137,8 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
+        } else {
+            $this->removeInserted();
         }
         parent::_before($test);
     }
@@ -144,6 +147,17 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     {
         $this->populated = false;
         parent::_after($test);
+    }
+
+    protected function removeInserted()
+    {
+        foreach ($this->insertedIds as $insertId) {
+            try {
+            $this->driver->deleteQuery($insertId['table'], $insertId['id']);
+            } catch (\Exception $e) {
+                $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
+            }
+        }
     }
 
     protected function cleanup()
@@ -179,6 +193,34 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
                 $e->getMessage() . "\nSQL query being executed: " . $this->sql
             );
         }
+    }
+
+    /**
+     * Inserts SQL record into database
+     *
+     * ``` php
+     * <?php
+     * $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param $table
+     * @param array $data
+     */
+    public function haveInDatabase($table, array $data)
+    {
+        $query = $this->driver->insert($table, $data);
+        $this->debugSection('Query', $query);
+
+        $sth = $this->driver->getDbh()->prepare($query);
+        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
+
+        foreach ($data as $k => $val) {
+            $sth->bindParam($k+1, $val);
+        }
+        $res = $sth->execute();
+        if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
+        $this->insertedIds[] = array('table' => $table, 'id' => $this->driver->getDbh()->lastInsertId());
     }
 
     public function seeInDatabase($table, $criteria = array())

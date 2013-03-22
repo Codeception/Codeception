@@ -422,7 +422,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 Checks element visibility.
 Fails if element exists but is invisible to user.
-Either CSS or XPath can be used.
+Eiter CSS or XPath can be used.
 
  * param $selector
 

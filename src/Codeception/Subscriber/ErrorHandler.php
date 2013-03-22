@@ -23,6 +23,7 @@ class ErrorHandler implements EventSubscriberInterface
             $this->errorLevel = eval("return {$settings['error_level']};");
         }
         error_reporting($this->errorLevel);
+        set_exception_handler(array(__CLASS__, 'errorHandler'));
         set_error_handler(array(__CLASS__, 'errorHandler'));
         register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
     }
@@ -46,6 +47,8 @@ class ErrorHandler implements EventSubscriberInterface
         $error = error_get_last();
         if (!is_array($error)) return;
         if (error_reporting() === 0) return;
+        // not fatal
+        if ($error['type'] > 1) return;
 
         echo "\n\n\nFATAL ERROR. TESTS NOT FINISHED.\n";
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
