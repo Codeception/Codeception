@@ -45,7 +45,7 @@ class Configuration
         }
 
         if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth(0);
+            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth('< 1');
             $config['suites'] = array();
             foreach ($suites as $suite) {
                 preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
