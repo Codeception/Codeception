@@ -79,6 +79,15 @@ class Selenium2Test extends TestsForMink
         // In Selenium you can't select option by it's value
     }
 
+    public function testClickEventOnCheckbox()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->uncheckOption('#checkin');
+        $this->module->dontSee('ticked','#notice');
+        $this->module->checkOption('#checkin');
+        $this->module->see('ticked','#notice');
+    }
+
     public function testAcceptPopup()
     {
         $this->module->amOnPage('/form/popup');
@@ -100,6 +109,15 @@ class Selenium2Test extends TestsForMink
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Really?');
+    }
+
+    public function testScreenshot()
+    {
+        $this->module->amOnPage('/');
+        @unlink(\Codeception\Configuration::logDir().'testshot.png');
+        $this->module->_saveScreenshot(\Codeception\Configuration::logDir().'testshot.png');
+        $this->assertFileExists(\Codeception\Configuration::logDir().'testshot.png');
+        @unlink(\Codeception\Configuration::logDir().'testshot.png');
     }
 
 }

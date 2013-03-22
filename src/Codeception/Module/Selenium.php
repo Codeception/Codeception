@@ -67,7 +67,7 @@ class Selenium extends \Codeception\Util\MinkJS
         );
 
         $this->session = new \Behat\Mink\Session($driver);
-        parent::_initialize();
+
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {

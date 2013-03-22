@@ -37,12 +37,12 @@ abstract class Module
     }
 
     // HOOK: before each suite
-    public function beforeSuite($settings = array())
+    public function _beforeSuite($settings = array())
     {
     }
 
     // HOOK: after suite
-    public function afterSuite()
+    public function _afterSuite()
     {
     }
 

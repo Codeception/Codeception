@@ -140,7 +140,7 @@ class AMQP extends \Codeception\Module
             : new AMQPMessage($message);
 
         $this->channel->queue_declare($queue);
-        $this->channel->basic_publish(new AMQPMessage($message), '',$queue);
+        $this->channel->basic_publish($message, '',$queue);
     }
 
     /**
@@ -174,7 +174,7 @@ class AMQP extends \Codeception\Module
      * $message = $I->grabMessageFromQueue('queue.emails');
      *
      * @param $queue
-     * @return AMQPQueue
+     * @return AMQPMessage
      */
     public function grabMessageFromQueue($queue)
     {

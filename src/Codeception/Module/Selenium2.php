@@ -67,10 +67,17 @@ class Selenium2 extends \Codeception\Util\MinkJS
         $driver = new Selenium2Driver(
             $this->config['browser'],
             $capabilities,
-            sprintf('http://%s:%d/node/hub',$this->config['host'],$this->config['port'])
+            sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
-        $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) {
+            $this->session->start();
+            $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
+        }
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
@@ -85,7 +92,7 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     public function _saveScreenshot($filename)
     {
-        if (!isset($this->webDriver)) {
+        if (!$this->webDriverSession) {
             $this->debug("Can't make screenshot, no web driver");
             return;
         }
@@ -94,19 +101,6 @@ class Selenium2 extends \Codeception\Util\MinkJS
     }
 
     // please, add more custom Selenium functions here
-
-
-    /**
-     * Clicks on either link or button (for PHPBrowser) or on any selector for JS browsers.
-     * Link text or css selector can be passed.
-     *
-     * @param $link
-     */
-    public function click($link) {
-        $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link);
-        $el->click();
-    }
 
     /**
      * Accept alert or confirm popup

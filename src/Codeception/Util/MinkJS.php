@@ -4,6 +4,22 @@ namespace Codeception\Util;
 class MinkJS extends Mink
 {
 
+    public function checkOption($option)
+    {
+        $field = $this->findField($option);
+        $isChecked = $field->isChecked();
+        // overriding to use click
+        if (!$isChecked) $field->click();
+    }
+
+    public function uncheckOption($option)
+    {
+        $field = $this->findField($option);
+        $isChecked = $field->isChecked();
+        // overriding to use click
+        if ($isChecked) $field->click();
+    }
+
     /**
      * Double clicks on link or button or any node found by CSS or XPath
      *

@@ -23,7 +23,7 @@ Supported and tested databases are:
 Supported but not tested.
 
 * MSSQL
-* Oracle
+* Orcale
 
 Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
 Check out drivers if you get problems loading dumps and cleaning databases.
@@ -116,6 +116,21 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * param $column
  * param array $criteria
  * return mixed
+
+
+### haveInDatabase
+
+
+Inserts SQL record into database
+
+``` php
+<?php
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+?>
+```
+
+ * param $table
+ * param array $data
 
 
 ### seeInDatabase

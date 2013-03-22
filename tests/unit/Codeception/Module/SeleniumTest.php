@@ -17,7 +17,6 @@ class SeleniumTest extends TestsForMink
 
     public function setUp()
     {
-        $this->markTestSkipped('lets test selenium2 instead');
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module = new \Codeception\Module\Selenium();
@@ -31,6 +30,7 @@ class SeleniumTest extends TestsForMink
         }
 
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox'));
+        // $this->markTestSkipped('lets test selenium2 instead');
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
@@ -79,6 +79,15 @@ class SeleniumTest extends TestsForMink
     {
         // In Selenium you can't select option by it's value
 
+    }
+
+    public function testClickEventOnCheckbox()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->uncheckOption('#checkin');
+        $this->module->dontSee('ticked','#notice');
+        $this->module->checkOption('#checkin');
+        $this->module->see('ticked','#notice');
     }
 
 }
