@@ -139,6 +139,31 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::assertContains($uri, $this->client->getHistory()->current()->getUri());
     }
 
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->client->getHistory()->current()->getUri());
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, str_replace('http://localhost','',$this->client->getHistory()->current()->getUri()));
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, str_replace('http://localhost','',$this->client->getHistory()->current()->getUri()));
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->client->getHistory()->current()->getUri());
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->client->getHistory()->current()->getUri());
+    }
+
     public function seeCheckboxIsChecked($checkbox)
     {
         $checkboxes = $this->crawler->filter($checkbox);
@@ -389,6 +414,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($selector);
         $this->assertGreaterThen(0, $nodes->count());
+    }
+
+    public function dontSeeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertEquals(0, $nodes->count());
     }
 
 }

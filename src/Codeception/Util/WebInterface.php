@@ -128,11 +128,83 @@ interface WebInterface
     public function dontSeeLink($text, $url = null);
 
     /**
-     * Checks that current uri contains value
+     * Checks that current uri contains a value
+     *
+     * ``` php
+     * <?php
+     * // to match: /home/dashboard
+     * $I->seeInCurrentUrl('home');
+     * // to match: /users/1
+     * $I->seeInCurrentUrl('/users/');
+     * ?>
+     * ```
      *
      * @param $uri
      */
     public function seeInCurrentUrl($uri);
+
+    /**
+     * Checks that current url is equal to value.
+     * Unlike `seeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function seeCurrentUrlEquals($uri);
+
+    /**
+     * Checks that current url is matches a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function seeCurrentUrlMatches($uri);
+
+    /**
+     * Checks that current uri does not contain a value
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInCurrentUrl('/users/');
+     * ?>
+     * ```
+     *
+     * @param $uri
+     */
+    public function dontSeeInCurrentUrl($uri);
+
+    /**
+     * Checks that current url is not equal to value.
+     * Unlike `dontSeeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // current url is not root
+     * $I->dontSeeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function dontSeeCurrentUrlEquals($uri);
+
+    /**
+     * Checks that current url does not match a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function dontSeeCurrentUrlMatches($uri);
 
     /**
      * Assert if the specified checkbox is checked.
@@ -334,4 +406,17 @@ interface WebInterface
      * @param $selector
      */
     public function seeElement($selector);
+
+    /**
+     * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeElement('.error');
+     * $I->dontSeeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     */
+    public function dontSeeElement($selector);
 }

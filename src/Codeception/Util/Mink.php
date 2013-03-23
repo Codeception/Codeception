@@ -163,6 +163,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $this->assertNotEmpty($el);
     }
 
+    public function dontSeeElement($selector)
+    {
+        $el = $this->findEl($selector);
+        $this->assertEmpty($el);
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -280,6 +286,32 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function seeInCurrentUrl($uri) {
         \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
     }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->session->getCurrentUrl(),'');
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->session->getCurrentUrl(),'');
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->session->getCurrentUrl(),'');
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->session->getCurrentUrl(),'');
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->session->getCurrentUrl(),'');
+    }
+
 
     public function attachFile($field, $filename) {
         $field = $this->findField($field);
