@@ -117,7 +117,8 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
-                $target = $method->name;
+                if (strpos($method->name, '_') === 0) continue;
+
                 if (isset($unit->class)) {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
@@ -136,6 +137,7 @@ class SuiteManager {
                     'guy' => $this->settings['class_name']
                 )));
             }
+            
             $this->suite->addTestSuite($cestSuite);
         }
     }
