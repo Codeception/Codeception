@@ -83,4 +83,17 @@ interface FrameworkInterface extends WebInterface
      * @param $params
      */
     public function sendAjaxGetRequest($uri, $params = array());
+
+    /**
+     * Asserts that current page has 404 response status code.
+     */
+    public function seePageNotFound();
+
+    /**
+     * Checks that response code is equal to value provided.
+     *
+     * @param $code
+     * @return mixed
+     */
+    public function seeResponseCodeIs($code);
 }

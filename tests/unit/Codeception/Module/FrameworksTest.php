@@ -17,9 +17,11 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testAmOnPage() {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
+        $this->module->seeResponseCodeIs(200);
 
         $this->module->amOnPage('/info');
         $this->module->see('Information');
+        $this->module->seeResponseCodeIs(200);
     }
 
     public function testCurrentUrl()

@@ -419,7 +419,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                }
            }
         }
-
     }
 
     public function seeElement($selector)
@@ -432,6 +431,16 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($selector);
         $this->assertEquals(0, $nodes->count());
+    }
+
+    public function seePageNotFound()
+    {
+        $this->seeResponseCodeIs(404);
+    }
+
+    public function seeResponseCodeIs($code)
+    {
+        $this->assertEquals($code, $this->client->getResponse()->getStatus());
     }
 
 }
