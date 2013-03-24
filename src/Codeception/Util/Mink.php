@@ -293,34 +293,45 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
+    public function _getCurrentUri()
+    {
+        $url = $this->session->getCurrentUrl();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+        return $uri;
+    }
 
     public function seeInCurrentUrl($uri) {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertEquals($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
 
     public function grabFromCurrentUrl($uri = null)

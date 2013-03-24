@@ -134,43 +134,52 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::assertEquals(0, $links->count());
     }
 
+    public function _getCurrentUri()
+    {
+        $url = $this->client->getHistory()->current()->getUri();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        return $uri;
+    }
+
     public function seeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertEquals($uri, str_replace('http://localhost','',$this->client->getHistory()->current()->getUri()));
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotEquals($uri, str_replace('http://localhost','',$this->client->getHistory()->current()->getUri()));
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlMatches($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
 
     public function grabFromCurrentUrl($uri = null)
     {
-        $current = str_replace('http://localhost','',$this->client->getHistory()->current()->getUri());
-        if (!$uri) return $current;
         $matches = array();
-        $res = preg_match($uri, $current, $matches);
-        if (!$res) $this->fail("Couldn't match $uri in $current");
+        $res = preg_match($uri, $this->_getCurrentUri(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
         if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
         return $matches[1];
     }
@@ -416,7 +425,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                foreach ($field->childNodes as $option) {
                    if ($option->getAttribute('selected') == 'selected')
                        $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-               }
+               }http://sphotos-c.ak.fbcdn.net/hphotos-ak-prn1/532959_348333291945066_1909818296_n.jpg
            }
         }
     }
