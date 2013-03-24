@@ -176,7 +176,11 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     public function dontSeeElement($selector)
     {
-        $el = $this->findEl($selector);
+        $el = array();
+        try{
+            $el = $this->findEl($selector);
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        }
         $this->assertEmpty($el);
     }
 
