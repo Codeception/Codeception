@@ -164,6 +164,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->client->getHistory()->current()->getUri());
     }
 
+    public function grabFromCurrentUrl($uri = null)
+    {
+        $current = str_replace('http://localhost','',$this->client->getHistory()->current()->getUri());
+        if (!$uri) return $current;
+        $matches = array();
+        $res = preg_match($uri, $current, $matches);
+        if (!$res) $this->fail("Couldn't match $uri in $current");
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
+    }
+
     public function seeCheckboxIsChecked($checkbox)
     {
         $checkboxes = $this->crawler->filter($checkbox);
@@ -283,6 +294,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         if (!isset($input)) $input = $this->match($field);
         if (!count($input)) \PHPUnit_Framework_Assert::fail("Form field for '$field' not found on page");
         return $input->first();
+
     }
 
     public function selectOption($select, $option)

@@ -207,6 +207,23 @@ interface WebInterface
     public function dontSeeCurrentUrlMatches($uri);
 
     /**
+     * Takes a parameters from current URI by RegEx.
+     * If no url provided returns full URI.
+     *
+     * ``` php
+1     * <?php
+     * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+     * $uri = $I->grabFromCurrentUrl();
+     * ?>
+     * ```
+     *
+     * @param null $uri
+     * @internal param $url
+     * @return mixed
+     */
+    public function grabFromCurrentUrl($uri = null);
+
+    /**
      * Assert if the specified checkbox is checked.
      * Use css selector or xpath to match.
      *

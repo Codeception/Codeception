@@ -312,6 +312,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->session->getCurrentUrl(),'');
     }
 
+    public function grabFromCurrentUrl($uri = null)
+    {
+        if (!$uri) return $this->session->getCurrentUrl();
+        $matches = array();
+        $res = preg_match($uri, $this->session->getCurrentUrl(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->session->getCurrentUrl());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
+    }
 
     public function attachFile($field, $filename) {
         $field = $this->findField($field);

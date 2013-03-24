@@ -38,6 +38,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInCurrentUrl('user');
     }
 
+    public function testGrabFromCurrentUrl()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->assertEquals('/form/checkbox', $this->module->grabFromCurrentUrl());
+        $this->assertEquals('checkbox', $this->module->grabFromCurrentUrl('~form/(\w+)~'));
+    }
+
     public function testSee() {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
