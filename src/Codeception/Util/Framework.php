@@ -177,6 +177,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function grabFromCurrentUrl($uri = null)
     {
+        if (!$uri) return $this->_getCurrentUri();
         $matches = array();
         $res = preg_match($uri, $this->_getCurrentUri(), $matches);
         if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
