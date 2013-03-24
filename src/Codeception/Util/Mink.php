@@ -197,7 +197,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             $el = $page->find('css', $selector);
         } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
 
-        if (!$el) $el = @$page->find('xpath',$selector);
+        try {
+            if (!$el) $el = @$page->find('xpath',$selector);
+        } catch (\Exception $e) {
+        }
 
         if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
         return $el;
