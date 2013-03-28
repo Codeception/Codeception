@@ -26,7 +26,7 @@ class Run extends Base
             new InputOption('tap', '', InputOption::VALUE_NONE, 'Generate Tap Log'),
             new InputOption('json', '', InputOption::VALUE_NONE, 'Generate Json Log'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            new InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
+            new InputOption('silent', '', InputOption::VALUE_NONE, 'Don\'t show the progress output'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
             new InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
