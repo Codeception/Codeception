@@ -32,4 +32,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $email = $this->module->grabFromDatabase('users', 'email', array('name' => 'davert'));
         $this->assertEquals('davert@mail.ua', $email);
     }
+
+    public function testHaveAndSeeInDatabase()
+    {
+        $this->module->haveInDatabase('users', array('name' => 'john'));
+        $this->module->seeInDatabase('users', array('name' => 'john'));
+        $this->module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        $this->module->dontSeeInDatabase('users', array('name' => 'john'));
+    }
 }

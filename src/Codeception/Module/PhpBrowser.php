@@ -9,9 +9,26 @@ namespace Codeception\Module;
  *
  * If test fails stores last shown page in 'output' dir.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Configuration
  *
  * * url *required* - start url of your app
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ *     modules: 
+ *        enabled: [PhpBrowser]
+ *        config:
+ *           PhpBrowser:
+ *              url: 'http://localhost'
  *
  * ## Public Properties
  *
@@ -67,6 +84,16 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $query = $params ? '?'. http_build_query($params) : '';
         $this->call($uri.$query, 'GET', $params);
         $this->debug($this->session->getPage()->getContent());
+    }
+
+    public function seePageNotFound()
+    {
+        $this->seeResponseCodeIs(404);
+    }
+
+    public function seeResponseCodeIs($code)
+    {
+        $this->assertEquals($code, $this->session->getStatusCode());
     }
 
 

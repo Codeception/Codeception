@@ -16,21 +16,21 @@ class Run extends Base
     {
         $this->setDefinition(array(
 
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
-            new \Symfony\Component\Console\Input\InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
+            new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
+            new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
 
-            new \Symfony\Component\Console\Input\InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
-            new \Symfony\Component\Console\Input\InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
-            new \Symfony\Component\Console\Input\InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
-            new \Symfony\Component\Console\Input\InputOption('xml', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
-            new \Symfony\Component\Console\Input\InputOption('tap', '', InputOption::VALUE_NONE, 'Generate Tap Log'),
-            new \Symfony\Component\Console\Input\InputOption('json', '', InputOption::VALUE_NONE, 'Generate Json Log'),
-            new \Symfony\Component\Console\Input\InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            new \Symfony\Component\Console\Input\InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            new \Symfony\Component\Console\Input\InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
-            new \Symfony\Component\Console\Input\InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
-            new \Symfony\Component\Console\Input\InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
-            new \Symfony\Component\Console\Input\InputOption('no-exit', '', InputOption::VALUE_NONE, 'Dont\'t finish with exit code')
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
+            new InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
+            new InputOption('xml', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
+            new InputOption('tap', '', InputOption::VALUE_NONE, 'Generate Tap Log'),
+            new InputOption('json', '', InputOption::VALUE_NONE, 'Generate Json Log'),
+            new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
+            new InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
+            new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
+            new InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
+            new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code')
         ));
         parent::configure();
     }

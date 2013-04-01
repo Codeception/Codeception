@@ -248,11 +248,12 @@ There are plenty of options you can use.
 
 * `steps` - all performed actions will be printed to console.
 * `debug` - additional debug output will be printed.
+* `config` - specify different config file for current run.
 * `colors` - turn on colors (if disabled)
 * `silent` - don't show the progress output.
 * `report` - format results in report mode.
+* `coverage` - collect code coverage report
 * `no-exit` - don't provide exit codes on finish. This option may be useful for using Codeception with some CI servers like Bamboo.
-* `config` - specify different config file for current run.
 
 With the following options you can set the output in the most suitable format.
 
@@ -275,7 +276,8 @@ There are plenty of useful Codeception commands.
 
 * `generate:cept` *suite* *filename* - Generates a sample Cept scenario.
 * `generate:cest` *suite* *filename* - Generates a sample Cest test.
-* `generate:test` *suite* *filename* - Generates a sample PHPUnit Test.
+* `generate:test` *suite* *filename* - Generates a sample PHPUnit Test with Codeception hooks.
+* `generate:phpunit` *suite* *filename* - Generates a classic PHPUnit Test.
 * `generate:suite` *suite* *guy* - Generates a new suite with the given Guy class name.
 * `generate:scenarios` *suite* - Generates text files containing scenarios from tests.
 

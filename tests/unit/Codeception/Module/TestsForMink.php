@@ -26,6 +26,23 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Information');
     }
 
+    public function testCurrentUrl()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeCurrentUrlEquals('/');
+        $this->module->dontSeeInCurrentUrl('/user');
+        $this->module->dontSeeCurrentUrlMatches('~user~');
+
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCurrentUrlEquals('/form/checkbox');
+        $this->module->seeInCurrentUrl('form');
+        $this->module->seeCurrentUrlMatches('~form/.*~');
+        $this->module->dontSeeCurrentUrlEquals('/');
+        $this->module->dontSeeCurrentUrlMatches('~form/a~');
+        $this->module->dontSeeInCurrentUrl('user');
+    }
+
+
     public function testSee()
     {
         $this->module->amOnPage('/');
@@ -54,7 +71,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('More info');
         $this->module->dontSeeLink('/info');
         $this->module->dontSeeLink('#info');
-
         $this->module->amOnPage('/info');
         $this->module->seeLink('Back');
     }
@@ -71,6 +87,17 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/');
         $this->module->click("descendant-or-self::a[@id = 'link']");
+        $this->module->seeInCurrentUrl('/info');
+    }
+
+    public function testClickOnContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('More info','p');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('More info','body>p');
         $this->module->seeInCurrentUrl('/info');
     }
 
@@ -189,7 +216,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testSeeCheckboxChecked()
     {
-        $this->module->_initialize();
         $this->module->amOnPage('/info');
         $this->module->seeCheckboxIsChecked('input[type=checkbox]');
     }
@@ -204,7 +230,52 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Текст', 'p');
     }
 
-    public function testFieldWithNonLatin() {
+    public function testSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeInField('Name','OLD_VALUE');
+        $this->module->seeInField('input[name=name]','OLD_VALUE');
+        $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
+    }
+
+    public function testSeeInFieldForEmptyInput()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_input','');
+    }
+
+    public function testSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->seeInField('Description','sunrise');
+        $this->module->seeInField('textarea','sunrise');
+        $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
+    }
+
+    public function testSeeInFieldForEmptyTextarea()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','');
+    }
+
+
+    public function testDontSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeInField('Name','Davert');
+        $this->module->dontSeeInField('input[name=name]','Davert');
+        $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
+    public function testDontSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunset');
+        $this->module->dontSeeInField('textarea','sunset');
+        $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
+    }
+
+    public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }
@@ -246,5 +317,14 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/');
         $this->module->click('Test');
         $this->module->seeInCurrentUrl('/form/hidden');
+    }
+
+    public function testSeeElementOnPage()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeElement('input[name=name]');
+        $this->module->seeElement('descendant-or-self::input[@id="name"]');
+        $this->module->dontSeeElement('#something-beyond');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
 }

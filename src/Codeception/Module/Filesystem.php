@@ -6,6 +6,12 @@ use Codeception\Util\FileSystem as Util;
  * Module for testing local filesystem.
  * Fork it to extend the module for FTP, Amazon S3, others.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * Module was developed to test Codeception itself.
  */
 class Filesystem extends \Codeception\Module

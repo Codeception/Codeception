@@ -1,12 +1,20 @@
 <?php
 
-use Codeception\Util\Stub;
+use Codeception\Module\MongoDb;
 
 class MongoDbTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var \Codeception\Module\MongoDb
+     * @var array 
+     */
+    private $mongoConfig = array(
+        'dsn' => 'mongodb://localhost:27017/test',
+        'user' => '',
+        'password' => ''
+    );
+    
+    /**
+     * @var MongoDb
      */
     protected $module;
 
@@ -14,29 +22,34 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
      * @var \MongoDb
      */
     protected $db;
+    
+    /**
+     * @var \MongoCollection
+     */
+    private $userCollection;
 
     protected function setUp()
     {
-        if (!class_exists('\Mongo')) $this->markTestSkipped('Mongo is not installed');
+        if (!class_exists('Mongo')) {
+            $this->markTestSkipped('Mongo is not installed');
+        }
 
         $mongo = new \Mongo();
-
-        $this->module = new \Codeception\Module\MongoDb();
-        $this->module->_setConfig(array(
-                'dsn' => 'mongodb://localhost:27017/test',
-                'user' => '',
-                'password' => ''
-        ));
+        
+        $this->module = new MongoDb();
+        $this->module->_setConfig($this->mongoConfig);
         $this->module->_initialize();
 
         $this->db = $mongo->selectDB('test');
-        $userCol = $this->db->createCollection('users');
-        $userCol->insert(array('id' => 1, 'email' => 'miles@davis.com'));
+        $this->userCollection = $this->db->createCollection('users');
+        $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
     }
 
     protected function tearDown()
     {
-        $this->db->dropCollection('users');
+        if (!is_null($this->userCollection)) {
+            $this->userCollection->drop();
+        }
     }
 
     public function testSeeInCollection()
@@ -47,6 +60,12 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     public function testDontSeeInCollection()
     {
         $this->module->dontSeeInCollection('users', array('email' => 'davert@davert.com'));
+    }
+
+    public function testHaveAndSeeInCollection()
+    {
+        $this->module->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+        $this->module->seeInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
     }
 
     public function testGrabFromCollection()

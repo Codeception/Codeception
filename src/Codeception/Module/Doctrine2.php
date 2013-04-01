@@ -15,11 +15,24 @@ namespace Codeception\Module;
  * \Codeception\Module\Doctrine2::$em = $em
  *
  * ```
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
- * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
+ * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+ *
+ *  ### Example (`functional.suite.yml`)
+ * 
+ *      modules:
+ *         enabled: [Doctrine2]
+ *         config:
+ *            Doctrine2:
+ *               cleanup: false
  */
 
 class Doctrine2 extends \Codeception\Module
@@ -35,7 +48,7 @@ class Doctrine2 extends \Codeception\Module
     public function _before(\Codeception\TestCase $test)
     {
         // trying to connect to Symfony2 and get event manager
-        if (!self::$em && $this->config['auto_connect']) {
+        if ($this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
                 $kernel = $this->getModule('Symfony2')->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
@@ -45,7 +58,7 @@ class Doctrine2 extends \Codeception\Module
        }
 
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
@@ -63,7 +76,7 @@ class Doctrine2 extends \Codeception\Module
     public function _after(\Codeception\TestCase $test)
     {
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
@@ -103,6 +116,7 @@ class Doctrine2 extends \Codeception\Module
      *
      * ``` php
      * <?php
+     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
      * $I->persistEntity($user, array('name' => 'Miles'));
      * ```
      *
@@ -165,6 +179,14 @@ class Doctrine2 extends \Codeception\Module
         } else {
             $this->debugSection('Warning','Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property');
         }
+    }
+
+    /**
+     * Saves data in repository
+     */
+    public function haveInRepository($repository, array $data)
+    {
+
     }
 
     /**
@@ -235,7 +257,7 @@ class Doctrine2 extends \Codeception\Module
      * @param array $params
      * @return array
      */
-    protected function grabFromRepository($entity, $field, $params = array())
+    public function grabFromRepository($entity, $field, $params = array())
     {
         // we need to store to database...
         self::$em->flush();
@@ -244,8 +266,7 @@ class Doctrine2 extends \Codeception\Module
         $qb->select('s.'.$field);
         $this->buildAssociationQuery($qb,$entity, 's', $params);
         $this->debug($qb->getDQL());
-        $res = $qb->getQuery()->getSingleScalarResult();
-        return array('True', (count($res) > 0), "$entity with " . json_encode($params));
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

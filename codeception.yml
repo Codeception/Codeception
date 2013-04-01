@@ -22,11 +22,8 @@ modules:
             username: 'guest'
             password: 'guest'
             vhost: '/'
-            routes:
-                - exchange: Exchange1
-                  queue: Queue1
-                - exchange: Exchange1
-                  queue: Queue2
+            queues: [queue1, queue2]
+
 coverage:
     enabled: true
     include:

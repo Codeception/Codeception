@@ -1,0 +1,364 @@
+[2013-03-10 22:25:21] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:25:21] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:25:22] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:25:22] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:25:22] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:25:22] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:25:22] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:25:22] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:25:22] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:25:22] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:25:22] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:25:22] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:25:22] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:25:22] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:25:22] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:25:22] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:25:22] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:25:23] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:25:23] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:25:23] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:26:13] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:26:13] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:26:13] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:26:13] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:26:13] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:26:13] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:26:13] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:26:13] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:26:13] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:26:13] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:26:13] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:26:13] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:26:14] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:26:14] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:26:14] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:26:14] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:26:14] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:26:14] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:26:14] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:26:14] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:27:33] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:27:33] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:27:34] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:27:34] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:27:34] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:27:34] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:27:34] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:27:34] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:27:34] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:27:34] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:27:34] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:27:34] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:27:34] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:27:34] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:27:34] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:27:34] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:27:34] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:27:35] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:27:35] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:27:35] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:30:04] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:30:04] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:30:05] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:30:05] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:30:05] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:30:05] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:30:05] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:30:05] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:30:05] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:30:05] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:30:05] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:30:05] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:30:05] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:30:05] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:30:05] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:30:05] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:30:05] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:30:06] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:30:06] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:30:06] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:31:15] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:31:15] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:31:15] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:31:15] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:31:15] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:31:15] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:31:15] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:31:15] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:31:15] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:31:15] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:31:16] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:31:16] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:31:16] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:31:16] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:31:16] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:31:16] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:31:16] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:31:16] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:31:16] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:31:16] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:17] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:17] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:32:18] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:18] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:18] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:18] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:18] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:32:18] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:18] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:18] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:18] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:18] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:32:18] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:18] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:18] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:18] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:18] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:32:18] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:18] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:18] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:32] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:32] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:32:33] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:33] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:33] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:33] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:33] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:32:33] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:33] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:33] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:33] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:33] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:32:33] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:33] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:33] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:33] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:33] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:32:34] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:34] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:34] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:58] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:58] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:32:58] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:58] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:58] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:58] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:58] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:32:59] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:59] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:59] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:59] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:59] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:32:59] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:59] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:59] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:32:59] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:32:59] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:32:59] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:32:59] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:32:59] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:36:39] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:36:39] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:36:39] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:36:39] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:36:39] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:36:39] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:36:39] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:36:40] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:36:40] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:36:40] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:36:40] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:36:40] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:36:40] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:36:40] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:36:40] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:36:40] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:36:40] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:36:41] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:36:41] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:36:41] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:38:34] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:38:34] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:38:34] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:38:34] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:38:34] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:38:34] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:38:34] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:38:35] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:38:35] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:38:35] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:38:35] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:38:35] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:38:35] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:38:35] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:38:35] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:38:35] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:38:35] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:38:35] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:38:35] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:38:35] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:44:43] RemoteServerWithHtmlCept.php.ALERT: mkdir(): File exists [] []
+[2013-03-10 22:44:43] RemoteServerWithHtmlCept.php.INFO: # ERROR # [] []
+[2013-03-10 22:44:43] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:44:43] RemoteServerWithXmlCept.php.ALERT: mkdir(): File exists [] []
+[2013-03-10 22:44:43] RemoteServerWithXmlCept.php.INFO: # ERROR # [] []
+[2013-03-10 22:44:43] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:44:43] RemoteWithHtmlCept.php.ALERT: mkdir(): File exists [] []
+[2013-03-10 22:44:43] RemoteWithHtmlCept.php.INFO: # ERROR # [] []
+[2013-03-10 22:44:43] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:44:43] RemoteWithXmlCept.php.ALERT: mkdir(): File exists [] []
+[2013-03-10 22:44:43] RemoteWithXmlCept.php.INFO: # ERROR # [] []
+[2013-03-10 22:44:43] RemoteWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:45:39] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:45:39] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-10 22:45:40] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:45:40] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:45:40] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:45:40] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:45:40] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-10 22:45:40] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:45:40] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:45:40] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:45:40] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:45:40] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-10 22:45:41] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:45:41] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:45:41] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-10 22:45:41] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-10 22:45:41] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-10 22:45:41] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.5
+Powered by PHPUnit 3.7.14 by Sebastian Bergmann. [] []
+[2013-03-10 22:45:41] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-10 22:45:41] RemoteWithXmlCept.php.INFO: PASSED [] []

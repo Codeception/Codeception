@@ -1,10 +1,18 @@
 # Doctrine1 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
+
 
 Performs DB operations with Doctrine ORM 1.x
 
 Uses active Doctrine connection. If none can be found will fail.
 
 This module cleans all cached data after each test.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Config
 * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.

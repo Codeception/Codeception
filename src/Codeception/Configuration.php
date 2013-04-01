@@ -16,17 +16,18 @@ class Configuration
 
     protected static $dir = null;
 
-    public static function config($config = null)
+    public static function config($config_file = null)
     {
         if (self::$config) return self::$config;
 
-        if ($config === null) {
-            $dir = getcwd();
-            $config = file_exists('codeception.yml') ? Yaml::parse('codeception.yml') : array();
-        } else {
-            $dir = dirname($config);
-            $config = file_exists($config) ? Yaml::parse($config) : array();
-        }
+        if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+        if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
+        $dir = dirname($config_file);
+
+        $config = file_exists($config_file)
+            ? Yaml::parse($config_file)
+            : array();
+
         $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
         $config = array_merge($distConfig, $config);
 
@@ -39,12 +40,12 @@ class Configuration
 
         if (isset($config['paths']['helpers'])) {
             // Helpers
-            $helpers = Finder::create()->files()->name('*Helper.php')->in($dir . DIRECTORY_SEPARATOR .$config['paths']['helpers']);
+            $helpers = Finder::create()->files()->name('*Helper.php')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['helpers']);
             foreach ($helpers as $helper) include_once($helper);
         }
 
         if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR .$config['paths']['tests'])->depth(0);
+            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth('< 1');
             $config['suites'] = array();
             foreach ($suites as $suite) {
                 preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
@@ -155,7 +156,6 @@ class Configuration
     {
         $actions = array();
         foreach ($modules as $modulename => $module) {
-            $module->_initialize();
             $class = new \ReflectionClass('\Codeception\Module\\' . $modulename);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
@@ -171,8 +171,7 @@ class Configuration
         if (!is_array($a1) || !is_array($a2))
             return $a2;
         $res = array();
-        foreach ($a2 as $k2 => $v2)
-        {
+        foreach ($a2 as $k2 => $v2) {
             if (!isset($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
                 continue;
@@ -184,7 +183,6 @@ class Configuration
             $res[$k1] = $v1;
         return $res;
     }
-
 
 
 }

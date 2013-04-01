@@ -16,9 +16,9 @@ class GenerateCept extends Base
     protected function configure()
     {
         $this->setDefinition(array(
-
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
-            new \Symfony\Component\Console\Input\InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
+            new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
@@ -32,7 +32,7 @@ class GenerateCept extends Base
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('test');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
         $guy = $suiteconf['class_name'];
@@ -44,20 +44,10 @@ class GenerateCept extends Base
             return;
         }
 
-        if (strpos(strrev($filename), strrev('Cept')) === 0) $filename .= '.php';
-        if (strpos(strrev($filename), strrev('Cept.php')) !== 0) $filename .= 'Cept.php';
-        if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
+        $filename = $this->completeSuffix($filename, 'Cept');
+        $this->buildPath($suiteconf['path'], $filename);
 
-        $filename = str_replace('\\','/', $filename);
-        $dirs = explode('/', $filename);
-        array_pop($dirs);
-        $path = $suiteconf['path'].DIRECTORY_SEPARATOR;
-        foreach ($dirs as $dir) {
-            $path .= $dir.DIRECTORY_SEPARATOR;
-            @mkdir($path);
-        }
-
-        file_put_contents($suiteconf['path'].DIRECTORY_SEPARATOR.$filename, $file);
+        file_put_contents($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
         $output->writeln("<info>Test was generated in $filename</info>");
     }
 

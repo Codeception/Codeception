@@ -18,6 +18,14 @@ namespace Codeception\Module;
  * Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
  * Check out the driver if you get problems loading dumps and cleaning databases.
  *
+ * ## Status
+ *
+ * * Maintainer: **judgedim**, **davert**
+ * * Stability: **beta**
+ * * Contact: codecept@davert.mail.ua
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Config
  *
  * * dsn *required* - MongoDb DSN with the db name specified at the end of the host after slash
@@ -27,9 +35,6 @@ namespace Codeception\Module;
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
  *
- * ### Beta Version
- *
- * Report an issue if this module doesn't work for you.
  */
 
 use \Codeception\Util\Driver\MongoDb as MongoDbDriver;
@@ -133,6 +138,22 @@ class MongoDb extends \Codeception\Module
         } catch (\Exception $e) {
             throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
         }
+    }
+
+    /**
+     * Inserts data into collection
+     *
+     * ``` php
+     * $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+     * ```
+     *
+     * @param $collection
+     * @param array $data
+     */
+    public function haveInCollection($collection, array $data)
+    {
+        $collection = $this->driver->getDbh()->selectCollection($collection);
+        $collection->insert($data);
     }
 
     /**
