@@ -20,9 +20,9 @@ class Output {
 
 	private function write($text)
 	{
-		if (!$this->defer_flush) {
-        	while (ob_get_level()) ob_end_flush();
-		}
+        if (!$this->defer_flush) {
+            while (ob_get_level()) ob_end_flush();
+        }
         print $text;
         ob_start();
 	}
