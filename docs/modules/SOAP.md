@@ -1,4 +1,6 @@
 # SOAP Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
+
 
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
@@ -8,9 +10,16 @@ It tries to guess the framework is is attached to.
 If a endpoint is a full url then it uses PHPBrowser.
 
 ### Using Inside Framework
+
 Please note, that PHP SoapServer::handle method sends additional headers.
 This may trigger warning: "Cannot modify header information"
 If you use PHP SoapServer with framework, try to block call to this method in testing environment.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Configuration
 

@@ -1,9 +1,25 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\Event\Suite;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Module implements EventSubscriberInterface {
+
+    public function beforeSuite(Suite $e)
+    {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            $module->_initialize();
+            $module->_beforeSuite($e->getSettings());
+        }
+    }
+
+    public function afterSuite()
+    {
+        foreach (\Codeception\SuiteManager::$modules as $module) {
+            $module->_afterSuite();
+        }
+    }
 
     public function before(\Codeception\Event\Test $e) {
 
@@ -46,6 +62,8 @@ class Module implements EventSubscriberInterface {
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
             'test.fail' => 'failed',
+            'suite.before' => 'beforeSuite',
+            'suite.after' => 'afterSuite'
         );
     }
 }

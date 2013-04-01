@@ -14,9 +14,26 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * Whether framework is used it operates via standard framework modules.
  * Otherwise sends raw HTTP requests to url via PHPBrowser.
  *
+ * ## Status
+ *
+ * * Maintainer: **tiger-seo**, **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * Contact: tiger.seo@gmail.com
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api
+ * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
+ *
+ * ### Example
+ *
+ *     modules: 
+ *        enabled: [REST]
+ *        config:
+ *           REST:
+ *              url: 'http://serviceapp/api/v1/' 
+ *              timeout: 90
  *
  * ## Public Properties
  *
@@ -28,10 +45,14 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  */
 class REST extends \Codeception\Module
 {
-    protected $config = array('url' => '');
+    protected $config = array(
+        'url'                 => '',
+        'timeout'             => 30,
+        'xdebug_remote'       => false
+    );
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
+     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
     public $is_functional = false;
@@ -69,6 +90,26 @@ class REST extends \Codeception\Module
 
         $this->client->setServerParameters(array());
 
+        $timeout = $this->config['timeout'];
+
+        if ($this->config['xdebug_remote']
+            && function_exists('xdebug_is_enabled')
+            && xdebug_is_enabled()
+            && ini_get('xdebug.remote_enable')
+        ) {
+            $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
+            $this->client->getCookieJar()->set($cookie);
+
+            // timeout is disabled, so we can debug gently :)
+            $timeout = 0;
+        }
+
+        if (method_exists($this->client, 'getClient')) {
+            $clientConfig = $this->client->getClient()->getConfig();
+            $curlOptions = $clientConfig->get('curl.options');
+            $curlOptions[CURLOPT_TIMEOUT] = $timeout;
+            $clientConfig->set('curl.options', $curlOptions);
+        }
     }
 
     /**
@@ -137,6 +178,18 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Sends PATCH request to given uri.
+     *
+     * @param       $url
+     * @param array $params
+     * @param array $files
+     */
+    public function sendPATCH($url, $params = array(), $files = array())
+    {
+        $this->execute('PATCH', $url, $params, $files);
+    }
+
+    /**
      * Sends DELETE request to given uri.
      *
      * @param $url
@@ -146,6 +199,67 @@ class REST extends \Codeception\Module
     public function sendDELETE($url, $params = array(), $files = array())
     {
         $this->execute('DELETE', $url, $params, $files);
+    }
+
+    /**
+     * Sets Headers "Link" as one header "Link" based on linkEntries
+     *
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
+     */
+    private function setHeaderLink(array $linkEntries)
+    {
+        $values = array();
+        foreach ($linkEntries as $linkEntry) {
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
+                'uri',
+                $linkEntry,
+                'linkEntry should contain property "uri"'
+            );
+            \PHPUnit_Framework_Assert::assertArrayHasKey(
+                'link-param',
+                $linkEntry,
+                'linkEntry should contain property "link-param"'
+            );
+            $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
+        }
+
+        $this->headers['Link'] = join(', ', $values);
+    }
+
+    /**
+     * Sends LINK request to given uri.
+     *
+     * @param       $url
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
+     */
+    public function sendLINK($url, array $linkEntries)
+    {
+        $this->setHeaderLink($linkEntries);
+        $this->execute('LINK', $url);
+    }
+
+    /**
+     * Sends UNLINK request to given uri.
+     *
+     * @param       $url
+     * @param array $linkEntries (entry is array with keys "uri" and "link-param")
+     *
+     * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+     *
+     * @author samva.ua@gmail.com
+     */
+    public function sendUNLINK($url, array $linkEntries)
+    {
+        $this->setHeaderLink($linkEntries);
+        $this->execute('UNLINK', $url);
     }
 
     protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
@@ -365,7 +479,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->$response);
+        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
     }
 
     /**
@@ -375,6 +489,10 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($num)
     {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+        } else {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        }
     }
 }

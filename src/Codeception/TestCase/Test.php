@@ -3,7 +3,7 @@ namespace Codeception\TestCase;
 
 use Codeception\Exception\TestRuntime;
 
-class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescribing
+class Test extends \Codeception\TestCase
 {
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -11,12 +11,58 @@ class Test extends \Codeception\TestCase implements \PHPUnit_Framework_SelfDescr
     protected $dispatcher = null;
     protected $bootstrap = null;
 
+    /**
+     * @var \CodeGuy
+     */
+    protected $codeGuy = null;
+
+    protected $guyClass;
+
     public function setDispatcher($dispatcher) {
         $this->dispatcher = $dispatcher;
     }
 
     public function setBootstrap($bootstrap) {
         $this->bootstrap = $bootstrap;
+    }
+
+    public function setGuyClass($guy)
+    {
+        $this->guyClass = $guy;
+    }
+
+    protected function setUp()
+    {
+        if ($this->bootstrap) require $this->bootstrap;
+        $this->scenario = new \Codeception\Scenario($this);
+        $guy = $this->guyClass;
+        if ($guy) $this->codeGuy = new $guy($this->scenario);
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
+        $this->scenario->run();
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
+        $this->_before();
+    }
+
+    /**
+     * @Override
+     */
+    protected function _before()
+    {
+
+    }
+
+    protected function tearDown()
+    {
+        $this->_after();
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+    }
+
+    /**
+     * @Override
+     */
+    protected function _after()
+    {
+
     }
 
     public function __construct($name = NULL, array $data = array(), $dataName = '') {

@@ -14,13 +14,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
+            $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
     
-    public function _cleanup() {
-        $this->session->reset();
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) $this->session->start();
     }
 
     public function _after(\Codeception\TestCase $test) {
@@ -49,6 +51,17 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $headers = $this->session->getResponseHeaders();
         if (!isset($headers[$header])) return false;
         return $headers[$header];
+    }
+
+    public function _getResponseCode()
+    {
+        return $this->session->getStatusCode();
+    }
+
+    public function _sendRequest($url)
+    {
+        $this->session->visit($url);
+        return $this->session->getDriver()->getContent();
     }
 
     /**
@@ -106,7 +119,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         );
 
         if (!$url) {
-            return \PHPUnit_Framework_Assert::assertNotNull($nodes);
+            return \PHPUnit_Framework_Assert::assertNotEmpty($nodes);
         }
 
         foreach ($nodes as $node) {
@@ -145,14 +158,30 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function click($link) {
+    public function click($link, $context = null) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link);
+        $el = $this->findClickable($link, $context);
         $el->click();
 
         if ($this->session->getCurrentUrl() != $url) {
             $this->debug('moved to page '. $this->session->getCurrentUrl());
         }
+    }
+
+    public function seeElement($selector)
+    {
+        $el = $this->findEl($selector);
+        $this->assertNotEmpty($el);
+    }
+
+    public function dontSeeElement($selector)
+    {
+        $el = array();
+        try{
+            $el = $this->findEl($selector);
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        }
+        $this->assertEmpty($el);
     }
 
     /**
@@ -168,9 +197,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             $el = $page->find('css', $selector);
         } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
 
-        if (!$el) $el = @$page->find('xpath',$selector);
+        try {
+            if (!$el) $el = @$page->find('xpath',$selector);
+        } catch (\Exception $e) {
+        }
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("Link | button | CSS | XPath for '$selector' not found'");
+        if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
         return $el;
     }
 
@@ -180,9 +212,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
     }
 
-    protected function findClickable($link)
+    protected function findClickable($link, $context = null)
     {
-        $page = $this->session->getPage();
+        $page = $context
+            ? $this->findEl($context)
+            : $this->session->getPage();
+
+        if (!$page) {
+            $this->fail("Context element $context not found");
+        }
         $el = $this->findLinkByContent($link);
         if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
@@ -234,6 +272,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->check();
     }
 
+    public function uncheckOption($option)
+    {
+        $field = $this->findField($option);
+        $field->uncheck();
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -256,14 +300,55 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function uncheckOption($option)
+    public function _getCurrentUri()
     {
-        $field = $this->findField($option);
-        $field->uncheck();
+        $url = $this->session->getCurrentUrl();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+        return $uri;
     }
 
     public function seeInCurrentUrl($uri) {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function grabFromCurrentUrl($uri = null)
+    {
+        if (!$uri) return $this->session->getCurrentUrl();
+        $matches = array();
+        $res = preg_match($uri, $this->session->getCurrentUrl(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->session->getCurrentUrl());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
     }
 
     public function attachFile($field, $filename) {
@@ -286,16 +371,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
     public function seeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertEquals($this->escape($value), $node->getValue());
+        $this->assertEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getAttribute('value'));
     }
 
 
     public function dontSeeInField($field, $value) {
-        $node  = $this->session->getPage()->findField($field);
+        $node  = $this->findField($field);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", field not found");
-        \PHPUnit_Framework_Assert::assertNotEquals($this->escape($value), $node->getValue());
+        $this->assertNotEquals($value, $node->getTagName() == 'textarea' ? $node->getText() : $node->getAttribute('value'));
     }
 
     public function grabTextFrom($cssOrXPathOrRegex) {

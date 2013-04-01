@@ -7,6 +7,8 @@ class Cest extends \Codeception\TestCase\Cept
     protected $testMethod = null;
     protected $signature;
     protected $guy = 'CodeGuy';
+    protected $dispatcher;
+    protected $bootstrap;
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);
@@ -39,11 +41,12 @@ class Cest extends \Codeception\TestCase\Cept
 
         // preload everything
         $this->executeTestMethod($I);
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
 
         if (!$run) return;
+        $this->scenario->run();
         $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
 
-        $this->scenario->run();
 
         if ($this->getCoveredMethod()) {
             $I->testMethod($this->signature);

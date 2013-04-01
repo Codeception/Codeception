@@ -69,6 +69,8 @@ interface WebInterface
      * If button is image button is found by it's value
      * If link or button can't be found by name they are searched by CSS selector.
      *
+     * The second parameter is a context: CSS or XPath locator to narrow the search.
+     *
      * Examples:
      *
      * ``` php
@@ -81,11 +83,14 @@ interface WebInterface
      * $I->click('#form input[type=submit]');
      * // XPath
      * $I->click('//form/*[@type=submit]')
+     * // link in context
+     * $I->click('Logout', '#nav');
      * ?>
      * ```
      * @param $link
+     * @param $context
      */
-    public function click($link);
+    public function click($link, $context = null);
 
     /**
      * Checks if there is a link with text specified.
@@ -123,11 +128,100 @@ interface WebInterface
     public function dontSeeLink($text, $url = null);
 
     /**
-     * Checks that current uri contains value
+     * Checks that current uri contains a value
+     *
+     * ``` php
+     * <?php
+     * // to match: /home/dashboard
+     * $I->seeInCurrentUrl('home');
+     * // to match: /users/1
+     * $I->seeInCurrentUrl('/users/');
+     * ?>
+     * ```
      *
      * @param $uri
      */
     public function seeInCurrentUrl($uri);
+
+    /**
+     * Checks that current url is equal to value.
+     * Unlike `seeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function seeCurrentUrlEquals($uri);
+
+    /**
+     * Checks that current url is matches a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function seeCurrentUrlMatches($uri);
+
+    /**
+     * Checks that current uri does not contain a value
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInCurrentUrl('/users/');
+     * ?>
+     * ```
+     *
+     * @param $uri
+     */
+    public function dontSeeInCurrentUrl($uri);
+
+    /**
+     * Checks that current url is not equal to value.
+     * Unlike `dontSeeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // current url is not root
+     * $I->dontSeeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function dontSeeCurrentUrlEquals($uri);
+
+    /**
+     * Checks that current url does not match a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     */
+    public function dontSeeCurrentUrlMatches($uri);
+
+    /**
+     * Takes a parameters from current URI by RegEx.
+     * If no url provided returns full URI.
+     *
+     * ``` php
+1     * <?php
+     * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+     * $uri = $I->grabFromCurrentUrl();
+     * ?>
+     * ```
+     *
+     * @param null $uri
+     * @internal param $url
+     * @return mixed
+     */
+    public function grabFromCurrentUrl($uri = null);
 
     /**
      * Assert if the specified checkbox is checked.
@@ -166,11 +260,13 @@ interface WebInterface
 
     /**
      * Checks that an input field or textarea contains value.
+     * Field is matched either by label or CSS or Xpath
      *
      * Example:
      *
      * ``` php
      * <?php
+     * $I->seeInField('Body','Type your comment here');
      * $I->seeInField('form textarea[name=body]','Type your comment here');
      * $I->seeInField('form input[type=hidden]','hidden_value');
      * $I->seeInField('#searchform input','Search');
@@ -185,11 +281,12 @@ interface WebInterface
 
     /**
      * Checks that an input field or textarea doesn't contain value.
-     *
+     * Field is matched either by label or CSS or Xpath
      * Example:
      *
      * ``` php
      * <?php
+     * $I->dontSeeInField('Body','Type your comment here');
      * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
      * $I->dontSeeInField('form input[type=hidden]','hidden_value');
      * $I->dontSeeInField('#searchform input','Search');
@@ -314,4 +411,29 @@ interface WebInterface
      */
     public function grabValueFrom($field);
 
+    /**
+     * Checks if element exists on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->seeElement('.error');
+     * $I->seeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     */
+    public function seeElement($selector);
+
+    /**
+     * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeElement('.error');
+     * $I->dontSeeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     */
+    public function dontSeeElement($selector);
 }

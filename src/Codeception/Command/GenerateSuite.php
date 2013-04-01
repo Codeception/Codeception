@@ -15,9 +15,9 @@ class GenerateSuite extends Base
     protected function configure()
     {
         $this->setDefinition(array(
-
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
-            new \Symfony\Component\Console\Input\InputArgument('guy', InputArgument::REQUIRED, 'name of new Guy class'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputArgument('guy', InputArgument::REQUIRED, 'name of new Guy class'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
@@ -32,7 +32,7 @@ class GenerateSuite extends Base
         $suite = $input->getArgument('suite');
         $guy = $input->getArgument('guy');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
 
         $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR;
         if (file_exists($dir.DIRECTORY_SEPARATOR.$suite)) throw new \Exception("Directory $suite already exists.");

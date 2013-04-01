@@ -28,8 +28,7 @@ class postgresTest extends \PHPUnit_Framework_TestCase
         }
         $this->postgres->cleanup();
     }
-    
-    
+
     public function testCleanupDatabase() {
 
         $this->postgres->getDbh()->exec('

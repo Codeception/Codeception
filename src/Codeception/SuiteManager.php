@@ -14,15 +14,15 @@ class SuiteManager {
     /**
      * @var \PHPUnit_Framework_TestSuite
      */
-	protected $suite = null;
+    protected $suite = null;
 
     /**
      * @var null|\Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher = null;
 
-	protected $tests = array();
-	protected $debug = false;
+    protected $tests = array();
+    protected $debug = false;
     protected $path = '';
     protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
@@ -35,7 +35,8 @@ class SuiteManager {
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'colors' => true,
         'memory_limit' => '1024M',
-        'path' => ''
+        'path' => '',
+        'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
     );
 
     protected $settings = array();
@@ -66,11 +67,8 @@ class SuiteManager {
     }
 
     public function addTest($path) {
-        $loaded_classes = get_declared_classes();
-        require_once $path;
-        $extra_loaded_classes = get_declared_classes();
 
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
+        $testClasses = $this->getClassesFromFile($path);
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
@@ -82,6 +80,7 @@ class SuiteManager {
                 if ($test instanceof \Codeception\TestCase\Test) {
                     $test->setBootstrap($this->settings['bootstrap']);
                     $test->setDispatcher($this->dispatcher);
+                    $test->setGuyClass($this->settings['class_name']);
                 } else {
                     if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
                 }
@@ -90,7 +89,7 @@ class SuiteManager {
     }
 
     public function addCept($file)
-   	{
+    {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
@@ -99,19 +98,13 @@ class SuiteManager {
             'file' => $file,
    	        'bootstrap' => $this->settings['bootstrap']
         )));
-   	}
-
+    }
 
     public function addCest($file) {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
-        $loaded_classes = get_declared_classes();
-        require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-
-        $testClasses = array_diff($extra_loaded_classes,$loaded_classes);
-
+        $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
             $unit = new $testClass;
@@ -124,7 +117,8 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
-                $target = $method->name;
+                if (strpos($method->name, '_') === 0) continue;
+
                 if (isset($unit->class)) {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
@@ -143,6 +137,7 @@ class SuiteManager {
                     'guy' => $this->settings['class_name']
                 )));
             }
+            
             $this->suite->addTestSuite($cestSuite);
         }
     }
@@ -152,7 +147,6 @@ class SuiteManager {
         return $name = str_replace($this->path, '', $file);
     }
 
-    
     public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
 
         $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));
@@ -170,7 +164,7 @@ class SuiteManager {
             $this->loadTests();
             return;
         }
-        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
+        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
     public function loadTests()
@@ -201,5 +195,13 @@ class SuiteManager {
      */
     public function getSuite() {
         return $this->suite;
+    }
+
+    protected function getClassesFromFile($file)
+    {
+        $loaded_classes = get_declared_classes();
+        require_once $file;
+        $extra_loaded_classes = get_declared_classes();
+        return array_diff($extra_loaded_classes,$loaded_classes);
     }
 }

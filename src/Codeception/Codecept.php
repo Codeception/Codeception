@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.5.1";
+    const VERSION = "1.5.7";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -113,8 +113,8 @@ class Codecept
     }
 
     public static function versionString() {
-   	    return 'Codeception PHP Testing Framework v'.self::VERSION;
-   	}
+        return 'Codeception PHP Testing Framework v'.self::VERSION;
+    }
 
     public function printResult() {
         $result = $this->getResult();
@@ -128,8 +128,8 @@ class Codecept
 
     /**
      * @return \PHPUnit_Framework_TestResult
-     */    public function getResult()
-    {
+     */
+    public function getResult() {
         return $this->result;
     }
 

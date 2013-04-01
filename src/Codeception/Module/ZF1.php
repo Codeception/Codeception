@@ -4,16 +4,23 @@ namespace Codeception\Module;
 /**
  * This module allows you to run tests inside Zend Framework.
  * It acts just like ControllerTestCase, but with usage of Codeception syntax.
- * Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
  *
  * It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
  * and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
+ * 
+ * [Tutorial](http://codeception.com/01-27-2012/bdd-with-zend-framework.html)
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
  * * env  - environment used for testing ('testing' by default).
  * * config - relative path to your application config ('application/configs/application.ini' by default).
- * * app_path - relative path to your application folder ('applicaiton' by default).
+ * * app_path - relative path to your application folder ('application' by default).
  * * lib_path - relative path to your library folder ('library' by default).
  *
  * ## API
@@ -30,7 +37,7 @@ namespace Codeception\Module;
  * [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
  *
  * If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
- * Use a generated helper TestHelper. Usse this code inside of it.
+ * Use a generated helper TestHelper. Use this code inside of it.
  *
  * ``` php
  * <?php

@@ -19,11 +19,11 @@ class Scenario {
 
     protected $currentStep = 0;
 
-    protected $finalizers = array();
-
     protected $running = false;
 
     protected $preloadedSteps = array();
+
+    protected $blocker = null;
 
     /**
      * Constructor.
@@ -53,6 +53,16 @@ class Scenario {
     public function assertion($action, $arguments)
     {
         return $this->addStep(new \Codeception\Step\Assertion($action, $arguments));
+    }
+
+    public function skip($reason = "")
+    {
+        $this->blocker = new \Codeception\Step\Skip($reason, array());
+    }
+
+    public function incomplete($reason = "")
+    {
+        $this->blocker = new \Codeception\Step\Incomplete($reason, array());
     }
 
     public function runStep()
@@ -97,6 +107,32 @@ class Scenario {
 	    return $this->feature;
 	}
 
+    public function getHtml()
+    {
+        $text = '';
+        foreach($this->getSteps() as $step) {
+            /** @var Step $step */
+            if ($step->getName() !== 'Comment') {
+                $text .= 'I ' . $step->getHtmlAction() . '<br/>';
+            } else {
+                $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
+            }
+        }
+        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
+        return $text;
+
+    }
+
+    public function getText()
+    {
+        $text = implode("\r\n", $this->getSteps());
+        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = strtoupper('I want to ' . $this->getFeature()) . "\r\n\r\n" . $text;
+        return $text;
+
+    }
+
 	public function comment($comment) {
 		$this->addStep(new \Codeception\Step\Comment($comment,array()));
 	}
@@ -107,6 +143,9 @@ class Scenario {
     }
     
     public function run() {
+        if ($this->running()) return;
+        if ($this->blocker) $this->blocker->run();
+
         $this->running = true;
         $this->preloadedSteps = $this->steps;
         $this->steps = array();

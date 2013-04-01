@@ -18,6 +18,12 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  *
  * * Module requires installed php_xmlrpc extension
  *
+ * ## Status
+ *
+ * * Maintainer: **tiger-seo**
+ * * Stability: **beta**
+ * * Contact: tiger.seo@gmail.com
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api

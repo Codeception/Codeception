@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\TestCase\Cest;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -48,7 +49,6 @@ class Console implements EventSubscriberInterface
     {
     }
 
-
     public function endTest(\Codeception\Event\Test $e)
     {
         $test = $e->getTest();
@@ -84,7 +84,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
 
-        if (!($test instanceof \Codeception\TestCase)) {
+        if (!($test instanceof \Codeception\TestCase\Cept)) {
             $this->output->writeln('- ' . $long);
         } elseif (!$this->steps) {
             $this->output->writeln(" - $long");
@@ -94,25 +94,20 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function beforeComment(\Codeception\Event\Step $e) {
-        if ($this->steps) $this->output->writeln("\n((".$e->getStep()->__toString()."))");
-    }
-
-    public function afterComment(\Codeception\Event\Step $e) {
-    }
-
     public function beforeStep(\Codeception\Event\Step $e)
     {
-        if ($this->steps) $this->output->writeln("* " . $e->getStep()->__toString());
+        if (!$this->steps) return;
+        if ($e->getStep()->getName() == 'Comment') {
+            $this->output->writeln("\n((".$e->getStep()."))");
+        } else {
+            $this->output->writeln("* " . $e->getStep());
+        }
     }
 
     public function afterStep(\Codeception\Event\Step $e)
     {
         if (!$this->debug) return;
-        $step = $e->getStep();
-        $action = $step->getAction();
-        $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$action]];
-        if ($output = $activeModule->_getDebugOutput()) {
+        if ($output = $e->getStep()->pullDebugOutput()) {
             $this->output->debug($output);
         }
     }
@@ -135,11 +130,21 @@ class Console implements EventSubscriberInterface
         if ($fail instanceof \PHPUnit_Framework_SelfDescribing) {
             $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
         } else {
-            $failToString = sprintf("%s (%s:%d)", $fail->getMessage(), $fail->getFile(), $fail->getLine());
+            $failToString = sprintf("[%s]\n%s", get_class($fail),$fail->getMessage());
         }
 
         $feature = $failedTest->getScenario()->getFeature();
         if ($e->getCount()) $this->output->put($e->getCount().") ");
+
+        // skip test
+        // Sample Message: create user in CreateUserCept.php is not ready for release
+        if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
+            if ($feature) $this->output->put("[[$feature]] in ");
+            $this->output->put($failedTest->getFilename());
+            if ($failToString) $this->output->put(" is ".$failToString);
+            $this->output->writeln("\n");
+            return;
+        }
 
         if ($feature) $this->output->put("Couldn't [[$feature]] in ");
         $this->output->writeln('(('.$failedTest->getFilename().'))');
@@ -148,10 +153,6 @@ class Console implements EventSubscriberInterface
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            if (!$this->debug) {
-                $this->output->writeln($failToString);
-                return;
-            }
             $this->printException($fail);
             return;
         }
@@ -167,7 +168,6 @@ class Console implements EventSubscriberInterface
         };
 
         // it's assertion
-
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
             $this->output->writeln("Guy unexpectedly managed to $action: {$failToString}");
@@ -236,14 +236,12 @@ class Console implements EventSubscriberInterface
         return array(
             'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
-            'test.before' => 'before',
+            'test.parsed' => 'before',
             'test.after' => 'afterTest',
             'test.start' => 'startTest',
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'comment.before' => 'beforeComment',
-            'comment.after' => 'afterComment',
             'fail.fail' => 'testFail',
             'fail.error' => 'testError',
             'fail.incomplete' => 'testIncomplete',
