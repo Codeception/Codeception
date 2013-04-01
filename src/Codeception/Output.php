@@ -4,9 +4,11 @@ namespace Codeception;
 class Output {
 
     protected $colors = true;
+	protected $defer_flush = false;
 
-	function __construct($colors = true) {
+	function __construct($colors = true, $defer_flush = false) {
 	    $this->colors = $colors;
+	    $this->defer_flush = $defer_flush;
         ob_start();
 	}
 
@@ -18,7 +20,9 @@ class Output {
 
 	private function write($text)
 	{
-        while (ob_get_level()) ob_end_flush();
+		if (!$this->defer_flush) {
+        	while (ob_get_level()) ob_end_flush();
+		}
         print $text;
         ob_start();
 	}
