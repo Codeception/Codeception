@@ -129,6 +129,8 @@ The bootstrap file is located in suite directory and is named `_bootstrap` and i
 
 The first line of generated class includes a Stub utility class into a test file. This means you can easily create dummy classes instead of real one. Don't waste your time on adding many parameters to constructor, just run the `Stub::make` to create a new class.
 
+Stubs are created with PHPUnit's mocking framework. Please refer to [PHPUnit Manual](http://www.phpunit.de/manual/3.6/en/test-doubles.html) if you need additional features on stubs or mocks.
+
 Full reference on stub util class can be [found here](/docs/reference/stubs).
 
 ### Mix it all together!
@@ -162,10 +164,6 @@ class SimpleTest extends \Codeception\TestCase\Test
 ?>
 ```
 
-### Limitations
-
-PHPUnit tests are very cool, but for complex tests you want to have more strict and readable structure of test. This is done to make a test readable and self-explain,. Whenever you come to idea that your test requires mocks, usage of reflection, you should consider using the specific Codeception Cest format which is a hybrid between PHPUnit Tests and scenario-based Cepts (Cest = Cept + Test). The usage example of the Cest files will be shown in next chapter.
-
 ## Conclusion
 
-PHPUnit tests is a first-class citizen in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit manually, but use a Codeception to execute them. Some nice features are added to common unit tests by integrating Codeception modules. For most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain. But when you need some advanced features like mocking, use the special Cest format, described in next chapters.
+PHPUnit tests is a first-class citizen in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit manually, but use a Codeception to execute them. Some nice features are added to common unit tests by integrating Codeception modules. For most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain.

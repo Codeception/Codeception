@@ -117,7 +117,8 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
-                $target = $method->name;
+                if (strpos($method->name, '_') === 0) continue;
+
                 if (isset($unit->class)) {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
@@ -136,6 +137,7 @@ class SuiteManager {
                     'guy' => $this->settings['class_name']
                 )));
             }
+            
             $this->suite->addTestSuite($cestSuite);
         }
     }
@@ -162,7 +164,7 @@ class SuiteManager {
             $this->loadTests();
             return;
         }
-        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
+        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
     public function loadTests()

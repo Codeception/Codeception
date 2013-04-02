@@ -86,6 +86,16 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->debug($this->session->getPage()->getContent());
     }
 
+    public function seePageNotFound()
+    {
+        $this->seeResponseCodeIs(404);
+    }
+
+    public function seeResponseCodeIs($code)
+    {
+        $this->assertEquals($code, $this->session->getStatusCode());
+    }
+
 
 	protected function call($uri, $method = 'get', $params = array())
 	{
