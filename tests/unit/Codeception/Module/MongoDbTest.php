@@ -1,4 +1,5 @@
 <?php
+
 use Codeception\Module\MongoDb;
 
 class MongoDbTest extends \PHPUnit_Framework_TestCase

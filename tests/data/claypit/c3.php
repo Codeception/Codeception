@@ -117,7 +117,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
     {
         file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . time() . '-error.txt', $message);
         if (!headers_sent()) {
-            header('X-Codeception-CodeCoverage-Error', str_replace("\n", ' ', $message));
+            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
         __c3_exit();
     }
@@ -137,7 +137,7 @@ if (!class_exists('\\Codeception\\Codecept')) {
     if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
         require_once __DIR__ . '/vendor/autoload.php';
     } elseif (file_exists(__DIR__ . '/codecept.phar')) {
-        require_once __DIR__ . '/codecept.phar/autoload.php';
+        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
     } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
         require_once 'Codeception/autoload.php';
     } else {

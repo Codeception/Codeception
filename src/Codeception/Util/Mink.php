@@ -53,6 +53,17 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $headers[$header];
     }
 
+    public function _getResponseCode()
+    {
+        return $this->session->getStatusCode();
+    }
+
+    public function _sendRequest($url)
+    {
+        $this->session->visit($url);
+        return $this->session->getDriver()->getContent();
+    }
+
     /**
      * Opens the page.
      *
@@ -163,6 +174,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $this->assertNotEmpty($el);
     }
 
+    public function dontSeeElement($selector)
+    {
+        $el = array();
+        try{
+            $el = $this->findEl($selector);
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        }
+        $this->assertEmpty($el);
+    }
+
     /**
      * @param $selector
      * @return \Behat\Mink\Element\NodeElement
@@ -176,7 +197,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             $el = $page->find('css', $selector);
         } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
 
-        if (!$el) $el = @$page->find('xpath',$selector);
+        try {
+            if (!$el) $el = @$page->find('xpath',$selector);
+        } catch (\Exception $e) {
+        }
 
         if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
         return $el;
@@ -276,9 +300,55 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
+    public function _getCurrentUri()
+    {
+        $url = $this->session->getCurrentUrl();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+        return $uri;
+    }
 
     public function seeInCurrentUrl($uri) {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->session->getCurrentUrl(),'');
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function grabFromCurrentUrl($uri = null)
+    {
+        if (!$uri) return $this->session->getCurrentUrl();
+        $matches = array();
+        $res = preg_match($uri, $this->session->getCurrentUrl(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->session->getCurrentUrl());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
     }
 
     public function attachFile($field, $filename) {

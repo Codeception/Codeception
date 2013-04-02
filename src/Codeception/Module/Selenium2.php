@@ -102,6 +102,12 @@ class Selenium2 extends \Codeception\Util\MinkJS
 
     // please, add more custom Selenium functions here
 
+    public function click($link, $context = null) {
+        $url = $this->session->getCurrentUrl();
+        $el = $this->findClickable($link, $context);
+        $el->click();
+    }
+
     /**
      * Accept alert or confirm popup
      *
