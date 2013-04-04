@@ -15,7 +15,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.3.3",
-        "behat/mink": "1.4",
+        "behat/mink": "1.4.*",
         "phpunit/phpunit": "3.7.*",
         "fabpot/goutte": "*",
         "behat/mink-goutte-driver": "*",
