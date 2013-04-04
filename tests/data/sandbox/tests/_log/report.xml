@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="dummy" tests="1" assertions="1" failures="0" errors="0" time="0.007714">
+    <testcase file="FileExistsCept.php" name="check config exists (FileExistsCept.php)" assertions="1" time="0.007714"/>
+  </testsuite>
+</testsuites>

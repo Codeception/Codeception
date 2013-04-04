@@ -1,0 +1,20 @@
+{
+    "event": "suiteStart",
+    "suite": "dummy",
+    "tests": 1
+}{
+    "event": "testStart",
+    "suite": "dummy",
+    "test": " (FileExistsCept.php)"
+}{
+    "event": "test",
+    "suite": "dummy",
+    "test": " (FileExistsCept.php)",
+    "status": "pass",
+    "time": 0.0077860355377197,
+    "trace": [
+
+    ],
+    "message": "",
+    "output": ""
+}

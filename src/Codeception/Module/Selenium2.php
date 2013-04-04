@@ -90,6 +90,27 @@ class Selenium2 extends \Codeception\Util\MinkJS
         if ($this->config['delay']) usleep($this->config['delay'] * 1000);
     }
 
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use Selenium WebDriver methods directly
+     *
+     * ``` php
+     * $I->executeInSelenium(function(\WebDriver\Session $webdriver) {
+     *   $webdriver->back();
+     * });
+     * ```
+     *
+     * Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
+     * Not recommended this command too be used on regular basis.
+     * If Codeception lacks important Selenium methods implement then and submit patches.
+     *
+     * @param callable $function
+     */
+    public function executeInSelenium(\Closure $function)
+    {
+        $function($this->webDriverSession);
+    }
+
     public function _saveScreenshot($filename)
     {
         if (!$this->webDriverSession) {
