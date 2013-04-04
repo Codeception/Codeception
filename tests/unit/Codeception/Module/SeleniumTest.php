@@ -90,4 +90,12 @@ class SeleniumTest extends TestsForMink
         $this->module->see('ticked','#notice');
     }
 
+    public function testRawSelenium()
+    {
+        $this->module->executeInSelenium(function (\Selenium\Browser $browser) {
+            $browser->open('/info');
+        });
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
 }

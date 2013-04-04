@@ -76,6 +76,27 @@ class Selenium extends \Codeception\Util\MinkJS
         $this->session->stop();
     }
 
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use Selenium RC methods directly
+     *
+     * ``` php
+     * $I->executeInSelenium(function(\Selenium\Browser $browser) {
+     *   $browser->open('/');
+     * });
+     * ```
+     *
+     * Use [Browser Selenium API](https://github.com/alexandresalome/PHP-Selenium)
+     * Not recommended this command too be used on regular basis.
+     * If Codeception lacks important Selenium methods implement then and submit patches.
+     *
+     * @param callable $function
+     */
+    public function executeInSelenium(\Closure $function)
+    {
+        $function($this->session->getDriver()->getBrowser());
+    }
+
     // please, add more custom Selenium functions here
     public function _afterStep(\Codeception\Step $step) {
         if ($this->config['delay']) usleep($this->config['delay'] * 1000);
