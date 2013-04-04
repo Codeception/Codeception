@@ -45,8 +45,14 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
+
+        if ($input->getArgument('test')
+            && strtolower(substr($input->getArgument('test'), -4)) === '.php'
+        ) {
+            $options['steps'] = true;
+        }
+
         if ($input->getOption('debug')) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
-        if ($input->getArgument('test')) $options['steps'] = true;
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
