@@ -30,7 +30,8 @@ class Run extends Base
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
             new InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
             new InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
-            new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code')
+            new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
+            new InputOption('defer-flush', '', InputOption::VALUE_NONE, 'Don\'t flush output during run')
         ));
         parent::configure();
     }
@@ -44,8 +45,14 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
+
+        if ($input->getArgument('test')
+            && strtolower(substr($input->getArgument('test'), -4)) === '.php'
+        ) {
+            $options['steps'] = true;
+        }
+
         if ($input->getOption('debug')) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
-        if ($input->getArgument('test')) $options['steps'] = true;
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');

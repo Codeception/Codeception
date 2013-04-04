@@ -4,7 +4,7 @@
 
 Codeception is a new PHP full-stack testing framework.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
-Powered by PHPUnit 3.6.
+Powered by PHPUnit 3.7.
 
 ### At a Glance
 
