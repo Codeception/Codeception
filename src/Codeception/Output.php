@@ -18,7 +18,7 @@ class Output {
 
 	private function write($text)
 	{
-        while (@ob_end_flush());
+        while (ob_get_level()) ob_end_flush();
         print $text;
         ob_start();
 	}
@@ -30,7 +30,7 @@ class Output {
     }
 
 	protected function colorize($message) {
-		// magent colors
+		// magenta colors
 		$message = str_replace(array('[[',']]'), array("\033[35;1m","\033[0m"), $message);
 		$message = str_replace(array('(%','%)'), array("\033[45;37m","\033[0m"), $message);
 		// grey

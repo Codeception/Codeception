@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3.3
   - 5.3
   - 5.4
 
@@ -9,13 +8,20 @@ branches:
   except:
     - gh-pages
 
+services:
+  - mongodb
+  - rabbitmq
+
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.16.1.jar
-  - java -jar selenium-server-standalone-2.16.1.jar &
+  - java -jar selenium-server-standalone-2.16.1.jar -port 4444 &
+  - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.31.0.jar
+  - java -jar selenium-server-standalone-2.31.0.jar -port 4455 &
   - php -S localhost:8000 -t tests/data/app &
-  - composer install --dev --verbose
+  - composer self-update
+  - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
 
-script: "php codecept run"
+script: "php -dxdebug.remote_enable=1 -dxdebug.remote_host=127.0.0.1 -dxdebug.remote_port=9000 -dxdebug.remote_mode=req codecept run"

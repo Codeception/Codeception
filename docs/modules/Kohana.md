@@ -1,8 +1,15 @@
 # Kohana Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Kohana.php)**
+
 
 This module provides integration with [Kohana](http://kohanaframework.org/) v3.
-Current status is PRE ALFA=)
 Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Nikita Groshin**
+* Stability: **alpha**
+* Contact: nike-17@ya.ru
 
 ### Installation
 
@@ -62,6 +69,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -135,11 +150,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -274,11 +290,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
@@ -410,6 +428,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

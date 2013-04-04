@@ -19,7 +19,7 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
             if ($test instanceof \Codeception\TestCase) $steps = $test->getScenario()->getSteps();
         } else {
             $success = FALSE;
-            if ($test instanceof \Codeception\TestCase) $steps = $test->getTrace();;
+            if ($test instanceof \Codeception\TestCase) $steps = $test->getTrace();
         }
 
         $this->onTest($test->toString(), $success, $steps, $time);

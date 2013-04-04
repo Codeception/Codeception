@@ -27,25 +27,48 @@ class Compiler
 
         $phar->startBuffering();
 
-            $finder = new Finder();
-            $finder->files()
-                    ->ignoreVCS(true)
-                    ->name('*.php')
-                    ->name('*.tpl.dist')
-                    ->name('*.html.dist')
-                    ->in($this->compileDir . '/src')
-            ;
+        $finder = new Finder();
+        $finder->files()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->name('*.tpl.dist')
+            ->name('*.html.dist')
+            ->in($this->compileDir . '/src');
 
-            foreach ($finder as $file) {
-                $this->addFile($phar, $file);
-            }
+        foreach ($finder as $file) {
+            $this->addFile($phar, $file);
+        }
+
+	    $finder = new Finder();
+        $finder
+            ->files()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->name('*.js')
+            ->name('*.css')
+            ->name('*.png')
+            ->name('*.tpl.dist')
+            ->name('*.html.dist')
+            ->exclude('Tests')
+            ->exclude('tests')
+            ->exclude('benchmark')
+            ->exclude('demo')
+            ->in($this->compileDir.'/plugins/frameworks');
+
+        foreach($finder as $file) {
+            $this->addFile($phar, $file);
+        }
 
         $finder = new Finder();
         $finder
             ->files()
             ->ignoreVCS(true)
             ->name('*.php')
+            ->name('*.css')
+            ->name('*.png')
             ->name('*.js')
+            ->name('*.css')
+            ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->exclude('Tests')
@@ -61,25 +84,20 @@ class Compiler
 
         $this->addFile($phar, new \SplFileInfo($this->compileDir.'/autoload.php'));
 
+        $this->setMainExecutable($phar);
+        $this->setStub($phar);
         $phar->stopBuffering();
 
         if(in_array('GZ', \Phar::getSupportedCompression())) {
-            echo "Compressed\r\n";
             //do not use compressFiles as it has issue with temporary file when adding large amount of files
 //            $phar->compressFiles(\Phar::GZ);
-            if (file_exists('codecept.phar.gz')) unlink('codecept.phar.gz');
-
-            $phar = $phar->compress(\Phar::GZ);
-            $this->setMainExecutable($phar);
-            $this->setStub($phar);
-
-            unlink('codecept.phar');
-            rename('codecept.phar.gz', 'codecept.phar');
+            $phar = $phar->compressFiles(\Phar::GZ);
+            echo "Compressed\r\n";
 
         } else {
-            $this->setMainExecutable($phar);
-            $this->setStub($phar);
+            $phar = $phar->compress(\Phar::NONE);
         }
+
 
 
         unset($phar);
@@ -97,7 +115,10 @@ class Compiler
 //        var_dump($path);
 
         $content = file_get_contents($file);
-        $content = $this->stripWhitespace($content);
+
+        if (strpos($file, 'Codeception') === false) {
+            $content = $this->stripWhitespace($content);
+        }
 
         $phar->addFromString($path, $content);
     }
@@ -110,7 +131,7 @@ class Compiler
     public function setStub($phar)
     {
         $contents = file_get_contents($this->compileDir.'/package/stub.php');
-        $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
+        // $contents = preg_replace('{^#!/usr/bin/env php\s*}', '', $contents);
         $phar->setStub($contents);
     }
 
@@ -130,6 +151,7 @@ class Compiler
             if (is_string($token)) {
                 $output .= $token;
             } elseif (in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
+                // $output .= $token[1];
                 $output .= str_repeat("\n", substr_count($token[1], "\n"));
             } elseif (T_WHITESPACE === $token[0]) {
                 // reduce wide spaces

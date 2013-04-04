@@ -71,6 +71,17 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/');
     }
 
+    public function testClickOnContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('More info','p');
+        $this->module->seeInCurrentUrl('/info');
+
+        $this->module->amOnPage('/');
+        $this->module->click('More info','body>p');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testRadioButton()
     {
         $this->module->amOnPage('/form/radio');
@@ -280,11 +291,55 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->click('Ссылочка');
     }
 
+    public function testSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeInField('Name','OLD_VALUE');
+        $this->module->seeInField('input[name=name]','OLD_VALUE');
+        $this->module->seeInField('descendant-or-self::input[@id="name"]','OLD_VALUE');
+    }
+
+    public function testSeeInFieldForEmptyInput()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_input','');
+    }
+
+    public function testSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->seeInField('Description','sunrise');
+        $this->module->seeInField('textarea','sunrise');
+        $this->module->seeInField('descendant-or-self::textarea[@id="description"]','sunrise');
+    }
+
+    public function testSeeInFieldForEmptyTextarea()
+    {
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','');
+    }
+
+    public function testDontSeeInFieldOnInput()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeInField('Name','Davert');
+        $this->module->dontSeeInField('input[name=name]','Davert');
+        $this->module->dontSeeInField('descendant-or-self::input[@id="name"]','Davert');
+    }
+
+    public function testDontSeeInFieldOnTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunset');
+        $this->module->dontSeeInField('textarea','sunset');
+        $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
+    }
+
     public function testFieldWithNonLatin() {
         $this->module->amOnPage('/info');
         $this->module->seeInField('input[name=rus]','Верно');
     }
-    
+
     public function testComplexSelectorsAndForms() {
         $this->module->amOnPage('/login');
         $this->module->submitForm('form#user_form_login', array('email' => 'miles@davis.com', 'password' => '111111'));
