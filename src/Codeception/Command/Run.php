@@ -42,7 +42,12 @@ class Run extends Base
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $options = $input->getOptions();
-        if ($input->getArgument('test')) $options['steps'] = true;
+
+        if ($input->getArgument('test')
+            && strtolower(substr($input->getArgument('test'), -4)) === '.php'
+        ) {
+            $options['steps'] = true;
+        }
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
