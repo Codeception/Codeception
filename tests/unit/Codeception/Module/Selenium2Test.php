@@ -122,8 +122,9 @@ class Selenium2Test extends TestsForMink
 
     public function testRawSelenium()
     {
+        $this->module->amOnPage('/');
         $this->module->executeInSelenium(function (\Webdriver\Session $webdriver) {
-            $webdriver->open('/info');
+            $webdriver->element('id','link')->click('');
         });
         $this->module->seeCurrentUrlEquals('/info');
     }
