@@ -1,9 +1,17 @@
 # Unit Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Unit.php)**
+
 
 Unit testing module
 
 This is the heart of the CodeGuy testing framework.
 By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Features
 * Descriptive - simply write what you are testing and how you are testing.

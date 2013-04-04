@@ -3,8 +3,13 @@ namespace Codeception\Module;
 
 /**
  * This module provides integration with [Kohana](http://kohanaframework.org/) v3.
- * Current status is PRE ALFA=)
  * Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
+ *
+ * ## Status
+ *
+ * * Maintainer: **Nikita Groshin**
+ * * Stability: **alpha**
+ * * Contact: nike-17@ya.ru
  *
  * ### Installation
  *
@@ -16,10 +21,10 @@ namespace Codeception\Module;
  * 3. if you have some problem pls feel free to ask me nike-17@ya.ru
  *
  * Module is created by [Nikita Groshin](nike-17@ya.ru)
- * 
+ *
  */
 
-class Kohana extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface {
+class Kohana extends \Codeception\Util\Framework {
 
 	public function _initialize() {
 		

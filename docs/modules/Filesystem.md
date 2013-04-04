@@ -1,48 +1,139 @@
 # Filesystem Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Filesystem.php)**
+
+
+Module for testing local filesystem.
+Fork it to extend the module for FTP, Amazon S3, others.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
+
+Module was developed to test Codeception itself.
 
 ## Actions
 
 
 ### amInPath
 
-__not documented__
+
+Enters a directory In local filesystem.
+Project root directory is used by default
+
+ * param $path
 
 
 ### copyDir
 
-__not documented__
+
+Copies directory with all contents
+
+``` php
+<?php
+$I->copyDir('vendor','old_vendor');
+?>
+```
+
+ * param $src
+ * param $dst
 
 
 ### deleteDir
 
-__not documented__
+
+Deletes directory with all subdirectories
+
+``` php
+<?php
+$I->deleteDir('vendor');
+?>
+```
+
+ * param $dirname
 
 
 ### deleteFile
 
-__not documented__
+
+Deletes a file
+
+``` php
+<?php
+$I->deleteFile('composer.lock');
+?>
+```
+
+ * param $filename
 
 
 ### deleteThisFile
 
-__not documented__
+
+Deletes a file
 
 
 ### dontSeeInThisFile
 
-__not documented__
+
+Checks If opened file doesn't contain `text` in it
+
+``` php
+<?php
+$I->openFile('composer.json');
+$I->seeInThisFile('codeception/codeception');
+?>
+```
+
+ * param $text
 
 
 ### openFile
 
-__not documented__
+
+Opens a file and stores it's content.
+
+Usage:
+
+``` php
+<?php
+$I->openFile('composer.json');
+$I->seeInThisFile('codeception/codeception');
+?>
+```
+
+ * param $filename
 
 
 ### seeFileFound
 
-__not documented__
+
+Checks if file exists in path.
+Opens a file when it's exists
+
+``` php
+<?php
+$I->seeFileFound('UserModel.php','app/models');
+?>
+```
+
+ * param $filename
+ * param string $path
 
 
 ### seeInThisFile
 
-__not documented__
+
+Checks If opened file has `text` in it.
+
+Usage:
+
+``` php
+<?php
+$I->openFile('composer.json');
+$I->seeInThisFile('codeception/codeception');
+?>
+```
+
+ * param $text

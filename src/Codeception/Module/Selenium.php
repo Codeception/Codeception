@@ -2,7 +2,11 @@
 namespace Codeception\Module;
 
 /**
+ *
  * Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
+ *
+ * But we recommend you to use **Selenium 2 WebDriver** as it is an evolution of SeleniumRC and grants you more stable results.
+ * For manipulation with Selenium WebDriver use [Selenium2](/docs/modules/Selenium2) module
  *
  * Note, all method takes CSS selectors to fetch elements.
  * For links, buttons, fields you can use names/values/ids of elements.
@@ -20,6 +24,13 @@ namespace Codeception\Module;
  *
  * Don't forget to turn on Db repopulation if you are using database.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
+ *
  * ## Configuration
  *
  * * url *required* - start url for your app
@@ -27,6 +38,15 @@ namespace Codeception\Module;
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
  * * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ *     modules: 
+ *        enabled: [Selenium]
+ *        config:
+ *           Selenium:
+ *              url: 'http://localhost/' 
+ *              browser: firefox 
  *
  * ## Public Properties
  *
@@ -47,7 +67,7 @@ class Selenium extends \Codeception\Util\MinkJS
         );
 
         $this->session = new \Behat\Mink\Session($driver);
-        parent::_initialize();
+
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {

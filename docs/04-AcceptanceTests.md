@@ -150,7 +150,7 @@ $I->fillField('Name', 'Miles');
 // we can use input name, or id
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
-$I->press('Update');
+$I->click('Update');
 ?>
 ```
 
@@ -329,15 +329,15 @@ class WebHelper extends \Codeception\Module {
 
     function seeResponseIsPrettyLong($size = 3000) {
         $session = $this->getModule('PhpBrowser')->session;
-        $content = $session->getPage()->getConetent();
+        $content = $session->getPage()->getContent();
         $this->assertGreaterThen($size, strlen($content));
     }
 }
 ?>
 ```
 
-We [connected a module](http://codeception.com/docs/03-Modules#connecting-modules), then we retrieved content from Mink session class.
-You should definetely learn Mink to dig deeper.
+We [connected a module](http://codeception.com/docs/03-ModulesAndHelpers#Connecting-Modules), then we retrieved content from Mink session class.
+You should definitely learn Mink to dig deeper.
 And in the end we performed assertion on current content.
 
 ## Conclusion

@@ -1,8 +1,17 @@
 # SocialEngine Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SocialEngine.php)**
+
 
 This module provides integration with [Social Engine](http://www.socialengine.net/) v4.
 
 Functional tests can be run inside Social Engine. All commands of this module are just the same as in other modules that share Framework interface.
+
+## Status
+
+* Maintainer: **Artem Kovradin**
+* Stability: **beta**
+* Contact: https://github.com/horechek
+* URL: http://tvorzasp.com
 
 ## Config
 
@@ -13,9 +22,7 @@ Functional tests can be run inside Social Engine. All commands of this module ar
 * client - BrowserKit client
 * bootstrap - current bootstrap file.
 
-
 Module is created by [Artem Kovradin](http://tvorzasp.com)
-
 
 ## Actions
 
@@ -63,6 +70,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -136,11 +151,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -275,11 +291,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
@@ -411,6 +429,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

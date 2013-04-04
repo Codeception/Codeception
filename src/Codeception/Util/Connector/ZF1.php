@@ -50,7 +50,7 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setHeaders($request->getServer());
         $_FILES = $request->getFiles();
 
-        $zendResponse = new \Zend_Controller_Response_Http;
+        $zendResponse = new \Zend_Controller_Response_HttpTestCase;
         $this->front->setRequest($zendRequest)->setResponse($zendResponse);
 
         ob_start();

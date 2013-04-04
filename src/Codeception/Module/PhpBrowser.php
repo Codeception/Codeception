@@ -3,16 +3,32 @@
 namespace Codeception\Module;
 
 /**
- * Uses Mink (http://mink.behat.org) with Goutte Driver to interact with your application.
- * Contains all Mink actions and additional ones, listed below.
+ * Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
  *
  * Use to perform web acceptance tests with non-javascript browser.
  *
  * If test fails stores last shown page in 'output' dir.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Configuration
  *
  * * url *required* - start url of your app
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ *     modules: 
+ *        enabled: [PhpBrowser]
+ *        config:
+ *           PhpBrowser:
+ *              url: 'http://localhost'
  *
  * ## Public Properties
  *

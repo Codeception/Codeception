@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit;
 class Runner extends \PHPUnit_TextUI_TestRunner {
 
     public static $persistentListeners = array();
+    protected $defaultListeners = array('xml' => false, 'html' => false, 'tap' => false, 'json' => false);
 
     /**
      * @return null|\PHPUnit_TextUI_ResultPrinter
@@ -72,22 +73,14 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
         }
 
         if (empty(self::$persistentListeners)) {
-
-            if (isset($arguments['html'])) {
-                if ($arguments['html']) self::$persistentListeners[] = new \Codeception\PHPUnit\ResultPrinter\HTML(\Codeception\Configuration::logDir() . 'report.html');
+            foreach ($this->defaultListeners as $listener => $value) {
+                if (!isset($arguments[$listener])) $arguments[$listener] = $value;
             }
 
-            if (isset($arguments['xml'])) {
-                if ($arguments['xml']) self::$persistentListeners[] = new \Codeception\PHPUnit\Log\JUnit(\Codeception\Configuration::logDir() . 'report.xml', false);
-            }
-
-            if (isset($arguments['tap'])) {
-                if ($arguments['tap']) self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP(\Codeception\Configuration::logDir() . 'report.tap.log');
-            }
-
-            if (isset($arguments['json'])) {
-                if ($arguments['json']) self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON(\Codeception\Configuration::logDir() . 'report.json');
-            }
+            if ($arguments['html']) self::$persistentListeners[] = new \Codeception\PHPUnit\ResultPrinter\HTML(\Codeception\Configuration::logDir() . 'report.html');
+            if ($arguments['xml']) self::$persistentListeners[] = new \Codeception\PHPUnit\Log\JUnit(\Codeception\Configuration::logDir() . 'report.xml', false);
+            if ($arguments['tap']) self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP(\Codeception\Configuration::logDir() . 'report.tap.log');
+            if ($arguments['json']) self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON(\Codeception\Configuration::logDir() . 'report.json');
 
             foreach (self::$persistentListeners as $listener) {
        	        $result->addListener($listener);

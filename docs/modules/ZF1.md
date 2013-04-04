@@ -1,16 +1,27 @@
 # ZF1 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF1.php)**
+
 
 This module allows you to run tests inside Zend Framework.
 It acts just like ControllerTestCase, but with usage of Codeception syntax.
-Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
 
 It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
-and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
+and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
+
+[Tutorial](http://codeception.com/01-27-2012/bdd-with-zend-framework.html)
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Config
 
 * env  - environment used for testing ('testing' by default).
 * config - relative path to your application config ('application/configs/application.ini' by default).
+* app_path - relative path to your application folder ('application' by default).
+* lib_path - relative path to your library folder ('library' by default).
 
 ## API
 
@@ -26,7 +37,7 @@ Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning yo
 [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
 
 If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
-Use a generated helper TestHelper. Usse this code inside of it.
+Use a generated helper TestHelper. Use this code inside of it.
 
 ``` php
 <?php
@@ -92,6 +103,14 @@ $I->attachFile('prices.xls');
 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -165,11 +184,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
@@ -304,11 +324,13 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
@@ -440,6 +462,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
-For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

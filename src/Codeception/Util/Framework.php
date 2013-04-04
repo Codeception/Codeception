@@ -4,7 +4,7 @@ namespace Codeception\Util;
 use \Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Abstract module for PHP framworks connected via Symfony BrowserKit components
+ * Abstract module for PHP frameworks connected via Symfony BrowserKit components
  * Each framework is connected with it's own connector defined in \Codeception\Util\Connector
  * Each module for framework should extend this class.
  *
@@ -45,11 +45,15 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->debugResponse();
     }
 
-    public function click($link)
+    public function click($link, $context = null)
     {
         $literal = Crawler::xpathLiteral($link);
 
-        $anchor = $this->crawler->filterXPath('//html/.//a[.='.$literal.']');
+        if ($context) {
+            $this->crawler = $this->match($context);
+        }
+
+        $anchor = $this->crawler->filterXPath('.//a[.='.$literal.']');
         if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
@@ -159,12 +163,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function proceedSeeInField($field, $value)
     {
-        $fields = $this->crawler->filter($field);
-        $values1 = $fields->filter('input')->extract(array('value'));
-        $values2 = $fields->filter('textarea')->extract(array('_text'));
-        if (empty($values1) && empty($values2)) \PHPUnit_Framework_Assert::fail('field not found');
-        $values = array_merge($values1, $values2);
-        return array('Contains', $this->escape($value), $values);
+        $field = $this->getFieldByLabelOrCss($field);
+        if (empty($field)) $this->fail("input field not found");
+        $currentValue = $field->filter('textarea')->extract(array('_text'));
+        if (!$currentValue) $currentValue = $field->extract(array('value'));
+        return array('Contains', $this->escape($value), $currentValue);
     }
 
     public function submitForm($selector, $params)
@@ -246,9 +249,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function getFieldByLabelOrCss($field)
     {
-        $label = $this->crawler->filterXPath(sprintf('descendant-or-self::label[text()="%s"]', $field))->first();
-        if (count($label) && $label->attr('for')) {
-            $input = $this->crawler->filter('#' . $label->attr('for'));
+        $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
+        if (count($label)) {
+            $label = $label->first();
+            if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
         if (!isset($input)) $input = $this->match($field);
@@ -309,7 +313,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function escape($string)
     {
-        return addslashes($string);
+        return $string;// addslashes($string);
     }
 
     protected function match($selector)
@@ -381,5 +385,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    public function seeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertGreaterThen(0, $nodes->count());
+    }
 
 }

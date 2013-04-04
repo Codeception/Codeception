@@ -14,10 +14,26 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * Whether framework is used it operates via standard framework modules.
  * Otherwise sends raw HTTP requests to url via PHPBrowser.
  *
+ * ## Status
+ *
+ * * Maintainer: **tiger-seo**, **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * Contact: tiger.seo@gmail.com
+ *
  * ## Configuration
  *
  * * url *optional* - the url of api
  * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
+ *
+ * ### Example
+ *
+ *     modules: 
+ *        enabled: [REST]
+ *        config:
+ *           REST:
+ *              url: 'http://serviceapp/api/v1/' 
+ *              timeout: 90
  *
  * ## Public Properties
  *
@@ -32,12 +48,11 @@ class REST extends \Codeception\Module
     protected $config = array(
         'url'                 => '',
         'timeout'             => 30,
-        'xdebug_remote'       => false,
-        'xdebug_codecoverage' => false,
+        'xdebug_remote'       => false
     );
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
+     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
     public $is_functional = false;
@@ -89,53 +104,11 @@ class REST extends \Codeception\Module
             $timeout = 0;
         }
 
-        $clientConfig = $this->client->getClient()->getConfig();
-        $curlOptions = $clientConfig->get('curl.options');
-        $curlOptions[CURLOPT_TIMEOUT] = $timeout;
-        $clientConfig->set('curl.options', $curlOptions);
-
-        if ($this->config['xdebug_codecoverage']) {
-            $this->headers['X-Codeception-CodeCoverage'] = $test->toString();
-        }
-    }
-
-    public function _afterSuite($suite)
-    {
-        if ($this->config['xdebug_codecoverage']) {
-            // Create a stream
-            $options = array(
-                'http' => array('header' => "X-Codeception-CodeCoverage: let me in\r\n")
-            );
-            $context = stream_context_create($options);
-            $url = $this->config['url'] . '/c3/report/';
-
-            /**
-             * Get html code coverage report
-             */
-
-            $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
-            file_put_contents($tempFile, file_get_contents($url . 'html', null, $context));
-
-            $destDir = \Codeception\Configuration::logDir() . 'codecoverage';
-
-            if (!is_dir($destDir)) {
-                mkdir($destDir, 0777, true);
-            } else {
-                \Codeception\Util\FileSystem::doEmptyDir($destDir);
-            }
-
-            $phar = new \PharData($tempFile);
-            $phar->extractTo($destDir);
-
-            unlink($tempFile);
-
-            /**
-             * Get clover code coverage report
-             */
-
-            $destFile = \Codeception\Configuration::logDir() . 'codeception.clover.xml';
-
-            file_put_contents($destFile, file_get_contents($url . 'clover', null, $context));
+        if (method_exists($this->client, 'getClient')) {
+            $clientConfig = $this->client->getClient()->getConfig();
+            $curlOptions = $clientConfig->get('curl.options');
+            $curlOptions[CURLOPT_TIMEOUT] = $timeout;
+            $clientConfig->set('curl.options', $curlOptions);
         }
     }
 
@@ -239,7 +212,7 @@ class REST extends \Codeception\Module
      */
     private function setHeaderLink(array $linkEntries)
     {
-        $values = [];
+        $values = array();
         foreach ($linkEntries as $linkEntry) {
             \PHPUnit_Framework_Assert::assertArrayHasKey(
                 'uri',
@@ -438,7 +411,7 @@ class REST extends \Codeception\Module
         $data = $response = json_decode($this->response, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->fail('Respose is not of JSON format or is malformed');
+            $this->fail('Response is not of JSON format or is malformed');
             $this->debugSection('Response', $this->response);
         }
 
@@ -506,7 +479,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->$response);
+        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
     }
 
     /**
@@ -516,6 +489,10 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($num)
     {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+        } else {
+            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        }
     }
 }

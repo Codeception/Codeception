@@ -33,7 +33,7 @@ The REST module will automatically connect to PhpBrowser. In case you provide it
 Let's create the first sample test:
 
 ```
-php codecept.phar api CreateUser
+php codecept.phar generate:cept api CreateUser
 ```
 
 It will be called `CreateUserCept.php`. We can use it to test creation of user via web service.
