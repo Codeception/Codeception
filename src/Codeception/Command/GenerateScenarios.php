@@ -60,7 +60,7 @@ class GenerateScenarios extends Base
 
         $suiteManager = new \Codeception\SuiteManager($dispatcher, $suite, $suiteconf);
 
-        if (isset($suiteconf['bootstrap'])) {
+        if ($suiteconf['bootstrap']) {
             if (file_exists($suiteconf['path'] . $suiteconf['bootstrap'])) {
                 require_once $suiteconf['path'] . $suiteconf['bootstrap'];
             }
