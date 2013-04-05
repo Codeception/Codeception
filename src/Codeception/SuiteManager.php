@@ -34,7 +34,7 @@ class SuiteManager {
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
-        $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
         if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
             throw new \Codeception\Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
@@ -176,6 +176,14 @@ class SuiteManager {
         foreach ($testFiles as $test) {
             $this->addTest($test->getPathname());
         }
+    }
+
+    protected function getClassesFromFile($file)
+    {
+        $loaded_classes = get_declared_classes();
+        require_once $file;
+        $extra_loaded_classes = get_declared_classes();
+        return array_diff($extra_loaded_classes,$loaded_classes);
     }
 
     /**

@@ -39,6 +39,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    public function amHttpAuthenticated($username, $password)
+    {
+        $this->client->setServerParameter('PHP_AUTH_USER', $username);
+        $this->client->setServerParameter('PHP_AUTH_PW', $password);
+    }
+
     public function amOnPage($page)
     {
         $this->crawler = $this->client->request('GET', $page);

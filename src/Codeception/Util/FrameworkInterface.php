@@ -96,4 +96,12 @@ interface FrameworkInterface extends WebInterface
      * @return mixed
      */
     public function seeResponseCodeIs($code);
+
+    /**
+     * Adds HTTP authentication via username/password.
+     *
+     * @param $username
+     * @param $password
+     */
+    public function amHttpAuthenticated($username, $password);
 }
