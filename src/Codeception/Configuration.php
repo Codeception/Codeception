@@ -99,18 +99,29 @@ class Configuration
     public static function suiteSettings($suite, $config)
     {
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
+
+        $defaults = array(
+            'class_name' => 'NoGuy',
+            'modules' => isset($config['modules']) ? $config['modules'] : array(),
+            'bootstrap' => false,
+            'suite_class' => '\PHPUnit_Framework_TestSuite',
+            'colors' => true,
+            'memory_limit' => '1024M',
+            'path' => '',
+            'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
+        );
+
         $globalConf = $config['settings'];
         $globalConf['coverage'] = isset($config['coverage'])
             ? $config['coverage']
             : array();
 
-        $moduleConf = array('modules' => isset($config['modules']) ? $config['modules'] : array());
         $path = $config['paths']['tests'];
 
         $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
         $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
 
-        $settings = self::mergeConfigs($globalConf, $moduleConf);
+        $settings = self::mergeConfigs($globalConf, $defaults);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
 

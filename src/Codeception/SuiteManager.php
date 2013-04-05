@@ -27,22 +27,10 @@ class SuiteManager {
     protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
 
-
-    protected $defaults = array(
-        'class_name' => 'NoGuy',
-        'modules' => array('enabled' => array(), 'config' => array()),
-        'bootstrap' => false,
-        'suite_class' => '\PHPUnit_Framework_TestSuite',
-        'colors' => true,
-        'memory_limit' => '1024M',
-        'path' => '',
-        'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
-    );
-
     protected $settings = array();
 
     public function __construct(EventDispatcher $dispatcher, $name, $settings) {
-        $this->settings = array_merge($this->defaults, $settings);
+        $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
@@ -195,13 +183,5 @@ class SuiteManager {
      */
     public function getSuite() {
         return $this->suite;
-    }
-
-    protected function getClassesFromFile($file)
-    {
-        $loaded_classes = get_declared_classes();
-        require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-        return array_diff($extra_loaded_classes,$loaded_classes);
     }
 }
