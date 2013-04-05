@@ -1,74 +1,28 @@
-# Yii1 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii1.php)**
+# ZF2 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF2.php)**
 
 
-This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
+This module allows you to run tests inside Zend Framework 2.
 
-The following configurations are available for this module:
-<ul>
-<li>appPath - full path to the application, include index.php</li>
-<li>url - full url to the index.php entry script</li>
-</ul>
-In your index.php you must return array with correct configuration for the application:
+File `init_autoloader` in project's root is required.
+Uses `tests/application.config.php` config file by default.
 
-For the simple created yii application index.php will be like this:
-<pre>
-// change the following paths if necessary
-$yii=dirname(__FILE__).'/../yii/framework/yii.php';
-$config=dirname(__FILE__).'/protected/config/main.php';
+## Status
 
-// remove the following lines when in production mode
-defined('YII_DEBUG') or define('YII_DEBUG',true);
-// specify how many levels of call stack should be shown in each log message
-defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
-require_once($yii);
-return array(
-	'class' => 'CWebApplication',
-	'config' => $config,
-);
-</pre>
+* Maintainer: **bladeofsteel**
+* Stability: **alpha**
+* Contact: https://github.com/bladeofsteel
 
-You can use this module by setting params in your functional.suite.yml:
-<pre>
-class_name: TestGuy
-modules:
-    enabled: [Yii1, TestHelper]
-    config:
-        Yii1:
-            appPath: '/path/to/index.php'
-            url: 'http://localhost/path/to/index.php'
-</pre>
+## Config
 
-You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web), this component will be
-imported when you include Yii1 module. There is also an alias "codeceptionsrc" available in Yii that points to the
-codeception source directory, you can use it as always:
-<pre>
-Yii::getPathOfAlias('codeceptionsrc');
-</pre>
-This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
-modify it to be extended from your custom http-request component.
+* config: relative path to config file (default: `tests/application.config.php`)
 
-You can test this module by creating new empty Yii application and creating this scenario:
-<pre>
-$I = new TestGuy($scenario);
-$I->wantTo('Test index page');
-$I->amOnPage('/index.php');
-$I->see('My Web Application','#header #logo');
-$I->click('Login');
-$I->see('Login','h1');
-$I->see('Username');
-$I->fillField('#LoginForm_username','demo');
-$I->fillField('#LoginForm_password','demo');
-$I->click('#login-form input[type="submit"]');
-$I->seeLink('Logout (demo)');
-$I->click('Logout (demo)');
-$I->seeLink('Login');
-</pre>
-Then run codeception: php codecept.phar --steps run functional
-You must see "OK" and that all steps are marked with asterisk (*).
-Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
+## API
 
- * property Codeception\Util\Connector\Yii1 $client
+* application -  instance of `\Zend\Mvc\ApplicationInterface`
+* db - instance of `\Zend\Db\Adapter\AdapterInterface`
+* client - BrowserKit client
+
 
 ## Actions
 

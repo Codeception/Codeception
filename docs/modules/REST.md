@@ -54,7 +54,7 @@ Adds HTTP authentication via username/password.
 ### dontSeeResponseContains
 
 
-Checks whether the last response does not contain text.
+Checks weather last response do not contain text.
 
  * param $text
 
@@ -127,7 +127,8 @@ Checks response code.
 
 ### seeResponseContains
 
-Checks whether the last response contains text.
+
+Checks weather the last response contains text.
 
  * param $text
 
@@ -135,7 +136,7 @@ Checks whether the last response contains text.
 ### seeResponseContainsJson
 
 
-Checks whether the last JSON response contains provided array.
+Checks weather the last JSON response contains provided array.
 The response is converted to array with json_decode($response, true)
 Thus, JSON is represented by associative array.
 This method matches that response array contains provided array.
@@ -169,7 +170,7 @@ Checks if response is exactly the same as provided.
 ### seeResponseIsJson
 
 
-Checks whether last response was valid JSON.
+Checks weather last response was valid JSON.
 This is done with json_last_error function.
 
 

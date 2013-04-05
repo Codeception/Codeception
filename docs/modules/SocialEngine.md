@@ -27,6 +27,15 @@ Module is created by [Artem Kovradin](http://tvorzasp.com)
 ## Actions
 
 
+### amHttpAuthenticated
+
+
+Adds HTTP authentication via username/password.
+
+ * param $username
+ * param $password
+
+
 ### amOnPage
 
 
