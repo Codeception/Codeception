@@ -8,6 +8,15 @@ class RunCest
         if (floatval(phpversion()) == '5.3') $scenario->skip();
     }
 
+    public function runOneFile(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/dummy/FileExistsCept.php');
+        $I->seeFileFound('report.html','tests/_log');
+        $I->seeInShellOutput("OK (");
+    }
+
     public function runHtml(\CliGuy $I) {
         $I->wantTo('execute tests with html output');
         $I->amInPath('tests/data/sandbox');
