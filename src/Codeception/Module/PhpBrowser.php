@@ -67,9 +67,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $curl_config = array_merge($this->curl_defaults, $this->config['curl']);
         array_walk($curl_config, function($a, &$b) { $b = "curl.$b"; });
 
-
         $client->setClient($this->guzzle = new Client('', $curl_config));
-
         $this->session = new \Behat\Mink\Session($driver);
         parent::_initialize();
     }

@@ -30,30 +30,8 @@ $I->seeInCurrentUrl('pages/tree-of-life-movie-review'); // slug is generated
 $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // data is stored in database
 ?>
 ```
-Ok, as for unit test similar approach may seem weird, but...
 
-Take a look at this:
-
-#### Sample unit test
-
-``` php
-<?php
-class UserControllerCest {
-    public $class = 'UserController';
-
-    public function createAction(CodeGuy $I)
-    {
-        $I->haveFakeClass($userController = Stub::makeEmptyExcept('UserController'));
-        $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
-        $I->seeResultEquals(true)
-        $I->seeMethodInvoked($userController, 'renderHtml')
-        $I->seeInDatabase('users', array('username' => 'MilesDavis'));
-    }
-}
-?>
-```
-
-Anyway, if you don't really like writing unit tests in DSL, Codeception can run PHPUnit tests natively.
+For unit testing you can stay on classic PHPUnit tests, as Codeception can run them too.
 
 ## Documentation
 
@@ -62,14 +40,6 @@ Anyway, if you don't really like writing unit tests in DSL, Codeception can run 
 Documentation is currently included within the project. Look for it in the 'docs' directory.
 
 ## Installation
-
-### PEAR
-Install latest PEAR package from GitHub:
-
-```
-pear channel-discover codeception.com/pear
-pear install codeception/Codeception
-```
 
 ### Phar
 
@@ -105,4 +75,4 @@ See Documentation for more information.
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011-2012
+2011-2013
