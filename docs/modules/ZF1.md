@@ -60,6 +60,15 @@ This will make your functional tests run super-fast.
 ## Actions
 
 
+### amHttpAuthenticated
+
+
+Adds HTTP authentication via username/password.
+
+ * param $username
+ * param $password
+
+
 ### amOnPage
 
 

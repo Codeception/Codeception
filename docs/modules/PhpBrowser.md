@@ -3,6 +3,7 @@
 
 
 Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
+Module works over CURL and requires **PHP CURL extension** to be enabled.
 
 Use to perform web acceptance tests with non-javascript browser.
 
@@ -12,29 +13,45 @@ If test fails stores last shown page in 'output' dir.
 
 * Maintainer: **davert**
 * Stability: **stable**
-* Contact: codecept@davert.mail.ua
-* relies on [Mink](http://mink.behat.org)
+* Contact: davert.codecept@mailican.com
+* relies on [Mink](http://mink.behat.org) and [Guzzle](http://guzzlephp.org/)
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
 
 ## Configuration
 
 * url *required* - start url of your app
+* curl - curl options
 
 ### Example (`acceptance.suite.yml`)
 
-    modules: 
+    modules:
        enabled: [PhpBrowser]
        config:
           PhpBrowser:
              url: 'http://localhost'
+             curl:
+                 CURLOPT_RETURNTRANSFER: true
 
 ## Public Properties
 
 * session - contains Mink Session
+* guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\Guzzle\Http\Client`
+
+All SSL certification checks are disabled by default.
+To configure CURL options use `curl` config parameter.
 
 
 ## Actions
+
+
+### amHttpAuthenticated
+
+
+Adds HTTP authentication via username/password.
+
+ * param $username
+ * param $password
 
 
 ### amOnPage
@@ -242,6 +259,35 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
  * param $text
  * param null $url
+
+
+### executeInGuzzle
+
+
+Low-level API method.
+If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
+
+Example:
+
+``` php
+<?php
+// from the official Guzzle manual
+$I->amGoingTo('Sign all requests with OAuth');
+$I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
+     $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
+                 'consumer_key'    => '***',
+                 'consumer_secret' => '***',
+                 'token'           => '***',
+                 'token_secret'    => '***'
+     )));
+});
+?>
+```
+
+Not recommended this command too be used on regular basis.
+If Codeception lacks important Guzzle Client methods implement then and submit patches.
+
+ * param callable $function
 
 
 ### fillField

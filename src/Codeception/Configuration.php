@@ -103,7 +103,7 @@ class Configuration
         $defaults = array(
             'class_name' => 'NoGuy',
             'modules' => isset($config['modules']) ? $config['modules'] : array(),
-            'bootstrap' => false,
+            'bootstrap' => '_bootstrap.php',
             'suite_class' => '\PHPUnit_Framework_TestSuite',
             'colors' => true,
             'memory_limit' => '1024M',

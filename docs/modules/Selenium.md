@@ -297,6 +297,25 @@ XPath or CSS selectors are accepted.
  * param $el2
 
 
+### executeInSelenium
+
+
+Low-level API method.
+If Codeception commands are not enough, use Selenium RC methods directly
+
+``` php
+$I->executeInSelenium(function(\Selenium\Browser $browser) {
+  $browser->open('/');
+});
+```
+
+Use [Browser Selenium API](https://github.com/alexandresalome/PHP-Selenium)
+Not recommended this command too be used on regular basis.
+If Codeception lacks important Selenium methods implement then and submit patches.
+
+ * param callable $function
+
+
 ### executeJs
 
 
