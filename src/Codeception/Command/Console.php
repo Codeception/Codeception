@@ -60,6 +60,7 @@ class Console extends Base {
         $output->writeln("<info>Interactive console started for suite $suiteName</info>");
         $output->writeln("<info>Try Codeception commands without writing a test</info>");
         $output->writeln("<info>type 'exit' to leave console</info>");
+        $output->writeln("<info>type 'actions' to see all available actions for this suite</info>");
 
         $dispatcher->dispatch('suite.before', new Suite($this->suite, $this->codecept->getResult(), $settings));
         $dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this->test));
@@ -83,7 +84,11 @@ class Console extends Base {
         if (file_exists($bootstrap)) require $bootstrap;
 
         do {
-            $command = $dialog->ask($output, '$I->');
+            $command = $dialog->ask($output, '$I->', null, array_keys(SuiteManager::$actions));
+            if ($command == 'actions') {
+                $output->writeln("<info>".implode(' ',array_keys(SuiteManager::$actions)));
+                continue;
+            };
             if ($command == 'exit') return;
             if ($command == '') continue;
             try {
