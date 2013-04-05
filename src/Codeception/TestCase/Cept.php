@@ -70,6 +70,9 @@ class Cept extends \Codeception\TestCase
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
             $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
             throw $e;
+        } catch (\Exception $e) {
+            $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+            throw $e;
         }
         $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
