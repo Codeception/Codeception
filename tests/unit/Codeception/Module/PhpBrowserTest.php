@@ -53,7 +53,7 @@ class PhpBrowserTest extends TestsForMink
         $this->assertFalse($guzzle->getConfig('CURLOPT_CERTINFO'));
 
         $module = new \Codeception\Module\PhpBrowser();
-        $module->_setConfig(array('url' => 'http://localhost:8000', 'curl' => array('CURLOPT_MUTE' => true)));
+        $module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_MUTE' => true)));
         $module->_initialize();
         $guzzle = $module->guzzle;
         $this->assertTrue($guzzle->getConfig('CURLOPT_MUTE'));
