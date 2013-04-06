@@ -27,7 +27,7 @@ class Cept extends \Codeception\TestCase
         $this->name = $data['name'];
         $this->scenario = new \Codeception\Scenario($this);
         $this->testfile = $data['file'];
-        $this->bootstrap = $data['bootstrap'] ? $data['bootstrap'] : null;
+        $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
     }
 
     public function getFileName()
