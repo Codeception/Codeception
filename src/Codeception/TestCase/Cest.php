@@ -59,7 +59,7 @@ class Cest extends \Codeception\TestCase\Cept
             $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
             throw $e;
         }
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
     protected function executeTestMethod($I)
