@@ -56,8 +56,10 @@ class Cest extends \Codeception\TestCase\Cept
             $this->executeTestMethod($I);
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
             $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
+            $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
             throw $e;
         }
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
     protected function executeTestMethod($I)
@@ -119,7 +121,7 @@ class Cest extends \Codeception\TestCase\Cept
         }
         return '';
     }
-    
+
     public function getFileName() {
         return get_class($this)."::".$this->getTestMethod();
     }
