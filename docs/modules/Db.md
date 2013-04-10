@@ -57,7 +57,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
        config:
           Db:
              dsn: 'mysql:host=localhost;dbname=testdb'
-             username: 'root'
+             user: 'root'
              password: ''
              dump: 'tests/_data/dump.sql'
              populate: true
