@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Guzzle\Http\Client;
+use Codeception\Exception\TestRuntime;
 
 /**
  * Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
@@ -73,26 +74,30 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     }
 
     public function submitForm($selector, $params) {
-
         $form = $this->session->getPage()->find('css',$selector);
-	    $fields = $this->session->getPage()->findAll('css', $selector.' input');
-	    $url = '';
-	    foreach ($fields as $field) {
-		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
-	    }
 
-	    $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
-	    foreach ($fields as $field) {
-		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
-	    }
+        if ($form === null)
+            throw new TestRuntime("Form with selector: \"$selector\" was not found on given page.");
 
-	    $fields = $this->session->getPage()->findAll('css', $selector.' select');
+        $fields = $this->session->getPage()->findAll('css', $selector.' input');
+        $url = '';
+
+        foreach ($fields as $field) {
+            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
+        }
+
+        $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
+        foreach ($fields as $field) {
+            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
+        }
+
+        $fields = $this->session->getPage()->findAll('css', $selector.' select');
         foreach ($fields as $field) {
    		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
    	    }
 
-		$url .= '&'.http_build_query($params);
-	    parse_str($url, $params);
+        $url .= '&'.http_build_query($params);
+        parse_str($url, $params);
         $url = $form->getAttribute('action');
         $method = $form->getAttribute('method');
 
