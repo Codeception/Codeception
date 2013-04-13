@@ -1,0 +1,40 @@
+[2013-04-13 09:43:51] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-04-13 09:43:51] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-04-13 09:43:52] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.0.3
+Powered by PHPUnit 3.7.19 by Sebastian Bergmann.
+
+Suite remote_server started [] []
+[2013-04-13 09:43:52] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-04-13 09:43:52] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-04-13 09:43:52] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-04-13 09:43:52] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-04-13 09:43:52] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.0.3
+Powered by PHPUnit 3.7.19 by Sebastian Bergmann.
+
+Suite remote_server started [] []
+[2013-04-13 09:43:52] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-04-13 09:43:52] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-04-13 09:43:52] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-04-13 09:43:52] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-04-13 09:43:52] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.0.3
+Powered by PHPUnit 3.7.19 by Sebastian Bergmann.
+
+Suite remote started [] []
+[2013-04-13 09:43:52] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-04-13 09:43:52] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-04-13 09:43:52] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-04-13 09:43:52] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-04-13 09:43:52] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.0.3
+Powered by PHPUnit 3.7.19 by Sebastian Bergmann.
+
+Suite remote started [] []
+[2013-04-13 09:43:52] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-04-13 09:43:52] RemoteWithXmlCept.php.INFO: PASSED [] []
