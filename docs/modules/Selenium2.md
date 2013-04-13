@@ -243,7 +243,7 @@ Checks if element does not exist (or is visible) on a page, matching it by CSS o
 ``` php
 <?php
 $I->dontSeeElement('.error');
-$I->dontSeeElement(//form/input[1]);
+$I->dontSeeElement('//form/input[1]');
 ?>
 ```
  * param $selector
