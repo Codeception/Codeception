@@ -93,7 +93,13 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 	public function _initialize()
 	{
 		$this->appSettings = require_once($this->config['appPath']); //get application settings in the entry script
-		$this->_appConfig = require_once($this->appSettings['config']);
+
+		// get configuration from array or file
+		if (is_array($this->appSettings['config'])) {
+			$this->_appConfig = $this->appSettings['config'];
+		} else {
+			$this->_appConfig = require_once($this->appSettings['config']);
+		}
 
 		Yii::setPathOfAlias('codeceptionsrc',dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
 
