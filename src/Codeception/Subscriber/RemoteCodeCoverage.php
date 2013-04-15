@@ -1,5 +1,7 @@
 <?php
+
 namespace Codeception\Subscriber;
+
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements EventSubscriberInterface
@@ -9,7 +11,12 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     protected $remote = false;
     protected $suite_name = "";
 
-    protected $settings = array('enabled' => false, 'remote' => false, 'xdebug_session' => 'codeception', 'remote_config' => '');
+    protected $settings = array(
+        'enabled'        => false,
+        'remote'         => false,
+        'xdebug_session' => 'codeception',
+        'remote_config'  => ''
+    );
 
     /**
      * @var \Codeception\Util\RemoteInterface
@@ -30,6 +37,10 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         $this->module = $this->getRemoteConnectionModule();
         if (!$this->module) return;
 
+        if ($this->settings['remote_config']) {
+            $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+        }
+
         $knock = $this->getRemoteCoverageFile($this->module, 'clear');
         if ($knock === false) {
             throw new \Codeception\Exception\RemoteException('
@@ -47,8 +58,9 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         if (!$this->module) return;
         $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
         $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
-        if ($this->settings['remote_config'])
+        if ($this->settings['remote_config']) {
             $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+        }
     }
 
     public function afterStep(\Codeception\Event\Step $e)

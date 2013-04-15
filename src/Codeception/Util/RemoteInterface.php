@@ -11,4 +11,7 @@ interface RemoteInterface
 
     public function _getResponseHeader($header);
 
+    public function _getResponseCode();
+
+    public function _sendRequest($url);
 }
