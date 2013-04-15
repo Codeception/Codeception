@@ -214,9 +214,11 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
-
-        foreach ($data as $k => $val) {
-            $sth->bindParam($k+1, $val);
+	
+	$i = 1;
+        foreach ($data as $val) {
+            $sth->bindParam($i, $val);
+            $i++;
         }
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
