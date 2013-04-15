@@ -18,7 +18,7 @@ class PhpBrowserTest extends TestsForMink
         $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
-        if (strpos(PHP_VERSION, '5.4')===0) $url = 'http://localhost:8000';
+        if (version_compare(PHP_VERSION, '5.4', '>=')) $url = 'http://localhost:8000';
         // my local config.
         if ($this->is_local) $url = 'http://testapp.com';
 
@@ -39,13 +39,13 @@ class PhpBrowserTest extends TestsForMink
         return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
-    protected function noPhpWebserver() {
-        if ((strpos(PHP_VERSION, '5.4')!==0) and (!$this->is_local))
-        $this->markTestSkipped(
-          'Requires PHP built-in web server, available only in PHP 5.4.'
-        );
+    protected function noPhpWebserver()
+    {
+        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
+            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
+        }
     }
-    
+
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array('name' => 'Davert'));
