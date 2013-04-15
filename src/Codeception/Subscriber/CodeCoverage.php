@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\Subscriber;
 
-use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Codeception\Util\RemoteInterface;
 use Codeception\Configuration;
 
 /**
@@ -31,12 +32,12 @@ class CodeCoverage implements EventSubscriberInterface
     }
 
     /**
-     * @return \Codeception\Util\RemoteInterface|null
+     * @return RemoteInterface|null
      */
     protected function getRemoteConnectionModule()
     {
         foreach (\Codeception\SuiteManager::$modules as $module) {
-            if ($module instanceof \Codeception\Util\RemoteInterface) {
+            if ($module instanceof RemoteInterface) {
                 return $module;
             }
         }
@@ -85,13 +86,19 @@ class CodeCoverage implements EventSubscriberInterface
         $this->coverage->merge($coverage);
     }
 
+    /**
+     * @param RemoteInterface $module
+     * @param $type
+     *
+     * @return bool|string
+     */
     protected function getRemoteCoverageFile($module, $type)
     {
-        $headers = array('http' => array('header' => "X-Codeception-CodeCoverage: remote-access\r\n"));
-        $context = stream_context_create($headers);
-        $url = $module->_getUrl() . '/c3/report/'.$type;
-        $contents = @file_get_contents($url, null, $context);
-        if ($contents === false) $this->getRemoteError($module);
+        $module->_setHeader('X-Codeception-CodeCoverage', 'remote-access');
+        $contents = $module->_sendRequest($module->_getUrl() . '/c3/report/'.$type);
+        if ($module->_getResponseCode() !== 200) {
+            $this->getRemoteError($module);
+        }
         return $contents;
     }
 
@@ -163,6 +170,4 @@ class CodeCoverage implements EventSubscriberInterface
             'result.print.after' => 'printResult'
         );
     }
-
-
 }
