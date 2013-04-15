@@ -45,7 +45,7 @@ Don't forget to turn on Db repopulation if you are using database.
 ## Public Properties
 
 * session - contains Mink Session
-* webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
+* webDriverSession - contains \WebDriver\Session object from [php-webdriver](https://github.com/instaclick/php-webdriver)
 
 ## Actions
 
