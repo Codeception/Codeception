@@ -35,7 +35,7 @@ EOF;
     /**
      %s
      * @see %s::%s()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
