@@ -366,7 +366,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function escape($string)
     {
-        return $string;// addslashes($string);
+        return (string)$string;// addslashes($string);
     }
 
     protected function match($selector)
