@@ -157,7 +157,7 @@ class SuiteManager {
 
     public function loadTests()
     {
-        $finder = Finder::create()->files()->sortByName()->depth('>= 0')->in($this->path);
+        $finder = Finder::create()->files()->sortByName()->in($this->path);
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
