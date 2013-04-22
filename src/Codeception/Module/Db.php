@@ -49,15 +49,15 @@ namespace Codeception\Module;
  * * dump - path to database dump.
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
- * 
+ *
  * ### Example
- * 
- *     modules: 
+ *
+ *     modules:
  *        enabled: [Db]
  *        config:
  *           Db:
  *              dsn: 'mysql:host=localhost;dbname=testdb'
- *              username: 'root'
+ *              user: 'root'
  *              password: ''
  *              dump: 'tests/_data/dump.sql'
  *              populate: true
@@ -214,9 +214,11 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
-
-        foreach ($data as $k => $val) {
-            $sth->bindParam($k+1, $val);
+	
+	$i = 1;
+        foreach ($data as $val) {
+            $sth->bindParam($i, $val);
+            $i++;
         }
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
