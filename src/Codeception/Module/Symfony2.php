@@ -1,7 +1,11 @@
 <?php
 namespace Codeception\Module;
+
 use Codeception\Exception\ModuleRequire;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
@@ -60,10 +64,6 @@ class Symfony2 extends \Codeception\Util\Framework
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass('test', true);
-        $this->kernel->boot();
-        if (!($this->kernel->getContainer() instanceof \Symfony\Component\DependencyInjection\ContainerInterface)) {
-            throw new ModuleRequire(__CLASS__,"Wrong container in Kernel (not implements ContainerInterface)");
-        }
     }
     
     public function _before(\Codeception\TestCase $test) {
