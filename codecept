@@ -4,13 +4,7 @@
  * Codeception CLI
  */
 
-if (!class_exists('UniversalClassLoader')) {
-    $bootstrap_folder = (is_dir(__DIR__ . '/src'))
-        ? dirname(__FILE__)
-        : 'Codeception';
-
-    require_once $bootstrap_folder.'/autoload.php';
-}
+require_once dirname(__FILE__).'/autoload.php';
 
 if (isset($argv[1])) {
     if (!in_array('run', $argv)) {
