@@ -177,7 +177,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 	}
 
 	public function _failed(\Codeception\TestCase $test, $fail) {
-		file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.fail.html', $this->session->getPage()->getContent());
+                $fileName = str_replace('::','-',$test->getFileName());
+		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
 
 
