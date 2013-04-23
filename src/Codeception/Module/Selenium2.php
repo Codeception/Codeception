@@ -242,4 +242,23 @@ class Selenium2 extends \Codeception\Util\MinkJS
         $this->session->getDriver()->switchToIFrame($name);
     }
 
+    /**
+     * Resize a window
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->resizeWindow('current', 800, 600);
+     *
+     * ```
+     *
+     * @param string $handle
+     * @param int    $width
+     * @param int    $height
+     * @author Jaik Dean <jaik@jaikdean.com>
+     */
+    public function resizeWindow($handle, $width, $height) {
+        $this->webDriverSession->window($handle)->postSize(array('width' => $width, 'height' => $height));
+    }
+
 }
