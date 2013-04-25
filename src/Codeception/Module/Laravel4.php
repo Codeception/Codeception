@@ -101,7 +101,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  bool    $changeHistory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function action($method, $action, $wildcards = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
+	public function executeAction($method, $action, $wildcards = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
 	{
 		$uri = $this->kernel['url']->action($action, $wildcards, false);
 
@@ -121,65 +121,11 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  bool    $changeHistory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function route($method, $name, $routeParameters = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
+	public function executeRoute($method, $name, $routeParameters = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
 	{
 		$uri = $this->kernel['url']->route($name, $routeParameters, false);
 
 		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-	}
-
-	/**
-	 * Assert that the client response has an OK status code.
-	 *
-	 * @return void
-	 */
-	public function assertResponseOk()
-	{
-		return $this->assertTrue($this->client->getResponse()->isOk());
-	}
-
-	/**
-	 * Assert that the response view has a given piece of bound data.
-	 *
-	 * @param  string|array  $key
-	 * @param  mixed  $value
-	 * @return void
-	 */
-	public function assertViewHas($key, $value = null)
-	{
-		if (is_array($key)) return $this->assertViewHasAll($key);
-
-		$response = $this->client->getResponse()->original;
-
-		if (is_null($value))
-		{
-			$this->assertArrayHasKey($key, $response->getData());
-		}
-		else
-		{
-			$this->assertEquals($value, $response->$key);
-		}
-	}
-
-	/**
-	 * Assert that the view has a given list of bound data.
-	 *
-	 * @param  array  $bindings
-	 * @return void
-	 */
-	public function assertViewHasAll(array $bindings)
-	{
-		foreach ($bindings as $key => $value)
-		{
-			if (is_int($key))
-			{
-				$this->assertViewHas($value);
-			}
-			else
-			{
-				$this->assertViewHas($key, $value);
-			}
-		}
 	}
 
 	/**
@@ -189,11 +135,11 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amRedirectedTo($uri, $with = array())
+	public function amLocatedAt($uri, $with = array())
 	{
 		$response = $this->client->getResponse();
 
-		$this->assertInstanceOf('Illuminate\Http\RedirectResponse', $response);
+		$this->assertInstanceOf('Illuminate\Http\Response', $response);
 
 		$this->assertEquals($this->kernel['url']->to($uri), $response->headers->get('Location'));
 
@@ -207,9 +153,9 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amRedirectedToRoute($name, $with = array())
+	public function amOnRoutePage($name, $with = array())
 	{
-		$this->amRedirectedTo($this->kernel['url']->route($name), $with);
+		$this->amLocatedAt($this->kernel['url']->route($name), $with);
 	}
 
 	/**
@@ -219,9 +165,9 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amRedirectedToAction($name, $with = array())
+	public function amOnActionPage($name, $with = array())
 	{
-		$this->amRedirectedTo($this->kernel['url']->action($name), $with);
+		$this->amLocatedAt($this->kernel['url']->action($name), $with);
 	}
 
 	/**
