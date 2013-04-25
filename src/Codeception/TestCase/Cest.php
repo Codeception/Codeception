@@ -122,7 +122,7 @@ class Cest extends \Codeception\TestCase\Cept
     }
 
     public function getFileName() {
-        return get_class($this)."::".$this->getTestMethod();
+        return $this->signature;
     }
 
 }
