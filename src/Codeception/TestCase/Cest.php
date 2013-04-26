@@ -58,6 +58,7 @@ class Cest extends \Codeception\TestCase\Cept
             $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
             throw $e;
         }
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
     protected function executeTestMethod($I)
@@ -119,7 +120,7 @@ class Cest extends \Codeception\TestCase\Cept
         }
         return '';
     }
-    
+
     public function getFileName() {
         return get_class($this)."::".$this->getTestMethod();
     }

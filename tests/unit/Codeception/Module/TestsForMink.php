@@ -26,6 +26,23 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Information');
     }
 
+    public function testCurrentUrl()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeCurrentUrlEquals('/');
+        $this->module->dontSeeInCurrentUrl('/user');
+        $this->module->dontSeeCurrentUrlMatches('~user~');
+
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCurrentUrlEquals('/form/checkbox');
+        $this->module->seeInCurrentUrl('form');
+        $this->module->seeCurrentUrlMatches('~form/.*~');
+        $this->module->dontSeeCurrentUrlEquals('/');
+        $this->module->dontSeeCurrentUrlMatches('~form/a~');
+        $this->module->dontSeeInCurrentUrl('user');
+    }
+
+
     public function testSee()
     {
         $this->module->amOnPage('/');
@@ -307,5 +324,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/field');
         $this->module->seeElement('input[name=name]');
         $this->module->seeElement('descendant-or-self::input[@id="name"]');
+        $this->module->dontSeeElement('#something-beyond');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
 }

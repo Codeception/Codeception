@@ -1,5 +1,9 @@
 # Unit Tests Inside Scenario
 
+<div class="alert alert-error">This chapter is <strong>deprecated</strong>. Don't read it and forget everything I might have read.
+Use classical <a href="http://codeception.com/docs/06-UnitTests">Unit Tests</a> with some Codeception powers. <a href="http://codeception.com/03-18-2013/scenario-unit-deprecated.html">Here is why it it happened</a></div>
+
+
 Each function is like a little a little application in itself. It's the simplest and least divisible part of the program. It's natural to test it the way we test the application as a whole. Codeception unit tests are very similar to acceptance tests, with some additional features that simplify code testing.
 
 Unit tests are required to be as readable as possible. They should be clean and easy to understand. Codeception helps the developer to follow these practices.

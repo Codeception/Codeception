@@ -17,9 +17,34 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testAmOnPage() {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
+        $this->module->seeResponseCodeIs(200);
 
         $this->module->amOnPage('/info');
         $this->module->see('Information');
+        $this->module->seeResponseCodeIs(200);
+    }
+
+    public function testCurrentUrl()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeCurrentUrlEquals('/');
+        $this->module->dontSeeInCurrentUrl('/user');
+        $this->module->dontSeeCurrentUrlMatches('~user~');
+
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCurrentUrlEquals('/form/checkbox');
+        $this->module->seeInCurrentUrl('form');
+        $this->module->seeCurrentUrlMatches('~form/.*~');
+        $this->module->dontSeeCurrentUrlEquals('/');
+        $this->module->dontSeeCurrentUrlMatches('~form/a~');
+        $this->module->dontSeeInCurrentUrl('user');
+    }
+
+    public function testGrabFromCurrentUrl()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->assertEquals('/form/checkbox', $this->module->grabFromCurrentUrl());
+        $this->assertEquals('checkbox', $this->module->grabFromCurrentUrl('~form/(\w+)~'));
     }
 
     public function testSee() {
@@ -36,11 +61,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable','h1');
         $this->module->dontSee('valuable','descendant-or-self::h1');
-    }
-
-    public function testSeeInCurrentUrl() {
-        $this->module->amOnPage('/info');
-        $this->module->seeInCurrentUrl('/info');
     }
 
     public function testSeeLink() {
@@ -363,5 +383,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/form/hidden');
     }
 
+    public function testSeeElementOnPage()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->seeElement('input[name=name]');
+        $this->module->seeElement('descendant-or-self::input[@id="name"]');
+        $this->module->dontSeeElement('#something-beyond');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
+    }
 
 }

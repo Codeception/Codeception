@@ -23,12 +23,12 @@ class ErrorHandler implements EventSubscriberInterface
             $this->errorLevel = eval("return {$settings['error_level']};");
         }
         error_reporting($this->errorLevel);
-        set_exception_handler(array(__CLASS__, 'errorHandler'));
-        set_error_handler(array(__CLASS__, 'errorHandler'));
-        register_shutdown_function(array(__CLASS__, 'shutdownHandler'));
+        set_exception_handler(array($this, 'errorHandler'));
+        set_error_handler(array($this, 'errorHandler'));
+        register_shutdown_function(array($this, 'shutdownHandler'));
     }
 
-    public static function errorHandler($errno, $errstr, $errfile, $errline) {
+    public function errorHandler($errno, $errstr, $errfile, $errline) {
 
         if (!(error_reporting() & $errno)) {
             // This error code is not included in error_reporting
@@ -40,7 +40,7 @@ class ErrorHandler implements EventSubscriberInterface
         throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
-    public static function shutdownHandler() {
+    public function shutdownHandler() {
         if (self::$stopped)
             return;
         self::$stopped = true;

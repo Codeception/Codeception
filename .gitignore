@@ -2,5 +2,6 @@
 tests/log/debug
 composer.phar
 vendor
+tests/data/sandbox
 tests/data/claypit/c3tmp'
 composer.lock

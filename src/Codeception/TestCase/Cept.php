@@ -53,7 +53,11 @@ class Cept extends \Codeception\TestCase
     public function testCodecept($run = true)
     {
         $scenario = $this->scenario;
-        $this->preload();
+
+        // preload
+        if (file_exists($this->bootstrap)) require $this->bootstrap;
+        require $this->testfile;
+
         if (!$run) return;
         $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
 
@@ -66,14 +70,11 @@ class Cept extends \Codeception\TestCase
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
             $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
             throw $e;
+        } catch (\Exception $e) {
+            $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+            throw $e;
         }
         $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
     }
 
-    protected function preload()
-    {
-        $scenario = $this->scenario;
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
-        require $this->testfile;
-    }
 }
