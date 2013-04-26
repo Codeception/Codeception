@@ -155,14 +155,25 @@ class Configuration
     public static function actions($modules)
     {
         $actions = array();
-        foreach ($modules as $modulename => $module) {
-            $class = new \ReflectionClass('\Codeception\Module\\' . $modulename);
+
+        foreach ($modules as $moduleName => $module) {
+            $class   = new \ReflectionClass('\Codeception\Module\\' . $moduleName);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-                if (strpos($method->name, '_') === 0) continue;
-                $actions[$method->name] = $modulename;
+                // those with underscore at the begging are considered as hidden
+                if (strpos($method->name, '_') === 0) {
+                    continue;
+                }
+
+                // exclude inherited methods
+                if ($method->class !== $class->getName()) {
+                    continue;
+                }
+
+                $actions[$method->name] = $moduleName;
             }
         }
+
         return $actions;
     }
 
