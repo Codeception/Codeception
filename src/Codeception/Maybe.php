@@ -34,6 +34,9 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return "?";
         }
+        if (is_scalar($this->val)) {
+            return (string)$this->val;
+        }
         return $this->val;
     }
 
