@@ -39,6 +39,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    public function amHttpAuthenticated($username, $password)
+    {
+        $this->client->setServerParameter('PHP_AUTH_USER', $username);
+        $this->client->setServerParameter('PHP_AUTH_PW', $password);
+    }
+
     public function amOnPage($page)
     {
         $this->crawler = $this->client->request('GET', $page);
@@ -134,9 +140,55 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::assertEquals(0, $links->count());
     }
 
+    public function _getCurrentUri()
+    {
+        $url = $this->client->getHistory()->current()->getUri();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        return $uri;
+    }
+
     public function seeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function grabFromCurrentUrl($uri = null)
+    {
+        if (!$uri) return $this->_getCurrentUri();
+        $matches = array();
+        $res = preg_match($uri, $this->_getCurrentUri(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
     }
 
     public function seeCheckboxIsChecked($checkbox)
@@ -258,6 +310,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         if (!isset($input)) $input = $this->match($field);
         if (!count($input)) \PHPUnit_Framework_Assert::fail("Form field for '$field' not found on page");
         return $input->first();
+
     }
 
     public function selectOption($select, $option)
@@ -379,16 +432,31 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                foreach ($field->childNodes as $option) {
                    if ($option->getAttribute('selected') == 'selected')
                        $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-               }
+               }http://sphotos-c.ak.fbcdn.net/hphotos-ak-prn1/532959_348333291945066_1909818296_n.jpg
            }
         }
-
     }
 
     public function seeElement($selector)
     {
         $nodes = $this->match($selector);
         $this->assertGreaterThen(0, $nodes->count());
+    }
+
+    public function dontSeeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertEquals(0, $nodes->count());
+    }
+
+    public function seePageNotFound()
+    {
+        $this->seeResponseCodeIs(404);
+    }
+
+    public function seeResponseCodeIs($code)
+    {
+        $this->assertEquals($code, $this->client->getResponse()->getStatus());
     }
 
 }

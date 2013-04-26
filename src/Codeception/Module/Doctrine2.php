@@ -52,7 +52,7 @@ class Doctrine2 extends \Codeception\Module
             if ($this->hasModule('Symfony2')) {
                 $kernel = $this->getModule('Symfony2')->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
-                    self::$em = $kernel->getContainer()->get('doctrine')->getEntityManager();
+                    self::$em = $kernel->getContainer()->get('doctrine.orm.entity_manager');
                 }
             }
        }

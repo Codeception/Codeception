@@ -117,4 +117,13 @@ class Selenium2Test extends TestsForMink
         @unlink(\Codeception\Configuration::logDir().'testshot.png');
     }
 
+    public function testRawSelenium()
+    {
+        $this->module->amOnPage('/');
+        $this->module->executeInSelenium(function (\Webdriver\Session $webdriver) {
+            $webdriver->element('id','link')->click('');
+        });
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
 }

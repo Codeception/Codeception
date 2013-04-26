@@ -13,13 +13,12 @@ class GenerateCest extends Base
 {
     protected $template  = <<<EOF
 <?php
-%suse Codeception\Util\Stub;
+%s
 
 %s %sCest
 {
-    protected $%s = '%s';
 
-    public function _before()
+    public function _before(\$scenario)
     {
     }
 
@@ -72,9 +71,11 @@ EOF;
             exit;
         }
 
-        $tests = sprintf($this->methodTemplate, "shouldBe", $guy, '$I');
+        $classname = preg_replace("~Cest$~",'',$classname);
 
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, 'class', $class, $tests));
+        $tests = sprintf($this->methodTemplate, "tryToTest", $guy, '$I');
+
+        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
 
         $output->writeln("<info>Cest was created in $filename</info>");
 

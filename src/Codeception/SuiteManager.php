@@ -27,26 +27,14 @@ class SuiteManager {
     protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
 
-
-    protected $defaults = array(
-        'class_name' => 'NoGuy',
-        'modules' => array('enabled' => array(), 'config' => array()),
-        'bootstrap' => false,
-        'suite_class' => '\PHPUnit_Framework_TestSuite',
-        'colors' => true,
-        'memory_limit' => '1024M',
-        'path' => '',
-        'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
-    );
-
     protected $settings = array();
 
     public function __construct(EventDispatcher $dispatcher, $name, $settings) {
-        $this->settings = array_merge($this->defaults, $settings);
+        $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
-        $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
         if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
             throw new \Codeception\Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
@@ -117,7 +105,8 @@ class SuiteManager {
                 if ($method->isConstructor()) continue;
                 if ($method->isDestructor()) continue;
 
-                $target = $method->name;
+                if (strpos($method->name, '_') === 0) continue;
+
                 if (isset($unit->class)) {
                     $target = $unit->class;
                     $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
@@ -136,6 +125,7 @@ class SuiteManager {
                     'guy' => $this->settings['class_name']
                 )));
             }
+            
             $this->suite->addTestSuite($cestSuite);
         }
     }
@@ -162,12 +152,12 @@ class SuiteManager {
             $this->loadTests();
             return;
         }
-        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept (Spec), Cest, Test');
+        throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
     public function loadTests()
     {
-        $finder = Finder::create()->files()->sortByName()->depth('>= 0')->in($this->path);
+        $finder = Finder::create()->files()->sortByName()->in($this->path);
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
@@ -188,18 +178,18 @@ class SuiteManager {
         }
     }
 
-    /**
-     * @return null|\PHPUnit_Framework_TestSuite
-     */
-    public function getSuite() {
-        return $this->suite;
-    }
-
     protected function getClassesFromFile($file)
     {
         $loaded_classes = get_declared_classes();
         require_once $file;
         $extra_loaded_classes = get_declared_classes();
         return array_diff($extra_loaded_classes,$loaded_classes);
+    }
+
+    /**
+     * @return null|\PHPUnit_Framework_TestSuite
+     */
+    public function getSuite() {
+        return $this->suite;
     }
 }

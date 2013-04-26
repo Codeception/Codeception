@@ -21,7 +21,7 @@ class Console implements EventSubscriberInterface
         $this->debug = !$this->silent && $options['debug'];
         $this->steps = !$this->silent && ($options['steps'] or $options['debug']);
         $this->color = $options['colors'];
-        $this->output = new \Codeception\Output($this->color);
+        $this->output = new \Codeception\Output($this->color, $options['defer-flush']);
     }
 
     // triggered for all tests

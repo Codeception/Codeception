@@ -1,33 +1,27 @@
-# Symfony2 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2.php)**
+# ZF2 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF2.php)**
 
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+This module allows you to run tests inside Zend Framework 2.
 
-It implements common Framework interface.
+File `init_autoloader` in project's root is required.
+Uses `tests/application.config.php` config file by default.
 
 ## Status
 
-* Maintainer: **davert**
-* Stability: **stable**
-* Contact: codecept@davert.mail.ua
+* Maintainer: **bladeofsteel**
+* Stability: **alpha**
+* Contact: https://github.com/bladeofsteel
 
 ## Config
 
-* app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+* config: relative path to config file (default: `tests/application.config.php`)
 
-### Example (`functional.suite.yml`)
+## API
 
-    modules: 
-       enabled: [Symfony2]
-       config:
-          Symfony2:
-             app_path: 'app/front' 
-
-## Public Properties
-
-* kernel - HttpKernel instance
-* client - current Crawler instance
+* application -  instance of `\Zend\Mvc\ApplicationInterface`
+* db - instance of `\Zend\Db\Adapter\AdapterInterface`
+* client - BrowserKit client
 
 
 ## Actions
@@ -36,7 +30,7 @@ It implements common Framework interface.
 ### amHttpAuthenticated
 
 
-Authenticates user for HTTP_AUTH 
+Adds HTTP authentication via username/password.
 
  * param $username
  * param $password
@@ -293,22 +287,6 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
-### grabServiceFromContainer
-
-
-Grabs a service from Symfony DIC container.
-Recommended to use for unit testing.
-
-``` php
-<?php
-$em = $I->grabServiceFromContainer('doctrine');
-?>
-```
-
- * param $service
- * return mixed
-
-
 ### grabTextFrom
 
 
@@ -427,14 +405,6 @@ $I->seeElement(//form/input[1]);
 ?>
 ```
  * param $selector
-
-
-### seeEmailIsSent
-
-
-Checks if any email were sent by last request
-
- * throws \LogicException
 
 
 ### seeInCurrentUrl

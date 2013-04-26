@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.5.6";
+    const VERSION = "1.6.0.4";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -47,7 +47,8 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
-        'coverage' => false
+        'coverage' => false,
+	    'defer-flush' => false
     );
 
     public function __construct($options = array()) {
@@ -135,6 +136,14 @@ class Codecept
 
     public function getOptions() {
         return $this->options;
+    }
+
+    /**
+     * @return EventDispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
     public static function checkLastVersion()

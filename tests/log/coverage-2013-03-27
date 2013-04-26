@@ -1,0 +1,188 @@
+[2013-03-27 02:44:48] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-27 02:44:48] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-03-27 02:44:51] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.7
+Powered by PHPUnit 3.7.18 by Sebastian Bergmann.
+
+Suite remote_server started
+Running DemoCept.php - Error [] []
+[2013-03-27 02:44:51] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-27 02:44:51] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-27 02:44:51] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-27 02:44:51] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-03-27 02:44:51] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.7
+Powered by PHPUnit 3.7.18 by Sebastian Bergmann.
+
+Suite remote_server started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 6.00Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(394)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(103)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(85)
+#6 /home/davert/Codeception/src/Codeception/Step.php(123)
+#7 /home/davert/Codeception/src/Codeception/TestCase.php(26)
+#8 /home/davert/Codeception/src/Codeception/Scenario.php(74)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote_server/AbsolutelyOtherGuy.php(212)
+#10 /home/davert/Codeception/tests/data/sandbox/tests/remote_server/DemoCept.php(4)
+#11 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(69)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(976)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(831)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(776)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#18 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#19 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#20 /home/davert/Codeception/src/Codeception/SuiteManager.php(153)
+#21 /home/davert/Codeception/src/Codeception/Codecept.php(110)
+#22 /home/davert/Codeception/src/Codeception/Command/Run.php(70)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(240)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#25 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#26 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 1, Assertions: 0, Errors: 1.
+
+
+Code Coverage Report
+  2013-03-27 02:44:51
+
+ Summary:
+  Classes:  (0/0)
+  Methods:  (0/0)
+  Lines:    (0/0)
+ [] []
+[2013-03-27 02:44:51] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-27 02:44:51] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-03-27 02:44:51] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-27 02:44:51] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-03-27 02:44:52] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.7
+Powered by PHPUnit 3.7.18 by Sebastian Bergmann.
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 6.75Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(394)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(103)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(85)
+#6 /home/davert/Codeception/src/Codeception/Step.php(123)
+#7 /home/davert/Codeception/src/Codeception/TestCase.php(26)
+#8 /home/davert/Codeception/src/Codeception/Scenario.php(74)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(212)
+#10 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#11 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(69)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(976)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(831)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(776)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#18 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#19 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#20 /home/davert/Codeception/src/Codeception/SuiteManager.php(153)
+#21 /home/davert/Codeception/src/Codeception/Codecept.php(110)
+#22 /home/davert/Codeception/src/Codeception/Command/Run.php(70)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(240)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#25 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#26 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 1, Assertions: 0, Errors: 1.
+
+
+Code Coverage Report
+  2013-03-27 02:44:51
+
+ Summary:
+  Classes: 0.00% (0/6)
+  Methods: 0.00% (0/14)
+  Lines:   0.00% (0/325)
+ [] []
+[2013-03-27 02:44:52] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-03-27 02:44:52] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-03-27 02:44:52] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-03-27 02:44:52] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-03-27 02:44:53] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.5.7
+Powered by PHPUnit 3.7.18 by Sebastian Bergmann.
+
+Suite remote started
+Running DemoCept.php - Error
+
+
+Time: 0 seconds, Memory: 6.75Mb
+
+There was 1 error:
+
+---------
+1) DemoCept.php
+InvalidArgumentException: The current node list is empty.
+
+#1 /home/davert/Codeception/vendor/behat/mink-browserkit-driver/src/Behat/Mink/Driver/BrowserKitDriver.php(394)
+#2 /home/davert/Codeception/vendor/behat/mink/src/Behat/Mink/Element/Element.php(101)
+#3 /home/davert/Codeception/src/Codeception/Util/Mink.php(103)
+#4 /home/davert/Codeception/src/Codeception/Util/Mink.php(85)
+#6 /home/davert/Codeception/src/Codeception/Step.php(123)
+#7 /home/davert/Codeception/src/Codeception/TestCase.php(26)
+#8 /home/davert/Codeception/src/Codeception/Scenario.php(74)
+#9 /home/davert/Codeception/tests/data/sandbox/tests/remote/OtherGuy.php(212)
+#10 /home/davert/Codeception/tests/data/sandbox/tests/remote/DemoCept.php(4)
+#11 /home/davert/Codeception/src/Codeception/TestCase/Cept.php(69)
+#13 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(976)
+#14 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(831)
+#15 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestResult.php(648)
+#16 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestCase.php(776)
+#17 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(775)
+#18 /home/davert/Codeception/vendor/phpunit/phpunit/PHPUnit/Framework/TestSuite.php(745)
+#19 /home/davert/Codeception/src/Codeception/PHPUnit/Runner.php(107)
+#20 /home/davert/Codeception/src/Codeception/SuiteManager.php(153)
+#21 /home/davert/Codeception/src/Codeception/Codecept.php(110)
+#22 /home/davert/Codeception/src/Codeception/Command/Run.php(70)
+#23 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php(240)
+#24 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(193)
+#25 /home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php(106)
+#26 /home/davert/Codeception/codecept(40)
+
+
+FAILURES!
+Tests: 1, Assertions: 0, Errors: 1.
+
+
+Code Coverage Report
+  2013-03-27 02:44:52
+
+ Summary:
+  Classes: 0.00% (0/6)
+  Methods: 0.00% (0/14)
+  Lines:   0.00% (0/325)
+ [] []
+[2013-03-27 02:44:53] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-03-27 02:44:53] RemoteWithXmlCept.php.INFO: PASSED [] []
