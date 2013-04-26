@@ -24,7 +24,7 @@ class SecondDb extends Db
      */
     public function haveInSecondDatabase($table, array $data)
     {
-        return parent::haveInDatabase($table, $data);
+        parent::haveInDatabase($table, $data);
     }
 
     public function seeInSecondDatabase($table, $criteria = array())
