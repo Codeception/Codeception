@@ -3,6 +3,7 @@ language: php
 php:
   - 5.3
   - 5.4
+  - 5.5
 
 branches:
   except:
@@ -24,4 +25,4 @@ before_script:
   - php composer.phar install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
 
-script: "php -dxdebug.remote_enable=1 -dxdebug.remote_host=127.0.0.1 -dxdebug.remote_port=9000 -dxdebug.remote_mode=req codecept run"
+script: "php codecept run"

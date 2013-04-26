@@ -21,7 +21,7 @@ class SeleniumTest extends TestsForMink
         $this->noSelenium();
         $this->module = new \Codeception\Module\Selenium();
         $url = '';
-        if (strpos(PHP_VERSION, '5.4') === 0) {
+        if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $url = 'http://localhost:8000';
         }
         // my local config.
@@ -68,10 +68,8 @@ class SeleniumTest extends TestsForMink
 
     protected function noPhpWebserver()
     {
-        if ((strpos(PHP_VERSION, '5.4') !== 0) and (!$this->is_local)) {
-            $this->markTestSkipped(
-                'Requires PHP built-in web server, available only in PHP 5.4.'
-            );
+        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
+            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
         }
     }
 
