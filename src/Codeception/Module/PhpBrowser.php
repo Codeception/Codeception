@@ -180,6 +180,10 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 		file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.fail.html', $this->session->getPage()->getContent());
 	}
 
+    /*
+     * INHERITED ACTIONS
+     */
+
     public function amOnPage($page)
     {
         parent::amOnPage($page);
