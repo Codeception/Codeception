@@ -432,7 +432,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                foreach ($field->childNodes as $option) {
                    if ($option->getAttribute('selected') == 'selected')
                        $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-               }http://sphotos-c.ak.fbcdn.net/hphotos-ak-prn1/532959_348333291945066_1909818296_n.jpg
+               }
            }
         }
     }
