@@ -18,7 +18,7 @@ class PhpBrowserTest extends TestsForMink
         $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
-        if (strpos(PHP_VERSION, '5.4')===0) $url = 'http://localhost:8000';
+        if (version_compare(PHP_VERSION, '5.4', '>=')) $url = 'http://localhost:8000';
         // my local config.
         if ($this->is_local) $url = 'http://testapp.com';
 
@@ -36,14 +36,28 @@ class PhpBrowserTest extends TestsForMink
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\TestCase', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
-    protected function noPhpWebserver() {
-        if ((strpos(PHP_VERSION, '5.4')!==0) and (!$this->is_local))
-        $this->markTestSkipped(
-          'Requires PHP built-in web server, available only in PHP 5.4.'
-        );
+    protected function noPhpWebserver()
+    {
+        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
+            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
+        }
+    }
+
+    public function testCurlOptions()
+    {
+        $guzzle = $this->module->guzzle;
+        $this->assertFalse($guzzle->getConfig('CURLOPT_SSL_VERIFYPEER'));
+        $this->assertFalse($guzzle->getConfig('CURLOPT_CERTINFO'));
+
+        $module = new \Codeception\Module\PhpBrowser();
+        $module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_MUTE' => true)));
+        $module->_initialize();
+        $guzzle = $module->guzzle;
+        $this->assertTrue($guzzle->getConfig('CURLOPT_MUTE'));
+
     }
     
     public function testSubmitForm() {
@@ -56,6 +70,7 @@ class PhpBrowserTest extends TestsForMink
     }
 
     public function testAjax() {
+        $this->module->amOnPage('/');
         $this->module->sendAjaxGetRequest('/info');
         $this->assertNotNull(data::get('ajax'));
 

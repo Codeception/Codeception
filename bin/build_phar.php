@@ -1,46 +1,31 @@
 <?php
 
-if (file_exists(__DIR__.'/../package/codecept.phar')) unlink(__DIR__.'/../package/codecept.phar');
+$root = __DIR__.'/../';
+require $root.'/vendor/autoload.php';
+require $root.'/package/Compiler.php';
+use Codeception\Compiler;
 
 // download composer
-$composer = file_get_contents('http://getcomposer.org/installer');
-chdir(__DIR__.'/../');
-@mkdir("package/phar");
-chdir('package/phar');
-file_put_contents('composer.phar', $composer);
-file_put_contents('composer.json','
-{
-    "require": {
-        "codeception/codeception":  "*",
-        "behat/mink-goutte-driver": "*",
-        "behat/mink-selenium-driver": "*",
-        "behat/mink-selenium2-driver": "*",
-        "behat/mink-zombie-driver": "*"
-    },
-    "minimum-stability": "dev"
+
+//if (!file_exists('composer.phar')) {
+//	file_put_contents('composer.phar', file_get_contents('http://getcomposer.org/installer'));
+//}
+//system('php composer.phar update');
+
+chdir($root);
+$compiler = new Compiler();
+$compiler->compile();
+
+if (file_exists('codecept.phar.gz')) {
+    chmod('codecept.phar.gz', 755);
+    copy('codecept.phar.gz', 'package/codecept.phar');
+} else {
+    copy('codecept.phar', 'package/codecept.phar');
+    @exec('chmod 755 package/codecept.phar');
 }
-');
+@unlink('codecept.phar');
+@unlink('codecept.phar.gz');
 
-system('php composer.phar install');
-system('php composer.phar install');
+echo system('php package/codecept.phar');
 
-$p = new Phar('codecept.phar');
-$p->startBuffering();
-$p->buildFromDirectory(__DIR__.'/../package/phar/vendor','~\.html.dist$~');
-$p->buildFromDirectory(__DIR__.'/../package/phar/vendor','~\.tpl.dist$~');
-$p->buildFromDirectory(__DIR__.'/../package/phar/vendor','~\.php$~');
-$p->addFile(__DIR__.'/../package/bin','codecept');
-$p->setStub(file_get_contents(__DIR__.'/../package/stub.php'));
-$p->stopBuffering();
-$p->compressFiles(Phar::GZ);
-
-echo "copying archive";
-
-copy('codecept.phar', __DIR__.'/../package/codecept.phar');
-
-chdir('..');
-@system('del /s /q /F phar');
-@system('rd /s /q phar');
-@system('rm -rf phar');
-
-echo "PHAR build succesfull";
+echo "\nPHAR build finished\n\n";

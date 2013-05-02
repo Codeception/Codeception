@@ -4,7 +4,7 @@ namespace Codeception\Util;
 use \Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Abstract module for PHP framworks connected via Symfony BrowserKit components
+ * Abstract module for PHP frameworks connected via Symfony BrowserKit components
  * Each framework is connected with it's own connector defined in \Codeception\Util\Connector
  * Each module for framework should extend this class.
  *
@@ -39,16 +39,28 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    public function amHttpAuthenticated($username, $password)
+    {
+        $this->client->setServerParameter('PHP_AUTH_USER', $username);
+        $this->client->setServerParameter('PHP_AUTH_PW', $password);
+    }
+
     public function amOnPage($page)
     {
         $this->crawler = $this->client->request('GET', $page);
         $this->debugResponse();
     }
 
-    public function click($link)
+    public function click($link, $context = null)
     {
-        $link = $this->escape($link);
-        $anchor = $this->crawler->selectLink($link);
+        $literal = Crawler::xpathLiteral($link);
+
+        if ($context) {
+            $this->crawler = $this->match($context);
+        }
+
+        $anchor = $this->crawler->filterXPath('.//a[.='.$literal.']');
+        if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
             $this->debugResponse();
@@ -62,7 +74,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             return;
         }
 
-        $nodes = $this->crawler->filter($link);
+        $nodes = $this->match($link);
+
         if ($nodes->count()) {
             foreach ($nodes as $node) {
                 if ($node->nodeName == 'a') {
@@ -76,7 +89,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                 }
             }
         }
-
         \PHPUnit_Framework_Assert::fail("Link or button for '$link' was not found");
     }
 
@@ -100,14 +112,16 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         if (!$selector)
             return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text in\n" . self::formatResponse($this->client->getResponse()->getContent()));
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), " within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+        $nodes = $this->match($selector);
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $nodes->filter(':contains("' . $this->escape($text) . '")')->count(), " within selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . self::formatResponse($this->client->getResponse()->getContent()));
-        \PHPUnit_Framework_Assert::assertEquals(0, $this->crawler->filter($selector . ':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+            return $this->assertEquals(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text on page \n" . self::formatResponse($this->client->getResponse()->getContent()));
+        $nodes = $this->match($selector);
+        $this->assertEquals(0, $nodes->filter(':contains("' . $this->escape($text) . '")')->count(), "'$text'' within CSS selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
     }
 
     public function seeLink($text, $url = null)
@@ -126,9 +140,55 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         \PHPUnit_Framework_Assert::assertEquals(0, $links->count());
     }
 
+    public function _getCurrentUri()
+    {
+        $url = $this->client->getHistory()->current()->getUri();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        return $uri;
+    }
+
     public function seeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->client->getHistory()->current()->getUri());
+        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+    }
+
+    public function grabFromCurrentUrl($uri = null)
+    {
+        if (!$uri) return $this->_getCurrentUri();
+        $matches = array();
+        $res = preg_match($uri, $this->_getCurrentUri(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
     }
 
     public function seeCheckboxIsChecked($checkbox)
@@ -155,39 +215,37 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function proceedSeeInField($field, $value)
     {
-        $fields = $this->crawler->filter($field);
-        $values1 = $fields->filter('input')->extract(array('value'));
-        $values2 = $fields->filter('textarea')->extract(array('_text'));
-        if (empty($values1) && empty($values2)) \PHPUnit_Framework_Assert::fail('field not found');
-        $values = array_merge($values1, $values2);
-        return array('Contains', $this->escape($value), $values);
+        $field = $this->getFieldByLabelOrCss($field);
+        if (empty($field)) $this->fail("input field not found");
+        $currentValue = $field->filter('textarea')->extract(array('_text'));
+        if (!$currentValue) $currentValue = $field->extract(array('value'));
+        return array('Contains', $this->escape($value), $currentValue);
     }
 
     public function submitForm($selector, $params)
     {
-        $form = $this->crawler->filter($selector)->first();
+        $form = $this->match($selector)->first();
 
         if (!count($form)) return \PHPUnit_Framework_Assert::fail(', form does not exists');
 
         $url = '';
-        $fields = $this->crawler->filter($selector . ' input');
+        $fields = $form->filter('input');
         foreach ($fields as $field) {
             if ($field->getAttribute('type') == 'checkbox') continue;
             if ($field->getAttribute('type') == 'radio') continue;
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
         }
 
-        $fields = $this->crawler->filter($selector . ' textarea');
+        $fields = $form->filter('textarea');
         foreach ($fields as $field) {
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
         }
 
-        $fields = $this->crawler->filter($selector . ' select');
+        $fields = $form->filter('select');
         foreach ($fields as $field) {
             foreach ($field->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected')
                     $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-
             }
         }
 
@@ -243,14 +301,16 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function getFieldByLabelOrCss($field)
     {
-        $label = $this->crawler->filterXPath(sprintf('descendant-or-self::label[text()="%s"]', $field))->first();
-        if (count($label) && $label->attr('for')) {
-            $input = $this->crawler->filter('#' . $label->attr('for'));
+        $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
+        if (count($label)) {
+            $label = $label->first();
+            if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
-        if (!isset($input)) $input = $this->crawler->filter($field);
+        if (!isset($input)) $input = $this->match($field);
         if (!count($input)) \PHPUnit_Framework_Assert::fail("Form field for '$field' not found on page");
         return $input->first();
+
     }
 
     public function selectOption($select, $option)
@@ -306,7 +366,16 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function escape($string)
     {
-        return addslashes($string);
+        return $string;// addslashes($string);
+    }
+
+    protected function match($selector)
+    {
+        try {
+            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+        }
+        return @$this->crawler->filterXPath($selector);
     }
 
     public static function formatResponse($response)
@@ -329,5 +398,65 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         return "page.";
     }
 
+    public function grabTextFrom($cssOrXPathOrRegex)
+    {
+        $nodes = $this->match($cssOrXPathOrRegex);
+        if ($nodes) {
+            return $nodes->first()->text();
+        }
+        if (@preg_match($cssOrXPathOrRegex, $this->client->getResponse()->getContent(), $matches)) {
+            return $matches[1];
+        }
+        $this->fail("Element that matches '$cssOrXPathOrRegex' not found");
+
+    }
+
+    public function grabValueFrom($field)
+    {
+        $nodes = $this->match($field);
+        if ($nodes) {
+
+           foreach ($fields as $field) {
+               if ($field->getAttribute('type') == 'checkbox') continue;
+               if ($field->getAttribute('type') == 'radio') continue;
+               $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
+           }
+
+           $fields = $form->filter('textarea');
+           foreach ($fields as $field) {
+               $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
+           }
+
+           $fields = $form->filter('select');
+           foreach ($fields as $field) {
+               foreach ($field->childNodes as $option) {
+                   if ($option->getAttribute('selected') == 'selected')
+                       $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+               }
+           }
+        }
+    }
+
+    public function seeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertGreaterThen(0, $nodes->count());
+    }
+
+    public function dontSeeElement($selector)
+    {
+        $nodes = $this->match($selector);
+        $this->assertEquals(0, $nodes->count());
+    }
+
+    public function seePageNotFound()
+    {
+        $this->seeResponseCodeIs(404);
+    }
+
+    public function seeResponseCodeIs($code)
+    {
+        $this->assertEquals($code, $this->client->getResponse()->getStatus());
+    }
 
 }

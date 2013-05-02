@@ -1,11 +1,14 @@
 <?php
 namespace Codeception\TestCase;
 
-class Cest extends \Codeception\TestCase
+class Cest extends \Codeception\TestCase\Cept
 {
     protected $testClass = null;
     protected $testMethod = null;
     protected $signature;
+    protected $guy = 'CodeGuy';
+    protected $dispatcher;
+    protected $bootstrap;
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);
@@ -13,21 +16,21 @@ class Cest extends \Codeception\TestCase
         $this->testMethod = $data['method'];
         $this->static = $data['static'];
         $this->signature = $data['signature'];
+        $this->guy = $data['guy'];
     }
-    
-    public function loadScenario() {
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
 
-        $unit = $this->testClass;
+    public function testCodecept($run = true) {
+
+        if (file_exists($this->bootstrap)) require $this->bootstrap;
 
         if (isset($this->testClass->class)) {
             if (!class_exists($this->testClass->class, true)) {
-                throw new \Exception("Tested class '{$unit->class}' can't be loaded.");
+                throw new \Exception("Tested class '{$this->testClass->class}' can't be loaded.");
             }
         }
-
         // executing test
-        $I = new \CodeGuy($this->scenario);
+        $class_name = '\\'.$this->guy;
+        $I = new $class_name($this->scenario);
         if ($this->getCoveredMethod()) {
             $I->testMethod($this->signature);
         }
@@ -36,13 +39,37 @@ class Cest extends \Codeception\TestCase
             $I->wantTo($spec);
         }
 
+        // preload everything
+        $this->executeTestMethod($I);
+        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
+
+        if (!$run) return;
+        $this->scenario->run();
+        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
+
+
+        if ($this->getCoveredMethod()) {
+            $I->testMethod($this->signature);
+        }
+
+        try {
+            $this->executeTestMethod($I);
+        } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
+            $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
+            throw $e;
+        }
+        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+    }
+
+    protected function executeTestMethod($I)
+    {
         if ($this->static) {
-            $class = $unit->class;
+            $class = $this->testClass->class;
             if (!is_callable(array($class, $this->testMethod))) throw new \Exception("Method {$this->specName} can't be found in tested class");
-            call_user_func(array(get_class($unit), $this->testMethod), $I);
+            call_user_func(array(get_class($this->testClass), $this->testMethod), $I, $this->scenario);
         } else {
-            if (!is_callable(array($unit, $this->testMethod))) throw new \Exception("Method {$this->specName} can't be found in tested class");
-            call_user_func(array($this->testClass, $this->testMethod), $I);
+            if (!is_callable(array($this->testClass, $this->testMethod))) throw new \Exception("Method {$this->specName} can't be found in tested class");
+            call_user_func(array($this->testClass, $this->testMethod), $I, $this->scenario);
         }
     }
 
@@ -92,6 +119,10 @@ class Cest extends \Codeception\TestCase
             return $text;
         }
         return '';
+    }
+
+    public function getFileName() {
+        return get_class($this)."::".$this->getTestMethod();
     }
 
 }

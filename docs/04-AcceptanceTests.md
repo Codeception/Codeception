@@ -33,8 +33,8 @@ I see 'Welcome, Davert!'
 
 Such transformations can be done by command: 
 
-```bash
-$ codecept generate:scenarios
+``` bash
+$ php codecept.phar generate:scenarios
 ```
 
 Generated scenarios will be stored in your data dir within text files.
@@ -47,7 +47,7 @@ This is the fastest way to run acceptance tests, since it doesn't require runnin
 
 Before we start we need a local copy of the site running on your host. We need to specify the url parameter in the acceptance suite config (tests/acceptance.suite.yml).
 
-```yaml
+``` yaml
 class_name: WebGuy
 modules:
     enabled:
@@ -61,7 +61,7 @@ modules:
 
 We should start by creating a 'Cept' file in the __tests/acceptance__ dir. Let's call it __SigninCept.php__. We will write the first lines into it.
 
-```php
+``` php
 <?php
 $I = new WebGuy($scenario);
 $I->wantTo('sign in with valid account');
@@ -70,7 +70,7 @@ $I->wantTo('sign in with valid account');
 
 The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to make a Codeception scenario a BDD Story. If you have ever written a BDD scenario in Gherkin, you can translate a classic story into Codeception code.
 
-```bash
+``` bash
 As an Account Holder
 I want to withdraw cash from an ATM
 So that I can get money when the bank is closed
@@ -150,7 +150,7 @@ $I->fillField('Name', 'Miles');
 // we can use input name, or id
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
-$I->press('Update');
+$I->click('Update');
 ?>
 ```
 
@@ -200,6 +200,8 @@ $I->see('Thank you, Miles');
 // We check that 'Thank you Miles' is inside 
 // the element with 'notice' class.
 $I->see('Thank you, Miles','.notice');
+// Or using XPath locators
+$I->see('Thank you, Miles',"descendant-or-self::*[contains(concat(' ', normalize-space(@class), ' '), ' notice ')]");
 // We check this message is not on page.
 $I->dontSee('Form is filled incorrectly');
 ?>
@@ -212,6 +214,33 @@ We also have other useful commands to perform checks. Please note that they all 
 $I->seeInCurrentUrl('/user/miles');
 $I->seeCheckboxIsChecked('#agree');
 $I->seeInField('user[name]','Miles');
+$I->seeLink('Login');
+?>
+```
+
+#### Grabbers
+
+This is are the commands are introduced in Codeception 1.1. They are quite useful when you need to retrieve the data from the test and use it in next steps. Imagine, your site generates a password for every user, and you want to check the user can log in into site using this password.
+
+```php
+<?php
+$I->fillField('email','miles@davis.com')
+$I->click('Generate Password');
+$password = $I->grabTextFrom('#password');
+$I->click('Login');
+$I->fillField('email','miles@davis.com');
+$I->fillField('password', $password);
+$I->click('Log in!');
+?>
+```
+
+Grabbers allows to get a single value from current page with commands.
+
+```php
+<?php
+$token = $I->grabTextFrom('.token');
+$password = $I->grabTextFrom("descendant::input/descendant::*[@id = 'password']");
+$api_key = $I->grabValueFrom('input[name=api]');
 ?>
 ```
 
@@ -300,15 +329,15 @@ class WebHelper extends \Codeception\Module {
 
     function seeResponseIsPrettyLong($size = 3000) {
         $session = $this->getModule('PhpBrowser')->session;
-        $content = $session->getPage()->getConetent();
+        $content = $session->getPage()->getContent();
         $this->assertGreaterThen($size, strlen($content));
     }
 }
-
+?>
 ```
 
-We [connected a module](http://codeception.com/docs/03-Modules#connecting-modules), then we retrieved content from Mink session class.
-You should definetely learn Mink to dig deeper.
+We [connected a module](http://codeception.com/docs/03-ModulesAndHelpers#Connecting-Modules), then we retrieved content from Mink session class.
+You should definitely learn Mink to dig deeper.
 And in the end we performed assertion on current content.
 
 ## Conclusion

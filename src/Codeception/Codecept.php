@@ -7,7 +7,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.0.14";
+    const VERSION = "1.6.0.4";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -17,6 +17,11 @@ class Codecept
      * @var \PHPUnit_Framework_TestResult
      */
     protected $result;
+
+    /**
+     * @var \Codeception\CodeCoverage
+     */
+    protected $coverage;
 
     /**
      * @var \Monolog\Handler\StreamHandler
@@ -42,17 +47,21 @@ class Codecept
         'report' => false,
         'colors' => false,
         'log' => true,
+        'coverage' => false,
+	    'defer-flush' => false
     );
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
-        $this->dispatcher = new EventDispatcher();
-        $this->config = \Codeception\Configuration::config();
+        $this->runner = new \Codeception\PHPUnit\Runner();
+
+        $this->config = \Codeception\Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
+
+        $this->dispatcher = new EventDispatcher();
         $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
         $this->registerListeners();
-
     }
 
     private function mergeOptions($options) {
@@ -75,39 +84,53 @@ class Codecept
     }
 
     public function registerSubscribers() {
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
         $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
+        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+
+        if ($this->options['coverage']) {
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+        }
     }
 
     public function runSuite($suite, $test = null) {
         $settings = \Codeception\Configuration::suiteSettings($suite, $this->config);
+
         $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $suite, $settings);
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
 
-        $this->runner = $suiteManager->run($this->result, $this->options);
+        if (!$this->runner->getPrinter()) {
+            $printer = new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
+            $this->runner->setPrinter($printer);
+        }
+
+        $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
     }
 
     public static function versionString() {
-   	    return 'Codeception PHP Testing Framework v'.self::VERSION;
-   	}
-    
+        return 'Codeception PHP Testing Framework v'.self::VERSION;
+    }
+
     public function printResult() {
         $result = $this->getResult();
         $result->flushListeners();
-        $this->runner->getPrinter()->printResult($result);
+
+        $printer = $this->runner->getPrinter();
+        $printer->printResult($result);
+
+        $this->dispatcher->dispatch('result.print.after', new \Codeception\Event\PrintResult($result, $printer));
     }
 
     /**
      * @return \PHPUnit_Framework_TestResult
      */
-    public function getResult()
-    {
+    public function getResult() {
         return $this->result;
     }
 
@@ -115,16 +138,38 @@ class Codecept
         return $this->options;
     }
 
-    public static function checkLastVersion() {
-        if (!class_exists('SimpleXMLElement')) return false;
-        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
-        if (!$file) return '';
-        $feed = new \SimpleXMLElement($file);
-        @$codeception = $feed->entry[0]->title;
-        if (!$codeception) return '';
-        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
-        if (!isset($version[0])) return '';
-        return $version[0];
+    /**
+     * @return EventDispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
     }
 
+    public static function checkLastVersion()
+    {
+        if (! class_exists('SimpleXMLElement')) {
+            return false;
+        }
+
+        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
+        if (! $file) {
+            return '';
+        }
+
+        try {
+            $feed = new \SimpleXMLElement($file, LIBXML_NOERROR);
+            @$codeception = $feed->entry[0]->title;
+        } catch (\Exception $e) {
+            $codeception = false;
+        }
+
+        if (! $codeception) {
+            return '';
+        }
+
+        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
+
+        return isset($version[0]) ? $version[0] : '';
+    }
 }

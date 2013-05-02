@@ -78,6 +78,10 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
             $scenarioStatus = 'scenarioIncomplete';
         }
 
+        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR){
+            $scenarioStatus = 'scenarioFailed';
+        }
+
         else {
             $scenarioStatus = 'scenarioSuccess';
         }
@@ -85,10 +89,6 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
         $stepsBuffer  = '';
 
         foreach ($steps as $step) {
-            $currentStepName = $step->getName();
-
-            $stepText = $currentStepName;
-
             $stepTemplate = new \Text_Template(
               $this->templatePath . 'step.html'
             );
@@ -117,6 +117,18 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
         );
 
         $this->scenarios .= $scenarioTemplate->render();
+    }
+
+    public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
+    {
+        $suiteTemplate = new \Text_Template(
+          $this->templatePath . 'suite.html'
+        );
+        
+        $suiteTemplate->setVar(array('suite' => ucfirst($suite->getName())));
+
+        $this->scenarios .= $suiteTemplate->render();
+
     }
 
     /**

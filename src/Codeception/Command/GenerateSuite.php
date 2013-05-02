@@ -12,19 +12,18 @@ use Symfony\Component\Yaml\Yaml;
 
 class GenerateSuite extends Base
 {
-    protected $template  = "<?php\n\$I = new %s(\$scenario);\n\$I->wantTo('perform actions and see result');\n";
-
     protected function configure()
     {
         $this->setDefinition(array(
-
-            new \Symfony\Component\Console\Input\InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
-            new \Symfony\Component\Console\Input\InputArgument('guy', InputArgument::REQUIRED, 'name of new Guy class'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputArgument('guy', InputArgument::REQUIRED, 'name of new Guy class'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
 
-    public function getDescription() {
+    public function getDescription() 
+    {
         return 'Generates new test suite';
     }
 
@@ -33,7 +32,7 @@ class GenerateSuite extends Base
         $suite = $input->getArgument('suite');
         $guy = $input->getArgument('guy');
 
-        $config = \Codeception\Configuration::config();
+        $config = \Codeception\Configuration::config($input->getOption('config'));
 
         $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR;
         if (file_exists($dir.DIRECTORY_SEPARATOR.$suite)) throw new \Exception("Directory $suite already exists.");
@@ -49,7 +48,7 @@ class GenerateSuite extends Base
         $guyname = substr($guy,0,-3);
 
         // generate helper
-        file_put_contents(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php', "<?php\nnamespace Codeception\\Module;\n\nrequire_once 'PHPUnit/Framework/Assert/Functions.php';\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
 
         $conf = array(
             'class_name' => $guy,

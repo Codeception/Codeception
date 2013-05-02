@@ -7,6 +7,12 @@ namespace Codeception\Module;
  * This is the heart of the CodeGuy testing framework.
  * By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Features
  * * Descriptive - simply write what you are testing and how you are testing.
  * * Execution limit - only 'execute* methods actually execute your code. It's easy to see where tested methods are invoked.
@@ -269,9 +275,9 @@ class Unit extends \Codeception\Module
     public function execute(\Closure $code)
     {
         // cleanup mocks
-        foreach ($this->stubs as $mock) {
-            $mock->__phpunit_cleanup();
-        }
+//        foreach ($this->stubs as $mock) {
+//            $mock->__phpunit_cleanup();
+//        }
 
         $this->createMocks();
         $this->predictExceptions();
@@ -316,9 +322,9 @@ class Unit extends \Codeception\Module
         $method = array_shift($params);
 
         // cleanup mocks
-        foreach ($this->stubs as $mock) {
-            $mock->__phpunit_cleanup();
-        }
+//        foreach ($this->stubs as $mock) {
+//            $mock->__phpunit_cleanup();
+//        }
 
         $this->createMocks();
         $this->predictExceptions();
@@ -340,7 +346,7 @@ class Unit extends \Codeception\Module
      * Can update even private and protected properties.
      * 
      * Properties to be updated and their values are passed in the second parameter as an array:
-     * array('theProprrty'     => 'some value',
+     * array('theProperty'     => 'some value',
      *      ('anotherProperty' => 'another value')
      *
      * @param $obj
@@ -348,12 +354,18 @@ class Unit extends \Codeception\Module
      */
 
     public function changeProperties($obj, $values = array()) {
-        $reflectedObj = new \ReflectionClass($obj);
-            foreach ($values as $key => $val) {
-                $property = $reflectedObj->getProperty($key);
-                $property->setAccessible(true);
-                $property->setValue($obj, $val);
-            }
+        //As for now, PHP cannot resolve properties of namespaced class if class instance passed to reflector
+        //In our case we have mocked class with original full classname stored in __mocked property
+        if(isset($obj->__mocked)) {
+            $reflectedObj = new \ReflectionClass($obj->__mocked);
+        } else {
+            $reflectedObj = new \ReflectionClass($obj);
+        }
+        foreach ($values as $key => $val) {
+            $property = $reflectedObj->getProperty($key);
+            $property->setAccessible(true);
+            $property->setValue($obj, $val);
+        }
 
     }
 
@@ -371,6 +383,8 @@ class Unit extends \Codeception\Module
     }
 
     public function seeExceptionThrown($classname, $message = null) {
+
+        \PHPUnit_Framework_Assert::assertNotEmpty($this->thrownExceptions, "No exception was thrown");
 
         foreach ($this->thrownExceptions as $e) {
             if ($e instanceof $classname) {
@@ -419,8 +433,10 @@ class Unit extends \Codeception\Module
     protected function createMocks()
     {
         $scenario = $this->test->getScenario();
-        $scenario->getCurrentStep();
+
         $steps = $scenario->getSteps();
+        if (!isset($steps[$scenario->getCurrentStep()])) throw new \Exception("New steps were added to scenario in realtime. Can't proceed.\nRemove loops from your unit test to fix it");
+
         for ($i = $scenario->getCurrentStep()+1; $i < count($steps); $i++) {
             $step = $steps[$i];
             if (strpos($action = $step->getAction(), 'seeMethod') === 0) {
@@ -428,6 +444,12 @@ class Unit extends \Codeception\Module
                 $mock = array_shift($arguments);
                 $function = array_shift($arguments);
                 $params = array_shift($arguments);
+
+                foreach ($this->stubs as $stub) {
+                    if (get_class($stub) == get_class($mock)) {
+                        $mock = $stub;
+                    }
+                }
 
                 $invoke = false;
 
@@ -463,9 +485,8 @@ class Unit extends \Codeception\Module
                         $this->debug('with ' . json_encode($params));
                     }
                 }
-
-
             }
+
             if ($step->getAction() == 'executeTestedMethod') break;
             if ($step->getAction() == 'execute') break;
             if ($step->getAction() == 'executeTestedMethodOn') break;
@@ -559,10 +580,12 @@ class Unit extends \Codeception\Module
 
     protected function verifyMock($mock)
     {
+        if ($mock instanceof \Codeception\Maybe) $mock = $mock->__value();
         foreach ($this->stubs as $stubid => $stub) {
             if (spl_object_hash($stub) == spl_object_hash($mock)) {
                 if (!$mock->__phpunit_hasMatchers()) {
-                    throw new \Exception("Probably Internal Error. There is no matchers for current mock");
+                    continue;
+//                    throw new \Exception("Probably Internal Error. There is no matchers for current mock");
                 }
                 if (isset($stub->__mocked)) {
                     $this->debugSection('Triggered Stub', 'Stub_' . $stubid . ' {' . $stub->__mocked . '}');
@@ -643,7 +666,8 @@ class Unit extends \Codeception\Module
     public function seeResultIs($type)
     {
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $this->last_result);
+            \PHPUnit_Framework_Assert::assertInternalType($type, $this->last_result);
+            return;
         }
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $this->last_result);
     }
@@ -681,7 +705,8 @@ class Unit extends \Codeception\Module
     public function seePropertyIs($object, $property, $type) {
         $current = $this->retrieveProperty($object, $property);
         if (in_array($type, array('int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar'))) {
-            return \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+            \PHPUnit_Framework_Assert::assertInternalType($type, $current);
+            return;
         }
         \PHPUnit_Framework_Assert::assertInstanceOf($type, $current);
     }

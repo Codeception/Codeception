@@ -19,7 +19,11 @@ class Scenario {
 
     protected $currentStep = 0;
 
-    protected $finalizers = array();
+    protected $running = false;
+
+    protected $preloadedSteps = array();
+
+    protected $blocker = null;
 
     /**
      * Constructor.
@@ -36,39 +40,55 @@ class Scenario {
 	    $this->feature = $feature;
 	}
 
-    public function condition($arguments)
+    public function condition($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Condition($arguments));
+        return $this->addStep(new \Codeception\Step\Condition($action, $arguments));
     }
 
-    public function action($arguments)
+    public function action($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Action($arguments));
+        return $this->addStep(new \Codeception\Step\Action($action, $arguments));
     }
 
-    public function assertion($arguments)
+    public function assertion($action, $arguments)
     {
-        return $this->addStep(new \Codeception\Step\Assertion($arguments));
+        return $this->addStep(new \Codeception\Step\Assertion($action, $arguments));
     }
 
-    public function run()
+    public function skip($reason = "")
     {
-        foreach ($this->steps as $k => $step)
-        {
-            $this->currentStep = $k;
-            $this->test->runStep($step);
+        $this->blocker = new \Codeception\Step\Skip($reason, array());
+    }
+
+    public function incomplete($reason = "")
+    {
+        $this->blocker = new \Codeception\Step\Incomplete($reason, array());
+    }
+
+    public function runStep()
+    {
+        if (empty($this->steps)) return;
+
+        $step = $this->lastStep();
+        if (!$step->executed) {
+            $result = $this->test->runStep($step);
+            $this->currentStep++;
+            $step->executed = true;
+            return $result;
         }
+    }
 
-        foreach ($this->finalizers as $fin) {
-            $fin();
-        }
-
+    /**
+     * @return \Codeception\Step
+     */
+    protected function lastStep()
+    {
+        return end($this->steps);
     }
 
     protected function addStep(\Codeception\Step $step)
     {
         $this->steps[] = $step;
-
         return $this->test;
     }
 
@@ -79,29 +99,65 @@ class Scenario {
      */
     public function getSteps()
     {
-        return $this->steps;
+        if (!$this->running) return $this->steps;
+        return $this->preloadedSteps;
     }
 
 	public function getFeature() {
 	    return $this->feature;
 	}
 
+    public function getHtml()
+    {
+        $text = '';
+        foreach($this->getSteps() as $step) {
+            /** @var Step $step */
+            if ($step->getName() !== 'Comment') {
+                $text .= 'I ' . $step->getHtmlAction() . '<br/>';
+            } else {
+                $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
+            }
+        }
+        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
+        return $text;
+
+    }
+
+    public function getText()
+    {
+        $text = implode("\r\n", $this->getSteps());
+        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = strtoupper('I want to ' . $this->getFeature()) . "\r\n\r\n" . $text;
+        return $text;
+
+    }
+
 	public function comment($comment) {
-		$this->addStep(new \Codeception\Step\Comment($comment));
+		$this->addStep(new \Codeception\Step\Comment($comment,array()));
 	}
 
     public function getCurrentStep()
     {
         return $this->currentStep;
     }
+    
+    public function run() {
+        if ($this->running()) return;
+        if ($this->blocker) $this->blocker->run();
 
-    public function prepare(\Closure $lambda) {
-        $res = call_user_func($lambda);
-        return $res;
+        $this->running = true;
+        $this->preloadedSteps = $this->steps;
+        $this->steps = array();
     }
 
-    public function finalize(\Closure $lambda) {
-        $this->finalizers[] = $lambda;
+    public function running()
+    {
+        return $this->running;
+    }
+
+    public function preload() {
+        return !$this->running;
     }
 
 }

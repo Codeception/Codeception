@@ -59,6 +59,14 @@ class Db
     public function getDbh() {
         return $this->dbh;
     }
+    
+    public function getDb()
+    {
+        $matches = array();
+        $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
+        if (!$matched) return false;
+        return $matches[1];
+    }        
 
     public function cleanup()
     {
@@ -66,26 +74,59 @@ class Db
 
     public function load($sql)
     {
-        $query = "";
-        foreach ($sql as $sql_line) {
+        $query           = '';
+        $delimiter       = ';';
+        $delimiterLength = 1;
 
-            $parsed = $this->sqlLine($sql_line);
-            if ($parsed) continue;
+        foreach ($sql as $sqlLine) {
+            if (preg_match('/DELIMITER ([\;\$\|\\\\]+)/i', $sqlLine, $match)) {
+                $delimiter       = $match[1];
+                $delimiterLength = strlen($delimiter);
+                continue;
+            }
 
-            $query .= $sql_line;
+            $parsed = $this->sqlLine($sqlLine);
+            if ($parsed) {
+                continue;
+            }
 
-            if (substr(rtrim($query), -1, 1) == ';') {
-                $this->sqlQuery($query);
+            $query .= rtrim($sqlLine);
+
+            if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
+                $this->sqlQuery(substr($query, 0, - 1 * $delimiterLength));
                 $query = "";
             }
         }
+    }
+
+    public function insert($table, array $data)
+    {
+        $query = "insert into %s (%s) values (%s)";
+        return sprintf($query, $table, implode(', ', array_keys($data)), implode(', ', array_fill(0, count($data),'?')));
+    }
+
+    public function select($column, $table, array $criteria) {
+        $query = "select %s from %s where %s";
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "$k = ? ";
+        }
+        $params = implode('AND ', $params);
+
+        return sprintf($query, $column, $table, $params);
+    }
+
+    public function deleteQuery($table, $id)
+    {
+        $query = "delete from $table where id = $id";
+        $this->sqlQuery($query);
     }
 
     protected function sqlLine($sql)
     {
         if (trim($sql) == "") return true;
         if (trim($sql) == ";") return true;
-        if (preg_match('~^--.*?~s', $sql)) return true;
+        if (preg_match('~^(--.*?)|(#)~s', $sql)) return true;
         return false;
     }
 

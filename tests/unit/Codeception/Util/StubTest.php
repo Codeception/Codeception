@@ -23,9 +23,13 @@ class StubTest extends \PHPUnit_Framework_TestCase
     
     public function testMakeEmptyMethodReplaced() {
         $dummy = Stub::makeEmpty('DummyClass', array('helloWorld' => function () { return 'good bye world'; }));
-        $this->assertTrue(method_exists($dummy,'helloWorld'));
-        $this->assertNotEquals($this->dummy->helloWorld(),$dummy->helloWorld());
-        $this->assertEquals($dummy->helloWorld(),'good bye world');
+        $this->assertMethodReplaced($dummy);
+    }
+
+    public function testMakeEmptyMethodSimplyReplaced()
+    {
+        $dummy = Stub::makeEmpty('DummyClass', array('helloWorld' => 'good bye world'));
+        $this->assertMethodReplaced($dummy);
     }
 
     public function testMakeEmptyExcept() {
@@ -34,7 +38,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($dummy->goodByeWorld());
     }
 
-    public function testMakeEmptyExceptProperyRepalced() {
+    public function testMakeEmptyExceptPropertyReplaced() {
         $dummy = Stub::makeEmptyExcept('DummyClass', 'getCheckMe', array('checkMe' => 'checked!'));
         $this->assertEquals('checked!', $dummy->getCheckMe());
     }
@@ -50,6 +54,17 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->dummy->helloWorld(), $dummy->helloWorld());
         $this->assertEquals("hello world", $dummy->goodByeWorld());
     }
+
+    public function testMakeMethodReplaced() {
+        $dummy = Stub::make('DummyClass', array('helloWorld' => function () { return 'good bye world'; }));
+        $this->assertMethodReplaced($dummy);
+    }
+
+    public function testMakeMethodSimplyReplaced()
+    {
+        $dummy = Stub::make('DummyClass', array('helloWorld' => 'good bye world'));
+        $this->assertMethodReplaced($dummy);
+    }
     
     public function testCopy() {
         $dummy = Stub::copy($this->dummy, array('checkMe' => 'checked!'));
@@ -64,6 +79,17 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $dummy = Stub::construct('DummyClass', array('checkMe' => 'checked!'), array('targetMethod' => function () { return false; }));
         $this->assertEquals('constructed: checked!', $dummy->getCheckMe());
         $this->assertEquals(false, $dummy->targetMethod());
+    }
+
+    public function testConstructMethodReplaced() {
+        $dummy = Stub::construct('DummyClass', array(), array('helloWorld' => function () { return 'good bye world'; }));
+        $this->assertMethodReplaced($dummy);
+    }
+
+    public function testConstructMethodSimplyReplaced()
+    {
+        $dummy = Stub::make('DummyClass', array('helloWorld' => 'good bye world'));
+        $this->assertMethodReplaced($dummy);
     }
 
     public function testConstructEmpty()
@@ -86,5 +112,28 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('done', $dummy->getCheckMe());
     }
 
+    public function testStubsFromObject()
+    {
+        $dummy = Stub::make(new \DummyClass());
+        $this->assertTrue(isset($dummy->__mocked));
+        $dummy = Stub::makeEmpty(new \DummyClass());
+        $this->assertTrue(isset($dummy->__mocked));
+        $dummy = Stub::makeEmptyExcept(new \DummyClass(),'helloWorld');
+        $this->assertTrue(isset($dummy->__mocked));
+        $dummy = Stub::construct(new \DummyClass());
+        $this->assertTrue(isset($dummy->__mocked));
+        $dummy = Stub::constructEmpty(new \DummyClass());
+        $this->assertTrue(isset($dummy->__mocked));
+        $dummy = Stub::constructEmptyExcept(new \DummyClass(),'helloWorld');
+        $this->assertTrue(isset($dummy->__mocked));
+    }
+
+    protected function assertMethodReplaced($dummy)
+    {
+        $this->assertTrue(method_exists($dummy,'helloWorld'));
+        $this->assertNotEquals($this->dummy->helloWorld(),$dummy->helloWorld());
+        $this->assertEquals($dummy->helloWorld(),'good bye world');
+
+    }
 
 }

@@ -9,9 +9,10 @@ class PostgreSql extends Db
 
     public function cleanup()
     {
-        $this->dbh->exec("GRANT ALL ON DATABASE codeception_test TO ".$this->user);
+        $db = $this->getDb();
+        $this->dbh->exec("GRANT ALL ON DATABASE $db TO ".$this->user);
 
-        $drops = $this->dbh->query("select 'drop table if exists ' || tablename || ' cascade;' from pg_tables where schemaname = 'public' ;")->fetchAll();
+        $drops = $this->dbh->query("select 'drop table if exists \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public' ;")->fetchAll();
 
         if (!$drops) return;
         foreach ($drops as $drop) {
@@ -47,5 +48,16 @@ class PostgreSql extends Db
         } else {
             $this->dbh->exec($query);
         }
+    }
+
+    public function select($column, $table, array $criteria) {
+        $query = 'select %s from "%s" where %s';
+        $params = array();
+        foreach ($criteria as $k => $v) {
+            $params[] = "$k = ? ";
+        }
+        $params = implode('AND ', $params);
+
+        return sprintf($query, $column, $table, $params);
     }
 }

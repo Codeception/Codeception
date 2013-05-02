@@ -1,10 +1,10 @@
 # Codeception
 
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/codeception)
+[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception)
 
 Codeception is a new PHP full-stack testing framework.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
-Powered by PHPUnit 3.6.
+Powered by PHPUnit 3.7.
 
 ### At a Glance
 
@@ -26,34 +26,12 @@ $I->see('New Page');
 $I->submitForm('form#new_page', array('title' => 'Tree of Life Movie Review','body' => "Next time don't let Hollywood create art-house!"));
 $I->see('page created'); // notice generated
 $I->see('Tree of Life Movie Review','h1'); // head of page of is our title
-$I->seeInCurrentUrl('pages/tree-of-life-mobie-review'); // slug is generated
+$I->seeInCurrentUrl('pages/tree-of-life-movie-review'); // slug is generated
 $I->seeInDatabase('pages', array('title' => 'Tree of Life Movie Review')); // data is stored in database
 ?>
 ```
-Ok, as for unit test similar approach may seem weird, but...
 
-Take a look at this:
-
-#### Sample unit test
-
-``` php
-<?php
-class UserControllerCest {
-    public $class = 'UserController';
-
-    public function createAction(CodeGuy $I)
-    {
-        $I->haveFakeClass($userController = Stub::makeEmptyExcept('UserController'));
-        $I->executeTestedMethodOn($userController, array('username' => 'MilesDavis', 'email' => 'miles@davis.com'))
-            ->seeResultEquals(true)
-            ->seeMethodInvoked($userController, 'renderHtml')
-            ->seeInDabatase('users', array('username' => 'MilesDavis'));
-    }
-}
-?>
-```
-
-Anyway, if you don't really like writing unit tests in DSL, Codeception can run PHPUnit tests natively.
+For unit testing you can stay on classic PHPUnit tests, as Codeception can run them too.
 
 ## Documentation
 
@@ -62,14 +40,6 @@ Anyway, if you don't really like writing unit tests in DSL, Codeception can run 
 Documentation is currently included within the project. Look for it in the 'docs' directory.
 
 ## Installation
-
-### PEAR
-Install latest PEAR package from GitHub:
-
-```
-pear channel-discover codeception.com/pear
-pear install codeception/Codeception
-```
 
 ### Phar
 
@@ -86,12 +56,6 @@ php codecept.phar
 ## Getting Started
 
 If you successfully installed Codeception, run this command:
-
-```
-codecept install
-```
-
-this will install all dependency tools like PHPUnit and Mink
 
 ```
 codecept bootstrap
@@ -111,4 +75,4 @@ See Documentation for more information.
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011
+2011-2013

@@ -18,11 +18,25 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         return 'Initializes empty test suite and default configuration file';
     }
 
+    protected function configure()
+    {
+        $this->setDefinition(array(
+            new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path','.'),
+        ));
+        parent::configure();
+    }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $path = $input->getArgument('path');
+        if (!is_dir($path)) {
+            $output->writeln("<error>\nDirectory '$path' does not exists\n</error>");
+            return;
+        }
+        chdir($path);
 
         if (file_exists('codeception.yml')) {
-            $output->writeln("<error>\nProject already initialized here\n</error>");
+            $output->writeln("<error>\nProject already initialized at '$path'\n</error>");
             return;
         }
 
@@ -54,7 +68,8 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str = Yaml::dump($basicConfig, 4);
         file_put_contents('codeception.yml', $str);
 
-        $output->writeln("File codeception.yml written - global configuration");
+        $output->writeln("<fg=white;bg=magenta>\nInitializing Codeception in ".realpath($path)."\n</fg=white;bg=magenta>");
+        $output->writeln("File codeception.yml created <- global configuration");
 
         @mkdir('tests');
         @mkdir('tests/functional');
@@ -64,9 +79,9 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         @mkdir('tests/_log');
         @mkdir('tests/_data');
 
-        $output->writeln("tests/unit created - unit tests");
-        $output->writeln("tests/functional created - functional tests");
-        $output->writeln("tests/acceptance created - acceptance tests");
+        $output->writeln("tests/unit created <- unit tests");
+        $output->writeln("tests/functional created <- functional tests");
+        $output->writeln("tests/acceptance created <- acceptance tests");
 
         file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
@@ -92,10 +107,11 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         $firstline = $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($conf, 2);
 
         file_put_contents('tests/unit.suite.yml', $str);
-        $output->writeln("tests/unit.suite.yml written - unit tests suite configuration");
+        $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
 
 
         // CodeGuy
@@ -108,10 +124,11 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
         $str .= "# (tip: better to use with frameworks).\n\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents('tests/functional.suite.yml', $str);
-        $output->writeln("tests/functional.suite.yml written - functional tests suite configuration");
+        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
 
 
 
@@ -142,13 +159,15 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= "# powered by Mink (http://mink.behat.org).\n";
         $str .= "# (tip: that's what your customer will see).\n";
         $str .= "# (tip: test your ajax and javascript by one of Mink drivers).\n\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
         file_put_contents('tests/acceptance.suite.yml', $str);
-        $output->writeln("tests/acceptance.suite.yml written - acceptance tests suite configuration");
+        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
 
-        $output->writeln("<info>\nBootstrap is done. Check out /tests directory</info>");
-        $output->writeln("<comment>To complete initialization run 'build' command</comment>");
+        $output->writeln("<info>Building initial Guy classes</info>");
+        $this->getApplication()->find('build')->run(new \Symfony\Component\Console\Input\ArrayInput(array('command' => 'build')), $output);
+        $output->writeln("<info>\nBootstrap is done. Check out ".realpath($path)."/tests directory</info>");
 
     }
 

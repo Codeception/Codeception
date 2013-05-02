@@ -1,26 +1,19 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 /**
  * Codeception CLI
  */
 
-if (!class_exists('UniversalClassLoader')) {
-    $bootstrap_folder = (is_dir(__DIR__ . '/src'))
-        ? dirname(__FILE__)
-        : 'Codeception';
-
-    require_once $bootstrap_folder.'/autoload.php';
-}
+require_once dirname(__FILE__).'/autoload.php';
 
 if (isset($argv[1])) {
-    if (($argv[1] != 'run') && ($version = \Codeception\Codecept::checkLastVersion())) {
+    if (!in_array('run', $argv)) {
+        $version = \Codeception\Codecept::checkLastVersion();
         if (version_compare($version, \Codeception\Codecept::VERSION) > 0) {
-            echo "UPDATE: version $version released. See changes on: http://codeception.com.\n";
+            echo "UPDATE: version $version released. See changes on: http://codeception.com .\n\n";
         }
     }
 }
-
-
 
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
@@ -30,10 +23,13 @@ use Symfony\Component\Console\Application,
  $app = new Application('Codeception', Codeception\Codecept::VERSION);
  $app->add(new Codeception\Command\Build('build'));
  $app->add(new Codeception\Command\Run('run'));
- $app->add(new Codeception\Command\Install('install'));
+ $app->add(new Codeception\Command\Analyze('analyze'));
+ $app->add(new Codeception\Command\Console('console'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
  $app->add(new Codeception\Command\GenerateCept('generate:cept'));
  $app->add(new Codeception\Command\GenerateCest('generate:cest'));
+ $app->add(new Codeception\Command\GenerateTest('generate:test'));
+ $app->add(new Codeception\Command\GeneratePhpUnit('generate:phpunit'));
  $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
  $app->run();

@@ -1,4 +1,6 @@
 # REST Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
+
 
 Module for testing REST WebService.
 
@@ -8,9 +10,26 @@ It tries to guess the framework is is attached to.
 Whether framework is used it operates via standard framework modules.
 Otherwise sends raw HTTP requests to url via PHPBrowser.
 
+## Status
+
+* Maintainer: **tiger-seo**, **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
+* Contact: tiger.seo@gmail.com
+
 ## Configuration
 
 * url *optional* - the url of api
+* timeout *optional* - the maximum number of seconds to allow cURL functions to execute
+
+### Example
+
+    modules: 
+       enabled: [REST]
+       config:
+          REST:
+             url: 'http://serviceapp/api/v1/' 
+             timeout: 90
 
 ## Public Properties
 
@@ -46,6 +65,47 @@ Checks weather last response do not contain text.
 Opposite to seeResponseContainsJson
 
  * param array $json
+
+
+### grabDataFromJsonResponse
+
+
+Returns data from the current JSON response using specified path
+so that it can be used in next scenario steps
+
+Example:
+
+``` php
+<?php
+$user_id = $I->grabDataFromJsonResponse('user.user_id');
+$I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
+?>
+```
+
+ * param string $path
+
+ * available since version 1.1.2
+ * return string
+
+ * author tiger.seo@gmail.com
+
+
+### grabResponse
+
+
+Returns current response so that it can be used in next scenario steps.
+
+Example:
+
+``` php
+<?php
+$user_id = $I->grabResponse();
+$I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
+?>
+```
+
+ * version 1.1
+ * return string
 
 
 ### haveHttpHeader
@@ -85,11 +145,11 @@ Examples:
 
 ``` php
 <?php
-// response: {name: john, email: john * gmail.com}
+// response: {name: john, email: john@gmail.com}
 $I->seeResponseContainsJson(array('name' => 'john'));
 
-// response {user: john, profile: { email: john * gmail.com }}
-$I->seeResponseContainsJson(array('email' => 'john * gmail.com'));
+// response {user: john, profile: { email: john@gmail.com }}
+$I->seeResponseContainsJson(array('email' => 'john@gmail.com'));
 
 ?>
 ```
@@ -102,7 +162,7 @@ This method recursively checks if one array can be found inside of another.
 ### seeResponseEquals
 
 
-Checks if response is exectly the same as provided.
+Checks if response is exactly the same as provided.
 
  * param $response
 
@@ -134,6 +194,29 @@ Sends a GET request to given uri.
  * param array $params
 
 
+### sendLINK
+
+
+Sends LINK request to given uri.
+
+ * param       $url
+ * param array $linkEntries (entry is array with keys "uri" and "link-param")
+
+ * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+
+ * author samva.ua@gmail.com
+
+
+### sendPATCH
+
+
+Sends PATCH request to given uri.
+
+ * param       $url
+ * param array $params
+ * param array $files
+
+
 ### sendPOST
 
 
@@ -149,8 +232,21 @@ Parameters and files (as array of filenames) can be provided.
 ### sendPUT
 
 
-Sends PUT request to gieven uri.
+Sends PUT request to given uri.
 
  * param $url
  * param array $params
  * param array $files
+
+
+### sendUNLINK
+
+
+Sends UNLINK request to given uri.
+
+ * param       $url
+ * param array $linkEntries (entry is array with keys "uri" and "link-param")
+
+ * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
+
+ * author samva.ua@gmail.com

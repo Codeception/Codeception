@@ -3,92 +3,12 @@ namespace Codeception\Util;
 
 /**
  * Interface for all Framework connectors.
- * PhpBrowser acts similarly, as universal connectorm thus implements it too.
+ * PhpBrowser acts similarly, as universal connector thus implements it too.
  *
  */
 
-interface FrameworkInterface
+interface FrameworkInterface extends WebInterface
 {
-    /**
-     * Opens the page.
-     * Requires relative uri as parameter
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * // opens front page
-     * $I->amOnPage('/');
-     * // opens /register page
-     * $I->amOnPage('/register');
-     * ?>
-     * ```
-     *
-     * @param $page
-     */
-    public function amOnPage($page);
-
-    /**
-     * Check if current page contains the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->see('Logout'); // I can suppose user is logged in
-     * $I->see('Sign Up','h1'); // I can suppose it's a signup page
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
-    public function see($text, $selector = null);
-
-    /**
-     * Check if current page doesn't contain the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ```php
-     * <?php
-     * $I->dontSee('Login'); // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
-    public function dontSee($text, $selector = null);
-
-    /**
-     * Perform a click on link or button.
-     * Link or button are found by their names or CSS selector.
-     * Submits a form if button is a submit type.
-     *
-     * If link is an image it's found by alt attribute value of image.
-     * If button is image button is found by it's value
-     * If link or button can't be found by name they are searched by CSS selector.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * // simple link
-     * $I->click('Logout');
-     * // button of form
-     * $I->click('Submit');
-     * // CSS button
-     * $I->click('#form input[type=submit]');
-     * ?>
-     * ```
-     * @param $link
-     */
-    public function click($link);
-
     /**
      * Submits a form located on page.
      * Specify the form by it's css or xpath selector.
@@ -165,170 +85,23 @@ interface FrameworkInterface
     public function sendAjaxGetRequest($uri, $params = array());
 
     /**
-     * Checks if there is a link with text specified.
-     * Specify url to match link with exact this url.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
-     * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $url
+     * Asserts that current page has 404 response status code.
      */
-    public function seeLink($text, $url = null);
+    public function seePageNotFound();
 
     /**
-     * Checks if page doesn't contain the link with text specified.
-     * Specify url to narrow the results.
+     * Checks that response code is equal to value provided.
      *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeLink('Logout'); // I suppose user is not logged in
-     *
-     * ```
-     *
-     * @param $text
-     * @param null $url
+     * @param $code
+     * @return mixed
      */
-    public function dontSeeLink($text, $url = null);
+    public function seeResponseCodeIs($code);
 
     /**
-     * Checks that current uri contains value
+     * Adds HTTP authentication via username/password.
      *
-     * @param $uri
+     * @param $username
+     * @param $password
      */
-    public function seeInCurrentUrl($uri);
-
-    /**
-     * Assert if the specified checkbox is checked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-     *
-     * ```
-     *
-     * @param $checkbox
-     */
-    public function seeCheckboxIsChecked($checkbox);
-
-    /**
-     * Assert if the specified checkbox is unchecked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-     *
-     * ```
-     *
-     * @param $checkbox
-     */
-    public function dontSeeCheckboxIsChecked($checkbox);
-
-    /**
-     * Checks that an input field or textarea contains value.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeInField('form textarea[name=body]','Type your comment here');
-     * $I->seeInField('form input[type=hidden]','hidden_value');
-     * $I->seeInField('#searchform input','Search');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $value
-     */
-    public function seeInField($field, $value);
-
-    /**
-     * Checks that an input field or textarea doesn't contain value.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
-     * $I->dontSeeInField('form input[type=hidden]','hidden_value');
-     * $I->dontSeeInField('#searchform input','Search');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $value
-     */
-    public function dontSeeInField($field, $value);
-
-    /**
-     * Selects an option in select tag or in radio button group.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->selectOption('form select[name=account]', 'Premium');
-     * $I->selectOption('form input[name=payment]', 'Monthly');
-     * ?>
-     * ```
-     *
-     * @param $select
-     * @param $option
-     */
-    public function selectOption($select, $option);
-
-    /**
-     * Ticks a checkbox.
-     *
-     * @param $option
-     */
-    public function checkOption($option);
-
-    /**
-     * Unticks a checkbox.
-     *
-     * @param $option
-     */
-    public function uncheckOption($option);
-
-    /**
-     * Fills a text field or textarea with value.
-     *
-     * @param $field
-     * @param $value
-     */
-    public function fillField($field, $value);
-
-    /**
-     * Attaches file from Codeception data directory to upload field.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * // file is stored in 'tests/data/tests.xls'
-     * $I->attachFile('prices.xls');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $filename
-     */
-    public function attachFile($field, $filename);
+    public function amHttpAuthenticated($username, $password);
 }

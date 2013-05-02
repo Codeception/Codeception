@@ -2,20 +2,17 @@
 namespace Codeception\Module;
 
 /**
- * Works with SQL dabatase.
+ * Works with SQL database.
  *
  * The most important function of this module is cleaning database before each test.
  * That's why this module was added into global configuration file: codeception.yml.
  * To have your database properly cleaned you should configure it to access the database.
+ * Also provides actions to perform checks in database.
  *
  * In order to have your database populated with data you need a raw SQL dump.
  * Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
- *
- * Performance may dramatically change when using SQLite file database storage.
- * Consider converting your database into SQLite3 format with one of [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
- * While using SQLite database not recreated from SQL dump, but a database file is copied itself. So database repopulation is just about copying file.
  *
  * Supported and tested databases are:
  *
@@ -31,6 +28,19 @@ namespace Codeception\Module;
  * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
  * Check out drivers if you get problems loading dumps and cleaning databases.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * stability:
+ *     - Mysql: **stable**
+ *     - SQLite: **stable**
+ *     - Postgres: **beta**
+ *     - MSSQL: **alpha**
+ *     - Oracle: **alpha**
+ * * Contact: codecept@davert.mail.ua
+ *
+ * *Please review the code of non-stable modules and provide patches if you have issues.*
+ *
  * ## Config
  *
  * * dsn *required* - PDO DSN
@@ -40,7 +50,18 @@ namespace Codeception\Module;
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
  *
- * Also provides actions to perform checks in database.
+ * ### Example
+ *
+ *     modules:
+ *        enabled: [Db]
+ *        config:
+ *           Db:
+ *              dsn: 'mysql:host=localhost;dbname=testdb'
+ *              user: 'root'
+ *              password: ''
+ *              dump: 'tests/_data/dump.sql'
+ *              populate: true
+ *              cleanup: false
  *
  * ## Public Properties
  * * dbh - contains PDO connection.
@@ -48,7 +69,9 @@ namespace Codeception\Module;
  *
  */
 
-use \Codeception\Util\Driver\Db as Driver;
+use Codeception\Util\Driver\Db as Driver;
+use Codeception\Exception\Module as ModuleException;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 
 class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 {
@@ -69,10 +92,13 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
                               'cleanup'  => true,
                               'dump'     => null);
 
+	protected $populated = false;
+
     /**
      * @var \Codeception\Util\Driver\Db
      */
     public $driver;
+    protected $insertedIds = array();
 
     protected $requiredFields = array('dsn', 'user', 'password');
 
@@ -81,93 +107,150 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
             if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
-                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "
-                    File with dump deesn't exist.\n
-                    Please, check path for sql file: " . $this->config['dump']);
+                throw new ModuleConfigException(
+                    __CLASS__,
+                    "\nFile with dump doesn't exist.
+                    Please, check path for sql file: " . $this->config['dump']
+                );
             }
             $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
-            $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+            $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
             $this->sql = explode("\n", $sql);
         }
 
         try {
             $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage() . ' while creating PDO connection');
+            throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating PDO connection');
         }
 
         // starting with loading dump
         if ($this->config['populate']) {
-                $this->cleanup();
-                $this->loadDump();
+            $this->cleanup();
+            $this->loadDump();
+            $this->populated = true;
         }
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->config['cleanup'] && !$this->populated) {
+            $this->cleanup();
+            $this->loadDump();
+        } else {
+            $this->removeInserted();
+        }
+        parent::_before($test);
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup']) {
-                $this->cleanup();
-                $this->loadDump();
+        $this->populated = false;
+        parent::_after($test);
+    }
+
+    protected function removeInserted()
+    {
+        foreach ($this->insertedIds as $insertId) {
+            try {
+            $this->driver->deleteQuery($insertId['table'], $insertId['id']);
+            } catch (\Exception $e) {
+                $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
+            }
         }
     }
 
     protected function cleanup()
     {
         $dbh = $this->driver->getDbh();
-        if (!$dbh) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
+        if (! $dbh) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "No connection to database. Remove this module from config if you don't need database repopulation"
+            );
         }
         try {
             // don't clear database for empty dump
-            if (!count($this->sql)) return;
+            if (! count($this->sql)) {
+                return;
+            }
             $this->driver->cleanup();
-
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(__CLASS__, $e->getMessage());
         }
     }
 
     protected function loadDump()
     {
-        if (!$this->sql) return;
+        if (! $this->sql) {
+            return;
+        }
         try {
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new ModuleException(
+                __CLASS__,
+                $e->getMessage() . "\nSQL query being executed: " . $this->sql
+            );
         }
+    }
+
+    /**
+     * Inserts SQL record into database
+     *
+     * ``` php
+     * <?php
+     * $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+     * ?>
+     * ```
+     *
+     * @param $table
+     * @param array $data
+     */
+    public function haveInDatabase($table, array $data)
+    {
+        $query = $this->driver->insert($table, $data);
+        $this->debugSection('Query', $query);
+
+        $sth = $this->driver->getDbh()->prepare($query);
+        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
+	
+	$i = 1;
+        foreach ($data as $val) {
+            $sth->bindParam($i, $val);
+            $i++;
+        }
+        $res = $sth->execute();
+        if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
+        $this->insertedIds[] = array('table' => $table, 'id' => $this->driver->getDbh()->lastInsertId());
     }
 
     public function seeInDatabase($table, $criteria = array())
     {
-        $res = $this->proceedSeeInDatabase($table, $criteria);
+        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
     }
 
     public function dontSeeInDatabase($table, $criteria = array())
     {
-        $res = $this->proceedSeeInDatabase($table, $criteria);
+        $res = $this->proceedSeeInDatabase($table, 'count(*)',$criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
     }
 
-    protected function proceedSeeInDatabase($table, $criteria)
+    protected function proceedSeeInDatabase($table, $column, $criteria)
     {
-        $query = "select count(*) from `%s` where %s";
-
-        $params = array();
-        foreach ($criteria as $k => $v) {
-            $params[] = "`$k` = ? ";
-        }
-        $params = implode('AND ', $params);
-
-        $query = sprintf($query, $table, $params);
-
-        $this->debugSection('Query', $query, $params);
+        $query = $this->driver->select($column, $table, $criteria);
+        $this->debugSection('Query', $query, json_encode($criteria));
 
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
 
         $sth->execute(array_values($criteria));
         return $sth->fetchColumn();
+    }
+
+    public function grabFromDatabase($table, $column, $criteria = array()) {
+        return $this->proceedSeeInDatabase($table, $column, $criteria);
     }
 
 }

@@ -6,6 +6,12 @@ namespace Codeception\Module;
  * Use it with Selenium, Selenium2, ZombieJS, or PhpBrowser module.
  * Whenever none of this modules are connected the exception is thrown.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Configuration:
  *
  * * disable: false (optional) - stop making dumps and screenshots. Useful when you don't need debug anymore but you don't wanna change the code of your tests.
@@ -80,7 +86,7 @@ class WebDebug extends \Codeception\Module
         try {
             $this->module->_saveScreenshot($filename.'.png');
         } catch (\Exception $e) {
-            $this->debugSection('Warning', "Screenshot coudn't be saved. HTML dump will be stored instead. ");
+            $this->debugSection('Warning', "Screenshot couldn't be saved. HTML dump will be stored instead. ");
             $this->debug('Screenshot saving error:'. $e->getMessage());
         }
 

@@ -10,10 +10,17 @@ namespace Codeception\Module;
  *
  * ## Installation
  *
- * Download Selenium2 [WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+ * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
  * Don't forget to turn on Db repopulation if you are using database.
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ * * relies on [Mink](http://mink.behat.org)
  *
  * ## Configuration
  *
@@ -22,26 +29,56 @@ namespace Codeception\Module;
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
  * * delay - set delay between actions in milliseconds (1/1000 of second) if they run too fast
+ * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ *
+ * ### Example (`acceptance.suite.yml`)
+ *
+ *     modules:
+ *        enabled: [Selenium2]
+ *        config:
+ *           Selenium2:
+ *              url: 'http://localhost/'
+ *              browser: firefox
+ *              capabilities:
+ *                  unexpectedAlertBehaviour: 'accept'
  *
  * ## Public Properties
  *
  * * session - contains Mink Session
+ * * webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
  */
 
-class Selenium2 extends \Codeception\Util\MinkJS
+use Behat\Mink\Driver\Selenium2Driver;
+use Codeception\Util\MinkJS;
+
+class Selenium2 extends MinkJS
 {
     protected $requiredFields = array('browser', 'url');
-    protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0);
+    protected $config = array('host' => '127.0.0.1', 'port' => '4444', 'delay' => 0, 'capabilities' => array());
+
+    /**
+     * @var \WebDriver\Session
+     */
+    public $webDriverSession;
 
 
-    public function _cleanup() {
-        $driver = new \Behat\Mink\Driver\Selenium2Driver(
+    public function _initialize() {
+        $capabilities = array_merge(Selenium2Driver::getDefaultCapabilities(), $this->config['capabilities']);
+        $capabilities['name'] = 'Codeception Test';
+        $driver = new Selenium2Driver(
             $this->config['browser'],
-            null,
+            $capabilities,
             sprintf('http://%s:%d/wd/hub',$this->config['host'],$this->config['port'])
         );
         $this->session = new \Behat\Mink\Session($driver);
-        $this->session->start();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        if ($this->session) {
+            $this->session->start();
+            $this->webDriverSession = $this->session->getDriver()->getWebDriverSession();
+        }
     }
 
     public function _failed(\Codeception\TestCase $test, $error) {
@@ -54,17 +91,359 @@ class Selenium2 extends \Codeception\Util\MinkJS
         if ($this->config['delay']) usleep($this->config['delay'] * 1000);
     }
 
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use Selenium WebDriver methods directly
+     *
+     * ``` php
+     * $I->executeInSelenium(function(\WebDriver\Session $webdriver) {
+     *   $webdriver->back();
+     * });
+     * ```
+     *
+     * Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
+     * Not recommended this command too be used on regular basis.
+     * If Codeception lacks important Selenium methods implement then and submit patches.
+     *
+     * @param callable $function
+     */
+    public function executeInSelenium(\Closure $function)
+    {
+        $function($this->webDriverSession);
+    }
+
     public function _saveScreenshot($filename)
     {
-        if (!isset($this->session->getDriver()->wdSession)) {
+        if (!$this->webDriverSession) {
             $this->debug("Can't make screenshot, no web driver");
             return;
         }
-        $wd = $this->session->getDriver()->wdSession;
-        $imgData = base64_decode($wd->screenshot());
+        $imgData = base64_decode($this->webDriverSession->screenshot());
         file_put_contents($filename, $imgData);
     }
 
     // please, add more custom Selenium functions here
 
+    public function click($link, $context = null) {
+        $url = $this->session->getCurrentUrl();
+        $el = $this->findClickable($link, $context);
+        $el->click();
+    }
+
+    /**
+     * Accept alert or confirm popup
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show alert popup');
+     * $I->acceptPopup();
+     *
+     * ```
+     */
+    public function acceptPopup() {
+        $this->webDriverSession->accept_alert();
+    }
+
+    /**
+     * Dismiss alert or confirm popup
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show confirm popup');
+     * $I->cancelPopup();
+     *
+     * ```
+     */
+    public function cancelPopup() {
+        $this->webDriverSession->dismiss_alert();
+    }
+
+    /**
+     * Checks if popup contains the $text
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click('Show alert popup');
+     * $I->seeInPopup('Error message');
+     *
+     * ```
+     *
+     * @param string $text
+     */
+    public function seeInPopup($text) {
+        $this->assertContains($text, $this->webDriverSession->alert_text());
+    }
+
+    /**
+     * Check if popup don't contains the $text
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->click();
+     * $I->dontSeeInPopup('Error message');
+     *
+     * ```
+     *
+     * @param string $text
+     */
+    public function dontSeeInPopup($text) {
+        $this->assertNotContains($text, $this->webDriverSession->alert_text());
+    }
+
+    /**
+     * Switch to another window
+     *
+     * Example:
+     * ``` html
+     * <input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
+     *
+     * ```
+     *
+     * ``` php
+     * <?php
+     * $I->click("Open window");
+     * # switch to another window
+     * $I->switchToWindow("another_window");
+     * # switch to parent window
+     * $I->switchToWindow();
+     *
+     * ```
+     *
+     * @param string|null $name
+     */
+    public function switchToWindow($name = null) {
+        $this->session->getDriver()->switchToWindow($name);
+    }
+
+    /**
+     * Switch to another frame
+     *
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     *
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIFrame("another_frame");
+     * # switch to parent page
+     * $I->switchToIFrame();
+     *
+     * ```
+     *
+     * @param string|null $name
+     */
+    public function switchToIFrame($name = null) {
+        $this->session->getDriver()->switchToIFrame($name);
+    }
+
+    /*
+     * INHERITED ACTIONS
+     */
+
+    public function dontSee($text, $selector = null)
+    {
+        parent::dontSee($text, $selector);
+    }
+
+    public function see($text, $selector = null)
+    {
+        parent::see($text, $selector);
+    }
+
+    public function seeLink($text, $url = null)
+    {
+        parent::seeLink($text, $url);
+    }
+
+    public function dontSeeLink($text, $url = null)
+    {
+        parent::dontSeeLink($text, $url);
+    }
+
+    public function dontSeeElement($selector)
+    {
+        parent::dontSeeElement($selector);
+    }
+
+    public function reloadPage()
+    {
+        parent::reloadPage();
+    }
+
+    public function moveBack()
+    {
+        parent::moveBack();
+    }
+
+    public function moveForward()
+    {
+        parent::moveForward();
+    }
+
+    public function fillField($field, $value)
+    {
+        parent::fillField($field, $value);
+    }
+
+    public function selectOption($select, $option)
+    {
+        parent::selectOption($select, $option);
+    }
+
+    public function seeInCurrentUrl($uri)
+    {
+        parent::seeInCurrentUrl($uri);
+    }
+
+    public function dontSeeInCurrentUrl($uri)
+    {
+        parent::dontSeeInCurrentUrl($uri);
+    }
+
+    public function seeCurrentUrlEquals($uri)
+    {
+        parent::seeCurrentUrlEquals($uri);
+    }
+
+    public function dontSeeCurrentUrlEquals($uri)
+    {
+        parent::dontSeeCurrentUrlEquals($uri);
+    }
+
+    public function seeCurrentUrlMatches($uri)
+    {
+        parent::seeCurrentUrlMatches($uri);
+    }
+
+    public function dontSeeCurrentUrlMatches($uri)
+    {
+        parent::dontSeeCurrentUrlMatches($uri);
+    }
+
+    public function grabFromCurrentUrl($uri = null)
+    {
+        return parent::grabFromCurrentUrl($uri);
+    }
+
+    public function attachFile($field, $filename)
+    {
+        parent::attachFile($field, $filename);
+    }
+
+    public function seeCheckboxIsChecked($checkbox)
+    {
+        parent::seeCheckboxIsChecked($checkbox);
+    }
+
+    public function dontSeeCheckboxIsChecked($checkbox)
+    {
+        parent::dontSeeCheckboxIsChecked($checkbox);
+    }
+
+    public function seeInField($field, $value)
+    {
+        parent::seeInField($field, $value);
+    }
+
+    public function dontSeeInField($field, $value)
+    {
+        parent::dontSeeInField($field, $value);
+    }
+
+    public function grabTextFrom($cssOrXPathOrRegex)
+    {
+        return parent::grabTextFrom($cssOrXPathOrRegex);
+    }
+
+    public function grabValueFrom($field)
+    {
+        return parent::grabValueFrom($field);
+    }
+
+    public function grabAttribute()
+    {
+        parent::grabAttribute();
+    }
+
+    public function checkOption($option)
+    {
+        parent::checkOption($option);
+    }
+
+    public function uncheckOption($option)
+    {
+        parent::uncheckOption($option);
+    }
+
+    public function doubleClick($link)
+    {
+        parent::doubleClick($link);
+    }
+
+    public function clickWithRightButton($link)
+    {
+        parent::clickWithRightButton($link);
+    }
+
+    public function moveMouseOver($link)
+    {
+        parent::moveMouseOver($link);
+    }
+
+    public function focus($el)
+    {
+        parent::focus($el);
+    }
+
+    public function blur($el)
+    {
+        parent::blur($el);
+    }
+
+    public function dragAndDrop($el1, $el2)
+    {
+        parent::dragAndDrop($el1, $el2);
+    }
+
+    public function seeElement($selector)
+    {
+        parent::seeElement($selector);
+    }
+
+    public function pressKey($element, $char, $modifier = null)
+    {
+        parent::pressKey($element, $char, $modifier);
+    }
+
+    public function pressKeyUp($element, $char, $modifier = null)
+    {
+        parent::pressKeyUp($element, $char, $modifier);
+    }
+
+    public function pressKeyDown($element, $char, $modifier = null)
+    {
+        parent::pressKeyDown($element, $char, $modifier);
+    }
+
+    public function wait($milliseconds)
+    {
+        parent::wait($milliseconds);
+    }
+
+    public function waitForJS($milliseconds, $jsCondition)
+    {
+        parent::waitForJS($milliseconds, $jsCondition);
+    }
+
+    public function executeJs($jsCode)
+    {
+        parent::executeJs($jsCode);
+    }
 }

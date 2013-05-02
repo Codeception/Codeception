@@ -1,12 +1,13 @@
 <?php
 namespace Codeception;
 
-abstract class Module {
+abstract class Module
+{
 
-	protected $debugStack = array();
+    protected $debugStack = array();
 
-	protected $storage = array();
-    
+    protected $storage = array();
+
     protected $config = array();
 
     protected $requiredFields = array();
@@ -18,76 +19,85 @@ abstract class Module {
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
             throw new \Codeception\Exception\ModuleConfig(get_class($this),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
-                Update cunfiguration and set all required fields\n\n
+                Update configuration and set all required fields\n\n
         ");
     }
-	
-	public function _hasRequiredFields()
-	{
-		return !empty($this->requiredFields);
-	}
+
+    public function _hasRequiredFields()
+    {
+        return !empty($this->requiredFields);
+    }
 
     // HOOK: used after configuration is loaded
     public function _initialize() {
     }
 
-	// HOOK: on every Guy class initialization
-	public function _cleanup() {
-	}
+    // HOOK: on every Guy class initialization
+    public function _cleanup() {
+    }
 
-	// HOOK: before every step
-	public function _beforeStep(\Codeception\Step $step) {
-	}
+    // HOOK: before each suite
+    public function _beforeSuite($settings = array())
+    {
+    }
 
-	// HOOK: after every  step
-	public function _afterStep(\Codeception\Step $step) {
-	}
+    // HOOK: after suite
+    public function _afterSuite()
+    {
+    }
 
-	// HOOK: before scenario
-	public function _before(\Codeception\TestCase $test) {
-	}
+    // HOOK: before every step
+    public function _beforeStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: after scenario
-	public function _after(\Codeception\TestCase $test) {
-	}
+    // HOOK: after every  step
+    public function _afterStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: on fail
-	public function _failed(\Codeception\TestCase $test, $fail) {
-	}
+    // HOOK: before scenario
+    public function _before(\Codeception\TestCase $test) {
+    }
 
+    // HOOK: after scenario
+    public function _after(\Codeception\TestCase $test) {
+    }
 
-	protected function debug($message) {
-	    $this->debugStack[] = $message;
-	}
+    // HOOK: on fail
+    public function _failed(\Codeception\TestCase $test, $fail) {
+    }
 
-	protected function debugSection($title, $message) {
-		$this->debug("[$title] $message");
-	}
+    protected function debug($message) {
+        $this->debugStack[] = $message;
+    }
 
-	public function _clearDebugOutput() {
-		$this->debugStack = array();
-	}
+    protected function debugSection($title, $message) {
+        $this->debug("[$title] $message");
+    }
 
-	public function _getDebugOutput() {
-		$debugStack = $this->debugStack;
-		$this->_clearDebugOutput();
-	    return $debugStack;
-	}
+    public function _clearDebugOutput() {
+        $this->debugStack = array();
+    }
 
-	protected function assert($arguments, $not = false) {
-		$not = $not ? 'Not' : '';
-		$method = ucfirst(array_shift($arguments));
-		if (($method === 'True') && $not) {
-			$method = 'False';
-			$not = '';
-		}
-		if (($method === 'False') && $not) {
-			$method = 'True';
-			$not = '';
-		}
+    public function _getDebugOutput() {
+        $debugStack = $this->debugStack;
+        $this->_clearDebugOutput();
+        return $debugStack;
+    }
 
-		call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
-	}
+    protected function assert($arguments, $not = false) {
+        $not = $not ? 'Not' : '';
+        $method = ucfirst(array_shift($arguments));
+        if (($method === 'True') && $not) {
+            $method = 'False';
+            $not = '';
+        }
+        if (($method === 'False') && $not) {
+            $method = 'True';
+            $not = '';
+        }
+
+        call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
+    }
 
     /**
      * Checks that two variables are equal.
@@ -128,7 +138,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that two vraibles are not equal
+     * Checks that two variables are not equal
      *
      * @param $expected
      * @param $actual
@@ -152,7 +162,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that expected is gretaer or equal then actual
+     * Checks that expected is greater or equal then actual
      *
      * @param $expected
      * @param $actual
@@ -177,7 +187,7 @@ abstract class Module {
     }
 
     /**
-     * Checks that expected is lower or euqal then actual
+     * Checks that expected is lower or equal then actual
      *
      * @param $expected
      * @param $actual
@@ -278,9 +288,9 @@ abstract class Module {
         return \PHPUnit_Framework_Assert::fail($message);
     }
 
-	protected function assertNot($arguments) {
-		$this->assert($arguments, true);
-	}
+    protected function assertNot($arguments) {
+        $this->assert($arguments, true);
+    }
 
     protected function hasModule($name)
     {
@@ -297,6 +307,14 @@ abstract class Module {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
+    protected function scalarizeArray($array)
+    {
+        foreach ($array as $k => $v) {
+            if (! is_scalar($v)) {
+                $array[$k] = (is_array($v) || $v instanceof \ArrayAccess) ? $this->scalarizeArray($v) : (string)$v;
+            }
+        }
 
-
+        return $array;
+    }
 }

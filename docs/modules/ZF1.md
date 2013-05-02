@@ -1,16 +1,27 @@
 # ZF1 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF1.php)**
+
 
 This module allows you to run tests inside Zend Framework.
 It acts just like ControllerTestCase, but with usage of Codeception syntax.
-Currently this module is a bit *alpha* as I have a little bit experience with ZF. Thus, contributions are welcome.
 
 It assumes, you have standard structure with __APPLICATION_PATH__ set to './application'
-and LIBRARY_PATH set to './library'. If it's not redefine this constants in bootstrap file of your suite.
+and LIBRARY_PATH set to './library'. If it's not then set the appropriate path in the Config.
+
+[Tutorial](http://codeception.com/01-27-2012/bdd-with-zend-framework.html)
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Config
 
 * env  - environment used for testing ('testing' by default).
 * config - relative path to your application config ('application/configs/application.ini' by default).
+* app_path - relative path to your application folder ('application' by default).
+* lib_path - relative path to your library folder ('library' by default).
 
 ## API
 
@@ -26,7 +37,7 @@ Unfortunately Zend_Db doesn't support nested transactions, thus, for cleaning yo
 [implement nested transactions yourself](http://blog.ekini.net/2010/03/05/zend-framework-how-to-use-nested-transactions-with-zend_db-and-mysql/).
 
 If your database supports nested transactions (MySQL doesn't) or you implemented them you can put all your code inside a transaction.
-Use a generated helper TestHelper. Usse this code inside of it.
+Use a generated helper TestHelper. Use this code inside of it.
 
 ``` php
 <?php
@@ -47,6 +58,15 @@ This will make your functional tests run super-fast.
 
 
 ## Actions
+
+
+### amHttpAuthenticated
+
+
+Adds HTTP authentication via username/password.
+
+ * param $username
+ * param $password
 
 
 ### amOnPage
@@ -91,6 +111,15 @@ $I->attachFile('prices.xls');
 
 
 Ticks a checkbox.
+For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
 
  * param $option
 
@@ -106,6 +135,8 @@ If link is an image it's found by alt attribute value of image.
 If button is image button is found by it's value
 If link or button can't be found by name they are searched by CSS selector.
 
+The second parameter is a context: CSS or XPath locator to narrow the search.
+
 Examples:
 
 ``` php
@@ -116,9 +147,14 @@ $I->click('Logout');
 $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
+// XPath
+$I->click('//form/*[@type=submit]')
+// link in context
+$I->click('Logout', '#nav');
 ?>
 ```
  * param $link
+ * param $context
 
 
 ### dontSee
@@ -133,7 +169,7 @@ Examples:
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-
+$I->dontSee('Sign Up','//body/h1'); // with XPath
 ```
 
  * param $text
@@ -158,18 +194,75 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
  * param $checkbox
 
 
+### dontSeeCurrentUrlEquals
+
+
+Checks that current url is not equal to value.
+Unlike `dontSeeInCurrentUrl` performs a strict check.
+
+<?php
+// current url is not root
+$I->dontSeeCurrentUrlEquals('/');
+?>
+
+ * param $uri
+
+
+### dontSeeCurrentUrlMatches
+
+
+Checks that current url does not match a RegEx value
+
+<?php
+// to match root url
+$I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
+?>
+
+ * param $uri
+
+
+### dontSeeElement
+
+
+Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+
+``` php
+<?php
+$I->dontSeeElement('.error');
+$I->dontSeeElement(//form/input[1]);
+?>
+```
+ * param $selector
+
+
+### dontSeeInCurrentUrl
+
+
+Checks that current uri does not contain a value
+
+``` php
+<?php
+$I->dontSeeInCurrentUrl('/users/');
+?>
+```
+
+ * param $uri
+
+
 ### dontSeeInField
 
 
 Checks that an input field or textarea doesn't contain value.
-
+Field is matched either by label or CSS or Xpath
 Example:
 
 ``` php
 <?php
+$I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
+$I->dontSeeInField('//form/*[@name=search]','Search');
 ?>
 ```
 
@@ -209,6 +302,64 @@ Fills a text field or textarea with value.
 __not documented__
 
 
+### grabFromCurrentUrl
+
+
+Takes a parameters from current URI by RegEx.
+If no url provided returns full URI.
+
+``` php
+ <?php
+$user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+$uri = $I->grabFromCurrentUrl();
+?>
+```
+
+ * param null $uri
+ * internal param $url
+ * return mixed
+
+
+### grabTextFrom
+
+
+Finds and returns text contents of element.
+Element is searched by CSS selector, XPath or matcher by regex.
+
+Example:
+
+``` php
+<?php
+$heading = $I->grabTextFrom('h1');
+$heading = $I->grabTextFrom('descendant-or-self::h1');
+$value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
+?>
+```
+
+ * param $cssOrXPathOrRegex
+ * return mixed
+
+
+### grabValueFrom
+
+
+Finds and returns field and returns it's value.
+Searches by field name, then by CSS, then by XPath
+
+Example:
+
+``` php
+<?php
+$name = $I->grabValueFrom('Name');
+$name = $I->grabValueFrom('input[name=username]');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
+?>
+```
+
+ * param $field
+ * return mixed
+
+
 ### see
 
 
@@ -221,6 +372,7 @@ Examples:
 <?php
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
+$I->see('Sign Up','//body/h1'); // with XPath
 
 ```
 
@@ -240,16 +392,67 @@ Example:
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ```
 
  * param $checkbox
 
 
+### seeCurrentUrlEquals
+
+
+Checks that current url is equal to value.
+Unlike `seeInCurrentUrl` performs a strict check.
+
+<?php
+// to match root url
+$I->seeCurrentUrlEquals('/');
+?>
+
+ * param $uri
+
+
+### seeCurrentUrlMatches
+
+
+Checks that current url is matches a RegEx value
+
+<?php
+// to match root url
+$I->seeCurrentUrlMatches('~$/users/(\d+)~');
+?>
+
+ * param $uri
+
+
+### seeElement
+
+
+Checks if element exists on a page, matching it by CSS or XPath
+
+``` php
+<?php
+$I->seeElement('.error');
+$I->seeElement(//form/input[1]);
+?>
+```
+ * param $selector
+
+
 ### seeInCurrentUrl
 
 
-Checks that current uri contains value
+Checks that current uri contains a value
+
+``` php
+<?php
+// to match: /home/dashboard
+$I->seeInCurrentUrl('home');
+// to match: /users/1
+$I->seeInCurrentUrl('/users/');
+?>
+```
 
  * param $uri
 
@@ -258,14 +461,17 @@ Checks that current uri contains value
 
 
 Checks that an input field or textarea contains value.
+Field is matched either by label or CSS or Xpath
 
 Example:
 
 ``` php
 <?php
+$I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
+$I->seeInField('//form/*[@name=search]','Search');
 ?>
 ```
 
@@ -292,6 +498,21 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * param null $url
 
 
+### seePageNotFound
+
+
+Asserts that current page has 404 response status code.
+
+
+### seeResponseCodeIs
+
+
+Checks that response code is equal to value provided.
+
+ * param $code
+ * return mixed
+
+
 ### selectOption
 
 
@@ -303,6 +524,7 @@ Example:
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -392,5 +614,13 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 Unticks a checkbox.
+
+Example:
+
+``` php
+<?php
+$I->uncheckOption('#notify');
+?>
+```
 
  * param $option

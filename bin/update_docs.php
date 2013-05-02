@@ -10,7 +10,8 @@ function clean_doc($doc, $indent = 3)
         return substr($line, $indent);
     }, $lines);
     $doc = implode("\n", $lines);
-    $doc = str_replace('@', " * ", $doc);
+    $doc = str_replace(array('@since'), array(' * available since version'), $doc);
+    $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
     return $doc;
 }
 
@@ -20,6 +21,8 @@ foreach ($modules as $module) {
 
     $moduleName = basename(substr($module, 0, -4));
     $text = '# ' . $moduleName . " Module\n";
+
+    $text .= "**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**\n\n";
 
     $className = '\Codeception\Module\\' . $moduleName;
     $class = new ReflectionClass($className);

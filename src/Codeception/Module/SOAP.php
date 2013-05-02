@@ -10,9 +10,16 @@ namespace Codeception\Module;
  * If a endpoint is a full url then it uses PHPBrowser.
  *
  * ### Using Inside Framework
+ *
  * Please note, that PHP SoapServer::handle method sends additional headers.
  * This may trigger warning: "Cannot modify header information"
  * If you use PHP SoapServer with framework, try to block call to this method in testing environment.
+ *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Configuration
  *
@@ -134,8 +141,12 @@ class SOAP extends \Codeception\Module
         $call = $xml->createElement('ns:' . $action);
         if ($body) {
             $bodyXml = SoapUtils::toXml($body);
-            $bodyNode = $xml->importNode($bodyXml->documentElement, true);
-            $call->appendChild($bodyNode);
+            if ($bodyXml->hasChildNodes()) {
+                foreach ($bodyXml->childNodes as $bodyChildNode) {
+                    $bodyNode = $xml->importNode($bodyChildNode, true);
+                    $call->appendChild($bodyNode);
+                }
+            }
         }
 
         $xmlBody = $xml->getElementsByTagNameNS($soap_schema_url, 'Body')->item(0);
@@ -255,8 +266,8 @@ class SOAP extends \Codeception\Module
      * ```
      *
      * Use this method to check XML of valid structure is returned.
-     * This method doesn't use schema for validation.
-     * This method dosn't require whole response XML to match the structure.
+     * This method does not use schema for validation.
+     * This method does not require path from root to match the structure.
      *
      * @param $xml
      */
@@ -280,13 +291,101 @@ class SOAP extends \Codeception\Module
     }
 
     /**
+     * Checks XML response with XPath locator
+     *
+     * ``` php
+     * <?php
+     * $I->seeSoapResponseContainsXPath('//root/user[@id=1]');
+     * ?>
+     * ```
+     *
+     * @param $xpath
+     */
+    public function seeSoapResponseContainsXPath($xpath)
+    {
+        $path = new \DOMXPath($this->xmlResponse);
+        $res = $path->query($xpath);
+        if ($res === false) $this->fail("XPath selector is malformed");
+        $this->assertGreaterThen(0, $res->length);
+    }
+
+    /**
+     * Checks XML response doesn't contain XPath locator
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
+     * ?>
+     * ```
+     *
+     * @param $xpath
+     */
+    public function dontSeeSoapResponseContainsXPath($xpath)
+    {
+        $path = new \DOMXPath($this->xmlResponse);
+        $res = $path->query($xpath);
+        if ($res === false) $this->fail("XPath selector is malformed");
+        $this->assertEquals(0, $res->length);
+    }
+
+
+
+    /**
      * Checks response code from server.
      *
      * @param $code
      */
     public function seeResponseCodeIs($code) {
-        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatusCode(), "soap response code matches expected");
+        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatus(), "soap response code matches expected");
     }
+
+    /**
+     * Finds and returns text contents of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @version 1.1
+     * @param $cssOrXPath
+     * @return string
+     */
+    public function grabTextContentFrom($cssOrXPath) {
+        $el = $this->matchElement($cssOrXPath);
+        return $el->textContent;
+    }
+
+    /**
+     * Finds and returns attribute of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @version 1.1
+     * @param $cssOrXPath
+     * @param $attribute
+     * @return string
+     */
+    public function grabAttributeFrom($cssOrXPath, $attribute) {
+        $el = $this->matchElement($cssOrXPath);
+        if (!$el->hasAttribute($attribute)) $this->fail("Attribute not found in element matched by '$cssOrXPath'");
+        return $el->getAttribute($attribute);
+    }
+
+    /**
+     * @param $cssOrXPath
+     * @return \DOMElement
+     */
+    protected function matchElement($cssOrXPath)
+    {
+        $xpath = new \DOMXpath($this->xmlResponse);
+        try {
+            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($cssOrXPath);
+            $els = $xpath->query($selector);
+            if ($els) return $els->item(0);
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+        $els = $xpath->query($cssOrXPath);
+        if ($els) {
+            return $els->item(0);
+        }
+        $this->fail("No node matched CSS or XPath '$cssOrXPath'");
+    }
+    
 
     protected function structureMatches($schema, $xml)
     {

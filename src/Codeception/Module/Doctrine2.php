@@ -15,11 +15,24 @@ namespace Codeception\Module;
  * \Codeception\Module\Doctrine2::$em = $em
  *
  * ```
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
- * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as discribed above.
+ * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+ *
+ *  ### Example (`functional.suite.yml`)
+ * 
+ *      modules:
+ *         enabled: [Doctrine2]
+ *         config:
+ *            Doctrine2:
+ *               cleanup: false
  */
 
 class Doctrine2 extends \Codeception\Module
@@ -35,17 +48,17 @@ class Doctrine2 extends \Codeception\Module
     public function _before(\Codeception\TestCase $test)
     {
         // trying to connect to Symfony2 and get event manager
-        if (!self::$em && $this->config['auto_connect']) {
+        if ($this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
                 $kernel = $this->getModule('Symfony2')->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
-                    self::$em = $kernel->getContainer()->get('doctrine')->getEntityManager();
+                    self::$em = $kernel->getContainer()->get('doctrine.orm.entity_manager');
                 }
             }
        }
 
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
@@ -63,7 +76,7 @@ class Doctrine2 extends \Codeception\Module
     public function _after(\Codeception\TestCase $test)
     {
         if (!self::$em) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Doctrine2 module requires EntityManager explictly set.\n" .
+            "Doctrine2 module requires EntityManager explicitly set.\n" .
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
@@ -76,10 +89,13 @@ class Doctrine2 extends \Codeception\Module
     protected function clean()
     {
         $em = self::$em;
+
         $reflectedEm = new \ReflectionClass($em);
-        $property = $reflectedEm->getProperty('repositories');
-        $property->setAccessible(true);
-        $property->setValue($em, array());
+        if ($reflectedEm->hasProperty('repositories')) {
+            $property = $reflectedEm->getProperty('repositories');
+            $property->setAccessible(true);
+            $property->setValue($em, array());
+        }
         self::$em->clear();
     }
 
@@ -100,6 +116,7 @@ class Doctrine2 extends \Codeception\Module
      *
      * ``` php
      * <?php
+     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
      * $I->persistEntity($user, array('name' => 'Miles'));
      * ```
      *
@@ -155,9 +172,21 @@ class Doctrine2 extends \Codeception\Module
                                                                           '_class'      => $metadata), $methods));
         $em->clear();
         $reflectedEm = new \ReflectionClass($em);
-        $property = $reflectedEm->getProperty('repositories');
-        $property->setAccessible(true);
-        $property->setValue($em, array_merge($property->getValue($em), array($classname => $mock)));
+        if ($reflectedEm->hasProperty('repositories')) {
+            $property = $reflectedEm->getProperty('repositories');
+            $property->setAccessible(true);
+            $property->setValue($em, array_merge($property->getValue($em), array($classname => $mock)));
+        } else {
+            $this->debugSection('Warning','Repository can\'t be mocked, the EventManager class doesn\'t have "repositories" property');
+        }
+    }
+
+    /**
+     * Saves data in repository
+     */
+    public function haveInRepository($repository, array $data)
+    {
+
     }
 
     /**
@@ -207,6 +236,37 @@ class Doctrine2 extends \Codeception\Module
         $res = $qb->getQuery()->getArrayResult();
 
         return array('True', (count($res) > 0), "$entity with " . json_encode($params));
+    }
+
+    /**
+     * Selects field value from repository.
+     * It builds query based on array of parameters.
+     * You can use entity associations to build complex queries.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @version 1.1
+     * @param $entity
+     * @param $field
+     * @param array $params
+     * @return array
+     */
+    public function grabFromRepository($entity, $field, $params = array())
+    {
+        // we need to store to database...
+        self::$em->flush();
+        $data = self::$em->getClassMetadata($entity);
+        $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
+        $qb->select('s.'.$field);
+        $this->buildAssociationQuery($qb,$entity, 's', $params);
+        $this->debug($qb->getDQL());
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

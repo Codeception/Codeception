@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\TestCase\Cest;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -20,7 +21,7 @@ class Console implements EventSubscriberInterface
         $this->debug = !$this->silent && $options['debug'];
         $this->steps = !$this->silent && ($options['steps'] or $options['debug']);
         $this->color = $options['colors'];
-        $this->output = new \Codeception\Output($this->color);
+        $this->output = new \Codeception\Output($this->color, $options['defer-flush']);
     }
 
     // triggered for all tests
@@ -36,14 +37,17 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         $test = $e->getTest();
-        $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        if ($test->getFeature()) {
+            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        } else {
+            $this->output->put("Running {$test->getFileName()}");
+        }
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
     public function afterTest(\Codeception\Event\Test $e)
     {
     }
-
 
     public function endTest(\Codeception\Event\Test $e)
     {
@@ -80,7 +84,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
 
-        if (!($test instanceof \Codeception\TestCase)) {
+        if (!($test instanceof \Codeception\TestCase\Cept)) {
             $this->output->writeln('- ' . $long);
         } elseif (!$this->steps) {
             $this->output->writeln(" - $long");
@@ -90,25 +94,20 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function beforeComment(\Codeception\Event\Step $e) {
-        if ($this->steps) $this->output->writeln("((".$e->getStep()->__toString()."))");
-    }
-
-    public function afterComment(\Codeception\Event\Step $e) {
-    }
-
     public function beforeStep(\Codeception\Event\Step $e)
     {
-        if ($this->steps) $this->output->writeln("* " . $e->getStep()->__toString());
+        if (!$this->steps) return;
+        if ($e->getStep()->getName() == 'Comment') {
+            $this->output->writeln("\n((".$e->getStep()."))");
+        } else {
+            $this->output->writeln("* " . $e->getStep());
+        }
     }
 
     public function afterStep(\Codeception\Event\Step $e)
     {
         if (!$this->debug) return;
-        $step = $e->getStep();
-        $action = $step->getAction();
-        $activeModule = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$action]];
-        if ($output = $activeModule->_getDebugOutput()) {
+        if ($output = $e->getStep()->pullDebugOutput()) {
             $this->output->debug($output);
         }
     }
@@ -128,21 +127,33 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        if ($fail instanceof \PHPUnit_Framework_SelfDescribing) {
+            $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        } else {
+            $failToString = sprintf("[%s]\n%s", get_class($fail),$fail->getMessage());
+        }
 
         $feature = $failedTest->getScenario()->getFeature();
-        $this->output->put("\nCouldn't $feature");
-        $this->output->put(" ({$failedTest->getFilename()})\n");
+        if ($e->getCount()) $this->output->put($e->getCount().") ");
+
+        // skip test
+        // Sample Message: create user in CreateUserCept.php is not ready for release
+        if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
+            if ($feature) $this->output->put("[[$feature]] in ");
+            $this->output->put($failedTest->getFilename());
+            if ($failToString) $this->output->put(" is ".$failToString);
+            $this->output->writeln("\n");
+            return;
+        }
+
+        if ($feature) $this->output->put("Couldn't [[$feature]] in ");
+        $this->output->writeln('(('.$failedTest->getFilename().'))');
 
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
         $last = array_shift($trace);
         if (!method_exists($last, 'getHumanizedAction')) {
-            if (!$this->debug) {
-                $this->output->writeln($failToString);
-                return;
-            }
-            $this->output->writeln($this->printException('not an action', $fail));
+            $this->printException($fail);
             return;
         }
         $action = $last->getHumanizedAction();
@@ -152,44 +163,44 @@ class Console implements EventSubscriberInterface
 
         // it's exception
         if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            if ($this->debug) {
-                $this->printException($last->getAction(), $fail);
-            } else {
-                $this->output->writeln('to see the stack trace run this test with --debug option');
-            }
+            $this->printException($fail);
             return;
         };
 
         // it's assertion
-
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
-            $this->output->writeln("\nGuy unexpectedly managed to $action {$failToString}");
+            $this->output->writeln("Guy unexpectedly managed to $action: {$failToString}");
         } else {
-            $this->output->writeln("Guy couldn't $action $failToString");
+            $this->output->writeln("Guy couldn't $action: $failToString");
         }
 
-        $this->output->writeln("  $i. (!$last!)");
+
+        $this->output->writeln("Scenario Steps:");
+        $this->output->writeln("$i. (!$last!)");
         foreach ($trace as $step) {
             $i--;
-            $this->output->writeln("  $i. " . $step);
+            $this->output->writeln("$i. " . $step);
             if (($length - $i - 1) >= $this->traceLength) break;
         }
-        $this->output->writeln("");
+        if ($this->debug) {
+            $this->printException($fail);
+        }
+
     }
 
-    public function printException($action, \Exception $e)
+    public function printException(\Exception $e)
     {
+        $this->output->writeln("(!".get_class($e).': '.$e->getMessage()."!)\n");
         $i = 0;
-        $class = get_class($e);
-        $this->output->writeln("  Exception thrown " . $class . ":\n  (!" . $e->getMessage().'!)');
-        $this->output->writeln("  Stack trace:");
         foreach ($e->getTrace() as $step) {
             $i++;
-            if (strpos($step['function'], $action) !== false) break;
-            $this->output->writeln(sprintf("   #%s ((%s)) %s:%s",
+//            if (strpos($step['function'], $action) !== false) break;
+            if (!isset($step['file'])) continue;
+            $step['file'] = $this->highlightLocalFiles($step['file']);
+
+            $this->output->writeln(sprintf("#%d %s(%s)",
                 $i,
-                isset($step['function']) ? $step['function'] : '',
                 isset($step['file']) ? $step['file'] : '',
                 isset($step['line']) ? $step['line'] : ''));
             if ($i == 1) {
@@ -203,7 +214,21 @@ class Console implements EventSubscriberInterface
                 }
             }
         }
-        $this->output->writeln("\nIf it's a Codeception bug, please report it to GitHub");
+        $this->output->writeln("");
+    }
+
+    private function highlightLocalFiles($file)
+    {
+        if (strpos($file, \Codeception\Configuration::projectDir()) === 0) {
+            if (strpos($file, \Codeception\Configuration::projectDir() . 'codecept.phar') === 0) {
+                return $file;
+            }
+            if (strpos($file, \Codeception\Configuration::projectDir() . 'vendor') === 0) {
+                return $file;
+            }
+            return "((".$file."))";
+        }
+        return $file;
     }
 
     static function getSubscribedEvents()
@@ -211,14 +236,12 @@ class Console implements EventSubscriberInterface
         return array(
             'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
-            'test.before' => 'before',
+            'test.parsed' => 'before',
             'test.after' => 'afterTest',
             'test.start' => 'startTest',
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'comment.before' => 'beforeComment',
-            'comment.after' => 'afterComment',
             'fail.fail' => 'testFail',
             'fail.error' => 'testError',
             'fail.incomplete' => 'testIncomplete',

@@ -1,4 +1,6 @@
 # SOAP Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
+
 
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
@@ -8,9 +10,16 @@ It tries to guess the framework is is attached to.
 If a endpoint is a full url then it uses PHPBrowser.
 
 ### Using Inside Framework
+
 Please note, that PHP SoapServer::handle method sends additional headers.
 This may trigger warning: "Cannot modify header information"
 If you use PHP SoapServer with framework, try to block call to this method in testing environment.
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **stable**
+* Contact: codecept@davert.mail.ua
 
 ## Configuration
 
@@ -23,6 +32,20 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 ## Actions
+
+
+### dontSeeSoapResponseContainsXPath
+
+
+Checks XML response doesn't contain XPath locator
+
+``` php
+<?php
+$I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
+?>
+```
+
+ * param $xpath
 
 
 ### dontSeeSoapResponseEquals
@@ -44,6 +67,29 @@ Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * param $xml
+
+
+### grabAttributeFrom
+
+
+Finds and returns attribute of element.
+Element is matched by either CSS or XPath
+
+ * version 1.1
+ * param $cssOrXPath
+ * param $attribute
+ * return string
+
+
+### grabTextContentFrom
+
+
+Finds and returns text contents of element.
+Element is matched by either CSS or XPath
+
+ * version 1.1
+ * param $cssOrXPath
+ * return string
 
 
 ### haveSoapHeader
@@ -101,10 +147,24 @@ $I->seeSoapResponseContainsStructure("<query><name></name></query>");
 ```
 
 Use this method to check XML of valid structure is returned.
-This method doesn't use schema for validation.
-This method dosn't require whole response XML to match the structure.
+This method does not use schema for validation.
+This method does not require path from root to match the structure.
 
  * param $xml
+
+
+### seeSoapResponseContainsXPath
+
+
+Checks XML response with XPath locator
+
+``` php
+<?php
+$I->seeSoapResponseContainsXPath('//root/user[@id=1]');
+?>
+```
+
+ * param $xpath
 
 
 ### seeSoapResponseEquals

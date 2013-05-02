@@ -2,14 +2,20 @@
 
 class PhpTestCest
 {
-
-    public function phpFuncitons(CodeGuy $I) {
+    public function phpFuntions(CodeGuy $I) {
         $I->execute(function() { return strtoupper('hello'); });
         $I->seeResultEquals('HELLO');
     }
 
-    public function shouldTryWritingShoulds(CodeGuy $I) {
-        $I->seeFeaturesEquals('try writing shoulds');
+    public function shouldWriteShoulds(CodeGuy $I) {
+        $I->seeFeaturesEquals('write shoulds');
+    }
+
+    public function shouldUseCest(CodeGuy $I) {
+        $I->haveFakeClass($scenario = \Codeception\Util\Stub::makeEmptyExcept('Codeception\Scenario', 'comment'));
+        $I->executeMethod($scenario, 'comment', 'cool, that works!');
+        $I->seeMethodInvoked($scenario,'addStep');
+
     }
 
 }

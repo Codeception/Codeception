@@ -8,6 +8,12 @@ namespace Codeception\Module;
  *
  * This module cleans all cached data after each test.
  *
+ * ## Status
+ *
+ * * Maintainer: **davert**
+ * * Stability: **stable**
+ * * Contact: codecept@davert.mail.ua
+ *
  * ## Config
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  *
@@ -95,6 +101,34 @@ class Doctrine1 extends \Codeception\Module
     {
         $res = $this->proceedSeeInDatabase($model, $values);
         $this->assertNot($res);
+    }
+
+
+    /**
+     * Fetches single value from a database.
+     * Provide Doctrine model name, desired field, and criteria that can be passed to addWhere DQL
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
+     *
+     * ```
+     *
+     * @param $model
+     * @param $column
+     * @param array $values
+     * @return mixed
+     */
+    public function grabFromTable($model, $column, $values = array()) {
+        $query = \Doctrine_Core::getTable($model)->createQuery();
+        $string = array();
+        foreach ($values as $key => $value) {
+            $query->addWhere("$key = ?", $value);
+            $string[] = "$key = '$value'";
+        }
+        return $query->select($column)->fetchOne();
     }
 
 }
