@@ -358,8 +358,18 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->attachFile($path);
     }
 
+    public function seeOptionIsSelected($select, $option)
+    {
+        $this->see($option, "$select option[selected]");
+    }
+
+    public function dontSeeOptionIsSelected($select, $option)
+    {
+        $this->dontSee($option, "$select option[selected]");
+    }
+
     public function seeCheckboxIsChecked($checkbox) {
-       $node = $this->findField($checkbox);
+        $node = $this->findField($checkbox);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         \PHPUnit_Framework_Assert::assertTrue($node->isChecked());
     }
