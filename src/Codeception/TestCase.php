@@ -21,15 +21,15 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return get_class($this) . '::' . $this->getName();
     }
 
-    public function runStep(\Codeception\Step $step)
+    public function runStep(Step $step)
     {
         $this->trace[] = $step;
         $this->fire('step.before', new Step($this, $step));
         try {
             $result = $step->run();
-        } catch (\PHPUnit_Framework_ExpectationFailedException $fail) {
+        } catch (\Exception $e) {
             $this->fire('step.after', new Step($this, $step));
-            throw $fail;
+            throw $e;
         }
         $this->fire('step.after', new Step($this, $step));
         return $result;

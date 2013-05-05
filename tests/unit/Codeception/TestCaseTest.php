@@ -19,6 +19,9 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         \Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions = 0;
     }
 
+    /**
+     * @group core
+     */
     public function testRunStepEvents() {
         $events = array();
         $this->dispatcher->addListener('step.before', function () use (&$events) { $events[] = 'step.before'; });
@@ -28,6 +31,9 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($events, array('step.before', 'step.after'));
     }
 
+    /**
+     * @group core
+     */
     public function testRunFailedTestEvent() {
         $this->markTestSkipped();
         $events = array();
@@ -36,7 +42,10 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->testcase->run();
         $this->assertEquals($events, array('test.fail'));
     }
-    
+
+    /**
+     * @group core
+     */
     public function testRunStep() {
         $assertions = &\Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions;
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
@@ -51,12 +60,18 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $assertions);
     }
 
+    /**
+     * @group core
+     */
     public function testRunStepAddsTrace() {
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
         $this->testcase->runStep($step);
         $this->assertContains($step, $this->testcase->getTrace());
     }
-    
+
+    /**
+     * @group core
+     */
     public function testSetUp() {
         $this->markTestSkipped();
         $events = array();
@@ -65,7 +80,10 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->testcase->setUp();
         $this->assertEquals($events, array('test.before'));
     }
-    
+
+    /**
+     * @group core
+     */
     public function testTearDown() {
         $this->markTestSkipped();
         $events = array();
