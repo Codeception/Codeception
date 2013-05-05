@@ -42,7 +42,7 @@ class SuiteManager {
         require_once $settings['path'] . $settings['class_name'].'.php';
 
         self::$modules = Configuration::modules($settings);
-        self::$actions = Configuration::actions(self::$modules);
+        self::$actions = \Codeception\Configuration::actions(self::$modules);
     }
 
     protected function createSuite($name) {
@@ -177,6 +177,9 @@ class SuiteManager {
             $test->setBootstrap($this->settings['bootstrap']);
             $test->setDispatcher($this->dispatcher);
             $test->setGuyClass($this->settings['class_name']);
+
+            $groups = \PHPUnit_Util_Test::getGroups($class, $method->name);
+            $test->getScenario()->groups($groups);
         } else {
             if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
         }
@@ -191,7 +194,6 @@ class SuiteManager {
         $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(
             'name' => $target,
-
             'instance' => $cestInstance,
             'method' => $methodName,
             'file' => $file,
