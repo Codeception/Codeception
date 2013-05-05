@@ -1,0 +1,3 @@
+[2013-05-05 01:57:12] Codeception.INFO: test method "\Codeception\Module\WebDebug.makeAScreenshot" [] []
+[2013-05-05 02:02:54] Codeception.INFO: test method "\Codeception\Module\WebDebug.makeAScreenshot" [] []
+[2013-05-05 02:43:28] Codeception.INFO: test method "Codeception\Command\GenerateCest.execute" [] []

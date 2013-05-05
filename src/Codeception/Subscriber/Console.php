@@ -45,15 +45,9 @@ class Console implements EventSubscriberInterface
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
-    public function afterTest(\Codeception\Event\Test $e)
+    public function testSuccess(\Codeception\Event\Test $e)
     {
-    }
-
-    public function endTest(\Codeception\Event\Test $e)
-    {
-        $test = $e->getTest();
-        if (!$this->lastTestFailed) $this->formattedTestOutput($test, 'Ok', '.');
-        $this->lastTestFailed = FALSE;
+        $this->formattedTestOutput($e->getTest(), 'Ok', '.');
     }
 
     public function testFail(\Codeception\Event\Fail $e)
@@ -195,7 +189,6 @@ class Console implements EventSubscriberInterface
         $i = 0;
         foreach ($e->getTrace() as $step) {
             $i++;
-//            if (strpos($step['function'], $action) !== false) break;
             if (!isset($step['file'])) continue;
             $step['file'] = $this->highlightLocalFiles($step['file']);
 
@@ -236,17 +229,18 @@ class Console implements EventSubscriberInterface
         return array(
             'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
-            'test.parsed' => 'before',
+            'test.before' => 'before',
             'test.after' => 'afterTest',
             'test.start' => 'startTest',
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'fail.fail' => 'testFail',
-            'fail.error' => 'testError',
-            'fail.incomplete' => 'testIncomplete',
-            'fail.skipped' => 'testSkipped',
-            'fail.print' => 'printFail'
+            'test.success' => 'testSuccess',
+            'test.fail' => 'testFail',
+            'test.fail.error' => 'testError',
+            'test.fail.incomplete' => 'testIncomplete',
+            'test.fail.skipped' => 'testSkipped',
+            'test.fail.print' => 'printFail',
         );
     }
 

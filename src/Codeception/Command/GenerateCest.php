@@ -13,12 +13,12 @@ class GenerateCest extends Base
 {
     protected $template  = <<<EOF
 <?php
-%s
+%suse Codeception\Util\Stub;
 
 %s %sCest
 {
 
-    public function _before(\$scenario)
+    public function _before()
     {
     }
 

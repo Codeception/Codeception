@@ -18,7 +18,7 @@ class WebDebugCest {
 
     public function generateFilename(CodeGuy $I) {
         $I->haveFakeClass($stub = Stub::make($this->class, array(
-                'test' => Stub::makeEmpty('\Codeception\TestCase\Cept', array('getFileName' => function () { return 'testtest'; })),
+           'test' => Stub::makeEmpty('\Codeception\TestCase\Cept', array('getFileName' => function () { return 'testtest'; })),
         )));
         $I->executeTestedMethod($stub);
         $I->seeResultEquals(\Codeception\Configuration::logDir().'debug'.DIRECTORY_SEPARATOR.'testtest - 1');
