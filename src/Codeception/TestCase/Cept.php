@@ -70,14 +70,11 @@ class Cept extends \Codeception\TestCase
 
         try {
             require $this->testfile;
-        } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
-            $this->fireEnd('test.fail', new Fail($this, $e));
-            throw $e;
         } catch (\Exception $e) {
-            $this->fireEnd('test.fail.error', new Test($this));
+            $this->fire('test.after', new Test($this));
             throw $e;
         }
-        $this->fireEnd('test.success', new Test($this));
+        $this->fire('test.after', new Test($this));
     }
 
 }

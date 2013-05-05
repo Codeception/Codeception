@@ -73,10 +73,10 @@ class Logger implements EventSubscriberInterface
             'test.after' => 'afterTest',
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
-            'fail.fail' => 'testFail',
-            'fail.error' => 'testError',
-            'fail.incomplete' => 'testIncomplete',
-            'fail.skipped' => 'testSkipped',
+            'test.fail' => 'testFail',
+            'test.error' => 'testError',
+            'test.incomplete' => 'testIncomplete',
+            'test.skipped' => 'testSkipped',
         );
     }
 

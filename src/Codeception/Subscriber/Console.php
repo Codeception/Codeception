@@ -45,33 +45,37 @@ class Console implements EventSubscriberInterface
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
+    public function afterTest(\Codeception\Event\Test $e)
+    {
+    }
+
     public function testSuccess(\Codeception\Event\Test $e)
     {
         $this->formattedTestOutput($e->getTest(), 'Ok', '.');
     }
 
+    public function endTest(\Codeception\Event\Test $e)
+    {
+    }
+
     public function testFail(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), '(!Failed!)', 'F');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testError(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), '(!Error!)', 'E');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testSkipped(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), 'Skipped', 'S');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testIncomplete(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), 'Incomplete', 'I');
-        $this->lastTestFailed = TRUE;
     }
 
     protected function formattedTestOutput($test, $long)
@@ -237,9 +241,9 @@ class Console implements EventSubscriberInterface
             'step.after' => 'afterStep',
             'test.success' => 'testSuccess',
             'test.fail' => 'testFail',
-            'test.fail.error' => 'testError',
-            'test.fail.incomplete' => 'testIncomplete',
-            'test.fail.skipped' => 'testSkipped',
+            'test.error' => 'testError',
+            'test.incomplete' => 'testIncomplete',
+            'test.skipped' => 'testSkipped',
             'test.fail.print' => 'printFail',
         );
     }

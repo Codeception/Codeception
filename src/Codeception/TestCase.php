@@ -43,12 +43,6 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         }
     }
 
-    protected function fireEnd($event, Event $eventType)
-    {
-        $this->fire($event, $eventType);
-        $this->fire('test.after', $eventType);
-    }
-
     /**
      * @return \Codeception\Scenario
      */
