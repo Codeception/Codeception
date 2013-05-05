@@ -11,24 +11,30 @@ class Listener implements \PHPUnit_Framework_TestListener
      */
     protected $dispatcher;
 
+    protected $unsuccessfulTests = array();
+
     public function __construct(EventDispatcher $dispatcher) {
         $this->dispatcher = $dispatcher;
     }
 
-    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-        $this->dispatcher->dispatch('fail.error', new \Codeception\Event\Fail($test, $e));
+    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time) {
+        $this->unsuccessfulTests[] = spl_object_hash($test);
+        $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($test, $e));
     }
 
-    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time) {
-        $this->dispatcher->dispatch('fail.fail', new \Codeception\Event\Fail($test, $e));
+    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
+        $this->unsuccessfulTests[] = spl_object_hash($test);
+        $this->dispatcher->dispatch('test.error', new \Codeception\Event\Fail($test, $e));
     }
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-        $this->dispatcher->dispatch('fail.incomplete', new \Codeception\Event\Fail($test, $e));
+        $this->unsuccessfulTests[] = spl_object_hash($test);
+        $this->dispatcher->dispatch('test.incomplete', new \Codeception\Event\Fail($test, $e));
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
-        $this->dispatcher->dispatch('fail.skipped', new \Codeception\Event\Fail($test, $e));
+        $this->unsuccessfulTests[] = spl_object_hash($test);
+        $this->dispatcher->dispatch('test.skipped', new \Codeception\Event\Fail($test, $e));
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -44,6 +50,9 @@ class Listener implements \PHPUnit_Framework_TestListener
     }
 
     public function endTest(\PHPUnit_Framework_Test $test, $time) {
+        if (!in_array(spl_object_hash($test), $this->unsuccessfulTests))
+            $this->dispatcher->dispatch('test.success', new \Codeception\Event\Test($test));
+
         $this->dispatcher->dispatch('test.end', new \Codeception\Event\Test($test));
     }
     
