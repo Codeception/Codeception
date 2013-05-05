@@ -77,7 +77,7 @@ class GenerateScenarios extends Base
 
         foreach ($tests as $test) {
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
-            $test->testCodecept(false);
+            $test->preload();
             $features = $test->getScenarioText($format);
             $name = $this->underscore(substr($test->getFileName(), 0, -8));
 

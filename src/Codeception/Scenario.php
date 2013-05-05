@@ -25,6 +25,8 @@ class Scenario {
 
     protected $blocker = null;
 
+    protected $groups = array();
+
     /**
      * Constructor.
      *
@@ -33,6 +35,27 @@ class Scenario {
     public function __construct(\Codeception\TestCase $test)
     {
 		$this->test = $test;
+    }
+
+    public function group($group)
+    {
+        if (is_array($group)) {
+            foreach ($group as $t) {
+                $this->group($t);
+            }
+        } else {
+            $this->groups[] = $group;
+        }
+    }
+
+    public function groups()
+    {
+        $this->group(func_get_args());
+    }
+
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
 
@@ -63,6 +86,11 @@ class Scenario {
     public function incomplete($reason = "")
     {
         $this->blocker = new \Codeception\Step\Incomplete($reason, array());
+    }
+
+    protected function ignore()
+    {
+        $this->blocker = new \Codeception\Step\Ignore;
     }
 
     public function runStep()
@@ -144,7 +172,7 @@ class Scenario {
     
     public function run() {
         if ($this->running()) return;
-        if ($this->blocker) $this->blocker->run();
+        if ($this->blocker) return $this->blocker->run();
 
         $this->running = true;
         $this->preloadedSteps = $this->steps;

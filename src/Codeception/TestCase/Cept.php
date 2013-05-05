@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\TestCase;
 
+use Codeception\Event\Fail;
+use Codeception\Event\Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Step;
 
@@ -13,9 +15,7 @@ class Cept extends \Codeception\TestCase
     protected $features = array();
     protected $bootstrap = null;
     protected $stopped = false;
-
     protected $dispatcher;
-
 
     public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
@@ -50,31 +50,34 @@ class Cept extends \Codeception\TestCase
         return $this->scenario->getFeature() . ' (' . $this->getFileName() . ')';
     }
 
-    public function testCodecept($run = true)
+    public function preload()
     {
         $scenario = $this->scenario;
-
         // preload
         if (file_exists($this->bootstrap)) require $this->bootstrap;
         require $this->testfile;
 
-        if (!$run) return;
-        $this->dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this));
+        $this->fire('test.parsed', new Test($this));
+    }
 
+    public function testCodecept()
+    {
+        $scenario = $this->scenario;
+
+        $this->fire('test.before', new Test($this));
+        $scenario->run();
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
-        $scenario->run();
-        $this->dispatcher->dispatch('test.before', new \Codeception\Event\Test($this));
         try {
             require $this->testfile;
         } catch (\PHPUnit_Framework_ExpectationFailedException $e) {
-            $this->dispatcher->dispatch('test.fail', new \Codeception\Event\Fail($this, $e));
+            $this->fireEnd('test.fail', new Fail($this, $e));
             throw $e;
         } catch (\Exception $e) {
-            $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+            $this->fireEnd('test.fail.error', new Test($this));
             throw $e;
         }
-        $this->dispatcher->dispatch('test.after', new \Codeception\Event\Test($this));
+        $this->fireEnd('test.success', new Test($this));
     }
 
 }
