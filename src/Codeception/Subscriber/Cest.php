@@ -9,21 +9,21 @@ class Cest implements EventSubscriberInterface
         if (!($e->getTest() instanceof \Codeception\TestCase\Cest)) return;
         $test = $e->getTest();
         $scenario = $e->getTest()->getScenario();
-        if (method_exists($test->getTestClass(), '_before')) $test->getTestClass()->_before($e);
+        if (method_exists($test->getTestClass(), '_before')) $test->getTestClass()->_before($scenario);
     }
 
     public function afterTest(\Codeception\Event\Test $e) {
         if (!($e->getTest() instanceof \Codeception\TestCase\Cest)) return;
         $test = $e->getTest();
         $scenario = $e->getTest()->getScenario();
-        if (method_exists($test->getTestClass(), '_after')) $test->getTestClass()->_after($e);
+        if (method_exists($test->getTestClass(), '_after')) $test->getTestClass()->_after($scenario);
     }
 
     public function failedTest(\Codeception\Event\Fail $e) {
         if (!($e->getTest() instanceof \Codeception\TestCase\Cest)) return;
         $test = $e->getTest();
         $scenario = $e->getTest()->getScenario();
-        if (method_exists($test->getTestClass(), '_failed')) $test->getTestClass()->_failed($e);
+        if (method_exists($test->getTestClass(), '_failed')) $test->getTestClass()->_failed($scenario);
     }
 
     static function getSubscribedEvents()
