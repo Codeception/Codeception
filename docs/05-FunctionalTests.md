@@ -27,7 +27,7 @@ We recommend writing tests on unstable parts of your application as functional t
 
 ## Pitfalls
 
-Acceptance tests are usually much slower then functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
+Acceptance tests are usually much slower than functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
 
 #### Headers, Cookies, Sessions
 
@@ -202,7 +202,7 @@ After you get your module stabilized, share it with the community. Fork a Codece
 
 There are some requirements for modules:
 
-* It should be easy to configure
+* It should be easy to configure.
 * It should contain proper documentation.
 * It should extend basic operations by using framework internals.
 * It's preferred that it be able to print additional debug information.
