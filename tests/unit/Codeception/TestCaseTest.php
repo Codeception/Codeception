@@ -15,7 +15,12 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
-        $this->testcase = $this->getMockForAbstractClass('\Codeception\TestCase\Cept', array($this->dispatcher, array('name' => 'mocked test', 'file' => 'mocked file')));
+        $this->testcase = $this->getMockForAbstractClass('\Codeception\TestCase\Cept', array(
+            $this->dispatcher, array(
+                'name' => 'mocked test',
+                'file' => \Codeception\Configuration::dataDir().'SimpleCept.php'
+            )
+        ));
         \Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions = 0;
     }
 
@@ -29,18 +34,6 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
         $this->testcase->runStep($step);
         $this->assertEquals($events, array('step.before', 'step.after'));
-    }
-
-    /**
-     * @group core
-     */
-    public function testRunFailedTestEvent() {
-        $this->markTestSkipped();
-        $events = array();
-        $this->dispatcher->addListener('test.fail', function () use (&$events) { $events[] = 'test.fail'; });
-        $this->testcase->getScenario()->assertion('seeEquals', array(5,6));
-        $this->testcase->run();
-        $this->assertEquals($events, array('test.fail'));
     }
 
     /**
@@ -67,29 +60,6 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
         $this->testcase->runStep($step);
         $this->assertContains($step, $this->testcase->getTrace());
-    }
-
-    /**
-     * @group core
-     */
-    public function testSetUp() {
-        $this->markTestSkipped();
-        $events = array();
-        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->testcase->expects($this->once())->method('loadScenario');
-        $this->testcase->setUp();
-        $this->assertEquals($events, array('test.before'));
-    }
-
-    /**
-     * @group core
-     */
-    public function testTearDown() {
-        $this->markTestSkipped();
-        $events = array();
-        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->testcase->tearDown();
-        $this->assertEquals($events, array('test.after'));
     }
 
 }
