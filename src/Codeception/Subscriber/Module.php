@@ -2,6 +2,7 @@
 namespace Codeception\Subscriber;
 
 use Codeception\Event\Suite;
+use Codeception\TestCase;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Module implements EventSubscriberInterface {
@@ -22,7 +23,7 @@ class Module implements EventSubscriberInterface {
     }
 
     public function before(\Codeception\Event\Test $e) {
-
+        if (!$e->getTest() instanceof TestCase) return;
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_cleanup();
             $module->_before($e->getTest());
@@ -30,12 +31,14 @@ class Module implements EventSubscriberInterface {
     }
     
     public function after(\Codeception\Event\Test $e) {
+        if (!$e->getTest() instanceof TestCase) return;
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_after($e->getTest());
         }
     }
 
     public function failed(\Codeception\Event\Fail $e) {
+        if (!$e->getTest() instanceof TestCase) return;
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_failed($e->getTest(), $e->getFail());
         }

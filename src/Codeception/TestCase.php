@@ -2,7 +2,6 @@
 
 namespace Codeception;
 
-use Codeception\Event\Step;
 use Symfony\Component\EventDispatcher\Event;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
@@ -21,17 +20,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return get_class($this) . '::' . $this->getName();
     }
 
-    public function runStep(Step $step)
+    public function runStep(\Codeception\Step $step)
     {
         $this->trace[] = $step;
-        $this->fire('step.before', new Step($this, $step));
+        $this->fire('step.before', new \Codeception\Event\Step($this, $step));
         try {
             $result = $step->run();
         } catch (\Exception $e) {
-            $this->fire('step.after', new Step($this, $step));
+            $this->fire('step.after', new \Codeception\Event\Step($this, $step));
             throw $e;
         }
-        $this->fire('step.after', new Step($this, $step));
+        $this->fire('step.after', new \Codeception\Event\Step($this, $step));
         return $result;
     }
 

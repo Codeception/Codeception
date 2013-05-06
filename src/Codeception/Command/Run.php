@@ -28,10 +28,11 @@ class Run extends Base
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new InputOption('silent', '', InputOption::VALUE_NONE, 'Use colors in output'),
             new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
-            new InputOption('debug', '', InputOption::VALUE_NONE, 'Show debug and scenario output'),
+            new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
             new InputOption('coverage', 'cc', InputOption::VALUE_NONE, 'Run with code coverage'),
             new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
-            new InputOption('defer-flush', '', InputOption::VALUE_NONE, 'Don\'t flush output during run')
+            new InputOption('defer-flush', '', InputOption::VALUE_NONE, 'Don\'t flush output during run'),
+            new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests only from selected group. Pass multiple options for multiple groups')
         ));
         parent::configure();
     }
@@ -45,6 +46,7 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
+        if ($options['group']) $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
 
         if ($input->getArgument('test')
             && strtolower(substr($input->getArgument('test'), -4)) === '.php'

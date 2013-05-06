@@ -39,6 +39,7 @@ class Logger implements EventSubscriberInterface
 
     public function afterTest(\Codeception\Event\Test $e) {
     }
+
     public function endTest(\Codeception\Event\Test $e) {
         $this->logger->info("PASSED");
     }

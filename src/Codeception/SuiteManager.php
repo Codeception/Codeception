@@ -178,7 +178,7 @@ class SuiteManager {
             $test->setDispatcher($this->dispatcher);
             $test->setGuyClass($this->settings['class_name']);
 
-            $groups = \PHPUnit_Util_Test::getGroups($class, $method->name);
+            $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
             $test->getScenario()->groups($groups);
         } else {
             if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];

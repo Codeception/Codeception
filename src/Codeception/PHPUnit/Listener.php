@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\PHPUnit;
 
+use Codeception\Event\Test;
 use Codeception\TestCase;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -40,10 +41,10 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
-        $this->fire('suite.start', new \Codeception\Event\Suite($suite));
+        $this->dispatcher->dispatch('suite.start', new \Codeception\Event\Suite($suite));
     }
     public function endTestSuite(\PHPUnit_Framework_TestSuite $suite) {
-        $this->fire('suite.end', new \Codeception\Event\Suite($suite));
+        $this->dispatcher->dispatch('suite.end', new \Codeception\Event\Suite($suite));
     }
 
     public function startTest(\PHPUnit_Framework_Test $test) {
@@ -52,20 +53,19 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function endTest(\PHPUnit_Framework_Test $test, $time) {
         if (!in_array(spl_object_hash($test), $this->unsuccessfulTests))
-            $this->fire('test.success', new \Codeception\Event\Test($test));
+            $this->fire('test.success', new Test($test));
 
-        $this->dispatcher->dispatch('test.end', new \Codeception\Event\Test($test));
+        $this->dispatcher->dispatch('test.end', new Test($test));
     }
 
-    protected function fire($event, $eventType)
+    protected function fire($event, \Codeception\Event\Test $eventType)
     {
+        $test = $eventType->getTest();
         $this->dispatcher->dispatch($event, $eventType);
 
-        /** @var $test \PHPUnit_Framework_TestCase **/
-        if ($test instanceof TestCase) {
-            foreach ($test->getScenario()->getGroups() as $group) {
-                $this->dispatcher->dispatch($event.'.'.$group, $eventType);
-            }
+        if (!($test instanceof TestCase)) return;
+        foreach ($test->getScenario()->getGroups() as $group) {
+            $this->dispatcher->dispatch($event.'.'.$group, $eventType);
         }
     }
     

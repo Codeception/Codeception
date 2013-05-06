@@ -53,9 +53,9 @@ class Codecept
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
-        $this->runner = new \Codeception\PHPUnit\Runner();
+        $this->runner = new PHPUnit\Runner();
 
-        $this->config = \Codeception\Configuration::config($options['config']);
+        $this->config = Configuration::config($options['config']);
         $this->options = $this->mergeOptions($options);
 
         $this->dispatcher = new EventDispatcher();
@@ -72,42 +72,41 @@ class Codecept
                 $options[$option] = isset($this->config['settings'][$option]) ? $this->config['settings'][$option] : $this->options[$option];
             }
         }
-
         if ($options['report']) $options['silent'] = true;
+        if ($options['group']) $options['groups'] = $options['group'];
 
         return $options;
     }
 
     protected function registerListeners() {
-        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
+        $listener = new PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
 
     public function registerSubscribers() {
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\ErrorHandler());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Console($this->options));
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Logger());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Module());
-        $this->dispatcher->addSubscriber(new \Codeception\Subscriber\Cest());
+        $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        $this->dispatcher->addSubscriber(new Subscriber\Logger());
+        $this->dispatcher->addSubscriber(new Subscriber\Module());
+        $this->dispatcher->addSubscriber(new Subscriber\Cest());
 
         if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\CodeCoverage($this->options));
-            $this->dispatcher->addSubscriber(new \Codeception\Subscriber\RemoteCodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
         }
     }
 
     public function runSuite($suite, $test = null) {
-        $settings = \Codeception\Configuration::suiteSettings($suite, $this->config);
+        $settings = Configuration::suiteSettings($suite, $this->config);
 
-        $suiteManager = new \Codeception\SuiteManager($this->dispatcher, $suite, $settings);
+        $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
 
         if (!$this->runner->getPrinter()) {
-            $printer = new \Codeception\PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
+            $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
             $this->runner->setPrinter($printer);
         }
-
         $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
@@ -124,7 +123,7 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatcher->dispatch('result.print.after', new \Codeception\Event\PrintResult($result, $printer));
+        $this->dispatcher->dispatch('result.print.after', new Event\PrintResult($result, $printer));
     }
 
     /**
