@@ -25,11 +25,13 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     
     public function _before(\Codeception\TestCase $test)
     {
-        if ($this->session) $this->session->start();
+        if ($this->session) {
+            if (!$this->session->isStarted()) $this->session->start();
+        }
     }
 
     public function _after(\Codeception\TestCase $test) {
-        if ($this->session) $this->session->stop();
+        if ($this->session) $this->session->reset();
     }
 
     public function _getUrl()
