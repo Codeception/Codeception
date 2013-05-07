@@ -1,6 +1,9 @@
 <?php
 namespace Codeception\Util;
 
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\XPathExpr;
+
 abstract class Mink extends \Codeception\Module implements RemoteInterface, WebInterface
 {
     /**
@@ -358,14 +361,28 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->attachFile($path);
     }
 
-    public function seeOptionIsSelected($select, $option)
+    public function seeOptionIsSelected($select, $text)
     {
-        $this->see($option, "$select option[selected]");
+        $option = $this->findSelectedOption($select);
+        if (!$option) $this->fail("No option is selected in $select");
+        $this->assertEquals($text, $option->getText());
     }
 
-    public function dontSeeOptionIsSelected($select, $option)
+    public function dontSeeOptionIsSelected($select, $text)
     {
-        $this->dontSee($option, "$select option[selected]");
+        $option = $this->findSelectedOption($select);
+        if (!$option) {
+            \PHPUnit_Framework_Assert::assertNull($option);
+            return;
+        }
+        $this->assertNotEquals($text, $option->getText());
+    }
+
+    protected function findSelectedOption($select)
+    {
+        $selectbox = $this->findEl($select);
+        $option = $selectbox->find('css','option[selected]');
+        return $option;
     }
 
     public function seeCheckboxIsChecked($checkbox) {

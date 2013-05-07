@@ -449,6 +449,31 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->assertEquals(0, $nodes->count());
     }
 
+    public function seeOptionIsSelected($select, $optionText)
+    {
+        $selected = $this->matchSelectedOption($select);
+        $this->assertGreaterThen(0, $selected->count(), " no option is selected");
+        $this->assertEquals($optionText, $selected->text());
+    }
+
+    public function dontSeeOptionIsSelected($select, $optionText)
+    {
+        $selected = $this->matchSelectedOption($select);
+        $this->assertGreaterThen(0, $selected->count(), " no option is selected");
+        if (!$selected->count()) {
+            \PHPUnit_Framework_Assert::assertEquals(0, $selected->count);
+            return;
+        }
+        $this->assertNotEquals($optionText, $selected->text());
+    }
+
+    protected function matchSelectedOption($select)
+    {
+        $nodes = $this->match($select);
+        $this->assertGreaterThen(0, $nodes->count(), " select '$select' not found on page'");
+        return $nodes->first()->filter('option[selected]');
+    }
+
     public function seePageNotFound()
     {
         $this->seeResponseCodeIs(404);

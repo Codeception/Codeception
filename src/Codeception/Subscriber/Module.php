@@ -42,7 +42,6 @@ class Module implements EventSubscriberInterface {
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_failed($e->getTest(), $e->getFail());
         }
-        $this->after(new \Codeception\Event\Test($e->getTest()));
     }
 
     public function beforeStep(\Codeception\Event\Step $e) {

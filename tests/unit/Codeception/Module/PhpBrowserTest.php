@@ -86,4 +86,5 @@ class PhpBrowserTest extends TestsForMink
         $this->module->click('Ссылочка');
     }
 
+
 }
