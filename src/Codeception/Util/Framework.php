@@ -360,8 +360,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function debugResponse()
     {
-        $this->debugSection('Response', $this->client->getResponse()->getStatus());
+        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+    }
+
+    protected function getResponseStatusCode()
+    {
+        // depending on Symfony version
+        $response = $this->client->getResponse();
+        if (method_exists($response, 'getStatus')) return $response->getStatus();
+        if (method_exists($response, 'getStatusCode')) return $response->getStatusCode();
+        return "N/A";
     }
 
     protected function escape($string)
@@ -481,7 +490,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->client->getResponse()->getStatus());
+        $this->assertEquals($code, $this->getResponseStatusCode());
     }
 
 }

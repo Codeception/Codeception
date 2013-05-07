@@ -1,36 +1,66 @@
 <?php
 namespace Codeception\Module;
+
+use Codeception\Codecept;
+use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Client;
+use Illuminate\Foundation\Testing\Client;
 use Illuminate\Auth\UserInterface;
+
+/**
+ * Class Laravel4
+ *
+ * This module allows you to run functional tests for Laravel 4.
+ * Module is very fresh and should be improved with Laravel testing capabilities.
+ * Please try it and leave your feedbacks. If you want to maintin it - connect Codeception team.
+ *
+ * Uses 'bootstrap/start.php' to launch.
+ *
+ * ## Status
+ *
+ * * Maintainer: **Jon Phipps, Davert**
+ * * Stability: **alpha**
+ * * Contact: davert.codeception@mailican.com
+ *
+ *
+ * ## API
+ *
+ * * kernel - `Illuminate\Foundation\Application` instance
+ * * client - `BrowserKit` client
+ *
+ * ## Known Issues
+ *
+ * When submitting form do not use `Input::all` to pass to store (hope you won't do this anyway).
+ * Codeception creates internal form fields, so you get exception trying to save them.
+ *
+ */
 
 class Laravel4 extends \Codeception\Util\Framework {
 
 	public function _initialize()
 	{
-		//make sure we have a trailing slash (may not be necessary)
-		$projectDir =  rtrim(\Codeception\Configuration::projectDir(),DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $projectDir =  \Codeception\Configuration::projectDir();
+        require $projectDir.'/vendor/autoload.php';
 
-		//--> copied from './bootstrap/autoload'
-		if (file_exists($compiled = $projectDir.'/compiled.php'))
-		{
-			require $compiled;
-		}
-		\Illuminate\Support\ClassLoader::register();
+        \Illuminate\Support\ClassLoader::register();
+
 		if (is_dir($workbench = $projectDir.'workbench'))
 		{
 			\Illuminate\Workbench\Starter::start($workbench);
 		}
-		//--> end copied from './bootstrap/autoload'
-
-		//--> copied from './app/tests/TestCase.php
 		$unitTesting = true;
 		$testEnvironment = 'testing';
 		$app = require $projectDir.'bootstrap/start.php';
-		//--> end copied from './app/tests/TestCase.php
-
 		$this->kernel = $app;
+
+        $this->revertErrorHandler();
 	}
+
+    protected function revertErrorHandler()
+    {
+        $handler = new ErrorHandler();
+        set_error_handler(array($handler, 'errorHandler'));
+    }
 
 	public function _before(\Codeception\TestCase $test)
 	{
@@ -41,48 +71,6 @@ class Laravel4 extends \Codeception\Util\Framework {
 	public function _after(\Codeception\TestCase $test)
 	{
 		$this->kernel->shutdown();
-	}
-
-	/**
-	 * Assert whether the client was redirected to a given URI.
-	 *
-	 * @param  string  $uri
-	 * @param  array   $with
-	 * @return void
-	 */
-	public function seeLocatedAt($uri, $with = array())
-	{
-		$response = $this->client->getResponse();
-
-		$this->assertInstanceOf('Illuminate\Http\Response', $response);
-
-		$this->assertEquals($this->kernel['url']->to($uri), $response->headers->get('Location'));
-
-		$this->seeSessionHasValues($with);
-	}
-
-	/**
-	 * Assert whether the client was redirected to a given route.
-	 *
-	 * @param  string  $name
-	 * @param  array   $with
-	 * @return void
-	 */
-	public function seeRoutePage($name, $with = array())
-	{
-		$this->amLocatedAt($this->kernel['url']->route($name), $with);
-	}
-
-	/**
-	 * Assert whether the client was redirected to a given action.
-	 *
-	 * @param  string  $name
-	 * @param  array   $with
-	 * @return void
-	 */
-	public function seeActionPage($name, $with = array())
-	{
-		$this->amLocatedAt($this->kernel['url']->action($name), $with);
 	}
 
 	/**
@@ -104,6 +92,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 		{
 			$this->assertEquals($value, $this->kernel['session']->get($key));
 		}
+
 	}
 
 	/**
@@ -118,11 +107,11 @@ class Laravel4 extends \Codeception\Util\Framework {
 		{
 			if (is_int($key))
 			{
-				$this->seeSessionHas($value);
+				$this->seeInSession($value);
 			}
 			else
 			{
-				$this->seeSessionHas($key, $value);
+				$this->seeInSession($key, $value);
 			}
 		}
 	}
@@ -134,7 +123,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 */
 	public function seeSessionHasErrors()
 	{
-		return $this->seeSessionHas('errors');
+		$this->seeInSession('errors');
 	}
 
 	/**
