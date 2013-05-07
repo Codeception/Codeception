@@ -53,4 +53,13 @@ class RunCest
         $I->seeInThisFile('<testcase file="FileExistsCept.php"');
     }
 
+    public function runOneGroup(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run skipped -g notorun');
+        $I->seeInShellOutput("Incomplete");
+        $I->dontSeeInShellOutput("Skipped");
+
+    }
+
 }
