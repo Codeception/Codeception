@@ -243,207 +243,22 @@ class Selenium2 extends MinkJS
         $this->session->getDriver()->switchToIFrame($name);
     }
 
-    /*
-     * INHERITED ACTIONS
+    /**
+     * Resize current window
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->resizeWindow(800, 600);
+     *
+     * ```
+     *
+     * @param int    $width
+     * @param int    $height
+     * @author Jaik Dean <jaik@jaikdean.com>
      */
-
-    public function dontSee($text, $selector = null)
-    {
-        parent::dontSee($text, $selector);
+    public function resizeWindow($width, $height) {
+        $this->webDriverSession->window('current')->postSize(array('width' => $width, 'height' => $height));
     }
 
-    public function see($text, $selector = null)
-    {
-        parent::see($text, $selector);
-    }
-
-    public function seeLink($text, $url = null)
-    {
-        parent::seeLink($text, $url);
-    }
-
-    public function dontSeeLink($text, $url = null)
-    {
-        parent::dontSeeLink($text, $url);
-    }
-
-    public function dontSeeElement($selector)
-    {
-        parent::dontSeeElement($selector);
-    }
-
-    public function reloadPage()
-    {
-        parent::reloadPage();
-    }
-
-    public function moveBack()
-    {
-        parent::moveBack();
-    }
-
-    public function moveForward()
-    {
-        parent::moveForward();
-    }
-
-    public function fillField($field, $value)
-    {
-        parent::fillField($field, $value);
-    }
-
-    public function selectOption($select, $option)
-    {
-        parent::selectOption($select, $option);
-    }
-
-    public function seeInCurrentUrl($uri)
-    {
-        parent::seeInCurrentUrl($uri);
-    }
-
-    public function dontSeeInCurrentUrl($uri)
-    {
-        parent::dontSeeInCurrentUrl($uri);
-    }
-
-    public function seeCurrentUrlEquals($uri)
-    {
-        parent::seeCurrentUrlEquals($uri);
-    }
-
-    public function dontSeeCurrentUrlEquals($uri)
-    {
-        parent::dontSeeCurrentUrlEquals($uri);
-    }
-
-    public function seeCurrentUrlMatches($uri)
-    {
-        parent::seeCurrentUrlMatches($uri);
-    }
-
-    public function dontSeeCurrentUrlMatches($uri)
-    {
-        parent::dontSeeCurrentUrlMatches($uri);
-    }
-
-    public function grabFromCurrentUrl($uri = null)
-    {
-        return parent::grabFromCurrentUrl($uri);
-    }
-
-    public function attachFile($field, $filename)
-    {
-        parent::attachFile($field, $filename);
-    }
-
-    public function seeCheckboxIsChecked($checkbox)
-    {
-        parent::seeCheckboxIsChecked($checkbox);
-    }
-
-    public function dontSeeCheckboxIsChecked($checkbox)
-    {
-        parent::dontSeeCheckboxIsChecked($checkbox);
-    }
-
-    public function seeInField($field, $value)
-    {
-        parent::seeInField($field, $value);
-    }
-
-    public function dontSeeInField($field, $value)
-    {
-        parent::dontSeeInField($field, $value);
-    }
-
-    public function grabTextFrom($cssOrXPathOrRegex)
-    {
-        return parent::grabTextFrom($cssOrXPathOrRegex);
-    }
-
-    public function grabValueFrom($field)
-    {
-        return parent::grabValueFrom($field);
-    }
-
-    public function grabAttribute()
-    {
-        parent::grabAttribute();
-    }
-
-    public function checkOption($option)
-    {
-        parent::checkOption($option);
-    }
-
-    public function uncheckOption($option)
-    {
-        parent::uncheckOption($option);
-    }
-
-    public function doubleClick($link)
-    {
-        parent::doubleClick($link);
-    }
-
-    public function clickWithRightButton($link)
-    {
-        parent::clickWithRightButton($link);
-    }
-
-    public function moveMouseOver($link)
-    {
-        parent::moveMouseOver($link);
-    }
-
-    public function focus($el)
-    {
-        parent::focus($el);
-    }
-
-    public function blur($el)
-    {
-        parent::blur($el);
-    }
-
-    public function dragAndDrop($el1, $el2)
-    {
-        parent::dragAndDrop($el1, $el2);
-    }
-
-    public function seeElement($selector)
-    {
-        parent::seeElement($selector);
-    }
-
-    public function pressKey($element, $char, $modifier = null)
-    {
-        parent::pressKey($element, $char, $modifier);
-    }
-
-    public function pressKeyUp($element, $char, $modifier = null)
-    {
-        parent::pressKeyUp($element, $char, $modifier);
-    }
-
-    public function pressKeyDown($element, $char, $modifier = null)
-    {
-        parent::pressKeyDown($element, $char, $modifier);
-    }
-
-    public function wait($milliseconds)
-    {
-        parent::wait($milliseconds);
-    }
-
-    public function waitForJS($milliseconds, $jsCondition)
-    {
-        parent::waitForJS($milliseconds, $jsCondition);
-    }
-
-    public function executeJs($jsCode)
-    {
-        parent::executeJs($jsCode);
-    }
 }
