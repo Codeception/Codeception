@@ -176,11 +176,6 @@ class Configuration
                     continue;
                 }
 
-                // exclude inherited methods
-                if ($method->class !== $class->getName()) {
-                    continue;
-                }
-
                 $actions[$method->name] = $moduleName;
             }
         }
