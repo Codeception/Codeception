@@ -29,7 +29,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 		$app = require $projectDir.'bootstrap/start.php';
 		//--> end copied from './app/tests/TestCase.php
 
-		return $this->kernel = $app;
+		$this->kernel = $app;
 	}
 
 	public function _before(\Codeception\TestCase $test)
@@ -43,91 +43,6 @@ class Laravel4 extends \Codeception\Util\Framework {
 		$this->kernel->shutdown();
 	}
 
-	//*************************************************
-	//--> everything from here on copied from './Illuminate/Foundation/Testing/TestCase.php'
-	// Replacing '$this->app() with $this->kernel()
-	// UNTESTED!!
-
-	/**
-	 * Call the given URI and return the Response.
-	 *
-	 * @param  string  $method
-	 * @param  string  $uri
-	 * @param  array   $parameters
-	 * @param  array   $files
-	 * @param  array   $server
-	 * @param  string  $content
-	 * @param  bool    $changeHistory
-	 * @return \Illuminate\Http\Response
-	 */
-	public function call()
-	{
-		call_user_func_array(array($this->client, 'request'), func_get_args());
-
-		return $this->client->getResponse();
-	}
-
-	/**
-	 * Call the given HTTPS URI and return the Response.
-	 *
-	 * @param  string  $method
-	 * @param  string  $uri
-	 * @param  array   $parameters
-	 * @param  array   $files
-	 * @param  array   $server
-	 * @param  string  $content
-	 * @param  bool    $changeHistory
-	 * @return \Illuminate\Http\Response
-	 */
-	public function callSecure()
-	{
-		$parameters = func_get_args();
-
-		$parameters[1] = 'https://localhost/'.ltrim($parameters[1], '/');
-
-		return call_user_func_array(array($this, 'call'), $parameters);
-	}
-
-	/**
-	 * Call a controller action and return the Response.
-	 *
-	 * @param  string  $method
-	 * @param  string  $action
-	 * @param  array   $wildcards
-	 * @param  array   $parameters
-	 * @param  array   $files
-	 * @param  array   $server
-	 * @param  string  $content
-	 * @param  bool    $changeHistory
-	 * @return \Illuminate\Http\Response
-	 */
-	public function executeAction($method, $action, $wildcards = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
-	{
-		$uri = $this->kernel['url']->action($action, $wildcards, false);
-
-		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-	}
-
-	/**
-	 * Call a named route and return the Response.
-	 *
-	 * @param  string  $method
-	 * @param  string  $name
-	 * @param  array   $routeParameters
-	 * @param  array   $parameters
-	 * @param  array   $files
-	 * @param  array   $server
-	 * @param  string  $content
-	 * @param  bool    $changeHistory
-	 * @return \Illuminate\Http\Response
-	 */
-	public function executeRoute($method, $name, $routeParameters = array(), $parameters = array(), $files = array(), $server = array(), $content = null, $changeHistory = true)
-	{
-		$uri = $this->kernel['url']->route($name, $routeParameters, false);
-
-		return $this->call($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-	}
-
 	/**
 	 * Assert whether the client was redirected to a given URI.
 	 *
@@ -135,7 +50,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amLocatedAt($uri, $with = array())
+	public function seeLocatedAt($uri, $with = array())
 	{
 		$response = $this->client->getResponse();
 
@@ -153,7 +68,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amOnRoutePage($name, $with = array())
+	public function seeRoutePage($name, $with = array())
 	{
 		$this->amLocatedAt($this->kernel['url']->route($name), $with);
 	}
@@ -165,7 +80,7 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * @param  array   $with
 	 * @return void
 	 */
-	public function amOnActionPage($name, $with = array())
+	public function seeActionPage($name, $with = array())
 	{
 		$this->amLocatedAt($this->kernel['url']->action($name), $with);
 	}
@@ -232,17 +147,6 @@ class Laravel4 extends \Codeception\Util\Framework {
 	public function amLoggedAs(UserInterface $user, $driver = null)
 	{
 		$this->kernel['auth']->driver($driver)->setUser($user);
-	}
-
-	/**
-	 * Seed a given database connection.
-	 *
-	 * @param  string  $class
-	 * @return void
-	 */
-	public function seed($class = 'DatabaseSeeder')
-	{
-		$this->kernel[$class]->run();
 	}
 
 }
