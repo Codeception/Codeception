@@ -1,4 +1,4 @@
-<?
+<?php
 $scenario->group('notorun');
 $scenario->incomplete();
 $I = new SkipGuy($scenario);
