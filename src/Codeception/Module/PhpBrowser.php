@@ -94,7 +94,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $fields = $this->session->getPage()->findAll('css', $selector.' select');
         foreach ($fields as $field) {
    		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
-   	    }
+   	 }
 
         $url .= '&'.http_build_query($params);
         parse_str($url, $params);
@@ -166,18 +166,17 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
 	protected function call($uri, $method = 'get', $params = array())
 	{
-        if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
-        $browser = $this->session->getDriver()->getClient();
+		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
+			$browser = $this->session->getDriver()->getClient();
 
-    	$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
+		$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);
-
-
 		$this->debug('Response code: '.$this->session->getStatusCode());
 	}
 
 	public function _failed(\Codeception\TestCase $test, $fail) {
-		file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.fail.html', $this->session->getPage()->getContent());
+		$fileName = str_replace('::','-',$test->getFileName());
+		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
 
 }
