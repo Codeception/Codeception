@@ -158,6 +158,7 @@ class Configuration
             } else {
                 if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
             }
+            $module->_initialize();
         }
 
         return $modules;
