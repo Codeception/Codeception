@@ -10,7 +10,6 @@ class Module implements EventSubscriberInterface {
     public function beforeSuite(Suite $e)
     {
         foreach (\Codeception\SuiteManager::$modules as $module) {
-            $module->_initialize();
             $module->_beforeSuite($e->getSettings());
         }
     }
