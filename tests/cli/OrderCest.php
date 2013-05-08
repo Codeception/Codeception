@@ -16,7 +16,7 @@ class OrderCest {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order FailedCept.php --no-exit');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->expect('initialization, bootstrap, beforeSuite, before, bootstrap, test, after, fail, afterSuite');
+        $I->expect('initialization, bootstrap, beforeSuite, before, bootstrap, test, fail, after, afterSuite');
         $I->seeInThisFile("IBS([BSTF])");
     }
 

@@ -4,13 +4,15 @@ namespace Codeception\Module;
 /**
  * Unit testing module
  *
+ * ## Please don't use that anymore. Really. It's deprecated in [favor of common unit tests](http://codeception.com/03-18-2013/scenario-unit-deprecated.html).
+ *
  * This is the heart of the CodeGuy testing framework.
  * By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
  *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **stable**
+ * * Stability: **deprecated**
  * * Contact: codecept@davert.mail.ua
  *
  * ## Features
