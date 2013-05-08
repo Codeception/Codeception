@@ -443,7 +443,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     protected function escape($string)
     {
-        return $string;
+        return (string)$string;
     }
 
 
