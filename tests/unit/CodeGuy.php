@@ -46,7 +46,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $signature
      * @see Unit::testMethod()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -67,7 +67,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $instance
      * @see Unit::haveFakeClass()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -87,7 +87,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @alias haveFakeClass
      * @param $instance
      * @see Unit::haveStub()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -122,7 +122,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $object
      * @see Unit::executeTestedMethodOn()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -151,7 +151,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $params
      * @throws \Codeception\Exception\Module
      * @see Unit::executeTestedMethodWith()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -175,7 +175,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @throws \InvalidArgumentException
      * @see Unit::executeTestedMethod()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -226,7 +226,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param \Closure $code
      * @see Unit::execute()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -263,7 +263,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $object
      * @param $method
      * @see Unit::executeMethod()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -288,7 +288,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $obj
      * @param array $values
      * @see Unit::changeProperties()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -310,7 +310,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @see Unit::changeProperty()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -327,7 +327,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      *
      * @see Unit::seeExceptionThrown()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -367,7 +367,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodInvoked()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -394,7 +394,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodInvokedOnce()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -419,7 +419,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @see Unit::seeMethodNotInvoked()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -447,7 +447,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $times
      * @param array $params
      * @see Unit::seeMethodInvokedMultipleTimes()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -466,7 +466,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $value
      * @see Unit::seeResultEquals()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -483,7 +483,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      *
      * @see Unit::seeResultContains()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -502,7 +502,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $value
      * @see Unit::dontSeeResultContains()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -521,7 +521,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $value
      * @see Unit::dontSeeResultEquals()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -538,7 +538,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * Checks that the result of the last execution is empty.
      * @see Unit::seeEmptyResult()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -568,7 +568,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $type
      * @see Unit::seeResultIs()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -593,7 +593,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @see Unit::seePropertyEquals()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -619,7 +619,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $type
      * @see Unit::seePropertyIs()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -652,7 +652,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @see Unit::seeMethodReturns()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -677,7 +677,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @see Unit::seeMethodNotReturns()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -694,7 +694,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      *
      * @see EmulateModuleHelper::seeEquals()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -711,7 +711,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      *
      * @see EmulateModuleHelper::seeFeaturesEquals()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */

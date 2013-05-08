@@ -30,7 +30,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $path
      * @see Filesystem::amInPath()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -58,7 +58,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @see Filesystem::openFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -83,7 +83,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @see Filesystem::deleteFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -108,7 +108,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $dirname
      * @see Filesystem::deleteDir()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -134,7 +134,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @param $src
      * @param $dst
      * @see Filesystem::copyDir()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -162,7 +162,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      * @see Filesystem::seeInThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -188,7 +188,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      * @see Filesystem::dontSeeInThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -205,7 +205,7 @@ class DumbGuy extends \Codeception\AbstractGuy
     /**
      * Deletes a file
      * @see Filesystem::deleteThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -232,7 +232,7 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @param $filename
      * @param string $path
      * @see Filesystem::seeFileFound()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
