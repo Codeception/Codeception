@@ -14,17 +14,17 @@ You can start with generating a classical PHPUnit test extending `\PHPUnit_Frame
 This can be done by this command:
 
 ```bash
-$ php codecept.phar generate:phpunit unit Simple
+$ php codecept.phar generate:phpunit unit Example
 ```
 
 Codeception has it's addons to standard unit tests. So let's try them.
 We need another command to create Codeception-powered unit tests.
 
 ```bash
-$ php codecept.phar generate:test unit Simple
+$ php codecept.phar generate:test unit Example
 ```
 
-Both tests will create a new `SimpleTest` file located in `tests/unit` directory.
+Both tests will create a new `ExampleTest` file located in `tests/unit` directory.
 
 A test created by `generate:test` command will look like this:
 
@@ -32,7 +32,7 @@ A test created by `generate:test` command will look like this:
 <?php
 use Codeception\Util\Stub;
 
-class SimpleTest extends \Codeception\TestCase\Test
+class ExampleTest extends \Codeception\TestCase\Test
 {
    /**
     * @var CodeGuy
@@ -141,7 +141,7 @@ Less words, more code for better understanding.
 <?php
 use Codeception\Util\Stub;
 
-class SimpleTest extends \Codeception\TestCase\Test
+class ExampleTest extends \Codeception\TestCase\Test
 {
    /**
     * @var CodeGuy
