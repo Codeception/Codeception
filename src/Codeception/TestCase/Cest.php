@@ -34,7 +34,7 @@ class Cest extends Cept
         try {
             $this->executeTestMethod($I);
         } catch (\Exception $e) {
-            $this->fire('test.after', new Test($this));
+            // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
         $this->fire('test.after', new Test($this));

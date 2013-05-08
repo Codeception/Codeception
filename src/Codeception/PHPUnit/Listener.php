@@ -22,11 +22,13 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.fail', new \Codeception\Event\Fail($test, $e));
+        if ($test instanceof TestCase) $this->fire('test.after', new \Codeception\Event\Test($test));
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.error', new \Codeception\Event\Fail($test, $e));
+        if ($test instanceof TestCase) $this->fire('test.after', new \Codeception\Event\Test($test));
     }
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
