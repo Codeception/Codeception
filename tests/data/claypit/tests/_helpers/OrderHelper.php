@@ -5,6 +5,7 @@ namespace Codeception\Module;
 
 use Codeception\Codecept;
 use Codeception\Event\Suite;
+use Codeception\Event\Test;
 use Codeception\TestCase\Cept;
 
 class OrderHelper extends \Codeception\Module
