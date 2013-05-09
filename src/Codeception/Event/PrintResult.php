@@ -22,7 +22,7 @@ class PrintResult extends Event
     }
 
     /**
-     * @return \PHPUnit_Util_Printer 
+     * @return \PHPUnit_Util_Printer
      */
     public function getPrinter()
     {
