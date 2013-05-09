@@ -7,7 +7,7 @@ class Cest extends Cept
 {
     protected $testClassInstance = null;
     protected $testMethod = null;
-    protected $guy = 'CodeGuy';
+    protected $guy;
 
     public function __construct($dispatcher, array $data = array(), $dataName = '') {
         parent::__construct($dispatcher, $data, $dataName);
@@ -85,7 +85,9 @@ class Cest extends Cept
     }
 
     public function getFileName() {
-        return get_class($this->getTestClass())."::".$this->getTestMethod();
+        $class = explode('\\', get_class($this->getTestClass()));
+        $class = end($class);
+        return $class.".".$this->getTestMethod();
     }
 
 }
