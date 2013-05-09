@@ -24,16 +24,14 @@ class OrderGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * Fails the test with message.
      *
-     * @param $message
-     * @see OrderHelper::fail()
+     * @see OrderHelper::failNow()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
-    public function fail() {
-        $this->scenario->action('fail', func_get_args());
+    public function failNow() {
+        $this->scenario->action('failNow', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
