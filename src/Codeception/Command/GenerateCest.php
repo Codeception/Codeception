@@ -13,8 +13,6 @@ class GenerateCest extends Base
 {
     protected $template  = <<<EOF
 <?php
-%suse Codeception\Util\Stub;
-
 %s %sCest
 {
 
