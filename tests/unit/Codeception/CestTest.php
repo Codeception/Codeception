@@ -8,7 +8,7 @@ class CestTest extends PHPUnit_Framework_TestCase
                 'getTestClass' => new \Codeception\Util\Locator(),
                 'getTestMethod' => 'combine'
         ));
-        $this->assertEquals('Locator.combine', $cest->getFileName());
+        $this->assertEquals('Codeception.Util.Locator.combine', $cest->getFileName());
     }
 
 }
