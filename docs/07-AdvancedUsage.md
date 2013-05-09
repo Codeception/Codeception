@@ -1,195 +1,218 @@
-# Unit Tests Inside Scenario
+# Advanced Usage
 
-<div class="alert alert-error">This chapter is <strong>deprecated</strong>. Don't read it and forget everything I might have read.
-Use classical <a href="http://codeception.com/docs/06-UnitTests">Unit Tests</a> with some Codeception powers. <a href="http://codeception.com/03-18-2013/scenario-unit-deprecated.html">Here is why it it happened</a></div>
+In this chapter we will cover some technics and options that you can use to improve your testing experience and stay with better organization of your project. 
+
+## Interactive Console
+
+Interactive console was added to try Codeception commands before executing them inside a test. 
+This feature was introduced in 1.6.0 version. 
+
+![console](http://img267.imageshack.us/img267/204/003nk.png)
+
+You can execute console with 
+
+``` bash
+php codecept.phar console suitename
+```
+
+Now you can execute all commands of appropriate Guy class and see immidiate results. That is especially useful for when used with Selenium modules. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
+
+And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. With this you can convince him that it is easy to automate this steps and introduce acceptance testing to the project.
+
+## Running from different folders.
+
+If you have several project with Codeception tests in it you can use one `codecept.phar` file to run their tests.
+You can pass a `-c` option to any Codeception command, excluding `bootstrap` to execute codeception in other directory.
+
+```
+
+php codecept.phar run -c ~/projects/ecommerce/
+php codecept.phar run -c ~/projects/drupal/
+php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
+
+```
+
+To create a project in directory other then current just provide it's path as a parameter.
 
 
-Each function is like a little a little application in itself. It's the simplest and least divisible part of the program. It's natural to test it the way we test the application as a whole. Codeception unit tests are very similar to acceptance tests, with some additional features that simplify code testing.
+```
 
-Unit tests are required to be as readable as possible. They should be clean and easy to understand. Codeception helps the developer to follow these practices.
+php codecept.phar bootstrap ~/projects/drupal/
 
-## Writing a Simple Test
 
-With Codeception you should describe your test in a scenario, as we did that for acceptance tests.
+```
 
-```php
+Basically `-c` option allows you specify not only the path but a config file to be used. Thus, you can have several `codeception.yml` file for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
+
+## Groups
+
+There are several ways to execute bunch of tests. You can run tests from specific directory:
+
+```
+
+php codecept.phar run tests/acceptance/admin
+
+
+```
+
+Or execute one (or several) specific groups of tests:
+
+```
+
+php codecept.phar run -g admin -g editor
+
+```
+
+In this case all tests that belongs to groups admin or editor will be executed. Groups concept were taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
+
+``` php
 <?php
+$scenario->group('admin');
+$scenario->group('editor');
+// or
+$scenario->group(array('admin', 'editor'))
+// or
+$scenario->groups(array('admin', 'editor'))
 
-function validateEmail(CodeGuy $I)
+$I = new WebGuy($scenario);
+$I->wantToTest('admin area');
+?>
+```
+For Tests and Cests you can use annotation `@group` to add a test to the group.
+
+``` php
+<?php
+/**
+ * @group admin
+ */
+public function testAdminUser()
 {
-    $I->execute(function () {
-        return Validator::validateEmail('davert@mail.ua');
-    });
-    $I->seeResultEquals(true);
+    $this->assertEquals('admin', User::find(1)->role);
 }
 ?>
 ```
+Same annotation can be used in Cest classes.
 
-The similar test in PHPUnit would look like this:
+## Cest Classes
 
-```php
-<?php
-public function testValidateEmail()
-    $this->assertTrue(Validator::validateEmail('davert@mail.ua'));
-}
-?>
+In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use Cest format.
+It is very simple and is fully compatible with Cept scenarios. It means If you feel like your test is long enough and you want to split it - you can easily move it into class. 
+
+You can start Cest file by running the command:
+
+```
+php codecept.phar generate:cest suitename CestName
 ```
 
-Well, PHPUnit wins here: its test is shorter and readable. **There is no practical reason for using Codeception for testing simple methods**. But not all functions can be executed and tested that way. Whenever a function has dependencies and it's results can't be so easily observable, Codeception will be quite useful.
+The generated file will look like:
 
-Using Codeception for unit testing is like using a framework for web development. Even if it's hard to create a 'hello world' page with Symfony, Zend, or Yii, they help you build complex web applications.
-
-## Testing the Controller
-
-It's natural to assume that you are using PHP for web development.
-Generally, web applications use the MVC (Model-View-Controller) pattern.
-Let's show how Codeception simplifies unit testing for controller classes.
-
-We have a controller class of an imaginary MVC framework:
-
-```php
+``` php
 <?php
-class UserController extends AbstractController {
-
-    public function show($id)
-    {
-        $user = $this->db->find('users',$id);
-        if (!$user) return $this->render404('User not found');
-        $this->render('show.html.php', array('user' => $user));
-        return true;
-    }
-}
-?>
-```
-
-We want to test this `show` method. As you can see it's rather different then the `validateEmail` function from the previous example.
-This is because the `show` method relies on other functions and classes.
-
-When we are performing unit testing we should ignore all those dependencies in the test. We don't worry about how the render method works, or how the `$this->db` searches for a user instance.
-The only thing we test is the behavior of the `show` action.
-To test such a method, we should replace classes with their [stubs, and use mocks](http://martinfowler.com/articles/mocksArentStubs.html#TheDifferenceBetweenMocksAndStubs) for assertions.
-
-### Codeception Test
-
-For unit tests Codeception provides a different test file format. It's called Cest (Test + Cept = Cest).
-
-Here is the Codeception test for the 'show' action:
-
-```php
-<?php
-use Codeception\Util\Stub as Stub;
-
-const VALID_USER_ID = 1;
-const INVALID_USER_ID = 0;
-
-class UserControllerCest {
-    public $class = 'UserController';
-
-
-    public function show(CodeGuy $I) {
-        // prepare environment
-        $I->haveFakeClass($controller = Stub::makeEmptyExcept($this->class, 'show'));
-        $I->haveFakeClass($db = Stub::make('DbConnector', array('find' => function($id) { return $id == VALID_USER_ID ? new User() : null )));
-        $I->setProperty($controller, 'db', $db);
-
-        $I->executeTestedMethodOn($controller, VALID_USER_ID)
-            ->seeResultEquals(true)
-            ->seeMethodInvoked($controller, 'render');
-
-        $I->expect('it will render 404 page for non existent user')
-            ->executeTestedMethodOn($controller, INVALID_USER_ID)
-            ->seeResultNotEquals(true)
-            ->seeMethodInvoked($controller, 'render404','User not found')
-            ->seeMethodNotInvoked($controller, 'render');
-    }
-}
-?>
-```
-
-This test is written as a simple scenario. Every command of the scenario clearly describes the action being taken. Let's review this code.
-
-First of all, take a look at the `Cest` suffix. By it, Codeception knows it's a Cest testing class. The public property `$class` is just as important. It defines the class which is being tested. Each public method of `$class` will be treated as a test. Please note, that the name of each test method is the same as the method which is actually being tested. In other words, to test `UserController->show` we use `UserControllerCest->show`, `UserController->edit => UserControllerCest->edit`, etc. The only parameter of the test method is the CodeGuy class instance.
-
-With the CodeGuy we write a scenario for unit testing. The action `haveFakeClass` declares that we will use a stub in our testing. By using this command Codeception will dynamically create a mock for this class.
-Codeception uses a wrapper over PHPUnit's mocking library. It can create various stubs in a simple way. Later we will review this tool more deeply.
-
-For `UserController` we redefine all of it's methods, except the tested one, with dummies.
-For the `$db` property, which is supposed to be a DbConnector (Database class) instance we redefine its `find` method. Depending on a parameter it is supposed to return a User model or `null`.
-
-Next we connect both stubbed classes. We'd normally use:
-
-```php
-<?php
-    $controller->db = $db;
-?>
-```
-
-But the `$controller->db` property might be protected. By using the`setProperty` command we can even set the values of protected and private properties! This can be done with the power of [Reflection](http://php.net/manual/en/book.reflection.php).
-
-The environment has been prepared. There are no dependencies left. Now we can concentrate on the actual testing.
-
-First test case -- we execute the `show` action for an existing user.
-We see that the tested method returns true and the method `render` was invoked.
-
-To ensure 100% code coverage of this method we should test the negative scenario too, avoiding the [Happy Path anti-pattern](http://www.ibm.com/developerworks/opensource/library/os-junit/).
-
-Our second test case is running the `show` action for a non-existent user. The 404 page should be rendered in this case.
-
-The `expect` command we use here is as good as a comment. We describe the expected result if it's not obvious. Actually we can guess that the `UserController->show` method would show a user. But we can't be sure what would happen if the user doesn't exist.
-That's why we use 'expect' to describe the function description.
-
-### PHPUnit Example
-
-To prove Codeception was useful for testing the controller, we will write the same test in PHPUnit.
-Remember, it can be run with Codeception too.
-
-```php
-<?php
-
-class UserControllerTest extends PHPUnit_Framework_TestCase
+class BasicCest
 {
-    protected function prepareController()
-    {
-        $controller = $this->getMock('UserController', array('render', 'render404'), null, false, false);
-        $db = $this->getMock('DbConnector');
-        $db->expects($this->any())
-            ->method('find')
-            ->will($this->returnCallback(function ($id) { return $id ? new User() : null; }));
 
-        // connecting stubs together
-        $r = new ReflectionObject($controller);
-        $dbProperty = $r->getProperty('db');
-        $dbProperty->setAccessible(true);
-        $dbProperty->setValue($controller, $db);
+    public function _before()
+    {
     }
 
-    public function testShowForExistingUser()
+    public function _after()
     {
-        $controller = $this->prepareController();
-        $controller->expects($this->once())->method('render')->with($this->anything());
-        $this->assertTrue($controller->show(1));
     }
 
-    public function testShowForUnexistingUser()
-    {
-        $controller = $this->prepareController();
-        $controller->expects($this->never())->method('render')->with($this->anything());
-        $controller->expects($this->once())->method('404')->with($this->equalTo('User not found'));
-        $this->assertNotEquals(true, $controller->show(0));
+    // tests
+    public function tryToTest(\WebGuy $I) {
+    
     }
 }
 ?>
 ```
-This test is 1.5 times longer. One test is split into two. Mocking requires strong knowledge of the PHPUnit API. It's hard to understand the behavior of the tested method `show` without looking into its code.
-Nevertheless this test is quite readable.
 
-Let's analyze why we split the one test into two.
-We are testing one feature, but two different behaviors. This can be argued, but we suppose that showing a "404 page" can't be treated as a feature of your product.
+**Each public method of Cest (except, those starting from `_`) will be executed as a test** and will receive Guy class as the first parameter and `$scenario` variable as a second. 
 
-Having two tests instead of one is a technical, not a logical, limitation of PHPUnit.
-That's because you can't test the method `render` invoked once and not invoked in a single test. All mocked methods invocations are checked at the very end of the test. Thus, having expectations for both 'render once' and 'render never', we will only see that the last one has been performed.
+In `_before` and `_after` method you can use common setups, teardowns for the tests in the class. That actually makes Cest tests more flexible, then Cepts that rely only on similar methods in Helper classes.
+
+As you see we are passing Guy class into `tryToTest` stub. That allows us to write a scenarios the way we did before.
+
+``` php
+<?php
+class BasicCest
+{
+    // test
+    public function checkLogin(\WebGuy $I) {
+        $I->wantTo('log in to site');
+        $I->amOnPage('/');
+        $I->click('Login');
+        $I->fillField('username', 'jon');
+        $I->fillField('password','coltrane');
+        $I->click('Enter');
+        $I->see('Hello, Jon');
+        $I->seeInCurrentUrl('/account');
+    }
+}
+?>
+```
+
+But there is a limiation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
+It was useful to store some variables in bootstraps that should be passed into scenario.
+In Cest files you should inject all external variables manually, using static or global variables.
+
+As a workaround you can choose [Fixtures](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php) class which is nothing more then global storage to your variables. You can pass variables from `_bootstrap.php` or any other place just with `Fixtures::add()` call. But probably you can use Cest classes `_before` and `_after` methods to load fixtures on the start of test, and deleting them afterwards. Pretty useful too.
+
+As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you wnat by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
+
+Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
+
+## Refactoring
+
+As test base growth they will require refactoring, sharing common variables and behaviors. The classical example for this is `login` action which will be called for maybe every test of your test suite. It's wise to make it written one time and use it in all tests. 
+
+It's pretty obvious that for such cases you can use your own PHP classes to define such methods. 
+
+``` php
+<?php class TestCommons 
+{
+    public static $username = 'jon';
+    public static $password = 'coltrane';
+
+    public static logMeIn($I)
+    {
+        $I->amOnPage('/login');
+        $I->fillField('username', 'jon');
+        $I->fillField('password','coltrane');
+        $I->click('Enter');
+    }
+}
+?>
+```
+
+This file can be required in `_bootstrap.php` file
+
+``` php
+<?php
+// bootstrap
+require_once '/path/to/test/commons/TestCommons.php';
+?>
+```
+
+and used in your scenarios:
+
+``` php
+<?php
+$I = new WebGuy($scenario);
+TestCommons::logMeIn($I);
+?>
+``` 
+
+You should get the idea by now. Codeception doesn't provide any particular strategy for you to manage the tests. But it is flexible enough to create all the support classes you need for your test suites. The same way, with custom classes you can implement `PageObject` and `StepObject` patterns.
+
+## PageObject and StepObjects
+
+In next versions Codeception will provide PageObjects and StepObjects out of the box. 
+But today we encourage you to try your own implementations. Whe have some nice blogpost for you to learn what are PageObjects, why you ever want to use them and how they can be implemented.
+
+* [Ruling the Swarm (of Tests)](http://phpmaster.com/ruling-the-swarm-of-tests-with-codeception/) by Michael Bodnarchuk.
+* [Implementing Page Objects in Codeception](http://jonstuff.blogspot.ca/2013/05/implementing-page-objects-in.html) by Jon Phipps.
 
 ## Conclusion
 
-You are free to decide the testing framework you will use for unit tests. Codeception and PHPUnit run the same engine.
-Codeception provides you with a cool DSL to simplify your unit tests. You are writing the scenario definitions, not the actual executed code. Behind the scenes all the dirty work is done by Codeception. You write only the testing logic.
+Codeception is a framework which may look simple at first sight. But it allows you to build powerful test with one  APIs, refactor them, and write them faster using interactive console. Codeception tests can easily be organized with groups or cest classes. Probably too much abilities for the one framework. But nevertheless Codeception follows the KISS pricinple: it's easy to start, easy to learn, easy to extend. 

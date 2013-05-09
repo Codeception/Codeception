@@ -13,6 +13,8 @@ class GenerateCest extends Base
 {
     protected $template  = <<<EOF
 <?php
+%s
+
 %s %sCest
 {
 

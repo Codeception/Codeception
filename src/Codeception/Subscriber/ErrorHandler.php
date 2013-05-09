@@ -14,7 +14,7 @@ class ErrorHandler implements EventSubscriberInterface
     /**
      * @var int stores bitmask for errors
      */
-    private $errorLevel = 'E_ALL';
+    private $errorLevel = 'E_ALL & ~E_STRICT & ~E_DEPRECATED';
 
     public function handle(Suite $e) {
 
