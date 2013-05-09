@@ -17,17 +17,17 @@ class OrderHelper extends \Codeception\Module
         self::appendToFile('I');
     }
 
-    public function _before()
+    public function _before(\Codeception\TestCase $test)
     {
         self::appendToFile('[');
     }
 
-    public function _after()
+    public function _after(\Codeception\TestCase $test)
     {
         self::appendToFile(']');
     }
 
-    public function _failed()
+    public function _failed(\Codeception\TestCase $test, $fail)
     {
         self::appendToFile('F');
     }
