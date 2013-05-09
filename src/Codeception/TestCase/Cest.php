@@ -85,8 +85,7 @@ class Cest extends Cept
     }
 
     public function getFileName() {
-        $class = explode('\\', get_class($this->getTestClass()));
-        $class = end($class);
+        $class = str_replace('\\','.',get_class($this->getTestClass()));
         return $class.".".$this->getTestMethod();
     }
 
