@@ -11,18 +11,18 @@ class PrintResult extends Event
     protected $result;
 
     /**
-     * @var \PHPUnit_TextUI_ResultPrinter
+     * @var \PHPUnit_Util_Printer
      */
     protected $printer;
 
-    function __construct(\PHPUnit_Framework_TestResult $result, \PHPUnit_TextUI_ResultPrinter $printer)
+    function __construct(\PHPUnit_Framework_TestResult $result, \PHPUnit_Util_Printer $printer)
     {
         $this->result = $result;
         $this->printer = $printer;
     }
 
     /**
-     * @return \PHPUnit_TextUI_ResultPrinter
+     * @return \PHPUnit_Util_Printer 
      */
     public function getPrinter()
     {
