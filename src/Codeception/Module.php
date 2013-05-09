@@ -47,23 +47,23 @@ abstract class Module
     }
 
     // HOOK: before every step
-    public function _beforeStep(\Codeception\Step $step = null) {
+    public function _beforeStep(\Codeception\Step $step) {
     }
 
     // HOOK: after every  step
-    public function _afterStep(\Codeception\Step $step = null) {
+    public function _afterStep(\Codeception\Step $step) {
     }
 
     // HOOK: before scenario
-    public function _before(\Codeception\TestCase $test = null) {
+    public function _before(\Codeception\TestCase $test) {
     }
 
     // HOOK: after scenario
-    public function _after(\Codeception\TestCase $test = null) {
+    public function _after(\Codeception\TestCase $test) {
     }
 
     // HOOK: on fail
-    public function _failed(\Codeception\TestCase $test = null, $fail = null) {
+    public function _failed(\Codeception\TestCase $test, $fail) {
     }
 
     protected function debug($message) {
