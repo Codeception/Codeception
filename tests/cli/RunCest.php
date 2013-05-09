@@ -17,6 +17,10 @@ class RunCest
         $I->seeInShellOutput("OK (");
     }
 
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
     public function runHtml(\CliGuy $I) {
         $I->wantTo('execute tests with html output');
         $I->amInPath('tests/data/sandbox');
@@ -24,6 +28,10 @@ class RunCest
         $I->seeFileFound('report.html','tests/_log');
     }
 
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
     public function runJsonReport(\CliGuy $I)
     {
         $I->wantTo('check json reports');
@@ -34,6 +42,10 @@ class RunCest
         $I->seeInThisFile('"dummy"');
     }
 
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
     public function runTapReport(\CliGuy $I)
     {
         $I->wantTo('check tap reports');
@@ -42,6 +54,10 @@ class RunCest
         $I->seeFileFound('report.tap.log','tests/_log');
     }
 
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
     public function runXmlReport(\CliGuy $I)
     {
         $I->wantTo('check xml reports');

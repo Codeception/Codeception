@@ -1,33 +1,31 @@
-# Symfony2 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2.php)**
+# Laravel4 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Laravel4.php)**
 
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+Class Laravel4
 
-It implements common Framework interface.
+This module allows you to run functional tests for Laravel 4.
+Module is very fresh and should be improved with Laravel testing capabilities.
+Please try it and leave your feedbacks. If you want to maintin it - connect Codeception team.
+
+Uses 'bootstrap/start.php' to launch.
 
 ## Status
 
-* Maintainer: **davert**
-* Stability: **stable**
-* Contact: codecept@davert.mail.ua
+* Maintainer: **Jon Phipps, Davert**
+* Stability: **alpha**
+* Contact: davert.codeception@mailican.com
 
-## Config
 
-* app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+## API
 
-### Example (`functional.suite.yml`)
+* kernel - `Illuminate\Foundation\Application` instance
+* client - `BrowserKit` client
 
-    modules: 
-       enabled: [Symfony2]
-       config:
-          Symfony2:
-             app_path: 'app/front' 
+## Known Issues
 
-## Public Properties
-
-* kernel - HttpKernel instance
-* client - current Crawler instance
+When submitting form do not use `Input::all` to pass to store (hope you won't do this anyway).
+Codeception creates internal form fields, so you get exception trying to save them.
 
 
 ## Actions
@@ -36,10 +34,20 @@ It implements common Framework interface.
 ### amHttpAuthenticated
 
 
-Authenticates user for HTTP_AUTH 
+Adds HTTP authentication via username/password.
 
  * param $username
  * param $password
+
+
+### amLoggedAs
+
+
+ the currently logged in user for the application.
+
+ram  \Illuminate\Auth\UserInterface  $user
+ram  string  $driver
+turn void
 
 
 ### amOnPage
@@ -309,22 +317,6 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
-### grabServiceFromContainer
-
-
-Grabs a service from Symfony DIC container.
-Recommended to use for unit testing.
-
-``` php
-<?php
-$em = $I->grabServiceFromContainer('doctrine');
-?>
-```
-
- * param $service
- * return mixed
-
-
 ### grabTextFrom
 
 
@@ -445,14 +437,6 @@ $I->seeElement(//form/input[1]);
  * param $selector
 
 
-### seeEmailIsSent
-
-
-Checks if any email were sent by last request
-
- * throws \LogicException
-
-
 ### seeInCurrentUrl
 
 
@@ -490,6 +474,16 @@ $I->seeInField('//form/*[@name=search]','Search');
 
  * param $field
  * param $value
+
+
+### seeInSession
+
+
+ert that the session has a given list of values.
+
+ram  string|array  $key
+ram  mixed  $value
+turn void
 
 
 ### seeLink
@@ -540,6 +534,23 @@ Checks that response code is equal to value provided.
 
  * param $code
  * return mixed
+
+
+### seeSessionHasErrors
+
+
+ert that the session has errors bound.
+
+turn bool
+
+
+### seeSessionHasValues
+
+
+ert that the session has a given list of values.
+
+ram  array  $bindings
+turn void
 
 
 ### selectOption

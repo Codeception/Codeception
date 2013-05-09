@@ -211,7 +211,7 @@ interface WebInterface
      * If no url provided returns full URI.
      *
      * ``` php
-1     * <?php
+     * <?php
      * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ?>
