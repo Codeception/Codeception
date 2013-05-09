@@ -37,7 +37,7 @@ class OrderHelper extends \Codeception\Module
         parent::fail("intentionally");
     }
 
-    public function _beforeSuite()
+    public function _beforeSuite($settings = array())
     {
         self::appendToFile('(');
     }
