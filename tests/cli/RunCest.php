@@ -69,6 +69,20 @@ class RunCest
         $I->seeInThisFile('<testcase file="FileExistsCept.php"');
     }
 
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
+    public function runReportMode(\CliGuy $I)
+    {
+        $I->wantTo('try the reporting mode');
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run dummy --report');
+        $I->seeInShellOutput('FileExistsCept.php');
+        $I->seeInShellOutput('........Ok');
+
+    }
+
     public function runOneGroup(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');

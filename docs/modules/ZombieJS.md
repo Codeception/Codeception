@@ -358,7 +358,7 @@ Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
- <?php
+<?php
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
