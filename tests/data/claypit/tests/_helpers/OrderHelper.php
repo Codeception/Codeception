@@ -32,9 +32,9 @@ class OrderHelper extends \Codeception\Module
         self::appendToFile('F');
     }
 
-    public function fail()
+    public function failNow()
     {
-        parent::fail("intentionally");
+        $this->fail("intentionally");
     }
 
     public function _beforeSuite($settings = array())
