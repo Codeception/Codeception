@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\TestCase;
 
-use Codeception\Event\Test;
+use Codeception\Event\Test as TestEvent;
 
 class Cest extends Cept
 {
@@ -21,7 +21,7 @@ class Cest extends Cept
         if (file_exists($this->bootstrap)) require $this->bootstrap;
         $I = $this->makeIObject();
         $this->executeTestMethod($I);
-        $this->fire('test.parsed', new Test($this));
+        $this->fire('test.parsed', new TestEvent($this));
     }
 
     public function testCodecept() {
@@ -29,7 +29,7 @@ class Cest extends Cept
 
         $this->scenario->run();
         $I = $this->makeIObject();
-        $this->fire('test.before', new Test($this));
+        $this->fire('test.before', new TestEvent($this));
 
         try {
             $this->executeTestMethod($I);
@@ -37,7 +37,7 @@ class Cest extends Cept
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
-        $this->fire('test.after', new Test($this));
+        $this->fire('test.after', new TestEvent($this));
     }
 
     protected function makeIObject()

@@ -2,7 +2,7 @@
 namespace Codeception\TestCase;
 
 use Codeception\Event\Fail;
-use Codeception\Event\Test;
+use Codeception\Event\Test as TestEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Step;
 
@@ -57,14 +57,14 @@ class Cept extends \Codeception\TestCase
         if (file_exists($this->bootstrap)) require $this->bootstrap;
         require $this->testfile;
 
-        $this->fire('test.parsed', new Test($this));
+        $this->fire('test.parsed', new TestEvent($this));
     }
 
     public function testCodecept()
     {
         $scenario = $this->scenario;
 
-        $this->fire('test.before', new Test($this));
+        $this->fire('test.before', new TestEvent($this));
         $scenario->run();
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
@@ -74,7 +74,7 @@ class Cept extends \Codeception\TestCase
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
-        $this->fire('test.after', new Test($this));
+        $this->fire('test.after', new TestEvent($this));
     }
 
 }
