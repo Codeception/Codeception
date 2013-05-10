@@ -9,9 +9,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @author John Doe <john.doe@example.com>
- */
 class GenerateCest extends Base
 {
 
