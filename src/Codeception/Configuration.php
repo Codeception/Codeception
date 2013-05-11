@@ -165,6 +165,8 @@ class Configuration
      * fields are set, if not throws exception.
      * @param string $class module class
      * @param array $config config array. Defaults to empty array.
+     * @return \Codeception\Module created module
+     * @throws \Codeception\Exception\ModuleConfig if module required fields were not set.
      */
     public static function createModule($class,$config=array())
     {
