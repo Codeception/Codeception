@@ -22,7 +22,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
-    
+
     public function _before(\Codeception\TestCase $test)
     {
         $this->session->start();
@@ -161,9 +161,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function click($link, $context = null) {
+    public function click($link, $context = null, $strict = false) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link, $context);
+        $el = $this->findClickable($link, $context, $strict);
         $el->click();
 
         if ($this->session->getCurrentUrl() != $url) {
@@ -209,13 +209,18 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $el;
     }
 
-    protected function findLinkByContent($link)
+    protected function findLinkByContent($link, $strict = false)
     {
         $literal = $this->session->getSelectorsHandler()->xpathLiteral($link);
-        return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
+        if ($strict) {
+            return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
+        }
+        else {
+            return $this->session->getPage()->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
+        }
     }
 
-    protected function findClickable($link, $context = null)
+    protected function findClickable($link, $context = null, $strict = false)
     {
         $page = $context
             ? $this->findEl($context)
@@ -224,7 +229,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         if (!$page) {
             $this->fail("Context element $context not found");
         }
-        $el = $this->findLinkByContent($link);
+        $el = $this->findLinkByContent($link, $strict);
         if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
         if (!$el) $el = $this->findEl($link);
