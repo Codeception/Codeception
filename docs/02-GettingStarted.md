@@ -4,7 +4,7 @@ Let's take a look into Codeception architecture. We assume that you already [ins
 
 ## Guys
 
-One of the main concepts of Codeception is representation of tests as actions of a person. We call this person a Guy. We have a CodeGuy, who executes functions and tests the code. We also have a TestGuy, a qualified tester, who tests the application as a whole, with knowledge of it's internals. And a WebGuy, a user who works with our application through an interface that we provide.
+One of the main concepts of Codeception is representation of tests as actions of a person. We call this person a Guy. We have a CodeGuy, who executes functions and tests the code. We also have a TestGuy, a qualified tester, who tests the application as a whole, with knowledge of its internals. And a WebGuy, a user who works with our application through an interface that we provide.
 
 Each of these Guys are PHP classes along with the actions that they are allowed to do. As you can see, each of these Guys have different abilities. They are not constant, you can extend them. You can create new Guys If you like, but one Guy belongs to one suite. You can see the Guy classes inside the suite directories.
 
@@ -16,7 +16,7 @@ $ php codecept.phar build
 
 ## Writing a Sample Scenario
 
-By default tests are written as narrative scenarios. To make a php file a valid scenario, it's name should have a `Cept` suffix. 
+By default tests are written as narrative scenarios. To make a PHP file a valid scenario, its name should have a `Cept` suffix. 
 
 Let's say, we created a file `tests/acceptance/SigninCept.php`
 
@@ -34,7 +34,7 @@ $I = new WebGuy($scenario);
 
 A Scenario always starts with Guy class initialization. After that, writing a scenario is just like typing `$I->` and choosing a proper action from the auto-completion list.
 
-Let's sign in to our site. We assume that we have a 'login' page where we are getting authorized by login and password. Then we are moved to a user page, where we see the text `Hello, %username%`. Let's look at how this scenario is written in Codeception.
+Let's sign in to our site. We assume that we have a 'login' page where we are getting authenticated by login and password. Then we are moved to a user page, where we see the text `Hello, %username%`. Let's look at how this scenario is written in Codeception.
 
 ``` php
 <?php
@@ -48,7 +48,7 @@ $I->see('Hello, davert');
 ?>
 ```
 
-Before we execute this test, we should make sure that the site is running on a local web server. Open the `tests/acceptance.suite.yml` file and replace the url with the url of your web application:
+Before we execute this test, we should make sure that the site is running on a local web server. Open the `tests/acceptance.suite.yml` file and replace the URL with the URL of your web application:
 
 ``` yaml
 config:
@@ -58,7 +58,7 @@ config:
 
 If you don't have a web server running, you can use the [PHP Built-in Web Server](http://php.net/manual/en/features.commandline.webserver.php) which is available in PHP 5.4. 
 
-After you set the proper url, you can run this test with the command:
+After you set the proper URL, you can run this test with the command:
 
 ``` bash
 $ php codecept.phar run
@@ -112,11 +112,11 @@ Give it a try!
 
 ## Modules and Helpers
 
-The actions in Guy classes are taken from modules. With the `build` command described above, Codeception emulates multiple inheritance. Modules are designed to have one action performed with one method. According to the DRY principle, if you use the same scenario components in different modules, you can combine them and move them to a custom module. By default each suite has an empty module, which can extend Guy classes. They are stored in the `helpers` directory.
+The actions in Guy classes are taken from modules. With the `build` command described above, Codeception emulates multiple inheritance. M[odules are designed to have one action performed with one method. According to the [DRY principle](http://en.wikipedia.org/wiki/Don%27t_repeat_yourself), if you use the same scenario components in different modules, you can combine them and move them to a custom module. By default each suite has an empty module, which can extend Guy classes. They are stored in the `helpers` directory.
 
 ## Bootstrap
 
-Each suite has it's own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before each test.
+Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before each test.
 
 Write any setup preparations for the suite there.
 
@@ -125,7 +125,7 @@ Codeception supports three test formats. Besides the previously described scenar
 
 ## Important Notes
 
-Codeception is pretty smart when executing test scenarios. But you should keep in mind that Codeception executes each scenario two times: one for analysis and one for execution. So, any custom PHP code put in the file will be executed two times! Probably, you don't need that. Before injecting any custom php code (which is not using the `$I` object) into your test, please specify the stage when it should be executed.
+Codeception is pretty smart when executing test scenarios. But you should keep in mind that Codeception executes each scenario two times: one for analysis and one for execution. So, any custom PHP code put in the file will be executed two times! Probably, you don't need that. Before injecting any custom PHP code (which is not using the `$I` object) into your test, please specify the stage when it should be executed.
 
 __To say it again: each test file is run two times: for analyses and execution.__
 
@@ -149,11 +149,11 @@ if ($scenario->running()) {
 ?>
 ```
 
-But whenever you can try to keep you tests simple and avoid usage any custom PHP code at all. Use only the `$I` object whenever it is possible. Keep the test clean and readable.
+But whenever you can try to keep you tests simple and avoid using any custom PHP code. Use only the `$I` object whenever it is possible. Keep the test clean and readable.
 
 ## Configuration
 
-Codeception has a global configuration in `codeception.yml` and a config for each suite. We support also `.dist` configuration files. If you have several developers in a project, put shared settings into `codeception.dist.yml` and personal settings into `codeception.yml`. Same goes for suite configs. For example, the `unit.suite.yml` will be merged with `unit.suite.dist.yml`. 
+Codeception has a global configuration in `codeception.yml` and a config for each suite. We also support `.dist` configuration files. If you have several developers in a project, put shared settings into `codeception.dist.yml` and personal settings into `codeception.yml`. Same goes for suite configs. For example, the `unit.suite.yml` will be merged with `unit.suite.dist.yml`. 
 
 By default your global configuration file will be this:
 
@@ -257,10 +257,10 @@ There are plenty of options you can use.
 
 With the following options you can set the output in the most suitable format.
 
-* `html` - generate html file with results. It will be stored as 'report.html' in tests/_log.
+* `html` - generate HTML file with results. It will be stored as 'report.html' in tests/_log.
 * `xml` - generate report in JUnit format for CI services. It will be stored as 'report.xml' in tests/_log.
 * `tap` - generate report in TAP format. It will be stored as 'report.tap.log' in tests/_log.
-* `json` - generate report in Json format. It will be stored as 'report.json' in tests/_log.
+* `json` - generate report in JSON format. It will be stored as 'report.json' in tests/_log.
 
 Example:
 
@@ -268,7 +268,7 @@ Example:
 $ php codecept.phar run --steps --xml --html
 ```
 
-This command will run all tests for all suites, displaying the steps, and building html and xml reports.
+This command will run all tests for all suites, displaying the steps, and building HTML and XML reports.
 
 ### Generators
 
