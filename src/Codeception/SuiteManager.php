@@ -43,6 +43,15 @@ class SuiteManager {
 
         self::$modules = Configuration::modules($settings);
         self::$actions = \Codeception\Configuration::actions(self::$modules);
+
+        $this->initializeModules();
+    }
+
+    protected function initializeModules()
+    {
+        foreach (self::$modules as $module) {
+            $module->_initialize();
+        }
     }
 
     protected function createSuite($name) {
