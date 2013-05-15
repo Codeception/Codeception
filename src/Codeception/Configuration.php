@@ -148,20 +148,40 @@ class Configuration
         $settings = self::mergeConfigs($defaults, $settings);
 
         $moduleNames = $settings['modules']['enabled'];
-        foreach ($moduleNames as $moduleName) {
-            $classname = '\Codeception\Module\\' . $moduleName;
-            $module = new $classname;
-            $modules[$moduleName] = $module;
 
-            if (isset($settings['modules']['config'][$moduleName])) {
-                $module->_setConfig($settings['modules']['config'][$moduleName]);
-            } else {
-                if ($module->_hasRequiredFields()) throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
-            }
-            $module->_initialize();
+        foreach ($moduleNames as $moduleName)
+        {
+            $classname = '\Codeception\Module\\' . $moduleName;
+            $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
+
+            $modules[$moduleName] = static::createModule($classname, $moduleConfig);
         }
 
         return $modules;
+    }
+
+    /**
+     * Creates new module instance on given parameters. Also ensure that all module required
+     * fields are set, if not throws exception.
+     * @param string $class module class
+     * @param array $config config array. Defaults to empty array.
+     * @return \Codeception\Module created module
+     * @throws \Codeception\Exception\ModuleConfig if module required fields were not set.
+     */
+    public static function createModule($class,$config=array())
+    {
+        $moduleName  = explode('\\', $class);
+        $moduleName = end($moduleName);
+        $module = new $class;
+
+        if ($config !== array())
+            $module->_setConfig($config);
+        else if ($module->_hasRequiredFields())
+            throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
+
+       $module->_initialize();
+
+       return $module;
     }
 
     public static function actions($modules)
