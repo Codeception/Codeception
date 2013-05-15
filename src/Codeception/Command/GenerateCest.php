@@ -124,10 +124,10 @@ class {cestName}Cest
         $tests = str_replace('{guyClass}',$guy,$this->methodTemplate);
 
         $cestFileContent = str_replace(
-		array('{namespace}', '{cestName}', '{testMethod}'),
-		array($ns, $classname, $tests),
-		$this->template
-	);
+            array('{namespace}', '{cestName}', '{testMethod}'),
+            array($ns, $classname, $tests),
+            $this->template
+        );
 
         file_put_contents($filename, $cestFileContent);
 
