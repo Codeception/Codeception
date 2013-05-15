@@ -40,4 +40,52 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('click', $actions);
     }
 
+    /**
+     * @group core
+     */
+    public function testCreateModuleWithoutRequiredFields()
+    {
+        $this->setExpectedException('\Codeception\Exception\ModuleConfig');
+
+        $class = 'StubModule';
+        $module = \Codeception\Configuration::createModule($class);
+    }
+
+    /**
+     * @group core
+     */
+    public function testCreateModuleWithCorrectConfig()
+    {
+        $class = 'StubModule';
+        $config = array(
+            'firstField'     => 'firstValue',
+            'secondField' => 'secondValue',
+        );
+
+        $module = \Codeception\Configuration::createModule($class,$config);
+
+        $this->assertEquals($config['firstField'],$module->_getFirstField());
+        $this->assertEquals($config['secondField'],$module->_getSecondField());
+    }
+
+}
+
+class StubModule extends \Codeception\Module
+{
+
+    protected $requiredFields = array(
+        'firstField',
+        'secondField',
+    );
+
+    public function _getFirstField()
+    {
+        return $this->config['firstField'];
+    }
+
+    public function _getSecondField()
+    {
+        return $this->config['secondField'];
+    }
+
 }
