@@ -37,7 +37,7 @@ class {cestName}Cest
      */
     public function _before($event)
     {
-	// called before each public method of this class
+        // called before each public method of this class
     }
 
     /**
@@ -45,7 +45,7 @@ class {cestName}Cest
      */
     public function _after($event)
     {
-	//called after each public method of this class, even if test failed
+        //called after each public method of this class, even if test failed
     }
 
     /**
@@ -53,7 +53,7 @@ class {cestName}Cest
      */
     public function _failed($event)
     {
-	//called when test failed
+        //called when test failed
     }
 
     // tests
