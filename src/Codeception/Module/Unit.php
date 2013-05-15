@@ -89,6 +89,7 @@ class Unit extends \Codeception\Module
      * ```
      *
      * @param $signature
+     * @deprecated
      */
     public function testMethod($signature)
     {
@@ -116,6 +117,7 @@ class Unit extends \Codeception\Module
      * Without adding the stub to registry you can't trace it's method invocations.
      *
      * @param $instance
+     * @deprecated
      */
     public function haveFakeClass($instance)
     {
@@ -155,6 +157,7 @@ class Unit extends \Codeception\Module
      * For static methods use 'executeTestedMethodWith'.
      *
      * @param $object
+     * @deprecated
      */
     public function executeTestedMethodOn($object)
     {
@@ -196,6 +199,7 @@ class Unit extends \Codeception\Module
      *
      * @param $params
      * @throws \Codeception\Exception\Module
+     * @deprecated
      */
     public function executeTestedMethodWith($params)
     {
@@ -225,6 +229,7 @@ class Unit extends \Codeception\Module
      * See those methods for the full reference
      *
      * @throws \InvalidArgumentException
+     * @deprecated
      */
     public function executeTestedMethod()
     {
@@ -273,6 +278,7 @@ class Unit extends \Codeception\Module
      * ```
      *
      * @param \Closure $code
+     * @deprecated
      */
     public function execute(\Closure $code)
     {
@@ -317,6 +323,7 @@ class Unit extends \Codeception\Module
      *
      * @param $object
      * @param $method
+     * @deprecated
      */
     public function executeMethod($object, $method) {
         $params = func_get_args();
@@ -353,6 +360,7 @@ class Unit extends \Codeception\Module
      *
      * @param $obj
      * @param array $values
+     * @deprecated
      */
 
     public function changeProperties($obj, $values = array()) {
@@ -378,6 +386,7 @@ class Unit extends \Codeception\Module
      * @param $obj
      * @param $property
      * @param $value
+     * @deprecated
      */
 
     public function changeProperty($obj, $property, $value) {
@@ -521,6 +530,7 @@ class Unit extends \Codeception\Module
      * @param $mock
      * @param $method
      * @param array $params
+     * @deprecated
      */
     public function seeMethodInvoked($mock, $method, array $params = array())
     {
@@ -539,6 +549,7 @@ class Unit extends \Codeception\Module
      * @param $mock
      * @param $method
      * @param array $params
+     * @deprecated
      */
     public function seeMethodInvokedOnce($mock, $method, array $params = array())
     {
@@ -574,6 +585,7 @@ class Unit extends \Codeception\Module
      * @param $method
      * @param $times
      * @param array $params
+     * @deprecated
      */
     public function seeMethodInvokedMultipleTimes($mock, $method, $times, array $params = array())
     {
@@ -610,12 +622,17 @@ class Unit extends \Codeception\Module
      * Asserts that the last result from the tested method is equal to value
      *
      * @param $value
+     * @deprecated
      */
     public function seeResultEquals($value)
     {
         $this->assert(array('Equals', $value, $this->last_result,'in '.$this->last_result));
     }
 
+    /**
+     * @param $value
+     * @deprecated
+     */
     public function seeResultContains($value)
     {
         \PHPUnit_Framework_Assert::assertContains($value, $this->last_result);
@@ -625,6 +642,7 @@ class Unit extends \Codeception\Module
      * Checks that the result of the last execution doesn't contain a value.
      *
      * @param $value
+     * @deprecated
      */
     public function dontSeeResultContains($value)
     {
@@ -635,6 +653,7 @@ class Unit extends \Codeception\Module
      * Checks that the result of the last execution is not equal to a value.
      *
      * @param $value
+     * @deprecated
      */
     public function dontSeeResultEquals($value)
     {
@@ -643,6 +662,7 @@ class Unit extends \Codeception\Module
 
     /**
      * Checks that the result of the last execution is empty.
+     * @deprecated
      */
     public function seeEmptyResult()
     {
@@ -664,6 +684,7 @@ class Unit extends \Codeception\Module
      * ```
      *
      * @param $type
+     * @deprecated
      */
     public function seeResultIs($type)
     {
@@ -684,6 +705,7 @@ class Unit extends \Codeception\Module
      * @param $object
      * @param $property
      * @param $value
+     * @deprecated
      */
     public function seePropertyEquals($object, $property, $value)
     {
@@ -703,6 +725,7 @@ class Unit extends \Codeception\Module
      * @param $object
      * @param $property
      * @param $type
+     * @deprecated
      */
     public function seePropertyIs($object, $property, $type) {
         $current = $this->retrieveProperty($object, $property);
@@ -732,6 +755,7 @@ class Unit extends \Codeception\Module
      * @param $method
      * @param $value
      * @param array $params
+     * @deprecated
      */
     public function seeMethodReturns($object, $method, $value, $params = array())
     {
@@ -749,6 +773,7 @@ class Unit extends \Codeception\Module
      * @param $method
      * @param $value
      * @param array $params
+     * @deprecated
      */
     public function seeMethodNotReturns($object, $method, $value, $params = array())
     {
