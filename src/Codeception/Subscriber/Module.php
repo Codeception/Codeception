@@ -7,6 +7,11 @@ use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Module implements EventSubscriberInterface {
 
+    public function createSuite(Suite $e)
+    {
+
+    }
+
     public function beforeSuite(Suite $e)
     {
         foreach (\Codeception\SuiteManager::$modules as $module) {
