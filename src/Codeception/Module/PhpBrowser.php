@@ -108,6 +108,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         $this->call($uri, 'POST', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function sendAjaxGetRequest($uri, $params = array()) {
@@ -115,6 +116,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $query = $params ? '?'. http_build_query($params) : '';
         $this->call($uri.$query, 'GET', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function seePageNotFound()
