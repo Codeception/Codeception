@@ -51,7 +51,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     
     public function _getCookie($cookie)
     {
-    	$this->session->getCookie($cookie);
+    	return $this->session->getCookie($cookie);
     }
 
     public function _getResponseHeader($header)
