@@ -358,6 +358,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
     	\PHPUnit_Framework_Assert::assertNull($this->_getCookie($cookie));
     }
+
+    public function setCookie($cookie, $value)
+    {
+        $this->_setCookie($cookie, $value);
+    }
+
+    public function resetCookie($cookie)
+    {
+        $this->_setCookie($cookie, null);
+    }
     
     public function grabCookie($cookie)
     {
