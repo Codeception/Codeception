@@ -8,13 +8,7 @@ namespace Codeception\Util\Driver;
 class Facebook extends \BaseFacebook
 {
     /**
-     * Stores the given ($key, $value) pair, so that future calls to
-     * getPersistentData($key) return $value. This call may be in another request.
-     *
-     * @param string $key
-     * @param array  $value
-     *
-     * @return void
+     * @inheritdoc
      */
     protected function setPersistentData($key, $value)
     {
@@ -22,12 +16,7 @@ class Facebook extends \BaseFacebook
     }
 
     /**
-     * Get the data for $key, persisted by BaseFacebook::setPersistentData()
-     *
-     * @param string  $key The key of the data to retrieve
-     * @param boolean $default The default value to return if $key is not found
-     *
-     * @return mixed
+     * @inheritdoc
      */
     protected function getPersistentData($key, $default = false)
     {
@@ -35,11 +24,7 @@ class Facebook extends \BaseFacebook
     }
 
     /**
-     * Clear the data with $key from the persistent storage
-     *
-     * @param string $key
-     *
-     * @return void
+     * @inheritdoc
      */
     protected function clearPersistentData($key)
     {
@@ -47,12 +32,40 @@ class Facebook extends \BaseFacebook
     }
 
     /**
-     * Clear all data from the persistent storage
-     *
-     * @return void
+     * @inheritdoc
      */
     protected function clearAllPersistentData()
     {
         // TODO: Implement clearAllPersistentData() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function createTestUser()
+    {
+        $response = $this->api(
+            $this->getAppId() . '/accounts/test-users',
+            'POST',
+            array(
+                 'installed'    => true,
+                 'permissions'  => 'read_stream,email',
+                 'access_token' => $this->getApplicationAccessToken(),
+            )
+        );
+
+        // set user access token
+        $this->setAccessToken($response['access_token']);
+
+        return $response;
+    }
+
+    public function deleteTestUser($testUserID)
+    {
+        $this->api(
+            $testUserID,
+            'DELETE',
+            array('access_token' => $this->getApplicationAccessToken())
+        );
     }
 }
