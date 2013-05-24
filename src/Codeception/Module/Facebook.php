@@ -53,6 +53,15 @@ class Facebook extends BaseModule
      */
     protected $testUser = array();
 
+    protected function deleteTestUser()
+    {
+        if (array_key_exists('id', $this->testUser)) {
+            // make api-call for test user deletion
+            $this->facebook->deleteTestUser($this->testUser['id']);
+            $this->testUser = [];
+        }
+    }
+
     public function _initialize()
     {
         $this->facebook = new FacebookDriver(array(
@@ -63,20 +72,22 @@ class Facebook extends BaseModule
 
     public function _afterSuite()
     {
-        if (array_key_exists('id', $this->testUser)) {
-            // make api-call for test user deletion
-            $this->facebook->deleteTestUser($this->testUser['id']);
-            $this->testUser = [];
-        }
+        $this->deleteTestUser();
     }
 
     /**
      * Get facebook test user be created.
      *
-     * Please, note that test user is created only at first invoke.
+     * Please, note that the test user is created only at first invoke, unless $renew arguments is true.
+     *
+     * @param bool $renew true if the test user should be recreated
      */
-    public function haveFacebookTestUserAccount()
+    public function haveFacebookTestUserAccount($renew = false)
     {
+        if ($renew) {
+            $this->deleteTestUser();
+        }
+
         // make api-call for test user creation only if it's not yet created
         if (! array_key_exists('id', $this->testUser)) {
             $this->testUser = $this->facebook->createTestUser();
