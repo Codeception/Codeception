@@ -71,11 +71,16 @@ class Facebook extends BaseModule
     }
 
     /**
-     * Get facebook test user be created
+     * Get facebook test user be created.
+     *
+     * Please, note that test user is created only at first invoke.
      */
     public function haveFacebookTestUserAccount()
     {
-        $this->testUser = $this->facebook->createTestUser();
+        // make api-call for test user creation only if it's not yet created
+        if (! array_key_exists('id', $this->testUser)) {
+            $this->testUser = $this->facebook->createTestUser();
+        }
     }
 
     /**
