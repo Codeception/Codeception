@@ -34,7 +34,7 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  *                 test_user:
  *                     name: FacebookGuy
  *                     locale: uk_UA
- *                     permissions: [read_stream,publish_checkin]
+ *                     permissions: [email, publish_stream]
  *
  * @since 1.6.2
  * @author tiger.seo@gmail.com
@@ -64,10 +64,25 @@ class Facebook extends BaseModule
 
     public function _initialize()
     {
-        $this->facebook = new FacebookDriver(array(
-                                               'appId'  => $this->config['app_id'],
-                                               'secret' => $this->config['secret'],
-                                          ));
+        if (! array_key_exists('test_user', $this->config)) {
+            $this->config['test_user'] = array(
+                'permissions' => array()
+            );
+        } elseif (! array_key_exists('permissions', $this->config['test_user'])) {
+            $this->config['test_user']['permissions'] = array();
+        }
+
+        $self = $this;
+
+        $this->facebook = new FacebookDriver(
+            array(
+                 'appId'  => $this->config['app_id'],
+                 'secret' => $this->config['secret'],
+            ),
+            function ($title, $message) use ($self) {
+                $self->debugSection($title, $message);
+            }
+        );
     }
 
     public function _afterSuite()
@@ -90,7 +105,9 @@ class Facebook extends BaseModule
 
         // make api-call for test user creation only if it's not yet created
         if (! array_key_exists('id', $this->testUser)) {
-            $this->testUser = $this->facebook->createTestUser();
+            $this->testUser = $this->facebook->createTestUser(
+                $this->config['test_user']['permissions']
+            );
         }
     }
 
@@ -112,5 +129,20 @@ class Facebook extends BaseModule
     public function grabFacebookTestUserEmail()
     {
         return $this->testUser['email'];
+    }
+
+    public function seePostOnFacebookWithAttachedPlace($placeId)
+    {
+        $posts = $this->facebook->getLastPostsForTestUser();
+
+        if ($posts['data']) {
+            foreach ($posts['data'] as $post) {
+                if (array_key_exists('place', $post) && ($post['place']['id'] == $placeId)) {
+                    return; // success
+                }
+            }
+        }
+
+        $this->fail('Failed to see post on Facebook with attached place with id ' . $placeId);
     }
 }
