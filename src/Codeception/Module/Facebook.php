@@ -9,6 +9,7 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  * Provides testing for projects integrated with Facebook API.
  *
  * ## Status
+ *
  * * Maintainer: **tiger-seo**
  * * Stability: **alpha**
  * * Contact: tiger.seo@gmail.com
@@ -17,9 +18,10 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  *
  * * app_id *required* - Facebook application ID
  * * secret *required* - Facebook application secret
- * * test_user *optional* - Facebook test user parameters
+ * * test_user - Facebook test user parameters:
  * ** name - You can specify a name for the test user you create. The specified name will also be used in the email address assigned to the test user.
- * ** locale - You can specify a locale for the test user you create, the default is en_US. The list of supported locales is available at https://www.facebook.com/translations/FacebookLocales.xml.
+ * ** locale - You can specify a locale for the test user you create, the default is en_US. The list of supported locales is available at https://www.facebook.com/translations/FacebookLocales.xml
+ * ** permissions - An array of permissions. Your app is granted these permissions for the new test user. The full list of permissions is available at https://developers.facebook.com/docs/authentication/permissions
  *
  * ### Example
  *
@@ -34,7 +36,7 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  *                     locale: uk_UA
  *                     permissions: [read_stream,publish_checkin]
  *
- * @since 1.6.1
+ * @since 1.6.2
  * @author tiger.seo@gmail.com
  */
 class Facebook extends BaseModule
@@ -59,23 +61,40 @@ class Facebook extends BaseModule
                                           ));
     }
 
-    public function _beforeSuite($settings = array())
+    public function _afterSuite()
+    {
+        if (array_key_exists('id', $this->testUser)) {
+            // make api-call for test user deletion
+            $this->facebook->deleteTestUser($this->testUser['id']);
+            $this->testUser = [];
+        }
+    }
+
+    /**
+     * Get facebook test user be created
+     */
+    public function haveFacebookTestUserAccount()
     {
         $this->testUser = $this->facebook->createTestUser();
     }
 
-    public function _afterSuite()
-    {
-        $this->facebook->deleteTestUser($this->testUser['id']);
-    }
-
     /**
-     * Returns the user access token.
+     * Returns the test user access token.
      *
      * @return string
      */
-    public function grabFacebookAccessToken()
+    public function grabFacebookTestUserAccessToken()
     {
         return $this->facebook->getAccessToken();
+    }
+
+    /**
+     * Returns the test user email.
+     *
+     * @return string
+     */
+    public function grabFacebookTestUserEmail()
+    {
+        return $this->testUser['email'];
     }
 }
