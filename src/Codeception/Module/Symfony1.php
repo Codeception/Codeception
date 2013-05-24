@@ -190,9 +190,9 @@ class Symfony1 extends \Codeception\Module
 
         if ($selector) {
             $nodes = $this->browser->getResponseDomCssSelector()->matchAll($selector);
-            $values = array();
+            $values = '';
             foreach ($nodes as $node) {
-                $values[] = trim($node->nodeValue);
+                $values .= '<!-- Merged Output -->'.trim($node->nodeValue);
             }
             $response = Framework::formatResponse($response);
 
