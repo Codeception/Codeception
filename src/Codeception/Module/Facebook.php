@@ -51,7 +51,7 @@ class Facebook extends BaseModule
     /**
      * @var array
      */
-    protected $testUser;
+    protected $testUser = array();
 
     public function _initialize()
     {
