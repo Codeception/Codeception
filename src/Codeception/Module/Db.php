@@ -215,9 +215,9 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
 	
-	$i = 1;
+	    $i = 1;
         foreach ($data as $val) {
-            $sth->bindParam($i, $val);
+            $sth->bindValue($i, $val);
             $i++;
         }
         $res = $sth->execute();
@@ -228,7 +228,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function seeInDatabase($table, $criteria = array())
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
+        \PHPUnit_Framework_Assert::assertGreaterThan(0, $res, 'No matching records found');
     }
 
     public function dontSeeInDatabase($table, $criteria = array())

@@ -122,10 +122,8 @@ class Selenium2 extends MinkJS
         file_put_contents($filename, $imgData);
     }
 
-    // please, add more custom Selenium functions here
-
     public function click($link, $context = null, $strict = false) {
-        $url = $this->session->getCurrentUrl();
+        $url = $this->session->getCurrentUrl(); // required for popups
         $el = $this->findClickable($link, $context, $strict);
         $el->click();
     }
