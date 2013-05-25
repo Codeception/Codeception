@@ -52,8 +52,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     protected $config = array('curl' => array());
 
     protected $curl_defaults = array(
-        'CURLOPT_SSL_VERIFYPEER' => false,
-        'CURLOPT_CERTINFO' => false
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_CERTINFO => false,
     );
 
     /**
@@ -65,8 +65,19 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $client = new \Behat\Mink\Driver\Goutte\Client();
         $driver = new \Behat\Mink\Driver\GoutteDriver($client);
 
-        $curl_config = array_merge($this->curl_defaults, $this->config['curl']);
-        array_walk($curl_config, function($a, &$b) { $b = "curl.$b"; });
+        // build up a Guzzle friendly list of configuration options
+        // passed in both from our defaults and the respective
+        // yaml configuration file (if applicable)
+        $curl_config['curl.options'] = $this->curl_defaults;
+        foreach ($this->config['curl'] as $key => $val) {
+            $curl_config['curl.options'][constant($key)] = $val;
+        }
+
+        // Guzzle client requires that we set the ssl.certificate_authority config
+        // directive if we wish to disable SSL verification
+        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
+            $curl_config['ssl.certificate_authority'] = false;
+        }
 
         $client->setClient($this->guzzle = new Client('', $curl_config));
         $this->session = new \Behat\Mink\Session($driver);
@@ -108,6 +119,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         $this->call($uri, 'POST', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function sendAjaxGetRequest($uri, $params = array()) {
@@ -115,6 +127,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $query = $params ? '?'. http_build_query($params) : '';
         $this->call($uri.$query, 'GET', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function seePageNotFound()

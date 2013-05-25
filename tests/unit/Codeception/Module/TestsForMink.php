@@ -110,7 +110,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->assertEquals('agree', $form['terms']);
     }
 
-    public function testChecxboxByLabel()
+    public function testCheckboxByLabel()
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('I Agree');
@@ -335,4 +335,20 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('#something-beyond');
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
+
+	public function testCookies()
+	{
+		$cookie_name = 'test_cookie';
+		$cookie_value = 'this is a test';
+		$this->module->setCookie($cookie_name, $cookie_value);
+
+		$this->module->seeCookie($cookie_name);
+		$this->module->dontSeeCookie('evil_cookie');
+
+		$cookie = $this->module->grabCookie($cookie_name);
+		$this->assertEquals($cookie_value, $cookie);
+
+		$this->module->resetCookie($cookie_name);
+		$this->module->dontSeeCookie($cookie_name);
+	}
 }
