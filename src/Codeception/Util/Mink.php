@@ -172,9 +172,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     }
 
 
-    public function click($link, $context = null, $strict = false) {
+    public function click($link, $context = null) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link, $context, $strict);
+        $el = $this->findClickable($link, $context);
         $el->click();
 
         if ($this->session->getCurrentUrl() != $url) {
@@ -220,18 +220,13 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $el;
     }
 
-    protected function findLinkByContent($link, $strict = false)
+    protected function findLinkByContent($link)
     {
         $literal = $this->session->getSelectorsHandler()->xpathLiteral($link);
-        if ($strict) {
-            return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
-        }
-        else {
-            return $this->session->getPage()->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
-        }
+        return $this->session->getPage()->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
     }
 
-    protected function findClickable($link, $context = null, $strict = false)
+    protected function findClickable($link, $context = null)
     {
         $page = $context
             ? $this->findEl($context)
@@ -240,7 +235,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         if (!$page) {
             $this->fail("Context element $context not found");
         }
-        $el = $this->findLinkByContent($link, $strict);
+        $el = $this->findLinkByContent($link);
         if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
         if (!$el) $el = $this->findEl($link);
