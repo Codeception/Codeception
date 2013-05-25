@@ -84,7 +84,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     public function amOnSubdomain($subdomain)
     {
-        $url = preg_replace('~(https?://|\.)(?=.*?[/.])(\w*)~', "$1.$subdomain.$3", $this->config['url']);
+        $url = $this->config['url'];
+        $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
+        $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
         $this->_reconfigure(array('url' => $url));
     }
 
