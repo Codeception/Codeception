@@ -35,8 +35,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testHaveAndSeeInDatabase()
     {
-        $this->module->haveInDatabase('users', array('name' => 'john'));
-        $this->module->seeInDatabase('users', array('name' => 'john'));
+        $this->module->haveInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
+        $this->module->seeInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
         $this->module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
         $this->module->dontSeeInDatabase('users', array('name' => 'john'));
     }
