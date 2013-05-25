@@ -28,8 +28,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testAmOnSubdomain()
     {
+        $this->module->_reconfigure(array('url' => 'http://google.com'));
         $this->module->amOnSubdomain('user');
-        $this->assertEquals('http://user.localhost:8000', $this->module->_getUrl());
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
+
+        $this->module->_reconfigure(array('url' => 'http://www.google.com'));
+        $this->module->amOnSubdomain('user');
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
     }
 
     public function testCurrentUrl()
