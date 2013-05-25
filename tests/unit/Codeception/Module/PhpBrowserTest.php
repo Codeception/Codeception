@@ -57,7 +57,7 @@ class PhpBrowserTest extends TestsForMink
         $module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $module->_initialize();
         $guzzle = $module->guzzle;
-        $this->assertTrue($guzzle->getConfig('CURLOPT_NOBODY'));
+        $this->assertTrue($guzzle->getConfig(CURLOPT_NOBODY));
 
     }
     
