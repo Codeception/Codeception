@@ -4,7 +4,8 @@ namespace Codeception\Util;
 interface RemoteInterface
 {
     /**
-     * Moves to subdomain of confogured site.
+     * Sets 'url' configuration parameter to hosts subdomain.
+     * It does not open a page on subdomain. Use `amOnPage` for that
      *
      * ``` php
      * <?php
@@ -13,6 +14,7 @@ interface RemoteInterface
      * // or config is: 'http://company.mysite.com'
      *
      * $I->amOnSubdomain('user');
+     * $I->amOnPage('/');
      * // moves to http://user.mysite.com/
      * ?>
      * ```
