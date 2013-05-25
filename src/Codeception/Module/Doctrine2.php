@@ -80,7 +80,7 @@ class Doctrine2 extends \Codeception\Module
             "You can use your bootstrap file to assign the EntityManager:\n\n" .
             '\Codeception\Module\Doctrine2::$em = $em');
 
-        if ($this->config['cleanup']) {
+        if ($this->config['cleanup'] && self::$em->getConnection()->isTransactionActive()) {
             self::$em->getConnection()->rollback();
         }
         $this->clean();

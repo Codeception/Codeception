@@ -48,6 +48,11 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $this->session->setCookie($cookie, $value);
     }
+    
+    public function _getCookie($cookie)
+    {
+    	return $this->session->getCookie($cookie);
+    }
 
     public function _getResponseHeader($header)
     {
@@ -342,6 +347,31 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function dontSeeCurrentUrlMatches($uri)
     {
         \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
+    }
+    
+    public function seeCookie($cookie)
+    {
+    	\PHPUnit_Framework_Assert::assertNotNull($this->_getCookie($cookie));
+    }
+    
+    public function dontSeeCookie($cookie)
+    {
+    	\PHPUnit_Framework_Assert::assertNull($this->_getCookie($cookie));
+    }
+
+    public function setCookie($cookie, $value)
+    {
+        $this->_setCookie($cookie, $value);
+    }
+
+    public function resetCookie($cookie)
+    {
+        $this->_setCookie($cookie, null);
+    }
+    
+    public function grabCookie($cookie)
+    {
+    	return $this->_getCookie($cookie);
     }
 
     public function grabFromCurrentUrl($uri = null)
