@@ -93,7 +93,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/');
         $this->module->click("descendant-or-self::a[@id = 'link']");
-        $this->module->seeInCurrentUrl('/info');
+        $this->module->seeInCurrentUrl('/info');               
     }
 
     public function testClickOnContext()
