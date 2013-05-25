@@ -17,14 +17,14 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
-            $this->session->stop();
+                $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
     
     public function _before(\Codeception\TestCase $test)
-    {
+    {        
         $this->session->start();
     }
 
@@ -80,6 +80,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function amOnPage($page)
     {
         $this->session->visit($this->config['url'].$page);
+    }
+
+    public function amOnSubdomain($subdomain)
+    {
+        $host = preg_replace('~(https?://|\.)(?=.*?[/.])(\w*)~', "$1.$subdomain.$3", $this->config['host']);
+        $this->_reconfigure(array('host' => $host));
     }
 
 

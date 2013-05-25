@@ -70,7 +70,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         // yaml configuration file (if applicable)
         $curl_config['curl.options'] = $this->curl_defaults;
         foreach ($this->config['curl'] as $key => $val) {
-            $curl_config['curl.options'][constant($key)] = $val;
+            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
         }
 
         // Guzzle client requires that we set the ssl.certificate_authority config

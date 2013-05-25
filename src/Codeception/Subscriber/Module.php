@@ -30,6 +30,7 @@ class Module implements EventSubscriberInterface {
         if (!$e->getTest() instanceof TestCase) return;
         foreach (\Codeception\SuiteManager::$modules as $module) {
             $module->_cleanup();
+            $module->_resetConfig();
             $module->_before($e->getTest());
         }
     }
