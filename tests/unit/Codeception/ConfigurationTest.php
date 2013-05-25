@@ -68,6 +68,25 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($config['secondField'],$module->_getSecondField());
     }
 
+    /**
+     * @group core
+     */
+    public function testReconfigureModule()
+    {
+        $config = array(
+            'firstField'     => 'firstValue',
+            'secondField' => 'secondValue',
+        );
+
+        $module = \Codeception\Configuration::createModule('StubModule', $config);
+        $module->_reconfigure(array('firstField' => '1st', 'secondField' => '2nd'));
+        $this->assertEquals('1st',$module->_getFirstField());
+        $this->assertEquals('2nd',$module->_getSecondField());
+        $module->_resetConfig();
+        $this->assertEquals($config['firstField'],$module->_getFirstField());
+        $this->assertEquals($config['secondField'],$module->_getSecondField());
+    }
+
 }
 
 class StubModule extends \Codeception\Module

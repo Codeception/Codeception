@@ -10,11 +10,29 @@ abstract class Module
 
     protected $config = array();
 
+    protected $defaultConfig = array();
+
     protected $requiredFields = array();
 
     public function _setConfig($config)
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = $this->defaultConfig = array_merge($this->config, $config);
+        $this->validateConfig();
+    }
+
+    public function _reconfigure($config)
+    {
+        $this->config =  array_merge($this->defaultConfig, $config);
+        $this->validateConfig();        
+    }
+
+    public function _resetConfig()
+    {
+        $this->config = $this->defaultConfig;
+    }
+
+    protected function validateConfig()
+    {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
             throw new \Codeception\Exception\ModuleConfig(get_class($this),"
