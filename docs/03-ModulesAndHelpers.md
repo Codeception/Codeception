@@ -320,6 +320,20 @@ modules:
 
 Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get its value. 
 
+### Dynamic Configuration
+
+*new in 1.6.2*
+
+If you want to reconfigure module in run time, you can use the `_reconfigure` method of the module.
+You may call it from helper class and pass there all the fields you want to change.
+
+``` php
+<?php
+$this->getModule('Selenium2')->_reconfigure(array('browser' => 'chrome'));
+?>
+```
+
+By the end of a test all your changes will be rolled back to values to config values.
 
 ## Conclusion
 
