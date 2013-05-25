@@ -124,9 +124,9 @@ class Selenium2 extends MinkJS
 
     // please, add more custom Selenium functions here
 
-    public function click($link, $context = null) {
+    public function click($link, $context = null, $strict = false) {
         $url = $this->session->getCurrentUrl();
-        $el = $this->findClickable($link, $context);
+        $el = $this->findClickable($link, $context, $strict);
         $el->click();
     }
 
