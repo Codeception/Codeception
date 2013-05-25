@@ -49,8 +49,8 @@ class PhpBrowserTest extends TestsForMink
     public function testCurlOptions()
     {
         $guzzle = $this->module->guzzle;
-        $this->assertFalse($guzzle->getConfig('CURLOPT_SSL_VERIFYPEER'));
-        $this->assertFalse($guzzle->getConfig('CURLOPT_CERTINFO'));
+        $this->assertNull($guzzle->getConfig('CURLOPT_SSL_VERIFYPEER'));
+        $this->assertNull($guzzle->getConfig('CURLOPT_CERTINFO'));
 
         $module = new \Codeception\Module\PhpBrowser();
         $module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_MUTE' => true)));
