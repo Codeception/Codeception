@@ -58,7 +58,7 @@ class Facebook extends BaseModule
         if (array_key_exists('id', $this->testUser)) {
             // make api-call for test user deletion
             $this->facebook->deleteTestUser($this->testUser['id']);
-            $this->testUser = [];
+            $this->testUser = array();
         }
     }
 
