@@ -19,7 +19,7 @@ Provides testing for projects integrated with Facebook API.
     * locale - You can specify a locale for the test user you create, the default is en_US. The list of supported locales is available at https://www.facebook.com/translations/FacebookLocales.xml
     * permissions - An array of permissions. Your app is granted these permissions for the new test user. The full list of permissions is available at https://developers.facebook.com/docs/authentication/permissions
 
-### Example
+### Config example
 
     modules:
         enabled: [Facebook]
@@ -31,6 +31,22 @@ Provides testing for projects integrated with Facebook API.
                     name: FacebookGuy
                     locale: uk_UA
                     permissions: [email, publish_stream]
+
+###  Test example:
+
+``` php
+<?php
+$I = new ApiGuy($scenario);
+$I->am('Guest');
+$I->wantToTest('check-in to a place be published on the Facebook using API');
+$I->haveFacebookTestUserAccount();
+$accessToken = $I->grabFacebookTestUserAccessToken();
+$I->haveHttpHeader('Auth', 'FacebookToken ' . $accessToken);
+$I->amGoingTo('send request to the backend, so that it will publish on user\'s wall on Facebook');
+$I->sendPOST('/api/v1/some-api-endpoint');
+$I->seePostOnFacebookWithAttachedPlace('167724369950862');
+
+```
 
  * available since version 1.6.2
  * author tiger.seo@gmail.com
@@ -59,7 +75,7 @@ Returns the test user email.
 
 Get facebook test user be created.
 
-Please, note that the test user is created only at first invoke, unless $renew arguments is true.
+*Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
  * param bool $renew true if the test user should be recreated
 
