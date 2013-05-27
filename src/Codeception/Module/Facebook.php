@@ -52,7 +52,7 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  *
  * ```
  *
- * @since 1.6.2
+ * @since 1.6.3
  * @author tiger.seo@gmail.com
  */
 class Facebook extends BaseModule
