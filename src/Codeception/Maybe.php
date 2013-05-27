@@ -38,7 +38,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
             return (string)$this->val;
         }
 
-        if (is_object($this->val)) {
+        if (is_object($this->val) && method_exists($this->val, '__toString')) {
             return $this->val->__toString();
         }
 
