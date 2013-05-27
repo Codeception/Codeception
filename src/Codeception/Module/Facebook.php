@@ -72,15 +72,15 @@ class Facebook extends BaseModule
             $this->config['test_user']['permissions'] = array();
         }
 
-        $self = $this;
-
         $this->facebook = new FacebookDriver(
             array(
                  'appId'  => $this->config['app_id'],
                  'secret' => $this->config['secret'],
             ),
-            function ($title, $message) use ($self) {
-                $self->debugSection($title, $message);
+            function ($title, $message) {
+                if (version_compare(PHP_VERSION, '5.4', '>=')) {
+                    $this->debugSection($title, $message);
+                }
             }
         );
     }
