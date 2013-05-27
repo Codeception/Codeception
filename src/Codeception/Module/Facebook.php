@@ -19,9 +19,9 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  * * app_id *required* - Facebook application ID
  * * secret *required* - Facebook application secret
  * * test_user - Facebook test user parameters:
- * ** name - You can specify a name for the test user you create. The specified name will also be used in the email address assigned to the test user.
- * ** locale - You can specify a locale for the test user you create, the default is en_US. The list of supported locales is available at https://www.facebook.com/translations/FacebookLocales.xml
- * ** permissions - An array of permissions. Your app is granted these permissions for the new test user. The full list of permissions is available at https://developers.facebook.com/docs/authentication/permissions
+ *     * name - You can specify a name for the test user you create. The specified name will also be used in the email address assigned to the test user.
+ *     * locale - You can specify a locale for the test user you create, the default is en_US. The list of supported locales is available at https://www.facebook.com/translations/FacebookLocales.xml
+ *     * permissions - An array of permissions. Your app is granted these permissions for the new test user. The full list of permissions is available at https://developers.facebook.com/docs/authentication/permissions
  *
  * ### Example
  *
