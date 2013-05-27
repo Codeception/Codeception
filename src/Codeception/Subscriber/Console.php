@@ -29,7 +29,7 @@ class Console implements EventSubscriberInterface
     {
         if ($this->silent) return;
         if ($e->getTest() instanceof \Codeception\TestCase) return;
-        $this->output->put("Running [[" . $e->getTest()->toString() . "]] ");
+        $this->output->put("Running [[" . $e->getTest()->toString() . "]]");
     }
 
     // triggered for scenario based tests: cept, cest
@@ -49,35 +49,33 @@ class Console implements EventSubscriberInterface
     {
     }
 
+    public function testSuccess(\Codeception\Event\Test $e)
+    {
+        $this->formattedTestOutput($e->getTest(), 'Ok', '.');
+    }
+
     public function endTest(\Codeception\Event\Test $e)
     {
-        $test = $e->getTest();
-        if (!$this->lastTestFailed) $this->formattedTestOutput($test, 'Ok', '.');
-        $this->lastTestFailed = FALSE;
     }
 
     public function testFail(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), '(!Failed!)', 'F');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testError(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), '(!Error!)', 'E');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testSkipped(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), 'Skipped', 'S');
-        $this->lastTestFailed = TRUE;
     }
 
     public function testIncomplete(\Codeception\Event\Fail $e)
     {
         $this->formattedTestOutput($e->getTest(), 'Incomplete', 'I');
-        $this->lastTestFailed = TRUE;
     }
 
     protected function formattedTestOutput($test, $long)
@@ -85,7 +83,7 @@ class Console implements EventSubscriberInterface
         if ($this->silent) return;
 
         if (!($test instanceof \Codeception\TestCase\Cept)) {
-            $this->output->writeln('- ' . $long);
+            $this->output->writeln(' - ' . $long);
         } elseif (!$this->steps) {
             $this->output->writeln(" - $long");
         } else {
@@ -195,7 +193,6 @@ class Console implements EventSubscriberInterface
         $i = 0;
         foreach ($e->getTrace() as $step) {
             $i++;
-//            if (strpos($step['function'], $action) !== false) break;
             if (!isset($step['file'])) continue;
             $step['file'] = $this->highlightLocalFiles($step['file']);
 
@@ -236,17 +233,18 @@ class Console implements EventSubscriberInterface
         return array(
             'suite.before' => 'beforeSuite',
             'suite.after' => 'afterSuite',
-            'test.parsed' => 'before',
+            'test.before' => 'before',
             'test.after' => 'afterTest',
             'test.start' => 'startTest',
             'test.end' => 'endTest',
             'step.before' => 'beforeStep',
             'step.after' => 'afterStep',
-            'fail.fail' => 'testFail',
-            'fail.error' => 'testError',
-            'fail.incomplete' => 'testIncomplete',
-            'fail.skipped' => 'testSkipped',
-            'fail.print' => 'printFail'
+            'test.success' => 'testSuccess',
+            'test.fail' => 'testFail',
+            'test.error' => 'testError',
+            'test.incomplete' => 'testIncomplete',
+            'test.skipped' => 'testSkipped',
+            'test.fail.print' => 'printFail',
         );
     }
 

@@ -4,13 +4,15 @@
 
 Unit testing module
 
+## Please don't use that anymore. Really. It's deprecated in [favor of common unit tests](http://codeception.com/03-18-2013/scenario-unit-deprecated.html).
+
 This is the heart of the CodeGuy testing framework.
 By providing a unique set of features Unit, the module makes your tests cleaner, more readable, and easier to write.
 
 ## Status
 
 * Maintainer: **davert**
-* Stability: **stable**
+* Stability: **deprecated**
 * Contact: codecept@davert.mail.ua
 
 ## Features
@@ -35,6 +37,7 @@ array('theProperty'     => 'some value',
 
  * param $obj
  * param array $values
+ * deprecated
 
 
 ### changeProperty
@@ -46,6 +49,7 @@ Can update even private and protected properties.
  * param $obj
  * param $property
  * param $value
+ * deprecated
 
 
 ### dontSeeResultContains
@@ -54,6 +58,7 @@ Can update even private and protected properties.
 Checks that the result of the last execution doesn't contain a value.
 
  * param $value
+ * deprecated
 
 
 ### dontSeeResultEquals
@@ -62,6 +67,7 @@ Checks that the result of the last execution doesn't contain a value.
 Checks that the result of the last execution is not equal to a value.
 
  * param $value
+ * deprecated
 
 
 ### execute
@@ -102,6 +108,7 @@ $I->execute(function() use ($user) {
 ```
 
  * param \Closure $code
+ * deprecated
 
 
 ### executeMethod
@@ -128,6 +135,7 @@ $I->executeMethod($user, 'setNameAndAge', 'davert', '30');
 
  * param $object
  * param $method
+ * deprecated
 
 
 ### executeTestedMethod
@@ -141,6 +149,7 @@ If a method is not static 'executeTestedOn' will be called.
 See those methods for the full reference
 
  * throws \InvalidArgumentException
+ * deprecated
 
 
 ### executeTestedMethodOn
@@ -165,6 +174,7 @@ $I->seeResultEquals(true);
 For static methods use 'executeTestedMethodWith'.
 
  * param $object
+ * deprecated
 
 
 ### executeTestedMethodWith
@@ -183,6 +193,7 @@ For a non-static method use 'executeTestedMethodOn'
 
  * param $params
  * throws \Codeception\Exception\Module
+ * deprecated
 
 
 ### haveFakeClass
@@ -193,6 +204,7 @@ Use this command if you need to convert this stub to a mock.
 Without adding the stub to registry you can't trace it's method invocations.
 
  * param $instance
+ * deprecated
 
 
 ### haveStub
@@ -208,6 +220,7 @@ Alias for haveFakeClass
 
 
 Checks that the result of the last execution is empty.
+ * deprecated
 
 
 ### seeExceptionThrown
@@ -242,6 +255,7 @@ This method dynamically creates a mock from a stub.
  * param $mock
  * param $method
  * param array $params
+ * deprecated
 
 
 ### seeMethodInvokedMultipleTimes
@@ -259,6 +273,7 @@ Look for 'seeMethodInvoked' to see the example.
  * param $method
  * param $times
  * param array $params
+ * deprecated
 
 
 ### seeMethodInvokedOnce
@@ -275,6 +290,7 @@ Look for 'seeMethodInvoked' to see the example.
  * param $mock
  * param $method
  * param array $params
+ * deprecated
 
 
 ### seeMethodNotInvoked
@@ -303,6 +319,7 @@ Look for 'seeMethodReturns' for example.
  * param $method
  * param $value
  * param array $params
+ * deprecated
 
 
 ### seeMethodReturns
@@ -325,6 +342,7 @@ $I->seeMethodReturns($user,'getName','davert');
  * param $method
  * param $value
  * param array $params
+ * deprecated
 
 
 ### seePropertyEquals
@@ -339,6 +357,7 @@ Use it only if you have no other way to test it.
  * param $object
  * param $property
  * param $value
+ * deprecated
 
 
 ### seePropertyIs
@@ -354,11 +373,14 @@ Use it only if you have no other way to test it.
  * param $object
  * param $property
  * param $type
+ * deprecated
 
 
 ### seeResultContains
 
-__not documented__
+
+ * param $value
+ * deprecated
 
 
 ### seeResultEquals
@@ -367,6 +389,7 @@ __not documented__
 Asserts that the last result from the tested method is equal to value
 
  * param $value
+ * deprecated
 
 
 ### seeResultIs
@@ -386,6 +409,7 @@ $I->seeResultIs('User');
 ```
 
  * param $type
+ * deprecated
 
 
 ### testMethod
@@ -410,3 +434,4 @@ $I->testMethod('ClassName::MethodName');
 ```
 
  * param $signature
+ * deprecated

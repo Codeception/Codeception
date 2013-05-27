@@ -52,8 +52,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     protected $config = array('curl' => array());
 
     protected $curl_defaults = array(
-        'CURLOPT_SSL_VERIFYPEER' => false,
-        'CURLOPT_CERTINFO' => false
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_CERTINFO => false,
     );
 
     /**
@@ -65,8 +65,19 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $client = new \Behat\Mink\Driver\Goutte\Client();
         $driver = new \Behat\Mink\Driver\GoutteDriver($client);
 
-        $curl_config = array_merge($this->curl_defaults, $this->config['curl']);
-        array_walk($curl_config, function($a, &$b) { $b = "curl.$b"; });
+        // build up a Guzzle friendly list of configuration options
+        // passed in both from our defaults and the respective
+        // yaml configuration file (if applicable)
+        $curl_config['curl.options'] = $this->curl_defaults;
+        foreach ($this->config['curl'] as $key => $val) {
+            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
+        }
+
+        // Guzzle client requires that we set the ssl.certificate_authority config
+        // directive if we wish to disable SSL verification
+        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
+            $curl_config['ssl.certificate_authority'] = false;
+        }
 
         $client->setClient($this->guzzle = new Client('', $curl_config));
         $this->session = new \Behat\Mink\Session($driver);
@@ -94,7 +105,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $fields = $this->session->getPage()->findAll('css', $selector.' select');
         foreach ($fields as $field) {
    		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
-   	    }
+   	 }
 
         $url .= '&'.http_build_query($params);
         parse_str($url, $params);
@@ -108,6 +119,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         $this->call($uri, 'POST', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function sendAjaxGetRequest($uri, $params = array()) {
@@ -115,6 +127,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $query = $params ? '?'. http_build_query($params) : '';
         $this->call($uri.$query, 'GET', $params);
         $this->debug($this->session->getPage()->getContent());
+        $this->session->setRequestHeader('X-Requested-With', '');
     }
 
     public function seePageNotFound()
@@ -166,171 +179,17 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
 	protected function call($uri, $method = 'get', $params = array())
 	{
-        if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
-        $browser = $this->session->getDriver()->getClient();
+		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
+			$browser = $this->session->getDriver()->getClient();
 
-    	$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
+		$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);
-
-
 		$this->debug('Response code: '.$this->session->getStatusCode());
 	}
 
 	public function _failed(\Codeception\TestCase $test, $fail) {
-		file_put_contents(\Codeception\Configuration::logDir().basename($test->getFileName()).'.page.fail.html', $this->session->getPage()->getContent());
+		$fileName = str_replace('::','-',$test->getFileName());
+		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
 
-    /*
-     * INHERITED ACTIONS
-     */
-
-    public function amOnPage($page)
-    {
-        parent::amOnPage($page);
-    }
-
-    public function dontSee($text, $selector = null)
-    {
-        parent::dontSee($text, $selector);
-    }
-
-    public function see($text, $selector = null)
-    {
-        parent::see($text, $selector);
-    }
-
-    public function seeLink($text, $url = null)
-    {
-        parent::seeLink($text, $url);
-    }
-
-    public function dontSeeLink($text, $url = null)
-    {
-        parent::dontSeeLink($text, $url);
-    }
-
-    public function click($link, $context = null)
-    {
-        parent::click($link, $context);
-    }
-
-    public function seeElement($selector)
-    {
-        parent::seeElement($selector);
-    }
-
-    public function dontSeeElement($selector)
-    {
-        parent::dontSeeElement($selector);
-    }
-
-    public function reloadPage()
-    {
-        parent::reloadPage();
-    }
-
-    public function moveBack()
-    {
-        parent::moveBack();
-    }
-
-    public function moveForward()
-    {
-        parent::moveForward();
-    }
-
-    public function fillField($field, $value)
-    {
-        parent::fillField($field, $value);
-    }
-
-    public function selectOption($select, $option)
-    {
-        parent::selectOption($select, $option);
-    }
-
-    public function checkOption($option)
-    {
-        parent::checkOption($option);
-    }
-
-    public function uncheckOption($option)
-    {
-        parent::uncheckOption($option);
-    }
-
-    public function seeInCurrentUrl($uri)
-    {
-        parent::seeInCurrentUrl($uri);
-    }
-
-    public function dontSeeInCurrentUrl($uri)
-    {
-        parent::dontSeeInCurrentUrl($uri);
-    }
-
-    public function seeCurrentUrlEquals($uri)
-    {
-        parent::seeCurrentUrlEquals($uri);
-    }
-
-    public function dontSeeCurrentUrlEquals($uri)
-    {
-        parent::dontSeeCurrentUrlEquals($uri);
-    }
-
-    public function seeCurrentUrlMatches($uri)
-    {
-        parent::seeCurrentUrlMatches($uri);
-    }
-
-    public function dontSeeCurrentUrlMatches($uri)
-    {
-        parent::dontSeeCurrentUrlMatches($uri);
-    }
-
-    public function grabFromCurrentUrl($uri = null)
-    {
-        return parent::grabFromCurrentUrl($uri);
-    }
-
-    public function attachFile($field, $filename)
-    {
-        parent::attachFile($field, $filename);
-    }
-
-    public function seeCheckboxIsChecked($checkbox)
-    {
-        parent::seeCheckboxIsChecked($checkbox);
-    }
-
-    public function dontSeeCheckboxIsChecked($checkbox)
-    {
-        parent::dontSeeCheckboxIsChecked($checkbox);
-    }
-
-    public function seeInField($field, $value)
-    {
-        parent::seeInField($field, $value);
-    }
-
-    public function dontSeeInField($field, $value)
-    {
-        parent::dontSeeInField($field, $value);
-    }
-
-    public function grabTextFrom($cssOrXPathOrRegex)
-    {
-        return parent::grabTextFrom($cssOrXPathOrRegex);
-    }
-
-    public function grabValueFrom($field)
-    {
-        return parent::grabValueFrom($field);
-    }
-
-    public function grabAttribute()
-    {
-        parent::grabAttribute();
-    }
 }

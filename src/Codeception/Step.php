@@ -24,6 +24,12 @@ abstract class Step
         $this->arguments = $arguments;
     }
 
+    public function getName()
+    {
+        $class = explode('\\', __CLASS__);
+        return end($class);
+    }
+
     public function pullDebugOutput()
     {
         $output = $this->debugOutput;
@@ -58,7 +64,6 @@ abstract class Step
                     }
                     continue;
                 }
-                // if (settype($argument, 'string') === false) throw new \InvalidArgumentException('Argument can\'t be converted to string or serialized');
             }
             if (defined('JSON_UNESCAPED_UNICODE')) {
                 return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
@@ -71,8 +76,6 @@ abstract class Step
     {
         return trim($classname, "\\");
     }
-
-    abstract public function getName();
 
     public function __toString()
     {

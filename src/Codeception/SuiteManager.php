@@ -37,12 +37,21 @@ class SuiteManager {
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
         if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
-            throw new \Codeception\Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
+            throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
         require_once $settings['path'] . $settings['class_name'].'.php';
+        
+        $this->initializeModules($settings);
+    }
 
-        self::$modules = \Codeception\Configuration::modules($settings);
-        self::$actions = \Codeception\Configuration::actions(self::$modules);
+    protected function initializeModules($settings)
+    {
+        self::$modules = Configuration::modules($settings);
+        self::$actions = Configuration::actions(self::$modules);
+
+        foreach (self::$modules as $module) {
+            $module->_initialize();
+        }
     }
 
     protected function createSuite($name) {
@@ -62,16 +71,11 @@ class SuiteManager {
             $reflected = new \ReflectionClass($testClass);
             if ($reflected->isAbstract()) continue;
             foreach ($reflected->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                if (!\PHPUnit_Framework_TestSuite::isTestMethod($method) and (strpos($method->getName(),'should')!==0)) continue;
-                $test = \PHPUnit_Framework_TestSuite::createTest($reflected, $method->getName());
-                $this->suite->addTest($test);
-                if ($test instanceof \Codeception\TestCase\Test) {
-                    $test->setBootstrap($this->settings['bootstrap']);
-                    $test->setDispatcher($this->dispatcher);
-                    $test->setGuyClass($this->settings['class_name']);
-                } else {
-                    if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
-                }
+                $test = $this->createTestFromPhpUnitMethod($reflected, $method);
+                if (!$test) continue;
+
+                $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
+                $this->suite->addTest($test, $groups);
             }
         }
     }
@@ -81,11 +85,14 @@ class SuiteManager {
         $name = $this->relativeName($file);
    	    $this->tests[$name] = $file;
 
-   	    $this->suite->addTest(new \Codeception\TestCase\Cept($this->dispatcher, array(
-   			'name' => $name,
+        $cept = new TestCase\Cept($this->dispatcher, array(
+            'name' => $name,
             'file' => $file,
-   	        'bootstrap' => $this->settings['bootstrap']
-        )));
+            'bootstrap' => $this->settings['bootstrap']
+        ));
+
+        $cept->preload();
+   	    $this->suite->addTest($cept, $cept->getScenario()->getGroups());
     }
 
     public function addCest($file) {
@@ -97,35 +104,19 @@ class SuiteManager {
         foreach ($testClasses as $testClass) {
             $unit = new $testClass;
             $reflected = new \ReflectionClass($testClass);
-
             $cestSuite = new \PHPUnit_Framework_TestSuite($testClass.' ');
-
             $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
+
             foreach ($methods as $method) {
-                if ($method->isConstructor()) continue;
-                if ($method->isDestructor()) continue;
+                if ($method->isConstructor()) return;
+                if ($method->isDestructor()) return;
 
-                if (strpos($method->name, '_') === 0) continue;
+                $test = $this->createTestFromCestMethod($unit, $method->name, $file);
 
-                if (isset($unit->class)) {
-                    $target = $unit->class;
-                    $target .= $method->isStatic() ? '::'.$method->name : '.'.$method->name;
-                } else {
-                    $target = get_class($unit).'::'.$method->name;
-                }
-
-                $cestSuite->addTest(new \Codeception\TestCase\Cest($this->dispatcher, array(
-                    'name' => $name.'::'.$target,
-                    'class' => $unit,
-                    'method' => $method->name,
-                    'static' => $method->isStatic(),
-                    'signature' => $target,
-                    'file' => $file,
-           	        'bootstrap' => $this->settings['bootstrap'],
-                    'guy' => $this->settings['class_name']
-                )));
+                if (!$test) continue;
+                $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
+                $cestSuite->addTest($test, $groups);
             }
-            
             $this->suite->addTestSuite($cestSuite);
         }
     }
@@ -184,6 +175,44 @@ class SuiteManager {
         require_once $file;
         $extra_loaded_classes = get_declared_classes();
         return array_diff($extra_loaded_classes,$loaded_classes);
+    }
+
+    protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
+    {
+        if (!\PHPUnit_Framework_TestSuite::isTestMethod($method) and (strpos($method->name,'should')!==0)) return;
+        $test = \PHPUnit_Framework_TestSuite::createTest($class, $method->name);
+
+        if ($test instanceof TestCase\Test) {
+            $test->setBootstrap($this->settings['bootstrap']);
+            $test->setDispatcher($this->dispatcher);
+            $test->setGuyClass($this->settings['class_name']);
+
+            $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
+            $test->getScenario()->groups($groups);
+        } else {
+            if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
+        }
+        return $test;
+    }
+
+    protected function createTestFromCestMethod($cestInstance, $methodName, $file)
+    {
+        $testClass = get_class($cestInstance);
+        if (strpos($methodName, '_') === 0) return;
+
+        $target = $testClass.'::'.$methodName;
+        $cest = new TestCase\Cest($this->dispatcher, array(
+            'name' => $target,
+            'instance' => $cestInstance,
+            'method' => $methodName,
+            'file' => $file,
+            'bootstrap' => $this->settings['bootstrap'],
+            'guy' => $this->settings['class_name']
+        ));
+
+        $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
+        $cest->preload();
+        return $cest;
     }
 
     /**

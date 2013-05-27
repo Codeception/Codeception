@@ -21,7 +21,7 @@ $I->seeFileFound('running.lock');
 It can operate with different entities: the web page can be loaded with the Symfony1 module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
 
 Modules are attached to Guy classes in the suite config.
-For current example in `tests/functional.suite.yml` we should see.
+For example, in `tests/functional.suite.yml` we should see.
 
 ```yaml
 class_name: TestGuy
@@ -96,7 +96,7 @@ function seeClassExist($class)
 ?>
 ```
 
-In your helpers you can use this assertions:
+In your helpers you can use these assertions:
 
 ``` php
 <?php
@@ -126,7 +126,7 @@ $this->assertNot(array('internalType',$int,'bool'));
 $this->assert(array('Contains', array(3,5,9), 3));
 ?>
 ```
-Let's see how to define both `see` and `don't see` actions without code duplication.
+Let's see how to define both `see` and `dontSee` actions without code duplication.
 
 ```php
 <?php
@@ -151,7 +151,7 @@ For `dontSeeClassExist`, the `assertFalse` will be called.
 
 ### Resolving Collisions
 
-What happens if you have two modules which contains the same named actions?
+What happens if you have two modules which contain the same named actions?
 Codeception allows you to override actions by changing the module order.
 The action from the second module will be loaded and the action from the first will be ignored.
 The order of the modules can be defined in the suite config.
@@ -195,7 +195,7 @@ function seeConfigFilesCreated()
 
 ### Undefined Actions in Helpers
 
-In case you have action in test is not defined yet, you can automatically create a stub method for it in corresponding helper. To do so, you can use a `analyse` command which scans all tests and searches for actions that does not exists in any of connected modules.
+In case you have an action in test which is not defined yet, you can automatically create a stub method for it in the corresponding helper. To do so, you can use a `analyse` command which scans all tests and searches for actions that do not exist in any of the connected modules.
 
 So, you can assign writing tests to non-technical guys or QAs. In case they lack some actions they define them in test.
 
@@ -256,7 +256,7 @@ Please note that methods with a `_` prefix are not added to the Guy class. This 
 As we mentioned, the `_failed` hook can help in debugging a failed test. You have the opportunity to save the current test's state and show it to the user.
 
 But you are not limited to this. Each module can output internal values that may be useful during debug.
-For example, the PhpBrowser module prints the response code and current url every time it moves to a new page.
+For example, the PhpBrowser module prints the response code and current URL every time it moves to a new page.
 Thus, modules are not black boxes. They are trying to show you what is happening during the test. This makes debugging your tests less painful.
 
 To display additional information, use the `debug` and `debugSection` methods of the module.
@@ -320,6 +320,20 @@ modules:
 
 Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get its value. 
 
+### Dynamic Configuration
+
+*new in 1.6.2*
+
+If you want to reconfigure module in run time, you can use the `_reconfigure` method of the module.
+You may call it from helper class and pass there all the fields you want to change.
+
+``` php
+<?php
+$this->getModule('Selenium2')->_reconfigure(array('browser' => 'chrome'));
+?>
+```
+
+By the end of a test all your changes will be rolled back to values to config values.
 
 ## Conclusion
 

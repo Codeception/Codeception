@@ -101,8 +101,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         // CodeGuy
         $conf = array(
             'class_name' => 'CodeGuy',
-            'modules' => array('enabled' => array('Unit','CodeHelper')),
-
+            'modules' => array('enabled' => array('CodeHelper')),
         );
 
         $firstline = $str  = "# Codeception Test Suite Configuration\n\n";

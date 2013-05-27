@@ -18,7 +18,7 @@ class GenerateCest extends Base
 %s %sCest
 {
 
-    public function _before(\$scenario)
+    public function _before()
     {
     }
 

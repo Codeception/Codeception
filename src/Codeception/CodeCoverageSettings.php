@@ -4,7 +4,6 @@ use \Symfony\Component\Finder\Finder;
 
 class CodeCoverageSettings
 {
-
     /**
      * @var \PHP_CodeCoverage
      */

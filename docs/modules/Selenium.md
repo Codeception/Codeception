@@ -41,12 +41,12 @@ Don't forget to turn on Db repopulation if you are using database.
 
 ### Example (`acceptance.suite.yml`)
 
-    modules: 
+    modules:
        enabled: [Selenium]
        config:
           Selenium:
-             url: 'http://localhost/' 
-             browser: firefox 
+             url: 'http://localhost/'
+             browser: firefox
 
 ## Public Properties
 
@@ -279,6 +279,22 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
  * param null $url
 
 
+### dontSeeOptionIsSelected
+
+
+Checks if option is not selected in select field.
+
+``` php
+<?php
+$I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * param $selector
+ * param $optionText
+ * return mixed
+
+
 ### doubleClick
 
 
@@ -353,7 +369,7 @@ Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
- <?php
+<?php
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
@@ -607,6 +623,22 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
  * param $text
  * param null $url
+
+
+### seeOptionIsSelected
+
+
+Checks if option is selected in select field.
+
+``` php
+<?php
+$I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * param $selector
+ * param $optionText
+ * return mixed
 
 
 ### selectOption
