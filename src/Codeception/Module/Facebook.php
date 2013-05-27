@@ -131,6 +131,12 @@ class Facebook extends BaseModule
         return $this->testUser['email'];
     }
 
+    /**
+     *
+     * Please, note that you must have publish_stream permission to be able to publish to user's feed.
+     *
+     * @param string $placeId Place identifier to be verified against user published posts
+     */
     public function seePostOnFacebookWithAttachedPlace($placeId)
     {
         $posts = $this->facebook->getLastPostsForTestUser();
