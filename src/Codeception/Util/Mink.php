@@ -1,6 +1,9 @@
 <?php
 namespace Codeception\Util;
 
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\XPathExpr;
+
 abstract class Mink extends \Codeception\Module implements RemoteInterface, WebInterface
 {
     /**
@@ -14,19 +17,19 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         try {
             $this->session->start();
             $this->session->visit($this->config['url'].'/');
-            $this->session->stop();
+                $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
-    
+
     public function _before(\Codeception\TestCase $test)
-    {
-        if ($this->session) $this->session->start();
+    {        
+        $this->session->start();
     }
 
     public function _after(\Codeception\TestCase $test) {
-        if ($this->session) $this->session->stop();
+        $this->session->stop();
     }
 
     public function _getUrl()
@@ -44,6 +47,11 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function _setCookie($cookie, $value)
     {
         $this->session->setCookie($cookie, $value);
+    }
+    
+    public function _getCookie($cookie)
+    {
+    	return $this->session->getCookie($cookie);
     }
 
     public function _getResponseHeader($header)
@@ -72,6 +80,14 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function amOnPage($page)
     {
         $this->session->visit($this->config['url'].$page);
+    }
+
+    public function amOnSubdomain($subdomain)
+    {
+        $url = $this->config['url'];
+        $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
+        $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
+        $this->_reconfigure(array('url' => $url));
     }
 
 
@@ -209,7 +225,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     protected function findLinkByContent($link)
     {
         $literal = $this->session->getSelectorsHandler()->xpathLiteral($link);
-        return $this->session->getPage()->find('xpath','.//a[.='.$literal.']'); // search by strict match
+        return $this->session->getPage()->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
     }
 
     protected function findClickable($link, $context = null)
@@ -340,6 +356,31 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
+    
+    public function seeCookie($cookie)
+    {
+    	\PHPUnit_Framework_Assert::assertNotNull($this->_getCookie($cookie));
+    }
+    
+    public function dontSeeCookie($cookie)
+    {
+    	\PHPUnit_Framework_Assert::assertNull($this->_getCookie($cookie));
+    }
+
+    public function setCookie($cookie, $value)
+    {
+        $this->_setCookie($cookie, $value);
+    }
+
+    public function resetCookie($cookie)
+    {
+        $this->_setCookie($cookie, null);
+    }
+    
+    public function grabCookie($cookie)
+    {
+    	return $this->_getCookie($cookie);
+    }
 
     public function grabFromCurrentUrl($uri = null)
     {
@@ -358,8 +399,32 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $field->attachFile($path);
     }
 
+    public function seeOptionIsSelected($select, $text)
+    {
+        $option = $this->findSelectedOption($select);
+        if (!$option) $this->fail("No option is selected in $select");
+        $this->assertEquals($text, $option->getText());
+    }
+
+    public function dontSeeOptionIsSelected($select, $text)
+    {
+        $option = $this->findSelectedOption($select);
+        if (!$option) {
+            \PHPUnit_Framework_Assert::assertNull($option);
+            return;
+        }
+        $this->assertNotEquals($text, $option->getText());
+    }
+
+    protected function findSelectedOption($select)
+    {
+        $selectbox = $this->findEl($select);
+        $option = $selectbox->find('css','option[selected]');
+        return $option;
+    }
+
     public function seeCheckboxIsChecked($checkbox) {
-       $node = $this->findField($checkbox);
+        $node = $this->findField($checkbox);
         if (!$node) return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         \PHPUnit_Framework_Assert::assertTrue($node->isChecked());
     }
@@ -416,7 +481,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     protected function escape($string)
     {
-        return $string;
+        return (string)$string;
     }
 
 

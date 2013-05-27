@@ -26,6 +26,17 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Information');
     }
 
+    public function testAmOnSubdomain()
+    {
+        $this->module->_reconfigure(array('url' => 'http://google.com'));
+        $this->module->amOnSubdomain('user');
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
+
+        $this->module->_reconfigure(array('url' => 'http://www.google.com'));
+        $this->module->amOnSubdomain('user');
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
+    }
+
     public function testCurrentUrl()
     {
         $this->module->amOnPage('/');
@@ -87,7 +98,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/');
         $this->module->click("descendant-or-self::a[@id = 'link']");
-        $this->module->seeInCurrentUrl('/info');
+        $this->module->seeInCurrentUrl('/info');               
     }
 
     public function testClickOnContext()
@@ -110,7 +121,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->assertEquals('agree', $form['terms']);
     }
 
-    public function testChecxboxByLabel()
+    public function testCheckboxByLabel()
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('I Agree');
@@ -145,6 +156,14 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('adult', $form['age']);
     }
+    
+    public function testSeeSelectedOption()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('#age', '60-100');
+        $this->module->dontSeeOptionIsSelected('#age', '100-210');
+    }
+    
 
     public function testHidden()
     {
@@ -327,4 +346,20 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('#something-beyond');
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
+
+	public function testCookies()
+	{
+		$cookie_name = 'test_cookie';
+		$cookie_value = 'this is a test';
+		$this->module->setCookie($cookie_name, $cookie_value);
+
+		$this->module->seeCookie($cookie_name);
+		$this->module->dontSeeCookie('evil_cookie');
+
+		$cookie = $this->module->grabCookie($cookie_name);
+		$this->assertEquals($cookie_value, $cookie);
+
+		$this->module->resetCookie($cookie_name);
+		$this->module->dontSeeCookie($cookie_name);
+	}
 }

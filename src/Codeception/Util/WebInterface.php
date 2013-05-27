@@ -211,7 +211,7 @@ interface WebInterface
      * If no url provided returns full URI.
      *
      * ``` php
-1     * <?php
+     * <?php
      * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
      * $uri = $I->grabFromCurrentUrl();
      * ?>
@@ -436,4 +436,35 @@ interface WebInterface
      * @param $selector
      */
     public function dontSeeElement($selector);
+
+    /**
+     * Checks if option is selected in select field.
+     *
+     * ``` php
+     * <?php
+     * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param $optionText
+     * @return mixed
+     */
+    public function seeOptionIsSelected($selector, $optionText);
+
+    /**
+     * Checks if option is not selected in select field.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param $optionText
+     * @return mixed
+     */
+    public function dontSeeOptionIsSelected($selector, $optionText);
+
 }

@@ -65,7 +65,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $selector
      * @param $params
      * @see PhpBrowser::submitForm()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -99,7 +99,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $uri
      * @param $params
      * @see PhpBrowser::sendAjaxPostRequest()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -122,7 +122,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $uri
      * @param $params
      * @see PhpBrowser::sendAjaxGetRequest()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -137,11 +137,108 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Asserts that current page has 404 response status code.
+     * @see PhpBrowser::seePageNotFound()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seePageNotFound() {
+        $this->scenario->assertion('seePageNotFound', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that response code is equal to value provided.
+     *
+     * @param $code
+     * @return mixed
+     * @see PhpBrowser::seeResponseCodeIs()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeResponseCodeIs($code) {
+        $this->scenario->assertion('seeResponseCodeIs', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Adds HTTP authentication via username/password.
+     *
+     * @param $username
+     * @param $password
+     * @see PhpBrowser::amHttpAuthenticated()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function amHttpAuthenticated($username, $password) {
+        $this->scenario->condition('amHttpAuthenticated', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // from the official Guzzle manual
+     * $I->amGoingTo('Sign all requests with OAuth');
+     * $I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
+     *      $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
+     *                  'consumer_key'    => '***',
+     *                  'consumer_secret' => '***',
+     *                  'token'           => '***',
+     *                  'token_secret'    => '***'
+     *      )));
+     * });
+     * ?>
+     * ```
+     *
+     * Not recommended this command too be used on regular basis.
+     * If Codeception lacks important Guzzle Client methods implement then and submit patches.
+     *
+     * @param callable $function
+     * @see PhpBrowser::executeInGuzzle()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function executeInGuzzle($function) {
+        $this->scenario->action('executeInGuzzle', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
      * Opens the page.
      *
      * @param $page
      * @see PhpBrowser::amOnPage()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -171,7 +268,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $text
      * @param null $selector
      * @see PhpBrowser::dontSee()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -202,7 +299,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $text
      * @param null $selector
      * @see PhpBrowser::see()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -232,7 +329,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $text
      * @param null $url
      * @see PhpBrowser::seeLink()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -261,7 +358,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $text
      * @param null $url
      * @see PhpBrowser::dontSeeLink()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -284,6 +381,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * If button is image button is found by it's value
      * If link or button can't be found by name they are searched by CSS selector.
      *
+     * The second parameter is a context: CSS or XPath locator to narrow the search.
+     *
      * Examples:
      *
      * ``` php
@@ -296,16 +395,69 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * $I->click('#form input[type=submit]');
      * // XPath
      * $I->click('//form/*[@type=submit]')
+     * // link in context
+     * $I->click('Logout', '#nav');
      * ?>
      * ```
      * @param $link
+     * @param $context
      * @see PhpBrowser::click()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
-    public function click($link) {
+    public function click($link, $context = null) {
         $this->scenario->action('click', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks if element exists on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->seeElement('.error');
+     * $I->seeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     * @see PhpBrowser::seeElement()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeElement($selector) {
+        $this->scenario->assertion('seeElement', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeElement('.error');
+     * $I->dontSeeElement(//form/input[1]);
+     * ?>
+     * ```
+     * @param $selector
+     * @see PhpBrowser::dontSeeElement()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function dontSeeElement($selector) {
+        $this->scenario->action('dontSeeElement', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -317,7 +469,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
     /**
      * Reloads current page
      * @see PhpBrowser::reloadPage()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -334,7 +486,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
     /**
      * Moves back in history
      * @see PhpBrowser::moveBack()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -351,7 +503,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
     /**
      * Moves forward in history
      * @see PhpBrowser::moveForward()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -371,7 +523,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $field
      * @param $value
      * @see PhpBrowser::fillField()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -401,7 +553,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $select
      * @param $option
      * @see PhpBrowser::selectOption()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -429,7 +581,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $option
      * @see PhpBrowser::checkOption()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -456,7 +608,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $option
      * @see PhpBrowser::uncheckOption()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -471,16 +623,177 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * Checks that current uri contains value
+     * Checks that current uri contains a value
+     *
+     * ``` php
+     * <?php
+     * // to match: /home/dashboard
+     * $I->seeInCurrentUrl('home');
+     * // to match: /users/1
+     * $I->seeInCurrentUrl('/users/');
+     * ?>
+     * ```
      *
      * @param $uri
      * @see PhpBrowser::seeInCurrentUrl()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
     public function seeInCurrentUrl($uri) {
         $this->scenario->assertion('seeInCurrentUrl', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that current uri does not contain a value
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInCurrentUrl('/users/');
+     * ?>
+     * ```
+     *
+     * @param $uri
+     * @see PhpBrowser::dontSeeInCurrentUrl()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function dontSeeInCurrentUrl($uri) {
+        $this->scenario->action('dontSeeInCurrentUrl', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that current url is equal to value.
+     * Unlike `seeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     * @see PhpBrowser::seeCurrentUrlEquals()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeCurrentUrlEquals($uri) {
+        $this->scenario->assertion('seeCurrentUrlEquals', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that current url is not equal to value.
+     * Unlike `dontSeeInCurrentUrl` performs a strict check.
+     *
+     * <?php
+     * // current url is not root
+     * $I->dontSeeCurrentUrlEquals('/');
+     * ?>
+     *
+     * @param $uri
+     * @see PhpBrowser::dontSeeCurrentUrlEquals()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function dontSeeCurrentUrlEquals($uri) {
+        $this->scenario->action('dontSeeCurrentUrlEquals', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that current url is matches a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     * @see PhpBrowser::seeCurrentUrlMatches()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeCurrentUrlMatches($uri) {
+        $this->scenario->assertion('seeCurrentUrlMatches', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks that current url does not match a RegEx value
+     *
+     * <?php
+     * // to match root url
+     * $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
+     * ?>
+     *
+     * @param $uri
+     * @see PhpBrowser::dontSeeCurrentUrlMatches()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function dontSeeCurrentUrlMatches($uri) {
+        $this->scenario->action('dontSeeCurrentUrlMatches', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Takes a parameters from current URI by RegEx.
+     * If no url provided returns full URI.
+     *
+     * ``` php
+1     * <?php
+     * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
+     * $uri = $I->grabFromCurrentUrl();
+     * ?>
+     * ```
+     *
+     * @param null $uri
+     * @internal param $url
+     * @return mixed
+     * @see PhpBrowser::grabFromCurrentUrl()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function grabFromCurrentUrl($uri = null) {
+        $this->scenario->action('grabFromCurrentUrl', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -504,12 +817,66 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $field
      * @param $filename
      * @see PhpBrowser::attachFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
     public function attachFile($field, $filename) {
         $this->scenario->action('attachFile', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks if option is selected in select field.
+     *
+     * ``` php
+     * <?php
+     * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param $optionText
+     * @return mixed
+     * @see PhpBrowser::seeOptionIsSelected()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeOptionIsSelected($select, $text) {
+        $this->scenario->assertion('seeOptionIsSelected', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * Checks if option is not selected in select field.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     * @param $optionText
+     * @return mixed
+     * @see PhpBrowser::dontSeeOptionIsSelected()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function dontSeeOptionIsSelected($select, $text) {
+        $this->scenario->action('dontSeeOptionIsSelected', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -534,7 +901,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $checkbox
      * @see PhpBrowser::seeCheckboxIsChecked()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -563,7 +930,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $checkbox
      * @see PhpBrowser::dontSeeCheckboxIsChecked()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -596,7 +963,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $field
      * @param $value
      * @see PhpBrowser::seeInField()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -628,7 +995,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $field
      * @param $value
      * @see PhpBrowser::dontSeeInField()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -659,7 +1026,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $cssOrXPathOrRegex
      * @return mixed
      * @see PhpBrowser::grabTextFrom()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -690,7 +1057,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $field
      * @return mixed
      * @see PhpBrowser::grabValueFrom()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -707,7 +1074,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
     /**
      *
      * @see PhpBrowser::grabAttribute()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -727,7 +1094,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $path
      * @see Filesystem::amInPath()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -755,7 +1122,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @see Filesystem::openFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -780,7 +1147,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @see Filesystem::deleteFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -805,7 +1172,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $dirname
      * @see Filesystem::deleteDir()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -831,7 +1198,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $src
      * @param $dst
      * @see Filesystem::copyDir()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -859,7 +1226,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      * @see Filesystem::seeInThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -885,7 +1252,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      * @see Filesystem::dontSeeInThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -902,7 +1269,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
     /**
      * Deletes a file
      * @see Filesystem::deleteThisFile()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
@@ -929,7 +1296,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $filename
      * @param string $path
      * @see Filesystem::seeFileFound()
-     *
+     * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */

@@ -27,7 +27,7 @@ We recommend writing tests on unstable parts of your application as functional t
 
 ## Pitfalls
 
-Acceptance tests are usually much slower then functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
+Acceptance tests are usually much slower than functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
 
 #### Headers, Cookies, Sessions
 
@@ -68,6 +68,21 @@ php codecept.phar run functional
 
 Use `--debug` option for more detailed output.
 
+## Error Reporting
+
+By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting value. 
+In functional tests you might want to change this values depending on framework's error policy.
+The error reporting value can be set at suite configuraion file:
+
+{% highlight yaml %}
+class_name: TestGuy
+modules:
+    enabled: [Yii1, TestHelper]
+error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
+{% endhighlight %}
+
+`error_level` can be set globally in `codeception.yml` file.
+
 ## Frameworks
 
 Codeception have integrations for the most popular PHP frameworks.
@@ -87,11 +102,21 @@ modules:
     enabled: [Symfony2, Doctrine2, TestHelper] 
 ```
 
-By default this module will search for Kernel in the `app` directory.
+By default this module wilyl search for Kernel in the `app` directory.
 
 The module uses the Symfony Profiler to provide additional information and assertions.
 
 [See the full reference](http://codeception.com/docs/modules/Symfony2)
+
+### Laravel 4
+
+[Laravel](http://codeception.com/docs/modules/Laravel4) module is zero configuration and can be easily set up.
+
+```yaml
+class_name: TestGuy
+modules:
+    enabled: [Laravel4, TestHelper]
+```
 
 ### Yii
 
@@ -107,6 +132,16 @@ modules:
 
 To avoid common pitfalls we discussed earlier, Codeception provides basic hooks over Yii engine.
 Please set them up [following the installation steps in module reference](http://codeception.com/docs/modules/Yii1).
+
+### Zend Framework 2
+
+Use [ZF2](http://codeception.com/docs/modules/ZF2) module to run functional tests inside Zend Framework 2.
+
+```yaml
+class_name: TestGuy
+modules:
+    enabled: [ZF2, TestHelper]
+```
 
 ### Zend Framework 1.x
 
@@ -202,7 +237,7 @@ After you get your module stabilized, share it with the community. Fork a Codece
 
 There are some requirements for modules:
 
-* It should be easy to configure
+* It should be easy to configure.
 * It should contain proper documentation.
 * It should extend basic operations by using framework internals.
 * It's preferred that it be able to print additional debug information.

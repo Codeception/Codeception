@@ -20,7 +20,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
         $failedTest = $defect->failedTest();
         $this->write("\n---------\n");
         if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefect($defect, $count);
-        $this->dispatcher->dispatch('fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException(), $count));
+        $this->dispatcher->dispatch('test.fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException(), $count));
     }
 
     /**

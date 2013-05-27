@@ -90,7 +90,7 @@ $I->lookForwardTo('get money when the bank is closed');
 
 After we have described the story background, let's start writing a scenario. 
 
-The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PHPBrowser` and `Db` modules. We will briefly describe them here, but for the full reference look into the modules reference, here on (Codeception.com)[http://codeception.com]. 
+The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PHPBrowser` and `Db` modules. We will briefly describe them here, but for the full reference look into the modules reference, here on [Codeception.com](http://codeception.com). 
 
 ```php
 <?php

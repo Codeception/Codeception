@@ -63,4 +63,11 @@ class Base extends \Symfony\Component\Console\Command\Command
         if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
         return $filename;
     }
+
+    protected function save($filename, $contents)
+    {
+        if (file_exists($filename)) return false;
+        file_put_contents($filename, $contents);
+        return true;
+    }
 }

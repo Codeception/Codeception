@@ -33,11 +33,11 @@ Don't forget to turn on Db repopulation if you are using database.
 
 ### Example (`acceptance.suite.yml`)
 
-    modules: 
+    modules:
        enabled: [Selenium2]
        config:
           Selenium2:
-             url: 'http://localhost/' 
+             url: 'http://localhost/'
              browser: firefox
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
@@ -45,7 +45,7 @@ Don't forget to turn on Db repopulation if you are using database.
 ## Public Properties
 
 * session - contains Mink Session
-* webDriverSession - contains \WebDriver\Session object from [php-webdriver](https://github.com/instaclick/php-webdriver)
+* webDriverSession - contains webDriverSession object, i.e. $session from [php-webdriver](https://github.com/facebook/php-webdriver)
 
 ## Actions
 
@@ -243,7 +243,7 @@ Checks if element does not exist (or is visible) on a page, matching it by CSS o
 ``` php
 <?php
 $I->dontSeeElement('.error');
-$I->dontSeeElement('//form/input[1]');
+$I->dontSeeElement(//form/input[1]);
 ?>
 ```
  * param $selector
@@ -316,6 +316,22 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
  * param $text
  * param null $url
+
+
+### dontSeeOptionIsSelected
+
+
+Checks if option is not selected in select field.
+
+``` php
+<?php
+$I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * param $selector
+ * param $optionText
+ * return mixed
 
 
 ### doubleClick
@@ -392,7 +408,7 @@ Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
- <?php
+<?php
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
@@ -512,6 +528,23 @@ For example see 'pressKey'.
 
 
 Reloads current page
+
+
+### resizeWindow
+
+
+Resize current window
+
+Example:
+``` php
+<?php
+$I->resizeWindow(800, 600);
+
+```
+
+ * param int    $width
+ * param int    $height
+ * author Jaik Dean <jaik@jaikdean.com>
 
 
 ### see
@@ -662,6 +695,22 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
  * param $text
  * param null $url
+
+
+### seeOptionIsSelected
+
+
+Checks if option is selected in select field.
+
+``` php
+<?php
+$I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * param $selector
+ * param $optionText
+ * return mixed
 
 
 ### selectOption

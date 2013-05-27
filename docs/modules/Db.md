@@ -52,12 +52,12 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 
 ### Example
 
-    modules: 
+    modules:
        enabled: [Db]
        config:
           Db:
              dsn: 'mysql:host=localhost;dbname=testdb'
-             username: 'root'
+             user: 'root'
              password: ''
              dump: 'tests/_data/dump.sql'
              populate: true

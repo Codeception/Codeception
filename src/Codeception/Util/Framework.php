@@ -360,13 +360,22 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function debugResponse()
     {
-        $this->debugSection('Response', $this->client->getResponse()->getStatus());
+        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+    }
+
+    protected function getResponseStatusCode()
+    {
+        // depending on Symfony version
+        $response = $this->client->getResponse();
+        if (method_exists($response, 'getStatus')) return $response->getStatus();
+        if (method_exists($response, 'getStatusCode')) return $response->getStatusCode();
+        return "N/A";
     }
 
     protected function escape($string)
     {
-        return $string;// addslashes($string);
+        return (string)$string;
     }
 
     protected function match($selector)
@@ -432,7 +441,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                foreach ($field->childNodes as $option) {
                    if ($option->getAttribute('selected') == 'selected')
                        $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-               }http://sphotos-c.ak.fbcdn.net/hphotos-ak-prn1/532959_348333291945066_1909818296_n.jpg
+               }
            }
         }
     }
@@ -449,6 +458,31 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->assertEquals(0, $nodes->count());
     }
 
+    public function seeOptionIsSelected($select, $optionText)
+    {
+        $selected = $this->matchSelectedOption($select);
+        $this->assertGreaterThen(0, $selected->count(), " no option is selected");
+        $this->assertEquals($optionText, $selected->text());
+    }
+
+    public function dontSeeOptionIsSelected($select, $optionText)
+    {
+        $selected = $this->matchSelectedOption($select);
+        $this->assertGreaterThen(0, $selected->count(), " no option is selected");
+        if (!$selected->count()) {
+            \PHPUnit_Framework_Assert::assertEquals(0, $selected->count);
+            return;
+        }
+        $this->assertNotEquals($optionText, $selected->text());
+    }
+
+    protected function matchSelectedOption($select)
+    {
+        $nodes = $this->match($select);
+        $this->assertGreaterThen(0, $nodes->count(), " select '$select' not found on page'");
+        return $nodes->first()->filter('option[selected]');
+    }
+
     public function seePageNotFound()
     {
         $this->seeResponseCodeIs(404);
@@ -456,7 +490,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->client->getResponse()->getStatus());
+        $this->assertEquals($code, $this->getResponseStatusCode());
     }
 
 }

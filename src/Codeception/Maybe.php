@@ -37,6 +37,11 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if (is_scalar($this->val)) {
             return (string)$this->val;
         }
+
+        if (is_object($this->val) && method_exists($this->val, '__toString')) {
+            return $this->val->__toString();
+        }
+
         return $this->val;
     }
 
@@ -45,6 +50,13 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return new Maybe();
         }
+
+        if (is_object($this->val)) {
+            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
+                return $this->val->{$key};
+            }
+        }
+
         return $this->val->key;
     }
 
@@ -53,6 +65,12 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return;
         }
+
+        if (is_object($this->val)) {
+            $this->val->{$key} = $val;
+            return;
+        }
+
         $this->val->key = $val;
     }
 
