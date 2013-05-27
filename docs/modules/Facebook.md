@@ -48,7 +48,7 @@ $I->seePostOnFacebookWithAttachedPlace('167724369950862');
 
 ```
 
- * available since version 1.6.2
+ * available since version 1.6.3
  * author tiger.seo@gmail.com
 
 ## Actions
