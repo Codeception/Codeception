@@ -1,7 +1,6 @@
 <?php
 
 use Codeception\Module\Facebook;
-use Codeception\Util\Stub as Stub;
 use Codeception\Util\Driver\Facebook as FacebookDriver;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
