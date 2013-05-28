@@ -16,7 +16,7 @@
         '/' => 'index',
         '/info' => 'info',
         '/login' => 'login',
-        '/facebook\??.*' => 'facebookTest',
+        '/facebook\??.*' => 'facebookController',
         '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|empty|popup)(#)?' => 'form',
     );
 
