@@ -2,16 +2,19 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\Module as ModuleException;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Module as BaseModule;
 use Codeception\Util\Driver\Facebook as FacebookDriver;
 
 /**
  * Provides testing for projects integrated with Facebook API.
+ * Relies on Facebook's tool Test User API.
  *
  * ## Status
  *
  * * Maintainer: **tiger-seo**
- * * Stability: **alpha**
+ * * Stability: **beta**
  * * Contact: tiger.seo@gmail.com
  *
  * ## Config
@@ -49,6 +52,21 @@ use Codeception\Util\Driver\Facebook as FacebookDriver;
  * $I->amGoingTo('send request to the backend, so that it will publish on user\'s wall on Facebook');
  * $I->sendPOST('/api/v1/some-api-endpoint');
  * $I->seePostOnFacebookWithAttachedPlace('167724369950862');
+ *
+ * ```
+ *
+ * ``` php
+ * <?php
+ * $I = new WebGuy($scenario);
+ * $I->am('Guest');
+ * $I->wantToTest('log in to site using Facebook');
+ * $I->haveFacebookTestUserAccount(); // create facebook test user
+ * $I->haveTestUserLoggedInOnFacebook(); // so that facebook will not ask us for login and password
+ * $fbUserFirstName = $I->grabFacebookTestUserFirstName();
+ * $I->amOnPage('/welcome');
+ * $I->see('Welcome, Guest');
+ * $I->click('Login with Facebook');
+ * $I->see('Welcome, ' . $fbUserFirstName);
  *
  * ```
  *
@@ -128,6 +146,35 @@ class Facebook extends BaseModule
     }
 
     /**
+     * Get facebook test user be logged in on facebook.
+     *
+     * @throws ModuleConfigException
+     */
+    public function haveTestUserLoggedInOnFacebook()
+    {
+        if (! $this->hasModule('PhpBrowser')) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                'PhpBrowser module has to be enabled to be able to login to Facebook.'
+            );
+        }
+
+        if (! array_key_exists('id', $this->testUser)) {
+            throw new ModuleException(
+                __CLASS__,
+                'Facebook test user was not found. Did you forget to create one?'
+            );
+        }
+
+        /** @var PhpBrowser $phpBrowser */
+        $phpBrowser = $this->getModule('PhpBrowser');
+
+        // go to facebook and make login; it work only if you visit facebook.com first
+        $phpBrowser->_sendRequest('https://www.facebook.com');
+        $phpBrowser->_sendRequest($this->grabFacebookTestUserLoginUrl());
+    }
+
+    /**
      * Returns the test user access token.
      *
      * @return string
@@ -155,6 +202,19 @@ class Facebook extends BaseModule
     public function grabFacebookTestUserLoginUrl()
     {
         return $this->testUser['login_url'];
+    }
+
+    /**
+     * Returns the test user first name.
+     *
+     * @return string
+     */
+    public function grabFacebookTestUserFirstName()
+    {
+        if (! array_key_exists('profile', $this->testUser)) {
+            $this->testUser['profile'] = $this->facebook->api('/me');
+        }
+        return $this->testUser['profile']['first_name'];
     }
 
     /**
