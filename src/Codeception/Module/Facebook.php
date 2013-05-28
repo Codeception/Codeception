@@ -148,7 +148,7 @@ class Facebook extends BaseModule
     }
 
     /**
-     * Returns the test user URL for login.
+     * Returns URL for test user auto-login.
      *
      * @return string
      */
