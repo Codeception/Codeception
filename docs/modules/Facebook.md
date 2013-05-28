@@ -3,11 +3,12 @@
 
 
 Provides testing for projects integrated with Facebook API.
+Relies on Facebook's tool Test User API.
 
 ## Status
 
 * Maintainer: **tiger-seo**
-* Stability: **alpha**
+* Stability: **beta**
 * Contact: tiger.seo@gmail.com
 
 ## Config
@@ -48,6 +49,21 @@ $I->seePostOnFacebookWithAttachedPlace('167724369950862');
 
 ```
 
+``` php
+<?php
+$I = new WebGuy($scenario);
+$I->am('Guest');
+$I->wantToTest('log in to site using Facebook');
+$I->haveFacebookTestUserAccount(); // create facebook test user
+$I->haveTestUserLoggedInOnFacebook(); // so that facebook will not ask us for login and password
+$fbUserFirstName = $I->grabFacebookTestUserFirstName();
+$I->amOnPage('/welcome');
+$I->see('Welcome, Guest');
+$I->click('Login with Facebook');
+$I->see('Welcome, ' . $fbUserFirstName);
+
+```
+
  * available since version 1.6.3
  * author tiger.seo@gmail.com
 
@@ -70,6 +86,14 @@ Returns the test user email.
  * return string
 
 
+### grabFacebookTestUserFirstName
+
+
+Returns the test user first name.
+
+ * return string
+
+
 ### grabFacebookTestUserLoginUrl
 
 
@@ -86,6 +110,14 @@ Get facebook test user be created.
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
  * param bool $renew true if the test user should be recreated
+
+
+### haveTestUserLoggedInOnFacebook
+
+
+Get facebook test user be logged in on facebook.
+
+ * throws ModuleConfigException
 
 
 ### seePostOnFacebookWithAttachedPlace
