@@ -148,6 +148,16 @@ class Facebook extends BaseModule
     }
 
     /**
+     * Returns the test user URL for login.
+     *
+     * @return string
+     */
+    public function grabFacebookTestUserLoginUrl()
+    {
+        return $this->testUser['login_url'];
+    }
+
+    /**
      *
      * Please, note that you must have publish_stream permission to be able to publish to user's feed.
      *

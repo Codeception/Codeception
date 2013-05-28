@@ -31,6 +31,11 @@ class login {
 
 }
 
+class facebookTest {
+    function GET($matches) {
+        include __DIR__.'/view/facebook.php';
+    }
+}
 
 class form {
     function GET($matches) {
