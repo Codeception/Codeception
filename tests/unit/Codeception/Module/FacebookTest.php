@@ -112,14 +112,16 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $browserModule->_cleanup();
         $browserModule->_before($this->makeTest());
 
+        \Codeception\SuiteManager::$modules['PhpBrowser'] = $browserModule;
+
         // preconditions: #2 facebook test user was created
         $this->module->haveFacebookTestUserAccount();
+        $testUserFirstName = $this->module->grabFacebookTestUserFirstName();
 
-        // go to facebook and make login; it work only if referrer is facebook.com
-        $browserModule->_sendRequest('https://www.facebook.com');
-        $browserModule->_sendRequest($this->module->grabFacebookTestUserLoginUrl());
+        // preconditions: #3 test user logged in on facebook
+        $this->module->haveTestUserLoggedInOnFacebook();
 
-        // go to our facebook page at first
+        // go to our page with facebook login button
         $browserModule->amOnPage('/facebook');
 
         // check that yet we are not logged in with facebook
@@ -130,10 +132,10 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
         // check that we are logged in with facebook
         $browserModule->see('Your User Object (/me)');
-
-        echo $browserModule->session->getPage()->getHtml();
+        $browserModule->see($testUserFirstName);
 
         // cleanup
+        unset(\Codeception\SuiteManager::$modules['PhpBrowser']);
         $browserModule->_after($this->makeTest());
         data::clean();
     }
