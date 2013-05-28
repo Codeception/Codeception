@@ -31,7 +31,7 @@ class login {
 
 }
 
-class facebookTest {
+class facebookController {
     function GET($matches) {
         include __DIR__.'/view/facebook.php';
     }
@@ -52,4 +52,3 @@ class form {
         include __DIR__.'/view/index.php';
     }
 }
-?>
