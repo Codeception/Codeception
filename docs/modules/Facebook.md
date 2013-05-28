@@ -70,6 +70,14 @@ Returns the test user email.
  * return string
 
 
+### grabFacebookTestUserLoginUrl
+
+
+Returns URL for test user auto-login.
+
+ * return string
+
+
 ### haveFacebookTestUserAccount
 
 
