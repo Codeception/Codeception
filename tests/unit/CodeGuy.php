@@ -45,6 +45,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $signature
+     * @deprecated
      * @see Unit::testMethod()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -66,6 +67,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * Without adding the stub to registry you can't trace it's method invocations.
      *
      * @param $instance
+     * @deprecated
      * @see Unit::haveFakeClass()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -121,6 +123,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * For static methods use 'executeTestedMethodWith'.
      *
      * @param $object
+     * @deprecated
      * @see Unit::executeTestedMethodOn()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -150,6 +153,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $params
      * @throws \Codeception\Exception\Module
+     * @deprecated
      * @see Unit::executeTestedMethodWith()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -174,6 +178,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * See those methods for the full reference
      *
      * @throws \InvalidArgumentException
+     * @deprecated
      * @see Unit::executeTestedMethod()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -225,6 +230,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param \Closure $code
+     * @deprecated
      * @see Unit::execute()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -262,6 +268,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $object
      * @param $method
+     * @deprecated
      * @see Unit::executeMethod()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -287,6 +294,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $obj
      * @param array $values
+     * @deprecated
      * @see Unit::changeProperties()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -309,6 +317,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $obj
      * @param $property
      * @param $value
+     * @deprecated
      * @see Unit::changeProperty()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -366,6 +375,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $mock
      * @param $method
      * @param array $params
+     * @deprecated
      * @see Unit::seeMethodInvoked()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -393,6 +403,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $mock
      * @param $method
      * @param array $params
+     * @deprecated
      * @see Unit::seeMethodInvokedOnce()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -446,6 +457,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param $times
      * @param array $params
+     * @deprecated
      * @see Unit::seeMethodInvokedMultipleTimes()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -465,6 +477,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * Asserts that the last result from the tested method is equal to value
      *
      * @param $value
+     * @deprecated
      * @see Unit::seeResultEquals()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -481,7 +494,8 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
-     *
+     * @param $value
+     * @deprecated
      * @see Unit::seeResultContains()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -501,6 +515,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * Checks that the result of the last execution doesn't contain a value.
      *
      * @param $value
+     * @deprecated
      * @see Unit::dontSeeResultContains()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -520,6 +535,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * Checks that the result of the last execution is not equal to a value.
      *
      * @param $value
+     * @deprecated
      * @see Unit::dontSeeResultEquals()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -537,6 +553,7 @@ class CodeGuy extends \Codeception\AbstractGuy
  
     /**
      * Checks that the result of the last execution is empty.
+     * @deprecated
      * @see Unit::seeEmptyResult()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -567,6 +584,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $type
+     * @deprecated
      * @see Unit::seeResultIs()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -592,6 +610,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $object
      * @param $property
      * @param $value
+     * @deprecated
      * @see Unit::seePropertyEquals()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -618,6 +637,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $object
      * @param $property
      * @param $type
+     * @deprecated
      * @see Unit::seePropertyIs()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -651,6 +671,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param $value
      * @param array $params
+     * @deprecated
      * @see Unit::seeMethodReturns()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
@@ -676,6 +697,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param $value
      * @param array $params
+     * @deprecated
      * @see Unit::seeMethodNotReturns()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !

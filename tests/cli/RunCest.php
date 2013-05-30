@@ -92,4 +92,24 @@ class RunCest
 
     }
 
+    public function runTwoSuites(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run skipped,dummy --no-exit');
+        $I->seeInShellOutput("Suite skipped started");
+        $I->seeInShellOutput("Suite dummy started");
+        $I->dontSeeInShellOutput("Suite remote started");
+    }
+
+    public function skipSuites(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order');
+        $I->seeInShellOutput("Suite dummy started");
+        $I->dontSeeInShellOutput("Suite remote started");
+        $I->dontSeeInShellOutput("Suite remote_server started");
+        $I->dontSeeInShellOutput("Suite order started");
+
+    }
+
 }
