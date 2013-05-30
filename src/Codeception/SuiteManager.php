@@ -29,16 +29,18 @@ class SuiteManager {
 
     protected $settings = array();
 
-    public function __construct(EventDispatcher $dispatcher, $name, $settings) {
+    public function __construct(EventDispatcher $dispatcher, $name, $settings)
+    {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
-        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
 
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
+
         require_once $settings['path'] . $settings['class_name'].'.php';
         
         $this->initializeModules($settings);
@@ -148,7 +150,8 @@ class SuiteManager {
 
     public function loadTests()
     {
-        $finder = Finder::create()->files()->sortByName()->in($this->path);
+        $dirs = array_merge($this->path, $this->settings['includes']);
+        $finder = Finder::create()->files()->sortByName()->in($dirs);
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
