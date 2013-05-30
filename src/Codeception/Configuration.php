@@ -101,6 +101,7 @@ class Configuration
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
 
         $defaults = array(
+            'namespace' => null,
             'class_name' => 'NoGuy',
             'modules' => isset($config['modules']) ? $config['modules'] : array(),
             'bootstrap' => '_bootstrap.php',
@@ -108,7 +109,8 @@ class Configuration
             'colors' => true,
             'memory_limit' => '1024M',
             'path' => '',
-            'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED'
+            'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
+            'includes' => array()
         );
 
         $globalConf = $config['settings'];

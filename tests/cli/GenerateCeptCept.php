@@ -1,4 +1,6 @@
 <?php
+namespace frontend;
+
 $I = new CliGuy($scenario);
 $I->wantTo('generate sample Cept');
 $I->amInPath('tests/data/sandbox');

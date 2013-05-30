@@ -19,7 +19,8 @@ class Build extends Base
 // You can change it manually, but it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-use Codeception\Maybe;
+%s
+use \Codeception\Maybe;
 %s
 
 %s %s extends %s
@@ -166,13 +167,15 @@ EOF;
             $aliases[] = implode("\n",$inherited);
             $aliases[] = '*/';
 
+            $namespace = $this->getNamespaceString($suiteconf['namespace']);
 
             $contents = sprintf($this->template,
-	                            implode("\n", $aliases),
-	                            'class',
-	                            $settings['class_name'],
-	                            '\Codeception\AbstractGuy',
-	                            implode("\n\n ", $code));
+                $namespace,
+	            implode("\n", $aliases),
+	            'class',
+	            $settings['class_name'],
+	            '\Codeception\AbstractGuy',
+	            implode("\n\n ", $code));
 
             file_put_contents($file = $settings['path'].$settings['class_name'].'.php', $contents);
             $output->writeln("$file generated successfully. $methodCounter methods added");
