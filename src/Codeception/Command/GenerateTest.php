@@ -72,12 +72,12 @@ EOF;
         $filename = $path.$filename;
 
         if (file_exists($filename)) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test $suite/$filename already exists</error>");
             exit;
         }
         file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
 
-        $output->writeln("<info>Test for $class was created in $filename</info>");
+        $output->writeln("<info>Test for $class was created in $suite/$filename</info>");
 
     }
 }

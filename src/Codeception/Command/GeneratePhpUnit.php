@@ -65,11 +65,11 @@ EOF;
 
         $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname));
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test $suite/$filename already exists</error>");
             exit;
         }
 
-        $output->writeln("<info>Test for $class was created in $filename</info>");
+        $output->writeln("<info>Test for $class was created in $suite/$filename</info>");
     }
 
 }

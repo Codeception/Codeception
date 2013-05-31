@@ -16,6 +16,8 @@ class Logger implements EventSubscriberInterface
     protected $path;
     protected $max_files;
 
+    protected $suite;
+
     public function __construct($max_files = 3) {
         $this->path = \Codeception\Configuration::logDir();
         $this->max_files = $max_files;
@@ -28,12 +30,27 @@ class Logger implements EventSubscriberInterface
     }
 
     public function beforeSuite(\Codeception\Event\Suite $e) {
-        $suite = $e->getSuite()->getName();
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($this->path.$suite, $this->max_files);
+        $this->suite = $e->getSuite();
+
+        $paths = explode(DIRECTORY_SEPARATOR, $this->path.$this->suite->getName());
+        $fullPath = '';
+        foreach ($paths as $path) {
+            $fullPath = $fullPath . DIRECTORY_SEPARATOR . $path;
+
+            if(!file_exists($fullPath)){
+                @mkdir($fullPath);
+            }
+        }
+        $logFile = $this->path.$this->suite->getName(). DIRECTORY_SEPARATOR . 'testlog';
+        // die($logFile);
+        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($logFile, $this->max_files);
     }
 
     public function beforeTest(\Codeception\Event\Test $e) {
-        $this->logger = new \Monolog\Logger($e->getTest()->getFileName());
+        $test = $e->getTest()->getFileName();
+        $suite = $this->suite->getName();
+
+        $this->logger = new \Monolog\Logger($suite . DIRECTORY_SEPARATOR . $test);
         $this->logger->pushHandler($this->logHandler);
     }
 

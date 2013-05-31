@@ -45,11 +45,15 @@ class Configuration
         }
 
         if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth('< 1');
+            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth('< 5');
             $config['suites'] = array();
             foreach ($suites as $suite) {
                 preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
-                $config['suites'][] = $matches[1];
+                if(!$suite->getRelativePath()) {
+                    $config['suites'][] = $matches[1];
+                } else {
+                    $config['suites'][] = $suite->getRelativePath() . DIRECTORY_SEPARATOR . $matches[1];
+                }
             }
         }
 
