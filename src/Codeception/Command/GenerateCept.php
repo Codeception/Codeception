@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateCept extends Base
 {
-    protected $template  = "<?php%s\n\$I = new %s(\$scenario);\n\$I->wantTo('perform actions and see result');\n";
+    protected $template  = "<?php\n\$I = new %s(\$scenario);\n\$I->wantTo('perform actions and see result');\n";
 
     protected function configure()
     {
@@ -37,8 +37,8 @@ class GenerateCept extends Base
 
         $namespace = $this->getNamespaceString($suiteconf['namespace']);
 
-        $guy = $suiteconf['class_name'];
-        $file = sprintf($this->template, $namespace, $guy);
+        $guy = $this->getNamespaceString($guyNamespace).$suiteconf['class_name'];
+        $file = sprintf($this->template, $guy);
         $filename = $this->completeSuffix($filename, 'Cept');
         $this->buildPath($suiteconf['path'], $filename);
 
