@@ -167,10 +167,10 @@ EOF;
             $aliases[] = implode("\n",$inherited);
             $aliases[] = '*/';
 
-            $namespace = $this->getNamespaceString($suiteconf['namespace']);
+            $guyNamespace = $this->getNamespaceString($settings['namespace']);
 
             $contents = sprintf($this->template,
-                $namespace,
+                $guyNamespace,
 	            implode("\n", $aliases),
 	            'class',
 	            $settings['class_name'],
