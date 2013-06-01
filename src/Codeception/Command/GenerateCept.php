@@ -35,9 +35,7 @@ class GenerateCept extends Base
         $config = \Codeception\Configuration::config($input->getOption('config'));
         $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
 
-        $namespace = $this->getNamespaceString($suiteconf['namespace']);
-
-        $guy = $this->getNamespaceString($guyNamespace).$suiteconf['class_name'];
+        $guy = $suiteconf['class_name'];
         $file = sprintf($this->template, $guy);
         $filename = $this->completeSuffix($filename, 'Cept');
         $this->buildPath($suiteconf['path'], $filename);
