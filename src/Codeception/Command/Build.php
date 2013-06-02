@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -78,48 +76,29 @@ EOF;
             $code = array();
             $methodCounter = 0;
 
-	        $aliases = array();
+	        $docblock = array();
+            foreach ($modules as $moduleName => $module) {
+                $docblock[] = "use \\Codeception\\Module\\$moduleName;";
+            }
+
             $methods[] = array();
+            $actions = \Codeception\Configuration::actions($modules);
 
-            foreach ($modules as $modulename => $module) {
-	            $className = '\Codeception\\Module\\'.$modulename;
-                $class = new \ReflectionClass($className);
-	            $aliases[] = 'use ' . ltrim($className, '\\') . ';';
-                $refMethods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-                foreach ($refMethods as $refMethod) {
-
-                    if (strpos($refMethod->name, '_') === 0) continue;
-                    if (in_array($refMethod->name, $methods)) continue;
-
-                    $code[] = $this->addMethod($class, $refMethod);
-                    $methods[] = $refMethod->name;
-                    $methodCounter++;
-                }
+            foreach ($actions as $action => $moduleName) {
+                if (in_array($action, $methods)) continue;
+                $method = new \ReflectionMethod('\Codeception\\Module\\'.$moduleName, $action);
+                $code[] = $this->addMethod($method);
+                $methods[] = $action;
+                $methodCounter++;
             }
 
-            // append PHPDoc for abstractGuy methods
-            $className = '\Codeception\\AbstractGuy';
-            $class = new \ReflectionClass($className);
-            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-
-            $inherited = array();
-
-            foreach ($methods as $method) {
-                if (strpos($method->name, '_') === 0) continue;
-                if (in_array($method->name, $methods)) continue;
-                $params = $this->getParamsString($method);
-                $inherited[] = sprintf($this->inheritedMethodTemplate, $method->name, $params);
-            }
-
-            $aliases[] = "\n/**\n * Inherited methods";
-            $aliases[] = implode("\n",$inherited);
-            $aliases[] = '*/';
+            $docblock = $this->prependAbstractGuyDocBlocks($docblock);
 
             $guyNamespace = $this->getNamespaceString($settings['class_name']);
 
             $contents = sprintf($this->template,
                 $guyNamespace,
-	            implode("\n", $aliases),
+	            implode("\n", $docblock),
 	            'class',
                 $this->getClassName($settings['class_name']),
 	            '\Codeception\AbstractGuy',
@@ -131,8 +110,9 @@ EOF;
     }
 
 
-    protected function addMethod(\ReflectionClass $class, \ReflectionMethod $refMethod)
+    protected function addMethod(\ReflectionMethod $refMethod)
     {
+        $class = $refMethod->getDeclaringClass();
         $params = $this->getParamsString($refMethod);
 
         if (0 === strpos($refMethod->name, 'see')) {
@@ -200,5 +180,28 @@ EOF;
             return $doc;
         }
         return $doc;
+    }
+
+    /**
+     * @param $aliases
+     * @return array
+     */
+    protected function prependAbstractGuyDocBlocks($aliases)
+    {
+        $inherited = array();
+
+        $class   = new \ReflectionClass('\Codeception\\AbstractGuy');
+        $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
+
+        foreach ($methods as $method) {
+            if ($method->name == '__call') continue; // skipping magic
+            $params = $this->getParamsString($method);
+            $inherited[] = sprintf($this->inheritedMethodTemplate, $method->name, $params);
+        }
+
+        $aliases[] = "\n/**\n * Inherited methods";
+        $aliases[] = implode("\n", $inherited);
+        $aliases[] = '*/';
+        return $aliases;
     }
 }
