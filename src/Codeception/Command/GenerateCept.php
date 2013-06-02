@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Tester\CommandTester;
 
 
 class GenerateCept extends Base
@@ -32,10 +33,11 @@ class GenerateCept extends Base
         $suite = $input->getArgument('suite');
         $filename = $input->getArgument('test');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
+        if ($suiteconf['namespace']) $guy = $suiteconf['namespace'].'\\'.$guy;
+
         $file = sprintf($this->template, $guy);
         $filename = $this->completeSuffix($filename, 'Cept');
         $this->buildPath($suiteconf['path'], $filename);
@@ -43,9 +45,9 @@ class GenerateCept extends Base
         $res = $this->save($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
-            exit;
+            return;
         }
-        $output->writeln("<info>Test was generated in $filename</info>");
+        $output->writeln("<info>Test was created in $filename</info>");
     }
 
 

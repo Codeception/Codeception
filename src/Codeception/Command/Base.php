@@ -64,10 +64,28 @@ class Base extends \Symfony\Component\Console\Command\Command
         return $filename;
     }
 
-    protected function save($filename, $contents)
+    protected function removeSuffix($classname, $suffix)
     {
-        if (file_exists($filename)) return false;
+        $classname = preg_replace('~\.php$~','',$classname);
+        return preg_replace("~$suffix$~",'',$classname);
+    }
+
+    protected function save($filename, $contents, $force = false)
+    {
+        if (file_exists($filename) && !$force) return false;
         file_put_contents($filename, $contents);
         return true;
+    }
+
+    protected function getSuiteConfig($suite, $conf)
+    {
+        $config = \Codeception\Configuration::config($conf);
+        return \Codeception\Configuration::suiteSettings($suite, $config);
+    }
+
+    protected function getSuites($conf)
+    {
+        \Codeception\Configuration::config($conf);
+        return \Codeception\Configuration::suites();
     }
 }

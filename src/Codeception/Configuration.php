@@ -95,12 +95,9 @@ class Configuration
         return self::$dir . DIRECTORY_SEPARATOR;
     }
 
-
-    public static function suiteSettings($suite, $config)
+    public static function defaultSuiteSettings()
     {
-        if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
-
-        $defaults = array(
+        return array(
             'namespace' => null,
             'class_name' => 'NoGuy',
             'modules' => isset($config['modules']) ? $config['modules'] : array(),
@@ -112,6 +109,15 @@ class Configuration
             'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
             'includes' => array()
         );
+
+    }
+
+
+    public static function suiteSettings($suite, $config)
+    {
+        if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
+
+        $defaults = self::defaultSuiteSettings();
 
         $globalConf = $config['settings'];
         $globalConf['coverage'] = isset($config['coverage'])

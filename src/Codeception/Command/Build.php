@@ -66,11 +66,12 @@ EOF;
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suites = \Codeception\Configuration::suites();
+        $suites = $this->getSuites($input->getOption('config'));
+
+        $output->writeln("<info>Building Guy classes for suites: ".implode(', ', $suites).'</info>');
 
         foreach ($suites as $suite) {
-            $settings = \Codeception\Configuration::suiteSettings($suite, $config);
+            $settings = $this->getSuiteConfig($suite, $input->getOption('config'));
             $modules = \Codeception\Configuration::modules($settings);
 
             $code = array();
@@ -94,17 +95,16 @@ EOF;
 
             $docblock = $this->prependAbstractGuyDocBlocks($docblock);
 
-            $guyNamespace = $this->getNamespaceString($settings['class_name']);
-
             $contents = sprintf($this->template,
-                $guyNamespace,
+                $settings['namespace'] ? "namespace {$settings['namespace']};\n" : '',
 	            implode("\n", $docblock),
 	            'class',
                 $this->getClassName($settings['class_name']),
 	            '\Codeception\AbstractGuy',
 	            implode("\n\n ", $code));
 
-            file_put_contents($file = $settings['path'].$this->getClassName($settings['class_name']).'.php', $contents);
+            $file = $settings['path'].$this->getClassName($settings['class_name']).'.php';
+            $this->save($file, $contents, true);
             $output->writeln("$file generated successfully. $methodCounter methods added");
         }
     }

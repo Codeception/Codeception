@@ -54,10 +54,10 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
+        if ($suiteconf['namespace']) $guy = $suiteconf['namespace'].'\\'.$guy;
 
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
@@ -71,13 +71,17 @@ EOF;
             exit;
         }
 
-        $classname = preg_replace("~Cest$~",'',$classname);
+        $classname = $this->removeSuffix($classname, 'Cest');
 
         $tests = sprintf($this->methodTemplate, "tryToTest", $guy, '$I');
 
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
+        if (!$res) {
+            $output->writeln("<error>Test $filename already exists</error>");
+            return;
+        }
 
-        $output->writeln("<info>Cest was created in $filename</info>");
+        $output->writeln("<info>Test was created in $filename</info>");
 
     }
 }
