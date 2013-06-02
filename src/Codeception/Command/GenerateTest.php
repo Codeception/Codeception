@@ -59,8 +59,7 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
 
@@ -68,16 +67,19 @@ EOF;
         $path = $this->buildPath($suiteconf['path'], $class);
         $ns = $this->getNamespaceString($class);
 
+
         $filename = $this->completeSuffix($classname, 'Test');
         $filename = $path.$filename;
 
-        if (file_exists($filename)) {
-            $output->writeln("<error>Test $filename already exists</error>");
-            exit;
-        }
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
+        $classname = $this->removeSuffix($classname, 'Test');
 
-        $output->writeln("<info>Test for $class was created in $filename</info>");
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
+
+        if (!$res) {
+            $output->writeln("<error>Test $filename already exists</error>");
+            return;
+        }
+        $output->writeln("<info>Test was created in $filename</info>");
 
     }
 }

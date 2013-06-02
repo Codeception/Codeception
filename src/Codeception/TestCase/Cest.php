@@ -74,14 +74,11 @@ class Cest extends Cept
     }
 
     public function getSpecFromMethod() {
-        if (strpos(strtolower($this->testMethod),'should') === 0) {
-            $text = substr($this->testMethod,6);
-            $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-            $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-            $text = strtolower($text);
-            return $text;
-        }
-        return '';
+        $text = $this->testMethod;
+        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = strtolower($text);
+        return $text;
     }
 
     public function getFileName() {

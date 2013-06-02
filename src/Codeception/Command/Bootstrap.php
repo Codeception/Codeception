@@ -22,7 +22,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
     {
         $this->setDefinition(array(
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path','.'),
-            new InputOption('namespace', 'n', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
