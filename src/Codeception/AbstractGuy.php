@@ -32,34 +32,6 @@ abstract class AbstractGuy
         return $this;
     }
 
-    public function amTesting($method)
-    {
-        return $this->testMethod($method);
-    }
-
-    public function amTestingMethod($method)
-    {
-        $this->testMethod($method);
-        return $this;
-    }
-
-    public function testMethod($signature)
-    {
-        $this->scenario->condition('testMethod', array($signature));
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-
-        if (!$this->scenario->getFeature()) {
-            $this->scenario->setFeature("test method $signature()");
-        } else {
-            $this->scenario->setFeature($this->scenario->getFeature() . " with [[$signature]]");
-        }
-
-        return $this;
-    }
-
     public function expectTo($prediction)
     {
         $this->scenario->comment('I expect to ' . $prediction);
