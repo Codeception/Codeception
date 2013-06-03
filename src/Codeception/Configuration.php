@@ -100,14 +100,13 @@ class Configuration
         return array(
             'namespace' => null,
             'class_name' => 'NoGuy',
-            'modules' => isset($config['modules']) ? $config['modules'] : array(),
+            'modules' => array(),
             'bootstrap' => '_bootstrap.php',
             'suite_class' => '\PHPUnit_Framework_TestSuite',
             'colors' => true,
             'memory_limit' => '1024M',
             'path' => '',
             'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
-            'includes' => array()
         );
 
     }
@@ -120,16 +119,16 @@ class Configuration
         $defaults = self::defaultSuiteSettings();
 
         $globalConf = $config['settings'];
-        $globalConf['coverage'] = isset($config['coverage'])
-            ? $config['coverage']
-            : array();
+        foreach (array('modules','coverage', 'namespace') as $key) {
+            if (isset($config[$key])) $globalConf[$key] = $config[$key];
+        }
 
         $path = $config['paths']['tests'];
 
         $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
         $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
 
-        $settings = self::mergeConfigs($globalConf, $defaults);
+        $settings = self::mergeConfigs($defaults, $globalConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
 
@@ -218,6 +217,7 @@ class Configuration
         foreach ($a2 as $k2 => $v2) {
             if (!isset($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
+                unset($a1[$k2]);
                 continue;
             }
             $res[$k2] = self::mergeConfigs($a1[$k2], $v2);

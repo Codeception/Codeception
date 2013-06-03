@@ -195,6 +195,7 @@ EOF;
 
         foreach ($methods as $method) {
             if ($method->name == '__call') continue; // skipping magic
+            if ($method->name == '__construct') continue; // skipping magic
             $params = $this->getParamsString($method);
             $inherited[] = sprintf($this->inheritedMethodTemplate, $method->name, $params);
         }
