@@ -188,10 +188,16 @@ class Configuration
 
         foreach ($modules as $moduleName => $module) {
             $class   = new \ReflectionClass('\Codeception\Module\\' . $moduleName);
+            $isHelper = substr($moduleName, -6) === 'Helper';
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
                 // those with underscore at the begging are considered as hidden
                 if (strpos($method->name, '_') === 0) {
+                    continue;
+                }
+
+                // exclude inherited methods from helpers
+                if ($isHelper && $method->class !== $class->getName()) {
                     continue;
                 }
 
