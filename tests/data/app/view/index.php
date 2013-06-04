@@ -7,7 +7,6 @@
 
 <p>
     <a href="/info" id="link">More info</a>
-
 </p>
 
     <a href="/form/file"> Test Link </a>

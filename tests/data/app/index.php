@@ -16,8 +16,8 @@
         '/' => 'index',
         '/info' => 'info',
         '/login' => 'login',
-        '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|empty|popup)(#)?' => 'form'
+        '/facebook\??.*' => 'facebookController',
+        '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|empty|popup)(#)?' => 'form',
     );
 
     glue::stick($urls);
-?>
