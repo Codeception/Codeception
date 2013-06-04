@@ -22,7 +22,10 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testFunctionForStrippingClassNames()
     {
-        preg_match('~\\?(\w*?Helper)~', '\Codeception\Module\UserHelper', $matches);
+        $matches = array();
+        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
+        $this->assertEquals('UserHelper', $matches[1]);
+        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
         $this->assertEquals('UserHelper', $matches[1]);
     }
 
@@ -31,6 +34,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testModules() {
         $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')), 'class_name' => 'CodeGuy','path' => $this->config['paths']['tests'].'/unit');
+
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertArrayHasKey('EmulateModuleHelper', $modules);
         $this->assertTrue(method_exists($modules['EmulateModuleHelper'], 'seeEquals'));
@@ -67,7 +71,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Codeception\Exception\ModuleConfig');
 
         $class = 'StubModule';
-        $module = \Codeception\Configuration::createModule($class);
+        new $class;
     }
 
     /**
@@ -81,7 +85,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'secondField' => 'secondValue',
         );
 
-        $module = \Codeception\Configuration::createModule($class,$config);
+        $module = new $class($config);
 
         $this->assertEquals($config['firstField'],$module->_getFirstField());
         $this->assertEquals($config['secondField'],$module->_getSecondField());
@@ -97,7 +101,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'secondField' => 'secondValue',
         );
 
-        $module = \Codeception\Configuration::createModule('StubModule', $config);
+        $class = 'StubModule';
+        $module = new $class($config);
         $module->_reconfigure(array('firstField' => '1st', 'secondField' => '2nd'));
         $this->assertEquals('1st',$module->_getFirstField());
         $this->assertEquals('2nd',$module->_getSecondField());

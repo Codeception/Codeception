@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Exception\ModuleConfig;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
 
@@ -17,8 +18,10 @@ class Configuration
     protected static $testsDir = null;
 
     public static $defaultConfig = array(
-        'namespace' => null,
-        'paths' => array(),
+        'namespace' => '',
+        'paths' => array(
+            'tests' => ''
+        ),
         'modules' => array(),
         'settings' => array(
             'colors' => false,
@@ -28,7 +31,10 @@ class Configuration
 
     public static $defaultSuiteSettings = array(
         'class_name' => 'NoGuy',
-        'modules' => array(),
+        'modules' => array(
+            'enabled' => array(),
+            'config' => array(),
+        ),
         'bootstrap' => '_bootstrap.php',
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
@@ -71,13 +77,13 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        $helpers = Finder::create()->files()->name('*Helper.php')->in(self::helpersDir());
-
         spl_autoload_register(function ($class) {
-            if (!preg_match('~Helper$~', $class)) return;
-            $helpers = Finder::create()->files()->name($class.'.php')->in(self::$helpersDir);
+            $matches = null;
+            if (!preg_match('~\\\\?(\\w*?Helper)$~', $class, $matches)) return;
+            $className = $matches[1];
+            $helpers = Finder::create()->files()->name($className.'.php')->in(self::helpersDir());
+            foreach ($helpers as $helper) include_once($helper);
         });
-        foreach ($helpers as $helper) include_once($helper);
     }
 
     protected static function loadSuites()
@@ -88,35 +94,6 @@ class Configuration
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
             self::$suites[] = $matches[1];
         }
-    }
-
-    public static function dataDir()
-    {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
-    }
-
-    public static function helpersDir()
-    {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$helpersDir . DIRECTORY_SEPARATOR;
-    }
-
-    public static function logDir()
-    {
-        if (!self::$logDir) throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
-        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
-        if (!is_writable($dir)) {
-            @mkdir($dir);
-            @chmod($dir, 777);
-        }
-        if (!is_writable($dir)) {
-            throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
-        }
-        return $dir;
-    }
-
-    public static function projectDir()
-    {
-        return self::$dir . DIRECTORY_SEPARATOR;
     }
 
     public static function suiteSettings($suite, $config)
@@ -149,49 +126,28 @@ class Configuration
 
     public static function modules($settings)
     {
-        $defaults = array('modules' => array('enabled' => array(), 'config' => array()));
-        if (!isset($settings['modules'])) throw new ConfigurationException('No modules configured!');
-
         if (file_exists($guy = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php')) require_once $guy;
-        // if (!class_exists($settings['class_name'])) throw new \Codeception\Exception\Configuration("No guys were found. Tried to find {$settings['class_name']} but he was not there.");
 
         $modules = array();
-
-        $settings = self::mergeConfigs($defaults, $settings);
+        $namespace = isset($settings['namespace']) ? $settings['namespace'] : '';
 
         $moduleNames = $settings['modules']['enabled'];
 
         foreach ($moduleNames as $moduleName)
         {
-            $classname = '\Codeception\Module\\' . $moduleName;
+            $classname = $namespace.'\\Codeception\\Module\\' . $moduleName;
+            if (!class_exists($classname)) {
+              $classname = '\\Codeception\\Module\\' . $moduleName;
+              if (!class_exists($classname)) {
+                  throw new ModuleConfig($moduleName,'could not be loaded');
+              }
+            }
             $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
 
-            $modules[$moduleName] = static::createModule($classname, $moduleConfig);
+            $modules[$moduleName] = new $classname($moduleConfig);
         }
 
         return $modules;
-    }
-
-    /**
-     * Creates new module instance on given parameters. Also ensure that all module required
-     * fields are set, if not throws exception.
-     * @param string $class module class
-     * @param array $config config array. Defaults to empty array.
-     * @return \Codeception\Module created module
-     * @throws \Codeception\Exception\ModuleConfig if module required fields were not set.
-     */
-    public static function createModule($class,$config=array())
-    {
-        $moduleName  = explode('\\', $class);
-        $moduleName = end($moduleName);
-        $module = new $class;
-
-        if ($config !== array())
-            $module->_setConfig($config);
-        else if ($module->_hasRequiredFields())
-            throw new \Codeception\Exception\ModuleConfig($moduleName, "Module $moduleName is not configured. Please check out it's required fields");
-
-       return $module;
     }
 
     public static function actions($modules)
@@ -212,6 +168,35 @@ class Configuration
         }
 
         return $actions;
+    }
+
+    public static function dataDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function helpersDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR . self::$helpersDir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function logDir()
+    {
+        if (!self::$logDir) throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
+        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
+        if (!is_writable($dir)) {
+            @mkdir($dir);
+            @chmod($dir, 777);
+        }
+        if (!is_writable($dir)) {
+            throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
+        }
+        return $dir;
+    }
+
+    public static function projectDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR;
     }
 
     protected static function mergeConfigs($a1, $a2)
