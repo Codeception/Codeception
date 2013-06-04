@@ -98,8 +98,9 @@ class Codecept
     }
 
     public function runSuite($suite, $test = null) {
-        $settings = Configuration::suiteSettings($suite, $this->config);
+        ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
 
+        $settings = Configuration::suiteSettings($suite, $this->config);
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
