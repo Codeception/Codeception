@@ -10,6 +10,25 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
+    public function testSuites()
+    {
+        $suites = \Codeception\Configuration::suites();
+        $this->assertContains('unit', $suites);
+        $this->assertContains('cli', $suites);
+    }
+
+    /**
+     * @group core
+     */
+    public function testFunctionForStrippingClassNames()
+    {
+        preg_match('~\\?(\w*?Helper)~', '\Codeception\Module\UserHelper', $matches);
+        $this->assertEquals('UserHelper', $matches[1]);
+    }
+
+    /**
+     * @group core
+     */
     public function testModules() {
         $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')), 'class_name' => 'CodeGuy','path' => $this->config['paths']['tests'].'/unit');
         $modules = \Codeception\Configuration::modules($settings);

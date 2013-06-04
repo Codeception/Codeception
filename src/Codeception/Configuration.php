@@ -1,6 +1,7 @@
 <?php
 namespace Codeception;
 
+use Codeception\Exception\Configuration as ConfigurationException;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
 
@@ -9,12 +10,29 @@ class Configuration
     protected static $suites = array();
     protected static $config = null;
 
+    protected static $dir = null;
     protected static $logDir = null;
     protected static $dataDir = null;
     protected static $helpersDir = null;
     protected static $testsDir = null;
 
-    protected static $dir = null;
+    public static $defaultConfig = array(
+        'namespace' => null,
+        'paths' => array(),
+        'modules' => array(),
+        'settings' => array(
+            'colors' => false,
+            'log' => false
+        )
+    );
+
+    public static $defaultSuiteSettings = array(
+        'class_name' => 'NoGuy',
+        'modules' => array(),
+        'bootstrap' => '_bootstrap.php',
+        'suite_class' => '\PHPUnit_Framework_TestSuite',
+        'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
+    );
 
     public static function config($config_file = null)
     {
@@ -23,51 +41,55 @@ class Configuration
         if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
         $dir = dirname($config_file);
-
-        $config = file_exists($config_file)
-            ? Yaml::parse($config_file)
-            : array();
+        $dist_file = $dir . DIRECTORY_SEPARATOR . 'codeception.yml';
 
         $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-        $config = array_merge($distConfig, $config);
-
-        if (empty($config)) throw new \Codeception\Exception\Configuration("Configuration file is invalid");
-        if (!isset($config['paths'])) throw new \Codeception\Exception\Configuration('Paths are not defined');
-        if (!isset($config['paths']['tests'])) throw new \Codeception\Exception\Configuration('Tests directory path is not defined');
-        if (!isset($config['paths']['data'])) throw new \Codeception\Exception\Configuration('Data path is not defined');
-        if (!isset($config['paths']['log'])) throw new \Codeception\Exception\Configuration('Log path is not defined');
 
 
-        if (isset($config['paths']['helpers'])) {
-            // Helpers
-            $helpers = Finder::create()->files()->name('*Helper.php')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['helpers']);
-            foreach ($helpers as $helper) include_once($helper);
-        }
+        $config = file_exists($config_file) ? Yaml::parse($config_file) : array();
+        $config = self::mergeConfigs(self::mergeConfigs(self::$defaultConfig, $distConfig), $config);
 
-        if (!isset($config['suites'])) {
-            $suites = Finder::create()->files()->name('*.suite.yml')->in($dir . DIRECTORY_SEPARATOR . $config['paths']['tests'])->depth('< 1');
-            $config['suites'] = array();
-            foreach ($suites as $suite) {
-                preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
-                $config['suites'][] = $matches[1];
-            }
-        }
 
-        ini_set('memory_limit', isset($config['settings']['memory_limit']) ? $config['settings']['memory_limit'] : '1024M');
+        if (empty($config)) throw new ConfigurationException("Configuration file is invalid");
+        if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
+        if (!isset($config['paths']['data'])) throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
+        if (!isset($config['paths']['log'])) throw new ConfigurationException('Log path is not defined by key "paths: log"');
 
-        self::$suites = $config['suites'];
         self::$config = $config;
         self::$dataDir = $config['paths']['data'];
         self::$logDir = $config['paths']['log'];
         self::$helpersDir = $config['paths']['helpers'];
+        self::$testsDir = $config['paths']['tests'];
         self::$dir = $dir;
+
+        self::autoloadHelpers();
+        self::loadSuites();
 
         return $config;
     }
 
+    protected static function autoloadHelpers()
+    {
+        $helpers = Finder::create()->files()->name('*Helper.php')->in(self::helpersDir());
+        spl_autoload_register(function ($class) {
+            if (!preg_match('~Helper$~', $class)) return;
+            $helpers = Finder::create()->files()->name($class.'.php')->in(self::$helpersDir);
+        });
+        // foreach ($helpers as $helper) include_once($helper);
+    }
+
+    protected static function loadSuites()
+    {
+        $suites = Finder::create()->files()->name('*.suite.yml')->in(self::$dir.DIRECTORY_SEPARATOR.self::$testsDir)->depth('< 1');
+        self::$suites = array();
+        foreach ($suites as $suite) {
+            preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
+            self::$suites[] = $matches[1];
+        }
+    }
+
     public static function dataDir()
     {
-        if (!self::$dataDir) throw new \Codeception\Exception\Configuration("Path for data not specified. Please, set data path in global config");
         return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
     }
 
@@ -78,14 +100,14 @@ class Configuration
 
     public static function logDir()
     {
-        if (!self::$logDir) throw new \Codeception\Exception\Configuration("Path for logs not specified. Please, set log path in global config");
+        if (!self::$logDir) throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
         $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
         if (!is_writable($dir)) {
             @mkdir($dir);
             @chmod($dir, 777);
         }
         if (!is_writable($dir)) {
-            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+            throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
         }
         return $dir;
     }
@@ -94,23 +116,6 @@ class Configuration
     {
         return self::$dir . DIRECTORY_SEPARATOR;
     }
-
-    public static function defaultSuiteSettings()
-    {
-        return array(
-            'namespace' => null,
-            'class_name' => 'NoGuy',
-            'modules' => array(),
-            'bootstrap' => '_bootstrap.php',
-            'suite_class' => '\PHPUnit_Framework_TestSuite',
-            'colors' => true,
-            'memory_limit' => '1024M',
-            'path' => '',
-            'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
-        );
-
-    }
-
 
     public static function suiteSettings($suite, $config)
     {
@@ -145,7 +150,7 @@ class Configuration
     public static function modules($settings)
     {
         $defaults = array('modules' => array('enabled' => array(), 'config' => array()));
-        if (!isset($settings['modules'])) throw new \Codeception\Exception\Configuration('No modules configured!');
+        if (!isset($settings['modules'])) throw new ConfigurationException('No modules configured!');
 
         if (file_exists($guy = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php')) require_once $guy;
         // if (!class_exists($settings['class_name'])) throw new \Codeception\Exception\Configuration("No guys were found. Tried to find {$settings['class_name']} but he was not there.");
