@@ -30,14 +30,26 @@ class GenerateSuite extends Base
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $suite = $input->getArgument('suite');
+
         $guy = $input->getArgument('guy');
 
         $config = \Codeception\Configuration::config($input->getOption('config'));
 
-        $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR;
-        if (file_exists($dir.DIRECTORY_SEPARATOR.$suite)) throw new \Exception("Directory $suite already exists.");
-        if (file_exists($dir.$suite.'.suite.yml')) throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
+        $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'];
 
+        $suitePath = $dir . DIRECTORY_SEPARATOR . $suite;
+        $paths = explode(DIRECTORY_SEPARATOR, $suitePath);
+        $prevPath = '';
+
+        foreach ($paths as $path) {
+            $prevPath = $prevPath . $path . DIRECTORY_SEPARATOR;
+
+            if(!is_dir($prevPath)) {
+                mkdir($prevPath);
+            }
+        }
+
+        if (file_exists($dir.$suite.'.suite.yml')) throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         @mkdir($dir.DIRECTORY_SEPARATOR.$suite);
 
         // generate bootstrap
@@ -55,7 +67,7 @@ class GenerateSuite extends Base
             'modules' => array('enabled' => array($guyname.'Helper')),
         );
 
-        file_put_contents($dir.$suite.'.suite.yml', Yaml::dump($conf, 2));
+        file_put_contents($dir.DIRECTORY_SEPARATOR.$suite.'.suite.yml', Yaml::dump($conf, 2));
 
         $output->writeln("<info>Suite $suite generated</info>");
     }

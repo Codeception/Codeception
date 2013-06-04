@@ -42,10 +42,10 @@ class GenerateCept extends Base
 
         $res = $this->save($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
         if (!$res) {
-            $output->writeln("<error>Test $filename already exists</error>");
+            $output->writeln("<error>Test $suite/$filename already exists</error>");
             exit;
         }
-        $output->writeln("<info>Test was generated in $filename</info>");
+        $output->writeln("<info>Test was generated in $suite/$filename</info>");
     }
 
 
