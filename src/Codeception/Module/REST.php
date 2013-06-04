@@ -414,9 +414,13 @@ class REST extends \Codeception\Module
             $this->fail('Response is not of JSON format or is malformed');
             $this->debugSection('Response', $this->response);
         }
+        
+        if ($path === '') {
+            return $data;
+        }
 
         foreach (explode('.', $path) as $key) {
-            if (!array_key_exists($key, $data)) {
+            if (!is_array($data) || !array_key_exists($key, $data)) {
                 $this->fail('Response does not have required data');
                 $this->debugSection('Response', $response);
             }
