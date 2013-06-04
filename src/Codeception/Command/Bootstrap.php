@@ -13,6 +13,8 @@ use Symfony\Component\Yaml\Yaml;
 class Bootstrap extends \Symfony\Component\Console\Command\Command
 {
 
+    protected $namespace = '';
+
     public function getDescription()
     {
         return 'Initializes empty test suite and default configuration file';
@@ -29,7 +31,9 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $namespace = rtrim($input->getOption('namespace'),'\\');
+        $this->namespace = rtrim($input->getOption('namespace'),'\\');
+        if ($this->namespace) $this->namespace = $this->namespace.'\\';
+
         $path = $input->getArgument('path');
 
         if (!is_dir($path)) {
@@ -62,14 +66,11 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
-        $suiteConfig = array();
-        if ($namespace) $suiteConfig['namespace'] = $namespace;
-
-        $this->createUnitSuite($suiteConfig);
+        $this->createUnitSuite();
         $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
-        $this->createFunctionalSuite($suiteConfig);
+        $this->createFunctionalSuite();
         $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
-        $this->createAcceptanceSuite($suiteConfig);
+        $this->createAcceptanceSuite();
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
 
         $output->writeln("<info>Building initial Guy classes</info>");
@@ -78,7 +79,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
     }
 
-    public function createGlobalConfig()
+    public function createGlobalConfig($overrides = array())
     {
         $basicConfig = array(
             'paths' => array(
@@ -105,17 +106,21 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
             )
         );
 
+        if ($this->namespace) {
+            $namespace = array('namespace' => $this->namespace);
+            $basicConfig = array_merge($basicConfig, $namespace);
+        }
+
         $str = Yaml::dump($basicConfig, 4);
         file_put_contents('codeception.yml', $str);
     }
 
-    protected function createFunctionalSuite($conf = array())
+    protected function createFunctionalSuite()
     {
         $suiteConfig = array(
             'class_name' => 'TestGuy',
             'modules' => array('enabled' => array('Filesystem', 'TestHelper')),
         );
-        $suiteConfig = array_merge($conf, $suiteConfig);
 
         $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for functional (integration) tests.\n";
@@ -125,11 +130,11 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/TestHelper.php', "<?php\n{$this->namespace}namespace Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/functional.suite.yml', $str);
     }
 
-    protected function createAcceptanceSuite($conf = array())
+    protected function createAcceptanceSuite()
     {
         $suiteConfig = array(
             'class_name' => 'WebGuy',
@@ -142,7 +147,6 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
                 )
             ),
         );
-        $suiteConfig = array_merge($conf, $suiteConfig);
 
         $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for acceptance tests.\n";
@@ -155,18 +159,17 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= Yaml::dump($suiteConfig, 5);
 
         file_put_contents('tests/acceptance/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/acceptance.suite.yml', $str);
     }
 
-    protected function createUnitSuite($conf = array())
+    protected function createUnitSuite($namespace = "")
     {
          // CodeGuy
         $suiteConfig = array(
             'class_name' => 'CodeGuy',
             'modules' => array('enabled' => array('CodeHelper')),
         );
-        $suiteConfig = array_merge($conf, $suiteConfig);
 
         $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
@@ -174,7 +177,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/unit.suite.yml', $str);
     }
 

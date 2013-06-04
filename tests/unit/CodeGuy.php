@@ -11,7 +11,6 @@ use \Codeception\Module\EmulateModuleHelper;
 
 /**
  * Inherited methods
- * @method void __construct($scenario)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)

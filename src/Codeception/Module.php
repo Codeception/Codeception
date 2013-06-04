@@ -1,6 +1,8 @@
 <?php
 namespace Codeception;
 
+use Codeception\Exception\ModuleConfig;
+
 abstract class Module
 {
 
@@ -13,6 +15,18 @@ abstract class Module
     protected $defaultConfig = array();
 
     protected $requiredFields = array();
+
+    public function __construct($config=array())
+    {
+        $moduleName  = explode('\\', get_class($this));
+        $moduleName = end($moduleName);
+
+        if ($config !== array())
+            $this->_setConfig($config);
+        else if ($this->_hasRequiredFields())
+            throw new ModuleConfig(get_class($this), "Module $moduleName is not configured. Please check out it's required fields");
+
+    }
 
     public function _setConfig($config)
     {
@@ -35,7 +49,7 @@ abstract class Module
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
-            throw new \Codeception\Exception\ModuleConfig(get_class($this),"
+            throw new ModuleConfig(get_class($this),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
                 Update configuration and set all required fields\n\n
         ");

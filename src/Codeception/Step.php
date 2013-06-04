@@ -101,7 +101,9 @@ abstract class Step
 
     public function getHumanizedArguments()
     {
-        return $this->clean($this->getArguments(true));
+        $args = array_map(function ($a) { return '"'.$a.'"'; }, $this->getArguments());
+        $args = implode(' within ', $args);
+        return $this->clean($args);
     }
 
     protected function clean($text)
