@@ -41,14 +41,9 @@ class Configuration
         if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
         $dir = dirname($config_file);
-        $dist_file = $dir . DIRECTORY_SEPARATOR . 'codeception.yml';
 
-        $distConfig = file_exists('codeception.dist.yml') ? Yaml::parse('codeception.dist.yml') : array();
-
-
-        $config = file_exists($config_file) ? Yaml::parse($config_file) : array();
-        $config = self::mergeConfigs(self::mergeConfigs(self::$defaultConfig, $distConfig), $config);
-
+        $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.yml', self::$defaultConfig);
+        $config = self::loadConfigFile($config_file, $config);
 
         if (empty($config)) throw new ConfigurationException("Configuration file is invalid");
         if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
@@ -68,14 +63,21 @@ class Configuration
         return $config;
     }
 
+    protected static function loadConfigFile($file, $parentConfig)
+    {
+        $config = file_exists($file) ? Yaml::parse($file) : array();
+        return self::mergeConfigs($parentConfig, $config);
+    }
+
     protected static function autoloadHelpers()
     {
         $helpers = Finder::create()->files()->name('*Helper.php')->in(self::helpersDir());
+
         spl_autoload_register(function ($class) {
             if (!preg_match('~Helper$~', $class)) return;
             $helpers = Finder::create()->files()->name($class.'.php')->in(self::$helpersDir);
         });
-        // foreach ($helpers as $helper) include_once($helper);
+        foreach ($helpers as $helper) include_once($helper);
     }
 
     protected static function loadSuites()
@@ -121,8 +123,6 @@ class Configuration
     {
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
 
-        $defaults = self::defaultSuiteSettings();
-
         $globalConf = $config['settings'];
         foreach (array('modules','coverage', 'namespace') as $key) {
             if (isset($config[$key])) $globalConf[$key] = $config[$key];
@@ -133,7 +133,7 @@ class Configuration
         $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
         $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
 
-        $settings = self::mergeConfigs($defaults, $globalConf);
+        $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
 
