@@ -44,7 +44,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     protected function noPhpWebserver()
     {
-        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
+        if (version_compare(PHP_VERSION, '5.4', '<')) {
             $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
         }
     }
