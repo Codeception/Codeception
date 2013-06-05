@@ -5,9 +5,9 @@
 
 
 use \Codeception\Maybe;
-use \Codeception\Module\Unit;
-use \Codeception\Module\CodeHelper;
-use \Codeception\Module\EmulateModuleHelper;
+use Codeception\Module\Unit;
+use Codeception\Module\CodeHelper;
+use Codeception\Module\EmulateModuleHelper;
 
 /**
  * Inherited methods

@@ -72,22 +72,27 @@ EOF;
 
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite, $input->getOption('config'));
+            $namespace = rtrim($settings['namespace'],'\\');
             $modules = \Codeception\Configuration::modules($settings);
 
             $code = array();
             $methodCounter = 0;
 
+            $output->writeln('');
+            $output->writeln('<info>'.$settings['class_name'] . "</info> includes modules: ".implode(', ',array_keys($modules)));
+
 	        $docblock = array();
-            foreach ($modules as $moduleName => $module) {
-                $docblock[] = "use \\Codeception\\Module\\$moduleName;";
+            foreach ($modules as $module) {
+                $docblock[] = "use ".get_class($module).";";
             }
 
-            $methods[] = array();
+            $methods = array();
             $actions = \Codeception\Configuration::actions($modules);
 
             foreach ($actions as $action => $moduleName) {
                 if (in_array($action, $methods)) continue;
-                $method = new \ReflectionMethod('\Codeception\\Module\\'.$moduleName, $action);
+                $module = $modules[$moduleName];
+                $method = new \ReflectionMethod(get_class($module), $action);
                 $code[] = $this->addMethod($method);
                 $methods[] = $action;
                 $methodCounter++;
@@ -96,10 +101,10 @@ EOF;
             $docblock = $this->prependAbstractGuyDocBlocks($docblock);
 
             $contents = sprintf($this->template,
-                $settings['namespace'] ? "namespace {$settings['namespace']};\n" : '',
+                $namespace ? "namespace $namespace;" : '',
 	            implode("\n", $docblock),
 	            'class',
-                $this->getClassName($settings['class_name']),
+                $settings['class_name'],
 	            '\Codeception\AbstractGuy',
 	            implode("\n\n ", $code));
 

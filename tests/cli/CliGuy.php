@@ -5,9 +5,9 @@
 
 
 use \Codeception\Maybe;
-use \Codeception\Module\Filesystem;
-use \Codeception\Module\Cli;
-use \Codeception\Module\CliHelper;
+use Codeception\Module\Filesystem;
+use Codeception\Module\Cli;
+use Codeception\Module\CliHelper;
 
 /**
  * Inherited methods

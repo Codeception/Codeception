@@ -135,11 +135,11 @@ class Configuration
 
         foreach ($moduleNames as $moduleName)
         {
-            $classname = $namespace.'\\Codeception\\Module\\' . $moduleName;
+            $classname = $namespace.'Codeception\\Module\\' . $moduleName;
             if (!class_exists($classname)) {
               $classname = '\\Codeception\\Module\\' . $moduleName;
               if (!class_exists($classname)) {
-                  throw new ModuleConfig($moduleName,'could not be loaded');
+                  throw new ConfigurationException($moduleName.' could not be found and loaded');
               }
             }
             $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
@@ -155,7 +155,7 @@ class Configuration
         $actions = array();
 
         foreach ($modules as $moduleName => $module) {
-            $class   = new \ReflectionClass('\Codeception\Module\\' . $moduleName);
+            $class   = new \ReflectionClass($module);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
                 // those with underscore at the beginning are considered as hidden
