@@ -111,17 +111,17 @@ class CodeCoverage implements EventSubscriberInterface
     public function printResult(\Codeception\Event\PrintResult $e)
     {
         if ($this->options['steps']) return;
-        $this->printText();
+        $this->printText($e->getPrinter());
         if ($this->options['html']) $this->printHtml();
         if ($this->options['xml']) $this->printXml();
     }
 
-    protected function printText()
+    protected function printText(\PHPUnit_Util_Printer $printer)
     {
         $writer = new \PHP_CodeCoverage_Report_Text(
             $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
         );
-        $writer->process($this->coverage, $this->options['colors']);
+        $printer->write($writer->process($this->coverage, $this->options['colors']));
     }
 
     protected function printHtml()
