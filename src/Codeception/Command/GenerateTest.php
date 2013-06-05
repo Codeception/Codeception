@@ -61,19 +61,20 @@ EOF;
 
         $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
+
         $guy = $suiteconf['class_name'];
+        if ($suiteconf['namespace']) $guy = $suiteconf['namespace'].'\\'.$guy;
 
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($class);
-
+        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
 
         $filename = $this->completeSuffix($classname, 'Test');
         $filename = $path.$filename;
 
         $classname = $this->removeSuffix($classname, 'Test');
 
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($guy), lcfirst($guy), $guy));
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($suiteconf['class_name'])));
 
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");

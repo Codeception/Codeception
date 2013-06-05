@@ -273,3 +273,384 @@
 [2013-06-05 01:58:41] Codeception.INFO: PASSED [] []
 [2013-06-05 01:58:41] Codeception.INFO: PASSED [] []
 [2013-06-05 01:58:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.ALERT: Failed asserting that '<?php use MiddleEarthHobbitGuy
+
+$I = new HobbitGuy($scenario);
+$I->wantTo('perform actions and see result');
+' contains "use MiddleEarth\HobbitGuy;". [] []
+[2013-06-05 03:26:28] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.ALERT: Failed asserting that '<?php
+
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\HobbitGuy $I)". [] []
+[2013-06-05 03:26:28] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.ALERT: Failed asserting that '<?php
+use ShireHobbitGuy;
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "namespace Shire;". [] []
+[2013-06-05 03:26:28] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.ALERT: Failed asserting that '<?php
+use MiddleEarthHobbitGuy;
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\MiddleEarth\HobbitGuy $I)". [] []
+[2013-06-05 03:26:28] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:26:28] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\HobbitGuy
+
+$I = new HobbitGuy($scenario);
+$I->wantTo('perform actions and see result');
+' contains "use MiddleEarth\HobbitGuy;". [] []
+[2013-06-05 03:34:35] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.ALERT: Failed asserting that '<?php
+
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\HobbitGuy $I)". [] []
+[2013-06-05 03:34:35] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.ALERT: Failed asserting that '<?php
+namespace MiddleEarth;
+use MiddleEarth\HobbitGuy;
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\MiddleEarth\HobbitGuy $I)". [] []
+[2013-06-05 03:34:35] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:34:35] Codeception.ALERT: Failed asserting that false is true. [] []
+[2013-06-05 03:34:35] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:34:35] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.ALERT: Failed asserting that '<?php
+
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\HobbitGuy $I)". [] []
+[2013-06-05 03:35:16] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.ALERT: Failed asserting that '<?php
+namespace MiddleEarth;
+use MiddleEarth\HobbitGuy;
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\MiddleEarth\HobbitGuy $I)". [] []
+[2013-06-05 03:35:16] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:35:16] Codeception.ALERT: Failed asserting that false is true. [] []
+[2013-06-05 03:35:16] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:35:16] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.ALERT: Failed asserting that '<?php
+
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "public function tryToTest(\HobbitGuy $I)". [] []
+[2013-06-05 03:40:00] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:00] Codeception.ALERT: Failed asserting that false is true. [] []
+[2013-06-05 03:40:00] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:40:00] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.ALERT: Failed asserting that '<?php
+
+
+class HallUnderTheHillCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(HobbitGuy $I) {
+    
+    }
+
+}' contains "use \HobbitGuy;". [] []
+[2013-06-05 03:40:33] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:40:33] Codeception.ALERT: Failed asserting that false is true. [] []
+[2013-06-05 03:40:33] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:40:33] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:41:06] Codeception.ALERT: Failed asserting that false is true. [] []
+[2013-06-05 03:41:06] Codeception.INFO: # FAILED # [] []
+[2013-06-05 03:41:06] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []
+[2013-06-05 03:48:41] Codeception.INFO: PASSED [] []

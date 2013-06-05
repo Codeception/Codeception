@@ -32,7 +32,7 @@ class GenerateCest extends Base
 }
 EOF;
 
-    protected $methodTemplate = "public function %s(\\%s %s) {\n    \n    }";
+    protected $methodTemplate = "public function %s(%s %s) {\n    \n    }";
 
     protected function configure()
     {
@@ -57,11 +57,12 @@ EOF;
         $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
-        if ($suiteconf['namespace']) $guy = $suiteconf['namespace'].'\\'.$guy;
 
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($class);
+
+        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
+        $ns .= "use ".$suiteconf['namespace'].'\\'.$guy.";";
 
         $filename = $this->completeSuffix($classname, 'Cest');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;

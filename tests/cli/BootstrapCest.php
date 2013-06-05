@@ -21,6 +21,7 @@ class BootstrapCest
 
         $I->seeFileFound('codeception.yml');
         $I->seeInThisFile('namespace: Generated');
+        $I->dontSeeInThisFile('namespace Generated\\');
 
         $this->checkFilesCreated($I);
 
