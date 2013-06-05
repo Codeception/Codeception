@@ -33,20 +33,22 @@ class GenerateSuite extends Base
         $guy = $input->getArgument('guy');
 
         $config = \Codeception\Configuration::config($input->getOption('config'));
+        $namespace = $config['namespace'] ? $config['namespace'] . '\\' : '';
 
         $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR;
         if (file_exists($dir.$suite)) throw new \Exception("Directory $suite already exists.");
         if (file_exists($dir.$suite.'.suite.yml')) throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
 
-        $this->buildPath($dir, $suite);
+        $this->buildPath($dir.$suite.DIRECTORY_SEPARATOR, '_bootstrap.php');
 
         // generate bootstrap
-        $this->save($dir.$suite.'/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
+        $this->save($dir.$suite.DIRECTORY_SEPARATOR.'_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n", true);
 
         $guyname = $this->removeSuffix($guy, 'Guy');
 
         // generate helper
-        $this->save(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
+        $this->save(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php',
+            "<?php\nnamespace {$namespace}Codeception\\Module;\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
 
         $conf = array(
             'class_name' => $guy,

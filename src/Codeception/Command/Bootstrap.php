@@ -24,7 +24,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
     {
         $this->setDefinition(array(
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path','.'),
-            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            new InputOption('namespace', 'n', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
@@ -130,7 +130,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/_helpers/TestHelper.php', "<?php\n{$this->namespace}namespace Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/functional.suite.yml', $str);
     }
 
