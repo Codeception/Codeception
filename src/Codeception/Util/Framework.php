@@ -27,7 +27,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        if (!$this->client->getResponse()) return;
+        if (!$this->client || !$this->client->getResponse()) return;
         file_put_contents(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html', $this->client->getResponse()->getContent());
     }
 
