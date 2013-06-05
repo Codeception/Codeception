@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Util\Driver;
 
+use Codeception\Exception\Module as ModuleException;
+
 class Db
 {
     protected $dbh;
@@ -93,7 +95,15 @@ class Db
             $query .= rtrim($sqlLine);
 
             if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $this->sqlQuery(substr($query, 0, - 1 * $delimiterLength));
+                $queryToBeExecuted = substr($query, 0, - 1 * $delimiterLength);
+                try {
+                    $this->sqlQuery($queryToBeExecuted);
+                } catch (\PDOException $e) {
+                    throw new ModuleException(
+                        __CLASS__,
+                        $e->getMessage() . "\nSQL query being executed: " . $queryToBeExecuted
+                    );
+                }
                 $query = "";
             }
         }
