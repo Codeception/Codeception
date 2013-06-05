@@ -48,7 +48,8 @@ class Codecept
         'colors' => false,
         'log' => true,
         'coverage' => false,
-	    'defer-flush' => false
+	    'defer-flush' => false,
+        'group' => null
     );
 
     public function __construct($options = array()) {
