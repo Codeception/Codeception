@@ -32,7 +32,6 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->namespace = rtrim($input->getOption('namespace'),'\\');
-        if ($this->namespace) $this->namespace = $this->namespace.'\\';
 
         $path = $input->getArgument('path');
 
@@ -66,6 +65,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
         file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
+        if ($this->namespace) $this->namespace = $this->namespace.'\\';
         $this->createUnitSuite();
         $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
         $this->createFunctionalSuite();
@@ -79,7 +79,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
 
     }
 
-    public function createGlobalConfig($overrides = array())
+    public function createGlobalConfig()
     {
         $basicConfig = array(
             'paths' => array(
@@ -106,12 +106,10 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
             )
         );
 
-        if ($this->namespace) {
-            $namespace = array('namespace' => $this->namespace);
-            $basicConfig = array_merge($basicConfig, $namespace);
-        }
-
         $str = Yaml::dump($basicConfig, 4);
+        if ($this->namespace) {
+            $str = "namespace: {$this->namespace} \n".$str;
+        }
         file_put_contents('codeception.yml', $str);
     }
 

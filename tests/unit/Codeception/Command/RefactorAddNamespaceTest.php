@@ -1,11 +1,11 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class NamespacifyTest extends BaseCommandRunner
+class RefactorAddNamespaceTest extends BaseCommandRunner
 {
     protected function setUp()
     {
-        $this->makeCommand('\Codeception\Command\Namespacify');
+        $this->makeCommand('\Codeception\Command\RefactorAddNamespace');
     }
 
     public function testBasic()

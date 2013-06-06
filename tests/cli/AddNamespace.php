@@ -1,8 +1,8 @@
 <?php
 $I = new CliGuy($scenario);
-$I->wantTo('namespacify current suite');
+$I->wantTo('add namespace to configuration');
 $I->amInPath('tests/data/sandbox');
-$I->executeCommand('namespacify Jazz --force');
+$I->executeCommand('refactor:add-namespace Jazz --force');
 $I->seeFileFound('codeception.yml');
 $I->seeInThisFile('namespace: Jazz');
 $I->seeFileFound('OrderHelper.php');

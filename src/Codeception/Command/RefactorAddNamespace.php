@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
-class Namespacify extends Base {
+class RefactorAddNamespace extends Base {
 
     protected $namespace;
 
