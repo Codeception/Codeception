@@ -38,7 +38,7 @@ class BuildTest extends BaseCommandRunner {
     {
         $this->config['namespace'] = 'Shire';
         $this->execute();
-        $this->assertContains('namespace Shire;', $this->content);
+        $this->assertContains('namespace Shire\Codeception;', $this->content);
         $this->assertContains('class HobbitGuy extends \Codeception\AbstractGuy', $this->content);
         $this->assertContains('public function amInPath($path)', $this->content);
     }
