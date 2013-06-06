@@ -18,18 +18,16 @@ class BootstrapCest
         $I->executeCommand('bootstrap --namespace Generated');
 
         $I->seeInShellOutput('Building Guy classes for suites');
-
         $I->seeFileFound('codeception.yml');
         $I->seeInThisFile('namespace: Generated');
         $I->dontSeeInThisFile('namespace Generated\\');
-
         $this->checkFilesCreated($I);
 
         $I->seeFileFound('WebHelper.php');
         $I->seeInThisFile('namespace Generated\Codeception\Module;');
 
         $I->seeFileFound('WebGuy.php');
-        $I->seeInThisFile('namespace Generated;');
+        $I->seeInThisFile('namespace Generated\Codeception;');
     }
     
     protected function checkFilesCreated(\CliGuy $I)

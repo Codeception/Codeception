@@ -28,7 +28,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
         
         $commandTester = new CommandTester($app->find($this->commandName));
         $args['command'] = $this->commandName;
-        $commandTester->execute($args);
+        $commandTester->execute($args, array('interactive' => false));
         $this->output = $commandTester->getDisplay();
     }
     
@@ -51,6 +51,9 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
             },
             'getSuites' => function() {
                 return array('shire');
+            },
+            'getApplication' => function() {
+                return new \Codeception\Maybe;
             }
         ));
     }
