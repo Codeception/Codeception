@@ -41,7 +41,7 @@ class Configuration
 
     public static function config($config_file = null)
     {
-        if (self::$config) return self::$config;
+        if (!$config_file && self::$config) return self::$config;
 
         if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
@@ -51,9 +51,13 @@ class Configuration
         $config = self::loadConfigFile($config_file, $config);
 
         if (empty($config)) throw new ConfigurationException("Configuration file is invalid");
-        if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
-        if (!isset($config['paths']['data'])) throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
-        if (!isset($config['paths']['log'])) throw new ConfigurationException('Log path is not defined by key "paths: log"');
+
+        if (!isset($config['include'])) {
+            if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
+            if (!isset($config['paths']['data'])) throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
+            if (!isset($config['paths']['log'])) throw new ConfigurationException('Log path is not defined by key "paths: log"');
+            if (!isset($config['paths']['helpers'])) throw new ConfigurationException('Helpers path is not defined by key "paths: helpers"');
+        }
 
         self::$config = $config;
         self::$dataDir = $config['paths']['data'];
@@ -134,7 +138,7 @@ class Configuration
 
         foreach ($moduleNames as $moduleName)
         {
-            $classname = $namespace.'Codeception\\Module\\' . $moduleName;
+            $classname = $namespace.'\\Codeception\\Module\\' . $moduleName;
             if (!class_exists($classname)) {
               $classname = '\\Codeception\\Module\\' . $moduleName;
               if (!class_exists($classname)) {

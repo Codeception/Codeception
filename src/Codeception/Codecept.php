@@ -56,7 +56,7 @@ class Codecept
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->runner = new PHPUnit\Runner();
 
-        $this->config = Configuration::config($options['config']);
+        $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options);
 
         $this->dispatcher = new EventDispatcher();
