@@ -32,8 +32,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	    $this->handleConfiguration($arguments);
         $result->convertErrorsToExceptions(false);
         
-        $this->applyResultOptions($result, $arguments);
-
         if ($arguments['report']) $this->printer = new Report();
 
         if (empty(self::$persistentListeners)) $this->applyReporters($result, $arguments);
@@ -44,8 +42,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 	    foreach ($arguments['listeners'] as $listener) {
 	        $result->addListener($listener);
 	    }
-
-	    if ($arguments['strict']) $result->strictMode(true);
 
 	    $suite->run(
 	      $result,
@@ -63,34 +59,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 
 	    return $result;
 	}
-
-    protected function applyResultOptions(\PHPUnit_Framework_TestResult  $result, $arguments)
-    {
-        if (!$arguments['convertNoticesToExceptions']) {
-   	        \PHPUnit_Framework_Error_Notice::$enabled = false;
-   	    }
-
-   	    if (!$arguments['convertWarningsToExceptions']) {
-   	        \PHPUnit_Framework_Error_Warning::$enabled = false;
-   	    }
-
-   	    if ($arguments['stopOnError']) {
-   	        $result->stopOnError(true);
-   	    }
-
-   	    if ($arguments['stopOnFailure']) {
-   	        $result->stopOnFailure(true);
-   	    }
-
-   	    if ($arguments['stopOnIncomplete']) {
-   	        $result->stopOnIncomplete(true);
-   	    }
-
-   	    if ($arguments['stopOnSkipped']) {
-   	        $result->stopOnSkipped(true);
-   	    }
-
-    }
 
     /**
      * @param \PHPUnit_Framework_TestResult $result

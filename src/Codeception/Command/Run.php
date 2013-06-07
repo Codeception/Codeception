@@ -78,7 +78,7 @@ class Run extends Base
             foreach ($config['include'] as $included_config_file) {
                 Configuration::config($full_path = $current_dir . $included_config_file);
                 $namespace = $this->currentNamespace();
-                $output->writeln("\n<fg=white;bg=magenta>[$namespace] running tests from $full_path\n</fg=white;bg=magenta>");
+                $output->writeln("\n<fg=white;bg=magenta>\n[$namespace]: tests from $full_path\n</fg=white;bg=magenta>");
                 $suites = $suite ? explode(',', $suite) : Configuration::suites();
                 $this->runSuites($suites, $options['skip']);
             }

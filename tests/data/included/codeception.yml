@@ -3,3 +3,5 @@ include:
   - shire
 paths:
   log: "_log"
+settings:
+  colors: false
