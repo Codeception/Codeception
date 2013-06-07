@@ -82,12 +82,11 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        $helpersDir = self::helpersDir();
-        spl_autoload_register(function ($class) use ($helpersDir) {
+        spl_autoload_register(function ($class) {
             $matches = null;
             if (!preg_match('~\\\\?(\\w*?Helper)$~', $class, $matches)) return;
             $className = $matches[1];
-            $helpers = Finder::create()->files()->name($className.'.php')->in($helpersDir);
+            $helpers = Finder::create()->files()->name($className.'.php')->in(\Codeception\Configuration::helpersDir());
             foreach ($helpers as $helper) include_once($helper);
         });
     }
