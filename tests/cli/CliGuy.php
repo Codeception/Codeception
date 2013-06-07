@@ -246,6 +246,31 @@ class CliGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Erases directory contents
+     *
+     * ``` php
+     * <?php
+     * $I->cleanDir('logs');
+     * ?>
+     * ```
+     *
+     * @param $dirname
+     * @see Filesystem::cleanDir()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function cleanDir($dirname) {
+        $this->scenario->action('cleanDir', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
      * Executes a shell command
      *
      * @param $command

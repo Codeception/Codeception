@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 use Codeception\Util\FileSystem as Util;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Module for testing local filesystem.
@@ -183,7 +184,7 @@ class Filesystem extends \Codeception\Module
         if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
 
 
-        $files = \Symfony\Component\Finder\Finder::create()->files()->name($filename)->in($path);
+        $files = Finder::create()->files()->name($filename)->in($path);
         foreach ($files as $file) {
             $file = $file->getRealPath();
             $this->openFile($file);
@@ -193,5 +194,22 @@ class Filesystem extends \Codeception\Module
             return;
         }
         \PHPUnit_Framework_Assert::fail("$filename in $path");
+    }
+
+    /**
+     * Erases directory contents
+     *
+     * ``` php
+     * <?php
+     * $I->cleanDir('logs');
+     * ?>
+     * ```
+     *
+     * @param $dirname
+     */
+    public function cleanDir($dirname)
+    {
+        $path = $this->absolutizePath($dirname);
+        Util::doEmptyDir($path);
     }
 }
