@@ -18,14 +18,7 @@ abstract class Module
 
     public function __construct($config=array())
     {
-        $moduleName  = explode('\\', get_class($this));
-        $moduleName = end($moduleName);
-
-        if ($config !== array())
-            $this->_setConfig($config);
-        else if ($this->_hasRequiredFields())
-            throw new ModuleConfig(get_class($this), "Module $moduleName is not configured. Please check out it's required fields");
-
+        if (!empty($config)) $this->_setConfig($config);
     }
 
     public function _setConfig($config)
