@@ -78,7 +78,6 @@ EOF;
             $code = array();
             $methodCounter = 0;
 
-            $output->writeln('');
             $output->writeln('<info>'.$settings['class_name'] . "</info> includes modules: ".implode(', ',array_keys($modules)));
 
 	        $docblock = array();
@@ -110,7 +109,7 @@ EOF;
 
             $file = $settings['path'].$this->getClassName($settings['class_name']).'.php';
             $this->save($file, $contents, true);
-            $output->writeln("$file generated successfully. $methodCounter methods added");
+            $output->writeln("{$settings['class_name']}.php generated successfully. $methodCounter methods added");
         }
     }
 

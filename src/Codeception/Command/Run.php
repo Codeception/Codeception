@@ -1,8 +1,7 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
+use Codeception\Configuration;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,6 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Run extends Base
 {
+
+    /**
+     * @var \Codeception\Codecept
+     */
+    protected $codecept;
 
     protected function configure()
     {
@@ -48,48 +52,60 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
-        if ($options['group']) $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
+        if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
 
-        if ($input->getArgument('test')
-            && strtolower(substr($input->getArgument('test'), -4)) === '.php'
-        ) {
-            $options['steps'] = true;
-        }
-
-        if ($input->getOption('debug')) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        $config = Configuration::config($options['config']);
 
         $suite = $input->getArgument('suite');
         $test = $input->getArgument('test');
 
-        $codecept = new \Codeception\Codecept((array) $options);
-        $config = \Codeception\Configuration::config();
-
-        if (strpos($suite, $config['paths']['tests'])===0) {
-            $matches = $this->matchTestFromFilename($suite, $config['paths']['tests']);
-            $suite = $matches[1];
-            $test = $matches[2];
+        if (!Configuration::isEmpty() && !$test && strpos($suite, $config['paths']['tests'])===0) {
+            list($matches, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
 
-        $suites = $suite ? explode(',', $suite) : \Codeception\Configuration::suites();
+        if ($options['group']) $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
+        if ($input->getArgument('test')) $options['steps'] = true;
 
-        if ($suite and $test) {
-            $codecept->runSuite($suite, $test);
-        }
+
+        $this->codecept = new \Codeception\Codecept((array) $options);
+
+        if ($suite and $test) $this->codecept->runSuite($suite, $test);
 
         if (!$test) {
-            foreach ($suites as $suite) {
-                if (in_array($suite, $options['skip'])) continue;
-                $codecept->runSuite($suite);
+            $suites = $suite ? explode(',', $suite) : Configuration::suites();
+            $current_dir = Configuration::projectDir();
+            $this->runSuites($suites, $options['skip']);
+            foreach ($config['include'] as $included_config_file) {
+                Configuration::config($full_path = $current_dir . $included_config_file);
+                $namespace = $this->currentNamespace();
+                $output->writeln("\n<fg=white;bg=magenta>[$namespace] running tests from $full_path\n</fg=white;bg=magenta>");
+                $suites = $suite ? explode(',', $suite) : Configuration::suites();
+                $this->runSuites($suites, $options['skip']);
             }
         }
 
-        $codecept->printResult();
+        $this->codecept->printResult();
 
         if (!$input->getOption('no-exit')) {
-            if ($codecept->getResult()->failureCount() or $codecept->getResult()->errorCount()) exit(1);
+            if ($this->codecept->getResult()->failureCount() or $this->codecept->getResult()->errorCount()) exit(1);
         }
     }
 
+    protected function currentNamespace()
+    {
+        $config = Configuration::config();
+        if (!$config['namespace'])
+            throw new \RuntimeException("Can't include into runner suite without a namespace;\nUse 'refactor:add-namespace' command to fix it'");
+        return $config['namespace'];
+    }
+
+    protected function runSuites($suites, $skippedSuites = array())
+    {
+        foreach ($suites as $suite) {
+            if (in_array($suite, $skippedSuites)) continue;
+            $this->codecept->runSuite($suite);
+        }        
+    }        
 
     protected function matchTestFromFilename($filename,$tests_path)
     {

@@ -18,9 +18,8 @@ class Configuration
 
     public static $defaultConfig = array(
         'namespace' => '',
-        'paths' => array(
-            'tests' => ''
-        ),
+        'include' => array(),
+        'paths' => array(),
         'modules' => array(),
         'settings' => array(
             'colors' => false,
@@ -47,24 +46,27 @@ class Configuration
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
         $dir = dirname($config_file);
 
-        $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.yml', self::$defaultConfig);
+        $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml', self::$defaultConfig);
         $config = self::loadConfigFile($config_file, $config);
 
         if (empty($config)) throw new ConfigurationException("Configuration file is invalid");
 
-        if (!isset($config['include'])) {
-            if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
-            if (!isset($config['paths']['data'])) throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
-            if (!isset($config['paths']['log'])) throw new ConfigurationException('Log path is not defined by key "paths: log"');
-            if (!isset($config['paths']['helpers'])) throw new ConfigurationException('Helpers path is not defined by key "paths: helpers"');
-        }
-
+        self::$dir = $dir;
         self::$config = $config;
-        self::$dataDir = $config['paths']['data'];
+
+        if (!isset($config['paths']['log'])) throw new ConfigurationException('Log path is not defined by key "paths: log"');
         self::$logDir = $config['paths']['log'];
+
+        // config without tests, for inclusion of other configs
+        if (count($config['include']) and !isset($config['paths']['tests'])) return $config;
+
+        if (!isset($config['paths']['tests'])) throw new ConfigurationException('Tests directory is not defined in Codeception config by key "paths: tests:"');
+        if (!isset($config['paths']['data'])) throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
+        if (!isset($config['paths']['helpers'])) throw new ConfigurationException('Helpers path is not defined by key "paths: helpers"');
+
+        self::$dataDir = $config['paths']['data'];
         self::$helpersDir = $config['paths']['helpers'];
         self::$testsDir = $config['paths']['tests'];
-        self::$dir = $dir;
 
         self::autoloadHelpers();
         self::loadSuites();
@@ -146,7 +148,6 @@ class Configuration
               }
             }
             $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
-
             $modules[$moduleName] = new $classname($moduleConfig);
         }
 
@@ -200,6 +201,11 @@ class Configuration
     public static function projectDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function isEmpty()
+    {
+        return !(bool)self::$testsDir;
     }
 
     protected static function mergeConfigs($a1, $a2)
