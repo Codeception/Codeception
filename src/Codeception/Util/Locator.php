@@ -10,7 +10,8 @@
 
 namespace Codeception\Util;
 use Symfony\Component\CssSelector\CssSelector;
-use Symfony\Component\CssSelector\XPathExpr;
+use Symfony\Component\CssSelector\Exception\ParseException;
+use Symfony\Component\CssSelector\XPath\Translator;
 
 class Locator
 {
@@ -41,7 +42,7 @@ class Locator
      */
     public static function href($url)
     {
-        return sprintf('//a[@href=normalize-space(%s)]', XPathExpr::xpathLiteral($url));
+        return sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
     }
 
     /**
@@ -60,7 +61,7 @@ class Locator
     {
         try {
             $xpath = CssSelector::toXPath($selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+        } catch (ParseException $e) {
             $xpath = $selector;
         }
         return $xpath;
@@ -81,7 +82,7 @@ class Locator
             if (is_int($attribute)) {
                 $operands[] = '@'.$value;
             } else {
-                $operands[] = '@'.$attribute.' = '. XPathExpr::xpathLiteral($value);
+                $operands[] = '@'.$attribute.' = '. Translator::getXpathLiteral($value);
             }
         }
         return sprintf('//%s[%s]', $element, implode(' and ', $operands));
