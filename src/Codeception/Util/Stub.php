@@ -34,10 +34,11 @@ class Stub
      *
      * @param $class - A class to be mocked
      * @param array $params - properties and methods to set
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object - mock
      * @throws \RuntimeException when class not exists
      */
-    public static function make($class, $params = array())
+    public static function make($class, $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
         if (!class_exists($class)) throw new \RuntimeException("Stubbed class $class doesn't exist.");
@@ -46,15 +47,15 @@ class Stub
         $callables = self::getMethodsToReplace($reflection, $params);
         if (!empty($callables)) {
             if ($reflection->isAbstract()) {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array_keys($callables), '', false);
+                $mock = self::generateMockForAbstractClass($class, array_keys($callables), '', false, $testCase);
             } else {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), array(), '', false);
+                $mock = self::generateMock($class, array_keys($callables), array(), '', false, $testCase);
             }
         } else {
             if ($reflection->isAbstract()) {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMockForAbstractClass($class, array(), '', false);
+                $mock = self::generateMockForAbstractClass($class, array(), '', false, $testCase);
             } else {
-                $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, array(), '', false);
+                $mock = self::generateMock($class, null, array(), '', false, $testCase);
             }
         }
         self::bindParameters($mock, $params);
@@ -110,9 +111,10 @@ class Stub
      * @param $class
      * @param $method
      * @param array $params
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object
      */
-    public static function makeEmptyExcept($class, $method, $params = array())
+    public static function makeEmptyExcept($class, $method, $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
@@ -123,7 +125,8 @@ class Stub
         $methods = array_map(function ($m) {
             return $m->name;
         }, $methods);
-        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, $methods, array(), '', false);
+        $methods = count($methods) ? $methods : null;
+        $mock = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
@@ -161,12 +164,13 @@ class Stub
      *
      * @param $class
      * @param array $params
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object
      */
-    public static function makeEmpty($class, $params = array())
+    public static function makeEmpty($class, $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
-        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), array(), '', false);
+      $mock = self::generateMock($class, array(), array(), '', false, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
@@ -219,17 +223,18 @@ class Stub
      * @param $class
      * @param array $constructorParams
      * @param array $params
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object
      */
-    public static function construct($class, $constructorParams = array(), $params = array())
+    public static function construct($class, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
         $callables = self::getMethodsToReplace(new \ReflectionClass($class), $params);
 
         if (!empty($callables)) {
-            $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array_keys($callables), $constructorParams);
+            $mock = self::generateMock($class, array_keys($callables), $constructorParams, $testCase);
         } else {
-            $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, null, $constructorParams);
+            $mock = self::generateMock($class, null, $constructorParams, $testCase);
         }
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
@@ -270,12 +275,13 @@ class Stub
      * @param $class
      * @param array $constructorParams
      * @param array $params
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object
      */
-    public static function constructEmpty($class, $constructorParams = array(), $params = array())
+    public static function constructEmpty($class, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
-        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, array(), $constructorParams);
+      $mock = self::generateMock($class, array(), $constructorParams, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
@@ -315,9 +321,10 @@ class Stub
      * @param $method
      * @param array $constructorParams
      * @param array $params
+     * @param bool|PHPUnit_Framework_TestCase $testCase
      * @return object
      */
-    public static function constructEmptyExcept($class, $method, $constructorParams = array(), $params = array())
+    public static function constructEmptyExcept($class, $method, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
@@ -328,10 +335,44 @@ class Stub
         $methods = array_map(function ($m) {
             return $m->name;
         }, $methods);
-        $mock = \PHPUnit_Framework_MockObject_Generator::getMock($class, $methods, $constructorParams);
+        $methods = count($methods) ? $methods : null;
+        $mock = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
+    }
+
+    private static function generateMock()
+    {
+        return self::doGenerateMock(func_get_args());
+    }
+
+    private static function generateMockForAbstractClass()
+    {
+      return self::doGenerateMock(func_get_args(), true);
+    }
+
+    private static function doGenerateMock($args, $isAbstract = false)
+    {
+      $testCase = self::extractTestCaseFromArgs($args);
+      $generateMethod = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
+
+      if ($testCase instanceof \PHPUnit_Framework_TestCase)
+        $mock = call_user_func_array(array($testCase, $generateMethod),$args);
+      else
+        $mock = call_user_func_array(array('\PHPUnit_Framework_MockObject_Generator', $generateMethod),$args);
+
+      return $mock;
+    }
+
+    private static function extractTestCaseFromArgs(&$args)
+    {
+      $argsLength = count($args) - 1;
+      $testCase = $args[$argsLength];
+
+      unset($args[$argsLength]);
+
+      return $testCase;
     }
 
     /**
@@ -356,7 +397,13 @@ class Stub
         foreach ($params as $param => $value) {
             // redefine method
             if ($reflectionClass->hasMethod($param)) {
-                if ($value instanceof \Closure) {
+                if ($value instanceof StubMarshaler) {
+                  $marshaler = $value;
+                  $mock->
+                      expects($marshaler->getMatcher())->
+                      method($param)->
+                      will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($marshaler->getValue()));
+                } elseif ($value instanceof \Closure) {
                     $mock->
                         expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
                         method($param)->
@@ -392,4 +439,122 @@ class Stub
         return $callables;
     }
 
+    /**
+     * Checks if a method never has been invoked
+     *
+     * If method invoked, it will immediately throw an
+     * exception.
+     *
+     * ``` php
+     * <?php
+     * $user = Stub::make('User', array('getName' => Stub::never(), 'someMethod' => function() {}));
+     * $user->someMethod();
+     * ?>
+     * ```
+     *
+     * @param mixed $params
+     * @return StubMarshaler
+     */
+    public static function never($params = null) {
+      return new StubMarshaler(new \PHPUnit_Framework_MockObject_Matcher_InvokedCount(0), self::closureIfNull($params));
+    }
+
+    /**
+     * Checks if a method has been invoked exactly one
+     * time.
+     *
+     * If the number is less or greater it will later be checked in verify() and also throw an
+     * exception.
+     *
+     * ``` php
+     * <?php
+     * $user = Stub::make('User', array('getName' => Stub::once(function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $userName = $user->getName();
+     * $this->assertEquals('Davert', $userName);
+     * ?>
+     * ```
+     *
+     * @param mixed $params
+     * @return StubMarshaler
+     */
+    public static function once($params = null) {
+      return new StubMarshaler(new \PHPUnit_Framework_MockObject_Matcher_InvokedCount(1), self::closureIfNull($params));
+    }
+
+    /**
+     * Checks if a method has been invoked at least one
+     * time.
+     *
+     * If the number of invocations is 0 it will throw an exception in verify.
+     *
+     * ``` php
+     * <?php
+     * $user = Stub::make('User', array('getName' => Stub::atLeastOnce(function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $user->getName();
+     * $user->getName();
+     * ?>
+     * ```
+     *
+     * @param mixed $params
+     * @return StubMarshaler
+     */
+    public static function atLeastOnce($params = null) {
+      return new StubMarshaler(new \PHPUnit_Framework_MockObject_Matcher_InvokedAtLeastOnce, self::closureIfNull($params));
+    }
+
+    /**
+     * Checks if a method has been invoked a certain amount
+     * of times.
+     * If the number of invocations exceeds the value it will immediately throw an
+     * exception,
+     * If the number is less it will later be checked in verify() and also throw an
+     * exception.
+     *
+     * ``` php
+     * <?php
+     * $user = Stub::make('User', array('getName' => Stub::exactly(3, function() { return 'Davert';}), 'someMethod' => function() {}));
+     * $user->getName();
+     * $user->getName();
+     * $user->getName();
+     * ?>
+     * ```
+     *
+     * @param mixed $params
+     * @return StubMarshaler
+     */
+    public static function exactly($count, $params = null) {
+      return new StubMarshaler(new \PHPUnit_Framework_MockObject_Matcher_InvokedCount($count), self::closureIfNull($params));
+    }
+
+    private static function closureIfNull($params) {
+      return null == $params ? function() {} : $params;
+  }
+
+}
+
+/**
+ * Holds matcher and value of mocked method
+ */
+
+class StubMarshaler
+{
+    private $methodMatcher;
+
+    private $methodValue;
+
+    public function __construct(\PHPUnit_Framework_MockObject_Matcher_InvokedRecorder $matcher, $value)
+    {
+        $this->methodMatcher = $matcher;
+        $this->methodValue = $value;
+    }
+
+    public function getMatcher()
+    {
+        return $this->methodMatcher;
+    }
+
+    public function getValue()
+    {
+        return $this->methodValue;
+    }
 }
