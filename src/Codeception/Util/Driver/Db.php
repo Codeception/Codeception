@@ -136,7 +136,7 @@ class Db
     {
         if (trim($sql) == "") return true;
         if (trim($sql) == ";") return true;
-        if (preg_match('~^(--.*?)|(#)~s', $sql)) return true;
+        if (preg_match('~^((--.*?)|(#))~s', $sql)) return true;
         return false;
     }
 
