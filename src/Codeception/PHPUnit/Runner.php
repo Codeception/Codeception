@@ -12,6 +12,9 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
     protected $defaultListeners = array('xml' => false, 'html' => false, 'tap' => false, 'json' => false);
     protected $config = array();
     protected $log_dir = null;
+    protected $defaultArguments = array(
+        'report' => false,
+    );
 
     public function __construct()
     {
@@ -29,6 +32,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 
 	public function doEnhancedRun(\PHPUnit_Framework_Test $suite, \PHPUnit_Framework_TestResult $result, array $arguments = array())
 	{
+        $arguments = array_merge($this->defaultArguments, $arguments);
 	    $this->handleConfiguration($arguments);
         $result->convertErrorsToExceptions(false);
         
