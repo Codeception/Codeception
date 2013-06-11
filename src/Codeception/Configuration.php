@@ -49,7 +49,7 @@ class Configuration
         $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml', self::$defaultConfig);
         $config = self::loadConfigFile($config_file, $config);
 
-        if (empty($config)) throw new ConfigurationException("Configuration file is invalid");
+        if ($config == self::$defaultConfig) throw new ConfigurationException("Configuration file is invalid");
 
         self::$dir = $dir;
         self::$config = $config;

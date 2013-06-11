@@ -35,4 +35,11 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($xml->xpath(Locator::find('a', array('href', 'tabindex' => '2'))));
     }
 
+    public function testIsXPath()
+    {
+        $this->assertTrue(Locator::isXPath("//hr[@class='edge' and position()=1]"));
+        $this->assertFalse(Locator::isXPath("and position()=1]"));
+        $this->assertTrue(Locator::isXPath('//table[parent::div[@class="pad"] and not(@id)]//a'));
+    }
+
 }
