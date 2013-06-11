@@ -23,7 +23,9 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
         $app = new Application();
         $app->add($this->command);
 
-        $conf = \Codeception\Configuration::suiteSettings('unit', \Codeception\Configuration::$defaultConfig);
+        $default = \Codeception\Configuration::$defaultConfig;
+        $default['paths']['tests'] = __DIR__;
+        $conf = \Codeception\Configuration::suiteSettings('unit', $default);
         $this->config = array_merge($conf, $this->config);
         
         $commandTester = new CommandTester($app->find($this->commandName));
