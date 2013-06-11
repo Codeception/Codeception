@@ -163,7 +163,24 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeOptionIsSelected('#age', '60-100');
         $this->module->dontSeeOptionIsSelected('#age', '100-210');
     }
-    
+
+    public function testSelectMultipleOptionsByText()
+    {
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->selectOption('What do you like the most?',array('Play Video Games', 'Have Sex'));
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals(array('play','adult'), $form['like']);
+    }
+
+    public function testSelectMultipleOptionsByValue()
+    {
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->selectOption('What do you like the most?',array('eat', 'adult'));
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals(array('eat','adult'), $form['like']);
+    }
 
     public function testHidden()
     {
@@ -362,4 +379,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 		$this->module->resetCookie($cookie_name);
 		$this->module->dontSeeCookie($cookie_name);
 	}
+
+
 }

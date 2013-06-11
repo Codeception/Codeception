@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Util;
 
+use Codeception\Exception\ElementNotFound;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use \Symfony\Component\DomCrawler\Crawler;
@@ -319,13 +320,26 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
 
-        $options = $field->filter(sprintf('option:contains("%s")', $option));
-        if ($options->count()) {
-            $form[$field->attr('name')]->select($options->first()->attr('value'));
+        if (is_array($option)) {
+            $options = array();
+            $fieldName = $field->attr('name');
+            if ($field->attr('multiple')) $fieldName = str_replace('[]', '', $fieldName);
+            foreach ($option as $opt) {
+                $options[] = $this->matchOption($field, $opt);
+            }
+            $form[$fieldName]->select($options);
             return;
         }
 
-        $form[$field->attr('name')]->select($option);
+        $form[$field->attr('name')]->select($this->matchOption($field, $option));
+
+    }
+
+    protected function matchOption(Crawler $field, $option)
+    {
+        $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]', $option));
+        if ($options->count()) return $options->first()->attr('value');
+        return $option;
     }
 
     public function checkOption($option)

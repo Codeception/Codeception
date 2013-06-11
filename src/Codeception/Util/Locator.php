@@ -57,14 +57,27 @@ class Locator
         return sprintf('//*[@tabindex = normalize-space(%d)]', $index);
     }
 
+    /**
+     * Matches option by text
+     *
+     * @param $value
+     * @return string
+     */
+    public static function option($value)
+    {
+        return sprintf('//option[.=normalize-space("%s")]', $value);
+    }
+
+
     protected static function toXPath($selector)
     {
         try {
             $xpath = CssSelector::toXPath($selector);
+            return $xpath;
         } catch (ParseException $e) {
-            $xpath = $selector;
+            if (self::isXPath($selector)) return $selector;
         }
-        return $xpath;
+        return null;
     }
 
     /**
@@ -86,6 +99,16 @@ class Locator
             }
         }
         return sprintf('//%s[%s]', $element, implode(' and ', $operands));
+    }
+
+    public static function isCSS($selector)
+    {
+        try {
+            CssSelector::toXPath($selector);
+        } catch (ParseException $e) {
+            return false;
+        }
+        return true;
     }
 
     public static function isXPath($locator)

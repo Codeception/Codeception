@@ -216,12 +216,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $page = $this->session->getPage();
         $el = null;
-        try {
-            CssSelector::toXPath($selector);
+        if (Locator::isCSS($selector)) {
             $el = $page->find('css', $selector);
-        } catch (ParseException $e) {}
-
-        if (Locator::isXPath($selector)) {
+        }
+        if (!$el and Locator::isXPath($selector)) {
             $el = @$page->find('xpath',$selector);
         }
 
@@ -285,6 +283,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function selectOption($select, $option)
     {
         $field = $this->findField($select);
+        if (is_array($option)) {
+            $field->selectOption($option, true);
+            return;
+        }
         $field->selectOption($option);
     }
 
@@ -303,7 +305,8 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     /**
      * @param $selector
-     * @return \Behat\Mink\Element\NodeElement
+     * @return \Behat\Mink\Element\NodeElement|null
+     * @throws \Codeception\Exception\ElementNotFound
      */
     protected function findField($selector)
     {
@@ -312,13 +315,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)
         ));
 
-        try {
-            if (!$field) $field = $page->find('css', $selector);
-        } catch (ParseException $e) {}
+        if (!$field and Locator::isCSS($selector)) $field = $page->find('css', $selector);
+        if (!$field and Locator::isXPath($selector)) $field = @$page->find('xpath', $selector);
 
-        if (!$field) $field = @$page->find('xpath', $selector);
-
-        if (!$field) \PHPUnit_Framework_Assert::fail("Field matching id|name|label|value or css or xpath selector does not exist");
+        if (!$field) throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
         return $field;
     }
 
