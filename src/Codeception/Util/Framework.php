@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Util;
 
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use \Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -317,7 +319,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
 
-        $options = $field->filter(sprintf('option:contains(%s)', $option));
+        $options = $field->filter(sprintf('option:contains("%s")', $option));
         if ($options->count()) {
             $form[$field->attr('name')]->select($options->first()->attr('value'));
             return;
@@ -381,9 +383,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     protected function match($selector)
     {
         try {
-            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            $selector = CssSelector::toXPath($selector);
+        } catch (ParseException $e) {
         }
+        if (!Locator::isXPath($selector)) return null;
+
         return @$this->crawler->filterXPath($selector);
     }
 
@@ -395,7 +399,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $response = str_replace("\n",'', $response);
             return $response;
         }
-        if (strpos($response, '<html') !== false) {
+        if (strpos(trim($response), '<html') !== false) {
             $formatted = 'page [';
             $crawler = new \Symfony\Component\DomCrawler\Crawler($response);
             $title = $crawler->filter('title');
@@ -424,7 +428,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($field);
         if ($nodes) {
-
+            $fields = $nodes;
            foreach ($fields as $field) {
                if ($field->getAttribute('type') == 'checkbox') continue;
                if ($field->getAttribute('type') == 'radio') continue;

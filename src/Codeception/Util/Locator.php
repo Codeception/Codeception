@@ -88,6 +88,11 @@ class Locator
         return sprintf('//%s[%s]', $element, implode(' and ', $operands));
     }
 
-
+    public static function isXPath($locator)
+    {
+        $document = new \DOMDocument('1.0', 'UTF-8');
+        $xpath = new \DOMXPath($document);
+        return @$xpath->evaluate($locator, $document) !== false;
+    }
 
 }

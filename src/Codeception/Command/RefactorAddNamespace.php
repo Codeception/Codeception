@@ -50,7 +50,7 @@ class RefactorAddNamespace extends Base {
         $this->updateConfigs();
         $output->writeln("+ Config file updated with namespace {$this->namespace}");
 
-        $this->getApplication()->find('build')->run(new ArrayInput(array('command' => 'build', '--quiet' => true)), $output);
+        $this->getApplication()->find('build')->run(new ArrayInput(array('command' => 'build', '-c' => $input->getOption('config'))), $output);
         $output->writeln('+ Guy classes rebuilt');
 
         $this->updateHelpers();
