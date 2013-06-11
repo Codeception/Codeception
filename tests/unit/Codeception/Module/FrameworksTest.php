@@ -166,6 +166,24 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('adult', $form['age']);
     }
+
+    public function testSelectMultipleOptionsByText()
+    {
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->selectOption('What do you like the most?',array('Play Video Games', 'Have Sex'));
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals(array('play','adult'), $form['like']);
+    }
+
+    public function testSelectMultipleOptionsByValue()
+    {
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->selectOption('What do you like the most?',array('eat', 'adult'));
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals(array('eat','adult'), $form['like']);
+    }
     
     public function testHidden() {
         $this->module->amOnPage('/form/hidden');
@@ -391,5 +409,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('#something-beyond');
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
+
 
 }
