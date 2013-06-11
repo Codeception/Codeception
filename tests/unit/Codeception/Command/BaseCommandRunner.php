@@ -42,7 +42,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
             'save' => function($file, $output) use ($self) {
                 $self->filename = $file;
                 $self->content = $output;
-                $this->log[] = array('filename' => $file, 'content' => $output);
+                $self->log[] = array('filename' => $file, 'content' => $output);
                 return true;
             },
             'getSuiteConfig' => function() use ($self) {
