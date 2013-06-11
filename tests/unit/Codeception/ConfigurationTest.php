@@ -71,7 +71,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('\Codeception\Exception\ModuleConfig');
 
         $class = 'StubModule';
-        new $class;
+        new $class(array('secondField' => 'none'));
     }
 
     /**
