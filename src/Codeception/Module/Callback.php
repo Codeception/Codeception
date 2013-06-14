@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 /**
- * Module for rapid test development where many difficult configurations and server environments
+ * Module for rapid test development with lots of complex configurations and server environments
  *
  * ## Status
  *
