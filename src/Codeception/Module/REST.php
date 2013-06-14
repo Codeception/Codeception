@@ -140,6 +140,17 @@ class REST extends \Codeception\Module
         }
     }
 
+	/**
+	 * Adds Digest authentication via username/password.
+	 * 
+	 * @param $username
+	 * @param $password
+	 */
+	public function amDigestAuthenticated($username, $password)
+	{
+		$this->client->setAuth($username, $password, CURLAUTH_DIGEST);
+	}
+
     /**
      * Sends a POST request to given uri.
      *
