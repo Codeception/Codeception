@@ -20,7 +20,7 @@ class CallbackTest extends \PHPUnit_Framework_TestCase
     public function testCallback($returnValue)
     {
         $expected = $returnValue;
-        $actual = $this->module->callback(function() use ($returnValue) {
+        $actual = $this->module->runTimeCallback(function() use ($returnValue) {
             return $returnValue;
         });
 

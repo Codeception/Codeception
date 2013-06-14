@@ -17,7 +17,7 @@ class Callback extends \Codeception\Module
     /**
      * Executes given callback
      */
-    public function callback(\Closure $callback)
+    public function runTimeCallback(\Closure $callback)
     {
         return $callback();
     }
