@@ -60,7 +60,7 @@ class SuiteManager {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class not found");
         $suite = new $suiteClass;
-        if ($this->settings['namespace']) $name = $this->settings['namespace']."\\$name";
+        if ($this->settings['namespace']) $name = $this->settings['namespace'].".$name";
         $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
         return $suite;

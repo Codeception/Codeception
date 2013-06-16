@@ -66,7 +66,6 @@ class Run extends Base
         if ($options['group']) $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
         if ($input->getArgument('test')) $options['steps'] = true;
 
-
         $this->codecept = new \Codeception\Codecept((array) $options);
 
         if ($suite and $test) $this->codecept->runSuite($suite, $test);
@@ -103,6 +102,7 @@ class Run extends Base
     {
         foreach ($suites as $suite) {
             if (in_array($suite, $skippedSuites)) continue;
+            if (!in_array($suite, Configuration::suites())) continue;
             $this->codecept->runSuite($suite);
         }        
     }        
