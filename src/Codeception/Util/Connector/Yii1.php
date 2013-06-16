@@ -85,7 +85,16 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 
 		$content = ob_get_clean();
 
-		$response = new Response($content,200,$this->getHeaders());
+        $headers = $this->getHeaders();
+        $statusCode = 200;
+        foreach ($headers as $header => $val) {
+            if ($header == 'Location') {
+                $statusCode = 302;
+            }
+        }
+
+        $response = new Response($content, $statusCode, $this->getHeaders());
+
 		return $response;
 	}
 

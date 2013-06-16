@@ -319,11 +319,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function selectOption($select, $option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
+        $fieldName = $field->attr('name');
+        if ($field->attr('multiple')) $fieldName = str_replace('[]', '', $fieldName);
 
         if (is_array($option)) {
             $options = array();
-            $fieldName = $field->attr('name');
-            if ($field->attr('multiple')) $fieldName = str_replace('[]', '', $fieldName);
             foreach ($option as $opt) {
                 $options[] = $this->matchOption($field, $opt);
             }
@@ -331,7 +331,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             return;
         }
 
-        $form[$field->attr('name')]->select($this->matchOption($field, $option));
+        $form[$fieldName]->select($this->matchOption($field, $option));
 
     }
 

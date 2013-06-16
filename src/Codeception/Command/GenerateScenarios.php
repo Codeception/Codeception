@@ -1,12 +1,14 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Configuration;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
 class GenerateScenarios extends Base
@@ -33,30 +35,30 @@ class GenerateScenarios extends Base
     {
         $suite = $input->getArgument('suite');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $config = Configuration::config($input->getOption('config'));
+        $suiteconf = Configuration::suiteSettings($suite, $config);
 
         if ($input->getOption('path')) {
             $path = $input->getOption('path');
         } else {
-            $path = \Codeception\Configuration::dataDir() . 'scenarios';
+            $path = Configuration::dataDir() . 'scenarios';
         }
 
         @mkdir($path);
 
         if (!is_writable($path)) {
-            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+            throw new \Codeception\Exception\Configuration("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
         }
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
 
         if ($input->getOption('single-file')) {
-            file_put_contents($path . '.txt', '');
+            $this->save($path . '.txt', '');
         } else {
             @mkdir($path);
         }
 
-            $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+        $dispatcher = new EventDispatcher();
 
         $suiteManager = new \Codeception\SuiteManager($dispatcher, $suite, $suiteconf);
 
@@ -77,15 +79,14 @@ class GenerateScenarios extends Base
 
         foreach ($tests as $test) {
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
-            $test->preload();
             $features = $test->getScenarioText($format);
             $name = $this->underscore(substr($test->getFileName(), 0, -8));
 
             if ($input->getOption('single-file')) {
-                file_put_contents($path . '.txt', $features . PHP_EOL, FILE_APPEND);
+                $this->save($path . '.txt', $features . PHP_EOL, FILE_APPEND);
                 $output->writeln("* $name rendered");
             } else {
-                file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
+                $this->save($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
                 $output->writeln("* $name generated");
             }
         }

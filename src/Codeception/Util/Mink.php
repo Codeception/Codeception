@@ -457,20 +457,22 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     public function grabTextFrom($cssOrXPathOrRegex) {
         $el = null;
-        try {
+
+        if (Locator::isCSS($cssOrXPathOrRegex)) {
             $el = $this->session->getPage()->find('css', $cssOrXPathOrRegex);
-        } catch (ParseException $e) {}
+            if ($el) return $el->getText();
+        }
 
-        if ($el) return $el->getText();
-
-        if (!$el) $el = @$this->session->getPage()->find('xpath', $cssOrXPathOrRegex);
-
-        if ($el) return $el->getText();
+        if (!$el and Locator::isXPath($cssOrXPathOrRegex)) {
+            $el = @$this->session->getPage()->find('xpath', $cssOrXPathOrRegex);
+            if ($el) return $el->getText();
+        }
 
         if (@preg_match($cssOrXPathOrRegex, $this->session->getPage()->getContent(), $matches)) {
             return $matches[1];
         }
-        $this->fail("Element that matches '$cssOrXPathOrRegex' not found");
+
+        throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
     }
 
 
