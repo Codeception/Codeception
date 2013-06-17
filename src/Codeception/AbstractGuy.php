@@ -17,6 +17,21 @@ abstract class AbstractGuy
         $this->scenario = $scenario;
     }
 
+    /**
+     * Lazy-execution given anonymous function
+     * @param $callable \Closure
+     * @return null|void|bool|mixed
+     */
+    public function run(\Closure $callable)
+    {
+        $this->scenario->executor($callable);
+        if ($this->scenario->running()) {
+            $this->scenario->runStep();
+            return $this;
+        }
+        return $this;
+    }
+
     public function wantToTest($text)
     {
         return $this->wantTo('test ' . $text);
