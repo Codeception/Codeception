@@ -11,9 +11,9 @@ class IncludedCest {
         $I->amInPath('tests/data/included');
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Suite Jazz\\functional started');
+        $I->seeInShellOutput('Suite Jazz.functional started');
         $I->seeInShellOutput('[Shire]');
-        $I->seeInShellOutput('Suite Shire\\functional started');
+        $I->seeInShellOutput('Suite Shire.functional started');
     }
 
     public function runIncludedWithXmlOutput(\CliGuy $I)
@@ -22,8 +22,8 @@ class IncludedCest {
         $I->executeCommand('run --xml');
         $I->amInPath('_log');
         $I->seeFileFound('report.xml');
-        $I->seeInThisFile('<testsuite name="Jazz\functional" tests="1" assertions="1"');
-        $I->seeInThisFile('<testsuite name="Shire\functional" tests="1" assertions="1"');
+        $I->seeInThisFile('<testsuite name="Jazz.functional" tests="1" assertions="1"');
+        $I->seeInThisFile('<testsuite name="Shire.functional" tests="1" assertions="1"');
         $I->seeInThisFile('<testcase file="HobbitCept.php"');
         $I->seeInThisFile('<testcase file="DemoCept.php"');
     }
@@ -35,9 +35,9 @@ class IncludedCest {
         $I->amInPath('_log');
         $I->seeFileFound('report.html');
         $I->seeInThisFile('Codeception Results');
-        $I->seeInThisFile('Jazz\functional Tests');
+        $I->seeInThisFile('Jazz.functional Tests');
         $I->seeInThisFile('check that jazz musicians can add numbers');
-        $I->seeInThisFile('Shire\functional Tests');
+        $I->seeInThisFile('Shire.functional Tests');
     }
 }
 

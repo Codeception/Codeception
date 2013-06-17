@@ -177,6 +177,34 @@ class CoverGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * Checks the strict matching of file contents.
+     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
+     * Better to use with HEREDOC strings.
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('process.pid');
+     * $I->seeFileContentsEqual('3192');
+     * ?>
+     * ```
+     *
+     * @param $text
+     * @see Filesystem::seeFileContentsEqual()
+     * @return \Codeception\Maybe
+     * ! This method is generated. DO NOT EDIT. !
+     * ! Documentation taken from corresponding module !
+     */
+    public function seeFileContentsEqual($text) {
+        $this->scenario->assertion('seeFileContentsEqual', func_get_args());
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
      * Checks If opened file doesn't contain `text` in it
      *
      * ``` php

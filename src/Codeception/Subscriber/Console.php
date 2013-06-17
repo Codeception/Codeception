@@ -170,7 +170,7 @@ class Console implements EventSubscriberInterface
             $action = substr($action, 6);
             $this->output->writeln("Guy unexpectedly managed to $action:\n$failToString");
         } else {
-            $this->output->writeln("Guy couldn't $action:\n\n(($failToString))");
+            $this->output->writeln("Guy couldn't $action: $failToString");
         }
 
 
