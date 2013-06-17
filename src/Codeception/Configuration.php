@@ -16,6 +16,8 @@ class Configuration
     protected static $helpersDir = null;
     protected static $testsDir = null;
 
+    public static $lock = false;
+
     public static $defaultConfig = array(
         'namespace' => '',
         'include' => array(),
@@ -41,6 +43,7 @@ class Configuration
     public static function config($config_file = null)
     {
         if (!$config_file && self::$config) return self::$config;
+        if (self::$config and self::$lock) return self::$config;
 
         if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
