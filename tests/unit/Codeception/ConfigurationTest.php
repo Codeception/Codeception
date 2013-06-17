@@ -5,6 +5,33 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->config = \Codeception\Configuration::config();
+
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = \Codeception\Module::$includeInheritedActions;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = \Codeception\Module::$onlyActions;
+        \Codeception\Module\PhpSiteHelper::$excludeActions = \Codeception\Module::$excludeActions;
+        \Codeception\Module\PhpSiteHelper::$aliases = \Codeception\Module::$aliases;
+    }
+
+    /**
+     * @group core
+     */
+    public function testSuites()
+    {
+        $suites = \Codeception\Configuration::suites();
+        $this->assertContains('unit', $suites);
+        $this->assertContains('cli', $suites);
+    }
+
+    /**
+     * @group core
+     */
+    public function testFunctionForStrippingClassNames()
+    {
+        $matches = array();
+        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', '\\Codeception\\Module\\UserHelper', $matches));
+        $this->assertEquals('UserHelper', $matches[1]);
+        $this->assertEquals(1, preg_match('~\\\\?(\\w*?Helper)$~', 'UserHelper', $matches));
+        $this->assertEquals('UserHelper', $matches[1]);
     }
 
     /**
@@ -12,6 +39,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function testModules() {
         $settings = array('modules' => array('enabled' => array('EmulateModuleHelper')), 'class_name' => 'CodeGuy','path' => $this->config['paths']['tests'].'/unit');
+
         $modules = \Codeception\Configuration::modules($settings);
         $this->assertArrayHasKey('EmulateModuleHelper', $modules);
         $this->assertTrue(method_exists($modules['EmulateModuleHelper'], 'seeEquals'));
@@ -43,12 +71,51 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
+    public function testActionsInExtendedButNotInheritedModule()
+    {
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = false;
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayNotHasKey('see', $actions);
+        $this->assertArrayNotHasKey('click', $actions);
+    }
+
+    /**
+     * @group core
+     */
+    public function testExplicitlySetActionsOnNotInherited()
+    {
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = false;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayHasKey('see', $actions);
+        $this->assertArrayNotHasKey('click', $actions);
+    }
+
+    /**
+     * @group core
+     */
+    public function testActionsExplicitlySetForNotInheritedModule()
+    {
+        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayHasKey('see', $actions);
+    }
+
+    /**
+     * @group core
+     */
     public function testCreateModuleWithoutRequiredFields()
     {
         $this->setExpectedException('\Codeception\Exception\ModuleConfig');
 
         $class = 'StubModule';
-        $module = \Codeception\Configuration::createModule($class);
+        new $class(array('secondField' => 'none'));
     }
 
     /**
@@ -62,7 +129,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'secondField' => 'secondValue',
         );
 
-        $module = \Codeception\Configuration::createModule($class,$config);
+        $module = new $class($config);
 
         $this->assertEquals($config['firstField'],$module->_getFirstField());
         $this->assertEquals($config['secondField'],$module->_getSecondField());
@@ -78,7 +145,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
             'secondField' => 'secondValue',
         );
 
-        $module = \Codeception\Configuration::createModule('StubModule', $config);
+        $class = 'StubModule';
+        $module = new $class($config);
         $module->_reconfigure(array('firstField' => '1st', 'secondField' => '2nd'));
         $this->assertEquals('1st',$module->_getFirstField());
         $this->assertEquals('2nd',$module->_getSecondField());

@@ -16,8 +16,6 @@ if (isset($argv[1])) {
 }
 
 use Symfony\Component\Console\Application,
-    Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Input\InputDefinition,
     Symfony\Component\Console\Input\InputOption;
 
  $app = new Application('Codeception', Codeception\Codecept::VERSION);
@@ -32,4 +30,5 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\GeneratePhpUnit('generate:phpunit'));
  $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
+ $app->add(new Codeception\Command\RefactorAddNamespace('refactor:add-namespace'));
  $app->run();

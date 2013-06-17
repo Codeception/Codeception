@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Util;
 
+use Codeception\Exception\ElementNotFound;
 use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\CssSelector\XPathExpr;
 
 abstract class Mink extends \Codeception\Module implements RemoteInterface, WebInterface
@@ -104,11 +106,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     protected function proceedSee($text, $selector = null) {
         if ($selector) {
+            $nodes = null;
             try {
                 $nodes = $this->session->getPage()->findAll('css', $selector);
-            } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            } catch (ParseException $e) {}
+            
+            if (Locator::isXPath($selector)) {
                 $nodes = $this->session->getPage()->findAll('xpath', $selector);
             }
+            if ($nodes === null) throw new ElementNotFound($selector, 'CSS or XPath');
+            
 		    $values = '';
 		    foreach ($nodes as $node) {
 		        $values .= '<!-- Merged Output -->'.$node->getText();
@@ -202,23 +209,21 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     /**
      * @param $selector
-     * @return \Behat\Mink\Element\NodeElement
+     * @return \Behat\Mink\Element\NodeElement|null
+     * @throws \Codeception\Exception\ElementNotFound
      */
     protected function findEl($selector)
     {
         $page = $this->session->getPage();
         $el = null;
-        try {
-            \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
+        if (Locator::isCSS($selector)) {
             $el = $page->find('css', $selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
-
-        try {
-            if (!$el) $el = @$page->find('xpath',$selector);
-        } catch (\Exception $e) {
+        }
+        if (!$el and Locator::isXPath($selector)) {
+            $el = @$page->find('xpath',$selector);
         }
 
-        if (!$el) \PHPUnit_Framework_Assert::fail("CSS or XPath for '$selector' not found'");
+        if (!$el) throw new ElementNotFound($selector, 'CSS or XPath');
         return $el;
     }
 
@@ -278,6 +283,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function selectOption($select, $option)
     {
         $field = $this->findField($select);
+        if (is_array($option)) {
+            $field->selectOption($option, true);
+            return;
+        }
         $field->selectOption($option);
     }
 
@@ -296,7 +305,8 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     /**
      * @param $selector
-     * @return \Behat\Mink\Element\NodeElement
+     * @return \Behat\Mink\Element\NodeElement|null
+     * @throws \Codeception\Exception\ElementNotFound
      */
     protected function findField($selector)
     {
@@ -305,13 +315,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             'field', $this->session->getSelectorsHandler()->xpathLiteral($selector)
         ));
 
-        try {
-            if (!$field) $field = $page->find('css', $selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+        if (!$field and Locator::isCSS($selector)) $field = $page->find('css', $selector);
+        if (!$field and Locator::isXPath($selector)) $field = @$page->find('xpath', $selector);
 
-        if (!$field) $field = @$page->find('xpath', $selector);
-
-        if (!$field) \PHPUnit_Framework_Assert::fail("Field matching id|name|label|value or css or xpath selector does not exist");
+        if (!$field) throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
         return $field;
     }
 
@@ -450,20 +457,22 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     public function grabTextFrom($cssOrXPathOrRegex) {
         $el = null;
-        try {
+
+        if (Locator::isCSS($cssOrXPathOrRegex)) {
             $el = $this->session->getPage()->find('css', $cssOrXPathOrRegex);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+            if ($el) return $el->getText();
+        }
 
-        if ($el) return $el->getText();
-
-        if (!$el) $el = @$this->session->getPage()->find('xpath', $cssOrXPathOrRegex);
-
-        if ($el) return $el->getText();
+        if (!$el and Locator::isXPath($cssOrXPathOrRegex)) {
+            $el = @$this->session->getPage()->find('xpath', $cssOrXPathOrRegex);
+            if ($el) return $el->getText();
+        }
 
         if (@preg_match($cssOrXPathOrRegex, $this->session->getPage()->getContent(), $matches)) {
             return $matches[1];
         }
-        $this->fail("Element that matches '$cssOrXPathOrRegex' not found");
+
+        throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
     }
 
 

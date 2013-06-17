@@ -103,7 +103,7 @@ EOF;
 
                 $contents = file_get_contents($helper_file);
                 $contents = preg_replace('~}(?!.*})~ism', $stub, $contents);
-                file_put_contents($helper_file, $contents);
+                $this->save($helper_file, $contents, true);
 
                 $output->writeln("Action '$action' added to helper $helper");
                 $replaced++;

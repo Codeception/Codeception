@@ -14,7 +14,7 @@ class PhpBrowserTest extends TestsForMink
     // this is my local config
     protected $is_local = false;
 
-    public function setUp() {
+    protected function setUp() {
         $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
@@ -28,9 +28,11 @@ class PhpBrowserTest extends TestsForMink
         $this->module->_before($this->makeTest());
     }
     
-    public function tearDown() {
+    protected function tearDown() {
         $this->noPhpWebserver();
-        $this->module->_after($this->makeTest());
+        if ($this->module) {
+            $this->module->_after($this->makeTest());
+        }
         data::clean();
     }
 

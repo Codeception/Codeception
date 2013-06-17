@@ -1,6 +1,9 @@
 <?php
 namespace Codeception\Util;
 
+use Codeception\Exception\ElementNotFound;
+use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use \Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -316,14 +319,27 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function selectOption($select, $option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
+        $fieldName = $field->attr('name');
+        if ($field->attr('multiple')) $fieldName = str_replace('[]', '', $fieldName);
 
-        $options = $field->filter(sprintf('option:contains(%s)', $option));
-        if ($options->count()) {
-            $form[$field->attr('name')]->select($options->first()->attr('value'));
+        if (is_array($option)) {
+            $options = array();
+            foreach ($option as $opt) {
+                $options[] = $this->matchOption($field, $opt);
+            }
+            $form[$fieldName]->select($options);
             return;
         }
 
-        $form[$field->attr('name')]->select($option);
+        $form[$fieldName]->select($this->matchOption($field, $option));
+
+    }
+
+    protected function matchOption(Crawler $field, $option)
+    {
+        $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]', $option));
+        if ($options->count()) return $options->first()->attr('value');
+        return $option;
     }
 
     public function checkOption($option)
@@ -381,9 +397,11 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     protected function match($selector)
     {
         try {
-            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+            $selector = CssSelector::toXPath($selector);
+        } catch (ParseException $e) {
         }
+        if (!Locator::isXPath($selector)) return null;
+
         return @$this->crawler->filterXPath($selector);
     }
 
@@ -395,7 +413,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $response = str_replace("\n",'', $response);
             return $response;
         }
-        if (strpos($response, '<html') !== false) {
+        if (strpos(trim($response), '<html') !== false) {
             $formatted = 'page [';
             $crawler = new \Symfony\Component\DomCrawler\Crawler($response);
             $title = $crawler->filter('title');
@@ -424,7 +442,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($field);
         if ($nodes) {
-
+            $fields = $nodes;
            foreach ($fields as $field) {
                if ($field->getAttribute('type') == 'checkbox') continue;
                if ($field->getAttribute('type') == 'radio') continue;

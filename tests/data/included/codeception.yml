@@ -1,0 +1,7 @@
+include:
+  - jazz
+  - shire
+paths:
+  log: "_log"
+settings:
+  colors: false

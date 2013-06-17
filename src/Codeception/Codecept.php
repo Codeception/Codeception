@@ -1,13 +1,14 @@
 <?php
 namespace Codeception;
 
+use Codeception\Configuration;
 use \Symfony\Component\Yaml\Yaml;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.6.2";
+    const VERSION = "1.6.3-dev";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -54,15 +55,18 @@ class Codecept
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
-        $this->runner = new PHPUnit\Runner();
 
-        $this->config = Configuration::config($options['config']);
+        $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options);
 
+
         $this->dispatcher = new EventDispatcher();
-        $this->path = $this->config['paths']['tests'];
         $this->registerSubscribers();
-        $this->registerListeners();
+        $this->registerPHPUnitListeners();
+
+        $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
+        $this->runner = new PHPUnit\Runner($this->config);
+        $this->runner->setPrinter($printer);
     }
 
     private function mergeOptions($options) {
@@ -79,7 +83,7 @@ class Codecept
         return $options;
     }
 
-    protected function registerListeners() {
+    protected function registerPHPUnitListeners() {
         $listener = new PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
@@ -98,16 +102,13 @@ class Codecept
     }
 
     public function runSuite($suite, $test = null) {
-        $settings = Configuration::suiteSettings($suite, $this->config);
+        ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
 
+        $settings = Configuration::suiteSettings($suite, Configuration::config());
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
 
-        if (!$this->runner->getPrinter()) {
-            $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
-            $this->runner->setPrinter($printer);
-        }
         $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
