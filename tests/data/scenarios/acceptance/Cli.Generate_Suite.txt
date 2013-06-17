@@ -1,8 +1,0 @@
-I WANT TO GENERATE SAMPLE SUITE
-
-I am in path "tests/data/sandbox"
-I execute command "generate:suite house HouseGuy"
-I see file found "house.suite.yml"
-I see in this file "class_name: HouseGuy"
-I see file found "HouseHelper.php"
-I see file found ["_bootstrap.php","tests/house"]

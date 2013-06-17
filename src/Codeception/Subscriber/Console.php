@@ -168,7 +168,7 @@ class Console implements EventSubscriberInterface
         // it's assertion
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
-            $this->output->writeln("Guy unexpectedly managed to $action: {$failToString}");
+            $this->output->writeln("Guy unexpectedly managed to $action:\n$failToString");
         } else {
             $this->output->writeln("Guy couldn't $action: $failToString");
         }
@@ -189,7 +189,7 @@ class Console implements EventSubscriberInterface
 
     public function printException(\Exception $e)
     {
-        $this->output->writeln("(!".get_class($e).': '.$e->getMessage()."!)\n");
+        $this->output->writeln("\n(!".get_class($e).': '.$e->getMessage()."!)\n");
         $i = 0;
         foreach ($e->getTrace() as $step) {
             $i++;

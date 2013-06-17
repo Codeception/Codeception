@@ -1,12 +1,14 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
+use Codeception\Codecept;
+use Codeception\Configuration;
+use Codeception\Exception\Configuration as ConfigurationException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
 class GenerateScenarios extends Base
@@ -18,7 +20,7 @@ class GenerateScenarios extends Base
             new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
             new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
-            new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)'),
+            new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)','text'),
             new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
         ));
         parent::configure();
@@ -33,30 +35,24 @@ class GenerateScenarios extends Base
     {
         $suite = $input->getArgument('suite');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
-        if ($input->getOption('path')) {
-            $path = $input->getOption('path');
-        } else {
-            $path = \Codeception\Configuration::dataDir() . 'scenarios';
-        }
+        $path = $input->getOption('path')
+            ? $input->getOption('path')
+            : Configuration::dataDir() . 'scenarios';
+
+        $format = $input->getOption('format');
 
         @mkdir($path);
 
         if (!is_writable($path)) {
-            throw new \Codeception\Exception\Configuration("Path for logs is not writable. Please, set appropriate access mode for log path.");
+            throw new ConfigurationException("Path $path is not writable. Please, set valid permissions for folder to store scenarios.");
         }
 
         $path = $path . DIRECTORY_SEPARATOR . $suite;
+        if (!$input->getOption('single-file')) @mkdir($path);
 
-        if ($input->getOption('single-file')) {
-            file_put_contents($path . '.txt', '');
-        } else {
-            @mkdir($path);
-        }
-
-            $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+        $dispatcher = new EventDispatcher();
 
         $suiteManager = new \Codeception\SuiteManager($dispatcher, $suite, $suiteconf);
 
@@ -68,26 +64,41 @@ class GenerateScenarios extends Base
 
         $suiteManager->loadTests();
         $tests = $suiteManager->getSuite()->tests();
-
-        if ($input->getOption('format')) {
-            $format = $input->getOption('format');
-        } else {
-            $format = 'text';
-        }
+        $scenarios = "";
 
         foreach ($tests as $test) {
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
-            $test->preload();
-            $features = $test->getScenarioText($format);
+            $feature = $test->getScenarioText($format);
             $name = $this->underscore(substr($test->getFileName(), 0, -8));
 
             if ($input->getOption('single-file')) {
-                file_put_contents($path . '.txt', $features . PHP_EOL, FILE_APPEND);
+                $scenarios .= $feature;
                 $output->writeln("* $name rendered");
             } else {
-                file_put_contents($path . DIRECTORY_SEPARATOR . $name . '.txt', $features);
+                $feature = $this->decorate($feature, $format);
+                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature);
                 $output->writeln("* $name generated");
             }
+        }
+
+        if ($input->getOption('single-file')) {
+            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format) . PHP_EOL);
+        }
+    }
+
+    protected function decorate($text, $format)
+    {
+        switch ($format) {
+            case 'text': return $text;
+            case 'html': return "<html><body>$text</body></html>";
+        }
+    }
+
+    protected function formatExtension($format)
+    {
+        switch ($format) {
+            case 'text': return '.txt';
+            case 'html': return '.html';
         }
     }
 

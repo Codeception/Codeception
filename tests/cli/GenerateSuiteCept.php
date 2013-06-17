@@ -6,8 +6,8 @@ $I->lookForwardTo('have a better tests categorization');
 
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:suite house HouseGuy');
-$I->seeFileFound('house.suite.yml');
+$I->seeFileFound('house.suite.yml', 'tests');
 $I->expect('guy class is generated');
 $I->seeInThisFile('class_name: HouseGuy');
-$I->seeFileFound('HouseHelper.php');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
 $I->seeFileFound('_bootstrap.php','tests/house');

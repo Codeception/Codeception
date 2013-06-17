@@ -13,6 +13,8 @@ use Symfony\Component\Yaml\Yaml;
 class Bootstrap extends \Symfony\Component\Console\Command\Command
 {
 
+    protected $namespace = '';
+
     public function getDescription()
     {
         return 'Initializes empty test suite and default configuration file';
@@ -22,17 +24,22 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
     {
         $this->setDefinition(array(
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path','.'),
+            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->namespace = rtrim($input->getOption('namespace'),'\\');
+
         $path = $input->getArgument('path');
+
         if (!is_dir($path)) {
             $output->writeln("<error>\nDirectory '$path' does not exists\n</error>");
             return;
         }
+
         chdir($path);
 
         if (file_exists('codeception.yml')) {
@@ -40,6 +47,40 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
             return;
         }
 
+        $this->createGlobalConfig();
+        $output->writeln("<fg=white;bg=magenta>\nInitializing Codeception in ".realpath($path)."\n</fg=white;bg=magenta>");
+        $output->writeln("File codeception.yml created <- global configuration");
+
+        @mkdir('tests');
+        @mkdir('tests/functional');
+        @mkdir('tests/unit');
+        @mkdir('tests/acceptance');
+        @mkdir('tests/_helpers');
+        @mkdir('tests/_log');
+        @mkdir('tests/_data');
+
+        $output->writeln("tests/unit created <- unit tests");
+        $output->writeln("tests/functional created <- functional tests");
+        $output->writeln("tests/acceptance created <- acceptance tests");
+
+        file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
+
+        if ($this->namespace) $this->namespace = $this->namespace.'\\';
+        $this->createUnitSuite();
+        $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
+        $this->createFunctionalSuite();
+        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+        $this->createAcceptanceSuite();
+        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+
+        $output->writeln("<info>Building initial Guy classes</info>");
+        $this->getApplication()->find('build')->run(new \Symfony\Component\Console\Input\ArrayInput(array('command' => 'build')), $output);
+        $output->writeln("<info>\nBootstrap is done. Check out ".realpath($path)."/tests directory</info>");
+
+    }
+
+    public function createGlobalConfig()
+    {
         $basicConfig = array(
             'paths' => array(
                 'tests' => 'tests',
@@ -66,71 +107,33 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         );
 
         $str = Yaml::dump($basicConfig, 4);
+        if ($this->namespace) {
+            $str = "namespace: {$this->namespace} \n".$str;
+        }
         file_put_contents('codeception.yml', $str);
+    }
 
-        $output->writeln("<fg=white;bg=magenta>\nInitializing Codeception in ".realpath($path)."\n</fg=white;bg=magenta>");
-        $output->writeln("File codeception.yml created <- global configuration");
-
-        @mkdir('tests');
-        @mkdir('tests/functional');
-        @mkdir('tests/unit');
-        @mkdir('tests/acceptance');
-        @mkdir('tests/_helpers');
-        @mkdir('tests/_log');
-        @mkdir('tests/_data');
-
-        $output->writeln("tests/unit created <- unit tests");
-        $output->writeln("tests/functional created <- functional tests");
-        $output->writeln("tests/acceptance created <- acceptance tests");
-
-        file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
-
-        file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-        file_put_contents('tests/acceptance/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
-
-
-        file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
-        file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
-        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
-
-//        file_put_contents('tests/unit/SampleSpec.php', "<?php\n\$I = new CodeGuy(\$scenario);\n\$I->wantTo('test a code specification');");
-//        file_put_contents('tests/functional/SampleSpec.php', "<?php\n\$I = new TestGuy(\$scenario);\n\$I->wantTo('test an integration feature');");
-//        file_put_contents('tests/acceptance/SampleSpec.php', "<?php\n\$I = new WebGuy(\$scenario);\n\$I->wantTo('test an application feature in a web browser');");
-
-        // CodeGuy
-        $conf = array(
-            'class_name' => 'CodeGuy',
-            'modules' => array('enabled' => array('CodeHelper')),
-        );
-
-        $firstline = $str  = "# Codeception Test Suite Configuration\n\n";
-        $str .= "# suite for unit (internal) tests.\n";
-        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
-        $str .= Yaml::dump($conf, 2);
-
-        file_put_contents('tests/unit.suite.yml', $str);
-        $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
-
-
-        // CodeGuy
+    protected function createFunctionalSuite()
+    {
         $suiteConfig = array(
             'class_name' => 'TestGuy',
             'modules' => array('enabled' => array('Filesystem', 'TestHelper')),
         );
 
-        $str = $firstline;
+        $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
         $str .= "# (tip: better to use with frameworks).\n\n";
         $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
 
+        file_put_contents('tests/functional/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
+        file_put_contents('tests/_helpers/TestHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/functional.suite.yml', $str);
-        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+    }
 
-
-
+    protected function createAcceptanceSuite()
+    {
         $suiteConfig = array(
             'class_name' => 'WebGuy',
             'modules' => array(
@@ -143,16 +146,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
             ),
         );
 
-//        if ((strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') and file_exists('codecept.phar') and (!file_exists('codecept.bat'))) {
-//            file_put_contents('codecept.bat','
-//            @echo off
-//            if "%PHPBIN%" == "" set PHPBIN=@php_bin@
-//            "%PHPBIN%" "codecept.phar" %*
-//            ');
-//            $output->writeln('batch file was created added');
-//        }
-
-        $str = $firstline;
+        $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for acceptance tests.\n";
         $str .= "# perform tests in browser using the Selenium-like tools.\n";
         $str .= "# powered by Mink (http://mink.behat.org).\n";
@@ -161,14 +155,28 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
+
+        file_put_contents('tests/acceptance/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
+        file_put_contents('tests/_helpers/WebHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n");
         file_put_contents('tests/acceptance.suite.yml', $str);
-        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
-
-        $output->writeln("<info>Building initial Guy classes</info>");
-        $this->getApplication()->find('build')->run(new \Symfony\Component\Console\Input\ArrayInput(array('command' => 'build')), $output);
-        $output->writeln("<info>\nBootstrap is done. Check out ".realpath($path)."/tests directory</info>");
-
     }
 
+    protected function createUnitSuite($namespace = "")
+    {
+         // CodeGuy
+        $suiteConfig = array(
+            'class_name' => 'CodeGuy',
+            'modules' => array('enabled' => array('CodeHelper')),
+        );
+
+        $str  = "# Codeception Test Suite Configuration\n\n";
+        $str .= "# suite for unit (internal) tests.\n";
+        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
+        $str .= Yaml::dump($suiteConfig, 2);
+
+        file_put_contents('tests/unit/_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n");
+        file_put_contents('tests/_helpers/CodeHelper.php', "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n");
+        file_put_contents('tests/unit.suite.yml', $str);
+    }
 
 }

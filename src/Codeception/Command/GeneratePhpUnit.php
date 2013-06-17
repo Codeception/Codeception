@@ -53,15 +53,16 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($class);
+        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
 
         $filename = $this->completeSuffix($classname, 'Test');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;
+
+        $classname = $this->removeSuffix($classname, 'Test');
 
         $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname));
         if (!$res) {
@@ -69,7 +70,7 @@ EOF;
             exit;
         }
 
-        $output->writeln("<info>Test for $class was created in $filename</info>");
+        $output->writeln("<info>Test was created in $filename</info>");
     }
 
 }

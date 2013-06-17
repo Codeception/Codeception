@@ -10,7 +10,8 @@
 
 namespace Codeception\Util;
 use Symfony\Component\CssSelector\CssSelector;
-use Symfony\Component\CssSelector\XPathExpr;
+use Symfony\Component\CssSelector\Exception\ParseException;
+use Symfony\Component\CssSelector\XPath\Translator;
 
 class Locator
 {
@@ -41,7 +42,7 @@ class Locator
      */
     public static function href($url)
     {
-        return sprintf('//a[@href=normalize-space(%s)]', XPathExpr::xpathLiteral($url));
+        return sprintf('//a[@href=normalize-space(%s)]', Translator::getXpathLiteral($url));
     }
 
     /**
@@ -56,14 +57,27 @@ class Locator
         return sprintf('//*[@tabindex = normalize-space(%d)]', $index);
     }
 
+    /**
+     * Matches option by text
+     *
+     * @param $value
+     * @return string
+     */
+    public static function option($value)
+    {
+        return sprintf('//option[.=normalize-space("%s")]', $value);
+    }
+
+
     protected static function toXPath($selector)
     {
         try {
             $xpath = CssSelector::toXPath($selector);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
-            $xpath = $selector;
+            return $xpath;
+        } catch (ParseException $e) {
+            if (self::isXPath($selector)) return $selector;
         }
-        return $xpath;
+        return null;
     }
 
     /**
@@ -81,12 +95,27 @@ class Locator
             if (is_int($attribute)) {
                 $operands[] = '@'.$value;
             } else {
-                $operands[] = '@'.$attribute.' = '. XPathExpr::xpathLiteral($value);
+                $operands[] = '@'.$attribute.' = '. Translator::getXpathLiteral($value);
             }
         }
         return sprintf('//%s[%s]', $element, implode(' and ', $operands));
     }
 
+    public static function isCSS($selector)
+    {
+        try {
+            CssSelector::toXPath($selector);
+        } catch (ParseException $e) {
+            return false;
+        }
+        return true;
+    }
 
+    public static function isXPath($locator)
+    {
+        $document = new \DOMDocument('1.0', 'UTF-8');
+        $xpath = new \DOMXPath($document);
+        return @$xpath->evaluate($locator, $document) !== false;
+    }
 
 }

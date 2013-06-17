@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 use Codeception\Util\FileSystem as Util;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Module for testing local filesystem.
@@ -136,6 +137,28 @@ class Filesystem extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertContains($text, $this->file, "text $text in currently opened file");
     }
 
+
+    /**
+     * Checks the strict matching of file contents.
+     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
+     * Better to use with HEREDOC strings.
+     * Matching is done after removing "\r" chars from file content.
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('process.pid');
+     * $I->seeFileContentsEqual('3192');
+     * ?>
+     * ```
+     *
+     * @param $text
+     */
+    public function seeFileContentsEqual($text)
+    {
+        $file = str_replace("\r",'',$this->file);
+        \PHPUnit_Framework_Assert::assertEquals($text, $file);
+    }
+
     /**
      * Checks If opened file doesn't contain `text` in it
      *
@@ -183,7 +206,7 @@ class Filesystem extends \Codeception\Module
         if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
 
 
-        $files = \Symfony\Component\Finder\Finder::create()->files()->name($filename)->in($path);
+        $files = Finder::create()->files()->name($filename)->in($path);
         foreach ($files as $file) {
             $file = $file->getRealPath();
             $this->openFile($file);
@@ -193,5 +216,22 @@ class Filesystem extends \Codeception\Module
             return;
         }
         \PHPUnit_Framework_Assert::fail("$filename in $path");
+    }
+
+    /**
+     * Erases directory contents
+     *
+     * ``` php
+     * <?php
+     * $I->cleanDir('logs');
+     * ?>
+     * ```
+     *
+     * @param $dirname
+     */
+    public function cleanDir($dirname)
+    {
+        $path = $this->absolutizePath($dirname);
+        Util::doEmptyDir($path);
     }
 }

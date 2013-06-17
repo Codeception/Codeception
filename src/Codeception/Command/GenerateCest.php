@@ -32,7 +32,7 @@ class GenerateCest extends Base
 }
 EOF;
 
-    protected $methodTemplate = "public function %s(\\%s %s) {\n    \n    }";
+    protected $methodTemplate = "public function %s(%s %s) {\n    \n    }";
 
     protected function configure()
     {
@@ -54,14 +54,15 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $suiteconf = \Codeception\Configuration::suiteSettings($suite, $config);
+        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
 
         $classname = $this->getClassName($class);
         $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($class);
+
+        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
+        $ns .= "use ".$suiteconf['namespace'].'\\'.$guy.";";
 
         $filename = $this->completeSuffix($classname, 'Cest');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;
@@ -71,13 +72,17 @@ EOF;
             exit;
         }
 
-        $classname = preg_replace("~Cest$~",'',$classname);
+        $classname = $this->removeSuffix($classname, 'Cest');
 
         $tests = sprintf($this->methodTemplate, "tryToTest", $guy, '$I');
 
-        file_put_contents($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
+        if (!$res) {
+            $output->writeln("<error>Test $filename already exists</error>");
+            return;
+        }
 
-        $output->writeln("<info>Cest was created in $filename</info>");
+        $output->writeln("<info>Test was created in $filename</info>");
 
     }
 }

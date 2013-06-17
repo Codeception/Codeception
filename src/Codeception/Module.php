@@ -1,8 +1,37 @@
 <?php
 namespace Codeception;
 
+use Codeception\Exception\ModuleConfig;
+
 abstract class Module
 {
+    /**
+     * By setting it to false module wan't inherit methods of parent class.
+     *
+     * @var bool
+     */
+    public static $includeInheritedActions = true;
+
+    /**
+     * Allows to explicitly set what methods have this class.
+     *
+     * @var array
+     */
+    public static $onlyActions = array();
+
+    /**
+     * Allows to explicitly exclude actions from module.
+     *
+     * @var array
+     */
+    public static $excludeActions = array();
+
+    /**
+     * Allows to rename actions
+     *
+     * @var array
+     */
+    public static $aliases = array();
 
     protected $debugStack = array();
 
@@ -13,6 +42,11 @@ abstract class Module
     protected $defaultConfig = array();
 
     protected $requiredFields = array();
+
+    public function __construct($config=array())
+    {
+        if (!empty($config)) $this->_setConfig($config);
+    }
 
     public function _setConfig($config)
     {
@@ -35,7 +69,7 @@ abstract class Module
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
-            throw new \Codeception\Exception\ModuleConfig(get_class($this),"
+            throw new ModuleConfig(get_class($this),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
                 Update configuration and set all required fields\n\n
         ");
