@@ -196,7 +196,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     }
 
     /**
-     * Inserts SQL record into database
+     * Inserts SQL record into database. This record will be erased after the test.
      *
      * ``` php
      * <?php
