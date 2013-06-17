@@ -22,8 +22,9 @@ abstract class AbstractGuy
      * @param $callable \Closure
      * @return null|void|bool|mixed
      */
-    public function runLazy(\Closure $callable)
+    public function execute(\Closure $callable)
     {
+        $this->scenario->comment('I execute lambda function');
         $this->scenario->executor($callable);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
