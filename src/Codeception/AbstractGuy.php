@@ -22,7 +22,7 @@ abstract class AbstractGuy
      * @param $callable \Closure
      * @return null|void|bool|mixed
      */
-    public function run(\Closure $callable)
+    public function runLazy(\Closure $callable)
     {
         $this->scenario->executor($callable);
         if ($this->scenario->running()) {
