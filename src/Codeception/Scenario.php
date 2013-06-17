@@ -78,6 +78,11 @@ class Scenario {
         return $this->addStep(new \Codeception\Step\Assertion($action, $arguments));
     }
 
+    public function executor(\Closure $callable)
+    {
+        return $this->addStep(new \Codeception\Step\Executor($callable, array()));
+    }
+
     public function skip($reason = "")
     {
         $this->blocker = new \Codeception\Step\Skip($reason, array());
