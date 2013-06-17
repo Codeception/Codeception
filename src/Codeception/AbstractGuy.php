@@ -22,7 +22,7 @@ abstract class AbstractGuy
      * @param $callable \Closure
      * @return null|void|bool|mixed
      */
-    public function execute(\Closure $callable)
+    public function execute($callable)
     {
         $this->scenario->comment('I execute lambda function');
         $this->scenario->executor($callable);
