@@ -92,13 +92,13 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 
 	public function _initialize()
 	{
-		$this->appSettings = require_once($this->config['appPath']); //get application settings in the entry script
+		$this->appSettings = include($this->config['appPath']); //get application settings in the entry script
 
 		// get configuration from array or file
 		if (is_array($this->appSettings['config'])) {
 			$this->_appConfig = $this->appSettings['config'];
 		} else {
-			$this->_appConfig = require_once($this->appSettings['config']);
+			$this->_appConfig = include($this->appSettings['config']);
 		}
 
 		Yii::setPathOfAlias('codeceptionsrc',dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
@@ -109,6 +109,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
 		Yii::$enableIncludePath = false;
+		Yii::setApplication(null);
 		Yii::createApplication($this->appSettings['class'],$this->_appConfig);
 	}
 
