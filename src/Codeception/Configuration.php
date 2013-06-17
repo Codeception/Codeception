@@ -162,10 +162,24 @@ class Configuration
             $class   = new \ReflectionClass($module);
             $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
-                // those with underscore at the beginning are considered as hidden
-                if (strpos($method->name, '_') === 0) {
-                    continue;
+                $inherit = $class->getStaticPropertyValue('includeInheritedActions');
+                $only = $class->getStaticPropertyValue('onlyActions');
+                $exclude = $class->getStaticPropertyValue('excludeActions');
+                // NOT READY YET: $aliases = $class->getStaticPropertyValue('aliases');
+
+                // exclude methods when they are listed as excluded
+                if (in_array($method->name, $exclude)) continue;
+
+                if (!empty($only)) {
+                    // skip if method is not listed
+                    if (!in_array($method->name, $only)) continue;
+                } else {
+                    // skip if method is inherited and inheritActions == false
+                    if (!$inherit and $method->getDeclaringClass() != $class) continue;
                 }
+
+                // those with underscore at the beginning are considered as hidden
+                if (strpos($method->name, '_') === 0) continue;
 
                 $actions[$method->name] = $moduleName;
             }

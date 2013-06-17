@@ -5,6 +5,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->config = \Codeception\Configuration::config();
+
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = \Codeception\Module::$includeInheritedActions;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = \Codeception\Module::$onlyActions;
+        \Codeception\Module\PhpSiteHelper::$excludeActions = \Codeception\Module::$excludeActions;
+        \Codeception\Module\PhpSiteHelper::$aliases = \Codeception\Module::$aliases;
     }
 
     /**
@@ -61,6 +66,45 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('amOnPage', $actions);
         $this->assertArrayHasKey('see', $actions);
         $this->assertArrayHasKey('click', $actions);
+    }
+
+    /**
+     * @group core
+     */
+    public function testActionsInExtendedButNotInheritedModule()
+    {
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = false;
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayNotHasKey('see', $actions);
+        $this->assertArrayNotHasKey('click', $actions);
+    }
+
+    /**
+     * @group core
+     */
+    public function testExplicitlySetActionsOnNotInherited()
+    {
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = false;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayHasKey('see', $actions);
+        $this->assertArrayNotHasKey('click', $actions);
+    }
+
+    /**
+     * @group core
+     */
+    public function testActionsExplicitlySetForNotInheritedModule()
+    {
+        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        $modules = array('PhpSiteHelper' => new \Codeception\Module\PhpSiteHelper());
+        $actions = \Codeception\Configuration::actions($modules);
+        $this->assertArrayNotHasKey('amOnPage', $actions);
+        $this->assertArrayHasKey('see', $actions);
     }
 
     /**
