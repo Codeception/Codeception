@@ -70,10 +70,10 @@ class Base extends \Symfony\Component\Console\Command\Command
         return preg_replace("~$suffix$~",'',$classname);
     }
 
-    protected function save($filename, $contents, $force = false)
+    protected function save($filename, $contents, $force = false, $flags = null)
     {
         if (file_exists($filename) && !$force) return false;
-        file_put_contents($filename, $contents);
+        file_put_contents($filename, $contents, $flags);
         return true;
     }
 
