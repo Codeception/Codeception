@@ -5,6 +5,33 @@ use Codeception\Exception\ModuleConfig;
 
 abstract class Module
 {
+    /**
+     * By setting it to false module wan't inherit methods of parent class.
+     *
+     * @var bool
+     */
+    public static $includeInheritedActions = true;
+
+    /**
+     * Allows to explicitly set what methods have this class.
+     *
+     * @var array
+     */
+    public static $onlyActions = array();
+
+    /**
+     * Allows to explicitly exclude actions from module.
+     *
+     * @var array
+     */
+    public static $excludeActions = array();
+
+    /**
+     * Allows to rename actions
+     *
+     * @var array
+     */
+    public static $aliases = array();
 
     protected $debugStack = array();
 
