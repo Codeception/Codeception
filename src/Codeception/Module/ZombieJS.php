@@ -124,17 +124,23 @@ class ZombieJS extends \Codeception\Util\MinkJS
         var http = new browser.window.XMLHttpRequest();
         http.open('HEAD', '%s');
         http.onreadystatechange = function(){
-            stream.end(http.getAllResponseHeaders());
+            if(http.readyState==4){
+                stream.end('HTTP/1.0 '+http.status+' '+http.statusText+'\\n'+http.getAllResponseHeaders());
+            }
         };
         http.send(null);
 JS
             ,addslashes($url))
         );
 
-        if (method_exists('\http\Header', 'parse')) {
-            return \http\Header::parse(str_replace("\n","\r\n",$headers));
-        } else {
-            return http_parse_headers(str_replace("\n","\r\n",$headers));
+        if(class_exists('\Guzzle\Parser\Message\MessageParser'))
+        {
+            $p = new \Guzzle\Parser\Message\MessageParser();
+            $parts = $p->parseResponse($headers);
+            return $parts['headers'];
+        }
+        else{
+            throw new \Exception("Could not parse response headers. Please install Guzzle");
         }
     }
 }
