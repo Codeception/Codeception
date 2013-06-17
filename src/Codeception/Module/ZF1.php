@@ -98,6 +98,7 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
     }
 
     public function _before(\Codeception\TestCase $test) {
+        \Zend_Session::$_unitTestEnabled = true;
         $this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
         $this->bootstrap->bootstrap();
         $this->client->setBootstrap($this->bootstrap);
