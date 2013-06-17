@@ -216,6 +216,7 @@ class StubTest extends \PHPUnit_Framework_TestCase
         array(1, Stub::exactly(1, function() {return null;}), null),
         array(1, Stub::exactly(1, function() {return 'hello world!';}), 'hello world!'),
       );
+
     }
 
     /**

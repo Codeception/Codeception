@@ -19,8 +19,7 @@ class c3Test extends PHPUnit_Framework_TestCase
         if (!extension_loaded('xdebug')) {
             $this->markTestSkipped('xdebug extension required for c3test.');
         }
-        Configuration::$lock = true;
-        
+
         $this->c3 = Configuration::dataDir() . 'claypit/c3.php';
         $this->c3_dir = Configuration::dataDir() . 'claypit/c3tmp/';
 
@@ -32,7 +31,6 @@ class c3Test extends PHPUnit_Framework_TestCase
     {
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG']);
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
-        Configuration::$lock = false;
     }
 
     public function testC3CodeCoverageStarted()
