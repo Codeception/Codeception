@@ -24,7 +24,7 @@ class RefactorAddNamespaceTest extends BaseCommandRunner
         
         // log[2] is helper, log[3] ... are helpers too
         $cept = $this->log[7];
-        $this->assertContains('<?php use MiddleEarth\\Codeception\\CliGuy', $cept['content']);
+        $this->assertContains('<?php use MiddleEarth\\Codeception\\', $cept['content']);
     }
 
 }
