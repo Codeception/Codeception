@@ -5,11 +5,13 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->config = \Codeception\Configuration::config();
+    }
 
-        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = \Codeception\Module::$includeInheritedActions;
-        \Codeception\Module\PhpSiteHelper::$onlyActions = \Codeception\Module::$onlyActions;
-        \Codeception\Module\PhpSiteHelper::$excludeActions = \Codeception\Module::$excludeActions;
-        \Codeception\Module\PhpSiteHelper::$aliases = \Codeception\Module::$aliases;
+    protected function tearDown()
+    {
+        \Codeception\Module::$includeInheritedActions = true;
+        \Codeception\Module::$onlyActions = array();
+        \Codeception\Module::$excludeActions = array();
     }
 
     /**
