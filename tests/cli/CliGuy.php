@@ -11,7 +11,7 @@ use Codeception\Module\CliHelper;
 
 /**
  * Inherited methods
- * @method void run($callable)
+ * @method void execute($callable)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
