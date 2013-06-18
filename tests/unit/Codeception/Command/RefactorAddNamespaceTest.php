@@ -16,11 +16,11 @@ class RefactorAddNamespaceTest extends BaseCommandRunner
         $config = $this->log[0];
         $this->assertContains('Config file updated', $this->output);
         $this->assertContains('namespace: MiddleEarth', $config['content']);
-        $this->assertEquals(\Codeception\Configuration::projectDir() . 'codeception.yml', $config['filename']);
+        $this->assertEquals(\Codeception\Configuration::projectDir() . 'codeception.yml', (string)$config['filename']);
         
         $helper = $this->log[1];
         $this->assertContains('namespace MiddleEarth\\Codeception\\Module', $helper['content']);
-        $this->assertContains(\Codeception\Configuration::helpersDir(), $helper['filename']);
+        $this->assertContains(\Codeception\Configuration::helpersDir(), (string)$helper['filename']);
         
         // log[2] is helper, log[3] ... are helpers too
         $cept = $this->log[7];
