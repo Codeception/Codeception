@@ -3,7 +3,6 @@ tests/log/debug
 composer.phar
 vendor
 tests/data/sandbox
-tests/data/included/_log
 tests/data/included/jazz/tests/_log
 tests/data/included/shire/tests/_log
 tests/data/claypit/c3tmp'
