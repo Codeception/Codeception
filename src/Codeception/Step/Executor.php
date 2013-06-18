@@ -2,13 +2,13 @@
 namespace Codeception\Step;
  
 class Executor extends \Codeception\Step {
-    const LAZY_EXECUTOR = 'lazy-executor';
 
     protected $callable = null;
 
     public function __construct(\Closure $callable, $arguments = array())
     {
-        parent::__construct(self::LAZY_EXECUTOR, array());
+        // TODO: add serialization to function http://www.htmlist.com/development/extending-php-5-3-closures-with-serialization-and-reflection/
+        parent::__construct('execute callable function', array());
 
         $this->callable = $callable;
     }
