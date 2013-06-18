@@ -52,9 +52,7 @@ class GenerateScenarios extends Base
         $path = $path . DIRECTORY_SEPARATOR . $suite;
         if (!$input->getOption('single-file')) @mkdir($path);
 
-        $dispatcher = new EventDispatcher();
-
-        $suiteManager = new \Codeception\SuiteManager($dispatcher, $suite, $suiteconf);
+        $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteconf);
 
         if ($suiteconf['bootstrap']) {
             if (file_exists($suiteconf['path'] . $suiteconf['bootstrap'])) {

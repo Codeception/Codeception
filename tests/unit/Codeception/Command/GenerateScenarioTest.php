@@ -1,11 +1,16 @@
 <?php
 
+use Codeception\Util\Stub;
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
 class GenerateScenarioTest extends BaseCommandRunner {
 
     protected function setUp()
     {
+        $this->modules = \Codeception\SuiteManager::$modules;
+        $this->actions = \Codeception\SuiteManager::$actions;
+
         $this->makeCommand('\Codeception\Command\GenerateScenarios');
         $this->config = array(
             'paths' => array(
@@ -16,6 +21,12 @@ class GenerateScenarioTest extends BaseCommandRunner {
             'class_name' => 'DumbGuy',
             'path' => 'tests/data/claypit/tests/dummy/'
         );
+    }
+
+    protected function tearDown()
+    {
+        \Codeception\SuiteManager::$modules = $this->modules;
+        \Codeception\SuiteManager::$actions = $this->actions;
     }
 
     public function testBasic()

@@ -31,7 +31,7 @@ class BuildTest extends BaseCommandRunner {
         $this->assertContains('@method void wantTo($text)', $this->content);
         $this->assertContains('@method void expectTo($prediction)', $this->content);
         
-        $this->assertContains('HobbitGuy.php generated successfully. 12 methods added', $this->output);
+        $this->assertContains('HobbitGuy.php generated successfully.', $this->output);
     }
 
     public function testBuildNamespacedGuy()

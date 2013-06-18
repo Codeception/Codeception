@@ -43,7 +43,7 @@ class Configuration
     public static function config($config_file = null)
     {
         if (!$config_file && self::$config) return self::$config;
-        if (self::$config and self::$lock) return self::$config;
+        if (self::$config && self::$lock) return self::$config;
 
         if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
         if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
@@ -168,7 +168,6 @@ class Configuration
                 $inherit = $class->getStaticPropertyValue('includeInheritedActions');
                 $only = $class->getStaticPropertyValue('onlyActions');
                 $exclude = $class->getStaticPropertyValue('excludeActions');
-                // NOT READY YET: $aliases = $class->getStaticPropertyValue('aliases');
 
                 // exclude methods when they are listed as excluded
                 if (in_array($method->name, $exclude)) continue;
