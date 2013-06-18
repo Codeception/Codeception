@@ -4586,3 +4586,345 @@ HobbitGuy.php generated successfully. 13 methods added
 [2013-06-18 06:19:06] Codeception.INFO: test method "\Codeception\Module\WebDebug.makeAScreenshot" [] []
 [2013-06-18 06:24:41] Codeception.INFO: test method "\Codeception\Module\WebDebug.makeAScreenshot" [] []
 [2013-06-18 06:25:14] Codeception.INFO: test method "\Codeception\Module\WebDebug.makeAScreenshot" [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:32] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:41:33] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~<?php use MiddleEarth\Codeception\.*?Guy;~". [] []
+[2013-06-18 16:41:33] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:41:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:15] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~<\?php use MiddleEarth\Codeception\.*?Guy;~". [] []
+[2013-06-18 16:42:15] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:42:15] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:33] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:34] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~<\?php use MiddleEarth\Codeception\.*?Guy~". [] []
+[2013-06-18 16:42:34] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:42:34] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:43] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~<\?php use MiddleEarth\Codeception\.*Guy$~". [] []
+[2013-06-18 16:42:43] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:42:43] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:56] Codeception.INFO: PASSED [] []
+[2013-06-18 16:42:57] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~\<\?php use MiddleEarth\Codeception\.*Guy$~". [] []
+[2013-06-18 16:42:57] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:42:57] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:01] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:43:02] Codeception.ALERT: Failed asserting that '<?php use MiddleEarth\Codeception\CliGuy;
+
+
+$I = new CliGuy($scenario);
+$I->am('developer who likes testing');
+$I->wantTo('generate sample Suite');
+$I->lookForwardTo('have a better tests categorization');
+
+$I->amInPath('tests/data/sandbox');
+$I->executeCommand('generate:suite house HouseGuy');
+$I->seeFileFound('house.suite.yml', 'tests');
+$I->expect('guy class is generated');
+$I->seeInThisFile('class_name: HouseGuy');
+$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('_bootstrap.php','tests/house');
+' matches PCRE pattern "~php use MiddleEarth\Codeception\.*Guy$~". [] []
+[2013-06-18 16:43:02] Codeception.INFO: # FAILED # [] []
+[2013-06-18 16:43:02] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:42] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
+[2013-06-18 16:44:50] Codeception.INFO: PASSED [] []
