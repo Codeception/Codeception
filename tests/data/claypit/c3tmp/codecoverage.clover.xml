@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1371519702">
-  <project timestamp="1371519702">
+<coverage generated="1371525914">
+  <project timestamp="1371525914">
     <package name="Codeception">
       <file name="/home/davert/Codeception/src/Codeception/AbstractGuy.php">
         <class name="AbstractGuy" namespace="Codeception">
-          <metrics methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="76" coveredstatements="0" elements="86" coveredelements="0"/>
+          <metrics methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="0" elements="87" coveredelements="0"/>
         </class>
         <line num="15" type="method" name="__construct" crap="2" count="0"/>
         <line num="16" type="stmt" count="0"/>
         <line num="17" type="stmt" count="0"/>
         <line num="18" type="stmt" count="0"/>
-        <line num="25" type="method" name="run" crap="6" count="0"/>
+        <line num="25" type="method" name="execute" crap="6" count="0"/>
         <line num="26" type="stmt" count="0"/>
         <line num="27" type="stmt" count="0"/>
         <line num="28" type="stmt" count="0"/>
@@ -19,12 +19,12 @@
         <line num="31" type="stmt" count="0"/>
         <line num="32" type="stmt" count="0"/>
         <line num="33" type="stmt" count="0"/>
-        <line num="35" type="method" name="wantToTest" crap="2" count="0"/>
-        <line num="36" type="stmt" count="0"/>
+        <line num="34" type="stmt" count="0"/>
+        <line num="36" type="method" name="wantToTest" crap="2" count="0"/>
         <line num="37" type="stmt" count="0"/>
         <line num="38" type="stmt" count="0"/>
-        <line num="40" type="method" name="wantTo" crap="6" count="0"/>
-        <line num="41" type="stmt" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="41" type="method" name="wantTo" crap="6" count="0"/>
         <line num="42" type="stmt" count="0"/>
         <line num="43" type="stmt" count="0"/>
         <line num="44" type="stmt" count="0"/>
@@ -32,8 +32,8 @@
         <line num="46" type="stmt" count="0"/>
         <line num="47" type="stmt" count="0"/>
         <line num="48" type="stmt" count="0"/>
-        <line num="50" type="method" name="expectTo" crap="6" count="0"/>
-        <line num="51" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="51" type="method" name="expectTo" crap="6" count="0"/>
         <line num="52" type="stmt" count="0"/>
         <line num="53" type="stmt" count="0"/>
         <line num="54" type="stmt" count="0"/>
@@ -41,8 +41,8 @@
         <line num="56" type="stmt" count="0"/>
         <line num="57" type="stmt" count="0"/>
         <line num="58" type="stmt" count="0"/>
-        <line num="60" type="method" name="expect" crap="6" count="0"/>
-        <line num="61" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="61" type="method" name="expect" crap="6" count="0"/>
         <line num="62" type="stmt" count="0"/>
         <line num="63" type="stmt" count="0"/>
         <line num="64" type="stmt" count="0"/>
@@ -50,8 +50,8 @@
         <line num="66" type="stmt" count="0"/>
         <line num="67" type="stmt" count="0"/>
         <line num="68" type="stmt" count="0"/>
-        <line num="70" type="method" name="amGoingTo" crap="6" count="0"/>
-        <line num="71" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <line num="71" type="method" name="amGoingTo" crap="6" count="0"/>
         <line num="72" type="stmt" count="0"/>
         <line num="73" type="stmt" count="0"/>
         <line num="74" type="stmt" count="0"/>
@@ -59,30 +59,31 @@
         <line num="76" type="stmt" count="0"/>
         <line num="77" type="stmt" count="0"/>
         <line num="78" type="stmt" count="0"/>
-        <line num="80" type="method" name="am" crap="6" count="0"/>
-        <line num="81" type="stmt" count="0"/>
+        <line num="79" type="stmt" count="0"/>
+        <line num="81" type="method" name="am" crap="6" count="0"/>
         <line num="82" type="stmt" count="0"/>
         <line num="83" type="stmt" count="0"/>
         <line num="84" type="stmt" count="0"/>
         <line num="85" type="stmt" count="0"/>
         <line num="86" type="stmt" count="0"/>
         <line num="87" type="stmt" count="0"/>
-        <line num="90" type="method" name="lookForwardTo" crap="6" count="0"/>
-        <line num="91" type="stmt" count="0"/>
+        <line num="88" type="stmt" count="0"/>
+        <line num="91" type="method" name="lookForwardTo" crap="6" count="0"/>
         <line num="92" type="stmt" count="0"/>
         <line num="93" type="stmt" count="0"/>
         <line num="94" type="stmt" count="0"/>
         <line num="95" type="stmt" count="0"/>
         <line num="96" type="stmt" count="0"/>
-        <line num="98" type="method" name="__call" crap="6" count="0"/>
-        <line num="99" type="stmt" count="0"/>
+        <line num="97" type="stmt" count="0"/>
+        <line num="99" type="method" name="__call" crap="6" count="0"/>
         <line num="100" type="stmt" count="0"/>
         <line num="101" type="stmt" count="0"/>
         <line num="102" type="stmt" count="0"/>
         <line num="103" type="stmt" count="0"/>
         <line num="104" type="stmt" count="0"/>
         <line num="105" type="stmt" count="0"/>
-        <metrics loc="106" ncloc="98" classes="1" methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="76" coveredstatements="0" elements="86" coveredelements="0"/>
+        <line num="106" type="stmt" count="0"/>
+        <metrics loc="107" ncloc="99" classes="1" methods="10" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="77" coveredstatements="0" elements="87" coveredelements="0"/>
       </file>
       <file name="/home/davert/Codeception/src/Codeception/CodeCoverageSettings.php">
         <class name="CodeCoverageSettings" namespace="Codeception">
@@ -3935,8 +3936,8 @@
         <class name="Executor" namespace="Codeception\Step">
           <metrics methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="12" coveredelements="0"/>
         </class>
-        <line num="9" type="method" name="__construct" crap="2" count="0"/>
-        <line num="10" type="stmt" count="0"/>
+        <line num="8" type="method" name="__construct" crap="2" count="0"/>
+        <line num="9" type="stmt" count="0"/>
         <line num="11" type="stmt" count="0"/>
         <line num="13" type="stmt" count="0"/>
         <line num="14" type="stmt" count="0"/>
@@ -3945,7 +3946,7 @@
         <line num="18" type="stmt" count="0"/>
         <line num="20" type="stmt" count="0"/>
         <line num="21" type="stmt" count="0"/>
-        <metrics loc="23" ncloc="23" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="12" coveredelements="0"/>
+        <metrics loc="23" ncloc="21" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="12" coveredelements="0"/>
       </file>
       <file name="/home/davert/Codeception/src/Codeception/Step/Incomplete.php">
         <class name="Incomplete" namespace="Codeception\Step">
@@ -7175,6 +7176,6 @@
     <file name="/home/davert/Codeception/tests/data/claypit/c3.php">
       <metrics loc="220" ncloc="193" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
     </file>
-    <metrics files="108" loc="13876" ncloc="9349" classes="100" methods="844" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6517" coveredstatements="0" elements="7361" coveredelements="0"/>
+    <metrics files="108" loc="13877" ncloc="9348" classes="100" methods="844" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6518" coveredstatements="0" elements="7362" coveredelements="0"/>
   </project>
 </coverage>
