@@ -10,6 +10,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     protected $trace = array();
 
+    protected $backupGlobalsBlacklist = array('app');
+
     public function getFeature()
     {
         return null;

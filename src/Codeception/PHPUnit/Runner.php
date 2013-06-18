@@ -32,6 +32,8 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
 
 	public function doEnhancedRun(\PHPUnit_Framework_Test $suite, \PHPUnit_Framework_TestResult $result, array $arguments = array())
 	{
+        unset($GLOBALS['app']); // hook for not to serialize globals
+
         $arguments = array_merge($this->defaultArguments, $arguments);
 	    $this->handleConfiguration($arguments);
         $result->convertErrorsToExceptions(false);

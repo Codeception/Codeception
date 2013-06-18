@@ -24,11 +24,11 @@ abstract class AbstractGuy
      */
     public function execute($callable)
     {
-        $this->scenario->comment('I execute lambda function');
         $this->scenario->executor($callable);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
+        } else {
         }
         return $this;
     }

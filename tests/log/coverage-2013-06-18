@@ -1,0 +1,32 @@
+[2013-06-18 02:09:59] RemoteServerWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-06-18 02:09:59] RemoteServerWithHtmlCept.php.INFO: execute command "run remote_server --coverage --html" [] []
+[2013-06-18 02:09:59] RemoteServerWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.3-dev
+Powered by PHPUnit 3.7.21 by Sebastian Bergmann. [] []
+[2013-06-18 02:09:59] RemoteServerWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-06-18 02:09:59] RemoteServerWithHtmlCept.php.INFO: PASSED [] []
+[2013-06-18 02:09:59] RemoteServerWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-06-18 02:09:59] RemoteServerWithXmlCept.php.INFO: execute command "run remote_server --coverage --xml" [] []
+[2013-06-18 02:09:59] RemoteServerWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.3-dev
+Powered by PHPUnit 3.7.21 by Sebastian Bergmann. [] []
+[2013-06-18 02:09:59] RemoteServerWithXmlCept.php.INFO: # FAILED # [] []
+[2013-06-18 02:09:59] RemoteServerWithXmlCept.php.INFO: PASSED [] []
+[2013-06-18 02:09:59] RemoteWithHtmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-06-18 02:09:59] RemoteWithHtmlCept.php.INFO: execute command "run remote --coverage --html" [] []
+[2013-06-18 02:09:59] RemoteWithHtmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.3-dev
+Powered by PHPUnit 3.7.21 by Sebastian Bergmann. [] []
+[2013-06-18 02:09:59] RemoteWithHtmlCept.php.INFO: # FAILED # [] []
+[2013-06-18 02:09:59] RemoteWithHtmlCept.php.INFO: PASSED [] []
+[2013-06-18 02:09:59] RemoteWithXmlCept.php.INFO: am in path "tests/data/sandbox" [] []
+[2013-06-18 02:09:59] RemoteWithXmlCept.php.INFO: execute command "run remote --coverage --xml" [] []
+[2013-06-18 02:10:00] RemoteWithXmlCept.php.ALERT: Result code was 1.
+
+Codeception PHP Testing Framework v1.6.3-dev
+Powered by PHPUnit 3.7.21 by Sebastian Bergmann. [] []
+[2013-06-18 02:10:00] RemoteWithXmlCept.php.INFO: # FAILED # [] []
+[2013-06-18 02:10:00] RemoteWithXmlCept.php.INFO: PASSED [] []
