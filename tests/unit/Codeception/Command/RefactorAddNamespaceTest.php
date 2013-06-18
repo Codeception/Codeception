@@ -20,11 +20,11 @@ class RefactorAddNamespaceTest extends BaseCommandRunner
         
         $helper = $this->log[1];
         $this->assertContains('namespace MiddleEarth\\Codeception\\Module', $helper['content']);
-        $this->assertContains(\Codeception\Configuration::helpersDir(), (string)$helper['filename']);
+        $this->assertRegExp('~'.\Codeception\Configuration::helpersDir().'.*?Helper~', (string)$helper['filename']);
         
         // log[2] is helper, log[3] ... are helpers too
         $cept = $this->log[7];
-        $this->assertContains('<?php use MiddleEarth\\Codeception\\', $cept['content']);
+        $this->assertRegExp('~<?php use MiddleEarth\\\\Codeception\\\\.*Guy~', $cept['content']);
     }
 
 }
