@@ -63,8 +63,6 @@ class Base extends \Symfony\Component\Console\Command\Command
         if (strpos(strrev($filename), strrev($suffix.'.php')) !== 0) $filename .= $suffix.'.php';
         if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
 
-        $filename = pathinfo($filename, PATHINFO_BASENAME);
-
         return $filename;
     }
 

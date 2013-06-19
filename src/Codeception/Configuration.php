@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Util\Autoload;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
 
@@ -85,13 +86,7 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        spl_autoload_register(function ($class) {
-            $matches = null;
-            if (!preg_match('~\\\\?(\\w*?Helper)$~', $class, $matches)) return;
-            $className = $matches[1];
-            $helpers = Finder::create()->files()->name($className.'.php')->in(\Codeception\Configuration::helpersDir());
-            foreach ($helpers as $helper) include_once($helper);
-        });
+        Autoload::registerSuffix('Helper', \Codeception\Configuration::helpersDir());
     }
 
     protected static function loadSuites()

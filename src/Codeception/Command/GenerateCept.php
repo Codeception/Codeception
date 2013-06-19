@@ -39,8 +39,10 @@ class GenerateCept extends Base
         $use = $suiteconf['namespace'] ? " use ".$suiteconf['namespace'].'\\Codeception\\'.$guy.";\n" : '';
 
         $file = sprintf($this->template, $use, $guy);
-        $filename = $this->completeSuffix($filename, 'Cept');
+
         $this->buildPath($suiteconf['path'], $filename);
+
+        $filename = $this->completeSuffix($filename, 'Cept');
 
         $res = $this->save($suiteconf['path'].DIRECTORY_SEPARATOR . $filename, $file);
         if (!$res) {

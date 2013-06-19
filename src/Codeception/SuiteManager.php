@@ -204,6 +204,10 @@ class SuiteManager {
         $testClass = get_class($cestInstance);
         if (strpos($methodName, '_') === 0) return;
 
+        $guy = $this->settings['namespace']
+            ? $this->settings['namespace'] . '\\Codeception\\' . $this->settings['class_name']
+            : $this->settings['class_name'];
+
         $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(
             'name' => $target,
@@ -211,7 +215,7 @@ class SuiteManager {
             'method' => $methodName,
             'file' => $file,
             'bootstrap' => $this->settings['bootstrap'],
-            'guy' => $this->settings['class_name']
+            'guy' => $guy
         ));
 
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
