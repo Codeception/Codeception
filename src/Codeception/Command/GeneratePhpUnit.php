@@ -56,11 +56,12 @@ EOF;
         $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $classname = $this->getClassName($class);
+
         $path = $this->buildPath($suiteconf['path'], $class);
         $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
 
         $filename = $this->completeSuffix($classname, 'Test');
-        $filename = trim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
+        $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         $classname = $this->removeSuffix($classname, 'Test');
 
