@@ -50,6 +50,7 @@ class Base extends \Symfony\Component\Console\Command\Command
 
     protected function breakParts($class)
     {
+        $class = str_replace('/', '\\', $class);
         $namespaces = explode('\\', $class);
         if (count($namespaces)) $namespaces[0] = ltrim($namespaces[0],'\\');
         if (!$namespaces[0]) array_shift($namespaces); // remove empty namespace caused of \\
@@ -61,6 +62,9 @@ class Base extends \Symfony\Component\Console\Command\Command
         if (strpos(strrev($filename), strrev($suffix)) === 0) $filename .= '.php';
         if (strpos(strrev($filename), strrev($suffix.'.php')) !== 0) $filename .= $suffix.'.php';
         if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
+
+        $filename = pathinfo($filename, PATHINFO_BASENAME);
+
         return $filename;
     }
 
