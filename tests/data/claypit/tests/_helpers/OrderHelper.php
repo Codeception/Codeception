@@ -13,7 +13,6 @@ class OrderHelper extends \Codeception\Module
 
     public function _initialize()
     {
-        @unlink(\Codeception\Configuration::logDir().'order.txt');
         self::appendToFile('I');
     }
 
