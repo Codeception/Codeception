@@ -4,6 +4,7 @@ class IncludedCest {
     public function _before()
     {
         \Codeception\Util\FileSystem::doEmptyDir('tests/data/included/_log');
+        file_put_contents('tests/data/included/_log/.gitkeep','');
     }
 
     public function runSuitesFromIncludedConfigs(\CliGuy $I)

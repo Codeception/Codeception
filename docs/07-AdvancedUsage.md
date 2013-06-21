@@ -152,7 +152,7 @@ class BasicCest
 ?>
 ```
 
-But there is a limiation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
+But there is a limitation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
 It was useful to store some variables in bootstraps that should be passed into scenario.
 In Cest files you should inject all external variables manually, using static or global variables.
 
@@ -212,6 +212,12 @@ But today we encourage you to try your own implementations. Whe have some nice b
 
 * [Ruling the Swarm (of Tests)](http://phpmaster.com/ruling-the-swarm-of-tests-with-codeception/) by Michael Bodnarchuk.
 * [Implementing Page Objects in Codeception](http://jonstuff.blogspot.ca/2013/05/implementing-page-objects-in.html) by Jon Phipps.
+
+## One Runner for Multiple Applications
+
+
+
+
 
 ## Conclusion
 
