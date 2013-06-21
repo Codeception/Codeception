@@ -27,7 +27,7 @@ class Configuration
         'settings' => array(
             'colors' => false,
             'log' => false,
-            'bootstrap' => false,
+            'bootstrap' => '_bootstrap.php',
         )
     );
 
@@ -37,7 +37,6 @@ class Configuration
             'enabled' => array(),
             'config' => array(),
         ),
-        'bootstrap' => '_bootstrap.php',
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     );
