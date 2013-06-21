@@ -16,7 +16,14 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
-        $this->suiteman = Stub::make('\Codeception\SuiteManager', array('dispatcher' => $this->dispatcher,'suite' => new PHPUnit_Framework_TestSuite(), 'settings' => array('bootstrap' => false, 'class_name' => 'CodeGuy')));
+        $this->suiteman = Stub::make('\Codeception\SuiteManager', array(
+                'dispatcher' => $this->dispatcher,
+                'suite' => new PHPUnit_Framework_TestSuite(), 
+                'settings' => array(
+                    'bootstrap' => false, 
+                    'class_name' => 'CodeGuy',
+                    'namespace' => '',
+        )));
     }
 
     /**
