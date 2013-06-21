@@ -139,4 +139,5 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $browserModule->_after($this->makeTest());
         data::clean();
     }
+
 }

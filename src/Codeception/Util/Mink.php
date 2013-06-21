@@ -285,8 +285,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $field = $this->findField($select);
         if (is_array($option)) {
-            $opt = array_shift($option);
-            $field->selectOption($opt);
             foreach ($option as $opt) {
                 $field->selectOption($opt, true);
             }
