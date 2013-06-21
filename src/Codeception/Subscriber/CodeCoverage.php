@@ -118,7 +118,7 @@ class CodeCoverage implements EventSubscriberInterface
 
     protected function printText(\PHPUnit_Util_Printer $printer)
     {
-        $writer = new \PHP_CodeCoverage_Report_Text(
+        $writer = new \PHP_CodeCoverage_Report_Text($printer,
             $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered']
         );
         $printer->write($writer->process($this->coverage, $this->options['colors']));
