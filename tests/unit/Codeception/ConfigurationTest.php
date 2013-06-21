@@ -9,9 +9,9 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
-        \Codeception\Module::$includeInheritedActions = true;
-        \Codeception\Module::$onlyActions = array();
-        \Codeception\Module::$excludeActions = array();
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = true;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = array();
+        \Codeception\Module\PhpSiteHelper::$excludeActions = array();
     }
 
     /**

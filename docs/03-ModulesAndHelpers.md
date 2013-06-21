@@ -335,6 +335,8 @@ $this->getModule('Selenium2')->_reconfigure(array('browser' => 'chrome'));
 
 By the end of a test all your changes will be rolled back to values to config values.
 
+### Extension options
+
 ## Conclusion
 
 Modules are the true power of Codeception. They are used to emulate multiple inheritance for Guy classes (CodeGuy, TestGuy, WebGuy, etc).
