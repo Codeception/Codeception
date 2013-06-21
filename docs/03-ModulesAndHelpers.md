@@ -337,6 +337,21 @@ By the end of a test all your changes will be rolled back to values to config va
 
 ### Extension options
 
+Like each class a Helper can be inherited from a module.
+
+``` php
+<?php
+namespace Codeception\Module;
+class MySeleniumHelper extends Selenium2 {
+}
+?>
+```
+
+In inherited helper you replace implemented methods with your own realization.
+Also you can replace `_before`, `_after` hooks, which is might be an option when you need to customize starting and stopping of testing session.
+
+But what about disabling some of inherited methods? Codeception has
+
 ## Conclusion
 
 Modules are the true power of Codeception. They are used to emulate multiple inheritance for Guy classes (CodeGuy, TestGuy, WebGuy, etc).
