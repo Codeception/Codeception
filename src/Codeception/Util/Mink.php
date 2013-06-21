@@ -107,14 +107,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     protected function proceedSee($text, $selector = null) {
         if ($selector) {
             $nodes = null;
-            try {
+
+            if (Locator::isCSS($selector)) {
                 $nodes = $this->session->getPage()->findAll('css', $selector);
-            } catch (ParseException $e) {}
-            
-            if (Locator::isXPath($selector)) {
+            }
+
+            if (!$nodes and Locator::isXPath($selector)) {
                 $nodes = $this->session->getPage()->findAll('xpath', $selector);
             }
-            if ($nodes === null) throw new ElementNotFound($selector, 'CSS or XPath');
+            if (empty($nodes)) throw new ElementNotFound($selector, 'CSS or XPath');
             
 		    $values = '';
 		    foreach ($nodes as $node) {
@@ -284,7 +285,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $field = $this->findField($select);
         if (is_array($option)) {
-            $field->selectOption($option, true);
+            foreach ($option as $opt) {
+                $field->selectOption($opt, true);
+            }
             return;
         }
         $field->selectOption($option);
