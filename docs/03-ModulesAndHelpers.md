@@ -337,6 +337,8 @@ By the end of a test all your changes will be rolled back to values to config va
 
 ### Extension options
 
+*new in 1.6.3*
+
 Like each class a Helper can be inherited from a module.
 
 ``` php
@@ -350,7 +352,44 @@ class MySeleniumHelper extends Selenium2 {
 In inherited helper you replace implemented methods with your own realization.
 Also you can replace `_before`, `_after` hooks, which is might be an option when you need to customize starting and stopping of testing session.
 
-But what about disabling some of inherited methods? Codeception has
+If some of the methods of parent class should not be used in child module, you can disable them. Codeception has several options for this.
+
+``` php
+<?php
+namespace Codeception\Module;
+class MySeleniumHelper extends Selenium2 {
+    // disable all inherited actions
+    public static $includeInheritedActions = false;
+
+    // include only "see" and "click" actions
+    public static $onlyActions = array('see','click');
+
+    // exclude "seeElement" action
+    public static $excludeActions = array('seeElement');
+}
+?>
+```
+
+Option `$includeInheritedActions` set to false adds ability to create aliases for parent methods.
+ It allows you to resolve conflicts between module. Let's say we want to use `Db` module with our `SecondDbHelper`
+ that actually inherits from `Db`. How can we use `seeInDatabase` methods from both modules? Let's find out.
+
+``` php
+<?php
+namespace Codeception\Module;
+class SecondDbHelper extends Db {
+    public static $includeInheritedActions = false;
+
+    public function seeInSecondDb($table, $data)
+    {
+        $this->seeInDatabase($table, $data);
+    }
+}
+?>
+```
+
+`$includeInheritedActions` set to false won't include the methods from parent classes into the generated Guy.
+Still you can use inherited methods in your helper class.
 
 ## Conclusion
 
