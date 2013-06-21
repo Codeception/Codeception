@@ -21,6 +21,7 @@ class Configuration
 
     public static $defaultConfig = array(
         'namespace' => '',
+        'bootstrap' => null,
         'include' => array(),
         'paths' => array(),
         'modules' => array(),
@@ -72,10 +73,20 @@ class Configuration
         self::$helpersDir = $config['paths']['helpers'];
         self::$testsDir = $config['paths']['tests'];
 
+        self::loadBootstrap($config['bootstrap']);
         self::autoloadHelpers();
         self::loadSuites();
 
         return $config;
+    }
+
+    protected static function loadBootstrap($bootstrap)
+    {
+        if (!$bootstrap) return;
+        $bootstrap = self::$testsDir.DIRECTORY_SEPARATOR.$bootstrap;
+        if (file_exists($bootstrap)) {
+            include_once self::$testsDir.DIRECTORY_SEPARATOR.$bootstrap;
+        }
     }
 
     protected static function loadConfigFile($file, $parentConfig)
