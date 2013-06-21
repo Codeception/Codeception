@@ -8,7 +8,7 @@ use \Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Codecept
 {
-    const VERSION = "1.6.3-dev";
+    const VERSION = "1.6.3";
 
     /**
      * @var \Codeception\PHPUnit\Runner
