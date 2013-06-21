@@ -2,7 +2,7 @@
 <body>
 <form action="/form/complex" method="POST">
     <label for="like">What do you like the most?</label>
-    <select name="like" id="like" multiple="multiple">
+    <select name="like[]" id="like" multiple="multiple">
         <option value="eat">Eat and Drink</option>
         <option value="play">Play Video Games</option>
         <option value="adult">Have Sex</option>
