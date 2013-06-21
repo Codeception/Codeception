@@ -705,3 +705,9 @@ Failed asserting that response contains "your user object (/me)". Response was s
 Failed asserting that response contains "your user object (/me)". Response was saved to 'log' directory. [] []
 [2013-06-21 23:21:48] Codeception.INFO: # FAILED # [] []
 [2013-06-21 23:21:48] Codeception.INFO: PASSED [] []
+[2013-06-21 23:55:40] Codeception.INFO: PASSED [] []
+[2013-06-21 23:56:15] Codeception.INFO: PASSED [] []
+[2013-06-21 23:56:57] Codeception.ALERT: 'Your User Object (/me)' in page..
+Failed asserting that response contains "your user object (/me)". Response was saved to 'log' directory. [] []
+[2013-06-21 23:56:57] Codeception.INFO: # FAILED # [] []
+[2013-06-21 23:56:57] Codeception.INFO: PASSED [] []
