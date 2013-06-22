@@ -67,6 +67,23 @@ modules:
     enabled: [Unit, CodeHelper]
 ```
 
+### Basic Testing
+
+Unit tests in Codeception written in absolutely the same way as you do it in PHPUnit:
+
+``` php
+<?php
+
+public function testMarkdown()
+{
+    $markdown = new MarkdownParser();
+    $html = $markdown->parse("**Hello world**");
+    $this->assertEquals('<strong>Hello World</strong>', $html);
+}
+
+?>
+```
+
 ### Testing Database
 
 Probably, there is no very useful modules set up by default for CodeGuy class. That's because the CodeGuy class is mostly used for scenario-driven unit tests, described in next chapters. But that's ok, we can get a use of it by adding modules we need. For example, we can add a Db module to test updates in database.
@@ -94,8 +111,10 @@ function testSavingUser()
 {
 	$user = new User();
 	$user->setName('Miles');
+    $user->setSurname('Davis');
 	$user->save();
-	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles'));
+    $this->assertEquals('Miles Davis', $user->getFullName());
+	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
@@ -117,6 +136,7 @@ For example, if you use `Symfony2` module here is the way you can access Symfony
  * @var Symfony\Component\DependencyInjection\Container
  */
 $container = $this->getModule('Symfony2')->container;
+?>
 ```
 
 All public variables are listed in references for corresponding modules.
