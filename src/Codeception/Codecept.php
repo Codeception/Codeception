@@ -77,6 +77,7 @@ class Codecept
                 $options[$option] = isset($this->config['settings'][$option]) ? $this->config['settings'][$option] : $this->options[$option];
             }
         }
+        if ($options['no-colors']) $options['colors'] = false;
         if ($options['report']) $options['silent'] = true;
         if ($options['group']) $options['groups'] = $options['group'];
 
