@@ -103,7 +103,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
-        $this->markTestSkipped("Facebook app not opening");
         // preconditions: #1 php web server being run
         $this->noPhpWebserver();
 
