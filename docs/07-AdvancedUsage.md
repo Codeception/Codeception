@@ -213,11 +213,6 @@ But today we encourage you to try your own implementations. Whe have some nice b
 * [Ruling the Swarm (of Tests)](http://phpmaster.com/ruling-the-swarm-of-tests-with-codeception/) by Michael Bodnarchuk.
 * [Implementing Page Objects in Codeception](http://jonstuff.blogspot.ca/2013/05/implementing-page-objects-in.html) by Jon Phipps.
 
-## One Runner for Multiple Applications
-
-
-
-
 
 ## Conclusion
 
