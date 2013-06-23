@@ -28,6 +28,10 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInDatabase('users', array('name' => 'user1'));
     }
 
+    public function testDontSeeInDatabaseWithEmptyTable() {
+        $this->module->dontSeeInDatabase('empty_table');
+    }
+
     public function testGrabFromDatabase() {
         $email = $this->module->grabFromDatabase('users', 'email', array('name' => 'davert'));
         $this->assertEquals('davert@mail.ua', $email);
