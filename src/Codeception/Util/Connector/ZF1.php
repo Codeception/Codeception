@@ -49,6 +49,7 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         $_FILES = $request->getFiles();
+        $_SERVER = array_merge($_SERVER, $request->getServer());
 
         $zendResponse = new \Zend_Controller_Response_HttpTestCase;
         $this->front->setRequest($zendRequest)->setResponse($zendResponse);
