@@ -14,3 +14,5 @@ INSERT INTO "users" VALUES(1,'davert','davert@mail.ua','2012-02-01 21:17:04');
 INSERT INTO "users" VALUES(2,'nick','nick@mail.ua','2012-02-01 21:17:15');
 INSERT INTO "users" VALUES(3,'miles','miles@davis.com','2012-02-01 21:17:25');
 INSERT INTO "users" VALUES(4,'bird','charlie@parker.com','2012-02-01 21:17:39');
+DROP TABLE IF EXISTS "empty_table";
+CREATE TABLE "empty_table" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "field" VARCHAR);
