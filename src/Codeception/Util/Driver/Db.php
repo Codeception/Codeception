@@ -7,6 +7,7 @@ class Db
 {
     protected $dbh;
     protected $dsn;
+	public $sqlToRun;
 
     public static function connect($dsn, $user, $password)
     {
@@ -95,15 +96,8 @@ class Db
             $query .= rtrim($sqlLine);
 
             if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $queryToBeExecuted = substr($query, 0, - 1 * $delimiterLength);
-                try {
-                    $this->sqlQuery($queryToBeExecuted);
-                } catch (\PDOException $e) {
-                    throw new ModuleException(
-                        __CLASS__,
-                        $e->getMessage() . "\nSQL query being executed: " . $queryToBeExecuted
-                    );
-                }
+                $this->sqlToRun = substr($query, 0, - 1 * $delimiterLength);
+                $this->sqlQuery($this->sqlToRun);
                 $query = "";
             }
         }

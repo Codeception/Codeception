@@ -190,7 +190,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         } catch (\PDOException $e) {
             throw new ModuleException(
                 __CLASS__,
-                $e->getMessage() . "\nSQL query being executed: " . $this->sql
+                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
             );
         }
     }
