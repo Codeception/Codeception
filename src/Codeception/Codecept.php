@@ -50,7 +50,8 @@ class Codecept
         'log' => true,
         'coverage' => false,
 	    'defer-flush' => false,
-        'group' => null
+        'groups' => null,
+        'excludeGroups' => null
     );
 
     public function __construct($options = array()) {
@@ -79,6 +80,7 @@ class Codecept
         }
         if ($options['report']) $options['silent'] = true;
         if ($options['group']) $options['groups'] = $options['group'];
+        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
 
         return $options;
     }
