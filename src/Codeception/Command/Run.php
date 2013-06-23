@@ -73,14 +73,15 @@ class Run extends Base
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $current_dir = Configuration::projectDir();
-            $this->runSuites($suites, $options['skip']);
+            $executed = $this->runSuites($suites, $options['skip']);
             foreach ($config['include'] as $included_config_file) {
                 Configuration::config($full_path = $current_dir . $included_config_file);
                 $namespace = $this->currentNamespace();
                 $output->writeln("\n<fg=white;bg=magenta>\n[$namespace]: tests from $full_path\n</fg=white;bg=magenta>");
                 $suites = $suite ? explode(',', $suite) : Configuration::suites();
-                $this->runSuites($suites, $options['skip']);
+                $executed += $this->runSuites($suites, $options['skip']);
             }
+            if (!$executed) throw new \RuntimeException(sprintf("Suite '%s' could not be found", implode(', ', $suites)));
         }
 
         $this->codecept->printResult();
@@ -100,11 +101,14 @@ class Run extends Base
 
     protected function runSuites($suites, $skippedSuites = array())
     {
+        $executed = 0;
         foreach ($suites as $suite) {
             if (in_array($suite, $skippedSuites)) continue;
             if (!in_array($suite, Configuration::suites())) continue;
             $this->codecept->runSuite($suite);
-        }        
+            $executed++;
+        }
+        return $executed;
     }        
 
     protected function matchTestFromFilename($filename,$tests_path)
