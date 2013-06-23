@@ -58,18 +58,18 @@ class Db
         $this->user = $user;
         $this->password = $password;
     }
-    
+
     public function getDbh() {
         return $this->dbh;
     }
-    
+
     public function getDb()
     {
         $matches = array();
         $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
         if (!$matched) return false;
         return $matches[1];
-    }        
+    }
 
     public function cleanup()
     {
@@ -110,7 +110,8 @@ class Db
     }
 
     public function select($column, $table, array $criteria) {
-        $query = "select %s from %s where %s";
+        $where = $criteria ? "where %s" : '';
+        $query = "select %s from `%s` $where";
         $params = array();
         foreach ($criteria as $k => $v) {
             $params[] = "$k = ? ";
