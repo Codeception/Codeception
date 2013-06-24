@@ -1,38 +1,84 @@
-# Yii2 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii2.php)**
+---
+layout: doc
+title: Codeception - Documentation
+---
+
+# Yii1 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Yii1.php)**
 
 
-This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
+This module provides integration with Yii framework (http://www.yiiframework.com/) (1.1.14dev).
 
-The following configurations are required for this module:
+The following configurations are available for this module:
 <ul>
-<li>entryScript - the path of the entry script</li>
-<li>url - the URL of the entry script</li>
+<li>appPath - full path to the application, include index.php</li>
+<li>url - full url to the index.php entry script</li>
 </ul>
+In your index.php you must return array with correct configuration for the application:
 
-The entry script must return the application configuration array.
+For the simple created yii application index.php will be like this:
+<pre>
+// change the following paths if necessary
+$yii=dirname(__FILE__).'/../yii/framework/yii.php';
+$config=dirname(__FILE__).'/protected/config/main.php';
+
+// remove the following lines when in production mode
+defined('YII_DEBUG') or define('YII_DEBUG',true);
+// specify how many levels of call stack should be shown in each log message
+defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
+require_once($yii);
+return array(
+	'class' => 'CWebApplication',
+	'config' => $config,
+);
+</pre>
 
 You can use this module by setting params in your functional.suite.yml:
 <pre>
 class_name: TestGuy
 modules:
-    enabled: [FileSystem, TestHelper, Yii2]
+    enabled: [Yii1, TestHelper]
     config:
-        Yii2:
-            entryScript: '/path/to/index.php'
+        Yii1:
+            appPath: '/path/to/index.php'
             url: 'http://localhost/path/to/index.php'
 </pre>
 
-## Status
+You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web), this component will be
+imported when you include Yii1 module. There is also an alias "codeceptionsrc" available in Yii that points to the
+codeception source directory, you can use it as always:
+<pre>
+Yii::getPathOfAlias('codeceptionsrc');
+</pre>
+This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
+modify it to be extended from your custom http-request component.
 
-Maintainer: **qiangxue**
-Stability: **beta**
+You can test this module by creating new empty Yii application and creating this scenario:
+<pre>
+$I = new TestGuy($scenario);
+$I->wantTo('Test index page');
+$I->amOnPage('/index.php');
+$I->see('My Web Application','#header #logo');
+$I->click('Login');
+$I->see('Login','h1');
+$I->see('Username');
+$I->fillField('#LoginForm_username','demo');
+$I->fillField('#LoginForm_password','demo');
+$I->click('#login-form input[type="submit"]');
+$I->seeLink('Logout (demo)');
+$I->click('Logout (demo)');
+$I->seeLink('Login');
+</pre>
+Then run codeception: php codecept.phar --steps run functional
+You must see "OK" and that all steps are marked with asterisk (*).
+Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
+
+ * property Codeception\Util\Connector\Yii1 $client
+
+### Actions
 
 
-## Actions
-
-
-### amHttpAuthenticated
+#### amHttpAuthenticated
 
 
 Adds HTTP authentication via username/password.
@@ -41,7 +87,7 @@ Adds HTTP authentication via username/password.
  * param $password
 
 
-### amOnPage
+#### amOnPage
 
 
 Opens the page.
@@ -49,37 +95,41 @@ Requires relative uri as parameter
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 // opens front page
 $I->amOnPage('/');
 // opens /register page
 $I->amOnPage('/register');
 ?>
-```
+
+{% endhighlight %}
 
  * param $page
 
 
-### attachFile
+#### attachFile
 
 
 Attaches file from Codeception data directory to upload field.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 // file is stored in 'tests/data/tests.xls'
 $I->attachFile('prices.xls');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $filename
 
 
-### checkOption
+#### checkOption
 
 
 Ticks a checkbox.
@@ -87,16 +137,18 @@ For radio buttons use `selectOption` method.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->checkOption('#agree');
 ?>
-```
+
+{% endhighlight %}
 
  * param $option
 
 
-### click
+#### click
 
 
 Perform a click on link or button.
@@ -111,7 +163,8 @@ The second parameter is a context: CSS or XPath locator to narrow the search.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 // simple link
 $I->click('Logout');
@@ -124,12 +177,13 @@ $I->click('//form/*[@type=submit]')
 // link in context
 $I->click('Logout', '#nav');
 ?>
-```
+
+{% endhighlight %}
  * param $link
  * param $context
 
 
-### dontSee
+#### dontSee
 
 
 Check if current page doesn't contain the text specified.
@@ -137,18 +191,20 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-```php
+{% highlight php %}
+
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 $I->dontSee('Sign Up','//body/h1'); // with XPath
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### dontSeeCheckboxIsChecked
+#### dontSeeCheckboxIsChecked
 
 
 Assert if the specified checkbox is unchecked.
@@ -156,17 +212,19 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### dontSeeCurrentUrlEquals
+#### dontSeeCurrentUrlEquals
 
 
 Checks that current url is not equal to value.
@@ -180,7 +238,7 @@ $I->dontSeeCurrentUrlEquals('/');
  * param $uri
 
 
-### dontSeeCurrentUrlMatches
+#### dontSeeCurrentUrlMatches
 
 
 Checks that current url does not match a RegEx value
@@ -193,42 +251,47 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
  * param $uri
 
 
-### dontSeeElement
+#### dontSeeElement
 
 
 Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeElement('.error');
 $I->dontSeeElement(//form/input[1]);
 ?>
-```
+
+{% endhighlight %}
  * param $selector
 
 
-### dontSeeInCurrentUrl
+#### dontSeeInCurrentUrl
 
 
 Checks that current uri does not contain a value
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeInCurrentUrl('/users/');
 ?>
-```
+
+{% endhighlight %}
 
  * param $uri
 
 
-### dontSeeInField
+#### dontSeeInField
 
 
 Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
@@ -236,13 +299,14 @@ $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
 $I->dontSeeInField('//form/*[@name=search]','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### dontSeeLink
+#### dontSeeLink
 
 
 Checks if page doesn't contain the link with text specified.
@@ -250,33 +314,37 @@ Specify url to narrow the results.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### dontSeeOptionIsSelected
+#### dontSeeOptionIsSelected
 
 
 Checks if option is not selected in select field.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
-```
+
+{% endhighlight %}
 
  * param $selector
  * param $optionText
  * return mixed
 
 
-### fillField
+#### fillField
 
 
 Fills a text field or textarea with value.
@@ -285,30 +353,32 @@ Fills a text field or textarea with value.
  * param $value
 
 
-### formatResponse
+#### formatResponse
 
 __not documented__
 
 
-### grabFromCurrentUrl
+#### grabFromCurrentUrl
 
 
 Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
-``` php
+{% highlight php %}
+
 <?php
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
-```
+
+{% endhighlight %}
 
  * param null $uri
  * internal param $url
  * return mixed
 
 
-### grabTextFrom
+#### grabTextFrom
 
 
 Finds and returns text contents of element.
@@ -316,19 +386,21 @@ Element is searched by CSS selector, XPath or matcher by regex.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $heading = $I->grabTextFrom('h1');
 $heading = $I->grabTextFrom('descendant-or-self::h1');
 $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ?>
-```
+
+{% endhighlight %}
 
  * param $cssOrXPathOrRegex
  * return mixed
 
 
-### grabValueFrom
+#### grabValueFrom
 
 
 Finds and returns field and returns it's value.
@@ -336,19 +408,21 @@ Searches by field name, then by CSS, then by XPath
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
 $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * return mixed
 
 
-### see
+#### see
 
 
 Check if current page contains the text specified.
@@ -356,19 +430,21 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
 $I->see('Sign Up','//body/h1'); // with XPath
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### seeCheckboxIsChecked
+#### seeCheckboxIsChecked
 
 
 Assert if the specified checkbox is checked.
@@ -376,18 +452,20 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
 $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### seeCurrentUrlEquals
+#### seeCurrentUrlEquals
 
 
 Checks that current url is equal to value.
@@ -401,7 +479,7 @@ $I->seeCurrentUrlEquals('/');
  * param $uri
 
 
-### seeCurrentUrlMatches
+#### seeCurrentUrlMatches
 
 
 Checks that current url is matches a RegEx value
@@ -414,38 +492,42 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
  * param $uri
 
 
-### seeElement
+#### seeElement
 
 
 Checks if element exists on a page, matching it by CSS or XPath
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeElement('.error');
 $I->seeElement(//form/input[1]);
 ?>
-```
+
+{% endhighlight %}
  * param $selector
 
 
-### seeInCurrentUrl
+#### seeInCurrentUrl
 
 
 Checks that current uri contains a value
 
-``` php
+{% highlight php %}
+
 <?php
 // to match: /home/dashboard
 $I->seeInCurrentUrl('home');
 // to match: /users/1
 $I->seeInCurrentUrl('/users/');
 ?>
-```
+
+{% endhighlight %}
 
  * param $uri
 
 
-### seeInField
+#### seeInField
 
 
 Checks that an input field or textarea contains value.
@@ -453,7 +535,8 @@ Field is matched either by label or CSS or Xpath
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
@@ -461,13 +544,14 @@ $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
 $I->seeInField('//form/*[@name=search]','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### seeLink
+#### seeLink
 
 
 Checks if there is a link with text specified.
@@ -475,40 +559,44 @@ Specify url to match link with exact this url.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeLink('Logout'); // matches <a href="#">Logout</a>
 $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### seeOptionIsSelected
+#### seeOptionIsSelected
 
 
 Checks if option is selected in select field.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
-```
+
+{% endhighlight %}
 
  * param $selector
  * param $optionText
  * return mixed
 
 
-### seePageNotFound
+#### seePageNotFound
 
 
 Asserts that current page has 404 response status code.
 
 
-### seeResponseCodeIs
+#### seeResponseCodeIs
 
 
 Checks that response code is equal to value provided.
@@ -517,26 +605,28 @@ Checks that response code is equal to value provided.
  * return mixed
 
 
-### selectOption
+#### selectOption
 
 
 Selects an option in select tag or in radio button group.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
 $I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
-```
+
+{% endhighlight %}
 
  * param $select
  * param $option
 
 
-### sendAjaxGetRequest
+#### sendAjaxGetRequest
 
 
 If your page triggers an ajax request, you can perform it manually.
@@ -548,7 +638,7 @@ See ->sendAjaxPostRequest for examples.
  * param $params
 
 
-### sendAjaxPostRequest
+#### sendAjaxPostRequest
 
 
 If your page triggers an ajax request, you can perform it manually.
@@ -560,18 +650,20 @@ Example:
 Imagine that by clicking checkbox you trigger ajax request which updates user settings.
 We emulate that click by running this ajax request manually.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
 $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
 
-```
+
+{% endhighlight %}
 
  * param $uri
  * param $params
 
 
-### submitForm
+#### submitForm
 
 
 Submits a form located on page.
@@ -584,15 +676,18 @@ This command itself triggers the request to form's action.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
 
-```
+
+{% endhighlight %}
 
 For sample Sign Up form:
 
-``` html
+{% highlight html %}
+
 <form action="/sign_up">
     Login: <input type="text" name="user[login]" /><br/>
     Password: <input type="password" name="user[password]" /><br/>
@@ -600,31 +695,36 @@ For sample Sign Up form:
     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
     <input type="submit" value="Submit" />
 </form>
-```
+
+{% endhighlight %}
 I can write this:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
 
-```
+
+{% endhighlight %}
 Note, that pricing plan will be set to Paid, as it's selected on page.
 
  * param $selector
  * param $params
 
 
-### uncheckOption
+#### uncheckOption
 
 
 Unticks a checkbox.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->uncheckOption('#notify');
 ?>
-```
+
+{% endhighlight %}
 
  * param $option

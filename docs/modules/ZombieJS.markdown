@@ -1,3 +1,8 @@
+---
+layout: doc
+title: Codeception - Documentation
+---
+
 # ZombieJS Module
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZombieJS.php)**
 
@@ -8,7 +13,7 @@ Note, all methods take CSS selectors to fetch elements.
 For links, buttons, fields you can use names/values/ids of elements.
 For form fields you can use input[name=fieldname] notation.
 
-## Status
+### Status
 
 * Maintainer: **synchrone**
 * Stability: **stable**
@@ -16,27 +21,31 @@ For form fields you can use input[name=fieldname] notation.
 * relies on [Mink](http://mink.behat.org)
 
 
-## Installation
+### Installation
 
 In order to talk with zombie.js server, you should install and configure zombie.js first:
 
 * Install node.js by following instructions from the official site: http://nodejs.org/.
 * Install npm (node package manager) by following instructions from the http://npmjs.org/.
 * Install zombie.js with npm:
-``` $ npm install -g zombie@0.13.0  * ```
+{% highlight yaml %}
+ $ npm install -g zombie@0.13.0  * 
+{% endhighlight %}
 Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
 says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
 
 After installing npm and zombie.js, you’ll need to add npm libs to your **NODE_PATH**. The easiest way to do this is to add:
 
-``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
+{% highlight yaml %}
+ export NODE_PATH="/PATH/TO/NPM/node_modules" 
+{% endhighlight %}
 into your **.bashrc**.
 
 Also note that this module requires php5-http PECL extension to parse returned headers properly
 
 Don't forget to turn on Db repopulation if you are using database.
 
-## Configuration
+### Configuration
 
 * url  *required*- url of your site
 * host - simply defines the host on which zombie.js will be started. It’s **127.0.0.1** by default.
@@ -46,7 +55,7 @@ Don't forget to turn on Db repopulation if you are using database.
 * threshold - amount of milliseconds (1/1000 of second) for the process to wait  (as of \Behat\Mink\Driver\Zombie\Server)
 * autostart - whether zombie.js should be started automatically. Defaults to **true**
 
-### Example (`acceptance.suite.yml`)
+#### Example (`acceptance.suite.yml`)
 
     modules:
        enabled: [ZombieJS]
@@ -56,14 +65,14 @@ Don't forget to turn on Db repopulation if you are using database.
              host: '127.0.0.1'
              port: 8124
 
-## Public Properties
+### Public Properties
 
 * session - contains Mink Session
 
-## Actions
+### Actions
 
 
-### amOnPage
+#### amOnPage
 
 
 Opens the page.
@@ -71,13 +80,14 @@ Opens the page.
  * param $page
 
 
-### amOnSubdomain
+#### amOnSubdomain
 
 
 Sets 'url' configuration parameter to hosts subdomain.
 It does not open a page on subdomain. Use `amOnPage` for that
 
-``` php
+{% highlight php %}
+
 <?php
 // If config is: 'http://mysite.com'
 // or config is: 'http://www.mysite.com'
@@ -87,30 +97,33 @@ $I->amOnSubdomain('user');
 $I->amOnPage('/');
 // moves to http://user.mysite.com/
 ?>
-```
+
+{% endhighlight %}
  * param $subdomain
  * return mixed
 
 
-### attachFile
+#### attachFile
 
 
 Attaches file from Codeception data directory to upload field.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 // file is stored in 'tests/data/tests.xls'
 $I->attachFile('prices.xls');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $filename
 
 
-### blur
+#### blur
 
 
 Removes focus from link or button or any node found by CSS or XPath
@@ -119,7 +132,7 @@ XPath or CSS selectors are accepted.
  * param $el
 
 
-### checkOption
+#### checkOption
 
 
 Ticks a checkbox.
@@ -127,16 +140,18 @@ For radio buttons use `selectOption` method.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->checkOption('#agree');
 ?>
-```
+
+{% endhighlight %}
 
  * param $option
 
 
-### click
+#### click
 
 
 Perform a click on link or button.
@@ -151,7 +166,8 @@ The second parameter is a context: CSS or XPath locator to narrow the search.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 // simple link
 $I->click('Logout');
@@ -164,12 +180,13 @@ $I->click('//form/*[@type=submit]')
 // link in context
 $I->click('Logout', '#nav');
 ?>
-```
+
+{% endhighlight %}
  * param $link
  * param $context
 
 
-### clickWithRightButton
+#### clickWithRightButton
 
 
 Clicks with right button on link or button or any node found by CSS or XPath
@@ -177,7 +194,7 @@ Clicks with right button on link or button or any node found by CSS or XPath
  * param $link
 
 
-### dontSee
+#### dontSee
 
 
 Check if current page doesn't contain the text specified.
@@ -185,18 +202,20 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-```php
+{% highlight php %}
+
 <?php
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 $I->dontSee('Sign Up','//body/h1'); // with XPath
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### dontSeeCheckboxIsChecked
+#### dontSeeCheckboxIsChecked
 
 
 Assert if the specified checkbox is unchecked.
@@ -204,22 +223,24 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### dontSeeCookie
+#### dontSeeCookie
 
 __not documented__
 
 
-### dontSeeCurrentUrlEquals
+#### dontSeeCurrentUrlEquals
 
 
 Checks that current url is not equal to value.
@@ -233,7 +254,7 @@ $I->dontSeeCurrentUrlEquals('/');
  * param $uri
 
 
-### dontSeeCurrentUrlMatches
+#### dontSeeCurrentUrlMatches
 
 
 Checks that current url does not match a RegEx value
@@ -246,42 +267,47 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
  * param $uri
 
 
-### dontSeeElement
+#### dontSeeElement
 
 
 Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeElement('.error');
 $I->dontSeeElement(//form/input[1]);
 ?>
-```
+
+{% endhighlight %}
  * param $selector
 
 
-### dontSeeInCurrentUrl
+#### dontSeeInCurrentUrl
 
 
 Checks that current uri does not contain a value
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeInCurrentUrl('/users/');
 ?>
-```
+
+{% endhighlight %}
 
  * param $uri
 
 
-### dontSeeInField
+#### dontSeeInField
 
 
 Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
@@ -289,13 +315,14 @@ $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
 $I->dontSeeInField('//form/*[@name=search]','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### dontSeeLink
+#### dontSeeLink
 
 
 Checks if page doesn't contain the link with text specified.
@@ -303,33 +330,37 @@ Specify url to narrow the results.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### dontSeeOptionIsSelected
+#### dontSeeOptionIsSelected
 
 
 Checks if option is not selected in select field.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
-```
+
+{% endhighlight %}
 
  * param $selector
  * param $optionText
  * return mixed
 
 
-### doubleClick
+#### doubleClick
 
 
 Double clicks on link or button or any node found by CSS or XPath
@@ -337,7 +368,7 @@ Double clicks on link or button or any node found by CSS or XPath
  * param $link
 
 
-### dragAndDrop
+#### dragAndDrop
 
 
 Drag first element to second
@@ -347,7 +378,7 @@ XPath or CSS selectors are accepted.
  * param $el2
 
 
-### executeJs
+#### executeJs
 
 
 Executes any JS code.
@@ -355,7 +386,7 @@ Executes any JS code.
  * param $jsCode
 
 
-### fillField
+#### fillField
 
 
 Fills a text field or textarea with value.
@@ -364,7 +395,7 @@ Fills a text field or textarea with value.
  * param $value
 
 
-### focus
+#### focus
 
 
 Moves focus to link or button or any node found by CSS or XPath
@@ -372,35 +403,37 @@ Moves focus to link or button or any node found by CSS or XPath
  * param $el
 
 
-### grabAttribute
+#### grabAttribute
 
 __not documented__
 
 
-### grabCookie
+#### grabCookie
 
 __not documented__
 
 
-### grabFromCurrentUrl
+#### grabFromCurrentUrl
 
 
 Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
-``` php
+{% highlight php %}
+
 <?php
 $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 $uri = $I->grabFromCurrentUrl();
 ?>
-```
+
+{% endhighlight %}
 
  * param null $uri
  * internal param $url
  * return mixed
 
 
-### grabTextFrom
+#### grabTextFrom
 
 
 Finds and returns text contents of element.
@@ -408,19 +441,21 @@ Element is searched by CSS selector, XPath or matcher by regex.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $heading = $I->grabTextFrom('h1');
 $heading = $I->grabTextFrom('descendant-or-self::h1');
 $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ?>
-```
+
+{% endhighlight %}
 
  * param $cssOrXPathOrRegex
  * return mixed
 
 
-### grabValueFrom
+#### grabValueFrom
 
 
 Finds and returns field and returns it's value.
@@ -428,38 +463,40 @@ Searches by field name, then by CSS, then by XPath
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
 $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * return mixed
 
 
-### headRequest
+#### headRequest
 
 
  * param string $url The URL to make HEAD request to
  * return array Header-Name => Value array
 
 
-### moveBack
+#### moveBack
 
 
 Moves back in history
 
 
-### moveForward
+#### moveForward
 
 
 Moves forward in history
 
 
-### moveMouseOver
+#### moveMouseOver
 
 
 Moves mouse over link or button or any node found by CSS or XPath
@@ -467,7 +504,7 @@ Moves mouse over link or button or any node found by CSS or XPath
  * param $link
 
 
-### pressKey
+#### pressKey
 
 
 Presses key on element found by css, xpath is focused
@@ -475,20 +512,22 @@ A char and modifier (ctrl, alt, shift, meta) can be provided.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->pressKey('#page','u');
 $I->pressKey('#page','u','ctrl');
 $I->pressKey('descendant-or-self::*[@id='page']','u');
 ?>
-```
+
+{% endhighlight %}
 
  * param $element
  * param $char char can be either char ('b') or char-code (98)
  * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
 
 
-### pressKeyDown
+#### pressKeyDown
 
 
 Presses key down on element found by CSS or XPath.
@@ -500,7 +539,7 @@ For example see 'pressKey'.
  * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
 
 
-### pressKeyUp
+#### pressKeyUp
 
 
 Presses key up on element found by CSS or XPath.
@@ -512,18 +551,18 @@ For example see 'pressKey'.
  * param null $modifier keyboard modifier (could be 'ctrl', 'alt', 'shift' or 'meta')
 
 
-### reloadPage
+#### reloadPage
 
 
 Reloads current page
 
 
-### resetCookie
+#### resetCookie
 
 __not documented__
 
 
-### see
+#### see
 
 
 Check if current page contains the text specified.
@@ -531,19 +570,21 @@ Specify the css selector to match only specific region.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
 $I->see('Sign Up','//body/h1'); // with XPath
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $selector
 
 
-### seeCheckboxIsChecked
+#### seeCheckboxIsChecked
 
 
 Assert if the specified checkbox is checked.
@@ -551,23 +592,25 @@ Use css selector or xpath to match.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
 $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
-```
+
+{% endhighlight %}
 
  * param $checkbox
 
 
-### seeCookie
+#### seeCookie
 
 __not documented__
 
 
-### seeCurrentUrlEquals
+#### seeCurrentUrlEquals
 
 
 Checks that current url is equal to value.
@@ -581,7 +624,7 @@ $I->seeCurrentUrlEquals('/');
  * param $uri
 
 
-### seeCurrentUrlMatches
+#### seeCurrentUrlMatches
 
 
 Checks that current url is matches a RegEx value
@@ -594,7 +637,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
  * param $uri
 
 
-### seeElement
+#### seeElement
 
 
 Checks element visibility.
@@ -604,24 +647,26 @@ Eiter CSS or XPath can be used.
  * param $selector
 
 
-### seeInCurrentUrl
+#### seeInCurrentUrl
 
 
 Checks that current uri contains a value
 
-``` php
+{% highlight php %}
+
 <?php
 // to match: /home/dashboard
 $I->seeInCurrentUrl('home');
 // to match: /users/1
 $I->seeInCurrentUrl('/users/');
 ?>
-```
+
+{% endhighlight %}
 
  * param $uri
 
 
-### seeInField
+#### seeInField
 
 
 Checks that an input field or textarea contains value.
@@ -629,7 +674,8 @@ Field is matched either by label or CSS or Xpath
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
@@ -637,13 +683,14 @@ $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
 $I->seeInField('//form/*[@name=search]','Search');
 ?>
-```
+
+{% endhighlight %}
 
  * param $field
  * param $value
 
 
-### seeLink
+#### seeLink
 
 
 Checks if there is a link with text specified.
@@ -651,74 +698,82 @@ Specify url to match link with exact this url.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeLink('Logout'); // matches <a href="#">Logout</a>
 $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
-```
+
+{% endhighlight %}
 
  * param $text
  * param null $url
 
 
-### seeOptionIsSelected
+#### seeOptionIsSelected
 
 
 Checks if option is selected in select field.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
-```
+
+{% endhighlight %}
 
  * param $selector
  * param $optionText
  * return mixed
 
 
-### selectOption
+#### selectOption
 
 
 Selects an option in select tag or in radio button group.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
 $I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
-```
+
+{% endhighlight %}
 
  * param $select
  * param $option
 
 
-### setCookie
+#### setCookie
 
 __not documented__
 
 
-### uncheckOption
+#### uncheckOption
 
 
 Unticks a checkbox.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->uncheckOption('#notify');
 ?>
-```
+
+{% endhighlight %}
 
  * param $option
 
 
-### wait
+#### wait
 
 
 Wait for x milliseconds
@@ -726,7 +781,7 @@ Wait for x milliseconds
  * param $milliseconds
 
 
-### waitForJS
+#### waitForJS
 
 
 Waits for x milliseconds or until JS condition turns true.

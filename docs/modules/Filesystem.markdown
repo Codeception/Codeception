@@ -1,3 +1,8 @@
+---
+layout: doc
+title: Codeception - Documentation
+---
+
 # Filesystem Module
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Filesystem.php)**
 
@@ -5,7 +10,7 @@
 Module for testing local filesystem.
 Fork it to extend the module for FTP, Amazon S3, others.
 
-## Status
+### Status
 
 * Maintainer: **davert**
 * Stability: **stable**
@@ -13,10 +18,10 @@ Fork it to extend the module for FTP, Amazon S3, others.
 
 Module was developed to test Codeception itself.
 
-## Actions
+### Actions
 
 
-### amInPath
+#### amInPath
 
 
 Enters a directory In local filesystem.
@@ -25,102 +30,114 @@ Project root directory is used by default
  * param $path
 
 
-### cleanDir
+#### cleanDir
 
 
 Erases directory contents
 
-``` php
+{% highlight php %}
+
 <?php
 $I->cleanDir('logs');
 ?>
-```
+
+{% endhighlight %}
 
  * param $dirname
 
 
-### copyDir
+#### copyDir
 
 
 Copies directory with all contents
 
-``` php
+{% highlight php %}
+
 <?php
 $I->copyDir('vendor','old_vendor');
 ?>
-```
+
+{% endhighlight %}
 
  * param $src
  * param $dst
 
 
-### deleteDir
+#### deleteDir
 
 
 Deletes directory with all subdirectories
 
-``` php
+{% highlight php %}
+
 <?php
 $I->deleteDir('vendor');
 ?>
-```
+
+{% endhighlight %}
 
  * param $dirname
 
 
-### deleteFile
+#### deleteFile
 
 
 Deletes a file
 
-``` php
+{% highlight php %}
+
 <?php
 $I->deleteFile('composer.lock');
 ?>
-```
+
+{% endhighlight %}
 
  * param $filename
 
 
-### deleteThisFile
+#### deleteThisFile
 
 
 Deletes a file
 
 
-### dontSeeInThisFile
+#### dontSeeInThisFile
 
 
 Checks If opened file doesn't contain `text` in it
 
-``` php
+{% highlight php %}
+
 <?php
 $I->openFile('composer.json');
 $I->seeInThisFile('codeception/codeception');
 ?>
-```
+
+{% endhighlight %}
 
  * param $text
 
 
-### openFile
+#### openFile
 
 
 Opens a file and stores it's content.
 
 Usage:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->openFile('composer.json');
 $I->seeInThisFile('codeception/codeception');
 ?>
-```
+
+{% endhighlight %}
 
  * param $filename
 
 
-### seeFileContentsEqual
+#### seeFileContentsEqual
 
 
 Checks the strict matching of file contents.
@@ -128,44 +145,50 @@ Unlike `seeInThisFile` will fail if file has something more then expected lines.
 Better to use with HEREDOC strings.
 Matching is done after removing "\r" chars from file content.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->openFile('process.pid');
 $I->seeFileContentsEqual('3192');
 ?>
-```
+
+{% endhighlight %}
 
  * param $text
 
 
-### seeFileFound
+#### seeFileFound
 
 
 Checks if file exists in path.
 Opens a file when it's exists
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeFileFound('UserModel.php','app/models');
 ?>
-```
+
+{% endhighlight %}
 
  * param $filename
  * param string $path
 
 
-### seeInThisFile
+#### seeInThisFile
 
 
 Checks If opened file has `text` in it.
 
 Usage:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->openFile('composer.json');
 $I->seeInThisFile('codeception/codeception');
 ?>
-```
+
+{% endhighlight %}
 
  * param $text
