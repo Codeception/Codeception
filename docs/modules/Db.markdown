@@ -1,3 +1,8 @@
+---
+layout: doc
+title: Codeception - Documentation
+---
+
 # Db Module
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
 
@@ -10,7 +15,9 @@ To have your database properly cleaned you should configure it to access the dat
 Also provides actions to perform checks in database.
 
 In order to have your database populated with data you need a raw SQL dump.
-Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
+Just put it in {% highlight yaml %}
+ tests/_data 
+{% endhighlight %} dir (by default) and specify path to it in config.
 Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
 
@@ -28,7 +35,7 @@ Supported but not tested.
 Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
 Check out drivers if you get problems loading dumps and cleaning databases.
 
-## Status
+### Status
 
 * Maintainer: **davert**
 * stability:
@@ -41,7 +48,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 
 *Please review the code of non-stable modules and provide patches if you have issues.*
 
-## Config
+### Config
 
 * dsn *required* - PDO DSN
 * user *required* - user to access database
@@ -50,7 +57,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
-### Example
+#### Example
 
     modules:
        enabled: [Db]
@@ -63,15 +70,15 @@ Check out drivers if you get problems loading dumps and cleaning databases.
              populate: true
              cleanup: false
 
-## Public Properties
+### Public Properties
 * dbh - contains PDO connection.
 * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
 
 
-## Actions
+### Actions
 
 
-### dontSeeInDatabase
+#### dontSeeInDatabase
 
 
 Effect is opposite to ->seeInDatabase
@@ -81,23 +88,27 @@ Provide table name and column values.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
-```
+
+{% endhighlight %}
 Will generate:
 
-``` sql
+{% highlight yaml %}
+ sql
 SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
-```
+
+{% endhighlight %}
 Fails if such user was found.
 
  * param $table
  * param array $criteria
 
 
-### grabFromDatabase
+#### grabFromDatabase
 
 
 Fetches a single column value from a database.
@@ -105,11 +116,13 @@ Provide table name, desired column and criteria.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
-```
+
+{% endhighlight %}
 
  * version 1.1
  * param $table
@@ -118,22 +131,24 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * return mixed
 
 
-### haveInDatabase
+#### haveInDatabase
 
 
 Inserts SQL record into database. This record will be erased after the test.
 
-``` php
+{% highlight php %}
+
 <?php
 $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
 ?>
-```
+
+{% endhighlight %}
 
  * param $table
  * param array $data
 
 
-### seeInDatabase
+#### seeInDatabase
 
 
 Checks if a row with given column values exists.
@@ -141,16 +156,20 @@ Provide table name and column values.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
-```
+
+{% endhighlight %}
 Will generate:
 
-``` sql
+{% highlight yaml %}
+ sql
 SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
-```
+
+{% endhighlight %}
 Fails if no such user found.
 
  * param $table

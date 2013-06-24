@@ -1,0 +1,120 @@
+---
+layout: doc
+title: Codeception - Documentation
+---
+
+# AMQP Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/AMQP.php)**
+
+
+This module interacts with message broker software that implements
+the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
+Use it to cleanup the queue between tests.
+
+### Status
+* Maintainer: **davert**, **tiger-seo**
+* Stability: **alpha**
+* Contact: codecept@davert.mail.ua
+* Contact: tiger.seo@gmail.com
+
+*Please review the code of non-stable modules and provide patches if you have issues.*
+
+### Config
+
+* host: localhost - host to connect
+* username: guest - username to connect
+* password: guest - password to connect
+* vhost: '/' - vhost to connect
+* cleanup: true - defined queues will be purged before running every test.
+* queues: [mail, twitter] - queues to cleanup
+
+#### Example
+
+    modules:
+        enabled: [AMQP]
+        config:
+            AMQP:
+                host: 'localhost'
+                port: '5672'
+                username: 'guest'
+                password: 'guest'
+                vhost: '/'
+                queues: [queue1, queue2]
+
+### Public Properties
+
+* connection - AMQPConnection - current connection
+
+ * available since version 1.1.2
+ * author tiger.seo@gmail.com
+ * author davert
+
+### Actions
+
+
+#### grabMessageFromQueue
+
+
+Takes last message from queue.
+
+$message = $I->grabMessageFromQueue('queue.emails');
+
+ * param $queue
+ * return AMQPMessage
+
+
+#### pushToExchange
+
+
+Sends message to exchange
+
+{% highlight php %}
+
+<?php
+$I->pushToExchange('exchange.emails', 'thanks');
+$I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
+?>
+
+{% endhighlight %}
+
+ * param $exchange
+ * param $message string|AMQPMessage
+
+
+#### pushToQueue
+
+
+Sends message to queue
+
+{% highlight php %}
+
+<?php
+$I->pushToQueue('queue.jobs', 'create user');
+$I->pushToQueue('queue.jobs', new AMQPMessage('create'));
+?>
+
+{% endhighlight %}
+
+ * param $queue
+ * param $message string|AMQPMessage
+
+
+#### seeMessageInQueueContainsText
+
+
+Checks if message containing text received.
+
+**This method drops message from queue**
+**This method will wait for message. If none is sent the script will stuck**.
+
+{% highlight php %}
+
+<?php
+$I->pushToQueue('queue.emails', 'Hello, davert');
+$I->seeMessageInQueueContainsText('queue.emails','davert');
+?>
+
+{% endhighlight %}
+
+ * param $queue
+ * param $text

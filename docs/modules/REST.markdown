@@ -1,3 +1,8 @@
+---
+layout: doc
+title: Codeception - Documentation
+---
+
 # REST Module
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
 
@@ -10,19 +15,19 @@ It tries to guess the framework is is attached to.
 Whether framework is used it operates via standard framework modules.
 Otherwise sends raw HTTP requests to url via PHPBrowser.
 
-## Status
+### Status
 
 * Maintainer: **tiger-seo**, **davert**
 * Stability: **stable**
 * Contact: codecept@davert.mail.ua
 * Contact: tiger.seo@gmail.com
 
-## Configuration
+### Configuration
 
 * url *optional* - the url of api
 * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
 
-### Example
+#### Example
 
     modules: 
        enabled: [REST]
@@ -31,7 +36,7 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
              url: 'http://serviceapp/api/v1/' 
              timeout: 90
 
-## Public Properties
+### Public Properties
 
 * headers - array of headers going to be sent.
 * params - array of sent data
@@ -39,10 +44,10 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 
 
-## Actions
+### Actions
 
 
-### amDigestAuthenticated
+#### amDigestAuthenticated
 
 
 s Digest authentication via username/password.
@@ -51,7 +56,7 @@ ram $username
 ram $password
 
 
-### amHttpAuthenticated
+#### amHttpAuthenticated
 
 
 Adds HTTP authentication via username/password.
@@ -60,7 +65,7 @@ Adds HTTP authentication via username/password.
  * param $password
 
 
-### dontSeeResponseContains
+#### dontSeeResponseContains
 
 
 Checks weather last response do not contain text.
@@ -68,7 +73,7 @@ Checks weather last response do not contain text.
  * param $text
 
 
-### dontSeeResponseContainsJson
+#### dontSeeResponseContainsJson
 
 
 Opposite to seeResponseContainsJson
@@ -76,7 +81,7 @@ Opposite to seeResponseContainsJson
  * param array $json
 
 
-### grabDataFromJsonResponse
+#### grabDataFromJsonResponse
 
 
 Returns data from the current JSON response using specified path
@@ -84,12 +89,14 @@ so that it can be used in next scenario steps
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $user_id = $I->grabDataFromJsonResponse('user.user_id');
 $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 ?>
-```
+
+{% endhighlight %}
 
  * param string $path
 
@@ -99,25 +106,27 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
  * author tiger.seo@gmail.com
 
 
-### grabResponse
+#### grabResponse
 
 
 Returns current response so that it can be used in next scenario steps.
 
 Example:
 
-``` php
+{% highlight php %}
+
 <?php
 $user_id = $I->grabResponse();
 $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 ?>
-```
+
+{% endhighlight %}
 
  * version 1.1
  * return string
 
 
-### haveHttpHeader
+#### haveHttpHeader
 
 
 Sets HTTP header
@@ -126,7 +135,7 @@ Sets HTTP header
  * param $value
 
 
-### seeResponseCodeIs
+#### seeResponseCodeIs
 
 
 Checks response code.
@@ -134,7 +143,7 @@ Checks response code.
  * param $num
 
 
-### seeResponseContains
+#### seeResponseContains
 
 
 Checks weather the last response contains text.
@@ -142,7 +151,7 @@ Checks weather the last response contains text.
  * param $text
 
 
-### seeResponseContainsJson
+#### seeResponseContainsJson
 
 
 Checks weather the last JSON response contains provided array.
@@ -152,7 +161,8 @@ This method matches that response array contains provided array.
 
 Examples:
 
-``` php
+{% highlight php %}
+
 <?php
 // response: {name: john, email: john@gmail.com}
 $I->seeResponseContainsJson(array('name' => 'john'));
@@ -161,14 +171,15 @@ $I->seeResponseContainsJson(array('name' => 'john'));
 $I->seeResponseContainsJson(array('email' => 'john@gmail.com'));
 
 ?>
-```
+
+{% endhighlight %}
 
 This method recursively checks if one array can be found inside of another.
 
  * param array $json
 
 
-### seeResponseEquals
+#### seeResponseEquals
 
 
 Checks if response is exactly the same as provided.
@@ -176,7 +187,7 @@ Checks if response is exactly the same as provided.
  * param $response
 
 
-### seeResponseIsJson
+#### seeResponseIsJson
 
 
 Checks weather last response was valid JSON.
@@ -184,7 +195,7 @@ This is done with json_last_error function.
 
 
 
-### sendDELETE
+#### sendDELETE
 
 
 Sends DELETE request to given uri.
@@ -194,7 +205,7 @@ Sends DELETE request to given uri.
  * param array $files
 
 
-### sendGET
+#### sendGET
 
 
 Sends a GET request to given uri.
@@ -203,7 +214,7 @@ Sends a GET request to given uri.
  * param array $params
 
 
-### sendLINK
+#### sendLINK
 
 
 Sends LINK request to given uri.
@@ -216,7 +227,7 @@ Sends LINK request to given uri.
  * author samva.ua@gmail.com
 
 
-### sendPATCH
+#### sendPATCH
 
 
 Sends PATCH request to given uri.
@@ -226,7 +237,7 @@ Sends PATCH request to given uri.
  * param array $files
 
 
-### sendPOST
+#### sendPOST
 
 
 Sends a POST request to given uri.
@@ -238,7 +249,7 @@ Parameters and files (as array of filenames) can be provided.
  * param array $files
 
 
-### sendPUT
+#### sendPUT
 
 
 Sends PUT request to given uri.
@@ -248,7 +259,7 @@ Sends PUT request to given uri.
  * param array $files
 
 
-### sendUNLINK
+#### sendUNLINK
 
 
 Sends UNLINK request to given uri.
