@@ -7,7 +7,7 @@ use Codeception\Util\Framework;
 use Codeception\Exception\ModuleConfig;
 
 /**
- * This module provides integration with Yii framework (http://www.yiiframework.com/) (2.0).
+ * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
  *
  * The following configurations are required for this module:
  * <ul>
@@ -27,6 +27,12 @@ use Codeception\Exception\ModuleConfig;
  *             entryScript: '/path/to/index.php'
  *             url: 'http://localhost/path/to/index.php'
  * </pre>
+ *
+ * ## Status
+ *
+ * Maintainer: **qiangxue**
+ * Stability: **beta**
+ *
  */
 class Yii2 extends Framework
 {
