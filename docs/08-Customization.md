@@ -34,7 +34,7 @@ php codecept.phar bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with `namespace: frontend` parameter in `codeception.yml` file. 
-Helpers will use `frontent\Codeception\Module` namespace and Guy classes will use `frontend` namespace.
+Helpers will use `frontend\Codeception\Module` namespace and Guy classes will use `frontend` namespace.
 Thus, newly generated tests will have this look:
 
 ``` php
