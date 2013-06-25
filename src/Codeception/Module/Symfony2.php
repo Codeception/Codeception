@@ -107,18 +107,6 @@ class Symfony2 extends \Codeception\Util\Framework
     }
 
     /**
-     * Authenticates user for HTTP_AUTH 
-     *
-     * @param $username
-     * @param $password
-     */
-    public function amHttpAuthenticated($username, $password) {
-        $this->client->setServerParameter('PHP_AUTH_USER', $username);
-        $this->client->setServerParameter('PHP_AUTH_PW', $password);
-    }
-
-
-    /**
      * Checks if any email were sent by last request
      *
      * @throws \LogicException

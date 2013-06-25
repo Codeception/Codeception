@@ -42,6 +42,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    /**
+     * Authenticates user for HTTP_AUTH 
+     *
+     * @param $username
+     * @param $password
+     */
     public function amHttpAuthenticated($username, $password)
     {
         $this->client->setServerParameter('PHP_AUTH_USER', $username);
