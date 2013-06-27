@@ -102,7 +102,7 @@ Example:
 
 <?php
 // file is stored in 'tests/data/tests.xls'
-$I->attachFile('prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 
 {% endhighlight %}
