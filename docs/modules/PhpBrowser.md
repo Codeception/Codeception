@@ -199,10 +199,12 @@ __not documented__
 Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
+``` php
 <?php
 // current url is not root
 $I->dontSeeCurrentUrlEquals('/');
 ?>
+```
 
  * param $uri
 
@@ -212,10 +214,12 @@ $I->dontSeeCurrentUrlEquals('/');
 
 Checks that current url does not match a RegEx value
 
+``` php
 <?php
 // to match root url
 $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
+```
 
  * param $uri
 
@@ -228,7 +232,7 @@ Checks if element does not exist (or is visible) on a page, matching it by CSS o
 ``` php
 <?php
 $I->dontSeeElement('.error');
-$I->dontSeeElement(//form/input[1]);
+$I->dontSeeElement('//form/input[1]');
 ?>
 ```
  * param $selector
