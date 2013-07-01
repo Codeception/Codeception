@@ -3,6 +3,8 @@ namespace Codeception\Util;
 
 class Stub
 {
+    public static $magicMethods = array('__isset', '__get', '__set');
+
     /**
      * Instantiates a class without executing a constructor.
      * Properties and methods can be set as a second parameter.
@@ -119,6 +121,9 @@ class Stub
         $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
         $methods = $reflectionClass->getMethods();
+        $methods = array_filter($methods, function($m) {
+            return !in_array($m->name, Stub::$magicMethods);
+        });
         $methods = array_filter($methods, function ($m) use ($method) {
             return $method != $m->name;
         });
@@ -170,7 +175,11 @@ class Stub
     public static function makeEmpty($class, $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
-      $mock = self::generateMock($class, array(), array(), '', false, $testCase);
+        $methods = get_class_methods($class);
+        $methods = array_filter($methods, function($i) {
+            return !in_array($i, Stub::$magicMethods);
+        });
+        $mock = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
@@ -281,7 +290,11 @@ class Stub
     public static function constructEmpty($class, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class = self::getClassname($class);
-      $mock = self::generateMock($class, array(), $constructorParams, $testCase);
+        $methods = get_class_methods($class);
+        $methods = array_filter($methods, function($i) {
+            return !in_array($i, Stub::$magicMethods);
+        });
+        $mock = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
@@ -329,6 +342,9 @@ class Stub
         $class = self::getClassname($class);
         $reflectionClass = new \ReflectionClass($class);
         $methods = $reflectionClass->getMethods();
+        $methods = array_filter($methods, function($m) {
+            return !in_array($m->name, Stub::$magicMethods);
+        });
         $methods = array_filter($methods, function ($m) use ($method) {
             return $method != $m->name;
         });
@@ -419,7 +435,11 @@ class Stub
                 $reflectionProperty->setAccessible(true);
                 $reflectionProperty->setValue($mock, $value);
                 continue;
+            } else {
+                $mock->$param = $value;
+                continue;
             }
+
         }
     }
 
