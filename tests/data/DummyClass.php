@@ -3,7 +3,7 @@
 class DummyClass
 {
     protected $checkMe = 1;
-    protected $properties = ['checkMeToo' => 1];
+    protected $properties = array('checkMeToo' => 1);
 
     function __construct($checkMe = 1)
     {
