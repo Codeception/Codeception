@@ -23,7 +23,7 @@ Checks that output from latest command doesn't contain text
 
 
 
-### runShellCommmand
+### runShellCommand
 
 
 Executes a shell command
