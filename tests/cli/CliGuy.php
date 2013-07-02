@@ -304,13 +304,13 @@ class CliGuy extends \Codeception\AbstractGuy
      * Executes a shell command
      *
      * @param $command
-     * @see Cli::runShellCommmand()
+     * @see Cli::runShellCommand()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
-    public function runShellCommmand($command) {
-        $this->scenario->action('runShellCommmand', func_get_args());
+    public function runShellCommand($command) {
+        $this->scenario->action('runShellCommand', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
