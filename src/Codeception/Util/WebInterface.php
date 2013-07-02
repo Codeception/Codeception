@@ -147,10 +147,12 @@ interface WebInterface
      * Checks that current url is equal to value.
      * Unlike `seeInCurrentUrl` performs a strict check.
      *
+     * ``` php
      * <?php
      * // to match root url
      * $I->seeCurrentUrlEquals('/');
      * ?>
+     * ```
      *
      * @param $uri
      */
@@ -159,10 +161,12 @@ interface WebInterface
     /**
      * Checks that current url is matches a RegEx value
      *
+     * ``` php
      * <?php
      * // to match root url
      * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
      * ?>
+     * ```
      *
      * @param $uri
      */
@@ -185,10 +189,12 @@ interface WebInterface
      * Checks that current url is not equal to value.
      * Unlike `dontSeeInCurrentUrl` performs a strict check.
      *
+     * ``` php
      * <?php
      * // current url is not root
      * $I->dontSeeCurrentUrlEquals('/');
      * ?>
+     * ```
      *
      * @param $uri
      */
@@ -197,10 +203,12 @@ interface WebInterface
     /**
      * Checks that current url does not match a RegEx value
      *
+     * ``` php
      * <?php
      * // to match root url
      * $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
      * ?>
+     * ```
      *
      * @param $uri
      */
@@ -417,7 +425,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->seeElement('.error');
-     * $I->seeElement(//form/input[1]);
+     * $I->seeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
@@ -430,7 +438,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
-     * $I->dontSeeElement(//form/input[1]);
+     * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
