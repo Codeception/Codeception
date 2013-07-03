@@ -25,7 +25,7 @@ class Cli extends \Codeception\Module
      *
      * @param $command
      */
-    public function runShellCommmand($command) {
+    public function runShellCommand($command) {
         $data = array();
         exec("$command", $data, $resultCode);
         $this->output = implode("\n", $data);

@@ -371,7 +371,7 @@ interface WebInterface
      *
      * ``` php
      * <?php
-     * // file is stored in 'tests/data/tests.xls'
+     * // file is stored in 'tests/_data/tests.xls'
      * $I->attachFile('input[@type="file"]', 'prices.xls');
      * ?>
      * ```

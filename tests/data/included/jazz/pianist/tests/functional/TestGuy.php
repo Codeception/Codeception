@@ -3,16 +3,13 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-
+namespace Jazz\Pianist\Codeception;
 use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
-use Codeception\Module\Cli;
-use Codeception\Module\CliHelper;
-use Codeception\Module\CoverHelper;
+use Jazz\Codeception\Module\TestHelper;
 
 /**
  * Inherited methods
- * @method void execute($callable)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -22,7 +19,7 @@ use Codeception\Module\CoverHelper;
  * @method void lookForwardTo($role)
 */
 
-class CoverGuy extends \Codeception\AbstractGuy
+class TestGuy extends \Codeception\AbstractGuy
 {
     
     /**
@@ -178,35 +175,6 @@ class CoverGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * Checks the strict matching of file contents.
-     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
-     * Better to use with HEREDOC strings.
-     * Matching is done after removing "\r" chars from file content.
-     *
-     * ``` php
-     * <?php
-     * $I->openFile('process.pid');
-     * $I->seeFileContentsEqual('3192');
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @see Filesystem::seeFileContentsEqual()
-     * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function seeFileContentsEqual($text) {
-        $this->scenario->assertion('seeFileContentsEqual', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
      * Checks If opened file doesn't contain `text` in it
      *
      * ``` php
@@ -277,97 +245,14 @@ class CoverGuy extends \Codeception\AbstractGuy
 
  
     /**
-     * Erases directory contents
      *
-     * ``` php
-     * <?php
-     * $I->cleanDir('logs');
-     * ?>
-     * ```
-     *
-     * @param $dirname
-     * @see Filesystem::cleanDir()
+     * @see TestHelper::seeEquals()
      * @return \Codeception\Maybe
      * ! This method is generated. DO NOT EDIT. !
      * ! Documentation taken from corresponding module !
      */
-    public function cleanDir($dirname) {
-        $this->scenario->action('cleanDir', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     * Executes a shell command
-     *
-     * @param $command
-     * @see Cli::runShellCommand()
-     * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function runShellCommand($command) {
-        $this->scenario->action('runShellCommand', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     * Checks that output from last executed command contains text
-     *
-     * @param $text
-     * @see Cli::seeInShellOutput()
-     * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function seeInShellOutput($text) {
-        $this->scenario->assertion('seeInShellOutput', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     * Checks that output from latest command doesn't contain text
-     *
-     * @param $text
-     *
-     * @see Cli::dontSeeInShellOutput()
-     * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function dontSeeInShellOutput($text) {
-        $this->scenario->action('dontSeeInShellOutput', func_get_args());
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     *
-     * @see CliHelper::executeCommand()
-     * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
-     */
-    public function executeCommand($command) {
-        $this->scenario->action('executeCommand', func_get_args());
+    public function seeEquals($expected, $actual) {
+        $this->scenario->assertion('seeEquals', func_get_args());
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

@@ -28,7 +28,7 @@ class Logger implements EventSubscriberInterface
     }
 
     public function beforeSuite(\Codeception\Event\Suite $e) {
-        $suite = $e->getSuite()->getName();
+        $suite = str_replace('\\', '_', $e->getSuite()->getName());
         $this->logHandler = new \Monolog\Handler\RotatingFileHandler($this->path.$suite, $this->max_files);
     }
 
