@@ -179,6 +179,14 @@ class MinkJS extends Mink
     /**
      * Wait for x milliseconds
      *
+     * Example:
+     * 
+     * ``` php
+     * <?php
+     * $I->wait(1000);	// waits 1000 milliseconds (one second)
+     * ?>
+     * ```
+     * 
      * @param $milliseconds
      */
     public function wait($milliseconds) {
@@ -186,8 +194,29 @@ class MinkJS extends Mink
     }
 
     /**
-     * Waits for x milliseconds or until JS condition turns true.
+     * Waits for x milliseconds or until a given JS condition turns true.
+     * The function will keep asserting the javascript condition, but will
+     * continue regardless of its validity once the x milliseconds time has
+     * been passed.
+     * 
+     * See the example below on how to embed javascript functions as the
+     * condition.
      *
+     * Example:
+     * 
+     * ``` php
+     * <?php
+     * $I->waitForJS(1000, (function myJavascriptFunction() {
+     * 		// Javascript function code
+     * 		if (some statement) {
+     *			return true;	// waitForJS() function will finish
+     *		} else {
+     *			return false;	// keep asserting (some statement)
+     *		}
+     *	})());
+     * ?>
+     * ```
+     * 
      * @param $milliseconds
      * @param $jsCondition
      */
