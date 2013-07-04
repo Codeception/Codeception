@@ -90,6 +90,14 @@ class MinkJS extends Mink
      * Fails if element exists but is invisible to user.
      * Eiter CSS or XPath can be used.
      *
+     * Example:
+     * 
+     * ``` php
+     * <?php
+     * $I->seeElement("//input[@type='button']");
+     * ?>
+     * ``` 
+     * 
      * @param $selector
      */
     public function seeElement($selector) {
@@ -206,14 +214,14 @@ class MinkJS extends Mink
      * 
      * ``` php
      * <?php
-     * $I->waitForJS(1000, (function myJavascriptFunction() {
+     * $I->waitForJS(1000, "(function myJavascriptFunction() {
      * 		// Javascript function code
      * 		if (some statement) {
      *			return true;	// waitForJS() function will finish
      *		} else {
      *			return false;	// keep asserting (some statement)
      *		}
-     *	})());
+     *	})()");
      * ?>
      * ```
      * 
