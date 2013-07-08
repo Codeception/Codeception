@@ -1,7 +1,7 @@
 <?php
 namespace Codeception;
 
-abstract class AbstractGuy
+abstract class AbstractGuy implements \ArrayAccess
 {
     public static $methods = array();
 
@@ -50,46 +50,67 @@ abstract class AbstractGuy
 
     public function expectTo($prediction)
     {
-        $this->scenario->comment('I expect to ' . $prediction);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I expect to ' . $prediction);
     }
 
     public function expect($prediction)
     {
-        $this->scenario->comment('I expect ' . $prediction);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I expect ' . $prediction);
     }
 
     public function amGoingTo($argumentation)
     {
-        $this->scenario->comment('I am going to ' . $argumentation);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I am going to ' . $argumentation);
     }
 
     public function am($role) {
-        $this->scenario->comment('As a ' . $role);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('As a ' . $role);
     }
 
+    public function lookForwardTo($achieveValue)
+    {
+        return $this->comment('So that I ' . $achieveValue);
+    }
 
-    public function lookForwardTo($role) {
-        $this->scenario->comment('So that I ' . $role);
+    /**
+     * In order to have this nicely looking comments.
+     *
+     * ``` php
+     * <?php
+     *
+     * $I['click on a product'];
+     * $I['then I select Purchase'];
+     * $I['I select shipment delivery'];
+     * $I['purchase a product'];
+     *
+     * ```
+     *
+     * @param mixed $offset
+     * @return mixed|void
+     */
+    public function offsetGet($offset)
+    {
+        $this->comment($offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        // not needed
+    }
+
+    public function offsetExists($offset)
+    {
+        return false;
+    }
+
+    public function offsetUnset($offset)
+    {
+       // not needed
+    }
+
+    protected function comment($description)
+    {
+        $this->scenario->comment($description);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -103,5 +124,5 @@ abstract class AbstractGuy
         } else {
             $this->scenario->action($method, $arguments);
         }
-    }
+    }       
 }
