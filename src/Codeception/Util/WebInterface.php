@@ -434,7 +434,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->seeElement('.error');
-     * $I->seeElement(//form/input[1]);
+     * $I->seeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
@@ -449,7 +449,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
-     * $I->dontSeeElement(//form/input[1]);
+     * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
