@@ -7,11 +7,11 @@ class Group extends Extension {
 
     public static $group;
 
-    public function before(Test $e)
+    public function _before(Test $e)
     {
     }
 
-    public function after(Test $e)
+    public function _after(Test $e)
     {
     }
 
@@ -20,8 +20,8 @@ class Group extends Extension {
         $events = array();
         if (self::$group) {
             $events = array(
-                'test.before.'.self::$group => 'before',
-                'test.after.'.self::$group => 'after',
+                'test.before.'.self::$group => '_before',
+                'test.after.'.self::$group => '_after',
             );
         }
         $events = array_merge($events, self::events());
