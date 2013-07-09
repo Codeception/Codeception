@@ -24,6 +24,7 @@ class Configuration
         'include' => array(),
         'paths' => array(),
         'modules' => array(),
+        'subscribers' => array(),
         'settings' => array(
             'colors' => false,
             'log' => false,

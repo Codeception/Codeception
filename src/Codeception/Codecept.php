@@ -2,9 +2,10 @@
 namespace Codeception;
 
 use Codeception\Configuration;
-use \Symfony\Component\Yaml\Yaml;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
@@ -94,24 +95,24 @@ class Codecept
     }
 
     public function registerSubscribers() {
+        // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
-        $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
 
-        if ($this->options['log']) $this->dispatcher->addSubscriber(new Subscriber\Logger());
+        // optional
+        if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
             $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
         }
 
-        // attach custom event listeners
-        if (isset($this->config['subscribers'])) {
-            foreach ($this->config['subscribers'] as $subscriber) {
-                if (class_exists($subscriber)) {
-                    $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
-                }
-            }
+        // custom event listeners
+        foreach ($this->config['subscribers'] as $subscriber) {
+            if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
+            if ($subscriber instanceof EventSubscriberInterface) throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
+            $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
         }
     }
 

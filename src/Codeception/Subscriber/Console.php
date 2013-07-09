@@ -16,9 +16,8 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
-        $this->silent = $options['silent'];
-        $this->debug = !$this->silent && $options['debug'];
-        $this->steps = !$this->silent && ($options['steps'] or $options['debug']);
+        $this->debug = $options['debug'];
+        $this->steps = $options['steps'] or $options['debug'];
         $this->color = $options['colors'];
         $this->output = new \Codeception\Output($this->color, $options['defer-flush']);
     }
@@ -26,7 +25,6 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(\Codeception\Event\Test $e)
     {
-        if ($this->silent) return;
         if ($e->getTest() instanceof \Codeception\TestCase) return;
         $this->output->put("Running [[" . $e->getTest()->toString() . "]]");
     }
@@ -34,7 +32,6 @@ class Console implements EventSubscriberInterface
     // triggered for scenario based tests: cept, cest
     public function before(\Codeception\Event\Test $e)
     {
-        if ($this->silent) return;
         $test = $e->getTest();
         if ($test->getFeature()) {
             $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
@@ -79,8 +76,6 @@ class Console implements EventSubscriberInterface
 
     protected function formattedTestOutput($test, $long)
     {
-        if ($this->silent) return;
-
         if (!($test instanceof \Codeception\TestCase\Cept)) {
             $this->output->writeln(' - ' . $long);
         } elseif (!$this->steps) {
