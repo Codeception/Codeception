@@ -24,7 +24,7 @@ class Group extends Extension {
                 'test.after.'.self::$group => '_after',
             );
         }
-        $events = array_merge($events, self::events());
+        $events = array_merge($events, self::$events);
         return $events;
     }
 }
