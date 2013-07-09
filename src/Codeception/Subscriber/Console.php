@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\TestCase\Cest;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface

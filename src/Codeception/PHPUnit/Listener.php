@@ -57,7 +57,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         if (!in_array(spl_object_hash($test), $this->unsuccessfulTests))
             $this->fire('test.success', new Test($test));
 
-        $this->dispatcher->dispatch('test.end', new Test($test));
+        $this->dispatcher->dispatch('test.end', new Test($test, $time));
     }
 
     protected function fire($event, \Codeception\Event\Test $eventType)
