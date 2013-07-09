@@ -37,6 +37,6 @@ class MyOutputFormatter extends \Codeception\Platform\Extension {
         $time = ($seconds%60).(($milliseconds===0)?'':'.'.$milliseconds);
 
         $this->write($e->getTest()->getFeature());
-        $this->writeln(' | '.$time .'s');
+        $this->writeln(' ('.$time .'s)');
     }
 }

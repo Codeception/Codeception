@@ -38,10 +38,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     protected function fire($event, Event $eventType)
     {
-        $this->dispatcher->dispatch($event, $eventType);
         foreach ($this->scenario->getGroups() as $group) {
             $this->dispatcher->dispatch($event.'.'.$group, $eventType);
         }
+        $this->dispatcher->dispatch($event, $eventType);
     }
 
     /**

@@ -19,7 +19,11 @@ use Codeception\Module\CoverHelper;
  * @method void expect($prediction)
  * @method void amGoingTo($argumentation)
  * @method void am($role)
- * @method void lookForwardTo($role)
+ * @method void lookForwardTo($achieveValue)
+ * @method void offsetGet($offset)
+ * @method void offsetSet($offset, $value)
+ * @method void offsetExists($offset)
+ * @method void offsetUnset($offset)
 */
 
 class CoverGuy extends \Codeception\AbstractGuy
