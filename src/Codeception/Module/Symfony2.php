@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * ## Config
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+ * * environment: 'local' - environment used for load kernel
 * 
  * ### Example (`functional.suite.yml`)
  *
@@ -28,7 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
  *        enabled: [Symfony2]
  *        config:
  *           Symfony2:
- *              app_path: 'app/front' 
+ *              app_path: 'app/front'
+ *              environment: 'local_test'
  *
  * ## Public Properties
  *
@@ -49,7 +51,7 @@ class Symfony2 extends \Codeception\Util\Framework
      */
     public $container;
 
-    public $config = array('app_path' => 'app');
+    public $config = array('app_path' => 'app', 'environment' => 'test');
     
     /**
      * @var
@@ -64,7 +66,7 @@ class Symfony2 extends \Codeception\Util\Framework
         if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        $this->kernel = new $this->kernelClass('test', true);
+        $this->kernel = new $this->kernelClass($this->config['environment'], true);
     }
     
     public function _before(\Codeception\TestCase $test) {
