@@ -8,7 +8,7 @@ settings:
     colors: false
     silent: true
     log: false
-subscribers: [MyOutputFormatter]
+extensions: [MyOutputFormatter]
 modules:
     config:
         Db:

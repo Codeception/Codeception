@@ -8,7 +8,7 @@ settings:
     colors: false
     silent: false
     log: false
-subscribers: [MyGroupHighlighter]
+extensions: [MyGroupHighlighter]
 modules:
     config:
         Db:

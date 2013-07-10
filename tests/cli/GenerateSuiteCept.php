@@ -1,4 +1,4 @@
-<?php
+    <?php
 $I = new CliGuy($scenario);
 $I->am('developer who likes testing');
 $I->wantTo('generate sample Suite');
