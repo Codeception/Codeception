@@ -116,7 +116,7 @@ EOF;
 
     protected function pathToSuitePageObject($config, $class)
     {
-        $path = $this->buildPath($config['path'].'/_pages/', $class);
+        $path = $this->buildPath($config['path'].'_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
         return  $path.DIRECTORY_SEPARATOR.$filename;
     }

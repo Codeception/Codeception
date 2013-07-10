@@ -49,7 +49,7 @@ class GenerateTestTest extends BaseCommandRunner {
     public function testValidPHP()
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
-        $this->assertTrue($this->isValidPhp());
+        $this->assertIsValidPhp($this->content);
     }
 
 

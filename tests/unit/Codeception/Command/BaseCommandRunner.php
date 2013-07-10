@@ -60,9 +60,14 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
         ));
     }
 
-    protected function isValidPhp()
+    protected function assertIsValidPhp($php)
     {
-        return eval(substr($this->content,6)) === null;
+        $temp_file = tempnam(sys_get_temp_dir(), 'CodeceptionUnitTest');
+        file_put_contents($temp_file, $php);
+        exec('php -l '.$temp_file, $output, $code);
+        unlink($temp_file);
+
+        $this->assertEquals(0, $code, $php);
     }
 
 

@@ -56,6 +56,7 @@ class GenerateCestTest extends BaseCommandRunner {
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCest.php');
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testGenerateWithGuyNamespaced()
@@ -66,12 +67,7 @@ class GenerateCestTest extends BaseCommandRunner {
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('use MiddleEarth\\HobbitGuy;', $this->content);
         $this->assertContains('public function tryToTest(HobbitGuy $I)', $this->content);
-    }
-
-    public function testValidPhp()
-    {
-        $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillCest'));
-        $this->assertTrue($this->isValidPhp());
+        $this->assertIsValidPhp($this->content);
     }
 
 }

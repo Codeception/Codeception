@@ -22,7 +22,7 @@ class Base extends \Symfony\Component\Console\Command\Command
             // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
             mkdir($path, 0775, true); // Third parameter commands to create directories recursively
         }
-        return rtrim($path,'//');
+        return $path;
     }
 
     protected function getNamespaceString($class)
