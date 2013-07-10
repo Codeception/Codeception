@@ -45,6 +45,9 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
                 $self->log[] = array('filename' => $file, 'content' => $output);
                 return true;
             },
+            'getGlobalConfig' => function() use ($self) {
+              return $self->config;
+            },
             'getSuiteConfig' => function() use ($self) {
                 return $self->config;
             },

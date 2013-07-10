@@ -67,8 +67,10 @@ class GenerateScenarioTest extends BaseCommandRunner {
 
         $this->execute(array('suite' => 'skipped', '--single-file' => true, '--format' => 'html'));
         $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/skipped.html', $this->filename);
-        $this->assertContains('<body><h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
-        $this->assertContains('<h3>I WANT TO SKIP IT</h3></body></html>', $this->content);
+        $this->assertContains('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
+        $this->assertContains('<h3>I WANT TO SKIP IT</h3>', $this->content);
+        $this->assertContains('<body><h3>', $this->content);
+        $this->assertContains('</body></html>', $this->content);
         $this->assertContains('* Skip_Me rendered', $this->output);
         $this->assertContains('* Incomplete_Me rendered', $this->output);        
     }

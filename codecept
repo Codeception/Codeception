@@ -30,6 +30,7 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\GeneratePhpUnit('generate:phpunit'));
  $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
 $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
+$app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
  $app->add(new Codeception\Command\RefactorAddNamespace('refactor:add-namespace'));
  $app->run();

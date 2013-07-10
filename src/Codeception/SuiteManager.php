@@ -2,6 +2,8 @@
 
 namespace Codeception;
 
+use Codeception\Event\Suite;
+use Codeception\Event\SuiteTests;
 use Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -152,7 +154,7 @@ class SuiteManager {
     public function loadTests()
     {
         $finder = Finder::create()->files()->sortByName()->in($this->path);
-        if (!empty($this->settings['includes'])) $finder->append($this->settings['includes']);
+
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {

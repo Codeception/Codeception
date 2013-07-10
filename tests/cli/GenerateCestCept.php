@@ -1,8 +1,7 @@
 <?php
-$I = new CliGuy($scenario);
+$I = new CliGuy\GeneratorSteps($scenario);
 $I->wantTo('generate sample Cest');
 $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:cest dummy DummyClass');
-$I->seeFileFound('DummyClassCest.php');
-$I->seeInThisFile('class DummyClassCest');
+$I->seeFileWithGeneratedClass('DummyClass');
 

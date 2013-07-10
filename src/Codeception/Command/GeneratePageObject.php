@@ -90,7 +90,7 @@ EOF;
 
         $classname = $this->getClassName($class);
         $classname = $this->removeSuffix($classname, 'Page');
-        $ns = $this->getNamespaceString($conf['namespace'].'\\'.$class);
+        $ns = $this->getNamespaceString($conf['namespace'].'\\'.$classname);
 
         $filename = $suite
             ? $this->pathToSuitePageObject($conf, $class)
@@ -116,14 +116,14 @@ EOF;
 
     protected function pathToSuitePageObject($config, $class)
     {
-        $path = $this->buildPath($config['path'].'_pages/', $class);
+        $path = $this->buildPath($config['path'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
         return  $path.DIRECTORY_SEPARATOR.$filename;
     }
 
     protected function createActions($conf)
     {
-        $class = $conf['namespace'].'\\'.$conf['class_name'];
+        $class = $conf['class_name'];
         $guy = lcfirst($conf['class_name']);
         $this->actions = sprintf($this->actionsTemplate, $class, $guy, $class, $guy, $class);
     }
