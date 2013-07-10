@@ -4,15 +4,23 @@ class MyOutputFormatter extends \Codeception\Platform\Extension {
 
     public function _reconfigure()
     {
+        // we silenced default formatter
         $this->options['silent'] = false;
     }
 
+    // we are listening for events
     static $events = array(
-        'test.end' => 'after',
+        'suite.before' => 'beforeSuite',
+        'test.after' => 'after',
         'test.success' => 'success',
         'test.fail' => 'fail',
         'test.error' => 'error',
     );
+
+    public function beforeSuite()
+    {
+        $this->writeln("");
+    }
 
     public function success()
     {
@@ -29,6 +37,7 @@ class MyOutputFormatter extends \Codeception\Platform\Extension {
         $this->write('[E] ');
     }
 
+    // we are printing test status and time taken
     public function after(\Codeception\Event\Test $e)
     {
         $seconds_input = $e->getTime();
