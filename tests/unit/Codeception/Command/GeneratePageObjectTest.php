@@ -9,7 +9,8 @@ class GeneratePageObjectTest extends BaseCommandRunner {
         $this->config = array(
             'class_name' => 'HobbitGuy',
             'path' => 'tests/shire',
-            'paths' => array('tests' => 'tests')
+            'paths' => array('tests' => 'tests'),
+            'settings' => array('bootstrap' => '_bootstrap.php')
         );
     }
 
