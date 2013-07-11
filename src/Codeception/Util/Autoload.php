@@ -30,7 +30,7 @@ class Autoload {
     {
         self::$map[self::regex($namespace, $suffix)] = $path;
         if (!self::$registered) {
-            spl_autoload_register(array(__CLASS__, 'autoload'));
+            spl_autoload_register(array(__CLASS__, 'load'));
             self::$registered = true;
         }
     }
@@ -47,7 +47,7 @@ class Autoload {
     }
 
 
-    public static function autoload($class)
+    public static function load($class)
     {
         foreach (self::$map as $regex => $path) {
             if (!preg_match($regex, $class)) continue;
