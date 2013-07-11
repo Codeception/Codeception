@@ -111,6 +111,7 @@ EOF;
     {
         $path = $this->buildPath($config['paths']['tests'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
+        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
         return  $path.DIRECTORY_SEPARATOR.$filename;
     }
 
@@ -118,6 +119,7 @@ EOF;
     {
         $path = $this->buildPath($config['path'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
+        $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'],'Page','_pages');
         return  $path.DIRECTORY_SEPARATOR.$filename;
     }
 

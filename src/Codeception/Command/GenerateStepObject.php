@@ -35,6 +35,7 @@ EOF;
              new InputArgument('suite', InputArgument::REQUIRED, 'Suite where for StepObject'),
              new InputArgument('step', InputArgument::REQUIRED, 'StepObject name'),
              new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+             new InputOption('force', '',InputOption::VALUE_NONE, 'skip verification question'),
          ));
          parent::configure();
      }
@@ -56,19 +57,24 @@ EOF;
         $ns = $this->getNamespaceString($conf['namespace'].'\\'.$guy . '\\' .$class);
         $ns = ltrim($ns, '\\');
 
+        $extended_class = '\\'.ltrim('\\'.$conf['namespace'].'\\'.$guy, '\\');
+
         $path = $this->buildPath($conf['path'].'/_steps/', $class);
         $filename = $this->completeSuffix($class, 'Steps');
         $filename = $path.DIRECTORY_SEPARATOR.$filename;
 
         $dialog = $this->getHelperSet()->get('dialog');
         $actions = "";
-        do {
-            $action = $dialog->ask($output, "Add action to StepObject class (ENTER to exit): ", null);
-            if ($action) $actions .= sprintf($this->actionTemplate, $action);
-        } while ($action);
+        if (!$input->getOption('force')) {
+            do {
+                $action = $dialog->ask($output, "Add action to StepObject class (ENTER to exit): ", null);
+                if ($action) $actions .= sprintf($this->actionTemplate, $action);
+            } while ($action);
+        }
 
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $class, $conf['namespace'].'\\'.$guy, $actions));
-
+        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $class, $extended_class, $actions));
+        
+        $this->introduceAutoloader($conf['path'].'/'.$conf['bootstrap'], 'Steps', '_steps');
 
         if (!$res) {
             $output->writeln("<error>StepObject $filename already exists</error>");

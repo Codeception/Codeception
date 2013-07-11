@@ -100,7 +100,7 @@ EOF;
             $docblock = $this->prependAbstractGuyDocBlocks($docblock);
 
             $contents = sprintf($this->template,
-                $namespace ? "namespace $namespace\\Codeception;" : '',
+                $namespace ? "namespace $namespace;" : '',
 	            implode("\n", $docblock),
 	            'class',
                 $settings['class_name'],

@@ -199,12 +199,19 @@ class Filesystem extends \Codeception\Module
      */
     public function seeFileFound($filename, $path = '')
     {
+        if (file_exists($filename)) {
+            $this->openFile($filename);
+            $this->filepath = $filename;
+            $this->debug($filename);
+            \PHPUnit_Framework_Assert::assertFileExists($filename);
+            return;
+        }
         $path = $this->absolutizePath($path);
 
         $this->debug($path);
 
-        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
 
+        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
 
         $files = Finder::create()->files()->name($filename)->in($path);
         foreach ($files as $file) {

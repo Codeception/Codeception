@@ -95,4 +95,16 @@ class Base extends \Symfony\Component\Console\Command\Command
         \Codeception\Configuration::config($conf);
         return \Codeception\Configuration::suites();
     }
+
+    protected function introduceAutoloader($file, $suffix, $relativePath)
+    {
+        $line = '\Codeception\Util\Autoload::registerSuffix(\'%s\', __DIR__.DIRECTORY_SEPARATOR.\'%s\');';
+        $line = sprintf($line, $suffix, $relativePath);
+        if (!file_exists($file)) return $this->save($file, "<?php \n".$line);
+        $contents = file_get_contents($file);
+        if (preg_match('~Autoload::registerSuffix\([\'"]'.$suffix.'[\'"]~', $contents)) return false;
+        $contents .= "\n".$line;
+        return $this->save($file, $contents, true);
+    }
+
 }
