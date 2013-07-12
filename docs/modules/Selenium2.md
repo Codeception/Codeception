@@ -102,8 +102,8 @@ Example:
 
 ``` php
 <?php
-// file is stored in 'tests/data/tests.xls'
-$I->attachFile('prices.xls');
+// file is stored in 'tests/_data/tests.xls'
+$I->attachFile('input[file=input]', 'prices.xls');
 ?>
 ```
 
