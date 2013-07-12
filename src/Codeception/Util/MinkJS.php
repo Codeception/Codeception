@@ -240,4 +240,20 @@ class MinkJS extends Mink
     public function executeJs($jsCode) {
         $this->session->getDriver()->executeScript($jsCode);
     }
+    
+    /**
+     * Waits for the page to finish loading all AJAX requests
+     * The function will fail after $milliseconds amount of time (in milliseconds)
+     * 
+     * Example:
+     * 
+     * ```php
+     * $I->waitForAjaxPageLoad(1000); // Waits for the page to load via AJAX or 1000 milliseconds (a second)
+     * ```
+     * 
+     * @param $milliseconds
+     */
+    public function waitForAjaxPageLoad($milliseconds) {
+        $this->waitForJS($milliseconds, "Ajax.activeRequestCount==0");
+    }
 }
