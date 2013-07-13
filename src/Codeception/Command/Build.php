@@ -34,7 +34,7 @@ EOF;
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      %s
      * @see %s::%s()
@@ -120,27 +120,30 @@ EOF;
     {
         $class = $refMethod->getDeclaringClass();
         $params = $this->getParamsString($refMethod);
+        $module = $class->getName();
+
+        $body = '';
+        $doc = $this->addDoc($class, $refMethod);
+        $doc = str_replace('/**', '', $doc);
+        $doc = trim(str_replace('*/','',$doc));
+        if (!$doc) $doc = "*";
+
+        $conditionalDoc = $doc . "\n    * Conditional Assertion: Test won't be stopped on fail";
 
         if (0 === strpos($refMethod->name, 'see')) {
+            $type = 'Assertion';
+            $body .= sprintf($this->methodTemplate, $conditionalDoc, $module, $refMethod->name, 'can'.ucfirst($refMethod->name), $params, 'ConditionalAssertion', $refMethod->name);
+
+        } elseif (0 === strpos($refMethod->name, 'dontSee')) {
+            $action = str_replace('dont','cant',$refMethod->name);
+            $body .= sprintf($this->methodTemplate, $conditionalDoc, $module, $refMethod->name, $action, $params, 'ConditionalAssertion', $refMethod->name);
             $type = 'Assertion';
         } elseif (0 === strpos($refMethod->name, 'am')) {
             $type = 'Condition';
         } else {
             $type = 'Action';
         }
-
-        $doc = $this->addDoc($class, $refMethod);
-        $doc = str_replace('/**', '', $doc);
-        $doc = trim(str_replace('*/','',$doc));
-        if (!$doc) $doc = "*";
-
-        $module = $class->getName();
-        $body = sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
-
-        if ($type == 'Assertion') {
-            $doc .= "\n    * Conditional Assertion: Test won't be stopped on fail";
-            $body .= sprintf($this->methodTemplate, $doc, $module, $refMethod->name, 'can'.ucfirst($refMethod->name), $params, 'ConditionalAssertion', $refMethod->name);
-        }
+        $body .= sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
 
         return $body;
     }

@@ -137,6 +137,7 @@ abstract class Module
     }
 
     protected function assert($arguments, $not = false) {
+
         $not = $not ? 'Not' : '';
         $method = ucfirst(array_shift($arguments));
         if (($method === 'True') && $not) {
@@ -148,7 +149,7 @@ abstract class Module
             $not = '';
         }
 
-        call_user_func_array(array('\Codeception\PHPUnit\Assert', 'assert'.$not.$method), $arguments);
+        call_user_func_array(array('\PHPUnit_Framework_Assert', 'assert'.$not.$method), $arguments);
     }
 
     /**
@@ -164,30 +165,6 @@ abstract class Module
         return \PHPUnit_Framework_Assert::assertEquals($expected, $actual, $message);
     }
 
-    /**
-     * Checks that a Web page contains text (ignoring HTML tags)
-     *
-     * @param $needle
-     * @param $haystack
-     * @param string $message
-     */
-    protected function assertPageContains($needle, $haystack, $message = '')
-    {
-        return \Codeception\PHPUnit\Assert::assertPageContains($needle, $haystack, $message);
-    }
-
-    /**
-     * Checks that a web page doesn't contain text (ignoring HTML tags)
-     *
-     * @param $needle
-     * @param $haystack
-     * @param string $message
-     * @return mixed
-     */
-    protected function assertPageNotContains($needle, $haystack, $message = '')
-    {
-        return \Codeception\PHPUnit\Assert::assertPageNotContains($needle, $haystack, $message);
-    }
 
     /**
      * Checks that two variables are not equal
@@ -328,6 +305,17 @@ abstract class Module
     protected function assertFalse($condition, $message = '')
     {
         return \PHPUnit_Framework_Assert::assertFalse($condition, $message);
+    }
+
+    protected function assertThat($haystack, $constraint, $message)
+    {
+        \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
+    }
+
+    protected function assertThatItsNot($haystack, $constraint, $message)
+    {
+        $constraint = new \PHPUnit_Framework_Constraint_Not($constraint);
+        \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
     }
 
     /**

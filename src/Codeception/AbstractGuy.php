@@ -1,6 +1,8 @@
 <?php
 namespace Codeception;
 
+use Codeception\Step\Action;
+
 abstract class AbstractGuy implements \ArrayAccess
 {
     public static $methods = array();
@@ -122,7 +124,7 @@ abstract class AbstractGuy implements \ArrayAccess
             $class = get_class($this);
             throw new \RuntimeException("Call to undefined method $class::$method");
         } else {
-            $this->scenario->action($method, $arguments);
+            $this->scenario->addStep(new Action($method, $arguments));
         }
-    }       
+    }
 }
