@@ -180,11 +180,12 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
+    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Filesystem::seeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function seeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
+    public function canSeeInThisFile($text) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -208,12 +209,11 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Filesystem::seeInThisFile()
      * @return \Codeception\Maybe
      */
-    public function canSeeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
+    public function seeInThisFile($text) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -222,35 +222,6 @@ class CoverGuy extends \Codeception\AbstractGuy
     }
 
  
-    /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ---------------------------------------------
-     *
-     * Checks the strict matching of file contents.
-     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
-     * Better to use with HEREDOC strings.
-     * Matching is done after removing "\r" chars from file content.
-     *
-     * ``` php
-     * <?php
-     * $I->openFile('process.pid');
-     * $I->seeFileContentsEqual('3192');
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
-     * @return \Codeception\Maybe
-     */
-    public function seeFileContentsEqual($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -281,8 +252,64 @@ class CoverGuy extends \Codeception\AbstractGuy
         }
         return new Maybe();
     }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks the strict matching of file contents.
+     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
+     * Better to use with HEREDOC strings.
+     * Matching is done after removing "\r" chars from file content.
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('process.pid');
+     * $I->seeFileContentsEqual('3192');
+     * ?>
+     * ```
+     *
+     * @param $text
+     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
+     * @return \Codeception\Maybe
+     */
+    public function seeFileContentsEqual($text) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
 
  
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks If opened file doesn't contain `text` in it
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeInThisFile('codeception/codeception');
+     * ?>
+     * ```
+     *
+     * @param $text
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
+     * @return \Codeception\Maybe
+     */
+    public function cantSeeInThisFile($text) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
@@ -302,7 +329,7 @@ class CoverGuy extends \Codeception\AbstractGuy
      * @return \Codeception\Maybe
      */
     public function dontSeeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Action('dontSeeInThisFile', func_get_args()));
+        $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -346,11 +373,12 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
+    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Filesystem::seeFileFound()
      * @return \Codeception\Maybe
      */
-    public function seeFileFound($filename, $path = null) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
+    public function canSeeFileFound($filename, $path = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -373,12 +401,11 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Filesystem::seeFileFound()
      * @return \Codeception\Maybe
      */
-    public function canSeeFileFound($filename, $path = null) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
+    public function seeFileFound($filename, $path = null) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -443,11 +470,12 @@ class CoverGuy extends \Codeception\AbstractGuy
      * Checks that output from last executed command contains text
      *
      * @param $text
+    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Cli::seeInShellOutput()
      * @return \Codeception\Maybe
      */
-    public function seeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
+    public function canSeeInShellOutput($text) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -462,12 +490,11 @@ class CoverGuy extends \Codeception\AbstractGuy
      * Checks that output from last executed command contains text
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\Cli::seeInShellOutput()
      * @return \Codeception\Maybe
      */
-    public function canSeeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
+    public function seeInShellOutput($text) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -485,11 +512,32 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      *
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Cli::dontSeeInShellOutput()
+     * @return \Codeception\Maybe
+     */
+    public function cantSeeInShellOutput($text) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that output from latest command doesn't contain text
+     *
+     * @param $text
+     *
      * @see Codeception\Module\Cli::dontSeeInShellOutput()
      * @return \Codeception\Maybe
      */
     public function dontSeeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\Action('dontSeeInShellOutput', func_get_args()));
+        $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

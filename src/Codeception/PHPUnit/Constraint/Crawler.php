@@ -9,7 +9,8 @@ class Crawler extends Page {
     protected function matches(DomCrawler $nodes)
     {
         if (!$nodes->count()) return false;
-        $res = false;
+        if ($this->string === '') return true;
+
         foreach ($nodes as $node)
         {
             if (parent::matches($node->nodeValue)) return true;
@@ -21,23 +22,35 @@ class Crawler extends Page {
     {
         if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
         $s = $nodes->count() > 1 ? 's' : '';
-        $output = "Failed asserting that any element matched by selector (('$selector')) ";
+
+        $output = "Failed asserting that any element found by selector '$selector' ";
+        if ($this->uri) $output .= "on page '{$this->uri}' ";
         if ($nodes->count() < 10) {
             $output .= "(listed below)";
             foreach ($nodes as $node)
             {
-                $output .= "\n--> ".$node->nodeValue;
+                $output .= "\n--> ".$node->C14N();
             }
         } else {
             $output .= "(total {$nodes->count()} elements)";
         }
         $s = $nodes->count() > 1 ? '' : 's';
-        $output .= "\ncontain$s text '".$this->string."'";
+        $output .= "\ncontains text '".$this->string."'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(
           $output,
           $comparisonFailure
         );
     }
+
+    protected function failureDescription(DOMCrawler $other)
+    {
+        $desc = '';
+        foreach ($other as $o) {
+            $desc .= parent::failureDescription($o->textContent);
+        }
+        return $desc;
+    }
+
 
 }
