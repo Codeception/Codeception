@@ -24,7 +24,7 @@ abstract class AbstractGuy implements \ArrayAccess
      */
     public function execute($callable)
     {
-        $this->scenario->executor($callable);
+        $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;

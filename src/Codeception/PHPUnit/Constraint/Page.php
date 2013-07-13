@@ -6,7 +6,9 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
 
     protected function failureDescription($other)
     {
-        return 'response ' . $this->toString().". Response was saved to 'log' directory";
+        $page = substr($other,0,500);
+        if (strlen($other) > 500) $page .= "\n[Content too long to display. See complete response in (('_log')) directory]";
+        return "page -->\n$page\n--> " . $this->toString();
     }
 
 }

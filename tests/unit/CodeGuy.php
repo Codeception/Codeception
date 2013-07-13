@@ -29,6 +29,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 {
     
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Registers a class/method which will be tested.
      * When you run 'execute' this method will be invoked.
      * Please, note that it also updates the feature section of the scenario.
@@ -49,13 +53,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $signature
      * @deprecated
-     * @see Unit::testMethod()
+     * @see Codeception\Module\Unit::testMethod()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function testMethod($signature) {
-        $this->scenario->action('testMethod', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('testMethod', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -65,19 +67,21 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Adds a stub to the internal registry.
      * Use this command if you need to convert this stub to a mock.
      * Without adding the stub to registry you can't trace it's method invocations.
      *
      * @param $instance
      * @deprecated
-     * @see Unit::haveFakeClass()
+     * @see Codeception\Module\Unit::haveFakeClass()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function haveFakeClass($instance) {
-        $this->scenario->action('haveFakeClass', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('haveFakeClass', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -87,17 +91,19 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Alias for haveFakeClass
      *
      * @alias haveFakeClass
      * @param $instance
-     * @see Unit::haveStub()
+     * @see Codeception\Module\Unit::haveStub()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function haveStub($instance) {
-        $this->scenario->action('haveStub', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('haveStub', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -107,6 +113,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Execute The tested method on an object (a stub can be passed).
      * First argument is an object, the rest are supposed to be parameters passed to method.
      *
@@ -127,13 +137,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $object
      * @deprecated
-     * @see Unit::executeTestedMethodOn()
+     * @see Codeception\Module\Unit::executeTestedMethodOn()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethodOn($object) {
-        $this->scenario->action('executeTestedMethodOn', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('executeTestedMethodOn', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -143,6 +151,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes the tested static method with parameters provided.
      *
      * ```
@@ -157,13 +169,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $params
      * @throws \Codeception\Exception\Module
      * @deprecated
-     * @see Unit::executeTestedMethodWith()
+     * @see Codeception\Module\Unit::executeTestedMethodWith()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethodWith($params) {
-        $this->scenario->action('executeTestedMethodWith', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('executeTestedMethodWith', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -173,6 +183,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes the method which is being tested.
      * If the method is not static, the class instance should be provided.
      *
@@ -182,13 +196,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @throws \InvalidArgumentException
      * @deprecated
-     * @see Unit::executeTestedMethod()
+     * @see Codeception\Module\Unit::executeTestedMethod()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function executeTestedMethod() {
-        $this->scenario->action('executeTestedMethod', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('executeTestedMethod', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -198,6 +210,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes a code block. The result of execution will be stored.
      * Parameter should be a valid Closure. The returned value can be checked with seeResult actions.
      *
@@ -234,13 +250,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param \Closure $code
      * @deprecated
-     * @see Unit::execute()
+     * @see Codeception\Module\Unit::execute()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function execute($code) {
-        $this->scenario->action('execute', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('execute', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -250,6 +264,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes a method of an object.
      * Additional parameters can be provided.
      *
@@ -272,13 +290,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $object
      * @param $method
      * @deprecated
-     * @see Unit::executeMethod()
+     * @see Codeception\Module\Unit::executeMethod()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function executeMethod($object, $method) {
-        $this->scenario->action('executeMethod', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('executeMethod', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -288,6 +304,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Updates multiple properties of the selected object.
      * Can update even private and protected properties.
      * 
@@ -298,13 +318,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $obj
      * @param array $values
      * @deprecated
-     * @see Unit::changeProperties()
+     * @see Codeception\Module\Unit::changeProperties()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function changeProperties($obj, $values = null) {
-        $this->scenario->action('changeProperties', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('changeProperties', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -314,6 +332,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Updates a single property of the selected object
      * Can update even private and protected properties.
      *
@@ -321,13 +343,11 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @deprecated
-     * @see Unit::changeProperty()
+     * @see Codeception\Module\Unit::changeProperty()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function changeProperty($obj, $property, $value) {
-        $this->scenario->action('changeProperty', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('changeProperty', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -337,14 +357,34 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
      *
-     * @see Unit::seeExceptionThrown()
+     *
+     * @see Codeception\Module\Unit::seeExceptionThrown()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeExceptionThrown($classname, $message = null) {
-        $this->scenario->assertion('seeExceptionThrown', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeExceptionThrown', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     *
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeExceptionThrown()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeExceptionThrown($classname, $message = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeExceptionThrown', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -354,6 +394,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that a method of a stub was invoked after the last execution.
      * Requires a stub as the first parameter, the method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -379,13 +423,53 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @deprecated
-     * @see Unit::seeMethodInvoked()
+     * @see Codeception\Module\Unit::seeMethodInvoked()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvoked($mock, $method, $params = null) {
-        $this->scenario->assertion('seeMethodInvoked', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodInvoked', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that a method of a stub was invoked after the last execution.
+     * Requires a stub as the first parameter, the method name as the second.
+     * Optionally pass the arguments which are expected by the executed method.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->testMethod('UserService.create');
+     * $I->haveStub($user = Stub::make('Model\User'));*
+     * $service = new UserService($user);
+     * $I->executeTestedMethodOn($service);
+     * // we expect $user->save was invoked.
+     * $I->seeMethodInvoked($user, 'save');
+     * ?>
+     * ```
+     *
+     * This method dynamically creates a mock from a stub.
+     *
+     * @magic
+     * @see createMocks
+     * @param $mock
+     * @param $method
+     * @param array $params
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodInvoked()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodInvoked($mock, $method, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodInvoked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -395,6 +479,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that a method of a stub was invoked *only once* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -407,13 +495,40 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param array $params
      * @deprecated
-     * @see Unit::seeMethodInvokedOnce()
+     * @see Codeception\Module\Unit::seeMethodInvokedOnce()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvokedOnce($mock, $method, $params = null) {
-        $this->scenario->assertion('seeMethodInvokedOnce', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodInvokedOnce', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that a method of a stub was invoked *only once* after the last execution.
+     * Requires a stub as the first parameter, a method name as the second.
+     * Optionally pass the arguments which are expected by the executed method.
+     *
+     * Look for 'seeMethodInvoked' to see the example.
+
+     * @magic
+     * @see createMocks
+     * @param $mock
+     * @param $method
+     * @param array $params
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodInvokedOnce()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodInvokedOnce($mock, $method, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodInvokedOnce', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -423,6 +538,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that a method of a stub *was not invoked* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
      * Optionally pass the arguments which are expected by the executed method.
@@ -432,13 +551,37 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $mock
      * @param $method
      * @param array $params
-     * @see Unit::seeMethodNotInvoked()
+     * @see Codeception\Module\Unit::seeMethodNotInvoked()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodNotInvoked($mock, $method, $params = null) {
-        $this->scenario->assertion('seeMethodNotInvoked', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodNotInvoked', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that a method of a stub *was not invoked* after the last execution.
+     * Requires a stub as the first parameter, a method name as the second.
+     * Optionally pass the arguments which are expected by the executed method.
+
+     * @magic
+     * @see createMocks
+     * @param $mock
+     * @param $method
+     * @param array $params
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodNotInvoked()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodNotInvoked($mock, $method, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodNotInvoked', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -448,6 +591,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that a method of a stub was invoked *multiple times* after the last execution.
      * Requires a stub as the first parameter, a method name as the second and the expected number of executions.
      * Optionally pass the arguments which are expected by the executed method.
@@ -461,13 +608,41 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $times
      * @param array $params
      * @deprecated
-     * @see Unit::seeMethodInvokedMultipleTimes()
+     * @see Codeception\Module\Unit::seeMethodInvokedMultipleTimes()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodInvokedMultipleTimes($mock, $method, $times, $params = null) {
-        $this->scenario->assertion('seeMethodInvokedMultipleTimes', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodInvokedMultipleTimes', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that a method of a stub was invoked *multiple times* after the last execution.
+     * Requires a stub as the first parameter, a method name as the second and the expected number of executions.
+     * Optionally pass the arguments which are expected by the executed method.
+     *
+     * Look for 'seeMethodInvoked' to see the example.
+
+     * @magic
+     * @see createMocks
+     * @param $mock
+     * @param $method
+     * @param $times
+     * @param array $params
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodInvokedMultipleTimes()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodInvokedMultipleTimes($mock, $method, $times, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodInvokedMultipleTimes', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -477,35 +652,40 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Asserts that the last result from the tested method is equal to value
      *
      * @param $value
      * @deprecated
-     * @see Unit::seeResultEquals()
+     * @see Codeception\Module\Unit::seeResultEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeResultEquals($value) {
-        $this->scenario->assertion('seeResultEquals', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeResultEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
         }
         return new Maybe();
     }
-
- 
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Asserts that the last result from the tested method is equal to value
+     *
      * @param $value
      * @deprecated
-     * @see Unit::seeResultContains()
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeResultEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
-    public function seeResultContains($value) {
-        $this->scenario->assertion('seeResultContains', func_get_args());
+    public function canSeeResultEquals($value) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeResultEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -515,17 +695,58 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * @param $value
+     * @deprecated
+     * @see Codeception\Module\Unit::seeResultContains()
+     * @return \Codeception\Maybe
+     */
+    public function seeResultContains($value) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeResultContains', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * @param $value
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeResultContains()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeResultContains($value) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeResultContains', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the result of the last execution doesn't contain a value.
      *
      * @param $value
      * @deprecated
-     * @see Unit::dontSeeResultContains()
+     * @see Codeception\Module\Unit::dontSeeResultContains()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function dontSeeResultContains($value) {
-        $this->scenario->action('dontSeeResultContains', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('dontSeeResultContains', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -535,17 +756,19 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the result of the last execution is not equal to a value.
      *
      * @param $value
      * @deprecated
-     * @see Unit::dontSeeResultEquals()
+     * @see Codeception\Module\Unit::dontSeeResultEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function dontSeeResultEquals($value) {
-        $this->scenario->action('dontSeeResultEquals', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Action('dontSeeResultEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -555,15 +778,36 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the result of the last execution is empty.
      * @deprecated
-     * @see Unit::seeEmptyResult()
+     * @see Codeception\Module\Unit::seeEmptyResult()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeEmptyResult() {
-        $this->scenario->assertion('seeEmptyResult', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeEmptyResult', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that the result of the last execution is empty.
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeEmptyResult()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeEmptyResult() {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeEmptyResult', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -573,6 +817,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the result of the last execution is a specific type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
      * Otherwise the parameter must be a class and the result must be an instance of that class.
@@ -588,13 +836,43 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * @param $type
      * @deprecated
-     * @see Unit::seeResultIs()
+     * @see Codeception\Module\Unit::seeResultIs()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeResultIs($type) {
-        $this->scenario->assertion('seeResultIs', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeResultIs', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that the result of the last execution is a specific type.
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     * Otherwise the parameter must be a class and the result must be an instance of that class.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->execute(function() { return new User });
+     * $I->seeResultIs('User');
+     * ?>
+     * ```
+     *
+     * @param $type
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeResultIs()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeResultIs($type) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeResultIs', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -604,6 +882,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the property of an object equals the value provided.
      * Can check even protected or private properties.
      *
@@ -614,13 +896,38 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $value
      * @deprecated
-     * @see Unit::seePropertyEquals()
+     * @see Codeception\Module\Unit::seePropertyEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seePropertyEquals($object, $property, $value) {
-        $this->scenario->assertion('seePropertyEquals', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seePropertyEquals', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that the property of an object equals the value provided.
+     * Can check even protected or private properties.
+     *
+     * Bear in mind that testing non-public properties is not a good practice.
+     * Use it only if you have no other way to test it.
+     *
+     * @param $object
+     * @param $property
+     * @param $value
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seePropertyEquals()
+     * @return \Codeception\Maybe
+     */
+    public function canSeePropertyEquals($object, $property, $value) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seePropertyEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -630,6 +937,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Checks that the property is a passed type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
      * Otherwise the parameter must be a class and the property must be an instance of that class.
@@ -641,13 +952,39 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $property
      * @param $type
      * @deprecated
-     * @see Unit::seePropertyIs()
+     * @see Codeception\Module\Unit::seePropertyIs()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seePropertyIs($object, $property, $type) {
-        $this->scenario->assertion('seePropertyIs', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seePropertyIs', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Checks that the property is a passed type.
+     * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
+     * Otherwise the parameter must be a class and the property must be an instance of that class.
+     *
+     * Bear in mind that testing non-public properties is not a good practice.
+     * Use it only if you have no other way to test it.
+     *
+     * @param $object
+     * @param $property
+     * @param $type
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seePropertyIs()
+     * @return \Codeception\Maybe
+     */
+    public function canSeePropertyIs($object, $property, $type) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seePropertyIs', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -657,6 +994,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes a method and checks that the result is equal to a value.
      * Good for testing values taken from getters.
      *
@@ -675,13 +1016,46 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @deprecated
-     * @see Unit::seeMethodReturns()
+     * @see Codeception\Module\Unit::seeMethodReturns()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodReturns($object, $method, $value, $params = null) {
-        $this->scenario->assertion('seeMethodReturns', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodReturns', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Executes a method and checks that the result is equal to a value.
+     * Good for testing values taken from getters.
+     *
+     * Example:
+     *
+     * ``` php
+     * $I->testMethod('User.setName');
+     * $user = new User();
+     * $I->executeTestedMethodOn($user, 'davert');
+     * $I->seeMethodReturns($user,'getName','davert');
+     *
+     * ```
+     *     *
+     * @param $object
+     * @param $method
+     * @param $value
+     * @param array $params
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodReturns()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodReturns($object, $method, $value, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodReturns', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -691,6 +1065,10 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      * Executes a method and checks that the result is NOT equal to a value.
      * Good for testing values taken from getters.
      *
@@ -701,13 +1079,38 @@ class CodeGuy extends \Codeception\AbstractGuy
      * @param $value
      * @param array $params
      * @deprecated
-     * @see Unit::seeMethodNotReturns()
+     * @see Codeception\Module\Unit::seeMethodNotReturns()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeMethodNotReturns($object, $method, $value, $params = null) {
-        $this->scenario->assertion('seeMethodNotReturns', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodNotReturns', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     * Executes a method and checks that the result is NOT equal to a value.
+     * Good for testing values taken from getters.
+     *
+     * Look for 'seeMethodReturns' for example.
+     *
+     * @param $object
+     * @param $method
+     * @param $value
+     * @param array $params
+     * @deprecated
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Unit::seeMethodNotReturns()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeMethodNotReturns($object, $method, $value, $params = null) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeMethodNotReturns', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -717,14 +1120,34 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
      *
-     * @see EmulateModuleHelper::seeEquals()
+     *
+     * @see Codeception\Module\EmulateModuleHelper::seeEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeEquals($expected, $actual) {
-        $this->scenario->assertion('seeEquals', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeEquals', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     *
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\EmulateModuleHelper::seeEquals()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeEquals($expected, $actual) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
@@ -734,14 +1157,34 @@ class CodeGuy extends \Codeception\AbstractGuy
 
  
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
      *
-     * @see EmulateModuleHelper::seeFeaturesEquals()
+     *
+     * @see Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function seeFeaturesEquals($expected) {
-        $this->scenario->assertion('seeFeaturesEquals', func_get_args());
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFeaturesEquals', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
+     *
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeFeaturesEquals($expected) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFeaturesEquals', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
