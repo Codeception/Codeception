@@ -64,6 +64,7 @@ class Cept extends \Codeception\TestCase
     {
         $scenario = $this->scenario;
 
+
         $scenario->run();
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 

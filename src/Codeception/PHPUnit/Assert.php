@@ -16,4 +16,17 @@ class Assert extends \PHPUnit_Framework_Assert
         self::assertThat($haystack, $constraint, $message);
     }
 
+    public static function assertCrawlerContains($needle, $haystack, $message = '')
+    {
+        $constraint = new Constraint\Crawler($needle, true);
+        self::assertThat($haystack, $constraint, $message);
+    }
+
+    public static function assertNotCrawlerContains($needle, $haystack, $message = '')
+    {
+        $constraint = new \PHPUnit_Framework_Constraint_Not(new Constraint\Crawler($needle, true));
+        self::assertThat($haystack, $constraint, $message);
+    }
+
+
 }

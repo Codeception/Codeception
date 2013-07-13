@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Util;
 
+use Codeception\Exception\ContentNotFound;
 use Codeception\Exception\ElementNotFound;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
@@ -114,9 +115,10 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function see($text, $selector = null)
     {
         if (!$selector)
-            return \PHPUnit_Framework_Assert::assertGreaterThan(0, $this->crawler->filter('html:contains("' . $this->escape($text) . '")')->count(), "$text in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+            $this->assert(array('pageContains', $text, $this->client->getResponse()->getContent()));
+
         $nodes = $this->match($selector);
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $nodes->filter(':contains("' . $this->escape($text) . '")')->count(), " within selector '$selector' in\n" . self::formatResponse($this->client->getResponse()->getContent()));
+        $this->assert(array('crawlerContains', $text, $nodes, $selector));
     }
 
     public function dontSee($text, $selector = null)
@@ -417,9 +419,9 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $formatted = 'page [';
             $crawler = new \Symfony\Component\DomCrawler\Crawler($response);
             $title = $crawler->filter('title');
-            if (count($title)) $formatted .= "Title: " . trim($title->first()->text());
+            if (count($title)) $formatted .= "Title: " . trim($title->first()->text())."\n";
             $h1 = $crawler->filter('h1');
-            if (count($h1)) $formatted .= "\nH1: " . trim($h1->first()->text());
+            if (count($h1)) $formatted .= "H1: " . trim($h1->first()->text());
             return $formatted. "]";
         }
         return "page.";

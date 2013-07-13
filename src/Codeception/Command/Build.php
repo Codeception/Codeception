@@ -32,14 +32,16 @@ EOF;
     protected $methodTemplate = <<<EOF
 
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ---------------------------------------------
+     *
      %s
      * @see %s::%s()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function %s(%s) {
-        \$this->scenario->%s('%s', func_get_args());
+        \$this->scenario->addStep(new \Codeception\Step\%s('%s', func_get_args()));
         if (\$this->scenario->running()) {
             \$result = \$this->scenario->runStep();
             return new Maybe(\$result);
@@ -120,11 +122,11 @@ EOF;
         $params = $this->getParamsString($refMethod);
 
         if (0 === strpos($refMethod->name, 'see')) {
-            $type = 'assertion';
+            $type = 'Assertion';
         } elseif (0 === strpos($refMethod->name, 'am')) {
-            $type = 'condition';
+            $type = 'Condition';
         } else {
-            $type = 'action';
+            $type = 'Action';
         }
 
         $doc = $this->addDoc($class, $refMethod);
@@ -132,8 +134,15 @@ EOF;
         $doc = trim(str_replace('*/','',$doc));
         if (!$doc) $doc = "*";
 
-        $module = $class->getShortName();
-        return sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
+        $module = $class->getName();
+        $body = sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
+
+        if ($type == 'Assertion') {
+            $doc .= "\n    * Conditional Assertion: Test won't be stopped on fail";
+            $body .= sprintf($this->methodTemplate, $doc, $module, $refMethod->name, 'can'.ucfirst($refMethod->name), $params, 'ConditionalAssertion', $refMethod->name);
+        }
+
+        return $body;
     }
 
     /**
