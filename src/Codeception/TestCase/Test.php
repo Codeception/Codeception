@@ -5,24 +5,25 @@ use Codeception\Exception\TestRuntime;
 
 class Test extends \Codeception\TestCase
 {
-    /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
-     */
-    protected $dispatcher = null;
-    protected $bootstrap = null;
+    /** @var \Symfony\Component\EventDispatcher\EventDispatcher */
+    protected $dispatcher;
+    
+    /** @var string */
+    protected $bootstrap;
 
-    /**
-     * @var \CodeGuy
-     */
-    protected $codeGuy = null;
+    /** @var \CodeGuy */
+    protected $codeGuy;
 
+    /** @var string */
     protected $guyClass;
 
-    public function setDispatcher($dispatcher) {
+    public function setDispatcher($dispatcher)
+    {
         $this->dispatcher = $dispatcher;
     }
 
-    public function setBootstrap($bootstrap) {
+    public function setBootstrap($bootstrap)
+    {
         $this->bootstrap = $bootstrap;
     }
 
@@ -33,10 +34,14 @@ class Test extends \Codeception\TestCase
 
     protected function setUp()
     {
-        if ($this->bootstrap) require $this->bootstrap;
+        if ($this->bootstrap) {
+            require $this->bootstrap;
+        }
         $this->scenario = new \Codeception\Scenario($this);
         $guy = $this->guyClass;
-        if ($guy) $this->codeGuy = new $guy($this->scenario);
+        if ($guy) {
+            $this->codeGuy = new $guy($this->scenario);
+        }
         $this->scenario->run();
         $this->fire('test.before', new \Codeception\Event\Test($this));
         $this->_before();
@@ -47,7 +52,6 @@ class Test extends \Codeception\TestCase
      */
     protected function _before()
     {
-
     }
 
     protected function tearDown()
@@ -61,15 +65,16 @@ class Test extends \Codeception\TestCase
      */
     protected function _after()
     {
-
     }
 
-    public function __construct($name = NULL, array $data = array(), $dataName = '') {
+    public function __construct($name = NULL, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
         $this->scenario = new \Codeception\Scenario($this);
     }
     
-    public function getFeature() {
+    public function getFeature()
+    {
         $text = $this->getName();
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
@@ -77,7 +82,7 @@ class Test extends \Codeception\TestCase
     }
 
     /**
-     * @param $module
+     * @param string $module
      * @return \Codeception\Module
      * @throws \Codeception\Exception\TestRuntime
      */
