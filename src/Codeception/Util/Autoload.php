@@ -69,6 +69,6 @@ class Autoload {
     protected static function regex($namespace, $suffix)
     {
         $namespace = str_replace("\\",'\\\\', $namespace);
-        return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        return sprintf('~\\\\?%s\\w*?%s$~', $namespace, $suffix);
     }
 }
