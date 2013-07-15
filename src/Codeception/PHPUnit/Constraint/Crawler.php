@@ -21,7 +21,6 @@ class Crawler extends Page {
     protected function fail(DomCrawler $nodes, $selector, PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
         if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
-        $s = $nodes->count() > 1 ? 's' : '';
 
         $output = "Failed asserting that any element found by selector '$selector' ";
         if ($this->uri) $output .= "on page '{$this->uri}' ";
@@ -34,7 +33,6 @@ class Crawler extends Page {
         } else {
             $output .= "(total {$nodes->count()} elements)";
         }
-        $s = $nodes->count() > 1 ? '' : 's';
         $output .= "\ncontains text '".$this->string."'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(

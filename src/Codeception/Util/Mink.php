@@ -117,10 +117,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             }
             if (empty($nodes)) throw new ElementNotFound($selector, 'CSS or XPath');
             
-		    $values = '';
+		    $values = array();
+
 		    foreach ($nodes as $node) {
-		        $values .= '<!-- Merged Output -->'.$node->getText();
+		        $values [] = $node->getText();
 		    }
+            $values = implode("-->\n",$values);
 			return array($text, $values, "'$selector' selector.");
         }
 
@@ -488,7 +490,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     protected function assertPageContains($needle, $haystack, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
-        $this->assertThat($haystack, $constraint,$message);
+        $this->assertThat($haystack, $constraint, $message);
     }
 
     protected function assertPageNotContains($needle, $haystack, $message = '')
