@@ -31,7 +31,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Registers a class/method which will be tested.
      * When you run 'execute' this method will be invoked.
@@ -69,7 +69,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Adds a stub to the internal registry.
      * Use this command if you need to convert this stub to a mock.
@@ -93,7 +93,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Alias for haveFakeClass
      *
@@ -115,7 +115,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Execute The tested method on an object (a stub can be passed).
      * First argument is an object, the rest are supposed to be parameters passed to method.
@@ -153,7 +153,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes the tested static method with parameters provided.
      *
@@ -185,7 +185,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes the method which is being tested.
      * If the method is not static, the class instance should be provided.
@@ -212,7 +212,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a code block. The result of execution will be stored.
      * Parameter should be a valid Closure. The returned value can be checked with seeResult actions.
@@ -266,7 +266,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a method of an object.
      * Additional parameters can be provided.
@@ -306,7 +306,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Updates multiple properties of the selected object.
      * Can update even private and protected properties.
@@ -334,7 +334,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Updates a single property of the selected object
      * Can update even private and protected properties.
@@ -359,7 +359,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
     * Conditional Assertion: Test won't be stopped on fail
@@ -377,7 +377,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\Unit::seeExceptionThrown()
@@ -396,7 +396,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked after the last execution.
      * Requires a stub as the first parameter, the method name as the second.
@@ -438,7 +438,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked after the last execution.
      * Requires a stub as the first parameter, the method name as the second.
@@ -481,7 +481,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked *only once* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
@@ -510,7 +510,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked *only once* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
@@ -540,7 +540,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub *was not invoked* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
@@ -566,7 +566,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub *was not invoked* after the last execution.
      * Requires a stub as the first parameter, a method name as the second.
@@ -593,7 +593,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked *multiple times* after the last execution.
      * Requires a stub as the first parameter, a method name as the second and the expected number of executions.
@@ -623,7 +623,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that a method of a stub was invoked *multiple times* after the last execution.
      * Requires a stub as the first parameter, a method name as the second and the expected number of executions.
@@ -654,7 +654,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Asserts that the last result from the tested method is equal to value
      *
@@ -675,7 +675,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Asserts that the last result from the tested method is equal to value
      *
@@ -697,7 +697,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * @param $value
      * @deprecated
@@ -716,7 +716,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * @param $value
      * @deprecated
@@ -736,7 +736,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution doesn't contain a value.
      *
@@ -757,7 +757,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution doesn't contain a value.
      *
@@ -779,7 +779,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is not equal to a value.
      *
@@ -800,7 +800,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is not equal to a value.
      *
@@ -822,7 +822,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is empty.
      * @deprecated
@@ -841,7 +841,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is empty.
      * @deprecated
@@ -861,7 +861,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is a specific type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
@@ -893,7 +893,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the result of the last execution is a specific type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
@@ -926,7 +926,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the property of an object equals the value provided.
      * Can check even protected or private properties.
@@ -953,7 +953,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the property of an object equals the value provided.
      * Can check even protected or private properties.
@@ -981,7 +981,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the property is a passed type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
@@ -1009,7 +1009,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that the property is a passed type.
      * Either 'int', 'bool', 'string', 'array', 'float', 'null', 'resource', 'scalar' can be passed for simple types.
@@ -1038,7 +1038,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a method and checks that the result is equal to a value.
      * Good for testing values taken from getters.
@@ -1073,7 +1073,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a method and checks that the result is equal to a value.
      * Good for testing values taken from getters.
@@ -1109,7 +1109,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a method and checks that the result is NOT equal to a value.
      * Good for testing values taken from getters.
@@ -1136,7 +1136,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a method and checks that the result is NOT equal to a value.
      * Good for testing values taken from getters.
@@ -1164,7 +1164,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
     * Conditional Assertion: Test won't be stopped on fail
@@ -1182,7 +1182,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\EmulateModuleHelper::seeEquals()
@@ -1201,7 +1201,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
     * Conditional Assertion: Test won't be stopped on fail
@@ -1219,7 +1219,7 @@ class CodeGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()

@@ -32,7 +32,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Enters a directory In local filesystem.
      * Project root directory is used by default
@@ -54,7 +54,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Opens a file and stores it's content.
      *
@@ -84,7 +84,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Deletes a file
      *
@@ -111,7 +111,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Deletes directory with all subdirectories
      *
@@ -138,7 +138,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Copies directory with all contents
      *
@@ -166,7 +166,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks If opened file has `text` in it.
      *
@@ -195,7 +195,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks If opened file has `text` in it.
      *
@@ -225,7 +225,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -255,7 +255,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -286,7 +286,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -313,7 +313,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -341,7 +341,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Deletes a file
      * @see Codeception\Module\Filesystem::deleteThisFile()
@@ -360,7 +360,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -388,7 +388,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -417,7 +417,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Erases directory contents
      *
@@ -444,7 +444,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Executes a shell command
      *
@@ -465,7 +465,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that output from last executed command contains text
      *
@@ -485,7 +485,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that output from last executed command contains text
      *
@@ -506,7 +506,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that output from latest command doesn't contain text
      *
@@ -527,7 +527,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      * Checks that output from latest command doesn't contain text
      *
@@ -549,7 +549,7 @@ class CoverGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\CliHelper::executeCommand()
