@@ -11,7 +11,7 @@ class MyOutputFormatter extends \Codeception\Platform\Extension {
     // we are listening for events
     static $events = array(
         'suite.before' => 'beforeSuite',
-        'test.after' => 'after',
+        'test.end' => 'after',
         'test.success' => 'success',
         'test.fail' => 'fail',
         'test.error' => 'error',
