@@ -48,7 +48,6 @@ class Listener implements \PHPUnit_Framework_TestListener
     }
 
     public function startTest(\PHPUnit_Framework_Test $test) {
-        if ($test instanceof TestCase) $this->fire('test.before', new Test($test));
         $this->dispatcher->dispatch('test.start', new \Codeception\Event\Test($test));
     }
 
@@ -56,7 +55,6 @@ class Listener implements \PHPUnit_Framework_TestListener
         if (!in_array(spl_object_hash($test), $this->unsuccessfulTests))
             $this->fire('test.success', new Test($test));
 
-        if ($test instanceof TestCase) $this->fire('test.after', new Test($test, $time));
         $this->dispatcher->dispatch('test.end', new Test($test, $time));
     }
 
