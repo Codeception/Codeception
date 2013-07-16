@@ -1,6 +1,4 @@
 .idea
-tests/log/debug
-tests/log/*
 composer.phar
 vendor
 tests/data/sandbox
