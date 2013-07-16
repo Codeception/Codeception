@@ -549,16 +549,30 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks response code.
+     * Checks response code equals to provided value.
      *
-     * @param $num
+     * @param $code
      */
-    public function seeResponseCodeIs($num)
+    public function seeResponseCodeIs($code)
     {
         if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+            $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
         } else {
-            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+            $this->assertEquals($code, $this->client->getResponse()->getStatus());
+        }
+    }
+
+    /**
+     * Checks that response code is not equal to provided value.
+     *
+     * @param $code
+     */
+    public function dontSeeResponseCodeIs($code)
+    {
+        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
+            $this->assertNotEquals($code, $this->client->getResponse()->getStatusCode());
+        } else {
+            $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
         }
     }
 }
