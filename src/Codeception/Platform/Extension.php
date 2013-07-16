@@ -16,11 +16,13 @@ class Extension implements EventSubscriberInterface {
         $this->config = $config;
         $this->options = $options;
         $this->output = new Output($options['colors']);
+        $this->_reconfigure();
     }
 
-    static function events()
+    static $events = array();
+
+    public function _reconfigure()
     {
-        return array();
     }
 
     protected function write($message)
@@ -42,7 +44,7 @@ class Extension implements EventSubscriberInterface {
 
     static function getSubscribedEvents()
     {
-        return self::events();
+        return static::$events;
     }
 
 }

@@ -32,14 +32,16 @@ EOF;
     protected $methodTemplate = <<<EOF
 
     /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
      %s
      * @see %s::%s()
      * @return \Codeception\Maybe
-     * ! This method is generated. DO NOT EDIT. !
-     * ! Documentation taken from corresponding module !
      */
     public function %s(%s) {
-        \$this->scenario->%s('%s', func_get_args());
+        \$this->scenario->addStep(new \Codeception\Step\%s('%s', func_get_args()));
         if (\$this->scenario->running()) {
             \$result = \$this->scenario->runStep();
             return new Maybe(\$result);
@@ -100,7 +102,7 @@ EOF;
             $docblock = $this->prependAbstractGuyDocBlocks($docblock);
 
             $contents = sprintf($this->template,
-                $namespace ? "namespace $namespace\\Codeception;" : '',
+                $namespace ? "namespace $namespace;" : '',
 	            implode("\n", $docblock),
 	            'class',
                 $settings['class_name'],
@@ -118,22 +120,32 @@ EOF;
     {
         $class = $refMethod->getDeclaringClass();
         $params = $this->getParamsString($refMethod);
+        $module = $class->getName();
 
-        if (0 === strpos($refMethod->name, 'see')) {
-            $type = 'assertion';
-        } elseif (0 === strpos($refMethod->name, 'am')) {
-            $type = 'condition';
-        } else {
-            $type = 'action';
-        }
-
+        $body = '';
         $doc = $this->addDoc($class, $refMethod);
         $doc = str_replace('/**', '', $doc);
         $doc = trim(str_replace('*/','',$doc));
         if (!$doc) $doc = "*";
 
-        $module = $class->getShortName();
-        return sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
+        $conditionalDoc = $doc . "\n    * Conditional Assertion: Test won't be stopped on fail";
+
+        if (0 === strpos($refMethod->name, 'see')) {
+            $type = 'Assertion';
+            $body .= sprintf($this->methodTemplate, $conditionalDoc, $module, $refMethod->name, 'can'.ucfirst($refMethod->name), $params, 'ConditionalAssertion', $refMethod->name);
+
+        } elseif (0 === strpos($refMethod->name, 'dontSee')) {
+            $action = str_replace('dont','cant',$refMethod->name);
+            $body .= sprintf($this->methodTemplate, $conditionalDoc, $module, $refMethod->name, $action, $params, 'ConditionalAssertion', $refMethod->name);
+            $type = 'Assertion';
+        } elseif (0 === strpos($refMethod->name, 'am')) {
+            $type = 'Condition';
+        } else {
+            $type = 'Action';
+        }
+        $body .= sprintf($this->methodTemplate, $doc, $module, $refMethod->name, $refMethod->name, $params, $type, $refMethod->name);
+
+        return $body;
     }
 
     /**

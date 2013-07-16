@@ -32,15 +32,17 @@ class BuildTest extends BaseCommandRunner {
         $this->assertContains('@method void expectTo($prediction)', $this->content);
         
         $this->assertContains('HobbitGuy.php generated successfully.', $this->output);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testBuildNamespacedGuy()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute();
-        $this->assertContains('namespace Shire\Codeception;', $this->content);
+        $this->assertContains('namespace Shire;', $this->content);
         $this->assertContains('class HobbitGuy extends \Codeception\AbstractGuy', $this->content);
         $this->assertContains('public function amInPath($path)', $this->content);
+        $this->assertIsValidPhp($this->content);
     }
 
 }

@@ -114,13 +114,14 @@ class MinkJS extends Mink
             $nodes = @$this->session->getPage()->findAll('xpath', $selector);
         }
 
-		$values = '';
+		$values = array();
 		foreach ($nodes as $node) {
             if (!$this->session->getDriver()->isVisible($node->getXpath())) continue;
 
-            $values .= '<!-- Merged Output -->'.$node->getText();
+            $values []= $node->getText();
         }
-		return array('contains', $this->escape($text), $values, "'$selector' selector For more details look for page snapshot in the log directory");
+        $values = implode("-->\n",$values);
+        return array($text, $values, "'$selector' selector.");
     }
 
     /**

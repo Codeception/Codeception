@@ -95,13 +95,13 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
     public function dontSee($text, $selector = null) {
         $res = $this->proceedSee($text, $selector);
-        $this->assertNot($res);
+        call_user_func_array(array($this, 'assertPageNotContains'), $res);
     }
 
 
     public function see($text, $selector = null) {
         $res = $this->proceedSee($text, $selector);
-        $this->assert($res);
+        call_user_func_array(array($this, 'assertPageContains'), $res);
     }
 
     protected function proceedSee($text, $selector = null) {
@@ -117,18 +117,18 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             }
             if (empty($nodes)) throw new ElementNotFound($selector, 'CSS or XPath');
             
-		    $values = '';
+		    $values = array();
+
 		    foreach ($nodes as $node) {
-		        $values .= '<!-- Merged Output -->'.$node->getText();
+		        $values [] = $node->getText();
 		    }
-			return array('pageContains', $this->escape($text), $values, "'$selector' selector.");
+            $values = implode("-->\n",$values);
+			return array($text, $values, "'$selector' selector.");
         }
 
         $response = $this->session->getPage()->getText();
 
-        $output = Framework::formatResponse($response);
-
-        return array('pageContains', $this->escape($text), $response, "'$text' in ".$output.'.');
+        return array($text, $response);
     }
 
 
@@ -487,8 +487,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $this->fail("Element '$field' not found");
     }
 
-    public function grabAttribute() {
+    protected function assertPageContains($needle, $haystack, $message = '')
+    {
+        $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
+        $this->assertThat($haystack, $constraint, $message);
+    }
 
+    protected function assertPageNotContains($needle, $haystack, $message = '')
+    {
+        $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
+        $this->assertThatItsNot($haystack, $constraint,$message);
     }
 
     protected function escape($string)
