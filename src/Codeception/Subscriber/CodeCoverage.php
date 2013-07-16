@@ -149,7 +149,7 @@ class CodeCoverage implements EventSubscriberInterface
     protected function printPHP()
     {
         $writer = new \PHP_CodeCoverage_Report_PHP;
-        $writer->process($this->coverage, Configuration::logDir() . 'coverage.serialize');
+        $writer->process($this->coverage, Configuration::logDir() . 'coverage.serialized');
     }
 
     protected function applySettings($settings)
