@@ -448,11 +448,11 @@ class CliGuy extends \Codeception\AbstractGuy
      * Executes a shell command
      *
      * @param $command
-     * @see Codeception\Module\Cli::runShellCommmand()
+     * @see Codeception\Module\Cli::runShellCommand()
      * @return \Codeception\Maybe
      */
-    public function runShellCommmand($command) {
-        $this->scenario->addStep(new \Codeception\Step\Action('runShellCommmand', func_get_args()));
+    public function runShellCommand($command) {
+        $this->scenario->addStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

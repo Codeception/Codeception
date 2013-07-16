@@ -16,6 +16,7 @@ class CodeCoverage implements EventSubscriberInterface
      */
     protected $coverage = null;
     protected $options = array();
+    protected $log_dir = null;
 
     protected $enabled = null;
     protected $remote = null;
@@ -29,6 +30,7 @@ class CodeCoverage implements EventSubscriberInterface
     {
         $this->options = $options;
         $this->coverage = new \PHP_CodeCoverage();
+        $this->log_dir = Configuration::logDir();
     }
 
     /**
@@ -136,14 +138,13 @@ class CodeCoverage implements EventSubscriberInterface
             )
         );
 
-        @mkdir(Configuration::logDir() . 'coverage');
-        $writer->process($this->coverage, Configuration::logDir() . 'coverage');
+        $writer->process($this->coverage, $this->log_dir . 'coverage');
     }
 
     protected function printXml()
     {
         $writer = new \PHP_CodeCoverage_Report_Clover;
-        $writer->process($this->coverage, Configuration::logDir() . 'coverage.xml');
+        $writer->process($this->coverage, $this->log_dir . 'coverage.xml');
     }
 
     protected function printPHP()

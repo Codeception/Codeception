@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  * ## Config
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+ * * environment: 'local' - environment used for load kernel
 * 
  * ### Example (`functional.suite.yml`)
  *
@@ -28,7 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
  *        enabled: [Symfony2]
  *        config:
  *           Symfony2:
- *              app_path: 'app/front' 
+ *              app_path: 'app/front'
+ *              environment: 'local_test'
  *
  * ## Public Properties
  *
@@ -49,7 +51,8 @@ class Symfony2 extends \Codeception\Util\Framework
      */
     public $container;
 
-    public $config = array('app_path' => 'app');
+    public $config = array('app_path' => 'app', 'environment' => 'test');
+    
     /**
      * @var
      */
@@ -59,11 +62,11 @@ class Symfony2 extends \Codeception\Util\Framework
 
 
     public function _initialize() {
-        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'].DIRECTORY_SEPARATOR.'bootstrap.php.cache';
-        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__,'Symfony2 bootstrap file not found in '.$cache);
+        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        $this->kernel = new $this->kernelClass('test', true);
+        $this->kernel = new $this->kernelClass($this->config['environment'], true);
     }
     
     public function _before(\Codeception\TestCase $test) {
@@ -95,7 +98,7 @@ class Symfony2 extends \Codeception\Util\Framework
         $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequire(__CLASS__,'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_dir" parameter.');
+            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_dir" parameter.');
         }
 
         $file = current($results);
@@ -105,18 +108,6 @@ class Symfony2 extends \Codeception\Util\Framework
 
         return $class;
     }
-
-    /**
-     * Authenticates user for HTTP_AUTH 
-     *
-     * @param $username
-     * @param $password
-     */
-    public function amHttpAuthenticated($username, $password) {
-        $this->client->setServerParameter('PHP_AUTH_USER', $username);
-        $this->client->setServerParameter('PHP_AUTH_PW', $password);
-    }
-
 
     /**
      * Checks if any email were sent by last request
@@ -149,8 +140,6 @@ class Symfony2 extends \Codeception\Util\Framework
         return $this->kernel->getContainer()->get($service);
     }
 
-
-
     /**
      * @return \Symfony\Component\HttpKernel\Profiler\Profile
      */
@@ -167,17 +156,17 @@ class Symfony2 extends \Codeception\Util\Framework
         if ($profile = $this->getProfiler()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
-                    $this->debugSection('User', $profile->getCollector('security')->getUser().' ['.implode(',', $profile->getCollector('security')->getRoles()).']');
+                    $this->debugSection('User', $profile->getCollector('security')->getUser() . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']');
                 } else {
                     $this->debugSection('User', 'Anonymous');
                 }
             }
             if ($profile->hasCollector('swiftmailer')) {
                 $messages = $profile->getCollector('swiftmailer')->getMessageCount();
-                if ($messages) $this->debugSection('Emails',$messages .' sent');
+                if ($messages) $this->debugSection('Emails', $messages . ' sent');
             }
             if ($profile->hasCollector('timer'))    $this->debugSection('Time', $profile->getCollector('timer')->getTime());
-            if ($profile->hasCollector('db'))       $this->debugSection('Db', $profile->getCollector('db')->getQueryCount().' queries');
+            if ($profile->hasCollector('db'))       $this->debugSection('Db', $profile->getCollector('db')->getQueryCount() . ' queries');
         }
     }
 }

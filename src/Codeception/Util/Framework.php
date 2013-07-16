@@ -6,7 +6,7 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\PHPUnit\Constraint\CrawlerNot;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
-use \Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Abstract module for PHP frameworks connected via Symfony BrowserKit components
@@ -44,6 +44,12 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     }
 
+    /**
+     * Authenticates user for HTTP_AUTH 
+     *
+     * @param $username
+     * @param $password
+     */
     public function amHttpAuthenticated($username, $password)
     {
         $this->client->setServerParameter('PHP_AUTH_USER', $username);
@@ -64,7 +70,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             $this->crawler = $this->match($context);
         }
 
-        $anchor = $this->crawler->filterXPath('.//a[.='.$literal.']');
+        $anchor = $this->crawler->filterXPath('.//a[.=' . $literal . ']');
         if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
