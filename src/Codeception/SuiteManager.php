@@ -2,6 +2,8 @@
 
 namespace Codeception;
 
+use Codeception\Event\Suite;
+use Codeception\Event\SuiteTests;
 use Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -105,8 +107,15 @@ class SuiteManager {
         $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
+
+            $guy = $this->settings['namespace']
+                ? $this->settings['namespace'] . '\\Codeception\\' . $this->settings['class_name']
+                : $this->settings['class_name'];
+
             $unit = new $testClass;
             $reflected = new \ReflectionClass($testClass);
+            if (preg_match('/@guy(?:[ \t]+(?P<guy>.*?))?[ \t]*\r?$/m', $reflected->getDocComment(), $annotations));
+            if (isset($annotations['guy'])) $guy = $annotations['guy'];
             $cestSuite = new \PHPUnit_Framework_TestSuite($testClass.' ');
             $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
 
@@ -114,7 +123,7 @@ class SuiteManager {
                 if ($method->isConstructor()) return;
                 if ($method->isDestructor()) return;
 
-                $test = $this->createTestFromCestMethod($unit, $method->name, $file);
+                $test = $this->createTestFromCestMethod($unit, $method->name, $file, $guy);
 
                 if (!$test) continue;
                 $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
@@ -152,7 +161,7 @@ class SuiteManager {
     public function loadTests()
     {
         $finder = Finder::create()->files()->sortByName()->in($this->path);
-        if (!empty($this->settings['includes'])) $finder->append($this->settings['includes']);
+
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
@@ -199,14 +208,10 @@ class SuiteManager {
         return $test;
     }
 
-    protected function createTestFromCestMethod($cestInstance, $methodName, $file)
+    protected function createTestFromCestMethod($cestInstance, $methodName, $file, $guy)
     {
         $testClass = get_class($cestInstance);
         if (strpos($methodName, '_') === 0) return;
-
-        $guy = $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\Codeception\\' . $this->settings['class_name']
-            : $this->settings['class_name'];
 
         $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(

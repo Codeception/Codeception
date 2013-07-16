@@ -63,26 +63,6 @@ class Scenario {
 	    $this->feature = $feature;
 	}
 
-    public function condition($action, $arguments)
-    {
-        return $this->addStep(new \Codeception\Step\Condition($action, $arguments));
-    }
-
-    public function action($action, $arguments)
-    {
-        return $this->addStep(new \Codeception\Step\Action($action, $arguments));
-    }
-
-    public function assertion($action, $arguments)
-    {
-        return $this->addStep(new \Codeception\Step\Assertion($action, $arguments));
-    }
-
-    public function executor(\Closure $callable)
-    {
-        return $this->addStep(new \Codeception\Step\Executor($callable, array()));
-    }
-
     public function skip($reason = "")
     {
         $this->blocker = new \Codeception\Step\Skip($reason, array());
@@ -119,7 +99,7 @@ class Scenario {
         return end($this->steps);
     }
 
-    protected function addStep(\Codeception\Step $step)
+    public function addStep(\Codeception\Step $step)
     {
         $this->steps[] = $step;
         return $this->test;

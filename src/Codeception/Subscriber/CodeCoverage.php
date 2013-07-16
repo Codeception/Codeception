@@ -112,6 +112,7 @@ class CodeCoverage implements EventSubscriberInterface
     {
         if ($this->options['steps']) return;
         $this->printText($e->getPrinter());
+        $this->printPHP();
         if ($this->options['html']) $this->printHtml();
         if ($this->options['xml']) $this->printXml();
     }
@@ -143,6 +144,12 @@ class CodeCoverage implements EventSubscriberInterface
     {
         $writer = new \PHP_CodeCoverage_Report_Clover;
         $writer->process($this->coverage, Configuration::logDir() . 'coverage.xml');
+    }
+
+    protected function printPHP()
+    {
+        $writer = new \PHP_CodeCoverage_Report_PHP;
+        $writer->process($this->coverage, Configuration::logDir() . 'coverage.serialized');
     }
 
     protected function applySettings($settings)

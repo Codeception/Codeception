@@ -56,7 +56,6 @@ class RefactorAddNamespace extends Base {
         $this->updateHelpers();
         $output->writeln("+ Helpers updated with namespace {$this->namespace}\\Codeception\\Module)");
 
-
         $counter = $this->updateCepts();
         $output->writeln("+ Cept tests updated (total $counter files changed)");
         $output->writeln("\nNamespace {$this->namespace} injected to current tests");
@@ -95,7 +94,7 @@ class RefactorAddNamespace extends Base {
         foreach ($suites as $suite) {
             $settings = \Codeception\Configuration::suiteSettings($suite, $config);
             $cepts = Finder::create()->files()->name('*Cept.php')->in($settings['path']);
-            $prepend_line = "use {$this->namespace}\\Codeception\\{$settings['class_name']};\n\n";
+            $prepend_line = "use {$this->namespace}\\{$settings['class_name']};\n\n";
             foreach ($cepts as $cept) {
                 $cept_body = file_get_contents($cept);
                 $cept_body = str_replace('<?php', '<?php '.$prepend_line,$cept_body);

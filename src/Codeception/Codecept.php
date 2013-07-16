@@ -2,13 +2,14 @@
 namespace Codeception;
 
 use Codeception\Configuration;
-use \Symfony\Component\Yaml\Yaml;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.6.3.1";
+    const VERSION = "1.6.4-dev";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -47,7 +48,7 @@ class Codecept
         'tap' => false,
         'report' => false,
         'colors' => false,
-        'log' => true,
+        'log' => false,
         'coverage' => false,
 	    'defer-flush' => false,
         'groups' => null,
@@ -75,7 +76,9 @@ class Codecept
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
-                $options[$option] = isset($this->config['settings'][$option]) ? $this->config['settings'][$option] : $this->options[$option];
+                $options[$option] = isset($this->config['settings'][$option])
+                    ? $this->config['settings'][$option]
+                    : $this->options[$option];
             }
         }
         if ($options['no-colors']) $options['colors'] = false;
@@ -92,15 +95,24 @@ class Codecept
     }
 
     public function registerSubscribers() {
+        // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
-        $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
-        $this->dispatcher->addSubscriber(new Subscriber\Logger());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
 
+        // optional
+        if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
             $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+        }
+
+        // custom event listeners
+        foreach ($this->config['extensions'] as $subscriber) {
+            if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
+            if ($subscriber instanceof EventSubscriberInterface) throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
+            $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
         }
     }
 

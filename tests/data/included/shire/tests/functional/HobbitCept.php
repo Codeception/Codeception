@@ -1,4 +1,4 @@
-<?php use Shire\Codeception\TestGuy;
+<?php use Shire\TestGuy;
 
 $I = new TestGuy($scenario);
 $I->wantTo('check that hobbits can add numbers');

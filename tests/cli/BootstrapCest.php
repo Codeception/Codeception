@@ -27,7 +27,7 @@ class BootstrapCest
         $I->seeInThisFile('namespace Generated\Codeception\Module;');
 
         $I->seeFileFound('WebGuy.php');
-        $I->seeInThisFile('namespace Generated\Codeception;');
+        $I->seeInThisFile('namespace Generated;');
     }
     
     protected function checkFilesCreated(\CliGuy $I)
