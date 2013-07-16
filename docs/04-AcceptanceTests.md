@@ -262,23 +262,29 @@ $I->see('Form is filled incorrectly');
 ## Selenium
 
 A nice feature of Codeception is that most scenarios can be easily ported between the testing backends.
-Your PhpBrowser tests we wrote previously can be performed by Selenium. The only thing we need to change is to reconfigure and rebuild the WebGuy class, to use Selenium instead of PhpBrowser.
+Your PhpBrowser tests we wrote previously can be performed by Selenium. The only thing we need to change is to reconfigure and rebuild the WebGuy class, to use Selenium2 instead of PhpBrowser.
+
+Modify your ```acceptance.suite.yml``` file...
 
 ```yaml
 class_name: WebGuy
 modules:
     enabled:
-        - Selenium
+        - Selenium2
         - WebHelper
     config:
-        Selenium:
+        Selenium2:
             url: 'http://localhost/myapp/'
             browser: firefox            
 ```
 
+After making changes to this file, you will often need to 'rebuild' the Codeception base classes.  You do this by running `codecept build` on the command line.
+
 Remember, running tests with PhpBrowser and Selenium is quite different. There are some actions which do not exist in both modules, like the `submitForm` action we reviewed before. 
 
 In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/) and get it running. 
+
+_Note: Selenium Server 2.33 is NOT compatible with Firefox 22.  You will need to remain with Firefox 21 until Selenium Server 2.34 is released._
 
 If you run acceptance tests with Selenium, Firefox will be started and all actions will be performed step by step. 
 The commands we use for Selenium are mostly like those we have for PHPBrowser. Nevertheless, their behavior may be slightly different.
@@ -294,7 +300,7 @@ $I->see('Confirm','#modal');
 ?>
 ```
 
-See the Selenium module documentation for the full reference.
+See Codeception's Selenium module documentation for the full reference.
 
 ### Cleaning things up
 

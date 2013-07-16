@@ -3,10 +3,10 @@
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
-namespace Jazz;
+namespace Jazz\Pianist;
 use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
-use Jazz\Codeception\Module\TestHelper;
+use Jazz\Pianist\Codeception\Module\TestHelper;
 
 /**
  * Inherited methods
@@ -446,7 +446,7 @@ class TestGuy extends \Codeception\AbstractGuy
      *
      *
     * Conditional Assertion: Test won't be stopped on fail
-     * @see Jazz\Codeception\Module\TestHelper::seeEquals()
+     * @see Jazz\Pianist\Codeception\Module\TestHelper::seeEquals()
      * @return \Codeception\Maybe
      */
     public function canSeeEquals($expected, $actual) {
@@ -463,7 +463,7 @@ class TestGuy extends \Codeception\AbstractGuy
      * ----------------------------------------------
      *
      *
-     * @see Jazz\Codeception\Module\TestHelper::seeEquals()
+     * @see Jazz\Pianist\Codeception\Module\TestHelper::seeEquals()
      * @return \Codeception\Maybe
      */
     public function seeEquals($expected, $actual) {

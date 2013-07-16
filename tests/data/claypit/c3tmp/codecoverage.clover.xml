@@ -1508,7 +1508,7 @@
         <line num="19" type="stmt" count="0"/>
         <line num="20" type="stmt" count="0"/>
         <line num="21" type="stmt" count="0"/>
-        <line num="28" type="method" name="runShellCommmand" crap="12" count="0"/>
+        <line num="28" type="method" name="runShellCommand" crap="12" count="0"/>
         <line num="29" type="stmt" count="0"/>
         <line num="30" type="stmt" count="0"/>
         <line num="31" type="stmt" count="0"/>

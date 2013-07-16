@@ -1,4 +1,4 @@
-namespace: Shire 
+namespace: Jazz\Pianist
 paths:
     tests: tests
     log: tests/_log

@@ -39,7 +39,7 @@ class SuiteManager {
         $this->path = $settings['path'];
 
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
-        if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
+        if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
 
@@ -62,7 +62,7 @@ class SuiteManager {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class not found");
         $suite = new $suiteClass;
-        if ($this->settings['namespace']) $name = $this->settings['namespace'].".$name";
+        if ($this->settings['namespace']) $name = $this->settings['namespace'] . ".$name";
         $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
         return $suite;
