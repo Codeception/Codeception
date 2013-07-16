@@ -72,7 +72,6 @@ class Cept extends \Codeception\TestCase
             require $this->testfile;
         } catch (\Exception $e) {
             // fails and errors are now handled by Codeception\PHPUnit\Listener
-            $this->fire('test.after', new TestEvent($this));
             throw $e;
         }
         $this->fire('test.after', new TestEvent($this));

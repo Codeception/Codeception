@@ -1,6 +1,11 @@
 <?php
+
 class RunCest
 {
+    public function _before(\Codeception\Event\Test $t)
+    {
+        if (floatval(phpversion()) == '5.3') $t->getTest()->getScenario()->skip();
+    }
 
     public function runOneFile(\CliGuy $I)
     {

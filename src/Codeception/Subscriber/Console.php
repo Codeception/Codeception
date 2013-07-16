@@ -27,18 +27,20 @@ class Console implements EventSubscriberInterface
     public function startTest(\Codeception\Event\Test $e)
     {
         $test = $e->getTest();
-        if ($test->getFeature()) {
-            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
-        } else {
-            $this->output->put("Running {$test->getFileName()}");
-        }
-        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
-
+        if ($test instanceof \Codeception\TestCase) return;
+        $this->output->put("Running [[{$test->toString()}]]");
     }
 
     // triggered for scenario based tests: cept, cest
     public function before(\Codeception\Event\Test $e)
     {
+        $test = $e->getTest();
+        if ($test->getFeature()) {
+            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+        } else {
+            $this->output->put("Running [[{$test->getFileName()}]]");
+        }
+        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
 
     public function afterTest(\Codeception\Event\Test $e)
