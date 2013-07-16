@@ -28,6 +28,8 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
         $this->module->seeResponseContainsJson(array('name' => 'davert'));
+        $this->module->seeResponseCodeIs(200);
+        $this->module->dontSeeResponseCodeIs(404);
     }
 
     public function testPost() {
