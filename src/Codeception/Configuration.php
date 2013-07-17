@@ -24,7 +24,10 @@ class Configuration
         'include' => array(),
         'paths' => array(),
         'modules' => array(),
-        'extensions' => array(),
+        'extensions' => array(
+            'enabled' => array(),
+            'config' => array(),
+        ),
         'settings' => array(
             'colors' => false,
             'log' => false,
