@@ -8,7 +8,8 @@ settings:
     colors: false
     silent: true
     log: false
-extensions: [MyOutputFormatter]
+extensions:
+    enabled: [MyOutputFormatter]
 modules:
     config:
         Db:
