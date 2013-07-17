@@ -203,12 +203,46 @@ TestCommons::logMeIn($I);
 ?>
 ``` 
 
-You should get the idea by now. Codeception doesn't provide any particular strategy for you to manage the tests. But it is flexible enough to create all the support classes you need for your test suites. The same way, with custom classes you can implement `PageObject` and `StepObject` patterns.
+If you git the idea, let's learn of built-in features for structuring your test code.
+We will discover PageObject and StepObject patterns implementation in Codeception.
 
-## PageObject and StepObjects
+## PageObjects
+
+[PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects) is widely used by test automation engineers. The Page Object pattern represents a web page as a class and the DOM elements on that page as properties, and some basic interactions as a methods.
+PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests, but rather move them into PageObject classes.
+
+Codeception can generate a pageobject class for you with command:
+
+```
+php codecept.phar generate:pageobject Login
+```
+
+This will create a `LoginPage` class in `tests/_pages`. The basic pageobject is nothing more then empty class with a few stubs.
+It is expected you will get it populated with UI locators of a page its represent and then those locators will be used on a page.
+Locators are represented with public static properties:
+
+``` php
+<?php
+class LoginPage
+{
+    const URL = '/login';
+
+    static $usernameField = '#mainForm input[name=username]';
+    static $passwordField = '#mainForm input[name=password]';
+    static $loginButton = "#mainForm input[type=submit]";
+
+}
+?>
+```
+
+
+
+# StepObjects
 
 In next versions Codeception will provide PageObjects and StepObjects out of the box. 
 But today we encourage you to try your own implementations. Whe have some nice blogpost for you to learn what are PageObjects, why you ever want to use them and how they can be implemented.
+
+
 
 * [Ruling the Swarm (of Tests)](http://phpmaster.com/ruling-the-swarm-of-tests-with-codeception/) by Michael Bodnarchuk.
 * [Implementing Page Objects in Codeception](http://jonstuff.blogspot.ca/2013/05/implementing-page-objects-in.html) by Jon Phipps.

@@ -263,3 +263,20 @@ class AdminGroup extends \Codeception\Platform\Group
 }
 ?>
 ```
+
+A group class can be created with `php codecept.phar generate:group groupname` command.
+Group class will be stored in `tests/_groups` directory.
+
+A group class should just the same manner you can enable extension class. In file `codeception.yml`:
+
+``` yaml
+extensions:
+    enabled: [AdminGroup]    
+```
+
+Now Admin group class will listen to all events of tests that belong to the `admin` group.
+
+## Conclusion
+
+Each mentioned feature above may dramaticly help when using Codeception to automate large projects. 
+Each of feature requires advanced knowledge of PHP. There is no "best practice" or "use cases" when we talk about groups, extensions, or other power features of Codeception. If you see you have a problem that can be solved using this extensions, then give them a try. 
