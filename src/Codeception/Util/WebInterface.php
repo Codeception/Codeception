@@ -321,6 +321,14 @@ interface WebInterface
      * ?>
      * ```
      *
+     * Can select multiple options if second argument is array:
+     *
+     * ``` php
+     * <?php
+     * $I->selectOption('Which OS do you use?', array('Windows','Linux'));
+     * ?>
+     * ```
+     *
      * @param $select
      * @param $option
      */
