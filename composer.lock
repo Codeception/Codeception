@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "43e4171f65d2fb22bd706308530833f3",
+    "hash": "91f94955f6ccd3479a6efa85a2617638",
     "packages": [
         {
             "name": "alexandresalome/php-selenium",
