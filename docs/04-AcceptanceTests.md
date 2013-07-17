@@ -209,7 +209,7 @@ $I->dontSee('Form is filled incorrectly');
 
 We also have other useful commands to perform checks. Please note that they all start with the `see` prefix.
 
-```php
+``` php
 <?php
 $I->seeInCurrentUrl('/user/miles');
 $I->seeCheckboxIsChecked('#agree');
@@ -217,6 +217,22 @@ $I->seeInField('user[name]','Miles');
 $I->seeLink('Login');
 ?>
 ```
+
+#### Conditional Assertions
+
+* new in 1.6.4 *
+
+Sometimes you don't want the test to be stopped when assertion fails. Maybe you have a long-running test and you want it to run to the end. In this case you can use conditional assertions. Each `see` method has corresponding `canSee` method, and `dontSee` has `cantSee` analog. 
+
+``` php
+<?php
+$I->canSeeInCurrentUrl('/user/miles');
+$I->canSeeCheckboxIsChecked('#agree');
+$I->cantSeeInField('user[name]','Miles');
+?>
+```
+
+Each failed assertion will be shown in test results. Still failed assertion won't stop the test execution.
 
 #### Grabbers
 

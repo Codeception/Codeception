@@ -6,31 +6,6 @@ This chapter summarizes all of the notices on clean ups from previous chapters a
 
 When we choose to clean up a database, we should make this cleaning as fast as possible. Tests should always run fast. Rebuilding the database from scratch is not the best way, but might be the only one. In any case, you should use a special test database for testing. Do not ever test on a development or production database!
 
-## Manual Cleanup
-
-You could possibly create records at the beginning of test and delete them afterwards. This is cool option if you don't have shared data between tests.
-But you shouldn't put any code into your test file. Because test files are parsed two times: for analysis and execution, this may lead to unpredictable results. So, you should specify when do you want your code to be executed. It's a good idea to create data before the analysis and remove data after the test is finished. Use the special methods `running()` and `preload()` of `$scenario` object to determine the current object state.
-
-``` php
-<?php
-if ($scenario->preload()) {
-    $user = new User();
-    $user->name('davert');
-    $user->save();
-}
-
-$I = new WebGuy($scenario);
-$I->amOnPage('/admin/users');
-$I->see('User: '. $user->name);
-
-if ($scenario->running()) {
-    $user->delete();
-}
-?>
-```
-
-Similarly you can insert any code before into your test. But please explicitly set the stage when you need it to be included, or the code will be executed twice!
-
 ## Automatic Cleanup
 
 Codeception has a Db module, which takes on most of the tasks of database interaction. By default it will try to repopulate the database from a dump and clean it up after each test. This module expects a database dump in SQL format. It's already prepared for configuration in codeception.yml
@@ -52,26 +27,6 @@ The Db module is a rough tool. It works for any type of database supported by PD
 ## Separate connections
 
 In acceptance tests, your test is interacting with the application through a web server. There is no way to receive a database connection from the web server. This means that the test and the application will work with the same database but on different connections. Provide in the Db module the same credentials that your application uses, and then you can access the database for assertions (`seeInDatabase` actions) and perform automatic cleanups.
-
-### Speedup with SQLite
-
-To speed up testing, we recommend that you try using SQLite in your application, converting your database dump to SQLite format. Use one of the [provided tools](http://www.sqlite.org/cvstrac/wiki?p=ConverterTools).
-
-Keep in mind that columns in SQLite are case-sensitive, so it's important to set `COLLATE NOCASE` for each text and varchar column.
-
-Store the SQLite test database in the __tests/_data__ directory, and point the Db module to it too:
-
-```yaml
-modules:
-    config:
-        Db:
-            dsn: 'sqlite:tests/_data/application.db'
-            user: 'root'
-            password:
-            dump: tests/_data/sqlite_dump.sql
-```
-
-Before the test suite is started, the SQLite database is created and copied. After each test, the copy replaces the database and a reconnection is done. 
 
 ## Shared connections
 
@@ -145,76 +100,23 @@ All variables from the bootstrap file are passed to the _Cept_ files of the test
 
 You can use the [Faker](https://github.com/fzaninotto/Faker) library to create tested data within a bootstrap file.
 
-#### Fixtures for Unit Tests.
+### Per Test Fixtures
 
-Passing fixtures to _Cest_ files is a bit harder, since you can't pass a variable into the class. So a special registry class `Fixtures` is used.
+* New in 1.6.2 *
 
-Fixture definition in __bootstrap.php_ for a unit test suite.
+If you want to create special database record for one test, you can use [`haveInDatabase`](http://codeception.com/docs/modules/Db#haveInDatabase) method of `Db` module.
 
-```php
-<?php
-use \Codeception\Util\Fixtures as Fixtures;
-Fixtures::add('davert', Doctrine::getTable('User')->findOneBy('name', 'davert'));
+``` php
+<?php 
+$I = new TestGuy($scenario);
+$I->haveInDatabase('posts', array('title' => 'Top 10 Testing Frameworks', 'body' => '1. Codeception'));
+$I->amOnPage('/posts');
+$I->see('Top 10 Testing Frameworks');
 ?>
 ```
 
-In a sample unit test:
-
-```php
-<?php
-$I->execute(function () {
-    $user = Fixtures::get('davert');
-    return $user->getName();        
-});
-$I->seeResultEquals('davert');
-?>
-```
-
-The Fixtures class stores and retrieves any variable by key. You can extend it by adding namespaces.
-
-In __bootstrap.yml_
-
-```php
-<?php
-use \Codeception\Util\Fixtures as Fixtures;
-
-class MyFixtures extends Fixtures {
-    public static function add($namespace, $key, $value) {
-        parent::add("$namespace.$key", $value);
-    }    
-    public static function get($namespace, $key) {
-        return parent::get("$namespace.$key");
-    }
-
-    public static function getUser($key)
-    {
-        return parent::get("user.$key");
-    }
-};
-
-MyFixtures::add('user', 'davert', Doctrine::getTable('User')->findOneBy('name', 'davert'));
-
-?>
-```
-
-
-In a test:
-
-```php
-<?php
-$I->execute(function () {
-    $user = Fixtures::get('user','davert');
-    // or
-    $user = Fixtures::getUser('davert');
-    return $user->getName();        
-});
-$I->seeResultEquals('davert');
-?>
-```
-
-Using fixtures simplifies your testing code. Name your fixtures wisely and your tests will gain in readability.
+`haveInDatabase` method does nothing then inserts into database a row with provided values. A record that was added will be deleted in the end of a test. In `MongoDB` module we have similar [`haveInCollection`](http://codeception.com/docs/modules/MongoDb#haveInCollection) method.
 
 ## Conclusion
 
-Codeception is not abandoning the developer when dealing with data. Tools for database population and cleanups are bundled within the Db module.
-To manipulate sample data in a test, use fixtures that can be defined within the bootstrap file.
+Codeception is not abandoning the developer when dealing with data. Tools for database population and cleanups are bundled within the Db module. To manipulate sample data in a test, use fixtures that can be defined within the bootstrap file.
