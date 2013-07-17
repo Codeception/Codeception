@@ -13,7 +13,9 @@ class Extension implements EventSubscriberInterface {
 
     function __construct($config, $options)
     {
-        $this->config = $config;
+        if (isset($config['extensions']['config'][get_class($this)]))
+            $this->config = $config['extensions']['config'][get_class($this)];
+
         $this->options = $options;
         $this->output = new Output($options['colors']);
         $this->_reconfigure();
