@@ -49,7 +49,8 @@ class Autoload {
 
     public static function load($class)
     {
-        foreach (self::$map as $record) {
+        $map = array_reverse(self::$map);
+        foreach ($map as $record) {
             list($regex, $path) = $record;
             if (!preg_match($regex, $class)) continue;
             $className = str_replace('\\', '', substr($class, (int)strrpos($class, '\\')));
@@ -70,7 +71,9 @@ class Autoload {
     protected static function regex($namespace, $suffix)
     {
         $namespace = str_replace("\\",'\\\\', $namespace);
-        if ($namespace) return sprintf('~\\\\%s\\\\\w*?%s$~', $namespace, $suffix);
+        if ($namespace) {
+            return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        }
         return sprintf('~\w*?%s$~', $suffix);
     }
 }
