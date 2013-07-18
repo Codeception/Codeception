@@ -24,11 +24,11 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 ### Example
 
-    modules: 
+    modules:
        enabled: [REST]
        config:
           REST:
-             url: 'http://serviceapp/api/v1/' 
+             url: 'http://serviceapp/api/v1/'
              timeout: 90
 
 ## Public Properties
@@ -60,10 +60,28 @@ Adds HTTP authentication via username/password.
  * param $password
 
 
+### dontSeeHttpHeader
+
+
+Checks over the given HTTP header and (optionally)
+its value, asserting that are not there
+
+ * param $name
+ * param $value
+
+
+### dontSeeResponseCodeIs
+
+
+Checks that response code is not equal to provided value.
+
+ * param $code
+
+
 ### dontSeeResponseContains
 
 
-Checks weather last response do not contain text.
+Checks whether last response do not contain text.
 
  * param $text
 
@@ -99,6 +117,17 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
  * author tiger.seo@gmail.com
 
 
+### grabHttpHeader
+
+
+Returns the value of the specified header name
+
+ * param $name
+ * param Boolean $first  Whether to return the first value or all header values
+
+ * return string|array The first header value if $first is true, an array of values otherwise
+
+
 ### grabResponse
 
 
@@ -126,18 +155,28 @@ Sets HTTP header
  * param $value
 
 
+### seeHttpHeader
+
+
+Checks over the given HTTP header and (optionally)
+its value, asserting that are there
+
+ * param $name
+ * param $value
+
+
 ### seeResponseCodeIs
 
 
-Checks response code.
+Checks response code equals to provided value.
 
- * param $num
+ * param $code
 
 
 ### seeResponseContains
 
 
-Checks weather the last response contains text.
+Checks whether the last response contains text.
 
  * param $text
 
@@ -145,7 +184,7 @@ Checks weather the last response contains text.
 ### seeResponseContainsJson
 
 
-Checks weather the last JSON response contains provided array.
+Checks whether the last JSON response contains provided array.
 The response is converted to array with json_decode($response, true)
 Thus, JSON is represented by associative array.
 This method matches that response array contains provided array.
@@ -179,7 +218,7 @@ Checks if response is exactly the same as provided.
 ### seeResponseIsJson
 
 
-Checks weather last response was valid JSON.
+Checks whether last response was valid JSON.
 This is done with json_last_error function.
 
 
