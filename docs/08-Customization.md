@@ -1,3 +1,5 @@
+# Customization
+
 In this chapter we will explain how can you extend and customize file structure and test execution routine.
 
 ## One Runner for Multiple Applications
