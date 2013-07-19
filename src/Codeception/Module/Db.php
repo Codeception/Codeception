@@ -214,7 +214,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 
         $sth = $this->driver->getDbh()->prepare($query);
         if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
-	
+
 	    $i = 1;
         foreach ($data as $val) {
             $sth->bindValue($i, $val);
@@ -222,7 +222,12 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         }
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
-        $this->insertedIds[] = array('table' => $table, 'id' => $this->driver->getDbh()->lastInsertId());
+
+        $lastInsertId = $this->driver->getDbh()->lastInsertId();
+
+        $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
+
+        return $lastInsertId;
     }
 
     public function seeInDatabase($table, $criteria = array())
