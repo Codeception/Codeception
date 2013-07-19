@@ -1,4 +1,8 @@
 {
+    "name":"codeception/codeception",
+    "description":"BDD-style testing framework",
+    "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
+    "homepage":"http://codeception.com/",
     "type":"library",
     "license":"MIT",
     "authors":[

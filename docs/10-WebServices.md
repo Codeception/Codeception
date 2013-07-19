@@ -72,7 +72,7 @@ The same way you can receive request parameters and headers.
 
 ## SOAP
 
-SOAP web services are often more complex. You will need PHP [configured with SOAP support](http://php.net/manual/en/soap.installation.php). Good knowledge of XML is required too. SOAP module uses specially formatted POST request to connect to WSDL web services. Codeception uses PhpBrowser of one of framework modules to perform this interaction. If you choose using one of framework modules, SOAP module will automatically connect to the framework, and you can improve speed of test execution and get more detailed stack traces in output.
+SOAP web services are often more complex. You will need PHP [configured with SOAP support](http://php.net/manual/en/soap.installation.php). Good knowledge of XML is required too. SOAP module uses specially formatted POST request to connect to WSDL web services. Codeception uses PhpBrowser or one of framework modules to perform interaction. If you choose using a framework module, SOAP automatically connect to the underliying framework. That may improve the speed of a test execution and will provide you with more detailed stack traces.
 
 Let's configure SOAP module to be used with PhpBrowser:
 
@@ -153,7 +153,7 @@ $I->seeSoapResponseIncludes(Soap::response()
 );
 ?>
 ```
-It's up to you to decide weather to use XmlBuilder or string XMLs. XmlBuilder will return XML string as well.
+It's up to you to decide whether to use XmlBuilder or string XMLs. XmlBuilder will return XML string as well.
 
 You may extend current functionality by using SOAP module in your helper class. To access the SOAP response as `\DOMDocument` you can use `response` property of SOAP module.
 
