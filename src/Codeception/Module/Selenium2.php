@@ -193,12 +193,13 @@ class Selenium2 extends MinkJS
     }
 
     /**
-     * Switch to another window
+     * Switch to another window identified by its name.
+     * 
+     * The window can only be identified by its name. If the $name parameter is blank it will switch to the parent window.
      *
      * Example:
      * ``` html
      * <input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
-     *
      * ```
      *
      * ``` php
@@ -208,9 +209,21 @@ class Selenium2 extends MinkJS
      * $I->switchToWindow("another_window");
      * # switch to parent window
      * $I->switchToWindow();
-     *
+     * ?>
      * ```
      *
+     * If the window has no name, the only way to access it is via the `executeInSelenium()` method like so:
+     * 
+     * ```
+     * <?php
+     * $I->executeInSelenium(function (\Webdriver\Session $webdriver) {
+     * $handles=$webdriver->window_handles();
+     * $last_window = end($handles);
+     * $webdriver->focusWindow($last_window);
+     * });
+     * ?>
+     * ```
+     * 
      * @param string|null $name
      */
     public function switchToWindow($name = null) {
