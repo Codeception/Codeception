@@ -28,6 +28,7 @@ class SuiteManager {
     protected $path = '';
     protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
+    protected $parameters = array();
 
     protected $settings = array();
 
@@ -38,13 +39,17 @@ class SuiteManager {
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
 
+        if (isset($settings['parameters'])) {
+            $this->parameters = $settings['parameters'];
+        }
+
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
 
         require_once $settings['path'] . $settings['class_name'].'.php';
-        
+
         $this->initializeModules($settings);
     }
 
@@ -93,7 +98,8 @@ class SuiteManager {
         $cept = new TestCase\Cept($this->dispatcher, array(
             'name' => $name,
             'file' => $file,
-            'bootstrap' => $this->settings['bootstrap']
+            'bootstrap' => $this->settings['bootstrap'],
+            'parameters' => $this->parameters
         ));
 
         $cept->preload();

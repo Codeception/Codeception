@@ -16,6 +16,7 @@ class Cept extends \Codeception\TestCase
     protected $bootstrap = null;
     protected $stopped = false;
     protected $dispatcher;
+    protected $parameters;
 
     public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
@@ -24,6 +25,7 @@ class Cept extends \Codeception\TestCase
 
         if (!isset($data['file'])) throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
 
+        $this->parameters = $data['parameters'];
         $this->name = $data['name'];
         $this->scenario = new \Codeception\Scenario($this);
         $this->testfile = $data['file'];
@@ -43,6 +45,11 @@ class Cept extends \Codeception\TestCase
 
     public function getFeature() {
         return $this->scenario->getFeature();
+    }
+
+    public function getParameters()
+    {
+        return $this->parameters;
     }
 
     public function toString()
