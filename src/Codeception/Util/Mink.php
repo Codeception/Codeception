@@ -81,7 +81,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
      */
     public function amOnPage($page)
     {
-        $this->session->visit($this->config['url'].$page);
+        $host = rtrim($this->config['url'], '/');
+        $page = ltrim($page, '/');
+        $this->session->visit($host . '/' . $page);
     }
 
     public function amOnSubdomain($subdomain)
