@@ -15,7 +15,7 @@
         "phpunit/phpunit": "3.7.*",
         "fabpot/goutte": "*",
         "facebook/php-sdk": "3.*",
-        "behat/mink-goutte-driver": "*",
+        "behat/mink-goutte-driver": "@dev",
         "behat/mink-selenium-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "behat/mink-zombie-driver": "*",

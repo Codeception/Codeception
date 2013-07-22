@@ -18,6 +18,12 @@ class info {
 
 }
 
+class redirect {
+    function GET() {
+        header('Location: /info');
+    }
+}
+
 class login {
 
     function GET($matches) {

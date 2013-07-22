@@ -53,6 +53,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInCurrentUrl('user');
     }
 
+    function testRedirect()
+    {
+        $this->module->amOnPage('/redirect');
+        $this->module->seeInCurrentUrl('info');
+    }
+
 
     public function testSee()
     {

@@ -42,7 +42,9 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->db = $mongo->selectDB('test');
         $this->userCollection = $this->db->createCollection('users');
-        $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
+        $user_id = $this->userCollection->insert(array('id' => 1, 'email' => 'miles@davis.com'));
+        $this->assertInternalType('string', $user_id);
+        
     }
 
     protected function tearDown()
