@@ -93,7 +93,7 @@ class Db
                 continue;
             }
 
-            $query .= rtrim($sqlLine);
+            $query .= rtrim($sqlLine) . "\n";
 
             if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, - 1 * $delimiterLength);
