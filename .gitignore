@@ -6,5 +6,5 @@ tests/data/included/_log/*
 tests/data/included/jazz/tests/_log/*
 tests/data/included/jazz/pianist/tests/_log/*
 tests/data/included/shire/tests/_log/*
-tests/data/claypit/c3tmp'
+tests/data/claypit/c3tmp/*'
 composer.lock

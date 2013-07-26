@@ -206,6 +206,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
      *
      * @param $table
      * @param array $data
+     * @return integer $id
      */
     public function haveInDatabase($table, array $data)
     {
@@ -223,7 +224,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
 
-        $lastInsertId = $this->driver->getDbh()->lastInsertId();
+        $lastInsertId = (int) $this->driver->getDbh()->lastInsertId();
 
         $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
 
