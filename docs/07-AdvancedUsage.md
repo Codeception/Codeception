@@ -273,19 +273,19 @@ class UserLoginPage
      */
     protected $webGuy;
 
-    public function __construct(TestGuy $I)
+    public function __construct(WebGuy $I)
     {
         $this->webGuy = $I;
     }
 
-    public static function of(TestGuy $I)
+    public static function of(WebGuy $I)
     {
         return new static($I);
     }
 
     public function login($name, $password)
     {
-        $I = $this->testGuy;
+        $I = $this->webGuy;
 
         $I->amOnPage(self::URL);
         $I->fillField(LoginPage::$usernameField, $name);
