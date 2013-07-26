@@ -211,7 +211,6 @@ class SuiteManager {
         $testClass = get_class($cestInstance);
         if (strpos($methodName, '_') === 0) return;
 
-        $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(
             'name' => $methodName,
             'instance' => $cestInstance,
