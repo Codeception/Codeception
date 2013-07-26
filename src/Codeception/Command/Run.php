@@ -67,6 +67,11 @@ class Run extends Base
         if ($options['group']) $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
         if ($input->getArgument('test')) $options['steps'] = true;
 
+        if ($test) {
+            $filter = $this->matchFilteredTestName($test);
+            $options['filter'] = $filter;
+        }
+
         $this->codecept = new \Codeception\Codecept((array) $options);
 
         if ($suite and $test) $this->codecept->runSuite($suite, $test);
@@ -118,6 +123,16 @@ class Run extends Base
         $res = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
         if (!$res) throw new \InvalidArgumentException("Test file can't be matched");
         return $matches;
+    }
+
+    protected function matchFilteredTestName(&$path)
+    {
+        $test_parts = explode(':', $path);
+        if (count($test_parts) > 1) {
+            list($path, $filter) = $test_parts;
+            return $filter;
+        }
+        return null;
     }
 
 }

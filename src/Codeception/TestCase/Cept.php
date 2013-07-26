@@ -35,6 +35,11 @@ class Cept extends \Codeception\TestCase
         return $this->name;
     }
 
+    public function getName($withDataSet = true)
+    {
+        return $this->name;
+    }
+
     public function getScenarioText($format = 'text')
     {
         if ($format == 'html') return $this->scenario->getHtml();
