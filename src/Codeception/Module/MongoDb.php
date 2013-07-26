@@ -145,6 +145,7 @@ class MongoDb extends \Codeception\Module
      *
      * ``` php
      * $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+     * $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
      * ```
      *
      * @param $collection
@@ -154,6 +155,7 @@ class MongoDb extends \Codeception\Module
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $collection->insert($data);
+        return $data['_id'];
     }
 
     /**

@@ -116,7 +116,6 @@ class SuiteManager {
             $reflected = new \ReflectionClass($testClass);
             if (preg_match('/@guy(?:[ \t]+(?P<guy>.*?))?[ \t]*\r?$/m', $reflected->getDocComment(), $annotations));
             if (isset($annotations['guy'])) $guy = $annotations['guy'];
-            $cestSuite = new \PHPUnit_Framework_TestSuite($testClass.' ');
             $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
@@ -127,9 +126,8 @@ class SuiteManager {
 
                 if (!$test) continue;
                 $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
-                $cestSuite->addTest($test, $groups);
+                $this->suite->addTest($test, $groups);
             }
-            $this->suite->addTestSuite($cestSuite);
         }
     }
 
@@ -215,7 +213,7 @@ class SuiteManager {
 
         $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(
-            'name' => $target,
+            'name' => $methodName,
             'instance' => $cestInstance,
             'method' => $methodName,
             'file' => $file,

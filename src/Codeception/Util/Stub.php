@@ -60,6 +60,7 @@ class Stub
                 $mock = self::generateMock($class, null, array(), '', false, $testCase);
             }
         }
+
         self::bindParameters($mock, $params);
         $mock->__mocked = $class;
         return $mock;
