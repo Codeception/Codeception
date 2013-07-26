@@ -174,7 +174,7 @@ It's pretty obvious that for such cases you can use your own PHP classes to defi
     public static $username = 'jon';
     public static $password = 'coltrane';
 
-    public static logMeIn($I)
+    public static function logMeIn($I)
     {
         $I->amOnPage('/login');
         $I->fillField('username', 'jon');
@@ -310,7 +310,7 @@ UserLoginPage::of($I)->login('bill evans', 'debby');
 Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a WebGuy. So it's up to you to use global page objects, or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
 
 
-# StepObjects
+## StepObjects
 
 StepObjects pattern came from BDD frameworks. StepObject class contains a bunch of common actions that may be used widely in different tests.
 The `login` method we used above can be a good example of such method. Similarly actions for creating/updating/deleting resources should be moved to StepObject too. Let's create a StepObject class and see what is it like. 
