@@ -52,7 +52,8 @@ class Codecept
         'coverage' => false,
 	    'defer-flush' => false,
         'groups' => null,
-        'excludeGroups' => null
+        'excludeGroups' => null,
+        'filter' => null
     );
 
     public function __construct($options = array()) {
@@ -122,7 +123,9 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, Configuration::config());
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
-        $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
+        $test
+            ? $suiteManager->loadTest($settings['path'].$test)
+            : $suiteManager->loadTests();
 
         $suiteManager->run($this->runner, $this->result, $this->options);
 

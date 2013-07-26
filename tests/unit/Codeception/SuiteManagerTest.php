@@ -65,7 +65,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      * @group core
      */
     public function testAddTest() {
-        $file = $file = \Codeception\Configuration::dataDir().'SimpleTest.php';
+        $file = $file = \Codeception\Configuration::dataDir().'AnotherTest.php';
         $this->suiteman->addTest($file);
         $this->assertEquals(1, $this->suiteman->getSuite()->count());
     }

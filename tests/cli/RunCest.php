@@ -111,4 +111,20 @@ class RunCest
 
     }
 
+    public function runOneTestFromUnit(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
+        $I->seeInShellOutput('Running AnotherTest::testFirst - Ok');
+        $I->dontSeeInShellOutput('AnotherTest::testSecond');
+    }
+
+    public function runOneTestFromCest(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
+        $I->seeInShellOutput('(AnotherCest.optimistic) - Ok');
+        $I->dontSeeInShellOutput('AnotherCest.pessimistic');
+    }
+
 }
