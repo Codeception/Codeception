@@ -224,7 +224,11 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
 
+<<<<<<< HEAD
         $lastInsertId = (int) $this->driver->getDbh()->lastInsertId();
+=======
+        $lastInsertId = $this->driver->getDbh()->lastInsertId();
+>>>>>>> master
 
         $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
 
