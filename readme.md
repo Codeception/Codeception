@@ -1,18 +1,21 @@
 # Codeception
 
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception)
-[![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
-[![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
 
 Codeception is a new PHP full-stack testing framework.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.7.
 
+**Stable / 1.6**: [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.6)](http://travis-ci.org/Codeception/Codeception)[![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
+
+**Development / master**: [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception)
+[![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
+
+
 #### Contributions
 
-**Pull request with bugfixes should be sent to current stable branch, which is the same as major version number.**
-When you send PRs to master, they will be included only when next stable branch will be started.
+**Bugfixes should be sent to to current stable branch, which is the same as major version number.**
 Breaking features and major improvements should be sent into `master`.
+When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
 
 ### At a Glance
 
