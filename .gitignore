@@ -1,6 +1,7 @@
 .idea
 composer.phar
 vendor
+tests/data/app/db
 tests/data/sandbox
 tests/data/included/_log/*
 tests/data/included/jazz/tests/_log/*

@@ -35,10 +35,12 @@ class Console implements EventSubscriberInterface
     public function before(\Codeception\Event\Test $e)
     {
         $test = $e->getTest();
+        $filename = $test->getFileName();
         if ($test->getFeature()) {
-            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+            $feature = $test->getFeature();
+            $this->output->put("Trying to [[$feature]] ($filename)");
         } else {
-            $this->output->put("Running [[{$test->getFileName()}]]");
+            $this->output->put("Running [[$filename]]");
         }
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
