@@ -199,6 +199,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $request = $this->session->getDriver()->getClient()->getRequest();
 
         $this->debugSection($request->getMethod(), $this->session->getCurrentUrl().' '.json_encode($request->getParameters()));
+        $this->debugSection('Client', json_encode($request->getServer()));
         $this->debugSection('Cookies', json_encode($request->getCookies()));
         $this->debugSection('Status', $this->session->getStatusCode());
         $this->debugSection('Headers', json_encode($this->session->getDriver()->getResponseHeaders()));

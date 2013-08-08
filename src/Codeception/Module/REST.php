@@ -333,16 +333,8 @@ class REST extends \Codeception\Module
         // allow full url to be requested
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
-        if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
-            $parameters = $this->scalarizeArray($parameters);
-            if (array_key_exists('Content-Type', $this->headers)
-                && $this->headers['Content-Type'] === 'application/json'
-                && $method != 'GET'
-            ) {
-                $parameters = json_encode($parameters);
-            }
-        }
-
+        $this->encodeApplicationJson($method, $parameters);
+        
         if (is_array($parameters) || $method == 'GET') {
             if ($method == 'GET' && !empty($parameters)) {
                 $url .= '?' . http_build_query($parameters);
@@ -356,10 +348,27 @@ class REST extends \Codeception\Module
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
-
         $this->response = $this->client->getResponse()->getContent();
+
+        $this->debugSection('Cookies', $this->client->getRequest()->getCookies());
+        $this->debugSection("Client", $this->client->getRequest()->getServer());
         $this->debugSection("Response", $this->response);
         $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
+        $this->debugSection("Status", json_encode($this->client->getResponse()->getStatus()));
+    }
+
+    protected function encodeApplicationJson($method, $parameters)
+    {
+        if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
+            $parameters = $this->scalarizeArray($parameters);
+            if (array_key_exists('Content-Type', $this->headers)
+                && $this->headers['Content-Type'] === 'application/json'
+                && $method != 'GET'
+            ) {
+                return json_encode($parameters);
+            }
+        }
+        return $parameters;
     }
 
     /**
