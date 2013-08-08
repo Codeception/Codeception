@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Behat\Mink\Driver\GoutteDriver;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
+use Symfony\Component\BrowserKit\Request;
 
 /**
  * Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
@@ -181,10 +182,8 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 	protected function call($uri, $method = 'get', $params = array())
 	{
 		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
-        /** @var $browser \Behat\Mink\Driver\Goutte\Client **/
         $browser = $this->session->getDriver()->getClient();
 
-		$this->debugSection('Request ('.$method.')', $uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);
         $this->debugPageInfo();
 	}
@@ -196,9 +195,13 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
     protected function debugPageInfo()
     {
-        $this->debugSection('URL', $this->session->getCurrentUrl());
-        $this->debugSection('Headers', json_encode($this->session->getDriver()->getResponseHeaders()));
+        /** @var $request Request **/
+        $request = $this->session->getDriver()->getClient()->getRequest();
+
+        $this->debugSection($request->getMethod(), $this->session->getCurrentUrl().' '.json_encode($request->getParameters()));
+        $this->debugSection('Cookies', json_encode($request->getCookies()));
         $this->debugSection('Status', $this->session->getStatusCode());
+        $this->debugSection('Headers', json_encode($this->session->getDriver()->getResponseHeaders()));
     }
 
 }
