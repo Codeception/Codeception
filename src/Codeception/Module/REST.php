@@ -349,10 +349,11 @@ class REST extends \Codeception\Module
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
         $this->response = $this->client->getResponse()->getContent();
-
-        $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
-        $this->debugSection("Client", json_encode($this->client->getRequest()->getServer()));
         $this->debugSection("Response", $this->response);
+
+        if (count($this->client->getRequest()->getCookies())) {
+            $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
+        }
         $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
         $this->debugSection("Status", json_encode($this->client->getResponse()->getStatus()));
     }
