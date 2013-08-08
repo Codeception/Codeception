@@ -359,6 +359,7 @@ class REST extends \Codeception\Module
 
         $this->response = $this->client->getResponse()->getContent();
         $this->debugSection("Response", $this->response);
+        $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
     }
 
     /**
