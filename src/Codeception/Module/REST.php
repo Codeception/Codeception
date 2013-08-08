@@ -350,8 +350,8 @@ class REST extends \Codeception\Module
         }
         $this->response = $this->client->getResponse()->getContent();
 
-        $this->debugSection('Cookies', $this->client->getRequest()->getCookies());
-        $this->debugSection("Client", $this->client->getRequest()->getServer());
+        $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
+        $this->debugSection("Client", json_encode($this->client->getRequest()->getServer()));
         $this->debugSection("Response", $this->response);
         $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
         $this->debugSection("Status", json_encode($this->client->getResponse()->getStatus()));
