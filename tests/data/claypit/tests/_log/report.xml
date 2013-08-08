@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="remote" tests="1" assertions="1" failures="0" errors="0" time="0.105324">
-    <testcase file="DemoCept.php" name=" (DemoCept.php)" assertions="1" time="0.105324"/>
+  <testsuite name="unit" tests="2" assertions="2" failures="1" errors="0" time="0.006357">
+    <testcase name="testMe" class="FailingTest" file="/home/davert/Codeception/tests/data/claypit/tests/unit/FailingTest.php" line="5" assertions="1" time="0.004139">
+      <failure type="PHPUnit_Framework_ExpectationFailedException">FailingTest::testMe
+Failed asserting that true is false.
+
+/home/davert/Codeception/tests/data/claypit/tests/unit/FailingTest.php:7
+/home/davert/Codeception/src/Codeception/PHPUnit/Runner.php:58
+/home/davert/Codeception/src/Codeception/SuiteManager.php:142
+/home/davert/Codeception/src/Codeception/Codecept.php:130
+/home/davert/Codeception/src/Codeception/Command/Run.php:114
+/home/davert/Codeception/src/Codeception/Command/Run.php:82
+/home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Command/Command.php:244
+/home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php:897
+/home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php:191
+/home/davert/Codeception/vendor/symfony/console/Symfony/Component/Console/Application.php:121
+</failure>
+    </testcase>
+    <testcase name="testMe" class="PassingTest" file="/home/davert/Codeception/tests/data/claypit/tests/unit/PassingTest.php" line="7" assertions="1" time="0.002218"/>
   </testsuite>
 </testsuites>
