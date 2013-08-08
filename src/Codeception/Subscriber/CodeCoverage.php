@@ -83,8 +83,8 @@ class CodeCoverage implements EventSubscriberInterface
 
         $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
         if (!$externalCoverage) return;
-        $coverage = unserialize($externalCoverage);
-        if (!$coverage) return;
+        $coverage = @unserialize($externalCoverage);
+        if ($coverage === false) return;
         $this->coverage->merge($coverage);
     }
 
