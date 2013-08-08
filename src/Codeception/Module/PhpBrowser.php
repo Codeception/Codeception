@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use Behat\Mink\Driver\GoutteDriver;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 
@@ -180,16 +181,24 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 	protected function call($uri, $method = 'get', $params = array())
 	{
 		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
-			$browser = $this->session->getDriver()->getClient();
+        /** @var $browser \Behat\Mink\Driver\Goutte\Client **/
+        $browser = $this->session->getDriver()->getClient();
 
-		$this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
+		$this->debugSection('Request ('.$method.')', $uri.' '. json_encode($params));
 		$browser->request($method, $uri, $params);
-		$this->debug('Response code: '.$this->session->getStatusCode());
+        $this->debugPageInfo();
 	}
 
 	public function _failed(\Codeception\TestCase $test, $fail) {
 		$fileName = str_replace('::','-',$test->getFileName());
 		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
+
+    protected function debugPageInfo()
+    {
+        $this->debugSection('URL', $this->session->getCurrentUrl());
+        $this->debugSection('Headers', json_encode($this->session->getDriver()->getResponseHeaders()));
+        $this->debugSection('Status', $this->session->getStatusCode());
+    }
 
 }

@@ -189,9 +189,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $el = $this->findClickable($link, $context);
         $el->click();
 
-        if ($this->session->getCurrentUrl() != $url) {
-            $this->debug('moved to page '. $this->session->getCurrentUrl());
-        }
+        if ($this->session->getCurrentUrl() != $url) $this->debugPageInfo();
+    }
+
+    protected function debugPageInfo()
+    {
+        $this->debug('Moved to page '. $this->session->getCurrentUrl());
     }
 
     public function seeElement($selector)
