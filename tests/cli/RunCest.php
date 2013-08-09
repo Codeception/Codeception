@@ -12,7 +12,6 @@ class RunCest
         $I->wantTo('execute one test');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php');
-        $I->seeFileFound('report.html','tests/_log');
         $I->seeInShellOutput("OK (");
     }
 
