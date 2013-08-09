@@ -83,9 +83,9 @@ class Codecept
             }
         }
         if (isset($options['no-colors'])) $options['colors'] = !$options['no-colors'];
-        if (isset($options['report'])) $options['silent'] = $options['report'];
-        if (isset($options['group'])) $options['groups'] = $options['group'];
-        if (isset($options['skip-group'])) $options['excludeGroups'] = $options['skip-group'];
+        if (isset($options['report']) && $options['report']) $options['silent'] = true;
+        if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
+        if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
 
         return $options;
     }
