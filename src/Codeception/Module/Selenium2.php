@@ -50,6 +50,7 @@ namespace Codeception\Module;
 
 use Behat\Mink\Driver\Selenium2Driver;
 use Codeception\Util\MinkJS;
+use WebDriver\Exception\UnexpectedAlertOpen;
 
 class Selenium2 extends MinkJS
 {
@@ -127,7 +128,12 @@ class Selenium2 extends MinkJS
         $el = $this->findClickable($link, $context, $strict);
         $el->click();
 
-        if ($this->session->getCurrentUrl() != $url) $this->debugPageInfo();
+        try {
+            $currentUrl = $this->webDriverSession->getUrl();
+            if ($currentUrl != $url) $this->debugPageInfo();
+        } catch (UnexpectedAlertOpen $e) {
+        }
+
     }
     
     protected function debugPageInfo()
