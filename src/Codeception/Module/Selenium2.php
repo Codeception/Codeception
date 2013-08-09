@@ -126,16 +126,8 @@ class Selenium2 extends MinkJS
         $url = $this->session->getCurrentUrl(); // required for popups
         $el = $this->findClickable($link, $context, $strict);
         $el->click();
-        $this->debugSection('URL', $url);
-        $this->debugPageInfo();
     }
     
-    protected function debugPageInfo()
-    {
-        $this->debugSection('Title', $this->webDriverSession->title());
-        $this->debugSection('Cookies', json_encode($this->webDriverSession->getAllCookies()));
-    }    
-
     /**
      * Accept alert or confirm popup
      *
@@ -288,11 +280,6 @@ class Selenium2 extends MinkJS
     public function dontSeeInTitle($title)
     {
         $this->assertNotContains($title, $this->webDriverSession->title(), "page title contains $title");
-    }
-
-    public function seeTitleIs()
-    {
-
     }
 
 }
