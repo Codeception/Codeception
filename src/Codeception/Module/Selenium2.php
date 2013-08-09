@@ -134,7 +134,7 @@ class Selenium2 extends MinkJS
     {
         $this->debug('Moved to page '. $this->session->getCurrentUrl());
         $this->debugSection('Title', $this->webDriverSession->title());
-        $this->debugSection('Cookies', $this->webDriverSession->getAllCookies());
+        $this->debugSection('Cookies', json_encode($this->webDriverSession->getAllCookies()));
     }    
 
     /**
@@ -279,6 +279,21 @@ class Selenium2 extends MinkJS
      */
     public function resizeWindow($width, $height) {
         $this->webDriverSession->window('current')->postSize(array('width' => $width, 'height' => $height));
+    }
+
+    public function seeInTitle($title)
+    {
+        $this->assertContains($title, $this->webDriverSession->title(), "page title contains $title");
+    }
+
+    public function dontSeeInTitle($title)
+    {
+        $this->assertNotContains($title, $this->webDriverSession->title(), "page title contains $title");
+    }
+
+    public function seeTitleIs()
+    {
+
     }
 
 }

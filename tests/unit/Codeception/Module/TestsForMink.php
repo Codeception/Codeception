@@ -386,5 +386,15 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 		$this->module->dontSeeCookie($cookie_name);
 	}
 
+    public function testPageTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeInTitle('TestEd Beta 2.0');
+        $this->module->dontSeeInTitle('Welcome to test app');
+
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeInTitle('TestEd Beta 2.0');
+    }
+
 
 }

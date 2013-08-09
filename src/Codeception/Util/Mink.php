@@ -492,6 +492,20 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $this->fail("Element '$field' not found");
     }
 
+    public function seeInTitle($title)
+    {
+        $el = $this->session->getPage()->find('css', 'title');
+        if (!$el) throw new ElementNotFound("<title>","Tag");
+        $this->assertContains($title, $el->getText(), "page title contains $title");
+    }
+
+    public function dontSeeInTitle($title)
+    {
+        $el = $this->session->getPage()->find('css', 'title');
+        if (!$el) return $this->assertTrue(true);
+        $this->assertNotContains($title, $el->getText(), "page title contains $title");
+    }
+
     protected function assertPageContains($needle, $haystack, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
@@ -508,6 +522,8 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         return (string)$string;
     }
+
+
 
 
 }
