@@ -34,6 +34,7 @@ class SeleniumTest extends TestsForMink
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
+        $this->markTestSkipped('Selenium RC tests should be disabled and deprecated');
     }
 
     public function tearDown()

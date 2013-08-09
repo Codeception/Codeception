@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.6.4.1";
+    const VERSION = "1.6.5";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -53,7 +53,7 @@ class Codecept
 	    'defer-flush' => false,
         'groups' => null,
         'excludeGroups' => null,
-        'filter' => null
+        'filter' => null,
     );
 
     public function __construct($options = array()) {
@@ -73,7 +73,7 @@ class Codecept
     }
 
     private function mergeOptions($options) {
-
+        
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
@@ -82,10 +82,10 @@ class Codecept
                     : $this->options[$option];
             }
         }
-        if ($options['no-colors']) $options['colors'] = false;
-        if ($options['report']) $options['silent'] = true;
-        if ($options['group']) $options['groups'] = $options['group'];
-        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if (isset($options['no-colors']) && $options['no-colors']) $options['colors'] = false;
+        if (isset($options['report']) && $options['report']) $options['silent'] = true;
+        if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
+        if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
 
         return $options;
     }

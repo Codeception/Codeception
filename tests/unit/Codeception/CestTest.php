@@ -1,7 +1,10 @@
 <?php
-class CestTest extends PHPUnit_Framework_TestCase
+class CestTest extends Codeception\TestCase\Test
 {
 
+    /**
+     * @group core
+     */
     public function testFilename()
     {
         $cest = \Codeception\Util\Stub::make('\Codeception\TestCase\Cest', array(

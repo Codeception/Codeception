@@ -12,7 +12,6 @@ class RunCest
         $I->wantTo('execute one test');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php');
-        $I->seeFileFound('report.html','tests/_log');
         $I->seeInShellOutput("OK (");
     }
 
@@ -103,7 +102,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order');
+        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order --skip unit');
         $I->seeInShellOutput("Suite dummy started");
         $I->dontSeeInShellOutput("Suite remote started");
         $I->dontSeeInShellOutput("Suite remote_server started");

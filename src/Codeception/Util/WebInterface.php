@@ -494,4 +494,26 @@ interface WebInterface
      */
     public function dontSeeOptionIsSelected($selector, $optionText);
 
+    /**
+     * Checks that page title contains text.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInTitle('Blog - Post #1');
+     * ?>
+     * ```
+     *
+     * @param $title
+     * @return mixed
+     */
+    public function seeInTitle($title);
+
+    /**
+     * Checks that page title does not contain text.
+     *
+     * @param $title
+     * @return mixed
+     */
+    public function dontSeeInTitle($title);
+
 }
