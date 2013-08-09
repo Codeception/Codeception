@@ -23,7 +23,7 @@ Supported and tested databases are:
 Supported but not tested.
 
 * MSSQL
-* Oracle
+* Orcale
 
 Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
 Check out drivers if you get problems loading dumps and cleaning databases.
