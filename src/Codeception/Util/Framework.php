@@ -492,6 +492,20 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->assertEquals($code, $this->getResponseStatusCode());
     }
 
+    public function seeInTitle($title)
+    {
+        $nodes = $this->crawler->filter('title');
+        if (!$nodes->count()) throw new ElementNotFound("<title>","Tag");
+        $this->assertContains($title, $nodes->first()->text(), "page title contains $title");
+    }
+
+    public function dontSeeInTitle($title)
+    {
+        $nodes = $this->crawler->filter('title');
+        if (!$nodes->count()) return $this->assertTrue(true);
+        $this->assertNotContains($title, $nodes->first()->text(), "page title contains $title");
+    }
+
     protected function assertDomContains($nodes, $message, $text = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Crawler($text, $this->_getCurrentUri());
@@ -515,5 +529,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
         $this->assertThatItsNot($this->client->getResponse()->getContent(), $constraint,$message);
     }
+
+
 
 }

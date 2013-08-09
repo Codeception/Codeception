@@ -1,4 +1,5 @@
 <html>
+    <title>TestEd Beta 2.0</title>
 <body>
 
 <h1>Welcome to test app!</h1>
