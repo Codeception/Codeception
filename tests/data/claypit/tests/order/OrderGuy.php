@@ -29,7 +29,7 @@ class OrderGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\OrderHelper::failNow()
@@ -48,7 +48,7 @@ class OrderGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\OrderHelper::writeToFile()
@@ -67,7 +67,7 @@ class OrderGuy extends \Codeception\AbstractGuy
     /**
      * This method is generated.
      * Documentation taken from corresponding module.
-     * ---------------------------------------------
+     * ----------------------------------------------
      *
      *
      * @see Codeception\Module\OrderHelper::appendToFile()

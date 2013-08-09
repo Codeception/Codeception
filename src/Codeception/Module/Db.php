@@ -123,6 +123,8 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         } catch (\PDOException $e) {
             throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating PDO connection');
         }
+        
+        $this->dbh = $this->driver->getDbh();
 
         // starting with loading dump
         if ($this->config['populate']) {

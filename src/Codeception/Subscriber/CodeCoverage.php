@@ -83,8 +83,8 @@ class CodeCoverage implements EventSubscriberInterface
 
         $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
         if (!$externalCoverage) return;
-        $coverage = unserialize($externalCoverage);
-        if (!$coverage) return;
+        $coverage = @unserialize($externalCoverage);
+        if ($coverage === false) return;
         $this->coverage->merge($coverage);
     }
 
@@ -97,6 +97,7 @@ class CodeCoverage implements EventSubscriberInterface
     protected function getRemoteCoverageFile($module, $type)
     {
         $module->_setHeader('X-Codeception-CodeCoverage', 'remote-access');
+        // TODO: replace with file_get_contents?
         $contents = $module->_sendRequest($module->_getUrl() . '/c3/report/'.$type);
         if ($module->_getResponseCode() !== 200) {
             $this->getRemoteError($module);

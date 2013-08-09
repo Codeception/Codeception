@@ -127,7 +127,7 @@ class Selenium2 extends MinkJS
         $el = $this->findClickable($link, $context, $strict);
         $el->click();
     }
-
+    
     /**
      * Accept alert or confirm popup
      *
@@ -270,6 +270,16 @@ class Selenium2 extends MinkJS
      */
     public function resizeWindow($width, $height) {
         $this->webDriverSession->window('current')->postSize(array('width' => $width, 'height' => $height));
+    }
+
+    public function seeInTitle($title)
+    {
+        $this->assertContains($title, $this->webDriverSession->title(), "page title contains $title");
+    }
+
+    public function dontSeeInTitle($title)
+    {
+        $this->assertNotContains($title, $this->webDriverSession->title(), "page title contains $title");
     }
 
 }

@@ -5,7 +5,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
 {
     public function startTest(\PHPUnit_Framework_Test $test)
     {
-        if (!($test instanceof \Codeception\TestCase)) return parent::startTest($test);
+        if (!($test instanceof \Codeception\TestCase\Cept)) return parent::startTest($test);
 
 
         $testCase = $this->document->createElement('testcase');
@@ -32,7 +32,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
 
     public function endTest(\PHPUnit_Framework_Test $test, $time) {
 
-        if ($test instanceof \Codeception\TestCase) {
+        if ($test instanceof \Codeception\TestCase\Cept) {
             $this->currentTestCase->setAttribute(
               'name', $test->toString()
             );

@@ -226,7 +226,7 @@ When a test is added to a group:
 
 ``` php
 <?php 
-$scenario->group = 'admin';
+$scenario->group('admin');
 $I = new WebGuy($scenario);
 ?>
 ```
