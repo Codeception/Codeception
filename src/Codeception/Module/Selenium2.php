@@ -126,7 +126,16 @@ class Selenium2 extends MinkJS
         $url = $this->session->getCurrentUrl(); // required for popups
         $el = $this->findClickable($link, $context, $strict);
         $el->click();
+
+        if ($this->session->getCurrentUrl() != $url) $this->debugPageInfo();
     }
+    
+    protected function debugPageInfo()
+    {
+        $this->debug('Moved to page '. $this->session->getCurrentUrl());
+        $this->debugSection('Title', $this->webDriverSession->title());
+        $this->debugSection('Cookies', $this->webDriverSession->getAllCookies());
+    }    
 
     /**
      * Accept alert or confirm popup

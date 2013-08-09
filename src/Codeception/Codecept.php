@@ -82,7 +82,7 @@ class Codecept
                     : $this->options[$option];
             }
         }
-        if (isset($options['no-colors'])) $options['colors'] = !$options['no-colors'];
+        if (isset($options['no-colors']) && $options['no-colors']) $options['colors'] = false;
         if (isset($options['report']) && $options['report']) $options['silent'] = true;
         if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
         if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
