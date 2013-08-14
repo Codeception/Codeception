@@ -24,7 +24,9 @@ class Output {
             while (ob_get_level()) ob_end_flush();
         }
         print $text;
-        ob_start();
+        if (!ob_get_level()) {
+            ob_start();
+        }
     }
 
     protected function naturalize($message)
