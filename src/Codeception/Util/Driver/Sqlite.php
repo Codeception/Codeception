@@ -18,6 +18,7 @@ class Sqlite extends Db
         $this->dbh = null;
         file_put_contents($this->filename,'');
         $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
+        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     public function load($sql) {
