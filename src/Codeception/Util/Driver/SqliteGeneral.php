@@ -17,8 +17,7 @@ class SqliteGeneral extends Db
     public function cleanup() {
         $this->dbh = null;
         file_put_contents($this->filename,'');
-        $this->dbh = new \PDO($this->dsn, $this->user, $this->password);
-        $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->dbh = self::connect($this->dsn, $this->user, $this->password);
     }
 
     public function load($sql) {
