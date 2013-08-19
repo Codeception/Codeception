@@ -109,7 +109,7 @@ class SuiteManager {
         foreach ($testClasses as $testClass) {
 
             $guy = $this->settings['namespace']
-                ? $this->settings['namespace'] . '\\Codeception\\' . $this->settings['class_name']
+                ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
                 : $this->settings['class_name'];
 
             $unit = new $testClass;
