@@ -41,11 +41,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $this->config['url'];
     }
 
-    public function _setHeader($header, $value)
-    {
-        $this->session->setRequestHeader($header, $value);
-    }
-
     public function _setCookie($cookie, $value)
     {
         $this->session->setCookie($cookie, $value);
@@ -54,13 +49,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function _getCookie($cookie)
     {
     	return $this->session->getCookie($cookie);
-    }
-
-    public function _getResponseHeader($header)
-    {
-        $headers = $this->session->getResponseHeaders();
-        if (!isset($headers[$header])) return false;
-        return $headers[$header];
     }
 
     public function _getResponseCode()

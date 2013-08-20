@@ -38,7 +38,7 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
         if (!$this->module) return;
 
         if ($this->settings['remote_config']) {
-            $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+            $this->addHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
         }
 
         $knock = $this->getRemoteCoverageFile($this->module, 'clear');
@@ -51,11 +51,21 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
                 '
             );
         }
+
     }
 
     public function beforeStep(\Codeception\Event\Step $e)
     {
         if (!$this->module) return;
+
+        $cookie = array(
+            'CodeCoverage' => $e->getTest()->getName(),
+            'CodeCoverage_Suite' => $this->suite_name,
+            'CodeCoverage_Config' => $this->settings['remote_config']
+        );
+        $this->module->setCookie('CODECEPTION_CODECOVERAGE', json_encode($cookie));
+
+        if (!method_exists($this->module, '_setHeader')) return;
         $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
         $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
         if ($this->settings['remote_config']) {
@@ -66,7 +76,11 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     public function afterStep(\Codeception\Event\Step $e)
     {
         if (!$this->module) return;
-        $this->getRemoteError($this->module);
+        if ($error  = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
+            throw new \Codeception\Exception\RemoteException($error);
+        }
+        $this->module->resetCookie('CODECEPTION_CODECOVERAGE_ERROR');
+        $this->module->resetCookie('CODECEPTION_CODECOVERAGE');
     }
 
     public function afterSuite(\Codeception\Event\Suite $e)
