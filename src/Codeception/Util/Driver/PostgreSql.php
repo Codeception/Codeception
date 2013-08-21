@@ -9,8 +9,8 @@ class PostgreSql extends Db
 
     public function cleanup()
     {
-        $db = $this->getDb();
-        $this->dbh->exec("GRANT ALL ON DATABASE $db TO ".$this->user);
+//        $db = $this->getDb();
+//        $this->dbh->exec("GRANT ALL ON DATABASE $db TO ".$this->user);
 
         $drops = $this->dbh->query("select 'drop table if exists \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public' ;")->fetchAll();
 
