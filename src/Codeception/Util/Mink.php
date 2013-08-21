@@ -71,7 +71,8 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $host = rtrim($this->config['url'], '/');
         $page = ltrim($page, '/');
-        $this->session->visit($host . '/' . $page);
+//        $this->debug($host . $page);
+        $this->session->visit($host .'/' .$page);
     }
 
     public function amOnSubdomain($subdomain)
@@ -84,7 +85,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
 
     public function dontSee($text, $selector = null) {
-        $res = $this->proceedSee($text, $selector);
+        try {
+            $res = $this->proceedSee($text, $selector);
+        } catch (ElementNotFound $e) {
+            $this->assertFalse(false, "$selector not found on page");
+            return;
+        }
         call_user_func_array(array($this, 'assertPageNotContains'), $res);
     }
 
@@ -112,7 +118,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 		    foreach ($nodes as $node) {
 		        $values [] = $node->getText();
 		    }
-            $values = implode("-->\n",$values);
+            $values = implode(" | ",$values);
 			return array($text, $values, "'$selector' selector.");
         }
 
