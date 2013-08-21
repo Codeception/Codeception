@@ -29,18 +29,18 @@ modules:
     enabled: [Symfony1, Db, Filesystem]
 ```
 
-The TestGuy class has its methods defined in modules. Actually, it doesn't contain any of them, but acts as a proxy for them. It knows which module executes this action and passes parameters into it. To make your IDE see all of the TestGuy methods, you use the `build` command. It generates the definition of the TestGuy class by copying the signatures from the configured modules.
+The TestGuy class has it's methods defined in modules. Actually, it doesn't contain any of them, but acts as a proxy for them. It knows which module executes this action and passes parameters into it. To make your IDE see all of the TestGuy methods, you use the `build` command. It generates the definition of the TestGuy class by copying the signatures from the configured modules.
 
 ## Standard Modules
 
 Codeception has many bundled modules which will help you run tests for different purposes and in different environments. The number of modules is not constant -- it's supposed to grow as more frameworks and ORMs are supported.
-See all of them listed in the right of the page at sidebar.
+See all of them listed in the main menu under Modules.
 
 All of these modules are documented. You can review their detailed references on [GitHub](https://github.com/DavertMik/Codeception/tree/master/docs/modules).
 
 ## Helpers
 
-Codeception doesn't restrict you to only the modules from the main repository. No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command, Codeception generates three dummy modules for you, one for each of the newly created suites. These custom modules are called 'Helpers', and they can be found in the `tests/helpers` path. 
+Codeception doesn't restrict you to only the modules from the main repository. No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command, Codeception generates three dummy modules for you, one for each of the newly created suites. These custom modules are called 'Helpers', and they can be found in the `tests/_helpers` path. 
 
 It's a good idea to define missing actions or assertion commands in helpers. 
 
@@ -81,8 +81,8 @@ $I->dontSeeUserExist($user);
 
 Every `see` or `dontSee` function requires at least one assert. Codeception uses PHPUnit assertions.
 
-You can define asserts by using assertXXX methods of module.
-Codeception uses PHPUnit asserts. So in case you miss some of asserts you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class for more.
+You can define asserts by using assertXXX methods of the Codeception module.
+As Codeception uses PHPUnit asserts, if you miss some of the asserts, you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class for more.
 
 ``` php
 <?php
@@ -195,7 +195,7 @@ function seeConfigFilesCreated()
 
 ### Undefined Actions in Helpers
 
-In case you have an action in test which is not defined yet, you can automatically create a stub method for it in the corresponding helper. To do so, you can use a `analyse` command which scans all tests and searches for actions that do not exist in any of the connected modules.
+In case you have an action in test which is not defined yet, you can automatically create a stub method for it in the corresponding helper. To do so, you can use an `analyze` command which scans all tests and searches for actions that do not exist in any of the connected modules.
 
 So, you can assign writing tests to non-technical guys or QAs. In case they lack some actions they define them in test.
 
@@ -205,7 +205,7 @@ $I->doManyCoolThings();
 ?>
 ```
 
-By running the `analyze` command you will be asked if you want to add `doManyCoolThings` to current Helper.
+By running the `analyze` command you will be asked if you want to add `doManyCoolThings` to the current Helper.
 
 
 ### Hooks
@@ -281,7 +281,7 @@ I click "All pages"
 ### Configuration
 
 Modules can be configured from the suite config file, or globally from `codeception.yml`.
-Mandatory parameters should be defined in the `$requiredFields` property of the module class. Here how it is done in the Db module
+Mandatory parameters should be defined in the `$requiredFields` property of the module class. Here is how it is done in the Db module:
 
 ```php
 <?php
@@ -318,14 +318,14 @@ modules:
             repopulate: false
 ```
 
-Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get its value. 
+Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get it's value. 
 
 ### Dynamic Configuration
 
 *new in 1.6.2*
 
 If you want to reconfigure module in run time, you can use the `_reconfigure` method of the module.
-You may call it from helper class and pass there all the fields you want to change.
+You may call it from helper class and pass in all the fields you want to change.
 
 ``` php
 <?php
@@ -333,13 +333,13 @@ $this->getModule('Selenium2')->_reconfigure(array('browser' => 'chrome'));
 ?>
 ```
 
-By the end of a test all your changes will be rolled back to values to config values.
+By the end of a test all your changes will be rolled back to the original config values.
 
 ### Extension options
 
 *new in 1.6.3*
 
-Like each class a Helper can be inherited from a module.
+Like each class, a Helper can be inherited from a module.
 
 ``` php
 <?php
@@ -349,10 +349,10 @@ class MySeleniumHelper extends Selenium2 {
 ?>
 ```
 
-In inherited helper you replace implemented methods with your own realization.
-Also you can replace `_before`, `_after` hooks, which is might be an option when you need to customize starting and stopping of testing session.
+In an inherited helper, you replace implemented methods with your own realization.
+You can also replace `_before` and `_after` hooks, which might be an option when you need to customize starting and stopping of a testing session.
 
-If some of the methods of parent class should not be used in child module, you can disable them. Codeception has several options for this.
+If some of the methods of the parent class should not be used in child module, you can disable them. Codeception has several options for this.
 
 ``` php
 <?php
@@ -370,8 +370,8 @@ class MySeleniumHelper extends Selenium2 {
 ?>
 ```
 
-Option `$includeInheritedActions` set to false adds ability to create aliases for parent methods.
- It allows you to resolve conflicts between module. Let's say we want to use `Db` module with our `SecondDbHelper`
+Option `$includeInheritedActions` set to false adds the ability to create aliases for parent methods.
+ It allows you to resolve conflicts between modules. Let's say we want to use the `Db` module with our `SecondDbHelper`
  that actually inherits from `Db`. How can we use `seeInDatabase` methods from both modules? Let's find out.
 
 ``` php
@@ -397,4 +397,4 @@ Modules are the true power of Codeception. They are used to emulate multiple inh
 Codeception provides modules to emulate web requests, access data, interact with popular PHP libraries, etc.
 For your application you might need custom actions. These can be defined in helper classes.
 If you have written a module that may be useful to others, share it.
-Fork the Codeception repository, put the module into the `src/Codeception/Module` directory, and send a pull request. Many thanks if you do so.
+Fork the Codeception repository, put the module into the __src/Codeception/Module__ directory, and send a pull request. Many thanks if you do so.
