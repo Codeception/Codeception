@@ -178,6 +178,17 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         return $function($this->guzzle);
     }
 
+    public function _setHeader($header, $value)
+    {
+        $this->session->setRequestHeader($header, $value);
+    }
+
+    public function _getResponseHeader($header)
+    {
+        $headers = $this->session->getResponseHeaders();
+        if (!isset($headers[$header])) return false;
+        return $headers[$header];
+    }
 
 	protected function call($uri, $method = 'get', $params = array())
 	{

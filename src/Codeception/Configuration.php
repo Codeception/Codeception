@@ -115,6 +115,7 @@ class Configuration
 
     public static function suiteSettings($suite, $config)
     {
+        if ($config['namespace']) $suite = preg_replace("~^".$config['namespace'].'\.~','', $suite);
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
 
         $globalConf = $config['settings'];

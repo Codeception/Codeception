@@ -361,6 +361,16 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/form/hidden');
     }
 
+    public function testLinksWithDifferentContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('Test', '#area1');
+        $this->module->seeInCurrentUrl('/form/file');
+        $this->module->amOnPage('/');
+        $this->module->click('Test', '#area2');
+        $this->module->seeInCurrentUrl('/form/hidden');
+    }
+
     public function testSeeElementOnPage()
     {
         $this->module->amOnPage('/form/field');

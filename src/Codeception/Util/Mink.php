@@ -41,11 +41,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $this->config['url'];
     }
 
-    public function _setHeader($header, $value)
-    {
-        $this->session->setRequestHeader($header, $value);
-    }
-
     public function _setCookie($cookie, $value)
     {
         $this->session->setCookie($cookie, $value);
@@ -54,13 +49,6 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function _getCookie($cookie)
     {
     	return $this->session->getCookie($cookie);
-    }
-
-    public function _getResponseHeader($header)
-    {
-        $headers = $this->session->getResponseHeaders();
-        if (!isset($headers[$header])) return false;
-        return $headers[$header];
     }
 
     public function _getResponseCode()
@@ -233,10 +221,10 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         return $el;
     }
 
-    protected function findLinkByContent($link)
+    protected function findLinkByContent($page, $link)
     {
         $literal = $this->session->getSelectorsHandler()->xpathLiteral($link);
-        return $this->session->getPage()->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
+        return $page->find('xpath','.//a[normalize-space(.)=normalize-space('.$literal.')]');
     }
 
     protected function findClickable($link, $context = null)
@@ -245,10 +233,9 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
             ? $this->findEl($context)
             : $this->session->getPage();
 
-        if (!$page) {
-            $this->fail("Context element $context not found");
-        }
-        $el = $this->findLinkByContent($link);
+        if (!$page) $this->fail("Context element $context not found");
+
+        $el = $this->findLinkByContent($page, $link);
         if (!$el) $el = $page->findLink($link);
         if (!$el) $el = $page->findButton($link);
         if (!$el) $el = $this->findEl($link);
