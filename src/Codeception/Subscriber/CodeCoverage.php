@@ -25,6 +25,7 @@ class CodeCoverage implements EventSubscriberInterface
     // defaults
     protected $settings = array('enabled' => false, 'remote' => false, 'low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false);
 
+    protected $http = array('method' => "GET", 'header' => '');
 
     function __construct($options = array())
     {
@@ -96,20 +97,28 @@ class CodeCoverage implements EventSubscriberInterface
      */
     protected function getRemoteCoverageFile($module, $type)
     {
-        $module->_setHeader('X-Codeception-CodeCoverage', 'remote-access');
-        // TODO: replace with file_get_contents?
-        $contents = $module->_sendRequest($module->_getUrl() . '/c3/report/'.$type);
-        if ($module->_getResponseCode() !== 200) {
-            $this->getRemoteError($module);
+        $this->addHeader('X-Codeception-CodeCoverage', 'remote-access');
+        $context = stream_context_create(array('http' => $this->http));
+        $contents = file_get_contents($module->_getUrl() . '/c3/report/'.$type, false, $context);
+        if ($contents === false) {
+            $this->getRemoteError($http_response_header);
         }
         return $contents;
     }
 
-    protected function getRemoteError($module)
+    protected function getRemoteError($headers)
     {
-        $error = $module->_getResponseHeader('X-Codeception-CodeCoverage-Error');
-        if ($error) throw new \Codeception\Exception\RemoteException($error[0]);
+        foreach ($headers as $header) {
+            if (strpos($header, 'X-Codeception-CodeCoverage-Error') === 0)
+                throw new \Codeception\Exception\RemoteException($header);
+        }
     }
+
+    protected function addHeader($header, $value)
+    {
+        $this->http['header'] .= "$header: $value\r\n";
+    }
+
 
     public function printResult(\Codeception\Event\PrintResult $e)
     {
