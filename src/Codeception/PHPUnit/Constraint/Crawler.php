@@ -28,7 +28,7 @@ class Crawler extends Page {
             $output .= "(listed below)";
             foreach ($nodes as $node)
             {
-                $output .= "\n--> ".$node->C14N();
+                $output .= "\n> ".$node->C14N();
             }
         } else {
             $output .= "(total {$nodes->count()} elements)";
