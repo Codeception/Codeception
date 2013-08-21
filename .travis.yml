@@ -24,5 +24,6 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
+  - psql -c 'create database codeception_test;' -U postgres
 
 script: "php codecept run"

@@ -66,7 +66,9 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
             "You can use your bootstrap file to assign the dbh:\n\n" .
             '\Codeception\Module\Dbh::$dbh = $dbh');
 
-        self::$dbh->rollback();
+        if(self::$dbh->inTransaction()) {
+          self::$dbh->rollback();
+        }
     }
 
     public function seeInDatabase($table, $criteria = array())
