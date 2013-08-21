@@ -1,6 +1,6 @@
 # Getting Started
 
-Let's take a look into Codeception architecture. We assume that you already [installed](http://codeception.com/install) it, and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance. They are well described in the previous chapter. Inside your `/tests` folder you will have three config files and three directories with names corresponding to these suites. Suites are independent groups of tests with a common purpose. 
+Let's take a look into Codeception architecture. We assume that you already [installed](http://codeception.com/install) it, and bootstrapped your first test suites. Codeception has generated three of them: unit, functional, and acceptance. They are well described in the previous chapter. Inside your __/tests__ folder you will have three config files and three directories with names corresponding to these suites. Suites are independent groups of tests with a common purpose. 
 
 ## Guys
 
@@ -112,7 +112,7 @@ Give it a try!
 
 ## Modules and Helpers
 
-The actions in Guy classes are taken from modules. With the `build` command described above, Codeception emulates multiple inheritance. M[odules are designed to have one action performed with one method. According to the [DRY principle](http://en.wikipedia.org/wiki/Don%27t_repeat_yourself), if you use the same scenario components in different modules, you can combine them and move them to a custom module. By default each suite has an empty module, which can extend Guy classes. They are stored in the `helpers` directory.
+The actions in Guy classes are taken from modules. With the `build` command described above, Codeception emulates multiple inheritance. Modules are designed to have one action performed with one method. According to the [DRY principle](http://en.wikipedia.org/wiki/Don%27t_repeat_yourself), if you use the same scenario components in different modules, you can combine them and move them to a custom module. By default each suite has an empty module, which can extend Guy classes. They are stored in the ___helpers__ directory.
 
 ## Bootstrap
 
@@ -149,7 +149,7 @@ if ($scenario->running()) {
 ?>
 ```
 
-But whenever you can try to keep you tests simple and avoid using any custom PHP code. Use only the `$I` object whenever it is possible. Keep the test clean and readable.
+But whenever you can, try to keep your tests simple and avoid using any custom PHP code. Use only the `$I` object whenever it is possible. Keep the test clean and readable.
 
 ## Configuration
 
@@ -249,10 +249,10 @@ There are plenty of options you can use.
 * `steps` - all performed actions will be printed to console.
 * `debug` - additional debug output will be printed.
 * `config` - specify different config file for current run.
-* `colors` - turn on colors (if disabled)
+* `colors` - turn on colors (if disabled).
 * `silent` - don't show the progress output.
 * `report` - format results in report mode.
-* `coverage` - collect code coverage report
+* `coverage` - collect code coverage report.
 * `no-exit` - don't provide exit codes on finish. This option may be useful for using Codeception with some CI servers like Bamboo.
 
 With the following options you can set the output in the most suitable format.
