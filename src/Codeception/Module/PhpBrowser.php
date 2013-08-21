@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Behat\Mink\Driver\GoutteDriver;
+use Codeception\Util\Connector\Goutte;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 use Symfony\Component\BrowserKit\Request;
@@ -64,7 +65,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     public $guzzle;
 
     public function _initialize() {
-        $client = new \Behat\Mink\Driver\Goutte\Client();
+        $client = new Goutte();
         $driver = new \Behat\Mink\Driver\GoutteDriver($client);
 
         // build up a Guzzle friendly list of configuration options
