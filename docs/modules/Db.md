@@ -46,9 +46,9 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * dsn *required* - PDO DSN
 * user *required* - user to access database
 * password *required* - password
-* dump - path to database dump.
+* dump - *required* path to database dump.
 * populate: true - should the dump be loaded before test suite is started.
-* cleanup: true - should the dump be reloaded after each test
+* cleanup: true - should the dump be reloaded before each test
 
 ### Example
 
