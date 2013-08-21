@@ -5,7 +5,7 @@
 Module for testing XMLRPC WebService.
 
 This module can be used either with frameworks or PHPBrowser.
-It tries to guess the framework is is attached to.
+It tries to guess the framework it is attached to.
 
 Whether framework is used it operates via standard framework modules.
 Otherwise sends raw HTTP requests to url via PHPBrowser.
