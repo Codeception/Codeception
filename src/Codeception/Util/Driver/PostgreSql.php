@@ -48,7 +48,8 @@ class PostgreSql extends Db
     }
 
     public function select($column, $table, array &$criteria) {
-        $query = 'select %s from "%s" where %s';
+        $where = $criteria ? "where %s" : '';
+        $query = 'select %s from "%s" '.$where;
         $params = array();
         foreach ($criteria as $k => $v) {
             if($v === NULL) {
