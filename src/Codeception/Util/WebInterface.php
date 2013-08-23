@@ -363,7 +363,7 @@ interface WebInterface
      *
      * ``` php
      * <?php
-     * // file is stored in 'tests/data/tests.xls'
+     * // file is stored in 'tests/_data/tests.xls'
      * $I->attachFile('prices.xls');
      * ?>
      * ```
