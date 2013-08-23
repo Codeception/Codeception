@@ -199,7 +199,7 @@ class Configuration
     public static function dataDir()
     {
         // Non-local UNIX directory path
-        if (self::$dataDir[0] == '/') {
+        if (self::$dataDir[0] == '/' || self::$dataDir[0] == '~') {
             self::$dataDirIsLocal = false;
             return self::$dataDir . DIRECTORY_SEPARATOR;
         }
