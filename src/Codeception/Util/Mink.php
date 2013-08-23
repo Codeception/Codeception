@@ -405,8 +405,16 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     public function attachFile($field, $filename) {
         $field = $this->findField($field);
         $path = \Codeception\Configuration::dataDir().$filename;
-        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
-        $field->attachFile($path);
+        $dataDirIsLocal = \Codeception\Configuration::dataDirIsLocal();
+
+        // If the file is local, check to see if it exists
+        if ($dataDirIsLocal) {
+            if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $path not found in Codeception data path. Only files stored in data path accepted");
+            $field->attachFile($path);
+        } else {
+            // File is not local, we cannot check to see if the file exists
+            $field->attachFile($path);
+        }
     }
 
     public function seeOptionIsSelected($select, $text)
