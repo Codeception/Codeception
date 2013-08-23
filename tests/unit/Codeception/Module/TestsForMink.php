@@ -88,8 +88,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('More info');
         $this->module->dontSeeLink('/info');
         $this->module->dontSeeLink('#info');
-        $this->module->amOnPage('/info');
-        $this->module->seeLink('Back');
+        $this->module->seeLink('More','/info');
     }
 
     public function testClick()

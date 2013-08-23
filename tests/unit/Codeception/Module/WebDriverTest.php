@@ -5,21 +5,23 @@ use Codeception\Util\Stub;
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForMink.php';
 
-class Selenium2Test extends TestsForMink
+class WebDriverTest extends TestsForMink
 {
     /**
-     * @var \Codeception\Module\Selenium2
+     * @var \Codeception\Module\WebDriver
      */
     protected $module;
 
     // this is my local config
     protected $is_local = false;
+    
+    protected $initialized = false;
 
     public function setUp()
     {
         $this->noPhpWebserver();
         $this->noSelenium();
-        $this->module = new \Codeception\Module\Selenium2();
+        $this->module = new \Codeception\Module\WebDriver();
         $url = '';
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $url = 'http://localhost:8000';
@@ -29,9 +31,9 @@ class Selenium2Test extends TestsForMink
             $url = 'http://testapp.com';
         }
 
-        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444'));
+        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true));
         $this->module->_initialize();
-        $this->module->_cleanup();
+
         $this->module->_before($this->makeTest());
     }
 
@@ -59,7 +61,7 @@ class Selenium2Test extends TestsForMink
             return true;
         }
         $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4444'
+            'Requires Selenium2 Server running on port 4455'
         );
         return false;
     }
@@ -85,6 +87,11 @@ class Selenium2Test extends TestsForMink
         $this->module->see('ticked','#notice');
     }
 
+    public function testSelectMultipleOptionsByValue()
+    {
+        // cant do this in WebDriver
+    }
+
     public function testAcceptPopup()
     {
         $this->module->amOnPage('/form/popup');
@@ -101,11 +108,22 @@ class Selenium2Test extends TestsForMink
         $this->module->see('No', '#result');
     }
 
+    public function testSelectByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption('form select[name=age]', '21-60');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('adult', $form['age']);
+    }
+
     public function testSeeInPopup()
     {
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Really?');
+        $this->module->cancelPopup();
+
     }
 
     public function testScreenshot()
@@ -117,13 +135,13 @@ class Selenium2Test extends TestsForMink
         @unlink(\Codeception\Configuration::logDir().'testshot.png');
     }
 
-    public function testRawSelenium()
-    {
-        $this->module->amOnPage('/');
-        $this->module->executeInSelenium(function (\Webdriver\Session $webdriver) {
-            $webdriver->element('id','link')->click('');
-        });
-        $this->module->seeCurrentUrlEquals('/info');
-    }
+//    public function testRawSelenium()
+//    {
+//        $this->module->amOnPage('/');
+//        $this->module->executeInSelenium(function (\Webdriver\Session $webdriver) {
+//            $webdriver->element('id','link')->click('');
+//        });
+//        $this->module->seeCurrentUrlEquals('/info');
+//    }
 
 }

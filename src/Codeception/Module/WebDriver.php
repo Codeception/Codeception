@@ -1,37 +1,115 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ElementNotFound;
+use Codeception\Util\Locator;
 use Codeception\Util\RemoteInterface;
 use Codeception\Util\WebInterface;
+use Symfony\Component\DomCrawler\Crawler;
+use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
+use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
-class WebDriver implements WebInterface, RemoteInterface {
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
+
+    protected $requiredFields = array('browser', 'url');
+    protected $config = array(
+        'host' => '127.0.0.1',
+        'port' => '4444',
+        'restart' => false,
+        'wait' => 0,
+        'capabilities' => array());
+    
+    protected $wd_host;
+    protected $capabilities;
 
     /**
      * @var \WebDriver
      */
     public $webDriver;
 
-    public function __construct()
+    public function _initialize()
     {
-        $wd_host = 'http://localhost:4444/wd/hub'; // this is the default
-        $capabilities = array(\WebDriverCapabilityType::BROWSER_NAME => 'firefox');
-        $this->webDriver = new \WebDriver($wd_host, $capabilities);
-        
+        $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
+        $this->capabilities = $this->config['capabilities'];
+        $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->webDriver = new \WebDriver($this->wd_host, $this->capabilities);
+        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        $this->webDriver->manage()->deleteAllCookies();
+    }
+
+    public function _after(\Codeception\TestCase $test)
+    {
+        try {
+            $this->webDriver->switchTo()->alert()->dismiss(); // close alert if exists
+        } catch (\NoAlertOpenWebDriverError $e) {}
+
+        $this->config['restart']
+            ? $this->webDriver->close()
+            : $this->amOnPage('/');
+    }
+
+    public function _afterSuite()
+    {
+        $this->webDriver->quit();
     }
 
     public function amOnSubdomain($subdomain)
     {
-        // TODO: Implement amOnSubdomain() method.
+        $url = $this->config['url'];
+        $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
+        $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
+        $this->_reconfigure(array('url' => $url));
     }
 
     public function _getUrl()
     {
-        // TODO: Implement _getUrl() method.
+        if (!isset($this->config['url']))
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Module connection failure. The URL for client can't bre retrieved");
+        return $this->config['url'];
     }
+
+    public function _getCurrentUri()
+    {
+        $url = $this->webDriver->getCurrentURL();
+        $parts = parse_url($url);
+        if (!$parts) $this->fail("URL couldn't be parsed");
+        $uri = "";
+        if (isset($parts['path'])) $uri .= $parts['path'];
+        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+        return $uri;
+    }
+
+    public function _saveScreenshot($filename)
+    {
+        $this->webDriver->takeScreenshot($filename);
+    }
+
+    /**
+     * Resize current window
+     *
+     * Example:
+     * ``` php
+     * <?php
+     * $I->resizeWindow(800, 600);
+     *
+     * ```
+     *
+     * @param int    $width
+     * @param int    $height
+     */
+    public function resizeWindow($width, $height) {
+        $this->webDriver->manage()->window()->setSize(new \WebDriverDimension($width, $height));
+    }
+
 
     public function _getResponseCode()
     {
-        // TODO: Implement _getResponseCode() method.
+        return "";
     }
 
     public function _sendRequest($url)
@@ -39,632 +117,470 @@ class WebDriver implements WebInterface, RemoteInterface {
         // TODO: Implement _sendRequest() method.
     }
 
-    /**
-     * Checks that cookie is set.
-     *
-     * @param $cookie
-     * @return mixed
-     */
     public function seeCookie($cookie)
     {
-        // TODO: Implement seeCookie() method.
+        $cookies = $this->webDriver->manage()->getCookies();
+        $cookies = array_map(function($c) { return $c['name']; }, $cookies);
+        $this->assertContains($cookie, $cookies);
     }
 
-    /**
-     * Checks that cookie doesn't exist
-     *
-     * @param $cookie
-     * @return mixed
-     */
     public function dontSeeCookie($cookie)
     {
-        // TODO: Implement dontSeeCookie() method.
+        $this->assertNull($this->webDriver->manage()->getCookieNamed($cookie));
     }
 
-    /**
-     * Sets a cookie.
-     *
-     * @param $cookie
-     * @param $value
-     * @return mixed
-     */
     public function setCookie($cookie, $value)
     {
-        // TODO: Implement setCookie() method.
+        $this->webDriver->manage()->addCookie(array('name' => $cookie, 'value' => $value));
     }
 
     public function resetCookie($cookie)
     {
-        // TODO: Implement resetCookie() method.
+        $this->webDriver->manage()->deleteCookieNamed($cookie);
     }
 
     public function grabCookie($cookie)
     {
-        // TODO: Implement grabCookie() method.
+        $value = $this->webDriver->manage()->getCookieNamed($cookie);
+        if (is_array($value)) return $value['value'];
     }
 
     public function amOnPage($page)
     {
-        $this->webDriver->get($page);
+        $host = rtrim($this->config['url'], '/');
+        $page = ltrim($page, '/');
+        $this->webDriver->get($host . '/' . $page);
     }
 
-    /**
-     * Check if current page contains the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->see('Logout'); // I can suppose user is logged in
-     * $I->see('Sign Up','h1'); // I can suppose it's a signup page
-     * $I->see('Sign Up','//body/h1'); // with XPath
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
     public function see($text, $selector = null)
     {
-        // TODO: Implement see() method.
+        if (!$selector) return $this->assertPageContains($text);
+        $nodes = $this->match($this->webDriver, $selector);
+        $this->assertNodesContain($text, $nodes);
     }
 
-    /**
-     * Check if current page doesn't contain the text specified.
-     * Specify the css selector to match only specific region.
-     *
-     * Examples:
-     *
-     * ```php
-     * <?php
-     * $I->dontSee('Login'); // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     * $I->dontSee('Sign Up','//body/h1'); // with XPath
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @param null $selector
-     */
     public function dontSee($text, $selector = null)
     {
-        // TODO: Implement dontSee() method.
+        if (!$selector) return $this->assertPageNotContains($text);
+        $nodes = $this->match($this->webDriver, $selector);
+        $this->assertNodesNotContain($text, $nodes);
     }
 
-    /**
-     * Perform a click on link or button.
-     * Link or button are found by their names or CSS selector.
-     * Submits a form if button is a submit type.
-     *
-     * If link is an image it's found by alt attribute value of image.
-     * If button is image button is found by it's value
-     * If link or button can't be found by name they are searched by CSS selector.
-     *
-     * The second parameter is a context: CSS or XPath locator to narrow the search.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * // simple link
-     * $I->click('Logout');
-     * // button of form
-     * $I->click('Submit');
-     * // CSS button
-     * $I->click('#form input[type=submit]');
-     * // XPath
-     * $I->click('//form/*[@type=submit]')
-     * // link in context
-     * $I->click('Logout', '#nav');
-     * ?>
-     * ```
-     * @param $link
-     * @param $context
-     */
+    protected function match($page, $selector)
+    {
+        $nodes = array();
+        if (Locator::isCSS($selector)) $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
+        if (!empty($nodes)) return $nodes;
+        if (Locator::isXPath($selector)) $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        return $nodes;
+    }
+
     public function click($link, $context = null)
     {
-        // TODO: Implement click() method.
+        $page = $this->webDriver;
+        if ($context) {
+            $nodes = $this->match($this->webDriver, $context);
+            if (empty($nodes)) throw new ElementNotFound($context,'CSS or XPath');
+            $page = reset($nodes);
+        }
+        $el = $this->findClickable($page, $link);
+        if (!$el) {
+            $els = $this->match($page, $link);
+            $el = reset($els);
+        }
+        if (!$el) throw new ElementNotFound($link, 'Link or Button or CSS or XPath');
+        $el->click();
     }
 
     /**
-     * Checks if there is a link with text specified.
-     * Specify url to match link with exact this url.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->seeLink('Logout'); // matches <a href="#">Logout</a>
-     * $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @param null $url
+     * @param $page
+     * @param $link
+     * @return \WebDriverElement
      */
+    protected function findClickable($page, $link)
+    {
+        $locator = Crawler::xpathLiteral(trim($link));
+
+        // narrow
+        $xpath = Locator::combine(
+            ".//a[normalize-space(.)=$locator]",
+            ".//button[normalize-space(.)=$locator]",
+            ".//a/img[normalize-space(@alt)=$locator]/ancestor::a",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][normalize-space(@value)=$locator]"
+        );
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
+
+        // wide
+        $xpath = Locator::combine(
+            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
+            ".//input[./@type = 'image'][contains(./@alt, $locator)]",
+            ".//button[contains(normalize-space(string(.)), $locator)]"
+        );
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
+        return null;
+    }
+
+    /**
+     * @param $selector
+     * @return \WebDriverElement
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    protected function findField($selector)
+    {
+        $locator = Crawler::xpathLiteral(trim($selector));
+
+        $xpath = Locator::combine(
+            ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
+            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
+        );
+
+        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
+
+        $els = $this->match($this->webDriver, $selector);
+        if (count($els)) return reset($els);
+
+        throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
+    }
+
+
     public function seeLink($text, $url = null)
     {
-        // TODO: Implement seeLink() method.
+        $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
+        if (!$url) return $this->assertNodesContain($text, $nodes);
+        $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
+                $parts = parse_url($url);
+                if (!$parts) $this->fail("Link URL of '$url' couldn't be parsed");
+                $uri = "";
+                if (isset($parts['path'])) $uri .= $parts['path'];
+                if (isset($parts['query'])) $uri .= "?".$parts['query'];
+                if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+                return $uri == trim($url);
+        });
+        $this->assertNodesContain($text, $nodes);
     }
 
-    /**
-     * Checks if page doesn't contain the link with text specified.
-     * Specify url to narrow the results.
-     *
-     * Examples:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeLink('Logout'); // I suppose user is not logged in
-     * ?>
-     * ```
-     *
-     * @param $text
-     * @param null $url
-     */
     public function dontSeeLink($text, $url = null)
     {
-        // TODO: Implement dontSeeLink() method.
+        $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
+        if (!$url) return $this->assertNodesNotContain($text, $nodes);
+        $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
+            return trim($e->getAttribute('href')) == trim($url);
+        });
+        $this->assertNodesNotContain($text, $nodes);
     }
 
-    /**
-     * Checks that current uri contains a value
-     *
-     * ``` php
-     * <?php
-     * // to match: /home/dashboard
-     * $I->seeInCurrentUrl('home');
-     * // to match: /users/1
-     * $I->seeInCurrentUrl('/users/');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function seeInCurrentUrl($uri)
     {
-        // TODO: Implement seeInCurrentUrl() method.
+        $this->assertContains($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Checks that current url is equal to value.
-     * Unlike `seeInCurrentUrl` performs a strict check.
-     *
-     * ``` php
-     * <?php
-     * // to match root url
-     * $I->seeCurrentUrlEquals('/');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function seeCurrentUrlEquals($uri)
     {
-        // TODO: Implement seeCurrentUrlEquals() method.
+        $this->assertEquals($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Checks that current url is matches a RegEx value
-     *
-     * ``` php
-     * <?php
-     * // to match root url
-     * $I->seeCurrentUrlMatches('~$/users/(\d+)~');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function seeCurrentUrlMatches($uri)
     {
-        // TODO: Implement seeCurrentUrlMatches() method.
+        \PHPUnit_Framework_Assert::assertRegExp($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Checks that current uri does not contain a value
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeInCurrentUrl('/users/');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function dontSeeInCurrentUrl($uri)
     {
-        // TODO: Implement dontSeeInCurrentUrl() method.
+        $this->assertNotContains($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Checks that current url is not equal to value.
-     * Unlike `dontSeeInCurrentUrl` performs a strict check.
-     *
-     * ``` php
-     * <?php
-     * // current url is not root
-     * $I->dontSeeCurrentUrlEquals('/');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function dontSeeCurrentUrlEquals($uri)
     {
-        // TODO: Implement dontSeeCurrentUrlEquals() method.
+        $this->assertNotEquals($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Checks that current url does not match a RegEx value
-     *
-     * ``` php
-     * <?php
-     * // to match root url
-     * $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
-     * ?>
-     * ```
-     *
-     * @param $uri
-     */
     public function dontSeeCurrentUrlMatches($uri)
     {
-        // TODO: Implement dontSeeCurrentUrlMatches() method.
+        \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
 
-    /**
-     * Takes a parameters from current URI by RegEx.
-     * If no url provided returns full URI.
-     *
-     * ``` php
-     * <?php
-     * $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
-     * $uri = $I->grabFromCurrentUrl();
-     * ?>
-     * ```
-     *
-     * @param null $uri
-     * @internal param $url
-     * @return mixed
-     */
     public function grabFromCurrentUrl($uri = null)
     {
-        // TODO: Implement grabFromCurrentUrl() method.
+        if (!$uri) return $this->_getCurrentUri();
+        $matches = array();
+        $res = preg_match($uri, $this->_getCurrentUri(), $matches);
+        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
+        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        return $matches[1];
     }
 
-    /**
-     * Assert if the specified checkbox is checked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-     * $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
-     * ?>
-     * ```
-     *
-     * @param $checkbox
-     */
     public function seeCheckboxIsChecked($checkbox)
     {
-        // TODO: Implement seeCheckboxIsChecked() method.
+        $this->assertTrue($this->findField($checkbox)->isSelected());
     }
 
-    /**
-     * Assert if the specified checkbox is unchecked.
-     * Use css selector or xpath to match.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-     * $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-     * ?>
-     * ```
-     *
-     * @param $checkbox
-     */
     public function dontSeeCheckboxIsChecked($checkbox)
     {
-        // TODO: Implement dontSeeCheckboxIsChecked() method.
+        $this->assertFalse($this->findField($checkbox)->isSelected());
     }
 
-    /**
-     * Checks that an input field or textarea contains value.
-     * Field is matched either by label or CSS or Xpath
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeInField('Body','Type your comment here');
-     * $I->seeInField('form textarea[name=body]','Type your comment here');
-     * $I->seeInField('form input[type=hidden]','hidden_value');
-     * $I->seeInField('#searchform input','Search');
-     * $I->seeInField('//form/*[@name=search]','Search');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $value
-     */
     public function seeInField($field, $value)
     {
-        // TODO: Implement seeInField() method.
+        $el = $this->findField($field);
+        if (!$el) throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
+        $el_value = $el->getTagName() == 'textarea'
+            ? $el->getText()
+            : $el->getAttribute('value');
+        $this->assertEquals($value, $el_value);
     }
 
-    /**
-     * Checks that an input field or textarea doesn't contain value.
-     * Field is matched either by label or CSS or Xpath
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeInField('Body','Type your comment here');
-     * $I->dontSeeInField('form textarea[name=body]','Type your comment here');
-     * $I->dontSeeInField('form input[type=hidden]','hidden_value');
-     * $I->dontSeeInField('#searchform input','Search');
-     * $I->dontSeeInField('//form/*[@name=search]','Search');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $value
-     */
     public function dontSeeInField($field, $value)
     {
-        // TODO: Implement dontSeeInField() method.
+        $el = $this->findField($field);
+        $el_value = $el->getTagName() == 'textarea'
+            ? $el->getText()
+            : $el->getAttribute('value');
+        $this->assertNotEquals($value, $el_value);
     }
 
-    /**
-     * Selects an option in select tag or in radio button group.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->selectOption('form select[name=account]', 'Premium');
-     * $I->selectOption('form input[name=payment]', 'Monthly');
-     * $I->selectOption('//form/select[@name=account]', 'Monthly');
-     * ?>
-     * ```
-     *
-     * Can select multiple options if second argument is array:
-     *
-     * ``` php
-     * <?php
-     * $I->selectOption('Which OS do you use?', array('Windows','Linux'));
-     * ?>
-     * ```
-     *
-     * @param $select
-     * @param $option
-     */
     public function selectOption($select, $option)
     {
-        // TODO: Implement selectOption() method.
+        $el = $this->findField($select);
+        $select = new \WebDriverSelect($el);
+        if ($select->isMultiple()) $select->deselectAll();
+        if (!is_array($option)) $option = array($option);
+        foreach ($option as $opt) {
+            $select->selectByVisibleText($opt);
+        }
     }
 
-    /**
-     * Ticks a checkbox.
-     * For radio buttons use `selectOption` method.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->checkOption('#agree');
-     * ?>
-     * ```
-     *
-     * @param $option
-     */
     public function checkOption($option)
     {
-        // TODO: Implement checkOption() method.
+        $field = $this->findField($option);
+        if ($field->isSelected()) return;
+        $field->click();
     }
 
-    /**
-     * Unticks a checkbox.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->uncheckOption('#notify');
-     * ?>
-     * ```
-     *
-     * @param $option
-     */
     public function uncheckOption($option)
     {
-        // TODO: Implement uncheckOption() method.
+        $field = $this->findField($option);
+        if (!$field->isSelected()) return;
+        $field->click();
+
     }
 
-    /**
-     * Fills a text field or textarea with value.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->fillField("//input[@type='text']", "Hello World!");
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $value
-     */
     public function fillField($field, $value)
     {
-        // TODO: Implement fillField() method.
+        $el = $this->findField($field);
+        $el->clear();
+        $el->sendKeys($value);
     }
 
-    /**
-     * Attaches file from Codeception data directory to upload field.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * // file is stored in 'tests/_data/prices.xls'
-     * $I->attachFile('input[@type="file"]', 'prices.xls');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @param $filename
-     */
     public function attachFile($field, $filename)
     {
-        // TODO: Implement attachFile() method.
+        $el = $this->findField($field);
+        $el->sendKeys(\Codeception\Configuration::dataDir().$filename);
     }
 
-    /**
-     * Finds and returns text contents of element.
-     * Element is searched by CSS selector, XPath or matcher by regex.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $heading = $I->grabTextFrom('h1');
-     * $heading = $I->grabTextFrom('descendant-or-self::h1');
-     * $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
-     * ?>
-     * ```
-     *
-     * @param $cssOrXPathOrRegex
-     * @return mixed
-     */
     public function grabTextFrom($cssOrXPathOrRegex)
     {
-        // TODO: Implement grabTextFrom() method.
+        $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
+        if (count($els)) return $els[0]->getText();
+        if (@preg_match($cssOrXPathOrRegex, $this->webDriver->getPageSource(), $matches)) return $matches[1];
+        throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
     }
 
-    /**
-     * Finds and returns field and returns it's value.
-     * Searches by field name, then by CSS, then by XPath
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $name = $I->grabValueFrom('Name');
-     * $name = $I->grabValueFrom('input[name=username]');
-     * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
-     * ?>
-     * ```
-     *
-     * @param $field
-     * @return mixed
-     */
     public function grabValueFrom($field)
     {
-        // TODO: Implement grabValueFrom() method.
+        $el = $this->findField($field);
+        if ($el->getTagName() == 'textarea') return $el->getText();
+        if ($el->getTagName() == 'input') return $el->getAttribute('value');
+        if ($el->getTagName() != 'select') return null;
+        $select = new \WebDriverSelect($el);
+        return $select->getFirstSelectedOption()->getAttribute('value');
     }
 
-    /**
-     * Checks if element exists on a page, matching it by CSS or XPath
-     *
-     * ``` php
-     * <?php
-     * $I->seeElement('.error');
-     * $I->seeElement('//form/input[1]');
-     * ?>
-     * ```
-     * @param $selector
-     */
     public function seeElement($selector)
     {
-        // TODO: Implement seeElement() method.
+        $this->assertNotEmpty($this->match($this->webDriver, $selector));
     }
 
-    /**
-     * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeElement('.error');
-     * $I->dontSeeElement('//form/input[1]');
-     * ?>
-     * ```
-     * @param $selector
-     */
     public function dontSeeElement($selector)
     {
-        // TODO: Implement dontSeeElement() method.
+        $this->assertEmpty($this->match($this->webDriver, $selector));
     }
 
-    /**
-     * Checks if option is selected in select field.
-     *
-     * ``` php
-     * <?php
-     * $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
-     * ?>
-     * ```
-     *
-     * @param $selector
-     * @param $optionText
-     * @return mixed
-     */
     public function seeOptionIsSelected($selector, $optionText)
     {
-        // TODO: Implement seeOptionIsSelected() method.
+        $el = $this->findField($selector);
+        $select = new \WebDriverSelect($el);
+        $this->assertNodesContain($optionText, $select->getAllSelectedOptions());
     }
 
-    /**
-     * Checks if option is not selected in select field.
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
-     * ?>
-     * ```
-     *
-     * @param $selector
-     * @param $optionText
-     * @return mixed
-     */
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
-        // TODO: Implement dontSeeOptionIsSelected() method.
+        $el = $this->findField($selector);
+        $select = new \WebDriverSelect($el);
+        $this->assertNodesNotContain($optionText, $select->getAllSelectedOptions());
+    }
+
+    public function seeInTitle($title)
+    {
+        $this->assertContains($title, $this->webDriver->getTitle());
+    }
+
+    public function dontSeeInTitle($title)
+    {
+        $this->assertNotContains($title, $this->webDriver->getTitle());
+    }
+
+    public function acceptPopup()
+    {
+        $this->webDriver->switchTo()->alert()->accept();
+    }
+
+    public function cancelPopup()
+    {
+        $this->webDriver->switchTo()->alert()->dismiss();
+    }
+
+    public function seeInPopup($text)
+    {
+        $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
+    }
+
+    public function typeInPopup($keys)
+    {
+        $this->webDriver->switchTo()->alert()->sendKeys($keys);
     }
 
     /**
-     * Checks that page title contains text.
+     * Reloads current page
+     */
+    public function reloadPage() {
+        $this->webDriver->navigate()->refresh();
+    }
+
+    /**
+     * Moves back in history
+     */
+    public function moveBack() {
+        $this->webDriver->navigate()->back();
+        $this->debug($this->_getCurrentUri());
+    }
+
+    /**
+     * Moves forward in history
+     */
+    public function moveForward() {
+        $this->webDriver->navigate()->forward();
+        $this->debug($this->_getCurrentUri());
+    }
+
+
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use Selenium WebDriver methods directly
+     *
+     * ``` php
+     * $I->executeInSelenium(function(\WebDriver $webdriver) {
+     *   $webdriver->get('http://google.com');
+     * });
+     * ```
+     *
+     * Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
+     * Not recommended this command too be used on regular basis.
+     * If Codeception lacks important Selenium methods implement then and submit patches.
+     *
+     * @param callable $function
+     */
+    public function executeInSelenium(\Closure $function)
+    {
+        $function($this->webDriver);
+    }
+
+    /**
+     * Switch to another window identified by its name.
+     *
+     * The window can only be identified by its name. If the $name parameter is blank it will switch to the parent window.
+     *
+     * Example:
+     * ``` html
+     * <input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
+     * ```
      *
      * ``` php
      * <?php
-     * $I->seeInTitle('Blog - Post #1');
+     * $I->click("Open window");
+     * # switch to another window
+     * $I->switchToWindow("another_window");
+     * # switch to parent window
+     * $I->switchToWindow();
      * ?>
      * ```
      *
-     * @param $title
-     * @return mixed
+     * If the window has no name, the only way to access it is via the `executeInSelenium()` method like so:
+     *
+     * ```
+     * <?php
+     * $I->executeInSelenium(function (\Webdriver $webdriver) {
+     * $handles=$webDriver->getWindowHandles();
+     * $last_window = end($handles);
+     * $webDriver->switchTo()->window($name);
+     * });
+     * ?>
+     * ```
+     *
+     * @param string|null $name
      */
-    public function seeInTitle($title)
-    {
-        // TODO: Implement seeInTitle() method.
+    public function switchToWindow($name = null) {
+        $this->webDriver->switchTo()->window($name);
+
     }
 
     /**
-     * Checks that page title does not contain text.
+     * Switch to another frame
      *
-     * @param $title
-     * @return mixed
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     *
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIFrame("another_frame");
+     * # switch to parent page
+     * $I->switchToIFrame();
+     *
+     * ```
+     *
+     * @param string|null $name
      */
-    public function dontSeeInTitle($title)
-    {
-        // TODO: Implement dontSeeInTitle() method.
+    public function switchToIFrame($name = null) {
+        $this->webDriver->switchTo()->frame($name);
     }
+
+    protected function assertNodesContain($text, $nodes)
+    {
+        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+    }
+
+    protected function assertNodesNotContain($text, $nodes)
+    {
+        $this->assertThatItsNot($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+    }
+
+    protected function assertPageContains($needle, $message = '')
+    {
+        $this->assertThat($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+    }
+
+    protected function assertPageNotContains($needle, $message = '')
+    {
+        $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+    }
+
 }

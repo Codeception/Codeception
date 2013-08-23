@@ -29,6 +29,7 @@ class Locator
         $selectors = func_get_args();
         foreach ($selectors as $k => $v) {
             $selectors[$k] = self::toXPath($v);
+            if (!$selectors[$k]) throw new \Exception("$v is invalid CSS or XPath");
         }
         return implode(' | ', $selectors);
     }
