@@ -409,7 +409,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
 
         // If the file is local, check to see if it exists
         if ($dataDirIsLocal) {
-            if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $path not found in Codeception data path. Only files stored in data path accepted");
+            if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
             $field->attachFile($path);
         } else {
             // File is not local, we cannot check to see if the file exists
