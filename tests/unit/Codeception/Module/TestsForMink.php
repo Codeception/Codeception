@@ -74,6 +74,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable', 'h1');
+        $this->module->dontSee('Welcome','h6');
     }
 
     public function testSeeInCurrentUrl()

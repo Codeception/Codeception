@@ -20,12 +20,12 @@ class Crawler extends Page {
 
     protected function fail(DomCrawler $nodes, $selector, PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
-        if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located by CSS or XPath');
+        if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
 
         $output = "Failed asserting that any element found by selector '$selector' ";
         if ($this->uri) $output .= "on page '{$this->uri}' ";
-        if ($nodes->count() < 5) {
-            $output .= "Tags:";
+        if ($nodes->count() < 10) {
+            $output .= "(listed below)";
             foreach ($nodes as $node)
             {
                 $output .= "\n+ " . $node->C14N();

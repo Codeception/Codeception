@@ -46,7 +46,7 @@ abstract class AbstractGuy implements \ArrayAccess
             $this->scenario->runStep();
             return $this;
         }
-        $this->scenario->setFeature(strtolower($text));
+        $this->scenario->setFeature(mb_strtolower($text));
         return $this;
     }
 
