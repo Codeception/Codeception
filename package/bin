@@ -2,15 +2,7 @@
 /**
  * Codeception CLI
  */
-
-if (isset($argv[1])) {
-    if (($argv[1] != 'run') && ($version = \Codeception\Codecept::checkLastVersion())) {
-        if (version_compare($version, \Codeception\Codecept::VERSION) > 0) {
-            echo "UPDATE: version $version released. See changes on: http://codeception.com.\n\n";
-        }
-    }
-}
-
+1
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Input\InputDefinition,
