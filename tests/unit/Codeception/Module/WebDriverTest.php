@@ -73,11 +73,6 @@ class WebDriverTest extends TestsForMink
         }
     }
 
-    public function testSelectByLabel()
-    {
-        // In Selenium you can't select option by it's value
-    }
-
     public function testClickEventOnCheckbox()
     {
         $this->module->amOnPage('/form/checkbox');
@@ -85,11 +80,6 @@ class WebDriverTest extends TestsForMink
         $this->module->dontSee('ticked','#notice');
         $this->module->checkOption('#checkin');
         $this->module->see('ticked','#notice');
-    }
-
-    public function testSelectMultipleOptionsByValue()
-    {
-        // cant do this in WebDriver
     }
 
     public function testAcceptPopup()
@@ -135,13 +125,59 @@ class WebDriverTest extends TestsForMink
         @unlink(\Codeception\Configuration::logDir().'testshot.png');
     }
 
-//    public function testRawSelenium()
-//    {
-//        $this->module->amOnPage('/');
-//        $this->module->executeInSelenium(function (\Webdriver\Session $webdriver) {
-//            $webdriver->element('id','link')->click('');
-//        });
-//        $this->module->seeCurrentUrlEquals('/info');
-//    }
+    public function testSubmitForm() {
+        $this->module->amOnPage('/form/complex');
+        $this->module->submitForm('form', array(
+                'name' => 'Davert',
+                'age' => 'child',
+                'terms' => 'agree',
+                'description' => 'My Bio'
+        ));
+        $form = data::get('form');
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('My Bio', $form['description']);
+        $this->assertEquals('agree',$form['terms']);
+        $this->assertEquals('child',$form['age']);
+    }
+
+    public function testRadioButtonByValue()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->selectOption('form','disagree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }
+
+    public function testRadioButtonByLabelOnContext()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->selectOption('form input','Get Off');
+        $this->module->seeOptionIsSelected('form input', 'disagree');
+        $this->module->dontSeeOptionIsSelected('form input','agree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }
+
+    public function testRadioButtonByLabel()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->checkOption('Get Off');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }
+
+
+    public function testRawSelenium()
+    {
+        $this->module->amOnPage('/');
+        $this->module->executeInSelenium(function (\Webdriver $webdriver) {
+            $webdriver->findElement(WebDriverBy::id('link'))->click();
+        });
+        $this->module->seeCurrentUrlEquals('/info');
+    }
 
 }

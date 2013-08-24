@@ -14,6 +14,7 @@ class WebDriver extends Page {
         foreach ($nodes as $node)
         {
             /** @var $node \WebDriverElement  **/
+            if (!$node->isDisplayed()) continue;
             if (parent::matches($node->getText())) return true;
         }
         return false;

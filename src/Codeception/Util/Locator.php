@@ -119,4 +119,9 @@ class Locator
         return @$xpath->evaluate($locator, $document) !== false;
     }
 
+    public static function isID($id)
+    {
+        return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
+    }
+
 }

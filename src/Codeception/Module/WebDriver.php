@@ -3,20 +3,19 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Util\Locator;
-use Codeception\Util\RemoteInterface;
 use Codeception\Util\WebInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
+class WebDriver extends \Codeception\Module implements WebInterface {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'wait' => 0,
+        'wait' => 5,
         'capabilities' => array());
     
     protected $wd_host;
@@ -34,19 +33,21 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         $this->webDriver = new \WebDriver($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        $wd = $this->webDriver;
+        register_shutdown_function(function () use ($wd) {
+            try { $wd->quit(); } catch (\UnhandledWebDriverError $e) {}
+        });
     }
 
     public function _before(\Codeception\TestCase $test)
     {
         $this->webDriver->manage()->deleteAllCookies();
+        $size = $this->webDriver->manage()->window()->getSize();
+        $this->debugSection("Window", $size->getWidth().'x'.$size->getHeight());
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        try {
-            $this->webDriver->switchTo()->alert()->dismiss(); // close alert if exists
-        } catch (\NoAlertOpenWebDriverError $e) {}
-
         $this->config['restart']
             ? $this->webDriver->close()
             : $this->amOnPage('/');
@@ -106,37 +107,30 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->webDriver->manage()->window()->setSize(new \WebDriverDimension($width, $height));
     }
 
-
-    public function _getResponseCode()
-    {
-        return "";
-    }
-
-    public function _sendRequest($url)
-    {
-        // TODO: Implement _sendRequest() method.
-    }
-
     public function seeCookie($cookie)
     {
         $cookies = $this->webDriver->manage()->getCookies();
         $cookies = array_map(function($c) { return $c['name']; }, $cookies);
+        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
     }
 
     public function dontSeeCookie($cookie)
     {
+        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertNull($this->webDriver->manage()->getCookieNamed($cookie));
     }
 
     public function setCookie($cookie, $value)
     {
         $this->webDriver->manage()->addCookie(array('name' => $cookie, 'value' => $value));
+        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
     public function resetCookie($cookie)
     {
         $this->webDriver->manage()->deleteCookieNamed($cookie);
+        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
     public function grabCookie($cookie)
@@ -150,6 +144,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $host = rtrim($this->config['url'], '/');
         $page = ltrim($page, '/');
         $this->webDriver->get($host . '/' . $page);
+        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
     public function see($text, $selector = null)
@@ -169,6 +164,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function match($page, $selector)
     {
         $nodes = array();
+        if (Locator::isID($selector)) $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
+        if (!empty($nodes)) return $nodes;
         if (Locator::isCSS($selector)) $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
         if (!empty($nodes)) return $nodes;
         if (Locator::isXPath($selector)) $nodes = $page->findElements(\WebDriverBy::xpath($selector));
@@ -232,6 +229,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findField($selector)
     {
+        if ($selector instanceof \WebDriverElement) return $selector;
         $locator = Crawler::xpathLiteral(trim($selector));
 
         $xpath = Locator::combine(
@@ -347,27 +345,94 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function selectOption($select, $option)
     {
         $el = $this->findField($select);
+        if ($el->getTagName() != 'select') {
+            $els = $this->matchCheckables($select);
+            $radio = null;
+            foreach ($els as $el) {
+                $radio = $this->findCheckable($el, $option, true);
+                if ($radio) break;
+            }
+            if (!$radio) throw new ElementNotFound($select, "Radiobutton with value or name '$option in");
+            $radio->click();
+            return;
+        }
+
         $select = new \WebDriverSelect($el);
         if ($select->isMultiple()) $select->deselectAll();
         if (!is_array($option)) $option = array($option);
+
+        $matched = false;
+
         foreach ($option as $opt) {
-            $select->selectByVisibleText($opt);
+            try {
+                $select->selectByVisibleText($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
         }
+        foreach ($option as $opt) {
+            try {
+            $select->selectByValue($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
+        }
+        if ($matched) return;
+        throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
+
+    /**
+     * @param $context
+     * @param $radio_or_checkbox
+     * @param bool $byValue
+     * @return mixed|null
+     */
+    protected function findCheckable($context, $radio_or_checkbox, $byValue = false)
+    {
+        if ($radio_or_checkbox instanceof \WebDriverElement) return $radio_or_checkbox;
+
+        $locator = Crawler::xpathLiteral($radio_or_checkbox);
+        $xpath = Locator::combine(
+            "//input[./@type = 'checkbox'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
+            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'checkbox']",
+            "//input[./@type = 'radio'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
+            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'radio']"
+        );
+        if ($byValue) {
+            $xpath = Locator::combine(
+                $xpath,
+                "//input[./@type = 'checkbox'][./@value = $locator]",
+                "//input[./@type = 'radio'][./@value = $locator]"
+            );
+        }
+        /** @var $context \WebDriverElement  **/
+        $els = $context->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
+        $els = $this->match($context, $radio_or_checkbox);
+        if (count($els)) return reset($els);
+        return null;
+    }
+
+    protected function matchCheckables($selector)
+    {
+        $els = $this->match($this->webDriver, $selector);
+        if (!count($els)) throw new ElementNotFound($selector, "Element containing radio by CSS or XPath");
+        return $els;
+    }
+
 
     public function checkOption($option)
     {
-        $field = $this->findField($option);
+        $field = $this->findCheckable($this->webDriver, $option);
+        if (!$field) throw new ElementNotFound($option, "Checkbox or Radio by Label or CSS or XPath");
         if ($field->isSelected()) return;
         $field->click();
     }
 
     public function uncheckOption($option)
     {
-        $field = $this->findField($option);
+        $field = $this->findCheckable($this->webDriver, $option);
+        if (!$field) throw new ElementNotFound($option, "Checkbox by Label or CSS or XPath");
         if (!$field->isSelected()) return;
         $field->click();
-
     }
 
     public function fillField($field, $value)
@@ -401,19 +466,84 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return $select->getFirstSelectedOption()->getAttribute('value');
     }
 
+    /**
+     * Checks for a visible element on a page, matching it by CSS or XPath
+     *
+     * ``` php
+     * <?php
+     * $I->seeElement('.error');
+     * $I->seeElement('//form/input[1]');
+     * ?>
+     * ```
+     * @param $selector
+     */
     public function seeElement($selector)
+    {
+        $els = array_filter($this->match($this->webDriver, $selector), function(\WebDriverElement $el) {
+            return $el->isDisplayed();
+        });
+        $this->assertNotEmpty($els);
+    }
+
+    /**
+     * Checks that element is invisible or not present on page.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeElement('.error');
+     * $I->dontSeeElement('//form/input[1]');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     */
+    public function dontSeeElement($selector)
+    {
+        $els = array_filter($this->match($this->webDriver, $selector), function(\WebDriverElement $el) {
+            return $el->isDisplayed();
+        });
+        $this->assertEmpty($els);
+    }
+
+
+    /**
+     * Checks if element exists on a page even it is invisible.
+     *
+     * ``` php
+     * <?php
+     * $I->seeElementInDOM('//form/input[type=hidden]');
+     * ?>
+     * ```
+     *
+     * @param $selector
+     */
+    public function seeElementInDOM($selector)
     {
         $this->assertNotEmpty($this->match($this->webDriver, $selector));
     }
 
-    public function dontSeeElement($selector)
+    /**
+     * Opposite to `seeElementInDOM`.
+     *
+     * @param $selector
+     */
+    public function dontSeeElementInDOM($selector)
     {
         $this->assertEmpty($this->match($this->webDriver, $selector));
     }
 
+
     public function seeOptionIsSelected($selector, $optionText)
     {
         $el = $this->findField($selector);
+        if ($el->getTagName() !== 'select') {
+            $els = $this->matchCheckables($selector);
+            foreach ($els as $k => $el) {
+                $els[$k] = $this->findCheckable($el, $optionText, true);
+            }
+            $this->assertNotEmpty(array_filter($els, function($e) { return $e->isSelected(); }));
+            return;
+        }
         $select = new \WebDriverSelect($el);
         $this->assertNodesContain($optionText, $select->getAllSelectedOptions());
     }
@@ -421,6 +551,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
         $el = $this->findField($selector);
+        if ($el->getTagName() !== 'select') {
+            $els = $this->matchCheckables($selector);
+            foreach ($els as $k => $el) {
+                $els[$k] = $this->findCheckable($el, $optionText, true);
+            }
+            $this->assertEmpty(array_filter($els, function($e) { return $e->isSelected(); }));
+            return;
+        }
         $select = new \WebDriverSelect($el);
         $this->assertNodesNotContain($optionText, $select->getAllSelectedOptions());
     }
@@ -478,6 +616,87 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->debug($this->_getCurrentUri());
     }
 
+    public function submitForm($selector, $params)
+    {
+        $form = $this->match($this->webDriver,$selector);
+        if (empty($form)) throw new ElementNotFound($selector, "Form via CSS or XPath");
+        $form = reset($form);
+        /** @var $form \WebDriverElement  **/
+        foreach ($params as $param => $value) {
+            $els = $form->findElements(\WebDriverBy::name($param));
+            $el = reset($els);
+            if ($el->getTagName() == 'textarea') $this->fillField($el, $value);
+            if ($el->getTagName() == 'select') $this->selectOption($el, $value);
+            if ($el->getTagName() == 'input') {
+                $type = $el->getAttribute('type');
+                if ($type == 'text') $this->fillField($el, $value);
+                if ($type == 'radio' or $type == 'checkbox') {
+                    foreach ($els as $radio) {
+                        if ($radio->getAttribute('value') == $value) $this->checkOption($radio);
+                    }
+                }
+            }
+        }
+        $this->debugSection('Uri', $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri());
+        $this->debugSection('Method', $form->getAttribute('method') ? $form->getAttribute('method') : 'GET');
+        $this->debugSection('Parameters', json_encode($params));
+
+        $form->submit();
+        $this->debugSection('Page', $this->_getCurrentUri());
+    }
+
+    /**
+     * Waits until element has changed according to callback function
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
+     *     return $el->isDisplayed();
+     * }, 100);
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param \Closure $callback
+     * @param int $timeout
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function waitForElementChange($element, \Closure $callback, $timeout = 30)
+    {
+        $els = $this->match($this->webDriver, $element);
+        if (!count($els)) throw new ElementNotFound($element, "CSS or XPath");
+        $el = reset($els);
+        $checker = function() use ($el, $callback) {
+            $callback($el);
+        };
+        $this->webDriver->wait($timeout)->until($checker);
+    }
+
+    /**
+     * Waits for element to appear on page for specific amount of time.
+     * If element not appears, timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElement('#agree_button', 30); // secs
+     * $I->click('#agree_button');
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param int $timeout seconds
+     * @throws \Exception
+     */
+    public function waitForElement($element, $timeout = 10)
+    {
+        $condition = null;
+        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::id(substr($element, 1)));
+        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::cssSelector($element));
+        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::xpath($element));
+        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+
+        $this->webDriver->wait($timeout)->until($condition);
+    }
 
     /**
      * Low-level API method.
@@ -497,7 +716,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function executeInSelenium(\Closure $function)
     {
-        $function($this->webDriver);
+        return $function($this->webDriver);
     }
 
     /**
@@ -536,7 +755,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function switchToWindow($name = null) {
         $this->webDriver->switchTo()->window($name);
-
     }
 
     /**
@@ -561,6 +779,20 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function switchToIFrame($name = null) {
         $this->webDriver->switchTo()->frame($name);
+    }
+
+    public function executeJS($script)
+    {
+        return $this->webDriver->executeScript($script);
+    }
+
+    public function waitForJS($script, $timeout)
+    {
+        $condition = function ($wd) use ($script) {
+            return $wd->executeScript($script);
+        };
+        $this->webDriver->wait($timeout)->until($condition);
+
     }
 
     protected function assertNodesContain($text, $nodes)

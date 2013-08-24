@@ -336,7 +336,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         }
 
         $form[$fieldName]->select($this->matchOption($field, $option));
-
     }
 
     protected function matchOption(Crawler $field, $option)
