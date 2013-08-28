@@ -140,5 +140,17 @@ class Laravel4 extends \Codeception\Util\Framework {
 	{
 		$this->kernel['auth']->driver($driver)->setUser($user);
 	}
+	
+	
+	/**
+	 * Return an instance of a class from the IoC Container
+	 *
+	 * @param  string  $class
+	 * @return class
+	 */
+	public function getInstance($class)
+	{
+		return $this->kernel[$class];
+	}
 
 }
