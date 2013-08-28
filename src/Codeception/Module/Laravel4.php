@@ -144,11 +144,27 @@ class Laravel4 extends \Codeception\Util\Framework {
 	
 	/**
 	 * Return an instance of a class from the IoC Container
-	 *
+	 * (http://laravel.com/docs/ioc)
+	 * 
+	 * Example
+	 * ````
+	 * //In Laravel
+	 * App::bind('foo', function($app)
+	 * {
+	 *     return new FooBar;
+	 * });
+	 * 
+	 * //Then in test
+	 * $I->grabService('foo');
+	 * 
+	 * //Will return an instance of FooBar, also works for singletons.
+	 * ```
+	 * 
+	 * 
 	 * @param  string  $class
 	 * @return class
 	 */
-	public function getInstance($class)
+	public function grabService($class)
 	{
 		return $this->kernel[$class];
 	}
