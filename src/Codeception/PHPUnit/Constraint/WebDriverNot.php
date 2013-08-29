@@ -1,15 +1,14 @@
 <?php
 namespace Codeception\PHPUnit\Constraint;
-use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
-class CrawlerNot extends Crawler {
+class WebDriverNot extends WebDriver {
 
-    protected function matches(DomCrawler $nodes)
+    protected function matches($nodes)
     {
         return !parent::matches($nodes);
     }
 
-    protected function fail(DomCrawler $nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
         $output = "Element '$selector' was found ";
 
@@ -17,8 +16,9 @@ class CrawlerNot extends Crawler {
 
         foreach ($nodes as $node)
         {
-            if (strpos($node->nodeValue, $this->string)) {
-                $output .= $this->failureDescription($node->C14N());
+            /** @var $node \WebDriverElement  **/
+            if (strpos($node->getText(), $this->string)) {
+                $output .= $this->failureDescription($node->getTagName().'['.$node->getText().']');
                 break;
             }
         }

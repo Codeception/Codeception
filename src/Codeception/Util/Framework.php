@@ -87,7 +87,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $nodes = $this->match($link);
 
-        if (!$nodes->count()) throw new ElementNotFound($link, 'LInk or Button by name or CSS or XPath');
+        if (!$nodes->count()) throw new ElementNotFound($link, 'Link or Button by name or CSS or XPath');
         foreach ($nodes as $node) {
             if ($node->nodeName == 'a') {
                 $this->crawler = $this->client->click($nodes->first()->link());
@@ -336,7 +336,6 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         }
 
         $form[$fieldName]->select($this->matchOption($field, $option));
-
     }
 
     protected function matchOption(Crawler $field, $option)
