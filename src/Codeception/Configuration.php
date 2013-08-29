@@ -16,6 +16,7 @@ class Configuration
     protected static $dataDir = null;
     protected static $helpersDir = null;
     protected static $testsDir = null;
+    protected static $dataDirIsLocal = true;
 
     public static $lock = false;
 
@@ -206,6 +207,18 @@ class Configuration
 
     public static function dataDir()
     {
+        // Non-local UNIX directory path
+        if (self::$dataDir[0] == '/' || self::$dataDir[0] == '~') {
+            self::$dataDirIsLocal = false;
+            return self::$dataDir . DIRECTORY_SEPARATOR;
+        }
+
+        // Non-local Windows directory path
+        if (self::$dataDir[1].self::$dataDir[2] == ':\\' || self::$dataDir[1].self::$dataDir[2] == ':/') {
+            self::$dataDirIsLocal = false;
+            return "file:///" . self::$dataDir . DIRECTORY_SEPARATOR;
+        }
+
         return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
     }
 
@@ -255,6 +268,10 @@ class Configuration
         foreach ($a1 as $k1 => $v1) // only single elements here left
             $res[$k1] = $v1;
         return $res;
+    }
+
+    public static function isLocal() {
+        return self::$isLocal;
     }
 
 
