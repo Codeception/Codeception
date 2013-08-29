@@ -146,22 +146,23 @@ class Laravel4 extends \Codeception\Util\Framework {
 	 * (http://laravel.com/docs/ioc)
 	 * 
 	 * Example
-	 * ````
-	 * //In Laravel
+	 * ``` php
+     * <?php
+	 * // In Laravel
 	 * App::bind('foo', function($app)
 	 * {
 	 *     return new FooBar;
 	 * });
 	 * 
-	 * //Then in test
-	 * $I->grabService('foo');
+	 * // Then in test
+	 * $service = $I->grabService('foo');
 	 * 
-	 * //Will return an instance of FooBar, also works for singletons.
+	 * // Will return an instance of FooBar, also works for singletons.
+     * ?>
 	 * ```
 	 * 
-	 * 
 	 * @param  string  $class
-	 * @return class
+	 * @return mixed
 	 */
 	public function grabService($class)
 	{
