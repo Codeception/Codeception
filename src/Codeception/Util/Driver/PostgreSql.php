@@ -9,11 +9,14 @@ class PostgreSql extends Db
 
     public function cleanup()
     {
-        $drops = $this->dbh->query("select 'drop table if exists \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public' ;")->fetchAll();
+        $tables = $this->dbh->query("SELECT 'DROP TABLE IF EXISTS \"' || tablename || '\" cascade;' FROM pg_tables WHERE schemaname = 'public';")->fetchAll();
+        $sequences = $this->dbh->query("SELECT 'DROP SEQUENCE IF EXISTS \"' || relname || '\" cascade;' FROM pg_class WHERE relkind = 'S';")->fetchAll();
 
-        if (!$drops) return;
-        foreach ($drops as $drop) {
-            $this->dbh->exec($drop[0]);
+        $drops = array_merge($tables, $sequences);
+        if ($drops) {
+            foreach ($drops as $drop) {
+                $this->dbh->exec($drop[0]);
+            }
         }
     }
 
