@@ -31,7 +31,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
-        $this->webDriver = new \WebDriver($this->wd_host, $this->capabilities);
+        $this->webDriver = new \RemoteWebDriver($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $wd = $this->webDriver;
         register_shutdown_function(function () use ($wd) {
@@ -781,18 +781,46 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->webDriver->switchTo()->frame($name);
     }
 
+    /**
+     * Executes custom JavaScript
+     *
+     * @param $script
+     * @return mixed
+     */
     public function executeJS($script)
     {
         return $this->webDriver->executeScript($script);
     }
 
-    public function waitForJS($script, $timeout)
+    /**
+     * Executes JavaScript and waits for it to return true or for the timeout.
+     *
+     * In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForJS(60, "return $.active == 0;");
+     * ?>
+     * ```
+     *
+     * @param $timeout int seconds
+     * @param $script
+     */
+    public function waitForJS($timeout, $script)
     {
         $condition = function ($wd) use ($script) {
             return $wd->executeScript($script);
         };
         $this->webDriver->wait($timeout)->until($condition);
 
+    }
+
+    /**
+     * Maximizes current window
+     */
+    public function maximizeWindow()
+    {
+        $this->webDriver->manage()->window()->maximize();
     }
 
     protected function assertNodesContain($text, $nodes)
