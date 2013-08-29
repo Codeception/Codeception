@@ -123,7 +123,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         } catch (\PDOException $e) {
             throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating PDO connection');
         }
-        
+
         $this->dbh = $this->driver->getDbh();
 
         // starting with loading dump
@@ -226,7 +226,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $res = $sth->execute();
         if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
 
-        $lastInsertId = (int) $this->driver->getDbh()->lastInsertId();
+        $lastInsertId = (int) $this->driver->lastInsertId($table);
 
         $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
 
