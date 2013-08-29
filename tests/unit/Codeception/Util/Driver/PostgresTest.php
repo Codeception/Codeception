@@ -49,7 +49,7 @@ class postgresTest extends \PHPUnit_Framework_TestCase
         $this->postgres->cleanup();
         $this->assertEmpty($this->postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
     }
-    
+
     public function testLoadDump() {
         $this->postgres->load($this->sql);
         $res = $this->postgres->getDbh()->query("select * from users where name = 'davert'");
@@ -59,6 +59,14 @@ class postgresTest extends \PHPUnit_Framework_TestCase
         $res = $this->postgres->getDbh()->query("select * from groups where name = 'coders'");
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
+    }
+
+    public function testSelectWithEmptyCriteria() {
+      $emptyCriteria = array();
+      $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
+
+      $this->assertNotContains('where', $generatedSql);
+
     }
 
 }

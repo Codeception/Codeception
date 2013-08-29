@@ -127,6 +127,10 @@ class Db
         $this->sqlQuery($query);
     }
 
+    public function lastInsertId($table) {
+      return $this->getDbh()->lastInsertId();
+    }
+
     protected function sqlLine($sql)
     {
         if (trim($sql) == "") return true;
