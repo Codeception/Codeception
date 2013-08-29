@@ -217,7 +217,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ### dontSeeCookie
 
-__not documented__
+
+Checks that cookie doesn't exist
+
+ * param $cookie
+ * return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -398,7 +402,11 @@ Moves focus to link or button or any node found by CSS or XPath
 
 ### grabCookie
 
-__not documented__
+
+Grabs a cookie value.
+
+ * param $cookie
+ * return mixed
 
 
 ### grabFromCurrentUrl
@@ -539,7 +547,11 @@ Reloads current page
 
 ### resetCookie
 
-__not documented__
+
+Unsets cookie
+
+ * param $cookie
+ * return mixed
 
 
 ### see
@@ -583,7 +595,11 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ### seeCookie
 
-__not documented__
+
+Checks that cookie is set.
+
+ * param $cookie
+ * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -753,7 +769,12 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
 ### setCookie
 
-__not documented__
+
+Sets a cookie.
+
+ * param $cookie
+ * param $value
+ * return mixed
 
 
 ### uncheckOption

@@ -1,86 +1,38 @@
-# PhpBrowser Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/PhpBrowser.php)**
-
-
-Uses [Mink](http://mink.behat.org) with [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
-Module works over CURL and requires **PHP CURL extension** to be enabled.
-
-Use to perform web acceptance tests with non-javascript browser.
-
-If test fails stores last shown page in 'output' dir.
-
-## Status
-
-* Maintainer: **davert**
-* Stability: **stable**
-* Contact: davert.codecept@mailican.com
-* relies on [Mink](http://mink.behat.org) and [Guzzle](http://guzzlephp.org/)
-
-*Please review the code of non-stable modules and provide patches if you have issues.*
-
-## Configuration
-
-* url *required* - start url of your app
-* curl - curl options
-
-### Example (`acceptance.suite.yml`)
-
-    modules:
-       enabled: [PhpBrowser]
-       config:
-          PhpBrowser:
-             url: 'http://localhost'
-             curl:
-                 CURLOPT_RETURNTRANSFER: true
-
-## Public Properties
-
-* session - contains Mink Session
-* guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\Guzzle\Http\Client`
-
-All SSL certification checks are disabled by default.
-To configure CURL options use `curl` config parameter.
+# WebDriver Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/WebDriver.php)**
 
 
 ## Actions
 
 
-### amHttpAuthenticated
+### acceptPopup
 
-
-Adds HTTP authentication via username/password.
-
- * param $username
- * param $password
+__not documented__
 
 
 ### amOnPage
 
 
 Opens the page.
+Requires relative uri as parameter
+
+Example:
+
+``` php
+<?php
+// opens front page
+$I->amOnPage('/');
+// opens /register page
+$I->amOnPage('/register');
+?>
+```
 
  * param $page
 
 
 ### amOnSubdomain
 
-
-Sets 'url' configuration parameter to hosts subdomain.
-It does not open a page on subdomain. Use `amOnPage` for that
-
-``` php
-<?php
-// If config is: 'http://mysite.com'
-// or config is: 'http://www.mysite.com'
-// or config is: 'http://company.mysite.com'
-
-$I->amOnSubdomain('user');
-$I->amOnPage('/');
-// moves to http://user.mysite.com/
-?>
-```
- * param $subdomain
- * return mixed
+__not documented__
 
 
 ### attachFile
@@ -99,6 +51,11 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
 
  * param $field
  * param $filename
+
+
+### cancelPopup
+
+__not documented__
 
 
 ### checkOption
@@ -191,11 +148,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ### dontSeeCookie
 
-
-Checks that cookie doesn't exist
-
- * param $cookie
- * return mixed
+__not documented__
 
 
 ### dontSeeCurrentUrlEquals
@@ -232,9 +185,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ### dontSeeElement
 
 
-Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
-
-Example:
+Checks that element is invisible or not present on page.
 
 ``` php
 <?php
@@ -242,6 +193,15 @@ $I->dontSeeElement('.error');
 $I->dontSeeElement('//form/input[1]');
 ?>
 ```
+
+ * param $selector
+
+
+### dontSeeElementInDOM
+
+
+Opposite to `seeElementInDOM`.
+
  * param $selector
 
 
@@ -323,33 +283,32 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
-### executeInGuzzle
+### executeInSelenium
 
 
 Low-level API method.
-If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
-
-Example:
+If Codeception commands are not enough, use Selenium WebDriver methods directly
 
 ``` php
-<?php
-// from the official Guzzle manual
-$I->amGoingTo('Sign all requests with OAuth');
-$I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
-     $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
-                 'consumer_key'    => '***',
-                 'consumer_secret' => '***',
-                 'token'           => '***',
-                 'token_secret'    => '***'
-     )));
+$I->executeInSelenium(function(\WebDriver $webdriver) {
+  $webdriver->get('http://google.com');
 });
-?>
 ```
 
+Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
 Not recommended this command too be used on regular basis.
-If Codeception lacks important Guzzle Client methods implement then and submit patches.
+If Codeception lacks important Selenium methods implement then and submit patches.
 
  * param callable $function
+
+
+### executeJS
+
+
+Executes custom JavaScript
+
+ * param $script
+ * return mixed
 
 
 ### fillField
@@ -371,11 +330,7 @@ $I->fillField("//input[@type='text']", "Hello World!");
 
 ### grabCookie
 
-
-Grabs a cookie value.
-
- * param $cookie
- * return mixed
+__not documented__
 
 
 ### grabFromCurrentUrl
@@ -436,6 +391,12 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
  * return mixed
 
 
+### maximizeWindow
+
+
+Maximizes current window
+
+
 ### moveBack
 
 
@@ -456,11 +417,23 @@ Reloads current page
 
 ### resetCookie
 
+__not documented__
 
-Unsets cookie
 
- * param $cookie
- * return mixed
+### resizeWindow
+
+
+Resize current window
+
+Example:
+``` php
+<?php
+$I->resizeWindow(800, 600);
+
+```
+
+ * param int    $width
+ * param int    $height
 
 
 ### see
@@ -504,11 +477,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ### seeCookie
 
-
-Checks that cookie is set.
-
- * param $cookie
- * return mixed
+__not documented__
 
 
 ### seeCurrentUrlEquals
@@ -545,7 +514,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ### seeElement
 
 
-Checks if element exists on a page, matching it by CSS or XPath
+Checks for a visible element on a page, matching it by CSS or XPath
 
 ``` php
 <?php
@@ -553,6 +522,20 @@ $I->seeElement('.error');
 $I->seeElement('//form/input[1]');
 ?>
 ```
+ * param $selector
+
+
+### seeElementInDOM
+
+
+Checks if element exists on a page even it is invisible.
+
+``` php
+<?php
+$I->seeElementInDOM('//form/input[type=hidden]');
+?>
+```
+
  * param $selector
 
 
@@ -593,6 +576,11 @@ $I->seeInField('//form/*[@name=search]','Search');
 
  * param $field
  * param $value
+
+
+### seeInPopup
+
+__not documented__
 
 
 ### seeInTitle
@@ -645,21 +633,6 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
-### seePageNotFound
-
-
-Asserts that current page has 404 response status code.
-
-
-### seeResponseCodeIs
-
-
-Checks that response code is equal to value provided.
-
- * param $code
- * return mixed
-
-
 ### selectOption
 
 
@@ -687,92 +660,79 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
  * param $option
 
 
-### sendAjaxGetRequest
-
-
-If your page triggers an ajax request, you can perform it manually.
-This action sends a GET ajax request with specified params.
-
-See ->sendAjaxPostRequest for examples.
-
- * param $uri
- * param $params
-
-
-### sendAjaxPostRequest
-
-
-If your page triggers an ajax request, you can perform it manually.
-This action sends a POST ajax request with specified params.
-Additional params can be passed as array.
-
-Example:
-
-Imagine that by clicking checkbox you trigger ajax request which updates user settings.
-We emulate that click by running this ajax request manually.
-
-``` php
-<?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
-
-```
-
- * param $uri
- * param $params
-
-
 ### setCookie
 
-
-Sets a cookie.
-
- * param $cookie
- * param $value
- * return mixed
+__not documented__
 
 
 ### submitForm
 
+__not documented__
 
-Submits a form located on page.
-Specify the form by it's css or xpath selector.
-Fill the form fields values as array.
 
-Skipped fields will be filled by their values from page.
-You don't need to click the 'Submit' button afterwards.
-This command itself triggers the request to form's action.
+### switchToIFrame
 
-Examples:
 
-``` php
-<?php
-$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+Switch to another frame
 
-```
-
-For sample Sign Up form:
-
+Example:
 ``` html
-<form action="/sign_up">
-    Login: <input type="text" name="user[login]" /><br/>
-    Password: <input type="password" name="user[password]" /><br/>
-    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
-    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
-    <input type="submit" value="Submit" />
-</form>
+<iframe name="another_frame" src="http://example.com">
+
 ```
-I can write this:
 
 ``` php
 <?php
-$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+# switch to iframe
+$I->switchToIFrame("another_frame");
+# switch to parent page
+$I->switchToIFrame();
 
 ```
-Note, that pricing plan will be set to Paid, as it's selected on page.
 
- * param $selector
- * param $params
+ * param string|null $name
+
+
+### switchToWindow
+
+
+Switch to another window identified by its name.
+
+The window can only be identified by its name. If the $name parameter is blank it will switch to the parent window.
+
+Example:
+``` html
+<input type="button" value="Open window" onclick="window.open('http://example.com', 'another_window')">
+```
+
+``` php
+<?php
+$I->click("Open window");
+# switch to another window
+$I->switchToWindow("another_window");
+# switch to parent window
+$I->switchToWindow();
+?>
+```
+
+If the window has no name, the only way to access it is via the `executeInSelenium()` method like so:
+
+```
+<?php
+$I->executeInSelenium(function (\Webdriver $webdriver) {
+     $handles=$webDriver->getWindowHandles();
+     $last_window = end($handles);
+     $webDriver->switchTo()->window($name);
+});
+?>
+```
+
+ * param string|null $name
+
+
+### typeInPopup
+
+__not documented__
 
 
 ### uncheckOption
@@ -789,3 +749,57 @@ $I->uncheckOption('#notify');
 ```
 
  * param $option
+
+
+### waitForElement
+
+
+Waits for element to appear on page for specific amount of time.
+If element not appears, timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElement('#agree_button', 30); // secs
+$I->click('#agree_button');
+?>
+```
+
+ * param $element
+ * param int $timeout seconds
+ * throws \Exception
+
+
+### waitForElementChange
+
+
+Waits until element has changed according to callback function
+
+``` php
+<?php
+$I->waitForElementChange('#menu', function(\WebDriverElement $el) {
+    return $el->isDisplayed();
+}, 100);
+?>
+```
+
+ * param $element
+ * param \Closure $callback
+ * param int $timeout
+ * throws \Codeception\Exception\ElementNotFound
+
+
+### waitForJS
+
+
+Executes JavaScript and waits for it to return true or for the timeout.
+
+In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
+
+``` php
+<?php
+$I->waitForJS("return $.active == 0;", 60);
+?>
+```
+
+ * param $script
+ * param $timeout int seconds
