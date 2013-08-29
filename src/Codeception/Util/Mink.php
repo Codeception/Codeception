@@ -18,15 +18,15 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         if (!$this->session) throw new \Codeception\Exception\Module(__CLASS__, "Module is not initialized. Mink session is not started in _initialize method of module.");;
         try {
             $this->session->start();
-            $this->session->visit($this->config['url'].'/');
-                $this->session->stop();
+            $this->session->visit(rtrim($this->config['url'], '/'));
+            $this->session->stop();
         } catch (\Exception $e) {
             throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Provided URL can't be accessed by this driver." . $e->getMessage());
         }
     }
 
     public function _before(\Codeception\TestCase $test)
-    {        
+    {
         $this->session->start();
     }
 
@@ -45,7 +45,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $this->session->setCookie($cookie, $value);
     }
-    
+
     public function _getCookie($cookie)
     {
     	return $this->session->getCookie($cookie);
@@ -112,7 +112,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
                 $nodes = $this->session->getPage()->findAll('xpath', $selector);
             }
             if (empty($nodes)) throw new ElementNotFound($selector, 'CSS or XPath');
-            
+
 		    $values = array();
 
 		    foreach ($nodes as $node) {
@@ -364,12 +364,12 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         \PHPUnit_Framework_Assert::assertNotRegExp($uri, $this->_getCurrentUri());
     }
-    
+
     public function seeCookie($cookie)
     {
     	\PHPUnit_Framework_Assert::assertNotNull($this->_getCookie($cookie));
     }
-    
+
     public function dontSeeCookie($cookie)
     {
     	\PHPUnit_Framework_Assert::assertNull($this->_getCookie($cookie));
@@ -384,7 +384,7 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
     {
         $this->_setCookie($cookie, null);
     }
-    
+
     public function grabCookie($cookie)
     {
     	return $this->_getCookie($cookie);
