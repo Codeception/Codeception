@@ -2,6 +2,46 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/WebDriver.php)**
 
 
+New generation Selenium2 module.
+
+## Installation
+
+Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
+
+## Status
+
+* Maintainer: **davert**
+* Stability: **alpha**
+* Contact: davert.codecept@mailican.com
+* Based on [faebook php-webdriver](https://github.com/facebook/php-webdriver)
+
+## Configuration
+
+* url *required* - start url for your app
+* browser *required* - browser that would be launched
+* host  - Selenium server host (localhost by default)
+* port - Selenium server port (4444 by default)
+* wait - set the implicit wait (5 secs) by default.
+* capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+
+### Example (`acceptance.suite.yml`)
+
+    modules:
+       enabled: [Selenium2]
+       config:
+          Selenium2:
+             url: 'http://localhost/'
+             browser: firefox
+             capabilities:
+                 unexpectedAlertBehaviour: 'accept'
+
+
+
+
+Class WebDriver
+ * package Codeception\Module
+
 ## Actions
 
 
@@ -667,7 +707,43 @@ __not documented__
 
 ### submitForm
 
-__not documented__
+
+Submits a form located on page.
+Specify the form by it's css or xpath selector.
+Fill the form fields values as array. Hidden fields can't be accessed.
+
+This command itself triggers the request to form's action.
+
+Examples:
+
+``` php
+<?php
+$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+
+```
+
+For sample Sign Up form:
+
+``` html
+<form action="/sign_up">
+    Login: <input type="text" name="user[login]" /><br/>
+    Password: <input type="password" name="user[password]" /><br/>
+    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
+    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+    <input type="submit" value="Submit" />
+</form>
+```
+You can write this:
+
+``` php
+<?php
+$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+
+```
+
+ * param $selector
+ * param $params
+ * throws \Codeception\Exception\ElementNotFound
 
 
 ### switchToIFrame
