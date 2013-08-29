@@ -744,9 +744,9 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      * ```
      * <?php
      * $I->executeInSelenium(function (\Webdriver $webdriver) {
-     * $handles=$webDriver->getWindowHandles();
-     * $last_window = end($handles);
-     * $webDriver->switchTo()->window($name);
+     *      $handles=$webDriver->getWindowHandles();
+     *      $last_window = end($handles);
+     *      $webDriver->switchTo()->window($name);
      * });
      * ?>
      * ```
@@ -782,6 +782,29 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     }
 
     /**
+     * Executes JavaScript and waits for it to return true or for the timeout.
+     *
+     * In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForJS("return $.active == 0;", 60);
+     * ?>
+     * ```
+     *
+     * @param $script
+     * @param $timeout int seconds
+     */
+    public function waitForJS($script, $timeout = 5)
+    {
+        $condition = function ($wd) use ($script) {
+            return $wd->executeScript($script);
+        };
+        $this->webDriver->wait($timeout)->until($condition);
+
+    }
+
+    /**
      * Executes custom JavaScript
      *
      * @param $script
@@ -790,29 +813,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function executeJS($script)
     {
         return $this->webDriver->executeScript($script);
-    }
-
-    /**
-     * Executes JavaScript and waits for it to return true or for the timeout.
-     *
-     * In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
-     *
-     * ``` php
-     * <?php
-     * $I->waitForJS(60, "return $.active == 0;");
-     * ?>
-     * ```
-     *
-     * @param $timeout int seconds
-     * @param $script
-     */
-    public function waitForJS($timeout, $script)
-    {
-        $condition = function ($wd) use ($script) {
-            return $wd->executeScript($script);
-        };
-        $this->webDriver->wait($timeout)->until($condition);
-
     }
 
     /**
