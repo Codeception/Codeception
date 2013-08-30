@@ -36,11 +36,12 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * ### Example (`acceptance.suite.yml`)
  *
  *     modules:
- *        enabled: [Selenium2]
+ *        enabled: [WebDriver]
  *        config:
- *           Selenium2:
+ *           WebDriver:
  *              url: 'http://localhost/'
  *              browser: firefox
+ *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
 
