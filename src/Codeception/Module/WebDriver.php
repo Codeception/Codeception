@@ -923,5 +923,31 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
     }
+    
+    /**
+     * Performs a simple mouse drag and drop operation.
+     *
+     * ``` php
+     * <?php
+     * $I->dragAndDrop('#drag', '#drop');
+     * ?>
+     * ```
+     *
+     * @param string $source (CSS ID or XPath)
+     * @param string $target (CSS ID or XPath)
+     */
+    public function dragAndDrop($source, $target)
+    {
+        $source = $this->match($this->webDriver, $source);
+        if (empty($source)) throw new ElementNotFound($context,'CSS or XPath');
+        $source = reset($source);
+
+        $target = $this->match($this->webDriver, $target);
+        if (empty($target)) throw new ElementNotFound($context,'CSS or XPath');
+        $target = reset($target);
+
+        $action = new \WebDriverActions($this->webDriver);
+        $action->dragAndDrop($source, $target)->perform();
+    }
 
 }
