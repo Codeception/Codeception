@@ -784,15 +784,15 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      *
      * ``` php
      * <?php
-     * $I->wait(5); // secs
+     * $I->wait(5000); // milliseconds
      * ?>
      * ```
      *
-     * @param int $timeout seconds
+     * @param int $timeout milliseconds
      */
-    public function wait($seconds)
+    public function wait($milliseconds)
     {
-        $this->webDriver->wait($seconds);
+        usleep($milliseconds * 1000);
     }
 
     /**
