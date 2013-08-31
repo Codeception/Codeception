@@ -938,16 +938,16 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function dragAndDrop($source, $target)
     {
-        $source = $this->match($this->webDriver, $source);
-        if (empty($source)) throw new ElementNotFound($context,'CSS or XPath');
-        $source = reset($source);
+        $snodes = $this->match($this->webDriver, $source);
+        if (empty($snodes)) throw new ElementNotFound($source,'CSS or XPath');
+        $snodes = reset($snodes);
 
-        $target = $this->match($this->webDriver, $target);
-        if (empty($target)) throw new ElementNotFound($context,'CSS or XPath');
-        $target = reset($target);
+        $tnodes = $this->match($this->webDriver, $target);
+        if (empty($tnodes)) throw new ElementNotFound($target,'CSS or XPath');
+        $tnodes = reset($tnodes);
 
         $action = new \WebDriverActions($this->webDriver);
-        $action->dragAndDrop($source, $target)->perform();
+        $action->dragAndDrop($snodes, $tnodes)->perform();
     }
 
 }
