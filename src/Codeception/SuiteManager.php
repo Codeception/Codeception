@@ -5,8 +5,7 @@ namespace Codeception;
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteTests;
 use Symfony\Component\Finder\Finder;
-use \Symfony\Component\EventDispatcher\EventDispatcher;
-
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager {
 
@@ -44,8 +43,13 @@ class SuiteManager {
         }
 
         require_once $settings['path'] . $settings['class_name'].'.php';
-        
+
         $this->initializeModules($settings);
+    }
+
+    public static function hasModule($moduleName)
+    {
+        return isset(self::$modules[$moduleName]);
     }
 
     protected function initializeModules($settings)
