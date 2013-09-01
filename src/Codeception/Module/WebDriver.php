@@ -778,6 +778,37 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         $this->webDriver->wait($timeout)->until($condition);
     }
+    
+    /**
+     * Waits for text to appear on the page for a specific amount of time.
+     * Can also be passed a selector to search in.
+     * If text does not appear, timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForText('foo', 30); // secs
+     * $I->waitForText('foo', 30, '.title'); // secs
+     * ?>
+     * ```
+     *
+     * @param string $text
+     * @param int $timeout seconds
+     * @param string $element
+     * @throws \Exception
+     */
+    public function waitForText($text, $timeout = 10, $selector = null)
+    {
+        $condition = null;
+        if (!$selector) {
+            $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath('//body'), $text);
+        } else {
+            if (Locator::isID($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::id(substr($selector, 1)), $text);
+            if (!$condition and Locator::isCSS($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::cssSelector($selector), $text);
+            if (Locator::isXPath($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath($selector), $text);
+            if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+        }
+        $this->webDriver->wait($timeout)->until($condition);
+    }
 
     /**
      * Low-level API method.
