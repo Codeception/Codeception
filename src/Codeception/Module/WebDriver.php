@@ -421,6 +421,37 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
+    
+    /*
+    * Unselect an option in a select box
+    *
+    */
+    public function unselectOption($select, $option)
+    {
+        $el = $this->findField($select);
+
+        $select = new \WebDriverSelect($el);
+
+        if (!is_array($option)) $option = array($option);
+
+        $matched = false;
+
+        foreach ($option as $opt) {
+            try {
+                $select->deselectByVisibleText($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
+
+            try {
+                $select->deselectByValue($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
+
+        }
+    
+        if ($matched) return;
+        throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
+    }
 
     /**
      * @param $context
@@ -778,6 +809,37 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         $this->webDriver->wait($timeout)->until($condition);
     }
+    
+    /**
+     * Waits for text to appear on the page for a specific amount of time.
+     * Can also be passed a selector to search in.
+     * If text does not appear, timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForText('foo', 30); // secs
+     * $I->waitForText('foo', 30, '.title'); // secs
+     * ?>
+     * ```
+     *
+     * @param string $text
+     * @param int $timeout seconds
+     * @param string $element
+     * @throws \Exception
+     */
+    public function waitForText($text, $timeout = 10, $selector = null)
+    {
+        $condition = null;
+        if (!$selector) {
+            $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath('//body'), $text);
+        } else {
+            if (Locator::isID($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::id(substr($selector, 1)), $text);
+            if (!$condition and Locator::isCSS($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::cssSelector($selector), $text);
+            if (Locator::isXPath($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath($selector), $text);
+            if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+        }
+        $this->webDriver->wait($timeout)->until($condition);
+    }
 
     /**
      * Low-level API method.
@@ -922,6 +984,32 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     protected function assertPageNotContains($needle, $message = '')
     {
         $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+    }
+    
+    /**
+     * Performs a simple mouse drag and drop operation.
+     *
+     * ``` php
+     * <?php
+     * $I->dragAndDrop('#drag', '#drop');
+     * ?>
+     * ```
+     *
+     * @param string $source (CSS ID or XPath)
+     * @param string $target (CSS ID or XPath)
+     */
+    public function dragAndDrop($source, $target)
+    {
+        $snodes = $this->match($this->webDriver, $source);
+        if (empty($snodes)) throw new ElementNotFound($source,'CSS or XPath');
+        $snodes = reset($snodes);
+
+        $tnodes = $this->match($this->webDriver, $target);
+        if (empty($tnodes)) throw new ElementNotFound($target,'CSS or XPath');
+        $tnodes = reset($tnodes);
+
+        $action = new \WebDriverActions($this->webDriver);
+        $action->dragAndDrop($snodes, $tnodes)->perform();
     }
 
 }
