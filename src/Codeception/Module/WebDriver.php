@@ -421,6 +421,37 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
+    
+    /*
+    * Unselect an option in a select box
+    *
+    */
+    public function unselectOption($select, $option)
+    {
+        $el = $this->findField($select);
+
+        $select = new \WebDriverSelect($el);
+
+        if (!is_array($option)) $option = array($option);
+
+        $matched = false;
+
+        foreach ($option as $opt) {
+            try {
+                $select->deselectByVisibleText($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
+
+            try {
+                $select->deselectByValue($opt);
+                $matched = true;
+            } catch (\NoSuchElementWebDriverError $e) {}
+
+        }
+    
+        if ($matched) return;
+        throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
+    }
 
     /**
      * @param $context
