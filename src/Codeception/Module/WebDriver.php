@@ -809,6 +809,22 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         $this->webDriver->wait($timeout)->until($condition);
     }
+    
+    /**
+     * Waits for specific amount of time.
+     *
+     * ``` php
+     * <?php
+     * $I->wait(5000); // milliseconds
+     * ?>
+     * ```
+     *
+     * @param int $timeout milliseconds
+     */
+    public function wait($milliseconds)
+    {
+        usleep($milliseconds * 1000);
+    }
 
     /**
      * Low-level API method.
