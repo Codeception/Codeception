@@ -98,7 +98,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
     public function _afterSuite()
     {
-        $this->webDriver->quit();
+        $this->webDriver->close();
     }
 
     public function amOnSubdomain($subdomain)
