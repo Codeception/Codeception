@@ -165,7 +165,7 @@ class Filesystem extends \Codeception\Module
      * ``` php
      * <?php
      * $I->openFile('composer.json');
-     * $I->seeInThisFile('codeception/codeception');
+     * $I->dontSeeInThisFile('codeception/codeception');
      * ?>
      * ```
      *
