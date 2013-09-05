@@ -385,7 +385,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertNotEquals($value, $el_value);
     }
 
-    public function selectOption($select, $option)
+    public function selectOption($select, $option, $reset = true)
     {
         $el = $this->findField($select);
         if ($el->getTagName() != 'select') {
@@ -401,7 +401,8 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         }
 
         $select = new \WebDriverSelect($el);
-        if ($select->isMultiple()) $select->deselectAll();
+
+        if ($reset) if ($select->isMultiple()) $select->deselectAll();
         if (!is_array($option)) $option = array($option);
 
         $matched = false;
@@ -411,13 +412,14 @@ class WebDriver extends \Codeception\Module implements WebInterface {
                 $select->selectByVisibleText($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
-        }
-        foreach ($option as $opt) {
+
             try {
-            $select->selectByValue($opt);
+                $select->selectByValue($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
+
         }
+    
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
