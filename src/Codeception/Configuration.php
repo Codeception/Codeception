@@ -116,7 +116,7 @@ class Configuration
     public static function suiteSettings($suite, $config)
     {
         // cut namespace name from suite name
-        if (substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
+        if ($suite != $config['namespace'] && substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
             $suite = substr($suite, strlen($config['namespace']));
         }         
 
