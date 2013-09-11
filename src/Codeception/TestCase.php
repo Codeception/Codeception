@@ -2,6 +2,7 @@
 
 namespace Codeception;
 
+use Codeception\Exception\ConditionalAssertionFailed;
 use Symfony\Component\EventDispatcher\Event;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
@@ -28,6 +29,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         $this->fire('step.before', new \Codeception\Event\Step($this, $step));
         try {
             $result = $step->run();
+        } catch (ConditionalAssertionFailed $f) {
+            $result = $this->getTestResultObject();
+            $result->stopOnFailure(false);
+            $result->addFailure(clone($this), $f, $result->time());
+            $result->stopOnFailure(true);
         } catch (\Exception $e) {
             $this->fire('step.after', new \Codeception\Event\Step($this, $step));
             throw $e;
@@ -38,10 +44,10 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     protected function fire($event, Event $eventType)
     {
-        $this->dispatcher->dispatch($event, $eventType);
         foreach ($this->scenario->getGroups() as $group) {
             $this->dispatcher->dispatch($event.'.'.$group, $eventType);
         }
+        $this->dispatcher->dispatch($event, $eventType);
     }
 
     /**
@@ -59,7 +65,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     public function toString()
     {
-        $this->getFeature();
+        return $this->getFeature();
     }
 
 }

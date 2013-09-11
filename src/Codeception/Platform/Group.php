@@ -5,26 +5,26 @@ use Codeception\Event\Test;
 
 class Group extends Extension {
 
-    public static $group;
+    static $group;
 
-    public function before(Test $e)
+    public function _before(Test $e)
     {
     }
 
-    public function after(Test $e)
+    public function _after(Test $e)
     {
     }
 
     static function getSubscribedEvents()
     {
         $events = array();
-        if (self::$group) {
+        if (static::$group) {
             $events = array(
-                'test.before.'.self::$group => 'before',
-                'test.after.'.self::$group => 'after',
+                'test.before.'.static::$group => '_before',
+                'test.after.'.static::$group => '_after',
             );
         }
-        $events = array_merge($events, self::events());
+        $events = array_merge($events, static::$events);
         return $events;
     }
 }

@@ -158,7 +158,7 @@ In Cest files you should inject all external variables manually, using static or
 
 As a workaround you can choose [Fixtures](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php) class which is nothing more then global storage to your variables. You can pass variables from `_bootstrap.php` or any other place just with `Fixtures::add()` call. But probably you can use Cest classes `_before` and `_after` methods to load fixtures on the start of test, and deleting them afterwards. Pretty useful too.
 
-As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you wnat by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
+As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you want by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
 
 Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
 
@@ -174,7 +174,7 @@ It's pretty obvious that for such cases you can use your own PHP classes to defi
     public static $username = 'jon';
     public static $password = 'coltrane';
 
-    public static logMeIn($I)
+    public static function logMeIn($I)
     {
         $I->amOnPage('/login');
         $I->fillField('username', 'jon');
@@ -203,17 +203,177 @@ TestCommons::logMeIn($I);
 ?>
 ``` 
 
-You should get the idea by now. Codeception doesn't provide any particular strategy for you to manage the tests. But it is flexible enough to create all the support classes you need for your test suites. The same way, with custom classes you can implement `PageObject` and `StepObject` patterns.
+If you caught the idea, let's learn of built-in features for structuring your test code.
+We will discover PageObject and StepObject patterns implementation in Codeception.
 
-## PageObject and StepObjects
+## PageObjects
 
-In next versions Codeception will provide PageObjects and StepObjects out of the box. 
-But today we encourage you to try your own implementations. Whe have some nice blogpost for you to learn what are PageObjects, why you ever want to use them and how they can be implemented.
+[PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects) is widely used by test automation engineers. The Page Object pattern represents a web page as a class and the DOM elements on that page as properties, and some basic interactions as a methods.
+PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests, but rather move them into PageObject classes.
 
-* [Ruling the Swarm (of Tests)](http://phpmaster.com/ruling-the-swarm-of-tests-with-codeception/) by Michael Bodnarchuk.
-* [Implementing Page Objects in Codeception](http://jonstuff.blogspot.ca/2013/05/implementing-page-objects-in.html) by Jon Phipps.
+Codeception can generate a pageobject class for you with command:
 
+```
+php codecept.phar generate:pageobject Login
+```
+
+This will create a `LoginPage` class in `tests/_pages`. The basic pageobject is nothing more then empty class with a few stubs.
+It is expected you will get it populated with UI locators of a page its represent and then those locators will be used on a page.
+Locators are represented with public static properties:
+
+``` php
+<?php
+class LoginPage
+{
+    const URL = '/login';
+
+    static $usernameField = '#mainForm #username';
+    static $passwordField = '#mainForm input[name=password]';
+    static $loginButton = "#mainForm input[type=submit]";
+}
+?>
+```
+
+And this is how this page object can be used in a test:
+
+``` php
+<?php
+$I = new WebGuy($scenario);
+$I->wantTo('login to site');
+$I->amOnPage(LoginPage::URL);
+$I->fillField(LoginPage::$usernameField, 'bill evans');
+$I->fillField(LoginPage::$passwordField, 'debby');
+$I->click(LoginPage::$loginButton);
+$I->see('Welcome, bill');
+?>
+```
+As you see you can freely change markup of your login page and all the tests interacting with this page, will have their locators updated according to properties of LoginPage class. 
+
+But lets move further. A PageObject concept also defines that methods for the page interaction should also be stored in a PageObject class.
+This can't be done in `LoginPage` class we just generated. Because this class is accessible across all test suites, we do not know which guy class will be used for interaction. Thus, we will need to generate another page object. In this case we will explicitly define the suite to be used:
+
+```
+php codecept.phar generate:pageobject acceptance UserLogin
+```
+
+*we called this class UserLogin for not to get into conflict with Login class we created before*
+
+This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before, with one differences. A now stores an instance of Guy object passed. A webguy can be accessed via `webGuy` property of that class. Let's define a `login` method in this class.
+
+``` php
+<?php
+
+class UserLoginPage
+{
+    // include url of current page
+    const URL = '/login';
+
+    /**
+     * @var WebGuy;
+     */
+    protected $webGuy;
+
+    public function __construct(WebGuy $I)
+    {
+        $this->webGuy = $I;
+    }
+
+    public static function of(WebGuy $I)
+    {
+        return new static($I);
+    }
+
+    public function login($name, $password)
+    {
+        $I = $this->webGuy;
+
+        $I->amOnPage(self::URL);
+        $I->fillField(LoginPage::$usernameField, $name);
+        $I->fillField(LoginPage::$passwordField, $password);
+        $I->click(LoginPage::$loginButton);
+
+        return $this;
+    }    
+}
+?>
+```
+
+And here is an example of how this PageObject can be used in a test.
+
+``` php
+<?php
+$I = new WebGuy($scenario);
+UserLoginPage::of($I)->login('bill evans', 'debby');
+?>
+```
+
+Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a WebGuy. So it's up to you to use global page objects, or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
+
+
+## StepObjects
+
+StepObjects pattern came from BDD frameworks. StepObject class contains a bunch of common actions that may be used widely in different tests.
+The `login` method we used above can be a good example of such method. Similarly actions for creating/updating/deleting resources should be moved to StepObject too. Let's create a StepObject class and see what is it like. 
+
+Lets create a "Member" Steps class, a generator will prompt you for methods to include, so let's add a `login` to it.
+
+```
+php codecept.phar generate:stepobject acceptance Member
+```
+
+This will generate a similar class to `tests/acceptance/_steps/MemberSteps.php`.
+
+``` php
+<?php
+namespace WebGuy;
+
+class MemberSteps extends \WebGuy
+{
+    function login()
+    {
+        $I = $this;
+
+    }
+}
+?>
+```
+
+As you see this class is very simple. But it inherits from `WebGuy` class, thus contains all its methods.
+`login` method can be implemented like this:
+
+``` php
+<?php
+namespace WebGuy;
+
+class MemberSteps extends \WebGuy
+{
+    function login($name, $password)
+    {
+        $I = $this;
+        $I->amOnPage(LoginPage::URL);
+        $I->fillField(LoginPage::$usernameField, $name);
+        $I->fillField(LoginPage::$passwordField, $password);
+        $I->click(LoginPage::$loginButton);
+    }
+}
+?>
+```
+
+In tests you can use a StepObject by instantiating a MemberSteps class instead of WebGuy.
+
+``` php
+<?php
+$I = new WebGuy\MemberSteps($scenario);
+$I->login('bill evans','debby');
+?>
+```
+
+As you see, StepObject class looks much simpler and readable then classical PageObject.
+As an alternative to StepObject we could use methods of `WebHelper` class. In a helper we do not have an access to `$I` object itself,
+thus it's better to use Helpers should be used to implement new actions, and StepObjects to combine common scenarios.
 
 ## Conclusion
 
-Codeception is a framework which may look simple at first sight. But it allows you to build powerful test with one  APIs, refactor them, and write them faster using interactive console. Codeception tests can easily be organized with groups or cest classes. Probably too much abilities for the one framework. But nevertheless Codeception follows the KISS pricinple: it's easy to start, easy to learn, easy to extend. 
+Codeception is a framework which may look simple at first sight. But it allows you to build powerful test with one  APIs, refactor them, and write them faster using interactive console. Codeception tests can easily be organized with groups or Cest classes, store locators in PageObjects and combine common steps in StepObjects.
+
+Probably too much features for the one framework. But nevertheless Codeception follows the KISS pricinple: it's easy to start, easy to learn, easy to extend.

@@ -16,6 +16,7 @@ $urls = array(
     '/' => 'index',
     '/info' => 'info',
     '/login' => 'login',
+    '/redirect' => 'redirect',
     '/facebook\??.*' => 'facebookController',
     '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup)(#)?' => 'form'
 );

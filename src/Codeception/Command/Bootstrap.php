@@ -73,6 +73,9 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         $this->createAcceptanceSuite();
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
 
+        file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading \n");
+        $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
+
         $output->writeln("<info>Building initial Guy classes</info>");
         $this->getApplication()->find('build')->run(new \Symfony\Component\Console\Input\ArrayInput(array('command' => 'build')), $output);
         $output->writeln("<info>\nBootstrap is done. Check out ".realpath($path)."/tests directory</info>");
@@ -161,7 +164,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
         file_put_contents('tests/acceptance.suite.yml', $str);
     }
 
-    protected function createUnitSuite($namespace = "")
+    protected function createUnitSuite()
     {
          // CodeGuy
         $suiteConfig = array(

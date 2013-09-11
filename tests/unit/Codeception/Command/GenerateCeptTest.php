@@ -18,12 +18,14 @@ class GenerateCeptTest extends BaseCommandRunner {
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertContains('$I = new HobbitGuy($scenario);', $this->content);
         $this->assertContains('Test was created in HomeCanInclude12DwarfsCept.php', $this->output);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testGenerateWithSuffix()
     {
         $this->execute(array('suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertIsValidPhp($this->content);
     }
 
     /**
@@ -33,6 +35,7 @@ class GenerateCeptTest extends BaseCommandRunner {
     {
         $this->execute(array('suite' => 'shire', 'test' => 'HomeCanInclude12DwarfsCept.php'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
+        $this->assertIsValidPhp($this->content);
     }
 
     /**
@@ -45,6 +48,7 @@ class GenerateCeptTest extends BaseCommandRunner {
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertContains('use MiddleEarth\Codeception\HobbitGuy;', $this->content);
         $this->assertContains('$I = new HobbitGuy($scenario);', $this->content);
+        $this->assertIsValidPhp($this->content);
     }
 
 

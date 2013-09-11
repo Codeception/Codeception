@@ -93,7 +93,7 @@ class Db
                 continue;
             }
 
-            $query .= rtrim($sqlLine);
+            $query .= "\n" . rtrim($sqlLine);
 
             if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
                 $this->sqlToRun = substr($query, 0, - 1 * $delimiterLength);
@@ -125,6 +125,10 @@ class Db
     {
         $query = "delete from $table where id = $id";
         $this->sqlQuery($query);
+    }
+
+    public function lastInsertId($table) {
+      return $this->getDbh()->lastInsertId();
     }
 
     protected function sqlLine($sql)

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\TestCase\Cest;
+use Codeception\Exception\ConditionalAssertionFailed;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -17,9 +17,8 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
-        $this->silent = $options['silent'];
-        $this->debug = !$this->silent && $options['debug'];
-        $this->steps = !$this->silent && ($options['steps'] or $options['debug']);
+        $this->debug = $options['debug'];
+        $this->steps = $this->debug || $options['steps'];
         $this->color = $options['colors'];
         $this->output = new \Codeception\Output($this->color, $options['defer-flush']);
     }
@@ -27,20 +26,21 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(\Codeception\Event\Test $e)
     {
-        if ($this->silent) return;
-        if ($e->getTest() instanceof \Codeception\TestCase) return;
-        $this->output->put("Running [[" . $e->getTest()->toString() . "]]");
+        $test = $e->getTest();
+        if ($test instanceof \Codeception\TestCase) return;
+        $this->output->put("Running [[{$test->toString()}]]");
     }
 
     // triggered for scenario based tests: cept, cest
     public function before(\Codeception\Event\Test $e)
     {
-        if ($this->silent) return;
         $test = $e->getTest();
+        $filename = $test->getFileName();
         if ($test->getFeature()) {
-            $this->output->put("Trying to [[{$test->getFeature()}]] ({$test->getFileName()})");
+            $feature = $test->getFeature();
+            $this->output->put("Trying to [[$feature]] ($filename)");
         } else {
-            $this->output->put("Running {$test->getFileName()}");
+            $this->output->put("Running [[$filename]]");
         }
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
     }
@@ -51,7 +51,7 @@ class Console implements EventSubscriberInterface
 
     public function testSuccess(\Codeception\Event\Test $e)
     {
-        $this->formattedTestOutput($e->getTest(), 'Ok', '.');
+        $this->formattedTestOutput($e->getTest(), '(%  Passed  %)', '((Ok))');
     }
 
     public function endTest(\Codeception\Event\Test $e)
@@ -60,35 +60,37 @@ class Console implements EventSubscriberInterface
 
     public function testFail(\Codeception\Event\Fail $e)
     {
-        $this->formattedTestOutput($e->getTest(), '(!Failed!)', 'F');
+        if (!$this->steps && ($e->getFail() instanceof ConditionalAssertionFailed)) {
+            $this->output->put(" (![F]!)");
+            return;
+        }
+        $this->formattedTestOutput($e->getTest(), '(! Failed !)', '(!Failed!)');
     }
 
     public function testError(\Codeception\Event\Fail $e)
     {
-        $this->formattedTestOutput($e->getTest(), '(!Error!)', 'E');
+        $this->formattedTestOutput($e->getTest(), '(! Error !)', '(!Error!)');
     }
 
     public function testSkipped(\Codeception\Event\Fail $e)
     {
-        $this->formattedTestOutput($e->getTest(), 'Skipped', 'S');
+        $this->formattedTestOutput($e->getTest(), 'Skipped', 'Skipped');
     }
 
     public function testIncomplete(\Codeception\Event\Fail $e)
     {
-        $this->formattedTestOutput($e->getTest(), 'Incomplete', 'I');
+        $this->formattedTestOutput($e->getTest(), 'Incomplete', 'Incomplete');
     }
 
-    protected function formattedTestOutput($test, $long)
+    protected function formattedTestOutput($test, $long, $short)
     {
-        if ($this->silent) return;
-
         if (!($test instanceof \Codeception\TestCase\Cept)) {
-            $this->output->writeln(' - ' . $long);
-        } elseif (!$this->steps) {
-            $this->output->writeln(" - $long");
+            $this->output->writeln(' - ' . $short);
+        } elseif (!$this->steps or (!count($test->getScenario()->getSteps()))) {
+            $this->output->writeln(" - $short");
         } else {
             $long = strtoupper($long);
-            $this->output->writeln("  (%$long%)\n");
+            $this->output->writeln("  $long\n");
         }
     }
 
@@ -168,9 +170,9 @@ class Console implements EventSubscriberInterface
         // it's assertion
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
-            $this->output->writeln("Guy unexpectedly managed to $action:\n$failToString");
+            $this->output->writeln("Ups, I unexpectedly managed to $action:\n$failToString");
         } else {
-            $this->output->writeln("Guy couldn't $action: $failToString");
+            $this->output->writeln("Ups, I couldn't $action,\n$failToString");
         }
 
 

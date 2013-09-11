@@ -2,13 +2,14 @@
 namespace Codeception;
 
 use Codeception\Configuration;
-use \Symfony\Component\Yaml\Yaml;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.6.3.1";
+    const VERSION = "1.7.0-pre";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -47,11 +48,12 @@ class Codecept
         'tap' => false,
         'report' => false,
         'colors' => false,
-        'log' => true,
+        'log' => false,
         'coverage' => false,
 	    'defer-flush' => false,
         'groups' => null,
-        'excludeGroups' => null
+        'excludeGroups' => null,
+        'filter' => null,
     );
 
     public function __construct($options = array()) {
@@ -71,17 +73,19 @@ class Codecept
     }
 
     private function mergeOptions($options) {
-
+        
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
-                $options[$option] = isset($this->config['settings'][$option]) ? $this->config['settings'][$option] : $this->options[$option];
+                $options[$option] = isset($this->config['settings'][$option])
+                    ? $this->config['settings'][$option]
+                    : $this->options[$option];
             }
         }
-        if ($options['no-colors']) $options['colors'] = false;
-        if ($options['report']) $options['silent'] = true;
-        if ($options['group']) $options['groups'] = $options['group'];
-        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if (isset($options['no-colors']) && $options['no-colors']) $options['colors'] = false;
+        if (isset($options['report']) && $options['report']) $options['silent'] = true;
+        if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
+        if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
 
         return $options;
     }
@@ -92,15 +96,24 @@ class Codecept
     }
 
     public function registerSubscribers() {
+        // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
-        $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
-        $this->dispatcher->addSubscriber(new Subscriber\Logger());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
 
+        // optional
+        if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
             $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+        }
+
+        // custom event listeners
+        foreach ($this->config['extensions']['enabled'] as $subscriber) {
+            if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
+            if ($subscriber instanceof EventSubscriberInterface) throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
+            $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
         }
     }
 
@@ -110,7 +123,9 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, Configuration::config());
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
-        $test ? $suiteManager->loadTest($settings['path'].$test) : $suiteManager->loadTests();
+        $test
+            ? $suiteManager->loadTest($settings['path'].$test)
+            : $suiteManager->loadTests();
 
         $suiteManager->run($this->runner, $this->result, $this->options);
 
@@ -148,32 +163,5 @@ class Codecept
     public function getDispatcher()
     {
         return $this->dispatcher;
-    }
-
-    public static function checkLastVersion()
-    {
-        if (! class_exists('SimpleXMLElement')) {
-            return false;
-        }
-
-        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
-        if (! $file) {
-            return '';
-        }
-
-        try {
-            $feed = new \SimpleXMLElement($file, LIBXML_NOERROR);
-            @$codeception = $feed->entry[0]->title;
-        } catch (\Exception $e) {
-            $codeception = false;
-        }
-
-        if (! $codeception) {
-            return '';
-        }
-
-        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
-
-        return isset($version[0]) ? $version[0] : '';
     }
 }

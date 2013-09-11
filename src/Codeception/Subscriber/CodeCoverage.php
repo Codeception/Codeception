@@ -16,6 +16,7 @@ class CodeCoverage implements EventSubscriberInterface
      */
     protected $coverage = null;
     protected $options = array();
+    protected $log_dir = null;
 
     protected $enabled = null;
     protected $remote = null;
@@ -24,11 +25,13 @@ class CodeCoverage implements EventSubscriberInterface
     // defaults
     protected $settings = array('enabled' => false, 'remote' => false, 'low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false);
 
+    protected $http = array('method' => "GET", 'header' => '');
 
     function __construct($options = array())
     {
         $this->options = $options;
         $this->coverage = new \PHP_CodeCoverage();
+        $this->log_dir = Configuration::logDir();
     }
 
     /**
@@ -81,8 +84,8 @@ class CodeCoverage implements EventSubscriberInterface
 
         $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
         if (!$externalCoverage) return;
-        $coverage = unserialize($externalCoverage);
-        if (!$coverage) return;
+        $coverage = @unserialize($externalCoverage);
+        if ($coverage === false) return;
         $this->coverage->merge($coverage);
     }
 
@@ -94,24 +97,34 @@ class CodeCoverage implements EventSubscriberInterface
      */
     protected function getRemoteCoverageFile($module, $type)
     {
-        $module->_setHeader('X-Codeception-CodeCoverage', 'remote-access');
-        $contents = $module->_sendRequest($module->_getUrl() . '/c3/report/'.$type);
-        if ($module->_getResponseCode() !== 200) {
-            $this->getRemoteError($module);
+        $this->addHeader('X-Codeception-CodeCoverage', 'remote-access');
+        $context = stream_context_create(array('http' => $this->http));
+        $contents = file_get_contents($module->_getUrl() . '/c3/report/'.$type, false, $context);
+        if ($contents === false) {
+            $this->getRemoteError($http_response_header);
         }
         return $contents;
     }
 
-    protected function getRemoteError($module)
+    protected function getRemoteError($headers)
     {
-        $error = $module->_getResponseHeader('X-Codeception-CodeCoverage-Error');
-        if ($error) throw new \Codeception\Exception\RemoteException($error[0]);
+        foreach ($headers as $header) {
+            if (strpos($header, 'X-Codeception-CodeCoverage-Error') === 0)
+                throw new \Codeception\Exception\RemoteException($header);
+        }
     }
+
+    protected function addHeader($header, $value)
+    {
+        $this->http['header'] .= "$header: $value\r\n";
+    }
+
 
     public function printResult(\Codeception\Event\PrintResult $e)
     {
         if ($this->options['steps']) return;
         $this->printText($e->getPrinter());
+        $this->printPHP();
         if ($this->options['html']) $this->printHtml();
         if ($this->options['xml']) $this->printXml();
     }
@@ -135,14 +148,19 @@ class CodeCoverage implements EventSubscriberInterface
             )
         );
 
-        @mkdir(Configuration::logDir() . 'coverage');
-        $writer->process($this->coverage, Configuration::logDir() . 'coverage');
+        $writer->process($this->coverage, $this->log_dir . 'coverage');
     }
 
     protected function printXml()
     {
         $writer = new \PHP_CodeCoverage_Report_Clover;
-        $writer->process($this->coverage, Configuration::logDir() . 'coverage.xml');
+        $writer->process($this->coverage, $this->log_dir . 'coverage.xml');
+    }
+
+    protected function printPHP()
+    {
+        $writer = new \PHP_CodeCoverage_Report_PHP;
+        $writer->process($this->coverage, Configuration::logDir() . 'coverage.serialized');
     }
 
     protected function applySettings($settings)

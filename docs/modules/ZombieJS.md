@@ -101,8 +101,8 @@ Example:
 
 ``` php
 <?php
-// file is stored in 'tests/data/tests.xls'
-$I->attachFile('prices.xls');
+// file is stored in 'tests/_data/prices.xls'
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
@@ -190,6 +190,7 @@ Examples:
 $I->dontSee('Login'); // I can suppose user is already logged in
 $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 $I->dontSee('Sign Up','//body/h1'); // with XPath
+?>
 ```
 
  * param $text
@@ -208,7 +209,7 @@ Example:
 <?php
 $I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
-
+?>
 ```
 
  * param $checkbox
@@ -216,7 +217,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ### dontSeeCookie
 
-__not documented__
+
+Checks that cookie doesn't exist
+
+ * param $cookie
+ * return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -225,10 +230,12 @@ __not documented__
 Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
+``` php
 <?php
 // current url is not root
 $I->dontSeeCurrentUrlEquals('/');
 ?>
+```
 
  * param $uri
 
@@ -238,10 +245,12 @@ $I->dontSeeCurrentUrlEquals('/');
 
 Checks that current url does not match a RegEx value
 
+``` php
 <?php
 // to match root url
 $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
+```
 
  * param $uri
 
@@ -251,10 +260,12 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
 Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 
+Example:
+
 ``` php
 <?php
 $I->dontSeeElement('.error');
-$I->dontSeeElement(//form/input[1]);
+$I->dontSeeElement('//form/input[1]');
 ?>
 ```
  * param $selector
@@ -295,6 +306,15 @@ $I->dontSeeInField('//form/*[@name=search]','Search');
  * param $value
 
 
+### dontSeeInTitle
+
+
+Checks that page title does not contain text.
+
+ * param $title
+ * return mixed
+
+
 ### dontSeeLink
 
 
@@ -306,7 +326,7 @@ Examples:
 ``` php
 <?php
 $I->dontSeeLink('Logout'); // I suppose user is not logged in
-
+?>
 ```
 
  * param $text
@@ -360,6 +380,14 @@ Executes any JS code.
 
 Fills a text field or textarea with value.
 
+Example:
+
+``` php
+<?php
+$I->fillField("//input[@type='text']", "Hello World!");
+?>
+```
+
  * param $field
  * param $value
 
@@ -372,14 +400,13 @@ Moves focus to link or button or any node found by CSS or XPath
  * param $el
 
 
-### grabAttribute
-
-__not documented__
-
-
 ### grabCookie
 
-__not documented__
+
+Grabs a cookie value.
+
+ * param $cookie
+ * return mixed
 
 
 ### grabFromCurrentUrl
@@ -520,7 +547,11 @@ Reloads current page
 
 ### resetCookie
 
-__not documented__
+
+Unsets cookie
+
+ * param $cookie
+ * return mixed
 
 
 ### see
@@ -536,7 +567,7 @@ Examples:
 $I->see('Logout'); // I can suppose user is logged in
 $I->see('Sign Up','h1'); // I can suppose it's a signup page
 $I->see('Sign Up','//body/h1'); // with XPath
-
+?>
 ```
 
  * param $text
@@ -556,7 +587,7 @@ Example:
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
 $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
-
+?>
 ```
 
  * param $checkbox
@@ -564,7 +595,11 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ### seeCookie
 
-__not documented__
+
+Checks that cookie is set.
+
+ * param $cookie
+ * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -573,10 +608,12 @@ __not documented__
 Checks that current url is equal to value.
 Unlike `seeInCurrentUrl` performs a strict check.
 
+``` php
 <?php
 // to match root url
 $I->seeCurrentUrlEquals('/');
 ?>
+```
 
  * param $uri
 
@@ -586,10 +623,12 @@ $I->seeCurrentUrlEquals('/');
 
 Checks that current url is matches a RegEx value
 
+``` php
 <?php
 // to match root url
 $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
+```
 
  * param $uri
 
@@ -600,6 +639,14 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 Checks element visibility.
 Fails if element exists but is invisible to user.
 Eiter CSS or XPath can be used.
+
+Example:
+
+``` php
+<?php
+$I->seeElement("//input[@type='button']");
+?>
+``` 
 
  * param $selector
 
@@ -643,6 +690,21 @@ $I->seeInField('//form/*[@name=search]','Search');
  * param $value
 
 
+### seeInTitle
+
+
+Checks that page title contains text.
+
+``` php
+<?php
+$I->seeInTitle('Blog - Post #1');
+?>
+```
+
+ * param $title
+ * return mixed
+
+
 ### seeLink
 
 
@@ -655,7 +717,7 @@ Examples:
 <?php
 $I->seeLink('Logout'); // matches <a href="#">Logout</a>
 $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-
+?>
 ```
 
  * param $text
@@ -693,13 +755,26 @@ $I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
+Can select multiple options if second argument is array:
+
+``` php
+<?php
+$I->selectOption('Which OS do you use?', array('Windows','Linux'));
+?>
+```
+
  * param $select
  * param $option
 
 
 ### setCookie
 
-__not documented__
+
+Sets a cookie.
+
+ * param $cookie
+ * param $value
+ * return mixed
 
 
 ### uncheckOption
@@ -723,13 +798,42 @@ $I->uncheckOption('#notify');
 
 Wait for x milliseconds
 
+Example:
+
+``` php
+<?php
+$I->wait(1000);	// waits 1000 milliseconds (one second)
+?>
+```
+
  * param $milliseconds
 
 
 ### waitForJS
 
 
-Waits for x milliseconds or until JS condition turns true.
+Waits for x milliseconds or until a given JS condition turns true.
+The function will keep asserting the javascript condition, but will
+continue regardless of its validity once the x milliseconds time has
+been passed.
+
+See the example below on how to embed javascript functions as the
+condition.
+
+Example:
+
+``` php
+<?php
+$I->waitForJS(1000, "(function myJavascriptFunction() {
+		// Javascript function code
+		if (some statement) {
+		return true;	// waitForJS() function will finish
+	} else {
+		return false;	// keep asserting (some statement)
+	}
+})()");
+?>
+```
 
  * param $milliseconds
  * param $jsCondition

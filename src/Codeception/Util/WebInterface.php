@@ -321,6 +321,14 @@ interface WebInterface
      * ?>
      * ```
      *
+     * Can select multiple options if second argument is array:
+     *
+     * ``` php
+     * <?php
+     * $I->selectOption('Which OS do you use?', array('Windows','Linux'));
+     * ?>
+     * ```
+     *
      * @param $select
      * @param $option
      */
@@ -434,7 +442,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->seeElement('.error');
-     * $I->seeElement(//form/input[1]);
+     * $I->seeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
@@ -449,7 +457,7 @@ interface WebInterface
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
-     * $I->dontSeeElement(//form/input[1]);
+     * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
      * @param $selector
@@ -485,5 +493,27 @@ interface WebInterface
      * @return mixed
      */
     public function dontSeeOptionIsSelected($selector, $optionText);
+
+    /**
+     * Checks that page title contains text.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInTitle('Blog - Post #1');
+     * ?>
+     * ```
+     *
+     * @param $title
+     * @return mixed
+     */
+    public function seeInTitle($title);
+
+    /**
+     * Checks that page title does not contain text.
+     *
+     * @param $title
+     * @return mixed
+     */
+    public function dontSeeInTitle($title);
 
 }

@@ -42,4 +42,14 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(Locator::isXPath('//table[parent::div[@class="pad"] and not(@id)]//a'));
     }
 
+    public function testIsId()
+    {
+        $this->assertTrue(Locator::isID('#username'));
+        $this->assertTrue(Locator::isID('#user.name'));
+        $this->assertTrue(Locator::isID('#user-name'));
+        $this->assertFalse(Locator::isID('#user-name .field'));
+        $this->assertFalse(Locator::isID('.field'));
+        $this->assertFalse(Locator::isID('hello'));
+    }
+
 }

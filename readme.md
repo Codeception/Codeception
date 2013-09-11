@@ -1,12 +1,23 @@
 # Codeception
 
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception)
-[![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
-[![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
+**Modern PHP Testing for everyone**
 
-Codeception is a new PHP full-stack testing framework.
+Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit 3.7.
+
+
+| release |  branch  |  status  |
+| ------- | -------- | -------- |
+| **Stable** | **1.6** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.6)](http://travis-ci.org/Codeception/Codeception) [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
+| **Development** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
+
+
+#### Contributions
+
+**Bugfixes should be sent to to current stable branch, which is the same as major version number.**
+Breaking features and major improvements should be sent into `master`.
+When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
 
 ### At a Glance
 

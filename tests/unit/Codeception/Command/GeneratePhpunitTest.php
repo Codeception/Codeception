@@ -20,6 +20,7 @@ class GeneratePhpunitTest extends BaseCommandRunner {
         $this->assertContains('Test was created in tests/shire/PonyTest.php', $this->output);
         $this->assertContains('protected function setUp()', $this->content);
         $this->assertContains('protected function tearDown()', $this->content);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testCreateWithSuffix()
@@ -28,6 +29,7 @@ class GeneratePhpunitTest extends BaseCommandRunner {
         $this->assertEquals('tests/shire/PonyTest.php', $this->filename);
         $this->assertContains('class PonyTest extends \PHPUnit_Framework_TestCase', $this->content);
         $this->assertContains('Test was created in tests/shire/PonyTest.php', $this->output);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testCreateWithExtension()
@@ -36,6 +38,7 @@ class GeneratePhpunitTest extends BaseCommandRunner {
         $this->assertEquals('tests/shire/PonyTest.php', $this->filename);
         $this->assertContains('class PonyTest extends \PHPUnit_Framework_TestCase', $this->content);
         $this->assertContains('Test was created in tests/shire/PonyTest.php', $this->output);
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testCreateWithNamespace()
@@ -45,13 +48,9 @@ class GeneratePhpunitTest extends BaseCommandRunner {
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class PonyTest extends \PHPUnit_Framework_TestCase', $this->content);
         $this->assertContains('Test was created in tests/shire/PonyTest.php', $this->output);
+        $this->assertIsValidPhp($this->content);
     }
 
-    public function testValidPHP()
-    {
-        $this->execute(array('suite' => 'shire', 'class' => 'Pony'));
-        $this->assertTrue($this->isValidPhp());
-    }
 
 
 }

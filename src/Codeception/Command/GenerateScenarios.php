@@ -60,14 +60,16 @@ class GenerateScenarios extends Base
             }
         }
 
-        $suiteManager->loadTests();
-        $tests = $suiteManager->getSuite()->tests();
+        $tests = $this->getTests($suiteManager);
         $scenarios = "";
 
         foreach ($tests as $test) {
             if (!($test instanceof \Codeception\TestCase\Cept)) continue;
             $feature = $test->getScenarioText($format);
-            $name = $this->underscore(substr($test->getFileName(), 0, -8));
+
+            $name = $test instanceof \Codeception\TestCase\Cest
+                ? $this->underscore($test->getFileName())
+                : $this->underscore(substr($test->getFileName(), 0, -8));
 
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
@@ -90,6 +92,12 @@ class GenerateScenarios extends Base
             case 'text': return $text;
             case 'html': return "<html><body>$text</body></html>";
         }
+    }
+
+    protected function getTests($suiteManager)
+    {
+        $suiteManager->loadTests();
+        return $suiteManager->getSuite()->tests();
     }
 
     protected function formatExtension($format)

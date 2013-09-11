@@ -53,6 +53,12 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInCurrentUrl('user');
     }
 
+    function testRedirect()
+    {
+        $this->module->amOnPage('/redirect');
+        $this->module->seeInCurrentUrl('info');
+    }
+
 
     public function testSee()
     {
@@ -68,6 +74,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable', 'h1');
+        $this->module->dontSee('Welcome','h6');
     }
 
     public function testSeeInCurrentUrl()
@@ -82,8 +89,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('More info');
         $this->module->dontSeeLink('/info');
         $this->module->dontSeeLink('#info');
-        $this->module->amOnPage('/info');
-        $this->module->seeLink('Back');
+        $this->module->seeLink('More','/info');
     }
 
     public function testClick()
@@ -355,6 +361,16 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/form/hidden');
     }
 
+    public function testLinksWithDifferentContext()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click('Test', '#area1');
+        $this->module->seeInCurrentUrl('/form/file');
+        $this->module->amOnPage('/');
+        $this->module->click('Test', '#area2');
+        $this->module->seeInCurrentUrl('/form/hidden');
+    }
+
     public function testSeeElementOnPage()
     {
         $this->module->amOnPage('/form/field');
@@ -379,6 +395,16 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 		$this->module->resetCookie($cookie_name);
 		$this->module->dontSeeCookie($cookie_name);
 	}
+
+    public function testPageTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeInTitle('TestEd Beta 2.0');
+        $this->module->dontSeeInTitle('Welcome to test app');
+
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeInTitle('TestEd Beta 2.0');
+    }
 
 
 }

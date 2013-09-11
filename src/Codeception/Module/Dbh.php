@@ -54,7 +54,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
         if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
             "Transaction module requires PDO instance explicitly set.\n" .
             "You can use your bootstrap file to assign the dbh:\n\n" .
-            '\Codeception\Module\Transaction::$dbh = $dbh');
+            '\Codeception\Module\Dbh::$dbh = $dbh');
 
         self::$dbh->beginTransaction();
     }
@@ -64,9 +64,11 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
         if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
             "Transaction module requires PDO instance explicitly set.\n" .
             "You can use your bootstrap file to assign the dbh:\n\n" .
-            '\Codeception\Module\Transaction::$dbh = $dbh');
+            '\Codeception\Module\Dbh::$dbh = $dbh');
 
-        self::$dbh->rollback();
+        if(self::$dbh->inTransaction()) {
+          self::$dbh->rollback();
+        }
     }
 
     public function seeInDatabase($table, $criteria = array())

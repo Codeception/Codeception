@@ -9,14 +9,14 @@ class PostgreSql extends Db
 
     public function cleanup()
     {
-        $db = $this->getDb();
-        $this->dbh->exec("GRANT ALL ON DATABASE $db TO ".$this->user);
+        $tables = $this->dbh->query("SELECT 'DROP TABLE IF EXISTS \"' || tablename || '\" cascade;' FROM pg_tables WHERE schemaname = 'public';")->fetchAll();
+        $sequences = $this->dbh->query("SELECT 'DROP SEQUENCE IF EXISTS \"' || relname || '\" cascade;' FROM pg_class WHERE relkind = 'S';")->fetchAll();
 
-        $drops = $this->dbh->query("select 'drop table if exists \"' || tablename || '\" cascade;' from pg_tables where schemaname = 'public' ;")->fetchAll();
-
-        if (!$drops) return;
-        foreach ($drops as $drop) {
-            $this->dbh->exec($drop[0]);
+        $drops = array_merge($tables, $sequences);
+        if ($drops) {
+            foreach ($drops as $drop) {
+                $this->dbh->exec($drop[0]);
+            }
         }
     }
 
@@ -50,8 +50,9 @@ class PostgreSql extends Db
         }
     }
 
-    public function select($column, $table, array &$criteria) {
-        $query = 'select %s from "%s" where %s';
+    public function select($column, $table, array $criteria) {
+        $where = $criteria ? "where %s" : '';
+        $query = 'select %s from "%s" '.$where;
         $params = array();
         foreach ($criteria as $k => $v) {
             if($v === NULL) {
@@ -64,5 +65,11 @@ class PostgreSql extends Db
         $params = implode('AND ', $params);
 
         return sprintf($query, $column, $table, $params);
+    }
+
+    public function lastInsertId($table) {
+      /*We make an assumption that the sequence name for this table is based on how postgres names sequences for SERIAL columns */
+      $sequenceName = $table.'_id_seq';
+      return $this->getDbh()->lastInsertId($sequenceName);
     }
 }

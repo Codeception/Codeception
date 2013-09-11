@@ -10,8 +10,22 @@ class Test extends Event
      */
     protected $test;
 
-    public function __construct(\PHPUnit_Framework_Test $test) {
+    /**
+     * @var float Time taken
+     */
+    protected $time;
+
+    public function __construct(\PHPUnit_Framework_Test $test, $time = 0) {
         $this->test = $test;
+        $this->time = $time;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTime()
+    {
+        return $this->time;
     }
 
     /**
@@ -20,5 +34,7 @@ class Test extends Event
     public function getTest() {
         return $this->test;
     }
+
+
 
 }

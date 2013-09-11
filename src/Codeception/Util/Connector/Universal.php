@@ -34,11 +34,20 @@ class Universal extends Client
         $content = ob_get_contents();
         ob_end_clean();
 
-        $headers = headers_list();
-        $headers['Content-type'] = "text/html; charset=UTF-8";
-        // header_remove();
+        $headers = array();
+        $php_headers = headers_list();
+        foreach ($php_headers as $value) {
+            // Get the header name
+            $parts = explode(':', $value);
+            if (count($parts) > 1) {
+                $name = trim(array_shift($parts));
+                // Build the header hash map
+                $headers[$name] = trim(implode(':', $parts));
+            }
+        }
+        $headers['Content-type'] = isset($headers['Content-type']) ? $headers['Content-type']: "text/html; charset=UTF-8";
 
-        $response = new Response($content,200,$headers);
+        $response = new Response($content, 200, $headers);
         return $response;
     }
 }

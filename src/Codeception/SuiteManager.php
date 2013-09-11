@@ -2,9 +2,10 @@
 
 namespace Codeception;
 
+use Codeception\Event\Suite;
+use Codeception\Event\SuiteTests;
 use Symfony\Component\Finder\Finder;
-use \Symfony\Component\EventDispatcher\EventDispatcher;
-
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager {
 
@@ -37,13 +38,18 @@ class SuiteManager {
         $this->path = $settings['path'];
 
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
-        if (!file_exists($settings['path'] . $settings['class_name'].'.php')) {
+        if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
 
         require_once $settings['path'] . $settings['class_name'].'.php';
-        
+
         $this->initializeModules($settings);
+    }
+
+    public static function hasModule($moduleName)
+    {
+        return isset(self::$modules[$moduleName]);
     }
 
     protected function initializeModules($settings)
@@ -60,7 +66,7 @@ class SuiteManager {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class not found");
         $suite = new $suiteClass;
-        if ($this->settings['namespace']) $name = $this->settings['namespace'].".$name";
+        if ($this->settings['namespace']) $name = $this->settings['namespace'] . ".$name";
         $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
         return $suite;
@@ -105,22 +111,27 @@ class SuiteManager {
         $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
+
+            $guy = $this->settings['namespace']
+                ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+                : $this->settings['class_name'];
+
             $unit = new $testClass;
             $reflected = new \ReflectionClass($testClass);
-            $cestSuite = new \PHPUnit_Framework_TestSuite($testClass.' ');
+            if (preg_match('/@guy(?:[ \t]+(?P<guy>.*?))?[ \t]*\r?$/m', $reflected->getDocComment(), $annotations));
+            if (isset($annotations['guy'])) $guy = $annotations['guy'];
             $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
 
             foreach ($methods as $method) {
                 if ($method->isConstructor()) return;
                 if ($method->isDestructor()) return;
 
-                $test = $this->createTestFromCestMethod($unit, $method->name, $file);
+                $test = $this->createTestFromCestMethod($unit, $method->name, $file, $guy);
 
                 if (!$test) continue;
                 $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
-                $cestSuite->addTest($test, $groups);
+                $this->suite->addTest($test, $groups);
             }
-            $this->suite->addTestSuite($cestSuite);
         }
     }
 
@@ -152,7 +163,7 @@ class SuiteManager {
     public function loadTests()
     {
         $finder = Finder::create()->files()->sortByName()->in($this->path);
-        if (!empty($this->settings['includes'])) $finder->append($this->settings['includes']);
+
         $ceptFinder = clone($finder);
         $testFiles = $ceptFinder->name('*Cept.php');
         foreach ($testFiles as $test) {
@@ -187,9 +198,14 @@ class SuiteManager {
         $test = \PHPUnit_Framework_TestSuite::createTest($class, $method->name);
 
         if ($test instanceof TestCase\Test) {
+            $guy = $this->settings['namespace']
+                ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+                : $this->settings['class_name'];
+
+
             $test->setBootstrap($this->settings['bootstrap']);
             $test->setDispatcher($this->dispatcher);
-            $test->setGuyClass($this->settings['class_name']);
+            $test->setGuyClass($guy);
 
             $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
             $test->getScenario()->groups($groups);
@@ -199,18 +215,13 @@ class SuiteManager {
         return $test;
     }
 
-    protected function createTestFromCestMethod($cestInstance, $methodName, $file)
+    protected function createTestFromCestMethod($cestInstance, $methodName, $file, $guy)
     {
         $testClass = get_class($cestInstance);
         if (strpos($methodName, '_') === 0) return;
 
-        $guy = $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\Codeception\\' . $this->settings['class_name']
-            : $this->settings['class_name'];
-
-        $target = $testClass.'::'.$methodName;
         $cest = new TestCase\Cest($this->dispatcher, array(
-            'name' => $target,
+            'name' => $methodName,
             'instance' => $cestInstance,
             'method' => $methodName,
             'file' => $file,

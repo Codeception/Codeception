@@ -28,9 +28,9 @@ class Autoload {
      */
     public static function register($namespace, $suffix, $path)
     {
-        self::$map[self::regex($namespace, $suffix)] = $path;
+        self::$map[] = array(self::regex($namespace, $suffix), $path);
         if (!self::$registered) {
-            spl_autoload_register(array(__CLASS__, 'autoload'));
+            spl_autoload_register(array(__CLASS__, 'load'));
             self::$registered = true;
         }
     }
@@ -47,9 +47,11 @@ class Autoload {
     }
 
 
-    public static function autoload($class)
+    public static function load($class)
     {
-        foreach (self::$map as $regex => $path) {
+        $map = array_reverse(self::$map);
+        foreach ($map as $record) {
+            list($regex, $path) = $record;
             if (!preg_match($regex, $class)) continue;
             $className = str_replace('\\', '', substr($class, (int)strrpos($class, '\\')));
             $file = $path.DIRECTORY_SEPARATOR.$className.'.php';
@@ -69,6 +71,9 @@ class Autoload {
     protected static function regex($namespace, $suffix)
     {
         $namespace = str_replace("\\",'\\\\', $namespace);
-        return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        if ($namespace) {
+            return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        }
+        return sprintf('~\w*?%s$~', $suffix);
     }
 }

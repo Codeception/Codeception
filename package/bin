@@ -3,14 +3,6 @@
  * Codeception CLI
  */
 
-if (isset($argv[1])) {
-    if (($argv[1] != 'run') && ($version = \Codeception\Codecept::checkLastVersion())) {
-        if (version_compare($version, \Codeception\Codecept::VERSION) > 0) {
-            echo "UPDATE: version $version released. See changes on: http://codeception.com.\n\n";
-        }
-    }
-}
-
 use Symfony\Component\Console\Application,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Input\InputDefinition,
@@ -30,4 +22,8 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
  $app->add(new Codeception\Command\RefactorAddNamespace('refactor:add-namespace'));
+ $app->add(new Codeception\Command\Clean('clean'));
+ $app->add(new Codeception\Command\GenerateGroup('generate:group'));
+ $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
+ $app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
  $app->run();

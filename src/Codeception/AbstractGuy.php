@@ -1,7 +1,9 @@
 <?php
 namespace Codeception;
 
-abstract class AbstractGuy
+use Codeception\Step\Action;
+
+abstract class AbstractGuy implements \ArrayAccess
 {
     public static $methods = array();
 
@@ -24,7 +26,7 @@ abstract class AbstractGuy
      */
     public function execute($callable)
     {
-        $this->scenario->executor($callable);
+        $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -44,52 +46,73 @@ abstract class AbstractGuy
             $this->scenario->runStep();
             return $this;
         }
-        $this->scenario->setFeature(strtolower($text));
+        $this->scenario->setFeature(mb_strtolower($text));
         return $this;
     }
 
     public function expectTo($prediction)
     {
-        $this->scenario->comment('I expect to ' . $prediction);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I expect to ' . $prediction);
     }
 
     public function expect($prediction)
     {
-        $this->scenario->comment('I expect ' . $prediction);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I expect ' . $prediction);
     }
 
     public function amGoingTo($argumentation)
     {
-        $this->scenario->comment('I am going to ' . $argumentation);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('I am going to ' . $argumentation);
     }
 
     public function am($role) {
-        $this->scenario->comment('As a ' . $role);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
-        return $this;
+        return $this->comment('As a ' . $role);
     }
 
+    public function lookForwardTo($achieveValue)
+    {
+        return $this->comment('So that I ' . $achieveValue);
+    }
 
-    public function lookForwardTo($role) {
-        $this->scenario->comment('So that I ' . $role);
+    /**
+     * In order to have this nicely looking comments.
+     *
+     * ``` php
+     * <?php
+     *
+     * $I['click on a product'];
+     * $I['then I select Purchase'];
+     * $I['I select shipment delivery'];
+     * $I['purchase a product'];
+     *
+     * ```
+     *
+     * @param mixed $offset
+     * @return mixed|void
+     */
+    public function offsetGet($offset)
+    {
+        $this->comment($offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        // not needed
+    }
+
+    public function offsetExists($offset)
+    {
+        return false;
+    }
+
+    public function offsetUnset($offset)
+    {
+       // not needed
+    }
+
+    protected function comment($description)
+    {
+        $this->scenario->comment($description);
         if ($this->scenario->running()) {
             $this->scenario->runStep();
             return $this;
@@ -101,7 +124,7 @@ abstract class AbstractGuy
             $class = get_class($this);
             throw new \RuntimeException("Call to undefined method $class::$method");
         } else {
-            $this->scenario->action($method, $arguments);
+            $this->scenario->addStep(new Action($method, $arguments));
         }
     }
 }

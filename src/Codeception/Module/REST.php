@@ -28,11 +28,11 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  *
  * ### Example
  *
- *     modules: 
+ *     modules:
  *        enabled: [REST]
  *        config:
  *           REST:
- *              url: 'http://serviceapp/api/v1/' 
+ *              url: 'http://serviceapp/api/v1/'
  *              timeout: 90
  *
  * ## Public Properties
@@ -123,6 +123,57 @@ class REST extends \Codeception\Module
         $this->headers[$name] = $value;
     }
 
+    /**
+     * Checks over the given HTTP header and (optionally)
+     * its value, asserting that are there
+     *
+     * @param $name
+     * @param $value
+     */
+    public function seeHttpHeader($name, $value = null)
+    {
+        if ($value) {
+            \PHPUnit_Framework_Assert::assertEquals(
+                $this->client->getResponse()->getHeader($name),
+                $value
+            );
+        }
+        else {
+            \PHPUnit_Framework_Assert::assertNotNull($this->client->getResponse()->getHeader($name));
+        }
+    }
+
+    /**
+     * Checks over the given HTTP header and (optionally)
+     * its value, asserting that are not there
+     *
+     * @param $name
+     * @param $value
+     */
+    public function dontSeeHttpHeader($name, $value = null) {
+        if ($value) {
+            \PHPUnit_Framework_Assert::assertNotEquals(
+                $this->client->getResponse()->getHeader($name),
+                $value
+            );
+        }
+        else {
+            \PHPUnit_Framework_Assert::assertNull($this->client->getResponse()->getHeader($name));
+        }
+    }
+
+
+    /**
+     * Returns the value of the specified header name
+     *
+     * @param $name
+     * @param Boolean $first  Whether to return the first value or all header values
+     *
+     * @return string|array The first header value if $first is true, an array of values otherwise
+     */
+    public function grabHttpHeader($name, $first = true) {
+        return $this->client->getResponse()->getHeader($name, $first);
+    }
 
     /**
      * Adds HTTP authentication via username/password.
@@ -142,7 +193,7 @@ class REST extends \Codeception\Module
 
 	/**
 	 * Adds Digest authentication via username/password.
-	 * 
+	 *
 	 * @param $username
 	 * @param $password
 	 */
@@ -282,16 +333,8 @@ class REST extends \Codeception\Module
         // allow full url to be requested
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
-        if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
-            $parameters = $this->scalarizeArray($parameters);
-            if (array_key_exists('Content-Type', $this->headers)
-                && $this->headers['Content-Type'] === 'application/json'
-                && $method != 'GET'
-            ) {
-                $parameters = json_encode($parameters);
-            }
-        }
-
+        $this->encodeApplicationJson($method, $parameters);
+        
         if (is_array($parameters) || $method == 'GET') {
             if ($method == 'GET' && !empty($parameters)) {
                 $url .= '?' . http_build_query($parameters);
@@ -305,13 +348,32 @@ class REST extends \Codeception\Module
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
-
         $this->response = $this->client->getResponse()->getContent();
         $this->debugSection("Response", $this->response);
+
+        if (count($this->client->getRequest()->getCookies())) {
+            $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
+        }
+        $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
+        $this->debugSection("Status", json_encode($this->client->getResponse()->getStatus()));
+    }
+
+    protected function encodeApplicationJson($method, $parameters)
+    {
+        if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
+            $parameters = $this->scalarizeArray($parameters);
+            if (array_key_exists('Content-Type', $this->headers)
+                && $this->headers['Content-Type'] === 'application/json'
+                && $method != 'GET'
+            ) {
+                return json_encode($parameters);
+            }
+        }
+        return $parameters;
     }
 
     /**
-     * Checks weather last response was valid JSON.
+     * Checks whether last response was valid JSON.
      * This is done with json_last_error function.
      *
      */
@@ -326,7 +388,7 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks weather the last response contains text.
+     * Checks whether the last response contains text.
      *
      * @param $text
      */
@@ -336,7 +398,7 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks weather last response do not contain text.
+     * Checks whether last response do not contain text.
      *
      * @param $text
      */
@@ -346,7 +408,7 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks weather the last JSON response contains provided array.
+     * Checks whether the last JSON response contains provided array.
      * The response is converted to array with json_decode($response, true)
      * Thus, JSON is represented by associative array.
      * This method matches that response array contains provided array.
@@ -425,7 +487,7 @@ class REST extends \Codeception\Module
             $this->fail('Response is not of JSON format or is malformed');
             $this->debugSection('Response', $this->response);
         }
-        
+
         if ($path === '') {
             return $data;
         }
@@ -498,16 +560,30 @@ class REST extends \Codeception\Module
     }
 
     /**
-     * Checks response code.
+     * Checks response code equals to provided value.
      *
-     * @param $num
+     * @param $code
      */
-    public function seeResponseCodeIs($num)
+    public function seeResponseCodeIs($code)
     {
         if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatusCode());
+            $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
         } else {
-            \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+            $this->assertEquals($code, $this->client->getResponse()->getStatus());
+        }
+    }
+
+    /**
+     * Checks that response code is not equal to provided value.
+     *
+     * @param $code
+     */
+    public function dontSeeResponseCodeIs($code)
+    {
+        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
+            $this->assertNotEquals($code, $this->client->getResponse()->getStatusCode());
+        } else {
+            $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
         }
     }
 }

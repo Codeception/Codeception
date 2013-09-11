@@ -61,6 +61,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSee('Welcome');
         $this->module->dontSee('valuable','h1');
         $this->module->dontSee('valuable','descendant-or-self::h1');
+        $this->module->dontSee('Welcome','h6');
     }
 
     public function testSeeLink() {
@@ -408,6 +409,16 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeElement('descendant-or-self::input[@id="name"]');
         $this->module->dontSeeElement('#something-beyond');
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
+    }
+
+    public function testPageTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->seeInTitle('TestEd Beta 2.0');
+        $this->module->dontSeeInTitle('Welcome to test app');
+
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
 

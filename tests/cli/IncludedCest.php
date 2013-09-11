@@ -46,6 +46,17 @@ class IncludedCest {
         $I->seeInThisFile('check that jazz pianists can add numbers');
         $I->seeInThisFile('Shire.functional Tests');
     }
+
+    public function runIncludedWithCoverage(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/included');
+        $I->executeCommand('run --xml --coverage');
+        $I->amInPath('_log');
+        $I->seeFileFound('coverage.xml');
+        $I->seeInThisFile('<class name="BillEvans" namespace="Jazz\Pianist">');
+        $I->seeInThisFile('<class name="Musician" namespace="Jazz">');
+        $I->seeInThisFile('<class name="Hobbit" namespace="Shire">');
+    }
 }
 
 

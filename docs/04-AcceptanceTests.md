@@ -1,8 +1,8 @@
 # Acceptance Testing
 Acceptance testing is testing that can be performed by a non-technical person. That person can be your tester, manager or even client.
-If you are developing a web-application (and probably you are) the tester needs nothing more then a web browser to check that your site works correctly. In Codeception we call such testers a WebGuy. You can reproduce a WebGuy's actions in scenarios and run them automatically after each site change. Codeception keeps tests clean and simple, since they were recorded from the words of WebGuy. 
+If you are developing a web-application (and probably you are) the tester needs nothing more than a web browser to check that your site works correctly. In Codeception we call such testers a WebGuy. You can reproduce a WebGuy's actions in scenarios and run them automatically after each site change. Codeception keeps tests clean and simple, since they were recorded from the words of WebGuy. 
 
-It makes no difference what CMS or Framework is used on the site. You can event test sites created on different platforms, like Java, .NET, etc. It's always a good idea to add tests to your web site. At least you will be sure that site features work after the last changes were made. 
+It makes no difference what CMS or Framework is used on the site. You can even test sites created on different platforms, like Java, .NET, etc. It's always a good idea to add tests to your web site. At least you will be sure that site features work after the last changes were made. 
 
 ## Sample Scenario
 
@@ -37,13 +37,13 @@ Such transformations can be done by command:
 $ php codecept.phar generate:scenarios
 ```
 
-Generated scenarios will be stored in your data dir within text files.
+Generated scenarios will be stored in your ___data__ directory in text files.
 
-This scenario can be performed either by a simple PHP browser or by a browser through Selenium (also Sahi or ZombieJS). We will start writing our first acceptance tests with a PHP Browser. This is a good place to start If you don't have experience working with Selenium Server or Sahi. 
+This scenario can be performed either by a simple PHP browser or by a browser through Selenium (also Sahi or ZombieJS). We will start writing our first acceptance tests with a PHP Browser. This is a good place to start if you don't have experience working with Selenium Server or Sahi. 
 
 ## PHP Browser
 
-This is the fastest way to run acceptance tests, since it doesn't require running an actual browser. We use a PHP web spider, which acts like a browser: it sends a request, then receives and parses the response. For such a browser Codeception uses [Goutte Web Scrapper](https://github.com/fabpot/Goutte) driven by [Mink](http://mink.behat.org). Unlike common browsers Goutte has no rendering or javascript processing engine, so you can't test actual visibility of elements, or javascript interactions. The good thing about Goutte is that it can be run in any environment, with just PHP required.
+This is the fastest way to run acceptance tests, since it doesn't require running an actual browser. We use a PHP web spider, which acts like a browser: it sends a request, then receives and parses the response. For such a browser Codeception uses [Goutte Web Scraper](https://github.com/fabpot/Goutte) driven by [Mink](http://mink.behat.org). Unlike common browsers Goutte has no rendering or javascript processing engine, so you can't test actual visibility of elements, or javascript interactions. The good thing about Goutte is that it can be run in any environment, with just PHP required.
 
 Before we start we need a local copy of the site running on your host. We need to specify the url parameter in the acceptance suite config (tests/acceptance.suite.yml).
 
@@ -59,7 +59,7 @@ modules:
             url: [your site's url]
 ```
 
-We should start by creating a 'Cept' file in the __tests/acceptance__ dir. Let's call it __SigninCept.php__. We will write the first lines into it.
+We should start by creating a 'Cept' file in the __tests/acceptance__ directory. Let's call it __SigninCept.php__. We will write the first lines into it.
 
 ``` php
 <?php
@@ -98,9 +98,9 @@ $I->amOnPage('/login');
 ?>
 ```
 
-We assume that all `am` commands should describe the starting environment. The `amOnPage` command sets the starting point of test on the __/login page__. By default the browser starts on the front page of your local site. 
+We assume that all `am` commands should describe the starting environment. The `amOnPage` command sets the starting point of a test on the __/login__ page. By default the browser starts on the front page of your local site. 
 
-With the `PhpBrowser` you can click the links and fill the forms. Probably that will be the majority of your actions.
+With the `PhpBrowser` you can click the links and fill the forms. That will probably be the majority of your actions.
 
 #### Click
 
@@ -158,7 +158,7 @@ To match fields by their labels, you should write a `for` attribute in the label
 
 From the developer's perspective, submitting a form is just sending a valid post request to the server.
 Sometimes it's easier to fill all of the fields at once and send the form without clicking a 'Submit' button.
-Similar scenario can be rewritten with only one command.
+A similar scenario can be rewritten with only one command.
 
 ```php
 <?php
@@ -209,7 +209,7 @@ $I->dontSee('Form is filled incorrectly');
 
 We also have other useful commands to perform checks. Please note that they all start with the `see` prefix.
 
-```php
+``` php
 <?php
 $I->seeInCurrentUrl('/user/miles');
 $I->seeCheckboxIsChecked('#agree');
@@ -218,9 +218,25 @@ $I->seeLink('Login');
 ?>
 ```
 
+#### Conditional Assertions
+
+* new in 1.6.4 *
+
+Sometimes you don't want the test to be stopped when an assertion fails. Maybe you have a long-running test and you want it to run to the end. In this case you can use conditional assertions. Each `see` method has a corresponding `canSee` method, and `dontSee` has a `cantSee` method. 
+
+``` php
+<?php
+$I->canSeeInCurrentUrl('/user/miles');
+$I->canSeeCheckboxIsChecked('#agree');
+$I->cantSeeInField('user[name]','Miles');
+?>
+```
+
+Each failed assertion will be shown in test results. Still, a failed assertion won't stop the test execution.
+
 #### Grabbers
 
-This is are the commands are introduced in Codeception 1.1. They are quite useful when you need to retrieve the data from the test and use it in next steps. Imagine, your site generates a password for every user, and you want to check the user can log in into site using this password.
+These commands were introduced in Codeception 1.1. They are quite useful when you need to retrieve data from the test and use it in any of the following steps. Imagine, your site generates a password for every user and you want to check the user can log into the site using this password.
 
 ```php
 <?php
@@ -234,7 +250,7 @@ $I->click('Log in!');
 ?>
 ```
 
-Grabbers allows to get a single value from current page with commands.
+Grabbers allow you to get a single value from the current page with commands.
 
 ```php
 <?php
@@ -254,7 +270,7 @@ Commands like amGoingTo, expect, expectTo helps you in making tests more descrip
 $I->amGoingTo('submit user form with invalid values');
 $I->fillField('user[email]','miles');
 $I->click('Update');
-$I->expect('the for is not submitted');
+$I->expect('the form is not submitted');
 $I->see('Form is filled incorrectly');
 ?>
 ```
@@ -287,7 +303,7 @@ In order to run Selenium tests you need to [download Selenium Server](http://sel
 _Note: Selenium Server 2.33 is NOT compatible with Firefox 22.  You will need to remain with Firefox 21 until Selenium Server 2.34 is released._
 
 If you run acceptance tests with Selenium, Firefox will be started and all actions will be performed step by step. 
-The commands we use for Selenium are mostly like those we have for PHPBrowser. Nevertheless, their behavior may be slightly different.
+The commands we use for Selenium are mostly like those we have for PHPBrowser. Nevertheless, their behaviour may be slightly different.
 All of the actions performed on a page will trigger javascript events, which might update the page contents. So the `click` action is not just loading the page from the  'href' parameter of an anchor, but also may start the ajax request, or toggle visibility of an element.
 
 By the way, the `see` command with element set, won't just check that the text exists inside the element, but it will also check that this element is actually visible to the user. 
@@ -304,9 +320,9 @@ See Codeception's Selenium module documentation for the full reference.
 
 ### Cleaning things up
 
-While testing, your actions may change the data on the site. Tests will fail if trying to create or update the same data twice. To avoid this problem, your database should be repopulated for each test. Codeception provides a `Db` module for that purpose. It will load a database dump after each passed test. To make repopulation work, create an sql dump of your database and put it into the __/tests/data__ dir. Set the database connection and path to the dump in the global Codeception config.
+While testing, your actions may change the data on the site. Tests will fail if trying to create or update the same data twice. To avoid this problem, your database should be repopulated for each test. Codeception provides a `Db` module for that purpose. It will load a database dump after each passed test. To make repopulation work, create an sql dump of your database and put it into the __/tests/_data__ directory. Set the database connection and path to the dump in the global Codeception config.
 
-````yaml
+```yaml
 # in codeception.yml:
 modules:
     config:
@@ -315,17 +331,17 @@ modules:
             user: '[set user]'
             password: '[set password]'
             dump: tests/_data/dump.sql
-````
+```
 
 ### Debugging
 
-The PhpBrowser module can output valuable information while running. Just execute tests with the `--debug` option to see additional output. On each fail, the snapshot of the last shown page will be stored in the __tests/log__ directory. PHPBrowser will store html code, and Selenium will save the screenshot of a page.
-When [WebDebug](http://codeception.com/docs/modules/WebDebug) is attached you can use it's methods to save screenshot of current window in any time.
+The PhpBrowser module can output valuable information while running. Just execute tests with the `--debug` option to see additional output. On each fail, the snapshot of the last shown page will be stored in the __tests/_log__ directory. PHPBrowser will store html code and Selenium will save the screenshot of a page.
+When [WebDebug](http://codeception.com/docs/modules/WebDebug) is attached you can use it's methods to save a screenshot of the current window in any time.
 
 ### Custom Methods
 
 In case you need to implement custom assertions or action you can extend a [Helper](http://codeception.com/docs/03-Modules#helpers) class.
-To perform operations on current browser state you should access [Mink Session](http://mink.behat.org/#control-the-browser-session) object.
+To perform operations on the current browser state you should access the [Mink Session](http://mink.behat.org/#control-the-browser-session) object.
 Here is the way you can do this:
 
 ``` php
@@ -342,9 +358,8 @@ class WebHelper extends \Codeception\Module {
 ?>
 ```
 
-We [connected a module](http://codeception.com/docs/03-ModulesAndHelpers#Connecting-Modules), then we retrieved content from Mink session class.
+We [connected a module](http://codeception.com/docs/03-ModulesAndHelpers#Connecting-Modules), then we retrieved content from the Mink session class and performed an assertion on the current content.
 You should definitely learn Mink to dig deeper.
-And in the end we performed assertion on current content.
 
 ## Conclusion
 

@@ -25,11 +25,11 @@ class Cest extends Cept
     }
 
     public function testCodecept() {
+        $this->fire('test.before', new TestEvent($this));
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
         $this->scenario->run();
         $I = $this->makeIObject();
-        $this->fire('test.before', new TestEvent($this));
 
         try {
             $this->executeTestMethod($I);

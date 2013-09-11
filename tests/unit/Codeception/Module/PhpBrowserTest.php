@@ -92,4 +92,5 @@ class PhpBrowserTest extends TestsForMink
     }
 
 
+
 }
