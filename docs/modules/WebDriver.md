@@ -25,12 +25,14 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 * wait - set the implicit wait (5 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
+#  initializing WebDriver method
+
 ### Example (`acceptance.suite.yml`)
 
     modules:
-       enabled: [Selenium2]
+       enabled: [WebDriver]
        config:
-          Selenium2:
+          WebDriver:
              url: 'http://localhost/'
              browser: firefox
              capabilities:
