@@ -187,8 +187,12 @@ class WebDriverTest extends TestsForMink
         $webdriver = $this->module->webDriver;
         $el = $webdriver->findElement(WebDriverBy::id('name'));
         $el->sendKeys(array(WebDriverKeys::CONTROL,'a'),'test');
-        $webdriver->getKeyboard()->press('shift')->sendKeys('111');
-        $this->module->seeInField('#name', 'test!!!');
+        $webdriver->getKeyboard()
+            ->pressKey(WebDriverKeys::SHIFT)
+            ->sendKeys('111')
+            ->releaseKey(WebDriverKeys::SHIFT)
+            ->sendKeys('1');
+        $this->module->seeInField('#name', 'test!!!1');
     }
 
 }
