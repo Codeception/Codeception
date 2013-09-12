@@ -4,8 +4,9 @@ require_once 'tests/data/app/data.php';
 
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
-use Codeception\Util\Stub;
+use Codeception\SuiteManager;
 use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,23 +30,10 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
      */
     protected $facebook;
 
-    protected function noSelenium()
-    {
-        $fp = @fsockopen('localhost', 4455);
-        if ($fp !== false) {
-            fclose($fp);
-            return true;
-        }
-        $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4455'
-        );
-        return false;
-    }
-
     protected function noPhpWebserver()
     {
         if (version_compare(PHP_VERSION, '5.4', '<')) {
-            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
+            $this->markTestSkipped('Requires PHP built-in web server, available since PHP 5.4.0.');
         }
     }
 
@@ -57,7 +45,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->module = new Facebook;
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
@@ -74,11 +63,12 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Codeception\Module\Facebook::haveFacebookTestUserAccount
-     * @covers \Codeception\Module\Facebook::grabFacebookTestUserEmail
-     * @covers \Codeception\Module\Facebook::grabFacebookTestUserAccessToken
+     * @covers Facebook::haveFacebookTestUserAccount
+     * @covers Facebook::grabFacebookTestUserEmail
+     * @covers Facebook::grabFacebookTestUserAccessToken
      */
-    public function testHaveFacebookTestUserAccount() {
+    public function testHaveFacebookTestUserAccount()
+    {
         $this->module->haveFacebookTestUserAccount(false);
         $this->assertNotEmpty($this->module->grabFacebookTestUserEmail());
         $this->assertNotEmpty($this->module->grabFacebookTestUserAccessToken());
@@ -113,7 +103,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $browserModule->_cleanup();
         $browserModule->_before($this->makeTest());
 
-        \Codeception\SuiteManager::$modules['PhpBrowser'] = $browserModule;
+        SuiteManager::$modules['PhpBrowser'] = $browserModule;
 
         // preconditions: #2 facebook test user was created
         $this->module->haveFacebookTestUserAccount();
@@ -136,9 +126,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $browserModule->see($testUserFirstName);
 
         // cleanup
-        unset(\Codeception\SuiteManager::$modules['PhpBrowser']);
+        unset(SuiteManager::$modules['PhpBrowser']);
         $browserModule->_after($this->makeTest());
         data::clean();
     }
-
 }
