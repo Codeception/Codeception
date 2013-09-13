@@ -29,8 +29,6 @@ abstract class AbstractGuy implements \ArrayAccess
         $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
         if ($this->scenario->running()) {
             $this->scenario->runStep();
-            return $this;
-        } else {
         }
         return $this;
     }
@@ -123,8 +121,7 @@ abstract class AbstractGuy implements \ArrayAccess
         if ($this->scenario->running()) {
             $class = get_class($this);
             throw new \RuntimeException("Call to undefined method $class::$method");
-        } else {
-            $this->scenario->addStep(new Action($method, $arguments));
         }
+        $this->scenario->addStep(new Action($method, $arguments));
     }
 }
