@@ -336,14 +336,12 @@ class REST extends \Codeception\Module
         $parameters = $this->encodeApplicationJson($method, $parameters);
         
         if (is_array($parameters) || $method == 'GET') {
-            if ($method == 'GET' && !empty($parameters)) {
+            if (!empty($parameters)) {
                 $url .= '?' . http_build_query($parameters);
-                $this->debugSection("Request", "$method $url");
-            } else {
-                $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
             }
-
+            $this->debugSection("Request", "$method $url");
             $this->client->request($method, $url, $parameters, $files);
+
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
@@ -435,7 +433,9 @@ class REST extends \Codeception\Module
         $resp_json = json_decode($this->response, true);
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
-            "response JSON matches provided"
+            "Response JSON contains provided\n"
+            ."- ".print_r($json, true)
+            ."+ ".print_r($resp_json, true)
         );
     }
 
@@ -545,7 +545,9 @@ class REST extends \Codeception\Module
         $resp_json = json_decode($this->response, true);
         \PHPUnit_Framework_Assert::assertFalse(
             $this->arrayHasArray($json, $resp_json),
-            "response JSON matches provided"
+            "Response JSON does not contain JSON provided\n"
+            ."- ".print_r($json, true)
+            ."+ ".print_r($resp_json, true)
         );
     }
 
@@ -566,11 +568,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($code)
     {
-        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
-        } else {
-            $this->assertEquals($code, $this->client->getResponse()->getStatus());
-        }
+        $this->assertEquals($code, $this->client->getResponse()->getStatus());
     }
 
     /**
@@ -580,10 +578,6 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseCodeIs($code)
     {
-        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            $this->assertNotEquals($code, $this->client->getResponse()->getStatusCode());
-        } else {
-            $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
-        }
+        $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
     }
 }
