@@ -51,8 +51,10 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
             'getSuiteConfig' => function() use ($self) {
                 return $self->config;
             },
-            'buildPath' => function($path) {
-                return $path;
+            'buildPath' => function($path, $testName) {
+                $path = rtrim($path, DIRECTORY_SEPARATOR);
+                $testName = str_replace(array('/','\\'),array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $testName);
+                return pathinfo($path.DIRECTORY_SEPARATOR.$testName, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
             },
             'getSuites' => function() {
                 return array('shire');
