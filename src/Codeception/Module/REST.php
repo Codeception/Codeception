@@ -333,7 +333,7 @@ class REST extends \Codeception\Module
         // allow full url to be requested
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
-        $this->encodeApplicationJson($method, $parameters);
+        $parameters = $this->encodeApplicationJson($method, $parameters);
         
         if (is_array($parameters) || $method == 'GET') {
             if ($method == 'GET' && !empty($parameters)) {
