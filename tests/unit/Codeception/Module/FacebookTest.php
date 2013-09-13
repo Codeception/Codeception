@@ -50,7 +50,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module = new Facebook;
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
-        $this->markTestSkipped('facebook block its api?');
 
         $reflection = new ReflectionProperty('Codeception\Module\Facebook', 'facebook');
         $reflection->setAccessible(true);
