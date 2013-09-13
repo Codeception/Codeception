@@ -60,7 +60,6 @@ EOF;
     protected function configure()
     {
         $this->setDefinition(array(
-            new InputOption('silent', '', InputOption::VALUE_NONE, 'Don\'t ask for rebuild'),
             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();

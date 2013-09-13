@@ -13,7 +13,8 @@ class Goutte extends Client {
     {
         $server = $request->getServer();
         $uri = $request->getUri();
-        $server['HTTP_HOST'] = parse_url($uri, PHP_URL_HOST).':'.parse_url($uri, PHP_URL_PORT);
+        $port = parse_url($uri, PHP_URL_PORT) ? '' : 80; 
+        $server['HTTP_HOST'] = parse_url($uri, PHP_URL_HOST).':'.$port;
 
         return new Request(
             $request->getUri(),
