@@ -76,10 +76,11 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJson()
     {
-        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}';
+        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('ticket' => array('title' => 'Bug should be fixed')));
         $this->module->seeResponseContainsJson(array('ticket' => array('user' => array('name' => 'Davert'))));
+        $this->module->seeResponseContainsJson(array('ticket' => array('labels' => null)));
     }
 
     public function testDontSeeInJson()
