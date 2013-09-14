@@ -8,7 +8,7 @@ class GenerateTestTest extends BaseCommandRunner {
         $this->makeCommand('\Codeception\Command\GenerateTest');
         $this->config = array(
             'class_name' => 'HobbitGuy',
-            'path' => 'tests/shire/',
+            'path' => 'tests/shire',
         );
     }
 
@@ -32,10 +32,10 @@ class GenerateTestTest extends BaseCommandRunner {
     public function testCreateWithNamespace()
     {
         $this->execute(array('suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillTest'));
-        $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
+        $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class HallUnderTheHillTest extends \Codeception\TestCase\Test', $this->content);
-        $this->assertContains('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
+        $this->assertContains('Test was created in tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->output);
     }
 
     public function testCreateWithExtension()

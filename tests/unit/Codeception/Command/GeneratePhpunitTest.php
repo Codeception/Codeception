@@ -44,10 +44,10 @@ class GeneratePhpunitTest extends BaseCommandRunner {
     public function testCreateWithNamespace()
     {
         $this->execute(array('suite' => 'shire', 'class' => 'MiddleEarth\Pony'));
-        $this->assertEquals('tests/shire/PonyTest.php', $this->filename);
+        $this->assertEquals('tests/shire/MiddleEarth/PonyTest.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class PonyTest extends \PHPUnit_Framework_TestCase', $this->content);
-        $this->assertContains('Test was created in tests/shire/PonyTest.php', $this->output);
+        $this->assertContains('Test was created in tests/shire/MiddleEarth/PonyTest.php', $this->output);
         $this->assertIsValidPhp($this->content);
     }
 

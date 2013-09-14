@@ -20,6 +20,7 @@ class GenerateCestTest extends BaseCommandRunner {
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
         $this->assertEquals('tests/shire/HallUnderTheHillCest.php', $this->filename);
+
         $this->assertContains('use ', $this->content);
         $this->assertContains('class HallUnderTheHillCest', $this->content);
         $this->assertContains('public function _before()', $this->content);
@@ -46,7 +47,7 @@ class GenerateCestTest extends BaseCommandRunner {
     public function testGenerateWithFullName()
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HomeCanInclude12DwarfsCest.php'));
-        $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCest.php');
+        $this->assertEquals('tests/shire/HomeCanInclude12DwarfsCest.php', $this->filename);
     }
 
     /**
