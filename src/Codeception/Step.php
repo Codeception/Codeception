@@ -25,7 +25,8 @@ abstract class Step
 
     public function getName()
     {
-        return end(explode('\\', __CLASS__));
+        $class = explode('\\', __CLASS__);
+        return end($class);
     }
 
     public function pullDebugOutput()

@@ -49,7 +49,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
 
     public function testSee() {
         $this->module->amOnPage('/');
-        $this->module->see('Welcome to test app!');
+        $this->module->see('Welcome to test app!');        
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!','h1');
@@ -409,6 +409,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeElement('descendant-or-self::input[@id="name"]');
         $this->module->dontSeeElement('#something-beyond');
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
+    }
+
+    // Issue 336: https://github.com/Codeception/Codeception/issues/336
+    public function testSeeQuotes()
+    {
+        $this->module->amOnPage('/');
+        $this->module->see('A wise man said: "debug!"');
     }
 
     public function testPageTitle()
