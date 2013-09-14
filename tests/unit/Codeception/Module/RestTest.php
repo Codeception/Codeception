@@ -78,17 +78,26 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
+        $this->module->seeResponseContainsJson(array('name' => 'Davert'));
+        $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
         $this->module->seeResponseContainsJson(array('ticket' => array('title' => 'Bug should be fixed')));
         $this->module->seeResponseContainsJson(array('ticket' => array('user' => array('name' => 'Davert'))));
         $this->module->seeResponseContainsJson(array('ticket' => array('labels' => null)));
+    }
+
+    public function testArrayJson()
+    {
+        $this->module->response = '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]';
+        $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
     public function testDontSeeInJson()
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}';
         $this->module->seeResponseIsJson();
-        $this->module->dontSeeResponseContainsJson(array('user' => array('name' => 'Davert')));
-        $this->module->dontSeeResponseContainsJson(array('title' => 'Bug should be fixed'));
+        $this->module->dontSeeResponseContainsJson(array('name' => 'Davet'));
+        $this->module->dontSeeResponseContainsJson(array('user' => array('name' => 'Davet')));
+        $this->module->dontSeeResponseContainsJson(array('user' => array('title' => 'Bug should be fixed')));
     }
 
     public function testApplicationJsonIncludesJsonAsContent()
