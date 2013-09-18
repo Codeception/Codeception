@@ -41,7 +41,7 @@ class ZF2 extends \Symfony\Component\BrowserKit\Client
 
         $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
-        $method = $request->getMethod();
+        $method = strtoupper($request->getMethod());
 
         if ($queryString) {
             parse_str($queryString, $query);
