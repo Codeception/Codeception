@@ -11,8 +11,9 @@ class PostgreSql extends Db
     {
         $tables = $this->dbh->query("SELECT 'DROP TABLE IF EXISTS \"' || tablename || '\" cascade;' FROM pg_tables WHERE schemaname = 'public';")->fetchAll();
         $sequences = $this->dbh->query("SELECT 'DROP SEQUENCE IF EXISTS \"' || relname || '\" cascade;' FROM pg_class WHERE relkind = 'S';")->fetchAll();
+        $types = $this->dbh->query("SELECT 'DROP TYPE IF EXISTS \"' || pg_type.typname || '\" cascade;' FROM pg_type JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid GROUP BY pg_type.typname;")->fetchAll();
 
-        $drops = array_merge($tables, $sequences);
+        $drops = array_merge($tables, $sequences, $types);
         if ($drops) {
             foreach ($drops as $drop) {
                 $this->dbh->exec($drop[0]);
