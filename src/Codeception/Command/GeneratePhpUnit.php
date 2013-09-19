@@ -61,7 +61,7 @@ EOF;
         $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
 
         $filename = $this->completeSuffix($classname, 'Test');
-        $filename = $path.DIRECTORY_SEPARATOR.$filename;
+        $filename = $path.$filename;
 
         $classname = $this->removeSuffix($classname, 'Test');
 

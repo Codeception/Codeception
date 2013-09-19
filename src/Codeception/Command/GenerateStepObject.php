@@ -61,7 +61,7 @@ EOF;
 
         $path = $this->buildPath($conf['path'].'/_steps/', $class);
         $filename = $this->completeSuffix($class, 'Steps');
-        $filename = $path.DIRECTORY_SEPARATOR.$filename;
+        $filename = $path.$filename;
 
         $dialog = $this->getHelperSet()->get('dialog');
         $actions = "";

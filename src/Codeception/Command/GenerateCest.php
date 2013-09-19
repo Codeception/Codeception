@@ -65,7 +65,7 @@ EOF;
         $ns .= "use ".$suiteconf['namespace'].'\\'.$guy.";";
 
         $filename = $this->completeSuffix($classname, 'Cest');
-        $filename = $path.DIRECTORY_SEPARATOR.$filename;
+        $filename = $path.$filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");

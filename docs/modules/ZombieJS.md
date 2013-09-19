@@ -23,16 +23,12 @@ In order to talk with zombie.js server, you should install and configure zombie.
 * Install node.js by following instructions from the official site: http://nodejs.org/.
 * Install npm (node package manager) by following instructions from the http://npmjs.org/.
 * Install zombie.js with npm:
-``` $ npm install -g zombie@0.13.0  * ```
-Note: Behat/Mink states that there are compatibility issues with zombie > 0.13, and their manual
-says to install version 0.12.15, BUT it has some bugs, so you'd rather install 0.13
+``` $ npm install -g zombie@1```
 
 After installing npm and zombie.js, you’ll need to add npm libs to your **NODE_PATH**. The easiest way to do this is to add:
 
 ``` export NODE_PATH="/PATH/TO/NPM/node_modules" ```
 into your **.bashrc**.
-
-Also note that this module requires php5-http PECL extension to parse returned headers properly
 
 Don't forget to turn on Db repopulation if you are using database.
 
@@ -217,7 +213,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ### dontSeeCookie
 
-__not documented__
+
+Checks that cookie doesn't exist
+
+ * param $cookie
+ * return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -398,7 +398,11 @@ Moves focus to link or button or any node found by CSS or XPath
 
 ### grabCookie
 
-__not documented__
+
+Grabs a cookie value.
+
+ * param $cookie
+ * return mixed
 
 
 ### grabFromCurrentUrl
@@ -539,7 +543,11 @@ Reloads current page
 
 ### resetCookie
 
-__not documented__
+
+Unsets cookie
+
+ * param $cookie
+ * return mixed
 
 
 ### see
@@ -583,7 +591,11 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ### seeCookie
 
-__not documented__
+
+Checks that cookie is set.
+
+ * param $cookie
+ * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -753,7 +765,12 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
 ### setCookie
 
-__not documented__
+
+Sets a cookie.
+
+ * param $cookie
+ * param $value
+ * return mixed
 
 
 ### uncheckOption

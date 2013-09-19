@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.6.6-dev";
+    const VERSION = "1.6.7";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -163,32 +163,5 @@ class Codecept
     public function getDispatcher()
     {
         return $this->dispatcher;
-    }
-
-    public static function checkLastVersion()
-    {
-        if (! class_exists('SimpleXMLElement')) {
-            return false;
-        }
-
-        $file = @file_get_contents("http://codeception.com/pear/feed.xml");
-        if (! $file) {
-            return '';
-        }
-
-        try {
-            $feed = new \SimpleXMLElement($file, LIBXML_NOERROR);
-            @$codeception = $feed->entry[0]->title;
-        } catch (\Exception $e) {
-            $codeception = false;
-        }
-
-        if (! $codeception) {
-            return '';
-        }
-
-        preg_match('~(\d+\.)?(\d+\.)?(\*|\d+)~', $codeception[0], $version);
-
-        return isset($version[0]) ? $version[0] : '';
     }
 }

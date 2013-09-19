@@ -194,9 +194,14 @@ class SuiteManager {
         $test = \PHPUnit_Framework_TestSuite::createTest($class, $method->name);
 
         if ($test instanceof TestCase\Test) {
+            $guy = $this->settings['namespace']
+                ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+                : $this->settings['class_name'];
+
+
             $test->setBootstrap($this->settings['bootstrap']);
             $test->setDispatcher($this->dispatcher);
-            $test->setGuyClass($this->settings['class_name']);
+            $test->setGuyClass($guy);
 
             $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
             $test->getScenario()->groups($groups);

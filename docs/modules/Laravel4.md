@@ -339,6 +339,32 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
+### grabService
+
+
+urn an instance of a class from the IoC Container.
+tp://laravel.com/docs/ioc)
+
+mple
+ php
+<?php
+In Laravel
+::bind('foo', function($app)
+
+ return new FooBar;
+
+
+Then in test
+rvice = $I->grabService('foo');
+
+Will return an instance of FooBar, also works for singletons.
+?>
+
+
+ram  string  $class
+turn mixed
+
+
 ### grabTextFrom
 
 

@@ -36,7 +36,7 @@ class GenerateCept extends Base
         $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $guy = $suiteconf['class_name'];
-        $use = $suiteconf['namespace'] ? " use ".$suiteconf['namespace'].'\\Codeception\\'.$guy.";\n" : '';
+        $use = $suiteconf['namespace'] ? " use ".$suiteconf['namespace'].'\\'.$guy.";\n" : '';
 
         $file = sprintf($this->template, $use, $guy);
 
