@@ -92,23 +92,23 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
         if ($form === null)
             throw new TestRuntime("Form with selector: \"$selector\" was not found on given page.");
-
-        $fields = $this->session->getPage()->findAll('css', $selector.' input');
+        /** @var \Behat\Mink\Element\NodeElement[] $fields */
+        $fields = $this->session->getPage()->findAll('css', $selector . ' input:enabled, ' . $selector . ' input[type=hidden]');
         $url = '';
 
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
+            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
         }
 
-        $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
+        $fields = $this->session->getPage()->findAll('css', $selector . ' textarea:enabled');
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
+            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
         }
 
-        $fields = $this->session->getPage()->findAll('css', $selector.' select');
+        $fields = $this->session->getPage()->findAll('css', $selector . ' select:enabled');
         foreach ($fields as $field) {
-   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
-   	 }
+   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
+   	    }
 
         $url .= '&'.http_build_query($params);
         parse_str($url, $params);
