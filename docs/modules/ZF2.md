@@ -1,11 +1,9 @@
 # ZF2 Module
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/ZF2.php)**
 
-
 This module allows you to run tests inside Zend Framework 2.
 
 File `init_autoloader` in project's root is required.
-Uses `tests/application.config.php` config file by default.
 
 ## Status
 
@@ -13,15 +11,27 @@ Uses `tests/application.config.php` config file by default.
 * Stability: **alpha**
 * Contact: https://github.com/bladeofsteel
 
-## Config
-
-* config: relative path to config file (default: `tests/application.config.php`)
-
 ## API
 
 * application -  instance of `\Zend\Mvc\ApplicationInterface`
 * db - instance of `\Zend\Db\Adapter\AdapterInterface`
 * client - BrowserKit client
+
+## Getting Start
+
+Sample of `tests/functional.suite.yml` configuration file:
+
+``` yml
+class_name: TestGuy
+modules:
+    enabled: [TestHelper, ZF2]
+    config:
+        ZF2:
+            config: 'tests/application.config.php'
+error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED & ~E_USER_DEPRECATED"
+```
+Just set ZF2 in enabled modules and point to your application.config.php copy on `tests` folder.
+The default `error_level` directive is `E_ALL & ~E_STRICT & ~E_DEPRECATED`,but for compatibility with newer  versions of Zend Framework 2 set `~E_USER_DEPRECATED`, this must be fixed on a newer module version.
 
 
 ## Actions
