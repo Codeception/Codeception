@@ -52,6 +52,12 @@ For unit testing you can stay on classic PHPUnit tests, as Codeception can run t
 
 Documentation is currently included within the project. Look for it in the 'docs' directory.
 
+## Translations
+
+Below translations, arranged by language.
+
+[Português (Brasil)](https://github.com/Codeception/Codeception/tree/master/docs/pt_br)
+
 ## Installation
 
 ### Phar
