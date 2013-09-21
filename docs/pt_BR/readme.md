@@ -49,7 +49,7 @@ Para testes unitários você pode seguir os testes clássicos de PHPUnit, Codece
 
 [Documentação no Github](https://github.com/Codeception/Codeception/tree/master/docs)
 
-A Documentação é correntemente incluida com o projeto. Olhe no diretório 'docs'.
+A Documentação é incluida com o projeto. Olhe no diretório 'docs'.
 
 ## Instalação
 
