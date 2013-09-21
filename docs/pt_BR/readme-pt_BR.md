@@ -15,13 +15,9 @@ Inspirando por BDD, ele provê uma forma totalmente nova de escrever testes de a
 
 #### Contribuições
 
-**Bugfixes should be sent to to current stable branch, which is the same as major version number.**
-Breaking features and major improvements should be sent into `master`.
-When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
-
-**Bugfixes devem ser enviados para um branch corrente e estável, que é which is the same as major version number.**
-Breaking features and major improvements should be sent into `master`.
-When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
+**Bugfixes devem ser enviados para um branch corrente e estável, que é o mesmo número da versão major.**
+Features quebradas e melhorias maiores devem ser enviadas para o branch `master`.
+Quando você envia Pull Requests para o master, eles serão adicionados ao ciclo de release somente quando o próximo branch estável iniciar.
 
 ### At a Glance
 
