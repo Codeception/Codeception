@@ -56,7 +56,7 @@ Documentation is currently included within the project. Look for it in the 'docs
 
 Below translations, arranged by language.
 
-[Português (Brasil)](https://github.com/Codeception/Codeception/tree/master/docs/pt_br)
+[Português (Brasil)](https://github.com/giuseppelopes/Codeception/tree/docsinpt_br/docs/pt_br)
 
 ## Installation
 
