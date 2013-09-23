@@ -3,7 +3,10 @@
 <form action="/form/complex" method="POST">
 
     <input type="hidden" name="action" value="kill_all" />
-
+    <fieldset disabled="disabled">
+        <input type="text" id="disabled_fieldset" name="disabled_fieldset" value="disabled_fieldset" />
+    </fieldset>
+    <input  type="text" id="disabled_field" name="disabled_field" value="disabled_field" disabled="disabled" />
     <label for="description">Description</label>
     <textarea name="description" id="description" cols="30" rows="10"></textarea>
 
