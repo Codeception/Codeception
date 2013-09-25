@@ -41,15 +41,22 @@ class Redis extends \Codeception\Module
     /**
      * @var RedisDriver
      */
-    public $driver;
+    public $drivers = [];
 
     protected $requiredFields = array('host', 'port', 'database');
 
     public function _initialize()
     {
+        $databases = $this->config['database'];
+        if (!is_array($databases)) {
+            $databases = array($databases);
+        }
+
         try {
-            $this->driver = new RedisDriver($this->config['host'], $this->config['port']);
-            $this->driver->select_db($this->config['database']);
+            foreach ($databases as $db) {
+                $this->drivers[$db] = new RedisDriver($this->config['host'], $this->config['port']);
+                $this->drivers[$db]->select_db($db);
+            }
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
@@ -79,7 +86,9 @@ class Redis extends \Codeception\Module
     protected function cleanup()
     {
         try {
-            $this->driver->flushdb();
+            foreach ($this->drivers as $driver) {
+                $driver->flushdb();
+            }
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
