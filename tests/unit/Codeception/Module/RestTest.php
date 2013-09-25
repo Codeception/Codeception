@@ -73,6 +73,21 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->response = '{xxx = yyy}';
         $this->module->seeResponseIsJson();
     }
+    public function testValidXml()
+    {
+        $this->module->response = '<xml></xml>';
+        $this->module->seeResponseIsXml();
+        $this->module->response = '<xml><name>John</name></xml>';
+        $this->module->seeResponseIsXml();
+        $this->module->seeResponseEquals($this->module->response);
+    }
+
+    public function testInvalidXml()
+    {
+        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
+        $this->module->response = '<xml><name>John</surname></xml>';
+        $this->module->seeResponseIsXml();
+    }
 
     public function testSeeInJson()
     {
