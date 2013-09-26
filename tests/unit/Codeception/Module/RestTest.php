@@ -88,6 +88,23 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->response = '<xml><name>John</surname></xml>';
         $this->module->seeResponseIsXml();
     }
+    public function testResponseContainsXpath(){
+        $this->module->response = '<xml><person><name>John</name><surname>Reacher</surname><email default="1">john@example.com</email></person></xml>';
+        $this->module->seeResponseIsXml();
+        $this->module->seeResponseContainsXpath("//person");
+        $this->module->seeResponseContainsXpath("//person/name");
+        $this->module->seeResponseContainsXpath('//surname[.="Reacher"]');
+        $this->module->seeResponseContainsXpath('//email[@default="1"]');
+
+    }
+    public function testResponseDontContainXpath(){
+        $this->module->response = '<xml><person><name>John</name><surname>Reacher</surname><email default="1">john@example.com</email></person></xml>';
+        $this->module->seeResponseIsXml();
+        $this->module->dontSeeResponseContainsXpath("//persons");
+        $this->module->dontSeeResponseContainsXpath("//person/names");
+        $this->module->dontSeeResponseContainsXpath('//surname[.="Reachers"]');
+        $this->module->dontSeeResponseContainsXpath('//email[@default="true"]');
+    }
 
     public function testSeeInJson()
     {
