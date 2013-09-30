@@ -24,7 +24,7 @@ class Bootstrap extends \Symfony\Component\Console\Command\Command
     {
         $this->setDefinition(array(
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path','.'),
-            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for guy classes and helpers'),
         ));
         parent::configure();
     }

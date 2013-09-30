@@ -93,8 +93,8 @@ EOF;
         $ns = $this->getNamespaceString($conf['namespace'].'\\'.$classname);
 
         $filename = $suite
-            ? $this->pathToSuitePageObject($conf, $class)
-            : $this->pathToGlobalPageObject($conf, $class);
+            ? $this->pathToSuitePageObject($conf, $classname)
+            : $this->pathToGlobalPageObject($conf, $classname);
 
         if ($suite) $this->createActions($conf);
 
@@ -112,7 +112,7 @@ EOF;
         $path = $this->buildPath($config['paths']['tests'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
         $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
-        return  $path.DIRECTORY_SEPARATOR.$filename;
+        return  $path.$filename;
     }
 
     protected function pathToSuitePageObject($config, $class)
@@ -120,7 +120,7 @@ EOF;
         $path = $this->buildPath($config['path'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
         $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'],'Page','_pages');
-        return  $path.DIRECTORY_SEPARATOR.$filename;
+        return  $path.$filename;
     }
 
     protected function createActions($conf)

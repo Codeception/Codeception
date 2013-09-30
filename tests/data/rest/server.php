@@ -22,7 +22,5 @@ function RESTServer()
         }
 
         print json_encode(call_user_func($callback, $data));
-    } else {
-        exit;
     }
 }

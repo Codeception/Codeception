@@ -58,16 +58,15 @@ EOF;
 
         $path = $this->buildPath($config['paths']['tests'].'/_groups/', $class);
         $filename = $this->completeSuffix($class, 'Group');
-        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
-        $filename = $path.DIRECTORY_SEPARATOR.$filename;
+        $filename = $path.$filename;
 
+        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Group','_groups');
         $res = $this->save($filename, sprintf($this->template, $ns, 'class', $class, $group));
 
         if (!$res) {
             $output->writeln("<error>Group $filename already exists</error>");
             exit;
         }
-        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Group','_groups');
         
         $output->writeln("<info>Group extension was created in $filename</info>");
         $output->writeln('To use this group extension, include it to "extensions" option of global Codeception config.');

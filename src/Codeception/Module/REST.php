@@ -333,17 +333,15 @@ class REST extends \Codeception\Module
         // allow full url to be requested
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
-        $this->encodeApplicationJson($method, $parameters);
+        $parameters = $this->encodeApplicationJson($method, $parameters);
         
         if (is_array($parameters) || $method == 'GET') {
-            if ($method == 'GET' && !empty($parameters)) {
+            if (!empty($parameters)) {
                 $url .= '?' . http_build_query($parameters);
-                $this->debugSection("Request", "$method $url");
-            } else {
-                $this->debugSection("Request", "$method $url?" . http_build_query($parameters));
             }
-
+            $this->debugSection("Request", "$method $url");
             $this->client->request($method, $url, $parameters, $files);
+
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
@@ -384,6 +382,29 @@ class REST extends \Codeception\Module
             0,
             $num = json_last_error(),
             "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
+        );
+    }
+    /**
+     * Checks whether last response was valid XML.
+     * This is done with libxml_get_last_error function.
+     *
+     */
+    public function seeResponseIsXml()
+    {
+        libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($this->response);
+        $num="";
+        $title="";
+        if ($doc===false) {
+            $error = libxml_get_last_error();
+            $num=$error->code;
+            $title=trim($error->message);
+            libxml_clear_errors();
+        }
+        libxml_use_internal_errors(false);
+        \PHPUnit_Framework_Assert::assertNotSame(false,
+            $doc ,
+            "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
         );
     }
 
@@ -435,7 +456,9 @@ class REST extends \Codeception\Module
         $resp_json = json_decode($this->response, true);
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
-            "response JSON matches provided"
+            "Response JSON contains provided\n"
+            ."- ".print_r($json, true)
+            ."+ ".print_r($resp_json, true)
         );
     }
 
@@ -517,16 +540,28 @@ class REST extends \Codeception\Module
     private function arrayIntersectAssocRecursive($arr1, $arr2)
     {
         if (!is_array($arr1) || !is_array($arr2)) {
-            return $arr1 == $arr2 ? $arr1 : null;
+            return null;
         }
+
         $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
         $ret = array();
         foreach ($commonkeys as $key) {
             $_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
             if ($_return !== null) {
                 $ret[$key] = $_return;
+                continue;
+            }
+            if ($arr1[$key] === $arr2[$key]) {
+                $ret[$key] = $arr1[$key];
             }
         }
+        if (empty($commonkeys)) {
+            foreach ($arr2 as $arr) {
+                $_return = $this->arrayIntersectAssocRecursive($arr1, $arr);
+                if ($_return) return $_return;
+            }
+        }
+
         return $ret;
     }
 
@@ -545,7 +580,9 @@ class REST extends \Codeception\Module
         $resp_json = json_decode($this->response, true);
         \PHPUnit_Framework_Assert::assertFalse(
             $this->arrayHasArray($json, $resp_json),
-            "response JSON matches provided"
+            "Response JSON does not contain JSON provided\n"
+            ."- ".print_r($json, true)
+            ."+ ".print_r($resp_json, true)
         );
     }
 
@@ -566,11 +603,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($code)
     {
-        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
-        } else {
-            $this->assertEquals($code, $this->client->getResponse()->getStatus());
-        }
+        $this->assertEquals($code, $this->client->getResponse()->getStatus());
     }
 
     /**
@@ -580,10 +613,6 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseCodeIs($code)
     {
-        if (method_exists($this->client->getResponse(), 'getStatusCode')) {
-            $this->assertNotEquals($code, $this->client->getResponse()->getStatusCode());
-        } else {
-            $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
-        }
+        $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
     }
 }

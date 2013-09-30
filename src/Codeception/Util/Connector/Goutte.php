@@ -1,7 +1,8 @@
 <?php
 
-
 namespace Codeception\Util\Connector;
+
+use Guzzle\Http\Url;
 use Behat\Mink\Driver\Goutte\Client;
 use Symfony\Component\BrowserKit\Request;
 
@@ -12,8 +13,8 @@ class Goutte extends Client {
     protected function filterRequest(Request $request)
     {
         $server = $request->getServer();
-        $uri = $request->getUri();
-        $server['HTTP_HOST'] = parse_url($uri, PHP_URL_HOST).':'.parse_url($uri, PHP_URL_PORT);
+        $uri = Url::factory($request->getUri());
+        $server['HTTP_HOST'] = $uri->getHost() . ':' . $uri->getPort();
 
         return new Request(
             $request->getUri(),

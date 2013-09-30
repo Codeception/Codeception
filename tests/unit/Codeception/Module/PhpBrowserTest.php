@@ -27,7 +27,7 @@ class PhpBrowserTest extends TestsForMink
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
     }
-    
+
     protected function tearDown() {
         $this->noPhpWebserver();
         if ($this->module) {
@@ -64,14 +64,20 @@ class PhpBrowserTest extends TestsForMink
         $this->assertTrue($opts[CURLOPT_NOBODY]);
 
     }
-    
-    public function testSubmitForm() {
+
+    public function testSubmitForm()
+    {
         $this->module->amOnPage('/form/complex');
-        $this->module->submitForm('form', array('name' => 'Davert'));
+        $this->module->submitForm('form', array(
+                'name' => 'Davert',
+                'description' => 'Is Codeception maintainer'
+        ));
         $form = data::get('form');
         $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('Is Codeception maintainer', $form['description']);
+        $this->assertFalse(isset($form['disabled_fieldset']));
+        $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
-
     }
 
     public function testAjax() {
@@ -90,7 +96,4 @@ class PhpBrowserTest extends TestsForMink
         $this->module->seeLink('Ссылочка');
         $this->module->click('Ссылочка');
     }
-
-
-
 }

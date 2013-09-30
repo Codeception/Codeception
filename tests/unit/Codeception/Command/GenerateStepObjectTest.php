@@ -17,7 +17,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->execute(array('suite' => 'shire', 'step' => 'Login', '--force' => true));
 
         $generated = $this->log[0];
-        $this->assertEquals('tests/shire/_steps//LoginSteps.php', $generated['filename']);
+        $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
         $this->assertContains('class LoginSteps extends \HobbitGuy', $generated['content']);
         $this->assertContains('namespace HobbitGuy;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
@@ -33,7 +33,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('suite' => 'shire', 'step' => 'Login', '--force' => true));
         $generated = $this->log[0];
-        $this->assertEquals('tests/shire/_steps//LoginSteps.php', $generated['filename']);
+        $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
         $this->assertContains('namespace MiddleEarth\HobbitGuy;', $generated['content']);
         $this->assertContains('class LoginSteps extends \MiddleEarth\HobbitGuy', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
@@ -42,5 +42,14 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->assertContains("\\Codeception\\Util\\Autoload::registerSuffix('Steps', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
         $this->assertIsValidPhp($bootstrap);
     }
+
+     public function testCreateInSubpath()
+     {
+         $this->execute(array('suite' => 'shire', 'step' => 'user/Login', '--force' => true));
+         $generated = $this->log[0];
+         $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
+         $this->assertIsValidPhp($this->content);
+     }
+
 
 }
