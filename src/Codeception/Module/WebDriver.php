@@ -369,7 +369,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
-	if ($matched) return;
+        if ($matched) return;
         foreach ($option as $opt) {
             try {
             $select->selectByValue($opt);
