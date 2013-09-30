@@ -37,6 +37,28 @@ class login {
 
 }
 
+class cookies {
+
+    function GET($matches) {
+        if (isset($_COOKIE['foo']) && $_COOKIE['foo'] === 'bar1') {
+            if (isset($_COOKIE['baz']) && $_COOKIE['baz'] === 'bar2') {
+                header('Location: /info');
+            }
+        } else {
+            include __DIR__.'/view/cookies.php';
+        }
+    }
+
+    function POST() {
+        setcookie('f', 'b', time() + 60, null, null, false, true);
+        setcookie('foo', 'bar1', time() + 60, null, 'sub.localhost', false, true);
+        setcookie('baz', 'bar2', time() + 60,  null, 'sub.localhost', false, true);
+        data::set('form', $_POST);
+        include __DIR__.'/view/cookies.php';
+    }
+
+}
+
 class facebookController {
     function GET($matches) {
         include __DIR__.'/view/facebook.php';

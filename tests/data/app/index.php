@@ -15,6 +15,7 @@ require_once('controllers.php');
 $urls = array(
     '/' => 'index',
     '/info' => 'info',
+    '/cookies' => 'cookies',
     '/login' => 'login',
     '/redirect' => 'redirect',
     '/facebook\??.*' => 'facebookController',
