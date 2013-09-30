@@ -29,6 +29,7 @@ class Locator
         $selectors = func_get_args();
         foreach ($selectors as $k => $v) {
             $selectors[$k] = self::toXPath($v);
+            if (!$selectors[$k]) throw new \Exception("$v is invalid CSS or XPath");
         }
         return implode(' | ', $selectors);
     }
@@ -116,6 +117,11 @@ class Locator
         $document = new \DOMDocument('1.0', 'UTF-8');
         $xpath = new \DOMXPath($document);
         return @$xpath->evaluate($locator, $document) !== false;
+    }
+
+    public static function isID($id)
+    {
+        return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
 
 }
