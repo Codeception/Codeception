@@ -412,6 +412,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
+        if ($matched) return;
         foreach ($option as $opt) {
             try {
             $select->selectByValue($opt);
@@ -533,11 +534,13 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function grabValueFrom($field)
     {
         $el = $this->findField($field);
-        if ($el->getTagName() == 'textarea') return $el->getText();
-        if ($el->getTagName() == 'input') return $el->getAttribute('value');
-        if ($el->getTagName() != 'select') return null;
-        $select = new \WebDriverSelect($el);
-        return $select->getFirstSelectedOption()->getAttribute('value');
+        // value of multiple select is the the value of the first selected option
+        if ($el->getTagName() == 'select') {
+            $select = new \WebDriverSelect($el);
+            return $select->getFirstSelectedOption()->getAttribute('value');
+        } else {
+            return $el->getAttribute('value');
+        }
     }
 
     /**
