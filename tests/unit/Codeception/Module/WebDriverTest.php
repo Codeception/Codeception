@@ -2,7 +2,6 @@
 
 use Codeception\Util\Stub;
 
-require_once '/home/davert/demos/php-webdriver/lib/__init__.php';
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForMink.php';
 
@@ -181,18 +180,5 @@ class WebDriverTest extends TestsForMink
         $this->module->seeCurrentUrlEquals('/info');
     }
 
-    public function testKeysInRawSelenium()
-    {
-        $this->module->amOnPage('/form/field');
-        $webdriver = $this->module->webDriver;
-        $el = $webdriver->findElement(WebDriverBy::id('name'));
-        $el->sendKeys(array(WebDriverKeys::CONTROL,'a'),'test');
-        $webdriver->getKeyboard()
-            ->pressKey(WebDriverKeys::SHIFT)
-            ->sendKeys('111')
-            ->releaseKey(WebDriverKeys::SHIFT)
-            ->sendKeys('1');
-        $this->module->seeInField('#name', 'test!!!1');
-    }
 
 }
