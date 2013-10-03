@@ -384,6 +384,29 @@ class REST extends \Codeception\Module
             "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
         );
     }
+    /**
+     * Checks whether last response was valid XML.
+     * This is done with libxml_get_last_error function.
+     *
+     */
+    public function seeResponseIsXml()
+    {
+        libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($this->response);
+        $num="";
+        $title="";
+        if ($doc===false) {
+            $error = libxml_get_last_error();
+            $num=$error->code;
+            $title=trim($error->message);
+            libxml_clear_errors();
+        }
+        libxml_use_internal_errors(false);
+        \PHPUnit_Framework_Assert::assertNotSame(false,
+            $doc ,
+            "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
+        );
+    }
 
     /**
      * Checks whether the last response contains text.
