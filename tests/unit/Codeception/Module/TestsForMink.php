@@ -381,6 +381,15 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
 
+    // regression test. https://github.com/Codeception/Codeception/issues/587
+    public function testSeeElementOnPageFails()
+    {
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('input[name=name]');
+    }
+
+
 	public function testCookies()
 	{
 		$cookie_name = 'test_cookie';
