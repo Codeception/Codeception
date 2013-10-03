@@ -149,6 +149,11 @@ class Console implements EventSubscriberInterface
         if ($feature) $this->output->put("Couldn't [[$feature]] in ");
         $this->output->writeln('(('.$failedTest->getFilename().'))');
 
+        if (!($failedTest instanceof \Codeception\TestCase\Cept)) {
+            $this->output->writeln($failToString);
+            return;
+        }
+
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
         $last = array_shift($trace);
