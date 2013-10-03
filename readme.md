@@ -56,7 +56,7 @@ Documentation is currently included within the project. Look for it in the 'docs
 
 ### Phar
 
-Download [codecept.phar](https://github.com/Codeception/Codeception/raw/master/package/codecept.phar)
+Download [codecept.phar](http://codeception.com/codecept.phar)
 
 Copy it into your project.
 
