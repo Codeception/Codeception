@@ -516,6 +516,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $el->clear();
         $el->sendKeys($value);
     }
+    
+    public function appendField($field, $value)
+    {
+        $el = $this->findField($field);
+        $el->sendKeys($value);
+    }
 
     public function attachFile($field, $filename)
     {
