@@ -46,10 +46,67 @@ abstract class Mink extends \Codeception\Module implements RemoteInterface, WebI
         $this->session->setCookie($cookie, $value);
     }
     
+    /**
+     * 
+     * @param type $cookie
+     * @return type
+     */
     public function _getCookie($cookie)
     {
-    	return $this->session->getCookie($cookie);
+    	$value = $this->session->getCookie($cookie);
+        if (is_null($value)) {
+            // try to parse headers because of bug in 
+            // \Behat\Mink\Driver\BrowserKitDriver::getCookie
+            $value = $this->_parseCookieFromHeaders($cookie);
+        }
+        return $value;
     }
+    
+    
+    /**
+     * 
+     * this method fixes the following
+     * 
+     * @see \Behat\Mink\Driver\BrowserKitDriver::getCookie
+     *   Note that the following doesn't work well because
+     *   Symfony\Component\BrowserKit\CookieJar stores cookies by name,
+     *   path, AND domain and if you don't fill them all in correctly then
+     *   you won't get the value that you're expecting.
+     * 
+     * 
+     * 
+     * @param string $name
+     * @return null|string
+     */
+    private function _parseCookieFromHeaders($name)
+    {
+        try {
+            $headers = $this->session->getResponseHeaders();
+        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+            return null;
+        }
+
+        if (!is_array($headers) || empty($headers) || !isset($headers['set-cookie'])) {
+            return null;
+        }
+        
+        foreach ($headers['set-cookie'] as $cookieString) {
+            if (!stripos($cookieString, $name) === 0) {
+                continue;
+            }
+            $cookiePieces = explode(';', $cookieString);
+            if (!$cookiePieces) {
+                return null;
+            }
+            $cookieKeyValue = explode('=', $cookiePieces[0]);
+            if (!isset($cookieKeyValue[1])) {
+                return null;
+            }
+            return $cookieKeyValue[1];
+            
+        }
+        return null;
+    }    
 
     public function _getResponseCode()
     {
