@@ -73,13 +73,7 @@ class Cept extends \Codeception\TestCase
         $scenario->run();
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
-        try {
-            require $this->testfile;
-        } catch (\Exception $e) {
-            // fails and errors are now handled by Codeception\PHPUnit\Listener
-            throw $e;
-        }
-        $this->fire('test.after', new TestEvent($this));
+        require $this->testfile;
     }
 
 }

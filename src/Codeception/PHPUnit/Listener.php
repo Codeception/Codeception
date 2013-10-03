@@ -22,25 +22,21 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.fail', new \Codeception\Event\Fail($test, $e));
-        $this->fire('test.after', new \Codeception\Event\Test($test, $time));
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.error', new \Codeception\Event\Fail($test, $e));
-        $this->fire('test.after', new \Codeception\Event\Test($test, $time));
     }
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.incomplete', new \Codeception\Event\Fail($test, $e));
-        $this->fire('test.after', new \Codeception\Event\Test($test, $time));
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time) {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire('test.skipped', new \Codeception\Event\Fail($test, $e));
-        $this->fire('test.after', new \Codeception\Event\Test($test, $time));
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -59,6 +55,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         if (!in_array(spl_object_hash($test), $this->unsuccessfulTests))
             $this->fire('test.success', new Test($test));
 
+        $this->fire('test.after', new \Codeception\Event\Test($test, $time));
         $this->dispatcher->dispatch('test.end', new Test($test, $time));
     }
 
