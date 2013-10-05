@@ -133,4 +133,12 @@ class PhpBrowserTest extends TestsForMink
         $this->module->amOnPage('/cookies');
         $this->module->seeInCurrentUrl('info');
     }      
+    
+    public function testSubmitFormGet()
+    {
+        $I = $this->module;
+        $I->amOnPage('/search');
+        $I->submitForm('form', array('searchQuery' => 'test'));
+        $I->see('Success');
+    }
 }

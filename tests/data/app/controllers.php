@@ -80,3 +80,13 @@ class form {
         include __DIR__.'/view/index.php';
     }
 }
+
+class search {
+    function GET($matches) {
+        $result = null;
+        if (isset($_GET['searchQuery']) && $_GET['searchQuery'] == 'test') {
+            $result = 'Success';
+        }
+        include __DIR__.'/view/search.php';
+    }
+}
