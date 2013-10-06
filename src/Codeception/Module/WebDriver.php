@@ -30,6 +30,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * browser *required* - browser that would be launched
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
+ * * restart - set to true to share brower sesssion between tests, or set to false to create a session per test
  * * wait - set the implicit wait (5 secs) by default.
  * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
@@ -44,7 +45,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
-
+ *
  *
  *
  *
@@ -77,28 +78,35 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->webDriver = new \RemoteWebDriver($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $wd = $this->webDriver;
-        register_shutdown_function(function () use ($wd) {
-            try { $wd->quit(); } catch (\UnhandledWebDriverError $e) {}
-        });
     }
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->webDriver->manage()->deleteAllCookies();
+        if (!isset($this->webDriver)) {
+            $this->_initialize();
+        }
         $size = $this->webDriver->manage()->window()->getSize();
         $this->debugSection("Window", $size->getWidth().'x'.$size->getHeight());
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        $this->config['restart']
-            ? $this->webDriver->close()
-            : $this->amOnPage('/');
+        if ($this->config['restart'] && isset($this->webDriver)) {
+            $this->webDriver->quit();
+            // \RemoteWebDriver consists of three parts, executor, mouse and keyboard, quit only set executor to null,
+            // but \RemoteWebDriver doesn't provide public access to check on executor
+            // so we need to unset $this->webDriver here to shut it down completely
+            $this->webDriver = null;
+        }
     }
 
     public function _afterSuite()
     {
-        $this->webDriver->close();
+        // this is just to make sure webDriver is cleared after suite
+        if (isset($this->webDriver)) {
+            $this->webDriver->quit();
+            unset($this->webDriver);
+        }
     }
 
     public function amOnSubdomain($subdomain)
@@ -534,13 +542,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function grabValueFrom($field)
     {
         $el = $this->findField($field);
-        // value of multiple select is the the value of the first selected option
+        // value of multiple select is the value of the first selected option
         if ($el->getTagName() == 'select') {
             $select = new \WebDriverSelect($el);
             return $select->getFirstSelectedOption()->getAttribute('value');
-        } else {
-            return $el->getAttribute('value');
         }
+        return $el->getAttribute('value');
     }
 
     /**
@@ -1015,4 +1022,24 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $action->dragAndDrop($snodes, $tnodes)->perform();
     }
 
+    /**
+     * Move mouse over the first element matched by css, xPath or regex on page
+     *
+     * https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
+     *
+     * @param string $cssOrXPathOrRegex css, xpath or regex of the web element
+     * @param int    $offsetX
+     * @param int    $offsetY
+     *
+     * @return null
+     */
+    public function moveMouseOver($cssOrXPathOrRegex, $offsetX = null, $offsetY = null)
+    {
+        $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
+        if (count($els)) {
+            $this->webDriver->getMouse()->mouseMove($els[0]->getCoordinates(), $offsetX, $offsetY);
+            return;
+        }
+        throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
+    }
 }
