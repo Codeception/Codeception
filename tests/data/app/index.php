@@ -16,6 +16,7 @@ $urls = array(
     '/' => 'index',
     '/info' => 'info',
     '/cookies' => 'cookies',
+    '/search.*' => 'search',
     '/login' => 'login',
     '/redirect' => 'redirect',
     '/facebook\??.*' => 'facebookController',

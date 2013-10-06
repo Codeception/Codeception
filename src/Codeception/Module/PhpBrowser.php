@@ -97,18 +97,24 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $url = '';
 
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();
+            $url .= sprintf('%s=%s', $fieldKey, $value) . '&';
         }
 
         $fields = $this->session->getPage()->findAll('css', $selector . ' textarea:enabled');
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();            
+            $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
         }
 
         $fields = $this->session->getPage()->findAll('css', $selector . ' select:enabled');
         foreach ($fields as $field) {
-   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()) . '&';
-   	    }
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();            
+   	    $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
+        }
 
         $url .= '&'.http_build_query($params);
         parse_str($url, $params);
@@ -191,16 +197,20 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         return $headers[$header];
     }
 
-	protected function call($uri, $method = 'get', $params = array())
-	{
-		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
+    protected function call($uri, $method = 'get', $params = array())
+    {
+	if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
         $browser = $this->session->getDriver()->getClient();
-
-		$browser->request($method, $uri, $params);
+        if ($browser instanceof Goutte && $method == 'get' && !empty($params)) {
+            $uri .= '?' . http_build_query($params);
+            $browser->request($method, $uri, array());
+        } else {
+            $browser->request($method, $uri, $params);
+        }
         $this->debugPageInfo();
-	}
+    }
 
-	public function _failed(\Codeception\TestCase $test, $fail) {
+    public function _failed(\Codeception\TestCase $test, $fail) {
 		$fileName = str_replace('::','-',$test->getFileName());
 		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
