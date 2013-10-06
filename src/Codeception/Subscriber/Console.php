@@ -166,12 +166,6 @@ class Console implements EventSubscriberInterface
             $action = 'become' . substr($action, 2);
         }
 
-        // it's exception
-        if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            $this->printException($fail);
-            return;
-        };
-
         // it's assertion
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);

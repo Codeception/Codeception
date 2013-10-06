@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class ElementNotFound extends \PHPUnit_Framework_AssertionFailedError
+class ElementNotFound extends TestRuntime
 {
 
     public function __construct($selector, $message = null)
