@@ -2,6 +2,7 @@
 namespace Codeception\Subscriber;
 
 use Codeception\Exception\ConditionalAssertionFailed;
+use Symfony\Component\Console\Helper\TableHelper;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
@@ -10,7 +11,6 @@ class Console implements EventSubscriberInterface
     protected $debug = false;
     protected $color = true;
     protected $silent = false;
-
     protected $lastTestFailed = false;
 
     protected $traceLength = 5;
@@ -191,17 +191,23 @@ class Console implements EventSubscriberInterface
 
     public function printException(\Exception $e)
     {
+        $table = new TableHelper();
         $this->output->writeln("\n(!".get_class($e).': '.$e->getMessage()."!)\n");
         $i = 0;
+        $table->setHeaders(array('#', 'Method', 'File'));
         foreach ($e->getTrace() as $step) {
             $i++;
-            if (!isset($step['file'])) continue;
-            $step['file'] = $this->highlightLocalFiles($step['file']);
+            $signature = '';
+            if (isset($step['class'])) {
+                $signature = $step['class'].'.'.$step['function'].' | ';
+            }
 
-            $this->output->writeln(sprintf("#%d %s(%s)",
-                $i,
-                isset($step['file']) ? $step['file'] : '',
-                isset($step['line']) ? $step['line'] : ''));
+            $file = '';
+            if (isset($step['file'])) $file = $this->highlightLocalFiles($step['file']);
+            $line = isset($step['line']) ? $step['line'] : '';
+
+            $table->addRow(array($i, $signature, $file, $line));
+
             if ($i == 1) {
                 if (isset($step['arguments'])) {
                     if (count($step['arguments'])) {
@@ -213,6 +219,7 @@ class Console implements EventSubscriberInterface
                 }
             }
         }
+        $table->render($this->output);
         $this->output->writeln("");
     }
 
