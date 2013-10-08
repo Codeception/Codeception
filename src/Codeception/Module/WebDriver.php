@@ -66,7 +66,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     protected $capabilities;
 
     /**
-     * @var \WebDriver
+     * @var \RemoteWebDriver
      */
     public $webDriver;
 
@@ -77,7 +77,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         $this->webDriver = new \RemoteWebDriver($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-        $wd = $this->webDriver;
     }
 
     public function _before(\Codeception\TestCase $test)
@@ -212,6 +211,11 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertNodesNotContain($text, $nodes);
     }
 
+    /**
+     * @param $page
+     * @param $selector
+     * @return array
+     */
     protected function match($page, $selector)
     {
         $nodes = array();
@@ -317,7 +321,10 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function dontSeeLink($text, $url = null)
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
-        if (!$url) return $this->assertNodesNotContain($text, $nodes);
+        if (!$url) {
+            $this->assertNodesNotContain($text, $nodes);
+            return;
+        }
         $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
             return trim($e->getAttribute('href')) == trim($url);
         });
@@ -356,7 +363,9 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
     public function grabFromCurrentUrl($uri = null)
     {
-        if (!$uri) return $this->_getCurrentUri();
+        if (!$uri) {
+            return $this->_getCurrentUri();
+        }
         $matches = array();
         $res = preg_match($uri, $this->_getCurrentUri(), $matches);
         if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
@@ -500,7 +509,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         if (!count($els)) throw new ElementNotFound($selector, "Element containing radio by CSS or XPath");
         return $els;
     }
-
 
     public function checkOption($option)
     {
@@ -657,21 +665,39 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertNotContains($title, $this->webDriver->getTitle());
     }
 
+    /**
+     * Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
+     * Don't confuse it with modal windows, created by [various libraries](http://jster.net/category/windows-modals-popups).
+     *
+     */
     public function acceptPopup()
     {
         $this->webDriver->switchTo()->alert()->accept();
     }
 
+    /**
+     * Dismisses active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt`.
+     */
     public function cancelPopup()
     {
         $this->webDriver->switchTo()->alert()->dismiss();
     }
 
+    /**
+     * Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
+     *
+     * @param $text
+     */
     public function seeInPopup($text)
     {
         $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
     }
 
+    /**
+     * Enters text into native JavaScript prompt popup created by `window.prompt`.
+     *
+     * @param $keys
+     */
     public function typeInPopup($keys)
     {
         $this->webDriver->switchTo()->alert()->sendKeys($keys);
@@ -819,7 +845,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         $this->webDriver->wait($timeout)->until($condition);
     }
-    
+
     /**
      * Waits for text to appear on the page for a specific amount of time.
      * Can also be passed a selector to search in.
@@ -834,8 +860,9 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      *
      * @param string $text
      * @param int $timeout seconds
-     * @param string $element
+     * @param null $selector
      * @throws \Exception
+     * @internal param string $element
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {
@@ -849,6 +876,16 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             if (!$condition) throw new \Exception("Only CSS or XPath allowed");
         }
         $this->webDriver->wait($timeout)->until($condition);
+    }
+
+    /**
+     * Explicit wait.
+     *
+     * @param $timeout secs
+     */
+    public function wait($timeout)
+    {
+        sleep($timeout);
     }
 
     /**
@@ -976,26 +1013,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->webDriver->manage()->window()->maximize();
     }
 
-    protected function assertNodesContain($text, $nodes)
-    {
-        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
-    }
-
-    protected function assertNodesNotContain($text, $nodes)
-    {
-        $this->assertThatItsNot($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
-    }
-
-    protected function assertPageContains($needle, $message = '')
-    {
-        $this->assertThat($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
-    }
-
-    protected function assertPageNotContains($needle, $message = '')
-    {
-        $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
-    }
-    
     /**
      * Performs a simple mouse drag and drop operation.
      *
@@ -1027,19 +1044,126 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      *
      * https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
      *
-     * @param string $cssOrXPathOrRegex css, xpath or regex of the web element
-     * @param int    $offsetX
-     * @param int    $offsetY
+     * @param string $cssOrXPath css or xpath of the web element
+     * @param int $offsetX
+     * @param int $offsetY
      *
+     * @throws \Codeception\Exception\ElementNotFound
      * @return null
      */
-    public function moveMouseOver($cssOrXPathOrRegex, $offsetX = null, $offsetY = null)
+    public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)
     {
-        $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
+        $els = $this->match($this->webDriver, $cssOrXPath);
         if (count($els)) {
             $this->webDriver->getMouse()->mouseMove($els[0]->getCoordinates(), $offsetX, $offsetY);
             return;
         }
-        throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
+        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+    }
+
+    /**
+     * Performs contextual click with right mouse button on element matched by CSS or XPath.
+     *
+     * @param $cssOrXPath
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function clickWithRightButton($cssOrXPath)
+    {
+        $els = $this->match($this->webDriver, $cssOrXPath);
+        if (count($els)) {
+            $this->webDriver->getMouse()->contextClick($els[0]->getCoordinates());
+        }
+        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+    }
+
+    /**
+     * Performs a double click on element matched by CSS or XPath.
+     *
+     * @param $cssOrXPath
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function doubleClick($cssOrXPath)
+    {
+        $els = $this->match($this->webDriver, $cssOrXPath);
+        if (count($els)) {
+            $this->webDriver->getMouse()->doubleClick($els[0]->getCoordinates());
+        }
+        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+    }
+
+    /**
+     * Presses key on element found by css, xpath is focused
+     * A char and modifier (ctrl, alt, shift, meta) can be provided.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // <input id="page" value="old" />
+     * $I->pressKey('#page','a'); // => olda
+     * $I->pressKey('#page',array('ctrl','a'),'new'); //=> new
+     * $I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
+     * $I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param $char can be char or array with modifier. You can provide several chars.
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    public function pressKey($element, $char)
+    {
+        $els = $this->match($this->webDriver, $element);
+        $el = reset($els);
+        if (!$el) {
+            throw new ElementNotFound("Focus element $element by CSS or XPath");
+        }
+        $args = func_get_args();
+        array_shift($args);
+        $keys = array();
+        foreach ($args as $key) {
+            $keys[] = $this->convertKeyModifier($key);
+        }
+        $el->sendKeys($keys);
+    }
+
+    protected function convertKeyModifier($keys)
+    {
+        if (!is_array($keys)) return $keys;
+        if (!isset($keys[1])) return $keys;
+        list($modifier, $key) = $keys;
+
+        switch ($modifier) {
+            case 'ctrl':
+            case 'control':
+                return array(\WebDriverKeys::CONTROL, $key);
+            case 'alt':
+                return array(\WebDriverKeys::ALT, $key);
+            case 'shift':
+                return array(\WebDriverKeys::SHIFT, $key);
+            case 'meta':
+                return array(\WebDriverKeys::META, $key);
+        }
+        return $keys;
+    }
+
+    protected function assertNodesContain($text, $nodes)
+    {
+        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+    }
+
+    protected function assertNodesNotContain($text, $nodes)
+    {
+        $this->assertThatItsNot($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+    }
+
+    protected function assertPageContains($needle, $message = '')
+    {
+        $this->assertThat($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+    }
+
+    protected function assertPageNotContains($needle, $message = '')
+    {
+        $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
     }
 }

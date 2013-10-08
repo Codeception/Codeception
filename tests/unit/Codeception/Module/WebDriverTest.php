@@ -180,5 +180,22 @@ class WebDriverTest extends TestsForMink
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testKeys()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE);
+        $this->module->pressKey('#name', 'test', array('shift', '111'));
+        $this->module->pressKey('#name', '1');
+        $this->module->seeInField('#name', 'test!!!1');
+    }
+
+    public function testWait()
+    {
+        $this->module->amOnPage('/');
+        $time = time();
+        $this->module->wait(3);
+        $this->assertGreaterThanOrEqual($time+3, time());
+    }
+
 
 }
