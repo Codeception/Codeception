@@ -132,6 +132,7 @@ abstract class Module extends AssertWrapper
 
     protected function debug($message)
     {
+       
         $this->debugStack[] = $message;
     }
 

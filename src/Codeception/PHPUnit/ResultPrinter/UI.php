@@ -11,7 +11,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
     protected $dispatcher;
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null) {
-        parent::__construct($out, $options['steps'] || $options['debug'], $options['colors']);
+        parent::__construct($out, $options['verbosity'] > 1, $options['colors']);
         $this->dispatcher = $dispatcher;
     }
 
@@ -49,6 +49,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
+
         if ($test instanceof \Codeception\TestCase\Test) return parent::startTest($test);
     }
 

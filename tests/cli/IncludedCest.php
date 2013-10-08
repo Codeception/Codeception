@@ -12,11 +12,11 @@ class IncludedCest {
         $I->amInPath('tests/data/included');
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
-        $I->seeInShellOutput('Suite Jazz.functional started');
+        $I->seeInShellOutput('Jazz.functional Tests');
         $I->seeInShellOutput('[Jazz\Pianist]');
-        $I->seeInShellOutput('Suite Jazz\Pianist.functional started');
+        $I->seeInShellOutput('Jazz\Pianist.functional Tests');
         $I->seeInShellOutput('[Shire]');
-        $I->seeInShellOutput('Suite Shire.functional started');
+        $I->seeInShellOutput('Shire.functional Tests');
     }
 
     public function runIncludedWithXmlOutput(\CliGuy $I)

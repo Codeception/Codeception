@@ -126,7 +126,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function dontSee($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageNotContains($text, $this->client->getResponse()->getContent());
+        if (!$selector) return $this->assertPageNotContains($text);
         $nodes = $this->match($selector);
         $this->assertDomNotContains($nodes, $selector, $text);
     }

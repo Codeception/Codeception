@@ -292,7 +292,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ``` php
      * <?php
      * $I->openFile('composer.json');
-     * $I->seeInThisFile('codeception/codeception');
+     * $I->dontSeeInThisFile('codeception/codeception');
      * ?>
      * ```
      *
@@ -319,7 +319,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ``` php
      * <?php
      * $I->openFile('composer.json');
-     * $I->seeInThisFile('codeception/codeception');
+     * $I->dontSeeInThisFile('codeception/codeception');
      * ?>
      * ```
      *
@@ -537,6 +537,43 @@ class CliGuy extends \Codeception\AbstractGuy
      */
     public function dontSeeInShellOutput($text) {
         $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
+     *
+    * Conditional Assertion: Test won't be stopped on fail
+     * @see Codeception\Module\Cli::seeShellOutputMatches()
+     * @return \Codeception\Maybe
+     */
+    public function canSeeShellOutputMatches($regex) {
+        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
+     *
+     * @see Codeception\Module\Cli::seeShellOutputMatches()
+     * @return \Codeception\Maybe
+     */
+    public function seeShellOutputMatches($regex) {
+        $this->scenario->addStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);
