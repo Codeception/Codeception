@@ -113,7 +113,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         foreach ($fields as $field) {
             $fieldKey = $field->getAttribute('name');
             $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();            
-   	    $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
+       	    $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
         }
 
         $url .= '&'.http_build_query($params);
