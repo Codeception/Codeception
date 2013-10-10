@@ -39,15 +39,6 @@ class Output extends ConsoleOutput {
         ob_start();
 	}
 
-	public function put($message, $style = null) {
-        if (!$this->config['defer_flush']) {
-            while (ob_get_level()) ob_end_flush();
-        }
-
-		$this->write($message);
-        ob_start();
-	}
-
 	protected function clean($message)
 	{
 		// clear json serialization
@@ -71,8 +62,6 @@ class Output extends ConsoleOutput {
         $table->setLayout(TableHelper::LAYOUT_BORDERLESS);
         $table->setCellHeaderFormat('<info>%s</info>');
         $table->setCellRowFormat('%s');
-//        $table->setHorizontalBorderChar('');
-//        $table->setBorderFormat('');
         $table->render($this);
     }
 

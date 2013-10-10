@@ -6,7 +6,6 @@ use Codeception\TestCase\ScenarioDriven;
 use Codeception\TestCase;
 use Codeception\Util\Console\Message;
 use Codeception\Util\Console\Output;
-use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,7 +29,6 @@ class Console implements EventSubscriberInterface
     }
 
     // triggered for scenario based tests: cept, cest
-
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
         $this->columns = array(40,5);

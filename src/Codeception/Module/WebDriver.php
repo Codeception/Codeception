@@ -1094,6 +1094,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     /**
      * Presses key on element found by css, xpath is focused
      * A char and modifier (ctrl, alt, shift, meta) can be provided.
+     * For special keys use key constants from \WebDriverKeys class.
      *
      * Example:
      *
@@ -1104,6 +1105,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      * $I->pressKey('#page',array('ctrl','a'),'new'); //=> new
      * $I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
      * $I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
+     * $I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
      * ?>
      * ```
      *
