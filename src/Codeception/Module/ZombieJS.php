@@ -8,6 +8,11 @@ namespace Codeception\Module;
  * For links, buttons, fields you can use names/values/ids of elements.
  * For form fields you can use input[name=fieldname] notation.
  *
+ * <div class="alert alert-info">
+ * To use this module with Composer you need <em>"behat/mink-zombie-driver": "1.1.*"</em> package.
+ * This module is considered <strong>deprecated</strong> and will be replaced with WebDriver module.
+ * </div>
+ *
  * ## Status
  *
  * * Maintainer: **synchrone**

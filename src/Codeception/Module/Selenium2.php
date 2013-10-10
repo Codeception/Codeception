@@ -8,6 +8,10 @@ namespace Codeception\Module;
  *
  * On test failure the browser window screenshot will be saved to log directory
  *
+ * <div class="alert alert-info">
+ * One day this module will be replaced with WebDriver module.
+ * </div>
+ *
  * ## Installation
  *
  * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
