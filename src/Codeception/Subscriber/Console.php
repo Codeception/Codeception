@@ -31,10 +31,13 @@ class Console implements EventSubscriberInterface
     // triggered for scenario based tests: cept, cest
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
-        $this->columns = array(40,5);
+        $this->columns = array(40, 5);
         foreach ($e->getSuite()->tests() as $test) {
             if ($test instanceof ScenarioDriven) {
-                $this->columns[0] = max($this->columns[0], 20+strlen($test->getFeature())+strlen($test->getFileName()));
+                $this->columns[0] = max(
+                    $this->columns[0],
+                    20 + strlen($test->getFeature()) + strlen($test->getFileName())
+                );
                 continue;
             }
             $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
@@ -44,7 +47,7 @@ class Console implements EventSubscriberInterface
             ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
             ->prepend("\n")
-            ->width(array_sum($this->columns),'-')
+            ->width(array_sum($this->columns), '-')
             ->writeln();
     }
 
@@ -52,7 +55,9 @@ class Console implements EventSubscriberInterface
     public function startTest(\Codeception\Event\Test $e)
     {
         $test = $e->getTest();
-        if ($test instanceof TestCase) return;
+        if ($test instanceof TestCase) {
+            return;
+        }
 
         $this->message($test->toString())
             ->style('focus')
@@ -79,7 +84,9 @@ class Console implements EventSubscriberInterface
                 ->write();
         }
 
-        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) $this->output->writeln("\nScenario:");
+        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) {
+            $this->output->writeln("\nScenario:");
+        }
     }
 
     public function afterTest(\Codeception\Event\Test $e)
@@ -152,7 +159,9 @@ class Console implements EventSubscriberInterface
 
     public function beforeStep(\Codeception\Event\Step $e)
     {
-        if (!$this->steps) return;
+        if (!$this->steps) {
+            return;
+        }
         $this->output->writeln("* " . $e->getStep());
     }
 
@@ -168,7 +177,7 @@ class Console implements EventSubscriberInterface
 
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        $this->message()->width(array_sum($this->columns),'-')->writeln();
+        $this->message()->width(array_sum($this->columns), '-')->writeln();
     }
 
     public function printFail(\Codeception\Event\Fail $e)
@@ -178,7 +187,9 @@ class Console implements EventSubscriberInterface
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
 
         $feature = $failedTest->getScenario()->getFeature();
-        if ($e->getCount()) $this->output->put($e->getCount().") ");
+        if ($e->getCount()) {
+            $this->output->put($e->getCount() . ") ");
+        }
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
             $this->printSkippedTest($feature, $failedTest->getFileName(), $failToString);
@@ -198,26 +209,32 @@ class Console implements EventSubscriberInterface
     public function printException(\Exception $e)
     {
         static $limit = 10;
-        $this->message("[%s]")->with(get_class($e))->block('error')->writeln($e instanceof \PHPUnit_Framework_AssertionFailedError
+        $this->message("[%s]")->with(get_class($e))->block('error')->writeln(
+            $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
-                : OutputInterface::VERBOSITY_VERBOSE);
+                : OutputInterface::VERBOSITY_VERBOSE
+        );
 
         $i = 0;
         foreach ($e->getTrace() as $step) {
             $i++;
             $message = $this->message($i)->prepend('#')->width(4);
             if (!isset($step['file']) && isset($step['class'])) {
-                $message->append("[internal] ".$step['class'].'.'.$step['function']);
+                $message->append("[internal] " . $step['class'] . '.' . $step['function']);
             }
 
             if (isset($step['file'])) {
-                $message->append($step['file'].'.'.$step['line']);
+                $message->append($step['file'] . '.' . $step['line']);
             }
-            $message->writeln($e instanceof \PHPUnit_Framework_AssertionFailedError
-                ? OutputInterface::VERBOSITY_DEBUG
-                : OutputInterface::VERBOSITY_VERBOSE);
+            $message->writeln(
+                $e instanceof \PHPUnit_Framework_AssertionFailedError
+                    ? OutputInterface::VERBOSITY_DEBUG
+                    : OutputInterface::VERBOSITY_VERBOSE
+            );
 
-            if ($i >= $limit) break;
+            if ($i >= $limit) {
+                break;
+            }
         }
     }
 
@@ -256,9 +273,13 @@ class Console implements EventSubscriberInterface
     public function printSkippedTest($feature, $fileName, $failToString)
     {
         $message = $this->message();
-        if ($feature) $message->append($feature)->style('focus')->append(' in ');
+        if ($feature) {
+            $message->append($feature)->style('focus')->append(' in ');
+        }
         $message->append($fileName);
-        if ($failToString) $message->append(" is $failToString");
+        if ($failToString) {
+            $message->append(" is $failToString");
+        }
         $message->write(OutputInterface::VERBOSITY_VERBOSE);
     }
 
@@ -295,10 +316,10 @@ class Console implements EventSubscriberInterface
         foreach ($trace as $step) {
             $i--;
             $this->message($i)->width(strlen($length))->append(". $step")->writeln();
-            if (($length - $i - 1) >= $this->traceLength) break;
+            if (($length - $i - 1) >= $this->traceLength) {
+                break;
+            }
         }
         $this->output->writeln("");
     }
-
-
 }
