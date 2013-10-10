@@ -44,9 +44,9 @@ abstract class Module extends AssertWrapper
 
     protected $requiredFields = array();
 
-    public function __construct($config = array())
+    public function __construct($config = null)
     {
-        if (!empty($config)) {
+        if (is_array($config)) {
             $this->_setConfig($config);
         }
     }
@@ -68,14 +68,13 @@ abstract class Module extends AssertWrapper
         $this->config = $this->defaultConfig;
     }
 
-    protected function validateConfig()
+    public function validateConfig()
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfig(
                 get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
-                Update configuration and set all required fields\n\n"
+                "\nOptions: " . implode(', ', $this->requiredFields) . " are required.\nPlease, update the configuration and set all the required fields"
             );
         }
     }

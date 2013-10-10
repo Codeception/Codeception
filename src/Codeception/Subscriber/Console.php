@@ -23,7 +23,7 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
-        $this->debug = $options['debug'] || $options['verbosity'] === OutputInterface::VERBOSITY_VERBOSE;
+        $this->debug = $options['debug'] || $options['verbosity'] === OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $options['steps'];
         $this->output = new Output($options);
     }
@@ -31,17 +31,7 @@ class Console implements EventSubscriberInterface
     // triggered for scenario based tests: cept, cest
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
-        $this->columns = array(40, 5);
-        foreach ($e->getSuite()->tests() as $test) {
-            if ($test instanceof ScenarioDriven) {
-                $this->columns[0] = max(
-                    $this->columns[0],
-                    20 + strlen($test->getFeature()) + strlen($test->getFileName())
-                );
-                continue;
-            }
-            $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
-        }
+        $this->buildResultsTable($e);
 
         $this->message("%s Tests (%d) ")
             ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
@@ -188,7 +178,7 @@ class Console implements EventSubscriberInterface
 
         $feature = $failedTest->getScenario()->getFeature();
         if ($e->getCount()) {
-            $this->output->put($e->getCount() . ") ");
+            $this->output->write($e->getCount() . ") ");
         }
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
@@ -224,7 +214,7 @@ class Console implements EventSubscriberInterface
             }
 
             if (isset($step['file'])) {
-                $message->append($step['file'] . '.' . $step['line']);
+                $message->append($step['file'] . ':' . $step['line']);
             }
             $message->writeln(
                 $e instanceof \PHPUnit_Framework_AssertionFailedError
@@ -241,26 +231,6 @@ class Console implements EventSubscriberInterface
     protected function message($text = '')
     {
         return new Message($text, $this->output);
-    }
-
-    static function getSubscribedEvents()
-    {
-        return array(
-            'suite.before' => 'beforeSuite',
-            'suite.after' => 'afterSuite',
-            'test.before' => 'before',
-            'test.after' => 'afterTest',
-            'test.start' => 'startTest',
-            'test.end' => 'endTest',
-            'step.before' => 'beforeStep',
-            'step.after' => 'afterStep',
-            'test.success' => 'testSuccess',
-            'test.fail' => 'testFail',
-            'test.error' => 'testError',
-            'test.incomplete' => 'testIncomplete',
-            'test.skipped' => 'testSkipped',
-            'test.fail.print' => 'printFail',
-        );
     }
 
     /**
@@ -321,5 +291,44 @@ class Console implements EventSubscriberInterface
             }
         }
         $this->output->writeln("");
+    }
+
+    /**
+     * @param \Codeception\Event\Suite $e
+     */
+    protected function buildResultsTable(\Codeception\Event\Suite $e)
+    {
+        $this->columns = array(40, 5);
+        foreach ($e->getSuite()->tests() as $test) {
+            if ($test instanceof ScenarioDriven) {
+                $this->columns[0] = max(
+                    $this->columns[0],
+                    20 + strlen($test->getFeature()) + strlen($test->getFileName())
+                );
+                continue;
+            }
+            $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
+        }
+    }
+
+    // events
+    static function getSubscribedEvents()
+    {
+        return array(
+            'suite.before' => 'beforeSuite',
+            'suite.after' => 'afterSuite',
+            'test.before' => 'before',
+            'test.after' => 'afterTest',
+            'test.start' => 'startTest',
+            'test.end' => 'endTest',
+            'step.before' => 'beforeStep',
+            'step.after' => 'afterStep',
+            'test.success' => 'testSuccess',
+            'test.fail' => 'testFail',
+            'test.error' => 'testError',
+            'test.incomplete' => 'testIncomplete',
+            'test.skipped' => 'testSkipped',
+            'test.fail.print' => 'printFail',
+        );
     }
 }

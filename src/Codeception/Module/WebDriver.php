@@ -6,6 +6,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\WebInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
+use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
 /**
@@ -60,7 +61,8 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         'port' => '4444',
         'restart' => false,
         'wait' => 5,
-        'capabilities' => array());
+        'capabilities' => array()
+    );
     
     protected $wd_host;
     protected $capabilities;
@@ -70,7 +72,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public $webDriver;
 
-    public function _initialize()
+    public function _beforeSuite()
     {
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
@@ -201,14 +203,14 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         if (!$selector) return $this->assertPageContains($text);
         $nodes = $this->match($this->webDriver, $selector);
-        $this->assertNodesContain($text, $nodes);
+        $this->assertNodesContain($text, $nodes, $selector);
     }
 
     public function dontSee($text, $selector = null)
     {
         if (!$selector) return $this->assertPageNotContains($text);
         $nodes = $this->match($this->webDriver, $selector);
-        $this->assertNodesNotContain($text, $nodes);
+        $this->assertNodesNotContain($text, $nodes, $selector);
     }
 
     /**
@@ -1149,14 +1151,14 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         return $keys;
     }
 
-    protected function assertNodesContain($text, $nodes)
+    protected function assertNodesContain($text, $nodes, $selector)
     {
-        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+        $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
     }
 
-    protected function assertNodesNotContain($text, $nodes)
+    protected function assertNodesNotContain($text, $nodes, $selector)
     {
-        $this->assertThatItsNot($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $text);
+        $this->assertThat($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
     }
 
     protected function assertPageContains($needle, $message = '')

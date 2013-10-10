@@ -30,7 +30,8 @@
         "behat/mink-selenium-driver": "1.1.*",
         "facebook/php-sdk": "3.*",
         "behat/mink-zombie-driver": "1.1.*",
-        "videlalvaro/php-amqplib": "*"
+        "videlalvaro/php-amqplib": "*",
+        "codeception/specify": "*"
     },
 
     "autoload":{

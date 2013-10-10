@@ -36,7 +36,6 @@ class Output extends ConsoleOutput {
         $this->formatHelper = new FormatterHelper();
 
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
-        ob_start();
 	}
 
 	protected function clean($message)

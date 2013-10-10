@@ -52,18 +52,20 @@ class WebDebug extends \Codeception\Module
 
     private $fileOrderCounter = 0;
 
-    public function _before(\Codeception\TestCase $test) {
-        $this->test = $test;
-        $this->fileOrderCounter = 0;
-
+    public function _initialize()
+    {
         foreach ($this->getModules() as $module) {
-            if ($module instanceof \Codeception\Util\Mink) {
+            if (method_exists($module, '_saveScreenshot')) {
                 $this->module = $module;
                 return;
             }
         }
         throw new \Codeception\Exception\ModuleConfig(__CLASS__,"couldn't connect to any of web manipulation modules.");
+    }
 
+    public function _before(\Codeception\TestCase $test) {
+        $this->test = $test;
+        $this->fileOrderCounter = 0;
    	}
 
     /**

@@ -11,18 +11,15 @@ class CrawlerNot extends Crawler {
 
     protected function fail(DomCrawler $nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
-        $output = "Element '$selector' was found ";
-
-        if (!$this->string) throw new \PHPUnit_Framework_ExpectationFailedException($output, $comparisonFailure);
-
-        foreach ($nodes as $node)
-        {
-            if (strpos($node->nodeValue, $this->string)) {
-                $output .= $this->failureDescription($node->C14N());
-                break;
-            }
+        if (!$this->string) {
+            throw new \PHPUnit_Framework_ExpectationFailedException("Element '$selector' was found", $comparisonFailure);
         }
 
+        $output = "There was '$selector' element";
+        $output .= $this->uriMessage('on page');
+        $output .= str_replace($this->string,"<bold>{$this->string}</bold>",$this->nodesList($nodes, $this->string));
+        $output .= "\ncontaining '{$this->string}'";
+        
         throw new \PHPUnit_Framework_ExpectationFailedException(
           $output,
           $comparisonFailure
