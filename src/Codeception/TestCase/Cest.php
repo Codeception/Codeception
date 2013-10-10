@@ -32,6 +32,7 @@ class Cest extends Cept
         $I = $this->makeIObject();
 
         $this->executeTestMethod($I);
+        $this->fire('test.after', new TestEvent($this));
     }
 
     protected function makeIObject()

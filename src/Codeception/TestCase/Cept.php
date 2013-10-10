@@ -74,6 +74,8 @@ class Cept extends \Codeception\TestCase
         if (file_exists($this->bootstrap)) require $this->bootstrap;
 
         require $this->testfile;
+
+        $this->fire('test.after', new TestEvent($this));
     }
 
 }
