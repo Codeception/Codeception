@@ -197,30 +197,4 @@ class WebDriverTest extends TestsForMink
         $this->assertGreaterThanOrEqual($time+3, time());
     }
 
-    public function testSeeFails()
-    {
-        $this->shouldFail();
-        $this->module->amOnPage('/');
-        $this->module->see('Text not here');
-    }
-
-    public function testSeeInElementFails()
-    {
-        $this->shouldFail();
-        $this->module->amOnPage('/info');
-        $this->module->see('woups','p');
-    }
-
-    public function testDontSeeInElementFails()
-    {
-        $this->shouldFail();
-        $this->module->amOnPage('/info');
-        $this->module->dontSee('interesting','p');
-    }
-
-    protected function shouldFail()
-    {
-        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
-    }
-
 }
