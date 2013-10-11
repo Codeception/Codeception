@@ -290,7 +290,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function seeLink($text, $url = null)
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
-        if (!$url) return $this->assertNodesContain($text, $nodes);
+        if (!$url) return $this->assertNodesContain($text, $nodes, 'a');
         $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
                 $parts = parse_url($url);
                 if (!$parts) $this->fail("Link URL of '$url' couldn't be parsed");
@@ -300,7 +300,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
                 if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
                 return $uri == trim($url);
         });
-        $this->assertNodesContain($text, $nodes);
+        $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
 
 
@@ -308,13 +308,13 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
         if (!$url) {
-            $this->assertNodesNotContain($text, $nodes);
+            $this->assertNodesNotContain($text, $nodes, 'a');
             return;
         }
         $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
             return trim($e->getAttribute('href')) == trim($url);
         });
-        $this->assertNodesNotContain($text, $nodes);
+        $this->assertNodesNotContain($text, $nodes,  "a[href=$url]");
     }
 
     public function seeInCurrentUrl($uri)
@@ -622,7 +622,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             return;
         }
         $select = new \WebDriverSelect($el);
-        $this->assertNodesContain($optionText, $select->getAllSelectedOptions());
+        $this->assertNodesContain($optionText, $select->getAllSelectedOptions(), 'option');
     }
 
 
@@ -638,7 +638,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             return;
         }
         $select = new \WebDriverSelect($el);
-        $this->assertNodesNotContain($optionText, $select->getAllSelectedOptions());
+        $this->assertNodesNotContain($optionText, $select->getAllSelectedOptions(), 'option');
     }
 
     public function seeInTitle($title)
@@ -1147,12 +1147,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         return $keys;
     }
 
-    protected function assertNodesContain($text, $nodes, $selector)
+    protected function assertNodesContain($text, $nodes, $selector = null)
     {
         $this->assertThat($nodes, new WebDriverConstraint($text, $this->_getCurrentUri()), $selector);
     }
 
-    protected function assertNodesNotContain($text, $nodes, $selector)
+    protected function assertNodesNotContain($text, $nodes, $selector = null)
     {
         $this->assertThat($nodes, new WebDriverConstraintNot($text, $this->_getCurrentUri()), $selector);
     }
