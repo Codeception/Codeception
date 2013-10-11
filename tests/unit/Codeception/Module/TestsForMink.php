@@ -416,5 +416,63 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
+    public function testSeeFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->see('Text not here');
+    }
+
+    public function testSeeInElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->see('woups','p');
+    }
+
+    public function testDontSeeInElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('interesting','p');
+    }
+
+    public function testSeeInFieldFail()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','xxx');
+    }
+
+    public function testSeeInFieldOnTextareaFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunrise');
+    }
+
+    public function testSeeCheckboxIsNotCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/complex');
+        $this->module->dontSeeCheckboxIsChecked('#checkin');
+    }
+
+    public function testSeeCheckboxCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCheckboxIsChecked('#checkin');
+    }
+
+    public function testDontSeeElementOnPageFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
+    }
+
+    protected function shouldFail()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
 
 }
