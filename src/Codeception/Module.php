@@ -46,7 +46,7 @@ abstract class Module
     public function __construct($config = null)
     {
         $this->backupConfig = $this->config;
-        if (is_array($config)) {
+        if (!is_array($config)) {
             $this->_setConfig($config);
         }
     }
@@ -61,7 +61,6 @@ abstract class Module
     {
         $this->config =  array_merge($this->backupConfig, $config);
         $this->validateConfig();        
-
     }
 
     public function _resetConfig()
@@ -72,12 +71,11 @@ abstract class Module
     protected function validateConfig()
     {
         $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
-            throw new Exception\ModuleConfig(
-                get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required.\nPlease, update the configuration and set all the required fields"
-            );
-        }
+        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
+            throw new ModuleConfig(get_class($this),"
+                Options: ".implode(', ', $this->requiredFields)." are required\n
+                Update configuration and set all required fields\n\n
+        ");
     }
 
     public function _hasRequiredFields()
@@ -86,13 +84,11 @@ abstract class Module
     }
 
     // HOOK: used after configuration is loaded
-    public function _initialize()
-    {
+    public function _initialize() {
     }
 
     // HOOK: on every Guy class initialization
-    public function _cleanup()
-    {
+    public function _cleanup() {
     }
 
     // HOOK: before each suite
@@ -290,11 +286,6 @@ abstract class Module
     protected function assertNull($actual, $message = '')
     {
         return \PHPUnit_Framework_Assert::assertNull($actual, $message);
-    }
-
-    protected function assertNotNull($actual, $message = '')
-    {
-        \PHPUnit_Framework_Assert::assertNotNull($actual, $message);
     }
 
     /**
