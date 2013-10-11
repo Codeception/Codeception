@@ -43,10 +43,12 @@ abstract class Module
 
     protected $requiredFields = array();
 
-    public function __construct($config=array())
+    public function __construct($config=null)
     {
         $this->backupConfig = $this->config;
-        if (!empty($config)) $this->_setConfig($config);
+        if (!is_array($config)) {
+            $this->_setConfig($config);
+        }
     }
 
     public function _setConfig($config)
