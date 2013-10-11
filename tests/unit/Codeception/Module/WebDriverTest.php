@@ -197,10 +197,4 @@ class WebDriverTest extends TestsForMink
         $this->assertGreaterThanOrEqual($time+3, time());
     }
 
-    public function testDoubleTap()
-    {
-        $this->module->amOnPage('/form/field');
-        $this->module->doubleTap('#name');
-    }
-
 }
