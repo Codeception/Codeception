@@ -94,7 +94,4 @@ class PhpBrowserTest extends TestsForMink
         $this->module->seeLink('Ссылочка');
         $this->module->click('Ссылочка');
     }
-
-
-
 }

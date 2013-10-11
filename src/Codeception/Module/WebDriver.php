@@ -72,7 +72,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public $webDriver;
 
-    public function _beforeSuite()
+    public function _initialize()
     {
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
@@ -213,22 +213,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertNodesNotContain($text, $nodes, $selector);
     }
 
-    /**
-     * @param $page
-     * @param $selector
-     * @return array
-     */
-    protected function match($page, $selector)
-    {
-        $nodes = array();
-        if (Locator::isID($selector)) $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
-        if (!empty($nodes)) return $nodes;
-        if (Locator::isCSS($selector)) $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
-        if (!empty($nodes)) return $nodes;
-        if (Locator::isXPath($selector)) $nodes = $page->findElements(\WebDriverBy::xpath($selector));
-        return $nodes;
-    }
-
     public function click($link, $context = null)
     {
         $page = $this->webDriver;
@@ -303,7 +287,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
     }
 
-
     public function seeLink($text, $url = null)
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
@@ -319,6 +302,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         });
         $this->assertNodesContain($text, $nodes);
     }
+
 
     public function dontSeeLink($text, $url = null)
     {
@@ -441,11 +425,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
-    
+
     /*
     * Unselect an option in a select box
     *
     */
+
     public function unselectOption($select, $option)
     {
         $el = $this->findField($select);
@@ -468,11 +453,10 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             } catch (\NoSuchElementWebDriverError $e) {}
 
         }
-    
+
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
-
     /**
      * @param $context
      * @param $radio_or_checkbox
@@ -599,7 +583,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertEmpty($els);
     }
 
-
     /**
      * Checks if element exists on a page even it is invisible.
      *
@@ -616,6 +599,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->assertNotEmpty($this->match($this->webDriver, $selector));
     }
 
+
     /**
      * Opposite to `seeElementInDOM`.
      *
@@ -625,7 +609,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         $this->assertEmpty($this->match($this->webDriver, $selector));
     }
-
 
     public function seeOptionIsSelected($selector, $optionText)
     {
@@ -641,6 +624,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $select = new \WebDriverSelect($el);
         $this->assertNodesContain($optionText, $select->getAllSelectedOptions());
     }
+
 
     public function dontSeeOptionIsSelected($selector, $optionText)
     {
@@ -796,7 +780,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     }
 
     /**
-     * Waits until element has changed according to callback function
+     * Waits until element has changed according to callback function or for $time seconds to pass.
      *
      * ``` php
      * <?php
@@ -808,7 +792,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      *
      * @param $element
      * @param \Closure $callback
-     * @param int $timeout
+     * @param int $timeout seconds
      * @throws \Codeception\Exception\ElementNotFound
      */
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
@@ -823,7 +807,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     }
 
     /**
-     * Waits for element to appear on page for specific amount of time.
+     * Waits for element to appear on page for $timeout seconds to pass.
      * If element not appears, timeout exception is thrown.
      *
      * ``` php
@@ -1029,13 +1013,8 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function dragAndDrop($source, $target)
     {
-        $snodes = $this->match($this->webDriver, $source);
-        if (empty($snodes)) throw new ElementNotFound($source,'CSS or XPath');
-        $snodes = reset($snodes);
-
-        $tnodes = $this->match($this->webDriver, $target);
-        if (empty($tnodes)) throw new ElementNotFound($target,'CSS or XPath');
-        $tnodes = reset($tnodes);
+        $snodes = $this->matchFirstOrFail($this->webDriver, $source);
+        $tnodes = $this->matchFirstOrFail($this->webDriver, $target);
 
         $action = new \WebDriverActions($this->webDriver);
         $action->dragAndDrop($snodes, $tnodes)->perform();
@@ -1055,12 +1034,8 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)
     {
-        $els = $this->match($this->webDriver, $cssOrXPath);
-        if (count($els)) {
-            $this->webDriver->getMouse()->mouseMove($els[0]->getCoordinates(), $offsetX, $offsetY);
-            return;
-        }
-        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $this->webDriver->getMouse()->mouseMove($el->getCoordinates(), $offsetX, $offsetY);
     }
 
     /**
@@ -1071,11 +1046,8 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function clickWithRightButton($cssOrXPath)
     {
-        $els = $this->match($this->webDriver, $cssOrXPath);
-        if (count($els)) {
-            $this->webDriver->getMouse()->contextClick($els[0]->getCoordinates());
-        }
-        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $this->webDriver->getMouse()->contextClick($el->getCoordinates());
     }
 
     /**
@@ -1086,11 +1058,88 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function doubleClick($cssOrXPath)
     {
-        $els = $this->match($this->webDriver, $cssOrXPath);
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $this->webDriver->getMouse()->doubleClick($el->getCoordinates());
+    }
+
+    public function tap($cssOrXPath)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->tap($el);
+    }
+
+    public function scrollHorizontally($cssOrXPath, $x)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->scrollFromElement($el, $x, 0);
+    }
+
+    public function scrollVertically($cssOrXPath, $y)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->scrollFromElement($el, 0, $y);
+    }
+
+    public function flickHorizontally($cssOrXPath, $x, $speed = 60)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->flickFromElement($el, $x, 0, $speed);
+    }
+
+    public function flickVertically($cssOrXPath, $y, $speed = 60)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->flickFromElement($el, 0, $y, $speed);
+    }
+
+    public function longPress($cssOrXPath)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->longPress($el);
+    }
+
+    public function doubleTap($cssOrXPath)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
+        $actions = new \WebDriverTouchActions($this->webDriver);
+        $actions->doubleTap($el);
+    }
+
+    /**
+     * @param $page
+     * @param $selector
+     * @return array
+     */
+    protected function match($page, $selector)
+    {
+        $nodes = array();
+        if (Locator::isID($selector)) $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
+        if (!empty($nodes)) return $nodes;
+        if (Locator::isCSS($selector)) $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
+        if (!empty($nodes)) return $nodes;
+        if (Locator::isXPath($selector)) $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        return $nodes;
+    }
+
+    /**
+     * @param $page
+     * @param $selector
+     * @return \RemoteWebElement
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    protected function matchFirstOrFail($page, $selector)
+    {
+        $els = $this->match($page, $selector);
         if (count($els)) {
-            $this->webDriver->getMouse()->doubleClick($els[0]->getCoordinates());
+            return reset($els);
         }
-        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+        throw new ElementNotFound($selector, 'CSS or XPath');
     }
 
     /**
@@ -1117,11 +1166,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function pressKey($element, $char)
     {
-        $els = $this->match($this->webDriver, $element);
-        $el = reset($els);
-        if (!$el) {
-            throw new ElementNotFound("Focus element $element by CSS or XPath");
-        }
+        $el = $this->matchFirstOrFail($this->webDriver, $element);
         $args = func_get_args();
         array_shift($args);
         $keys = array();
