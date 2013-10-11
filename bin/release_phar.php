@@ -10,6 +10,8 @@ $docs = \Symfony\Component\Finder\Finder::create()->files('*.md')->sortByName()-
 system('git clone git@github.com:Codeception/codeception.github.com.git package/site/');
 
 copy('package/codecept.phar','package/site/codecept.phar');
+@mkdir("package/site/releases/".\Codeception\Codecept::VERSION,777, true);
+copy('package/codecept.phar','package/site/releases/'.\Codeception\Codecept::VERSION.'"/codecept.phar');
 
 chdir('package/site');
 system('git add codecept.phar');

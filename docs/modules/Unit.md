@@ -89,7 +89,7 @@ $I->seeResultEquals('Davert');
 ?>
 ```
 
-You can use native PHPUnit asserts in the executed code. 
+You can use native PHPUnit asserts in the executed code.
 These can be either static methods of the 'PHPUnit_Framework_assert' class,
 or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
 You should manually include this file, as these functions may conflict with functions in your code.
