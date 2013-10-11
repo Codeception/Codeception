@@ -162,6 +162,57 @@ As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPU
 
 Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
 
+### Annotations
+
+*added in 1.7.0*
+
+You can control Cest files with annotations. You can use `@guy` annotation to pass Guy class different then set via config. This is quite useful if you want to pass a StepObject there (see below).
+
+``` php
+<?php
+/**
+ * @guy WebGuy\AdminSteps
+ */
+class AdminCest {
+
+    function banUser(WebGuy\AdminSteps $I)
+    {
+        // ...
+    }
+
+}
+?>
+```
+
+You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
+
+``` php
+<?php
+class ModeratorCest {
+
+    protected function login(WebGuy $I)
+    {
+        $I->amOnPage('/login');
+        $I->fillField('Username', 'miles');
+        $I->fillField('Password', 'davis');
+        $I->click('Login');
+    }
+
+    /**
+     * @before login
+     */
+    function banUser(WebGuy $I)
+    {
+        $I->amOnPage('/users/charlie-parker');
+        $I->see('Ban', '.button');
+        $I->click('Ban');        
+    }
+}
+?>
+```
+
+You can use `@before` and `@after` for included functions also. But you can't have multiple annotations in one method.
+
 ## Refactoring
 
 As test base growth they will require refactoring, sharing common variables and behaviors. The classical example for this is `login` action which will be called for maybe every test of your test suite. It's wise to make it written one time and use it in all tests. 
