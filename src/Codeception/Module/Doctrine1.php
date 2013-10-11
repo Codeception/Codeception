@@ -39,7 +39,7 @@ class Doctrine1 extends \Codeception\Module
     
     public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup']) {
+        if ($this->config['cleanup'] && $this->dmc->getTransactionLevel()) {
             $this->dmc->rollback();
         }
 
