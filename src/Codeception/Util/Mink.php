@@ -503,7 +503,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         if (!$node) {
             $this->fail(", checkbox not found");
         }
-        $this->assertTrue($node->isChecked());
+        $this->assertEquals('checked', $node->getAttribute('checked'));
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
@@ -512,7 +512,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         if (!$node) {
             $this->fail(", checkbox not found");
         }
-        $this->assertFalse($node->isChecked());
+        $this->assertNull($node->getAttribute('checked'));
     }
 
     public function seeInField($field, $value)

@@ -101,6 +101,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         }
     }
 
+    public function _failed(\Codeception\TestCase $test)
+    {
+        $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
+        $this->debug("Screenshot was saved into 'log' dir");
+    }
+
     public function _afterSuite()
     {
         // this is just to make sure webDriver is cleared after suite
@@ -140,6 +146,31 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     public function _saveScreenshot($filename)
     {
         $this->webDriver->takeScreenshot($filename);
+    }
+
+    /**
+     * Makes a screenshot of current window and saves it to `tests/_log/debug`.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnPage('/user/edit');
+     * $I->makeScreenshot('edit page');
+     * // saved to: tests/_log/debug/UserEdit - edit page.png
+     * ?>
+     * ```
+     *
+     * @param $name
+     */
+    public function makeScreenshot($name)
+    {
+        $debugDir = \Codeception\Configuration::logDir().'debug';
+        if (!is_dir($debugDir)) mkdir($debugDir, 0777);
+        $caseName = str_replace('Cept.php', '', $this->test->getFileName());
+        $caseName = str_replace('Cept.php', '', $caseName);
+
+        $screenName = $debugDir . DIRECTORY_SEPARATOR . $caseName.' - '.$name.'.png';
+        $this->_saveScreenshot($screenName);
+        $this->debug("Screenshot saved to $screenName");
     }
 
     /**

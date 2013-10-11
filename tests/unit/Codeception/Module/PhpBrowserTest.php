@@ -140,4 +140,5 @@ class PhpBrowserTest extends TestsForMink
         $I->submitForm('form', array('searchQuery' => 'test'));
         $I->see('Success');
     }
+
 }

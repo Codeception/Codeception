@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Util\Mink;
+
 /**
  * This is a mini-module with helper actions to debug acceptance tests.
  * Use it with Selenium, Selenium2, ZombieJS, or PhpBrowser module.
@@ -55,7 +57,7 @@ class WebDebug extends \Codeception\Module
     public function _initialize()
     {
         foreach ($this->getModules() as $module) {
-            if (method_exists($module, '_saveScreenshot')) {
+            if ($module instanceof Mink) {
                 $this->module = $module;
                 return;
             }
