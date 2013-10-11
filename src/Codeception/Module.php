@@ -39,30 +39,34 @@ abstract class Module
 
     protected $config = array();
 
-    protected $defaultConfig = array();
+    protected $backupConfig = array();
 
     protected $requiredFields = array();
 
-    public function __construct($config=array())
+    public function __construct($config = null)
     {
-        if (!empty($config)) $this->_setConfig($config);
+        $this->backupConfig = $this->config;
+        if (is_array($config)) {
+            $this->_setConfig($config);
+        }
     }
 
     public function _setConfig($config)
     {
-        $this->config = $this->defaultConfig = array_merge($this->config, $config);
+        $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
     }
 
     public function _reconfigure($config)
     {
-        $this->config =  array_merge($this->defaultConfig, $config);
+        $this->config =  array_merge($this->backupConfig, $config);
         $this->validateConfig();        
+
     }
 
     public function _resetConfig()
     {
-        $this->config = $this->defaultConfig;
+        $this->config = $this->backupConfig;
     }
 
     protected function validateConfig()
@@ -82,11 +86,13 @@ abstract class Module
     }
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {
+    public function _initialize()
+    {
     }
 
     // HOOK: on every Guy class initialization
-    public function _cleanup() {
+    public function _cleanup()
+    {
     }
 
     // HOOK: before each suite
@@ -284,6 +290,11 @@ abstract class Module
     protected function assertNull($actual, $message = '')
     {
         return \PHPUnit_Framework_Assert::assertNull($actual, $message);
+    }
+
+    protected function assertNotNull($actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertNotNull($actual, $message);
     }
 
     /**
