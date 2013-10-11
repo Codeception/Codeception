@@ -50,7 +50,7 @@ abstract class Module
             $this->_setConfig($config);
         }
     }
-
+    
     public function _setConfig($config)
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
