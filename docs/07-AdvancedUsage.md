@@ -183,6 +183,7 @@ class AdminCest {
 }
 ?>
 ```
+The guy annotation can be added to method DocBlock as well.
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
 
