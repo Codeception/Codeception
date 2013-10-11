@@ -462,13 +462,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeCheckboxIsChecked('#checkin');
     }
 
-    public function testSeeElementOnPageFails()
-    {
-        $this->shouldFail();
-        $this->module->amOnPage('/form/field');
-        $this->module->dontSeeElement('input[name=name]');
-    }
-
     public function testDontSeeElementOnPageFails()
     {
         $this->shouldFail();
