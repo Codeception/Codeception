@@ -23,23 +23,27 @@ class Doctrine1 extends \Codeception\Module
 {
     protected $config = array('cleanup' => true);
 
+    /** @var \Doctrine_Connection */
+    protected $dmc = null;
+
     public function _initialize() {
-        $this->dbh = \Doctrine_Manager::connection()->getDbh();
+        $this->dmc = \Doctrine_Manager::connection();
+        $this->dbh = $this->dmc->getDbh();
     }
 
     public function _before(\Codeception\TestCase $test) {
         if ($this->config['cleanup']) {
-            \Doctrine_Manager::connection()->beginTransaction();
+            $this->dmc->beginTransaction();
         }
     }
     
     public function _after(\Codeception\TestCase $test)
     {
         if ($this->config['cleanup']) {
-            \Doctrine_Manager::connection()->rollback();
+            $this->dmc->rollback();
         }
 
-        $this->tables = \Doctrine_Manager::connection()->getTables();
+        $this->tables = $this->dmc->getTables();
         foreach ($this->tables as $table) {
             foreach ($table->getRepository() as $record) {
                 $record->clearRelated();
