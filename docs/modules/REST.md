@@ -223,6 +223,14 @@ This is done with json_last_error function.
 
 
 
+### seeResponseIsXml
+
+
+Checks whether last response was valid XML.
+This is done with libxml_get_last_error function.
+
+
+
 ### sendDELETE
 
 

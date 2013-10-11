@@ -126,4 +126,6 @@ class Selenium2Test extends TestsForMink
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+
+
 }

@@ -31,9 +31,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
             $result = $step->run();
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->getTestResultObject();
-            $result->stopOnFailure(false);
             $result->addFailure(clone($this), $f, $result->time());
-            $result->stopOnFailure(true);
         } catch (\Exception $e) {
             $this->fire('step.after', new \Codeception\Event\Step($this, $step));
             throw $e;

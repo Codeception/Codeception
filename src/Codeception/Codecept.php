@@ -52,7 +52,6 @@ class Codecept
         'coverage' => false,
 	    'defer-flush' => false,
         'groups' => null,
-        'verbosity' => 1,
         'excludeGroups' => null,
         'filter' => null,
     );

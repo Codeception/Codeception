@@ -88,7 +88,6 @@ class Selenium2 extends MinkJS
     public function _failed(\Codeception\TestCase $test, $error) {
         $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
         $this->debug("Screenshot was saved into 'log' dir");
-        $this->session->stop();
     }
 
     public function _afterStep(\Codeception\Step $step) {
