@@ -1062,55 +1062,6 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         $this->webDriver->getMouse()->doubleClick($el->getCoordinates());
     }
 
-    public function tap($cssOrXPath)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->tap($el);
-    }
-
-    public function scrollHorizontally($cssOrXPath, $x)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->scrollFromElement($el, $x, 0);
-    }
-
-    public function scrollVertically($cssOrXPath, $y)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->scrollFromElement($el, 0, $y);
-    }
-
-    public function flickHorizontally($cssOrXPath, $x, $speed = 60)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->flickFromElement($el, $x, 0, $speed);
-    }
-
-    public function flickVertically($cssOrXPath, $y, $speed = 60)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->flickFromElement($el, 0, $y, $speed);
-    }
-
-    public function longPress($cssOrXPath)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->longPress($el);
-    }
-
-    public function doubleTap($cssOrXPath)
-    {
-        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
-        $actions = new \WebDriverTouchActions($this->webDriver);
-        $actions->doubleTap($el);
-    }
-
     /**
      * @param $page
      * @param $selector
