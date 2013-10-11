@@ -46,7 +46,7 @@ abstract class Module
     public function __construct($config=null)
     {
         $this->backupConfig = $this->config;
-        if (!is_array($config)) {
+        if (is_array($config)) {
             $this->_setConfig($config);
         }
     }
