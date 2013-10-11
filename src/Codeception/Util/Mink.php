@@ -73,7 +73,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
      */
     public function _getCookie($cookie)
     {
-    	$value = $this->session->getCookie($cookie);
+        $value = $this->session->getCookie($cookie);
         if (is_null($value)) {
             // try to parse headers because of bug in
             // \Behat\Mink\Driver\BrowserKitDriver::getCookie
@@ -213,7 +213,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
 
     public function seeLink($text, $url = null)
     {
-        $text    = $this->escape($text);
+        $text = $this->escape($text);
         $locator = array('link', $this->session->getSelectorsHandler()->xpathLiteral($text));
 
         /** @var NodeElement[] $nodes */
@@ -238,7 +238,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
             $this->dontSee($text, 'a');
         }
 
-        $text    = $this->escape($text);
+        $text = $this->escape($text);
         $locator = array('link', $this->session->getSelectorsHandler()->xpathLiteral($text));
 
         /** @var NodeElement[] $nodes */
@@ -296,7 +296,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
     protected function findEl($selector)
     {
         $page = $this->session->getPage();
-        $el   = null;
+        $el = null;
         if (Locator::isCSS($selector)) {
             $el = $page->find('css', $selector);
         }
@@ -405,9 +405,9 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
      */
     protected function findField($selector)
     {
-        $page    = $this->session->getPage();
+        $page = $this->session->getPage();
         $locator = array('field', $this->session->getSelectorsHandler()->xpathLiteral($selector));
-        $field   = $page->find('named', $locator);
+        $field = $page->find('named', $locator);
 
         if (!$field and Locator::isCSS($selector)) {
             $field = $page->find('css', $selector);
@@ -424,7 +424,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
 
     public function _getCurrentUri()
     {
-        $url   = $this->session->getCurrentUrl();
+        $url = $this->session->getCurrentUrl();
         $parts = parse_url($url);
         if (!$parts) {
             $this->fail("URL couldn't be parsed");
@@ -504,7 +504,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
             return $this->session->getCurrentUrl();
         }
         $matches = array();
-        $res     = preg_match($uri, $this->session->getCurrentUrl(), $matches);
+        $res = preg_match($uri, $this->session->getCurrentUrl(), $matches);
         if (!$res) {
             $this->fail("Couldn't match $uri in " . $this->session->getCurrentUrl());
         }
@@ -518,7 +518,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
     public function attachFile($field, $filename)
     {
         $field = $this->findField($field);
-        $path  = \Codeception\Configuration::dataDir() . $filename;
+        $path = \Codeception\Configuration::dataDir() . $filename;
         if (!file_exists($path)) {
             $this->fail(
                 "file '$filename' not found in Codeception data path. Only files stored in data path are accepted"
@@ -549,7 +549,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
     protected function findSelectedOption($select)
     {
         $selectbox = $this->findEl($select);
-        $option    = $selectbox->find('css', 'option[selected]');
+        $option = $selectbox->find('css', 'option[selected]');
 
         return $option;
     }
@@ -558,18 +558,18 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
     {
         $node = $this->findField($checkbox);
         if (!$node) {
-            $this->fail(", checkbox not found");
+            return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         }
-        $this->assertEquals('checked', $node->getAttribute('checked'));
+        \PHPUnit_Framework_Assert::assertTrue($node->isChecked());
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
     {
         $node = $this->findField($checkbox);
         if (!$node) {
-            $this->fail(", checkbox not found");
+            return \PHPUnit_Framework_Assert::fail(", checkbox not found");
         }
-        $this->assertNull($node->getAttribute('checked'));
+        \PHPUnit_Framework_Assert::assertFalse($node->isChecked());
     }
 
     public function seeInField($field, $value)

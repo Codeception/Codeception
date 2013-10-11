@@ -226,4 +226,23 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->debugSection('Status', $this->session->getStatusCode());
     }
 
+    public function seeCheckboxIsChecked($checkbox)
+    {
+        $node = $this->findField($checkbox);
+        if (!$node) {
+            $this->fail(", checkbox not found");
+        }
+        $this->assertEquals('checked', $node->getAttribute('checked'));
+    }
+
+    public function dontSeeCheckboxIsChecked($checkbox)
+    {
+        $node = $this->findField($checkbox);
+        if (!$node) {
+            $this->fail(", checkbox not found");
+        }
+        $this->assertNull($node->getAttribute('checked'));
+    }
+
+
 }
