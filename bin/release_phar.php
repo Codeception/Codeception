@@ -1,5 +1,4 @@
-gu<?php
-require_once __DIR__.'/../autoload.php';
+<?php
 $version = \Codeception\Codecept::VERSION;
 
 chdir(__DIR__.'/../');
