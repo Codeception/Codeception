@@ -1167,6 +1167,25 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ----------------------------------------------
      *
      *
+     * @see Codeception\Module::validateConfig()
+     * @return \Codeception\Maybe
+     */
+    public function validateConfig() {
+        $this->scenario->addStep(new \Codeception\Step\Action('validateConfig', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
+     *
     * Conditional Assertion: Test won't be stopped on fail
      * @see Codeception\Module\EmulateModuleHelper::seeEquals()
      * @return \Codeception\Maybe

@@ -29,7 +29,7 @@ class Extension implements EventSubscriberInterface {
 
     protected function write($message)
     {
-        if (!$this->options['silent']) $this->output->put($message);
+        if (!$this->options['silent']) $this->output->write($message);
     }
 
     protected function writeln($message)

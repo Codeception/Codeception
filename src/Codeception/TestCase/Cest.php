@@ -2,6 +2,7 @@
 namespace Codeception\TestCase;
 
 use Codeception\Event\Test as TestEvent;
+use Codeception\Util\Annotation;
 
 class Cest extends Cept
 {
@@ -32,13 +33,45 @@ class Cest extends Cept
         $I = $this->makeIObject();
 
         try {
+            $this->executeBefore($this->testMethod, $I);
             $this->executeTestMethod($I);
         } catch (\Exception $e) {
+            $this->executeAfter($this->testMethod, $I);
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
+        $this->executeAfter($this->testMethod, $I);
         $this->fire('test.after', new TestEvent($this));
     }
+
+    protected function executeBefore($testMethod, $I)
+    {
+        $before = Annotation::fetchForMethod($this->testClassInstance, $testMethod, 'before');
+        if (!$before) return;
+        $this->executeContextMethod($before, $I);
+    }
+
+    protected function executeAfter($testMethod, $I)
+    {
+        $after = Annotation::fetchForMethod($this->testClassInstance, $testMethod, 'after');
+        if (!$after) return;
+        $this->executeContextMethod($after, $I);
+    }
+
+    protected function executeContextMethod($context, $I)
+    {
+        if (method_exists($this->testClassInstance, $context)) {
+            $this->executeBefore($context, $I);
+            $contextMethod = new \ReflectionMethod($this->testClassInstance, $context);
+            $contextMethod->setAccessible(true);
+            $contextMethod->invoke($this->testClassInstance, $I);
+            $this->executeAfter($context, $I);
+            return;
+        }
+        throw new \Exception("Method $context defined in annotation but does not exists in ".get_class($this->testClassInstance));
+
+    }
+
 
     protected function makeIObject()
     {
@@ -48,11 +81,6 @@ class Cest extends Cept
         if ($spec = $this->getSpecFromMethod()) {
             $I->wantTo($spec);
         }
-        // @deprectated. Required only by Unit module
-        if (isset($this->testClassInstance->class)) {
-            $I->testMethod($this->testClassInstance->class .'.'. $this->testMethod);
-        }
-
         return $I;
     }
 

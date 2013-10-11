@@ -7,9 +7,20 @@ class IncludedCest {
         file_put_contents('tests/data/included/_log/.gitkeep','');
     }
 
-    public function runSuitesFromIncludedConfigs(\CliGuy $I)
+    /**
+     * @param CliGuy $I
+     */
+    protected function moveToIncluded(\CliGuy $I)
     {
         $I->amInPath('tests/data/included');
+    }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function runSuitesFromIncludedConfigs(\CliGuy $I)
+    {
         $I->executeCommand('run');
         $I->seeInShellOutput('[Jazz]');
         $I->seeInShellOutput('Jazz.functional Tests');
@@ -19,9 +30,12 @@ class IncludedCest {
         $I->seeInShellOutput('Shire.functional Tests');
     }
 
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
     public function runIncludedWithXmlOutput(\CliGuy $I)
     {
-        $I->amInPath('tests/data/included');
         $I->executeCommand('run --xml');
         $I->amInPath('_log');
         $I->seeFileFound('report.xml');
@@ -33,9 +47,12 @@ class IncludedCest {
         $I->seeInThisFile('<testcase file="PianistCept.php"');
     }
 
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
     public function runIncludedWithHtmlOutput(\CliGuy $I)
     {
-        $I->amInPath('tests/data/included');
         $I->executeCommand('run --html');
         $I->amInPath('_log');
         $I->seeFileFound('report.html');
@@ -47,9 +64,12 @@ class IncludedCest {
         $I->seeInThisFile('Shire.functional Tests');
     }
 
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
     public function runIncludedWithCoverage(\CliGuy $I)
     {
-        $I->amInPath('tests/data/included');
         $I->executeCommand('run --xml --coverage');
         $I->amInPath('_log');
         $I->seeFileFound('coverage.xml');
