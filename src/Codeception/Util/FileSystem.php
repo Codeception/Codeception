@@ -22,6 +22,10 @@ class FileSystem
                 }
                 rmdir($dir);
             } else {
+                $file = (string)$path;
+                if (basename($file) === '.gitignore') {
+                    continue;
+                }
                 unlink($path->__toString());
             }
         }

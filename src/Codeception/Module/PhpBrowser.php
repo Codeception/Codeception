@@ -243,6 +243,4 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         }
         $this->assertNull($node->getAttribute('checked'));
     }
-
-
 }
