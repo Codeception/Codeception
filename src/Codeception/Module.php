@@ -289,6 +289,18 @@ abstract class Module
     }
 
     /**
+     * Checks that variable is not NULL
+     *
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertNotNull($actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNotNull($actual, $message);
+    }
+
+
+    /**
      * Checks that condition is positive.
      *
      * @param $condition

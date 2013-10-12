@@ -23,7 +23,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * Maintainer: **davert**
  * * Stability: **alpha**
  * * Contact: davert.codecept@mailican.com
- * * Based on [faebook php-webdriver](https://github.com/facebook/php-webdriver)
+ * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
  * ## Configuration
  *

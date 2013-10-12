@@ -8,6 +8,10 @@ Note that all method take CSS selectors to fetch elements.
 
 On test failure the browser window screenshot will be saved to log directory
 
+<div class="alert alert-info">
+One day this module will be replaced with WebDriver module.
+</div>
+
 ## Installation
 
 Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
@@ -195,21 +199,10 @@ Clicks with right button on link or button or any node found by CSS or XPath
 ### dontSee
 
 
-Check if current page doesn't contain the text specified.
-Specify the css selector to match only specific region.
+ * param string $text
+ * param string $selector
 
-Examples:
-
-```php
-<?php
-$I->dontSee('Login'); // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1'); // with XPath
-?>
-```
-
- * param $text
- * param null $selector
+ * return void
 
 
 ### dontSeeCheckboxIsChecked
