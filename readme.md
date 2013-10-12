@@ -1,6 +1,6 @@
-# Codeception
+# Codeception [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception) [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
 
-**Modern PHP Testing for everyone** [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception) [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
+**Modern PHP Testing for everyone** 
 
 Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
