@@ -76,12 +76,8 @@ php codecept.phar
 
 ### Composer
 
-Add `"codeception/codeception": "*"` into `composer.json`.
-
-Run 
-
 ```
-php composer.phar install
+php composer.phar require "codeception/codeception:*"
 ```
 
 Read Also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
