@@ -65,6 +65,27 @@ Run CLI utility:
 php codecept.phar
 ```
 
+Copy it into your project.
+
+Run CLI utility:
+
+```
+php codecept.phar
+```
+
+
+### Composer
+
+Add `"codeception/codeception": "*"` into `composer.json`.
+
+Run 
+
+```
+php composer.phar install
+```
+
+Read Also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
+
 ## Getting Started
 
 If you successfully installed Codeception, run this command:
