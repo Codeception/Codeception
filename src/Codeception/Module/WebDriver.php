@@ -101,7 +101,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         }
     }
 
-    public function _failed(\Codeception\TestCase $test)
+    public function _failed(\Codeception\TestCase $test, $fail)
     {
         $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
         $this->debug("Screenshot was saved into 'log' dir");
