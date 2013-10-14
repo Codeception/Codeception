@@ -14,7 +14,11 @@ class Goutte extends Client {
     {
         $server = $request->getServer();
         $uri = Url::factory($request->getUri());
-        $server['HTTP_HOST'] = $uri->getHost() . ':' . $uri->getPort();
+        $server['HTTP_HOST'] = $uri->getHost();
+        $port = $uri->getPort();
+        if ($port) {
+            $server['HTTP_HOST'] .= (':' . $port);
+        }
 
         return new Request(
             $request->getUri(),
