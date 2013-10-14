@@ -336,7 +336,7 @@ class SOAP extends \Codeception\Module
      * @param $code
      */
     public function seeResponseCodeIs($code) {
-        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getResponse()->getStatus(), "soap response code matches expected");
+        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getInternalResponse()->getStatus(), "soap response code matches expected");
     }
 
     /**
@@ -466,7 +466,7 @@ class SOAP extends \Codeception\Module
     protected function processExternalRequest($action, $body)
     {
         $this->processRequest($action, $body);
-        return $this->client->getResponse()->getContent();
+        return $this->client->getInternalResponse()->getContent();
     }
 
 }
