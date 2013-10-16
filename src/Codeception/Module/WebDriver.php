@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\TestRuntime;
 use Codeception\Util\Locator;
 use Codeception\Util\WebInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -906,6 +907,11 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function wait($timeout)
     {
+        if ($timeout >= 1000) {
+            throw new TestRuntime("
+                Waiting for more then 1000 seconds: 16.6667 mins\n
+                Please note that wait method accepts number of seconds as parameter.");
+        }
         sleep($timeout);
     }
 
