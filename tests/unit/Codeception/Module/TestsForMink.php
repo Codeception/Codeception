@@ -447,7 +447,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     {
         $this->shouldFail();
         $this->module->amOnPage('/info');
-        $this->module->dontSeeElement('.notice');
+        $this->module->dontSeeElement('#back');
     }
 
     public function testSeeInFieldFail()
@@ -481,6 +481,13 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         $this->module->amOnPage('/form/field');
         $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
+    }
+
+    public function testSelectInvalidOptionFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption('#age','13-22');
     }
 
     protected function shouldFail()

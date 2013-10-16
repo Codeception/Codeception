@@ -434,22 +434,26 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             return;
         }
 
-        $select = new \WebDriverSelect($el);
-        if ($select->isMultiple()) $select->deselectAll();
-        if (!is_array($option)) $option = array($option);
+        $wdSelect = new \WebDriverSelect($el);
+        if ($wdSelect->isMultiple()) {
+            $wdSelect->deselectAll();
+        }
+        if (!is_array($option)) {
+            $option = array($option);
+        }
 
         $matched = false;
 
         foreach ($option as $opt) {
             try {
-                $select->selectByVisibleText($opt);
+                $wdSelect->selectByVisibleText($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
         if ($matched) return;
         foreach ($option as $opt) {
             try {
-            $select->selectByValue($opt);
+                $wdSelect->selectByValue($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
@@ -466,7 +470,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         $el = $this->findField($select);
 
-        $select = new \WebDriverSelect($el);
+        $wdSelect = new \WebDriverSelect($el);
 
         if (!is_array($option)) $option = array($option);
 
@@ -474,12 +478,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         foreach ($option as $opt) {
             try {
-                $select->deselectByVisibleText($opt);
+                $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
 
             try {
-                $select->deselectByValue($opt);
+                $wdSelect->deselectByValue($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
 
