@@ -23,7 +23,7 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 * browser *required* - browser that would be launched
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
-* restart - set to true to share brower sesssion between tests, or set to false to create a session per test
+* restart - set to false to share browser sesssion between tests (by default), or set to true to create a session per test
 * wait - set the implicit wait (5 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
@@ -508,7 +508,7 @@ Moves forward in history
 ### moveMouseOver
 
 
-Move mouse over the first element matched by css, xPath or regex on page
+Move mouse over the first element matched by css or xPath on page
 
 https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
 
