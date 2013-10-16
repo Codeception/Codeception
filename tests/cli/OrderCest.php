@@ -21,13 +21,20 @@ class OrderCest {
     }
 
 
-    public function checkTwoFiles(CliGuy $I)
+    public function checkSimpleFiles(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run order --no-exit');
+        $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BIBSBSBS([BST][BSTF][BST])");
+        $I->seeFileContentsEqual("BIBSBSBSB([BST][BSTF][BST])");
     }
 
-
+    public function checkCodeceptionTest(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order CodeTest.php --no-exit');
+        $I->seeFileFound('order.txt','tests/_log');
+        $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap, test, fail, after, afterSuite');
+        $I->seeFileContentsEqual("BIBSBSBSB([BST][BSTF][BST])");
+    }
 }
