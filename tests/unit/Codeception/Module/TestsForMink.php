@@ -422,18 +422,32 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Text not here');
     }
 
-    public function testSeeInElementFails()
+    public function testSeeInsideFails()
     {
         $this->shouldFail();
         $this->module->amOnPage('/info');
         $this->module->see('woups','p');
     }
 
-    public function testDontSeeInElementFails()
+    public function testDontSeeInInsideFails()
     {
         $this->shouldFail();
         $this->module->amOnPage('/info');
         $this->module->dontSee('interesting','p');
+    }
+
+    public function testSeeElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->seeElement('.alert');
+    }
+
+    public function testDontSeeElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeElement('.notice');
     }
 
     public function testSeeInFieldFail()
