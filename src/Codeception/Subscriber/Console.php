@@ -182,8 +182,13 @@ class Console implements EventSubscriberInterface
         }
 
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-        $failMessage = $this->message($failedTest->getFilename())->style('bold');
-        $failMessage->append("\n")->append($failToString)->writeln();
+        $this->message(get_class($failedTest))
+            ->append('::')
+            ->append($failedTest->getName())
+            ->style('bold')
+            ->append("\n")
+            ->append($failToString)
+            ->writeln();
 
         $this->printException($fail);
     }
