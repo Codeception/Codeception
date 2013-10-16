@@ -19,10 +19,16 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
+ * ## Migration Guide (Selenium2 -> WebDriver)
+ *
+ * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ * 
+ *
+ *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **alpha**
+ * * Stability: **beta**
  * * Contact: davert.codecept@mailican.com
  * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
@@ -47,8 +53,6 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
- *
- *
  *
  *
  * Class WebDriver
