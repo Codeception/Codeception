@@ -197,4 +197,11 @@ class WebDriverTest extends TestsForMink
         $this->assertGreaterThanOrEqual($time+3, time());
     }
 
+    public function testFailed()
+    {
+        $webDebug = Stub::make('Codeception\Module\WebDebug');
+        $webDebug->expects($this->once())->method('_saveScreenshot')->will($this->returnValue(null));
+        $webDebug->_failed(Stub::make('Codeception\TestCase'), new PHPUnit_Framework_AssertionFailedError());
+    }
+
 }

@@ -56,6 +56,15 @@ class Run extends Base
         if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         $options['verbosity'] = $output->getVerbosity();
 
+        if (!extension_loaded('curl')) {
+            throw new \Exception(
+                "Codeception requires CURL extension installed to make tests run\n".
+                "If you are not sure, how to install CURL, pls refer to StackOverflow\n\n".
+                "Notice: PHP for Apache/Nginx and CLI can have different php.ini files.\n".
+                "Please make sure that your PHP you run from console has CURL enabled."
+            );
+        }
+
         $config = Configuration::config($options['config']);
 
         $suite = $input->getArgument('suite');

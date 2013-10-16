@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\TestRuntime;
 use Codeception\Util\Locator;
 use Codeception\Util\WebInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -18,10 +19,16 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
+ * ## Migration Guide (Selenium2 -> WebDriver)
+ *
+ * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ * 
+ *
+ *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **alpha**
+ * * Stability: **beta**
  * * Contact: davert.codecept@mailican.com
  * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
@@ -46,8 +53,6 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
- *
- *
  *
  *
  * Class WebDriver
@@ -101,7 +106,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
         }
     }
 
-    public function _failed(\Codeception\TestCase $test)
+    public function _failed(\Codeception\TestCase $test, $fail)
     {
         $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
         $this->debug("Screenshot was saved into 'log' dir");
@@ -434,22 +439,26 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             return;
         }
 
-        $select = new \WebDriverSelect($el);
-        if ($select->isMultiple()) $select->deselectAll();
-        if (!is_array($option)) $option = array($option);
+        $wdSelect = new \WebDriverSelect($el);
+        if ($wdSelect->isMultiple()) {
+            $wdSelect->deselectAll();
+        }
+        if (!is_array($option)) {
+            $option = array($option);
+        }
 
         $matched = false;
 
         foreach ($option as $opt) {
             try {
-                $select->selectByVisibleText($opt);
+                $wdSelect->selectByVisibleText($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
         if ($matched) return;
         foreach ($option as $opt) {
             try {
-            $select->selectByValue($opt);
+                $wdSelect->selectByValue($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
         }
@@ -466,7 +475,7 @@ class WebDriver extends \Codeception\Module implements WebInterface {
     {
         $el = $this->findField($select);
 
-        $select = new \WebDriverSelect($el);
+        $wdSelect = new \WebDriverSelect($el);
 
         if (!is_array($option)) $option = array($option);
 
@@ -474,12 +483,12 @@ class WebDriver extends \Codeception\Module implements WebInterface {
 
         foreach ($option as $opt) {
             try {
-                $select->deselectByVisibleText($opt);
+                $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
 
             try {
-                $select->deselectByValue($opt);
+                $wdSelect->deselectByValue($opt);
                 $matched = true;
             } catch (\NoSuchElementWebDriverError $e) {}
 
@@ -902,6 +911,11 @@ class WebDriver extends \Codeception\Module implements WebInterface {
      */
     public function wait($timeout)
     {
+        if ($timeout >= 1000) {
+            throw new TestRuntime("
+                Waiting for more then 1000 seconds: 16.6667 mins\n
+                Please note that wait method accepts number of seconds as parameter.");
+        }
         sleep($timeout);
     }
 

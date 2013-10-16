@@ -1,6 +1,6 @@
-# Codeception
+# Codeception [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception) [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
 
-**Modern PHP Testing for everyone**
+**Modern PHP Testing for everyone** 
 
 Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
@@ -9,16 +9,14 @@ Powered by PHPUnit 3.7.
 
 | release |  branch  |  status  |
 | ------- | -------- | -------- |
-| **Stable** | **1.6** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.6)](http://travis-ci.org/Codeception/Codeception) [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
-| **Features** | **1.7** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.7)](http://travis-ci.org/Codeception/Codeception) [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception)
-| **Development** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
-
+| **Stable** | **1.6** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.6)](http://travis-ci.org/Codeception/Codeception)
+| **Current** | **1.7** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.7)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
+| **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://d2xishtp1ojlk0.cloudfront.net/d/2880469)](http://depending.in/Codeception/Codeception)
 
 #### Contributions
 
 **Bugfixes should be sent to to current stable branch, which is the same as major version number.**
-Breaking features and major improvements should be sent into `master`.
-When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
+Breaking features and major improvements should be sent into `master`. When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
 
 ### At a Glance
 
@@ -66,6 +64,23 @@ Run CLI utility:
 ```
 php codecept.phar
 ```
+
+Copy it into your project.
+
+Run CLI utility:
+
+```
+php codecept.phar
+```
+
+
+### Composer
+
+```
+php composer.phar require "codeception/codeception:*"
+```
+
+Read Also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
 
 ## Getting Started
 
