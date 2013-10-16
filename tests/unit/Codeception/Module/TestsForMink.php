@@ -483,13 +483,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
     }
 
-    public function testSelectInvalidOptionFails()
-    {
-        $this->shouldFail();
-        $this->module->amOnPage('/form/select');
-        $this->module->selectOption('#age','13-22');
-    }
-
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
