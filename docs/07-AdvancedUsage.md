@@ -95,8 +95,8 @@ Same annotation can be used in Cest classes.
 
 ## Cest Classes
 
-In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use Cest format.
-It is very simple and is fully compatible with Cept scenarios. It means If you feel like your test is long enough and you want to split it - you can easily move it into class. 
+In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use the Cest format.
+It is very simple and is fully compatible with Cept scenarios. It means if you feel like your test is long enough and you want to split it - you can easily move it into classes. 
 
 You can start Cest file by running the command:
 
