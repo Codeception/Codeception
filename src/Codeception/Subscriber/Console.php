@@ -174,39 +174,59 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        $this->output->write($e->getCount() . ") ");
 
-        $feature = $failedTest->getScenario()->getFeature();
-        if ($e->getCount()) {
-            $this->output->write($e->getCount() . ") ");
+        if ($e->getTest() instanceof ScenarioDriven) {
+            $this->printScenarioFail($failedTest, $fail);
+            return;
         }
+
+        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        $failMessage = $this->message($failedTest->getFilename())->style('bold');
+        $failMessage->append("\n")->append($failToString)->writeln();
+
+        $this->printException($fail);
+    }
+
+    protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
+    {
+        $feature = $failedTest->getScenario()->getFeature();
+        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+        $fail_message = $this->message($failedTest->getFilename())->style('bold');
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
             $this->printSkippedTest($feature, $failedTest->getFileName(), $failToString);
             return;
         }
-
-        $fail_message = $this->message($failedTest->getFilename())->style('bold');
         if ($feature) {
             $fail_message->prepend("Failed to $feature in ");
         }
         $fail_message->writeln();
         $this->printScenarioTrace($failedTest, $failToString);
-        $this->printException($fail);
-
+        if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
+            $this->printException($fail);
+            return;
+        }
+        if (!$fail instanceof \PHPUnit_Framework_AssertionFailedError) {
+            $this->printException($fail);
+            return;
+        }
     }
 
     public function printException(\Exception $e)
     {
         static $limit = 10;
+        static $bottomCut = -9;
         $this->message("[%s]")->with(get_class($e))->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
-                : OutputInterface::VERBOSITY_VERBOSE
+                : OutputInterface::VERBOSITY_NORMAL
         );
 
+        $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
+        array_splice($trace, $bottomCut);
         $i = 0;
-        foreach ($e->getTrace() as $step) {
+        foreach ($trace as $step) {
             $i++;
             $message = $this->message($i)->prepend('#')->width(4);
             if (!isset($step['file']) && isset($step['class'])) {
@@ -216,11 +236,7 @@ class Console implements EventSubscriberInterface
             if (isset($step['file'])) {
                 $message->append($step['file'] . ':' . $step['line']);
             }
-            $message->writeln(
-                $e instanceof \PHPUnit_Framework_AssertionFailedError
-                    ? OutputInterface::VERBOSITY_DEBUG
-                    : OutputInterface::VERBOSITY_VERBOSE
-            );
+            $message->writeln();
 
             if ($i >= $limit) {
                 break;
