@@ -10,10 +10,16 @@ New generation Selenium2 module.
 Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
+## Migration Guide (Selenium2 -> WebDriver)
+
+* `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+
+
+
 ## Status
 
 * Maintainer: **davert**
-* Stability: **alpha**
+* Stability: **beta**
 * Contact: davert.codecept@mailican.com
 * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
 
@@ -23,7 +29,7 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 * browser *required* - browser that would be launched
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
-* restart - set to true to share brower sesssion between tests, or set to false to create a session per test
+* restart - set to false to share browser sesssion between tests (by default), or set to true to create a session per test
 * wait - set the implicit wait (5 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
@@ -38,8 +44,6 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
              wait: 10
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
-
-
 
 
 Class WebDriver
@@ -508,7 +512,7 @@ Moves forward in history
 ### moveMouseOver
 
 
-Move mouse over the first element matched by css, xPath or regex on page
+Move mouse over the first element matched by css or xPath on page
 
 https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
 

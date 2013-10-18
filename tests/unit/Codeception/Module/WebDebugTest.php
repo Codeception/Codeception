@@ -29,5 +29,11 @@ class WebDebugTest extends \PHPUnit_Framework_TestCase {
         $this->module->makeAScreenshot("saved");
     }
 
+    public function testFailed()
+    {
+        $webDebug = Stub::make('Codeception\Module\WebDebug');
+        $webDebug->expects($this->once())->method('_saveScreenshot')->will($this->returnValue(null));
+        $webDebug->_failed(Stub::make('Codeception\TestCase'), new PHPUnit_Framework_AssertionFailedError());
+    }
 
 }

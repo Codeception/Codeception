@@ -37,5 +37,12 @@ class OrderCest {
         $I->seeFileContentsEqual("BIB([B0123456])");
     }
 
-
+    public function checkCodeceptionTest(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order CodeTest.php --no-exit');
+        $I->seeFileFound('order.txt','tests/_log');
+        $I->expect('global bootstrap, initialization, beforeSuite, bootstrap, before, after, afterSuite');
+        $I->seeFileContentsEqual("BI(B[C])");
+    }
 }
