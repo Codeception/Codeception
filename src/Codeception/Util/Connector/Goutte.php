@@ -30,4 +30,9 @@ class Goutte extends Client {
             $request->getContent());
     }
 
+    public function resetAuth()
+    {
+        $this->auth = null;
+    }
+
 }
