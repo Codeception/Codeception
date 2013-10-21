@@ -147,7 +147,7 @@ class Symfony2 extends \Codeception\Util\Framework
     {
         if (!$this->kernel->getContainer()->has('profiler')) return null;
         $profiler = $this->kernel->getContainer()->get('profiler');
-        return $profiler->loadProfileFromResponse($this->client->getResponse());
+        return $profiler->loadProfileFromResponse($this->client->getInternalResponse());
     }
 
     protected function debugResponse()

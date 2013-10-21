@@ -105,7 +105,7 @@ class XMLRPC extends \Codeception\Module
      * @param $num
      */
     public function seeResponseCodeIs($num) {
-        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getResponse()->getStatus());
+        \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getInternalResponse()->getStatus());
     }
 
     /**
@@ -144,7 +144,7 @@ class XMLRPC extends \Codeception\Module
         $this->debugSection('Request', $url . PHP_EOL . $requestBody);
         $this->client->request('POST', $url, array(), array(), array(), $requestBody);
 
-        $this->response = $this->client->getResponse()->getContent();
+        $this->response = $this->client->getInternalResponse()->getContent();
         $this->debugSection('Response', $this->response);
 
     }
