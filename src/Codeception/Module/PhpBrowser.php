@@ -60,13 +60,18 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
     );
 
     /**
+     * @var \Codeception\Util\Connector\Goutte
+     */
+    protected $goutte;
+
+    /**
      * @var \Guzzle\Http\Client
      */
     public $guzzle;
 
     public function _initialize() {
-        $client = new Goutte();
-        $driver = new \Behat\Mink\Driver\GoutteDriver($client);
+        $this->goutte = new Goutte();
+        $driver = new \Behat\Mink\Driver\GoutteDriver($this->goutte);
 
         // build up a Guzzle friendly list of configuration options
         // passed in both from our defaults and the respective
@@ -82,9 +87,13 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
             $curl_config['ssl.certificate_authority'] = false;
         }
 
-        $client->setClient($this->guzzle = new Client('', $curl_config));
+        $this->goutte->setClient($this->guzzle = new Client('', $curl_config));
         $this->session = new \Behat\Mink\Session($driver);
         parent::_initialize();
+    }
+
+    public function _before() {
+        $this->goutte->resetAuth();
     }
 
     public function submitForm($selector, $params) {
