@@ -5,6 +5,7 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
 use Codeception\Util\Locator;
 use Codeception\Util\WebInterface;
+use Codeception\Util\RemoteInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
@@ -58,7 +59,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements WebInterface {
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
@@ -120,6 +121,10 @@ class WebDriver extends \Codeception\Module implements WebInterface {
             unset($this->webDriver);
         }
     }
+    
+    public function _getResponseCode() {}
+
+    public function _sendRequest($url) {}
 
     public function amOnSubdomain($subdomain)
     {
