@@ -20,7 +20,7 @@ namespace Codeception\Module;
  *     enabled: [FileSystem, TestHelper, Phalcon1]
  *     config:
  *         Phalcon1
- *             entryScript: 'config/application.php'
+ *             application: 'config/application.php'
  *             cleanup: true 
  * </pre>
  *
