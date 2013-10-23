@@ -6,6 +6,7 @@ use Behat\Mink\Driver\GoutteDriver;
 use Codeception\Util\Connector\Goutte;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
+use Codeception\TestCase;
 use Symfony\Component\BrowserKit\Request;
 
 /**
@@ -92,7 +93,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         parent::_initialize();
     }
 
-    public function _before() {
+    public function _before(TestCase $test) {
         $this->goutte->resetAuth();
     }
 
