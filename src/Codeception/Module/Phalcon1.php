@@ -37,7 +37,11 @@ class Phalcon1 extends \Codeception\Util\Framework
         'cleanup' => true,
     );
 
-    private $di;
+
+    /**
+     * @var \Phalcon\DiInterface
+     */
+    public $di;
 
     public function _before(\Codeception\TestCase $test)
     {
