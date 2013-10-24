@@ -2,6 +2,9 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleConfig;
+use Codeception\Util\Connector\PhalconMemorySession;
+
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
  *
@@ -21,7 +24,7 @@ namespace Codeception\Module;
  *     config:
  *         Phalcon1
  *             application: 'config/application.php'
- *             cleanup: true 
+ *             cleanup: true
  * </pre>
  *
  * ## Status
@@ -43,14 +46,35 @@ class Phalcon1 extends \Codeception\Util\Framework
      */
     public $di;
 
+    public function _initialize()
+    {
+        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['application'])) {
+            throw new ModuleConfig(__CLASS__,
+                "Bootstrap file does not exists in ".$this->config['application']."\n".
+                "Please create the bootstrap file that return Application object\n".
+                "And specify path to it with 'application' config\n\n".
+                "Sample bootstrap: \n\n<?php\n".
+                '$config = include __DIR__ . "/config.php";'."\n".
+                'include __DIR__ . "/loader.php";'."\n".
+                '$di = new \Phalcon\DI\FactoryDefault();'."\n".
+                'include __DIR__ . "/services.php";'."\n".
+                'return new \Phalcon\Mvc\Application($di);'
+            );
+        }
+        $this->client = new \Codeception\Util\Connector\Phalcon1();
+
+    }
+
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new \Codeception\Util\Connector\Phalcon1();
         $this->client->setApplication(function () {
             $application = require \Codeception\Configuration::projectDir() . $this->config['application'];
             $di = $application->getDi();
             if (isset($this->di['db'])) {
                 $di['db'] = $this->di['db'];
+            }
+            if (isset($this->di['session'])) {
+                $di['session'] = $this->di['session'];
             }
             return $application;
         });
@@ -63,6 +87,10 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->di = $application->getDi();
         \Phalcon\DI::reset();
         \Phalcon\DI::setDefault($this->di);
+
+        if (isset($this->di['session'])) {
+            $this->di['session'] = new PhalconMemorySession();
+        }
 
         if ($this->config['cleanup'] && isset($this->di['db'])) {
             $this->di['db']->setNestedTransactionsWithSavepoints(true);
@@ -80,5 +108,10 @@ class Phalcon1 extends \Codeception\Util\Framework
 
         $this->di = null;
         \Phalcon\DI::reset();
+    }
+
+    public function haveInSession($key, $val)
+    {
+        $this->di->get('session')->set($key, $val);
     }
 }

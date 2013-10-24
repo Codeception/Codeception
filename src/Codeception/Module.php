@@ -72,10 +72,19 @@ abstract class Module
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
-            throw new ModuleConfig(get_class($this),"
+            throw new ModuleConfig($this->getName(),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
                 Update configuration and set all required fields\n\n
         ");
+    }
+
+    public function getName()
+    {
+        $module = get_class($this);
+         if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
+             $module = $matches[1];
+         }
+         return $module;
     }
 
     public function _hasRequiredFields()
@@ -358,7 +367,7 @@ abstract class Module
     }
 
     protected function getModule($name) {
-        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module(__CLASS__, "Module $name couldn't be connected");
+        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module($this->getName(), "Module $name couldn't be connected");
         return \Codeception\SuiteManager::$modules[$name];
     }
 

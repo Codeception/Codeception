@@ -2,6 +2,7 @@
 namespace Codeception\Subscriber;
 
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\SuiteManager;
 use Codeception\TestCase\ScenarioDriven;
 use Codeception\TestCase;
 use Codeception\Util\Console\Message;
@@ -36,9 +37,19 @@ class Console implements EventSubscriberInterface
         $this->message("%s Tests (%d) ")
             ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
-            ->prepend("\n")
             ->width(array_sum($this->columns), '-')
+            ->prepend("\n")
             ->writeln();
+
+        $message = $this->message(implode(', ',array_map(function ($module) {
+            return $module->getName();
+        }, SuiteManager::$modules)));
+        $message->style('info')
+            ->prepend('Modules: ')
+            ->writeln(OutputInterface::VERBOSITY_VERBOSE);
+        
+        $this->message('')->width(array_sum($this->columns), '-')->writeln(OutputInterface::VERBOSITY_VERBOSE);
+
     }
 
     // triggered for all tests
@@ -222,7 +233,7 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
         static $bottomCut = -9;
-        $this->message("[%s]")->with(get_class($e))->block('error')->writeln(
+        $this->message("[%s] %s")->with(get_class($e), $e->getMessage())->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
                 : OutputInterface::VERBOSITY_NORMAL

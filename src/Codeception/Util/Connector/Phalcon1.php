@@ -72,11 +72,12 @@ class Phalcon1 extends Client
         $_GET['_url'] = $uri;
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $di['request'] = Stub::make($di->get('request'), array(
-            'getRawBody' => function () {
-                return $this->request->getContent();
-            },
-        ));
+//        $di['request'] = Stub::make($di->get('request'), array(
+//            'getRawBody' => function () {
+//                return $this->request->getContent();
+//            },
+//        ));
+        $di['request'] = Stub::make($di->get('request'), array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();
 
@@ -92,4 +93,51 @@ class Phalcon1 extends Client
             $status ? $status : 200,
             is_array($headers) ? $headers : array());
     }
-} 
+}
+
+class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\Session\AdapterInterface
+{
+    private $isStarted = true;
+    private $data = array();
+
+    public function start()
+    {
+        $this->isStarted = true;
+    }
+
+    public function get($index, $defaultValue = null)
+    {
+        return isset($this->data[$index]) ? $this->data[$index] : $defaultValue;
+    }
+
+    public function set($index, $value)
+    {
+        $this->data[$index] = $value;
+    }
+
+    public function has($index)
+    {
+        return isset($this->data[$index]);
+    }
+
+    public function remove($index)
+    {
+        unset($this->data[$index]);
+    }
+
+    public function getId()
+    {
+        return 'test';
+    }
+
+    public function isStarted()
+    {
+        return $this->isStarted;
+    }
+
+    public function destroy()
+    {
+        $this->isStarted = false;
+        $this->data = array();
+    }
+}
