@@ -106,7 +106,7 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        Autoload::registerSuffix('Helper', \Codeception\Configuration::helpersDir());
+        Autoload::registerSuffix('Helper', self::helpersDir());
     }
 
     protected static function loadSuites()
@@ -175,6 +175,13 @@ class Configuration
         }
 
         return $modules;
+    }
+
+    public static function isExtensionEnabled($extensionName)
+    {
+        return isset(self::$config['extensions'])
+            && isset(self::$config['extensions']['enabled'])
+            && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     public static function actions($modules)
