@@ -1262,8 +1262,15 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             case "input":
                 $type = $el->getAttribute('type');
 
-                if ($type == 'radio' || $type == 'checkbox') {
-                    $this->checkOption($value);
+                if ($type == 'checkbox') {
+                    //Find by value or css,id,xpath
+                    $field = $this->findCheckable($this->webDriver, $value, true);
+                    if (!$field) throw new ElementNotFound($value, "Checkbox or Radio by Label or CSS or XPath");
+                    if ($field->isSelected()) return;
+                    $field->click();
+                    return;
+                } elseif ($type == 'radio') {
+                    $this->selectOption($field, $value);
                     return;
                 } else {
                     $el->sendKeys($value);
@@ -1272,7 +1279,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 break;
             default:
         }
-        
+
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
     }
 }
