@@ -87,6 +87,9 @@ class Phalcon1 extends Client
         $headersProperty->setAccessible(true);
         $headers = $headersProperty->getValue($headers);
 
-        return new Response($response->getContent(), $status ? $status : 200, $headers);
+        return new Response(
+            $response->getContent(),
+            $status ? $status : 200,
+            is_array($headers) ? $headers : array());
     }
 } 
