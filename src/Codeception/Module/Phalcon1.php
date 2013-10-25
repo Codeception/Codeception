@@ -117,6 +117,16 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->di->get('session')->set($key, $val);
     }
 
+    public function seeInSession($key, $value = null)
+   	{
+   		if (is_null($value)) {
+   			$this->assertTrue($this->di['session']->has($key));
+            return;
+   		}
+        $this->assertEquals($value, $this->di['session']->get($key));
+   	}
+
+
     public function haveRecord($model, $attributes = array())
     {
         $record = $this->getModelRecord($model);
@@ -131,6 +141,29 @@ class Phalcon1 extends \Codeception\Util\Framework
 
     public function seeRecord($model, $attributes = array())
     {
+        $record = $this->findRecord($model, $attributes);
+        if (!$record) {
+            $this->fail("Couldn't find $model with ".json_encode($attributes));
+        }
+        $this->debugSection($model, json_encode($record));
+    }
+
+    public function dontSeeRecord($model, $attributes = array())
+    {
+        $record = $this->findRecord($model, $attributes);
+        $this->debugSection($model, json_encode($record));
+        if ($record) {
+            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+        }
+    }
+
+    public function grabRecord($model, $attributes = array())
+    {
+        return $this->findRecord($model, $attributes);
+    }
+
+    protected function findRecord($model, $attributes = array())
+    {
         $this->getModelRecord($model);
         $query = array();
         foreach ($attributes as $key => $value) {
@@ -138,16 +171,7 @@ class Phalcon1 extends \Codeception\Util\Framework
         }
         $query = implode(' AND ', $query);
         $this->debugSection('Query', $query);
-        $record = call_user_func_array(array($model, 'findFirst'), array($query));
-        if (!$record) {
-            $this->fail("Couldn't find $model by query: '$query'");
-        }
-        $this->debugSection($model, json_encode($record));
-    }
-
-    public function grabRecord($model, $attributes = array())
-    {
-        
+        return call_user_func_array(array($model, 'findFirst'), array($query));
     }
 
     protected function getModelRecord($model)
