@@ -4,6 +4,7 @@ namespace Codeception\Util\Connector;
 
 use Symfony\Component\BrowserKit\Request,
     Symfony\Component\BrowserKit\Response,
+    Symfony\Component\BrowserKit\Cookie,
     Symfony\Component\BrowserKit\Client,
     Codeception\Util\Stub,
     Phalcon\DI;
@@ -12,11 +13,11 @@ class Phalcon1 extends Client
 {
     private $application;
 
-	/**
-	 * Set application by Phalcon\DI\Injectable, Closure or bootstrap file path 
+    /**
+     * Set application by Phalcon\DI\Injectable, Closure or bootstrap file path
      *
-	 * @param mixed application
-	 */
+     * @param mixed application
+     */
     public function setApplication($application)
     {
         $this->application = $application;
@@ -37,11 +38,11 @@ class Phalcon1 extends Client
         }
     }
 
-	/**
-	 *
-	 * @param \Symfony\Component\BrowserKit\Request $request
-	 * @return \Symfony\Component\BrowserKit\Response
-	 */
+    /**
+     *
+     * @param \Symfony\Component\BrowserKit\Request $request
+     * @return \Symfony\Component\BrowserKit\Response
+     */
     public function doRequest($request)
     {
         $application = $this->getApplication();
@@ -83,17 +84,44 @@ class Phalcon1 extends Client
         $headersProperty = new \ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);
         $headers = $headersProperty->getValue($headers);
+        if (!is_array($headers)) {
+            $headers = array();
+        }
+
+        $cookiesProperty = new \ReflectionProperty($di['cookies'], '_cookies');
+        $cookiesProperty->setAccessible(true);
+        $cookies = $cookiesProperty->getValue($di['cookies']);
+        if (is_array($cookies)) {
+            $restoredProperty = new \ReflectionProperty('\Phalcon\Http\Cookie', '_restored');
+            $restoredProperty->setAccessible(true);
+            $valueProperty = new \ReflectionProperty('\Phalcon\Http\Cookie', '_value');
+            $valueProperty->setAccessible(true);
+            foreach ($cookies as $name => $cookie) {
+                if (!$restoredProperty->getValue($cookie)) {
+                    $clientCookie = new Cookie(
+                        $name,
+                        $valueProperty->getValue($cookie),
+                        $cookie->getExpiration(),
+                        $cookie->getPath(),
+                        $cookie->getDomain(),
+                        $cookie->getSecure(),
+                        $cookie->getHttpOnly()
+                    );
+                    $headers['Set-Cookie'][] = (string)$clientCookie;
+                }
+            }
+        }
 
         return new Response(
             $response->getContent(),
             $status ? $status : 200,
-            is_array($headers) ? $headers : array());
+            $headers);
     }
 }
 
 class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\Session\AdapterInterface
 {
-    private $isStarted = true;
+    private $isStarted = false;
     private $data = array();
 
     public function start()
