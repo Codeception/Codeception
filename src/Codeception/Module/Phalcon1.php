@@ -130,12 +130,12 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->di = null;
         \Phalcon\DI::reset();
 
-		$_SESSION = array();
-		$_FILES = array();
-		$_GET = array();
-		$_POST = array();
-		$_COOKIE = array();
-		$_REQUEST = array();
+        $_SESSION = array();
+        $_FILES = array();
+        $_GET = array();
+        $_POST = array();
+        $_COOKIE = array();
+        $_REQUEST = array();
     }
 
     /**
@@ -158,14 +158,14 @@ class Phalcon1 extends \Codeception\Util\Framework
      * @param null $value
      */
     public function seeInSession($key, $value = null)
-   	{
+    {
         $this->debugSection('Session', json_encode($this->di['session']->getAll()));
-   		if (is_null($value)) {
-   			$this->assertTrue($this->di['session']->has($key));
+        if (is_null($value)) {
+            $this->assertTrue($this->di['session']->has($key));
             return;
-   		}
+        }
         $this->assertEquals($value, $this->di['session']->get($key));
-   	}
+    }
 
     /**
      * Inserts record into the database.
@@ -187,7 +187,6 @@ class Phalcon1 extends \Codeception\Util\Framework
         $res = $record->save($attributes);
         if (!$res) {
             $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
-        
         }
         $this->debugSection($model, json_encode($record));
         return $record->id;
@@ -252,7 +251,7 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->getModelRecord($model);
         $query = array();
         foreach ($attributes as $key => $value) {
-            $query []= "$key = '$value'";
+            $query[] = "$key = '$value'";
         }
         $query = implode(' AND ', $query);
         $this->debugSection('Query', $query);
