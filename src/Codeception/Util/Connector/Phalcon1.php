@@ -72,11 +72,6 @@ class Phalcon1 extends Client
         $_GET['_url'] = $uri;
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-//        $di['request'] = Stub::make($di->get('request'), array(
-//            'getRawBody' => function () {
-//                return $this->request->getContent();
-//            },
-//        ));
         $di['request'] = Stub::make($di->get('request'), array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();

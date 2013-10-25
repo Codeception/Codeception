@@ -67,19 +67,21 @@ class Phalcon1 extends \Codeception\Util\Framework
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client->setApplication(function () {
-            $application = require \Codeception\Configuration::projectDir() . $this->config['application'];
+        $bootstrap = \Codeception\Configuration::projectDir() . $this->config['application'];
+        $this->client->setApplication(function () use ($bootstrap) {
+            $currentDi = \Phalcon\DI::getDefault();
+            $application = require $bootstrap;
             $di = $application->getDi();
-            if (isset($this->di['db'])) {
-                $di['db'] = $this->di['db'];
+            if (isset($currentDi['db'])) {
+                $di['db'] = $currentDi['db'];
             }
-            if (isset($this->di['session'])) {
-                $di['session'] = $this->di['session'];
+            if (isset($currentDi['session'])) {
+                $di['session'] = $currentDi['session'];
             }
             return $application;
         });
 
-        $application = require \Codeception\Configuration::projectDir() . $this->config['application'];
+        $application = require $bootstrap;
         if (!$application instanceof \Phalcon\DI\Injectable) {
             throw new \Exception('Bootstrap must return \Phalcon\DI\Injectable object');
         }
@@ -113,5 +115,50 @@ class Phalcon1 extends \Codeception\Util\Framework
     public function haveInSession($key, $val)
     {
         $this->di->get('session')->set($key, $val);
+    }
+
+    public function haveRecord($model, $attributes = array())
+    {
+        $record = $this->getModelRecord($model);
+        $res = $record->save($attributes);
+        if (!$res) {
+            $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
+        
+        }
+        $this->debugSection($model, json_encode($record));
+        return $record->id;
+    }
+
+    public function seeRecord($model, $attributes = array())
+    {
+        $this->getModelRecord($model);
+        $query = array();
+        foreach ($attributes as $key => $value) {
+            $query []= "$key = '$value'";
+        }
+        $query = implode(' AND ', $query);
+        $this->debugSection('Query', $query);
+        $record = call_user_func_array(array($model, 'findFirst'), array($query));
+        if (!$record) {
+            $this->fail("Couldn't find $model by query: '$query'");
+        }
+        $this->debugSection($model, json_encode($record));
+    }
+
+    public function grabRecord($model, $attributes = array())
+    {
+        
+    }
+
+    protected function getModelRecord($model)
+    {
+        if (!class_exists($model)) {
+            throw new \RuntimeException("Model $model does not exist");
+        }
+        $record = new $model;
+        if (!$record instanceof \Phalcon\Mvc\Model) {
+            throw new \RuntimeException("Model $model is not instance of \Phalcon\Mvc\Model");
+        }
+        return $record;
     }
 }

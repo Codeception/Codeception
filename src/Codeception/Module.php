@@ -2,6 +2,8 @@
 namespace Codeception;
 
 use Codeception\Exception\ModuleConfig;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Module
 {
@@ -43,6 +45,8 @@ abstract class Module
 
     protected $requiredFields = array();
 
+    private $debugOutput;
+
     public function __construct($config = null)
     {
         $this->backupConfig = $this->config;
@@ -50,6 +54,8 @@ abstract class Module
             $this->_setConfig($config);
         }
     }
+
+
     
     public function _setConfig($config)
     {
@@ -131,7 +137,8 @@ abstract class Module
     }
 
     protected function debug($message) {
-        $this->debugStack[] = $message;
+        $this->debugOutput->write($message);
+//        $this->debugStack[] = $message;
     }
 
     protected function debugSection($title, $message) {

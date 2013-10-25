@@ -12,7 +12,6 @@ class Output extends ConsoleOutput {
 
     protected $config = array(
         'colors' => true,
-        'defer_flush' => false,
         'verbosity' => self::VERBOSITY_NORMAL
     );
 
