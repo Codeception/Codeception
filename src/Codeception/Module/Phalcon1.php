@@ -11,8 +11,9 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *
  * The following configurations are required for this module:
  * <ul>
- * <li>application - the path of the application bootstrap file</li>
+ * <li>boostrap - the path of the application bootstrap file</li>
  * <li>cleanup - cleanup database (using transactions)</li>
+ * <li>savepoints - use savepoints to emulate nested transactions</li>
  * </ul>
  *
  * The application bootstrap file must return Application object but not call its handle() method.
@@ -24,8 +25,9 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *     enabled: [FileSystem, TestHelper, Phalcon1]
  *     config:
  *         Phalcon1
- *             application: 'config/application.php'
+ *             bootstrap: 'app/config/bootstrap.php'
  *             cleanup: true
+ *             savepoints: true
  * </pre>
  *
  * ## Status
@@ -37,8 +39,9 @@ use Codeception\Util\Connector\PhalconMemorySession;
 class Phalcon1 extends \Codeception\Util\Framework
 {
     protected $config = array(
-        'application' => 'config/application.php',
+        'bootstrap' => 'app/config/bootstrap.php',
         'cleanup' => true,
+        'savepoints' => true,
     );
 
 
@@ -49,11 +52,11 @@ class Phalcon1 extends \Codeception\Util\Framework
 
     public function _initialize()
     {
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['application'])) {
+        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['bootstrap'])) {
             throw new ModuleConfig(__CLASS__,
-                "Bootstrap file does not exists in ".$this->config['application']."\n".
+                "Bootstrap file does not exists in ".$this->config['bootstrap']."\n".
                 "Please create the bootstrap file that return Application object\n".
-                "And specify path to it with 'application' config\n\n".
+                "And specify path to it with 'bootstrap' config\n\n".
                 "Sample bootstrap: \n\n<?php\n".
                 '$config = include __DIR__ . "/config.php";'."\n".
                 'include __DIR__ . "/loader.php";'."\n".
@@ -68,19 +71,7 @@ class Phalcon1 extends \Codeception\Util\Framework
 
     public function _before(\Codeception\TestCase $test)
     {
-        $bootstrap = \Codeception\Configuration::projectDir() . $this->config['application'];
-        $this->client->setApplication(function () use ($bootstrap) {
-            $currentDi = \Phalcon\DI::getDefault();
-            $application = require $bootstrap;
-            $di = $application->getDi();
-            if (isset($currentDi['db'])) {
-                $di['db'] = $currentDi['db'];
-            }
-            if (isset($currentDi['session'])) {
-                $di['session'] = $currentDi['session'];
-            }
-            return $application;
-        });
+        $bootstrap = \Codeception\Configuration::projectDir() . $this->config['bootstrap'];
 
         $application = require $bootstrap;
         if (!$application instanceof \Phalcon\DI\Injectable) {
@@ -95,21 +86,56 @@ class Phalcon1 extends \Codeception\Util\Framework
             $this->di['session'] = new PhalconMemorySession();
         }
 
+        if (isset($this->di['cookies'])) {
+            $this->di['cookies']->useEncryption(false);
+        }
 
         if ($this->config['cleanup'] && isset($this->di['db'])) {
+            if ($this->config['savepoints']) {
+                $this->di['db']->setNestedTransactionsWithSavepoints(true);
+            }
             $this->di['db']->begin();
         }
+
+        $this->client->setApplication(function () use ($bootstrap) {
+            $currentDi = \Phalcon\DI::getDefault();
+            $application = require $bootstrap;
+            $di = $application->getDi();
+            if (isset($currentDi['db'])) {
+                $di['db'] = $currentDi['db'];
+            }
+            if (isset($currentDi['session'])) {
+                $di['session'] = $currentDi['session'];
+            }
+            if (isset($di['cookies'])) {
+                $di['cookies']->useEncryption(false);
+            }
+            return $application;
+        });
     }
 
     public function _after(\Codeception\TestCase $test)
     {
         if ($this->config['cleanup'] && isset($this->di['db'])) {
-            if ($this->di['db']->isUnderTransaction()) {
-                $this->di['db']->rollback();
+            while ($this->di['db']->isUnderTransaction()) {
+                $level = $this->di['db']->getTransactionLevel();
+                try {
+                    $this->di['db']->rollback(true);
+                } catch (\PDOException $e) {}
+                if ($level == $this->di['db']->getTransactionLevel()) {
+                    break;
+                }
             }
         }
         $this->di = null;
         \Phalcon\DI::reset();
+
+        $_SESSION = array();
+        $_FILES = array();
+        $_GET = array();
+        $_POST = array();
+        $_COOKIE = array();
+        $_REQUEST = array();
     }
 
     /**
@@ -132,14 +158,14 @@ class Phalcon1 extends \Codeception\Util\Framework
      * @param null $value
      */
     public function seeInSession($key, $value = null)
-   	{
+    {
         $this->debugSection('Session', json_encode($this->di['session']->getAll()));
-   		if (is_null($value)) {
-   			$this->assertTrue($this->di['session']->has($key));
+        if (is_null($value)) {
+            $this->assertTrue($this->di['session']->has($key));
             return;
-   		}
+        }
         $this->assertEquals($value, $this->di['session']->get($key));
-   	}
+    }
 
     /**
      * Inserts record into the database.
@@ -161,7 +187,6 @@ class Phalcon1 extends \Codeception\Util\Framework
         $res = $record->save($attributes);
         if (!$res) {
             $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
-        
         }
         $this->debugSection($model, json_encode($record));
         return $record->id;
@@ -226,7 +251,7 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->getModelRecord($model);
         $query = array();
         foreach ($attributes as $key => $value) {
-            $query []= "$key = '$value'";
+            $query[] = "$key = '$value'";
         }
         $query = implode(' AND ', $query);
         $this->debugSection('Query', $query);
