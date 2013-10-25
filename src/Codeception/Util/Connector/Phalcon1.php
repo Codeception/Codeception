@@ -69,7 +69,8 @@ class Phalcon1 extends Client
         $_REQUEST = $request->getParameters();
         $uri = str_replace('http://localhost','',$request->getUri());
         $_SERVER['REQUEST_URI'] = $uri;
-        $_GET['_url'] = $uri;
+        $_GET['_url'] = strtok($uri, '?');
+        $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $di['request'] = Stub::make($di->get('request'), array('getRawBody' => $request->getContent()));
