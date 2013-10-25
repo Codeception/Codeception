@@ -73,4 +73,9 @@ class PostgreSql extends Db
       $sequenceName = $table.'_id_seq';
       return $this->getDbh()->lastInsertId($sequenceName);
     }
+
+    public function getQuotedName($name)
+    {
+        return '"' . $name . '"';
+    }
 }
