@@ -7,6 +7,7 @@ use Codeception\TestCase\ScenarioDriven;
 use Codeception\TestCase;
 use Codeception\Util\Console\Message;
 use Codeception\Util\Console\Output;
+use Codeception\Util\Debug;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -27,6 +28,9 @@ class Console implements EventSubscriberInterface
         $this->debug = $options['debug'] || $options['verbosity'] === OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $options['steps'];
         $this->output = new Output($options);
+        if ($this->debug) {
+            Debug::setOutput($this->output);
+        }
     }
 
     // triggered for scenario based tests: cept, cest

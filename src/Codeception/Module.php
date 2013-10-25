@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Exception\ModuleConfig;
+use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -137,22 +138,11 @@ abstract class Module
     }
 
     protected function debug($message) {
-        $this->debugOutput->write($message);
-//        $this->debugStack[] = $message;
+        Debug::debug($message);
     }
 
     protected function debugSection($title, $message) {
         $this->debug("[$title] $message");
-    }
-
-    public function _clearDebugOutput() {
-        $this->debugStack = array();
-    }
-
-    public function _getDebugOutput() {
-        $debugStack = $this->debugStack;
-        $this->_clearDebugOutput();
-        return $debugStack;
     }
 
     protected function assert($arguments, $not = false) {
