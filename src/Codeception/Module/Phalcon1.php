@@ -3,6 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
+use Codeception\Step;
 use Codeception\Util\Connector\PhalconMemorySession;
 
 /**
@@ -94,8 +95,8 @@ class Phalcon1 extends \Codeception\Util\Framework
             $this->di['session'] = new PhalconMemorySession();
         }
 
+
         if ($this->config['cleanup'] && isset($this->di['db'])) {
-            $this->di['db']->setNestedTransactionsWithSavepoints(true);
             $this->di['db']->begin();
         }
     }
@@ -107,18 +108,32 @@ class Phalcon1 extends \Codeception\Util\Framework
                 $this->di['db']->rollback();
             }
         }
-
         $this->di = null;
         \Phalcon\DI::reset();
     }
 
+    /**
+     * Sets value to session. Use for authorization.
+     *
+     * @param $key
+     * @param $val
+     */
     public function haveInSession($key, $val)
     {
-        $this->di->get('session')->set($key, $val);
+        $this->di->get('session')->set($key, (string)$val);
+        $this->debugSection('Session', json_encode($this->di['session']->getAll()));
     }
 
+    /**
+     * Checks that session contains value.
+     * If value is `null` checks that session has key.
+     *
+     * @param $key
+     * @param null $value
+     */
     public function seeInSession($key, $value = null)
    	{
+        $this->debugSection('Session', json_encode($this->di['session']->getAll()));
    		if (is_null($value)) {
    			$this->assertTrue($this->di['session']->has($key));
             return;
@@ -126,7 +141,20 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->assertEquals($value, $this->di['session']->get($key));
    	}
 
-
+    /**
+     * Inserts record into the database.
+     *
+     * ``` php
+     * <?php
+     * $user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
+     * $I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
+     * ?>
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
     public function haveRecord($model, $attributes = array())
     {
         $record = $this->getModelRecord($model);
@@ -139,6 +167,16 @@ class Phalcon1 extends \Codeception\Util\Framework
         return $record->id;
     }
 
+    /**
+     * Checks that record exists in database.
+     *
+     * ``` php
+     * $I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
     public function seeRecord($model, $attributes = array())
     {
         $record = $this->findRecord($model, $attributes);
@@ -148,6 +186,16 @@ class Phalcon1 extends \Codeception\Util\Framework
         $this->debugSection($model, json_encode($record));
     }
 
+    /**
+     * Checks that record does not exist in database.
+     *
+     * ``` php
+     * $I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
     public function dontSeeRecord($model, $attributes = array())
     {
         $record = $this->findRecord($model, $attributes);
@@ -157,6 +205,17 @@ class Phalcon1 extends \Codeception\Util\Framework
         }
     }
 
+    /**
+     * Retrieves record from database
+     *
+     * ``` php
+     * $category = $I->grabFromDatabase('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
     public function grabRecord($model, $attributes = array())
     {
         return $this->findRecord($model, $attributes);

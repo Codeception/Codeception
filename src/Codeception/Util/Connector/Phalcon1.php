@@ -135,4 +135,9 @@ class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\
         $this->isStarted = false;
         $this->data = array();
     }
+
+    public function getAll()
+    {
+        return $this->data;
+    }
 }

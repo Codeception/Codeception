@@ -25,7 +25,7 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
-        $this->debug = $options['debug'] || $options['verbosity'] === OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->debug = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $options['steps'];
         $this->output = new Output($options);
         if ($this->debug) {
