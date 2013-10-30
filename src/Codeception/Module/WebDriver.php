@@ -877,13 +877,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->webDriver->wait($timeout)->until($condition);
     }
     
-        /**
+    /**
      * Waits for element to be visible on the page for $timeout seconds to pass.
      * If element doesn't appear, timeout exception is thrown.
      *
      * ``` php
      * <?php
-     * $I->waitForElement('#agree_button', 30); // secs
+     * $I->waitForElementVisible('#agree_button', 30); // secs
      * $I->click('#agree_button');
      * ?>
      * ```
