@@ -105,7 +105,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 
 		require_once(Yii::getPathOfAlias('codeceptionsrc').'/plugins/frameworks/yii/yiit.php');
 
-		$_SERVER['SCRIPT_NAME'] = str_replace('http://localhost','',$this->config['url']);
+		$_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
 		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
 		Yii::$enableIncludePath = false;
