@@ -876,6 +876,57 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         $this->webDriver->wait($timeout)->until($condition);
     }
+    
+        /**
+     * Waits for element to be visible on the page for $timeout seconds to pass.
+     * If element doesn't appear, timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElement('#agree_button', 30); // secs
+     * $I->click('#agree_button');
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param int $timeout seconds
+     * @throws \Exception
+     */
+    public function waitForElementVisible($element, $timeout = 10)
+    {
+        $condition = null;
+        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::id(substr($element, 1)));
+        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::cssSelector($element));
+        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::xpath($element));
+        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+
+        $this->webDriver->wait($timeout)->until($condition);
+    }
+
+    /**
+     * Waits for element to not be visible on the page for $timeout seconds to pass.
+     * If element stays visible, timeout exception is thrown.
+     *
+     * ``` php
+     * <?php
+     * $I->waitForElementNotVisible('#agree_button', 30); // secs
+     * ?>
+     * ```
+     *
+     * @param $element
+     * @param int $timeout seconds
+     * @throws \Exception
+     */
+    public function waitForElementNotVisible($element, $timeout = 10)
+    {
+        $condition = null;
+        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::id(substr($element, 1)));
+        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::cssSelector($element));
+        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::xpath($element));
+        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+
+        $this->webDriver->wait($timeout)->until($condition);
+    }
 
     /**
      * Waits for text to appear on the page for a specific amount of time.
