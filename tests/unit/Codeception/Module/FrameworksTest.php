@@ -428,6 +428,42 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
+    public function testSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('Select your age', '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('Select your age', '60-100');
+    }
+
     // fails
 
     public function testSeeFails()
