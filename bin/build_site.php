@@ -34,7 +34,13 @@ foreach ($docs as $doc) {
     $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
     $contents = preg_replace('~```(.*?)```~ms',"{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
-    $contents = "---\nlayout: doc\ntitle: Codeception - Documentation\n---\n\n".$contents;
+    $matches = array();
+    $title = "";
+    // Extracting page h1 to re-use in <title>
+    if (preg_match('/^# (.*)$/m', $contents, $matches)) {
+      $title = $matches[1];
+    }
+    $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
 
     file_put_contents($newfile, $contents);
 }
