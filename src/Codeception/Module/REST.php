@@ -134,12 +134,12 @@ class REST extends \Codeception\Module
     {
         if ($value) {
             \PHPUnit_Framework_Assert::assertEquals(
-                $this->client->getResponse()->getHeader($name),
+                $this->client->getInternalResponse()->getHeader($name),
                 $value
             );
         }
         else {
-            \PHPUnit_Framework_Assert::assertNotNull($this->client->getResponse()->getHeader($name));
+            \PHPUnit_Framework_Assert::assertNotNull($this->client->getInternalResponse()->getHeader($name));
         }
     }
 
@@ -153,12 +153,12 @@ class REST extends \Codeception\Module
     public function dontSeeHttpHeader($name, $value = null) {
         if ($value) {
             \PHPUnit_Framework_Assert::assertNotEquals(
-                $this->client->getResponse()->getHeader($name),
+                $this->client->getInternalResponse()->getHeader($name),
                 $value
             );
         }
         else {
-            \PHPUnit_Framework_Assert::assertNull($this->client->getResponse()->getHeader($name));
+            \PHPUnit_Framework_Assert::assertNull($this->client->getInternalResponse()->getHeader($name));
         }
     }
 
@@ -172,7 +172,7 @@ class REST extends \Codeception\Module
      * @return string|array The first header value if $first is true, an array of values otherwise
      */
     public function grabHttpHeader($name, $first = true) {
-        return $this->client->getResponse()->getHeader($name, $first);
+        return $this->client->getInternalResponse()->getHeader($name, $first);
     }
 
     /**
@@ -346,14 +346,14 @@ class REST extends \Codeception\Module
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
-        $this->response = $this->client->getResponse()->getContent();
+        $this->response = $this->client->getInternalResponse()->getContent();
         $this->debugSection("Response", $this->response);
 
         if (count($this->client->getRequest()->getCookies())) {
             $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
         }
-        $this->debugSection("Headers", json_encode($this->client->getResponse()->getHeaders()));
-        $this->debugSection("Status", json_encode($this->client->getResponse()->getStatus()));
+        $this->debugSection("Headers", json_encode($this->client->getInternalResponse()->getHeaders()));
+        $this->debugSection("Status", json_encode($this->client->getInternalResponse()->getStatus()));
     }
 
     protected function encodeApplicationJson($method, $parameters)
@@ -603,7 +603,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->client->getResponse()->getStatus());
+        $this->assertEquals($code, $this->client->getInternalResponse()->getStatus());
     }
 
     /**
@@ -613,6 +613,6 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->client->getResponse()->getStatus());
+        $this->assertNotEquals($code, $this->client->getInternalResponse()->getStatus());
     }
 }
