@@ -1,6 +1,12 @@
-gu<?php
+<?php
 require_once __DIR__.'/../autoload.php';
 $version = \Codeception\Codecept::VERSION;
+$branch = file_get_contents(__DIR__.'/release.branch.txt');
+
+if (strpos($version, $branch) !== 0) {
+    echo "The $version is not in release $branch. Site is not build\n";
+    return;
+}
 
 chdir(__DIR__.'/../');
 
