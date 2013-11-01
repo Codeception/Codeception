@@ -45,17 +45,23 @@ class Configuration
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     );
 
-    public static function config($config_file = null)
+    public static function config($configFile = null)
     {
-        if (!$config_file && self::$config) return self::$config;
+        if (!$configFile && self::$config) return self::$config;
         if (self::$config && self::$lock) return self::$config;
 
-        if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
-        if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
-        $dir = dirname($config_file);
+        if ($configFile === null) $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+        if (is_dir($configFile)) $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
+        $dir = dirname($configFile);
 
-        $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml', self::$defaultConfig);
-        $config = self::loadConfigFile($config_file, $config);
+        $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+
+        if (! (file_exists($configDistFile) || file_exists($configFile))) {
+            throw new ConfigurationException("Configuration file could not be found");
+        }
+
+        $config = self::loadConfigFile($configDistFile, self::$defaultConfig);
+        $config = self::loadConfigFile($configFile, $config);
 
         if ($config == self::$defaultConfig) throw new ConfigurationException("Configuration file is invalid");
 
@@ -100,7 +106,7 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        Autoload::registerSuffix('Helper', \Codeception\Configuration::helpersDir());
+        Autoload::registerSuffix('Helper', self::helpersDir());
     }
 
     protected static function loadSuites()
@@ -169,6 +175,13 @@ class Configuration
         }
 
         return $modules;
+    }
+
+    public static function isExtensionEnabled($extensionName)
+    {
+        return isset(self::$config['extensions'])
+            && isset(self::$config['extensions']['enabled'])
+            && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     public static function actions($modules)
