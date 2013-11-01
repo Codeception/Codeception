@@ -31,7 +31,7 @@ class WebDriverTest extends TestsForMink
             $url = 'http://testapp.com';
         }
 
-        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true));
+        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0));
         $this->module->_initialize();
 
         $this->module->_before($this->makeTest());
@@ -203,6 +203,120 @@ class WebDriverTest extends TestsForMink
         $this->shouldFail();
         $this->module->amOnPage('/form/select');
         $this->module->selectOption('#age','13-22');
+    }
+
+    public function testAppendFieldSelect()
+    {
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->selectOption('form #like', 'eat');
+        $this->module->appendField('form #like', 'code');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEmpty(array_diff($form['like'], array("eat", "code")));
+    }
+
+    public function testAppendFieldSelectFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/select_multiple');
+        $this->module->appendField('form #like', 'code123');
+    }
+
+    public function testAppendFieldTextarea()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->fillField('form #description', 'eat');
+        $this->module->appendField('form #description', ' code');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('eat code', $form['description']);
+    }
+
+    public function testAppendFieldTextareaFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/textarea');
+        $this->module->appendField('form #description123', ' code');
+    }
+
+    public function testAppendFieldText()
+    {
+        $this->module->amOnPage('/form/field');
+        $this->module->appendField('form #name', ' code');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('OLD_VALUE code', $form['name']);
+    }
+
+    public function testAppendFieldTextFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/field');
+        $this->module->appendField('form #name123', ' code');
+    }
+
+    public function testAppendFieldCheckboxByValue()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->appendField('form input[name=terms]', 'agree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testAppendFieldCheckboxByValueFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->appendField('form input[name=terms]', 'agree123');
+    }
+
+    public function testAppendFieldCheckboxByLabel()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->appendField('form input[name=terms]', 'I Agree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testAppendFieldCheckboxByLabelFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->appendField('form input[name=terms]', 'I Agree123');
+    }
+
+    public function testAppendFieldRadioButtonByValue()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->appendField('form input[name=terms]','disagree');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }
+
+    public function testAppendFieldRadioButtonByValueFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/radio');
+        $this->module->appendField('form input[name=terms]','disagree123');
+    }
+
+    public function testAppendFieldRadioButtonByLabel()
+    {
+        $this->module->amOnPage('/form/radio');
+        $this->module->appendField('form input[name=terms]', 'Get Off');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('disagree', $form['terms']);
+    }
+
+    public function testAppendFieldRadioButtonByLabelFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/radio');
+        $this->module->appendField('form input[name=terms]', 'Get Off123');
     }
 
 }

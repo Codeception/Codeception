@@ -77,13 +77,13 @@ class Console implements EventSubscriberInterface
         $filename = $test->getFileName();
 
         if ($test->getFeature()) {
-            $this->message("Trying to <focus>%s</focus> (%s)")
+            $this->message("Trying to <focus>%s</focus> (%s) ")
                 ->with($test->getFeature(), $filename)
                 ->width($this->columns[0])
                 ->write();
 
         } else {
-            $this->message("Running <focus>%s</focus>")
+            $this->message("Running <focus>%s</focus> ")
                 ->with($filename)
                 ->width($this->columns[0])
                 ->write();
@@ -164,7 +164,7 @@ class Console implements EventSubscriberInterface
 
     public function beforeStep(\Codeception\Event\Step $e)
     {
-        if (!$this->steps) {
+        if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
         }
         $this->output->writeln("* " . $e->getStep());
@@ -246,7 +246,7 @@ class Console implements EventSubscriberInterface
         $this->message("[%s] %s")->with(get_class($e), $e->getMessage())->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
-                : OutputInterface::VERBOSITY_NORMAL
+                : OutputInterface::VERBOSITY_VERBOSE
         );
 
         $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
@@ -254,6 +254,12 @@ class Console implements EventSubscriberInterface
         $i = 0;
         foreach ($trace as $step) {
             $i++;
+            if (isset($step['file'])) {
+                if (strpos($step['file'], 'codecept.phar//') !== false) {
+                    continue;
+                }
+            }
+
             $message = $this->message($i)->prepend('#')->width(4);
             if (!isset($step['file']) && isset($step['class'])) {
                 $message->append("[internal] " . $step['class'] . '.' . $step['function']);
@@ -262,6 +268,7 @@ class Console implements EventSubscriberInterface
             if (isset($step['file'])) {
                 $message->append($step['file'] . ':' . $step['line']);
             }
+
             $message->writeln();
 
             if ($i >= $limit) {
@@ -342,7 +349,7 @@ class Console implements EventSubscriberInterface
     {
         $this->columns = array(40, 5);
         foreach ($e->getSuite()->tests() as $test) {
-            if ($test instanceof ScenarioDriven) {
+            if ($test instanceof TestCase) {
                 $this->columns[0] = max(
                     $this->columns[0],
                     20 + strlen($test->getFeature()) + strlen($test->getFileName())

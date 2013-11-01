@@ -103,10 +103,19 @@ class Db
         }
     }
 
-    public function insert($table, array $data)
+    public function insert($tableName, array $data)
     {
-        $query = "insert into %s (%s) values (%s)";
-        return sprintf($query, $table, implode(', ', array_keys($data)), implode(', ', array_fill(0, count($data),'?')));
+        $columns = array_map(
+            array($this, 'getQuotedName'),
+            array_keys($data)
+        );
+
+        return sprintf(
+            "INSERT INTO %s (%s) VALUES (%s)",
+            $this->getQuotedName($tableName),
+            implode(', ', $columns),
+            implode(', ', array_fill(0, count($data), '?'))
+        );
     }
 
     public function select($column, $table, array $criteria) {
@@ -129,6 +138,11 @@ class Db
 
     public function lastInsertId($table) {
       return $this->getDbh()->lastInsertId();
+    }
+
+    public function getQuotedName($name)
+    {
+        return $name;
     }
 
     protected function sqlLine($sql)

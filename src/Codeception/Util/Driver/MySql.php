@@ -34,4 +34,9 @@ class MySql extends Db
 
         return sprintf($query, $column, $table, $params);
     }
+
+    public function getQuotedName($name)
+    {
+        return '`' . $name . '`';
+    }
 }
