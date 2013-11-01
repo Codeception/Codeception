@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "753c745fe3a6192a728b8bb5de35002c",
+    "hash": "5380045b5a40a7a2d34f957c00006f7a",
     "packages": [
         {
             "name": "behat/mink",
@@ -225,54 +225,6 @@
             "time": "2013-06-02 19:09:45"
         },
         {
-            "name": "blackakula/wdebug",
-            "version": "0.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/blackakula/wdebug.git",
-                "reference": "97b499734f5db4dc0033f35b50746ef6acd598ca"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/blackakula/wdebug/zipball/97b499734f5db4dc0033f35b50746ef6acd598ca",
-                "reference": "97b499734f5db4dc0033f35b50746ef6acd598ca",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "facebook/webdriver": ">=0.2",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "chrome/webdriver": ">=2.4",
-                "claylo/selenium-server-standalone": ">=2.32.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "": [
-                        "src"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "OSL 3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Sergii Akulinin",
-                    "email": "blackakula@gmail.com"
-                }
-            ],
-            "description": "PHP Webdriver Debugger",
-            "keywords": [
-                "automation",
-                "selenium"
-            ],
-            "time": "2013-10-10 21:34:03"
-        },
-        {
             "name": "fabpot/goutte",
             "version": "v1.0.3",
             "source": {
@@ -330,20 +282,20 @@
         },
         {
             "name": "facebook/webdriver",
-            "version": "v0.2",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-webdriver.git",
-                "reference": "b720b6aafb667a463c7e7cafcdebf3210ddc5ef7"
+                "reference": "36bf555115da4cb03b131b4c04b681a75acd47d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/b720b6aafb667a463c7e7cafcdebf3210ddc5ef7",
-                "reference": "b720b6aafb667a463c7e7cafcdebf3210ddc5ef7",
+                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/36bf555115da4cb03b131b4c04b681a75acd47d1",
+                "reference": "36bf555115da4cb03b131b4c04b681a75acd47d1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=5.4.20"
             },
             "type": "library",
             "autoload": {
@@ -357,7 +309,7 @@
             ],
             "description": "A php client for WebDriver",
             "homepage": "https://github.com/facebook/php-webdriver",
-            "time": "2013-10-10 02:34:59"
+            "time": "2013-10-15 05:25:07"
         },
         {
             "name": "guzzle/common",
@@ -740,16 +692,16 @@
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "1.3.3",
+            "version": "1.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "16a78140ed2fc01b945cfa539665fadc6a038029"
+                "reference": "acd690379117b042d1c8af1fafd61bde001bf6bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/16a78140ed2fc01b945cfa539665fadc6a038029",
-                "reference": "16a78140ed2fc01b945cfa539665fadc6a038029",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/acd690379117b042d1c8af1fafd61bde001bf6bb",
+                "reference": "acd690379117b042d1c8af1fafd61bde001bf6bb",
                 "shasum": ""
             },
             "require": {
@@ -776,12 +728,12 @@
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
-            "homepage": "http://www.phpunit.de/",
+            "homepage": "https://github.com/sebastianbergmann/php-file-iterator/",
             "keywords": [
                 "filesystem",
                 "iterator"
             ],
-            "time": "2012-10-11 11:44:38"
+            "time": "2013-10-10 15:34:57"
         },
         {
             "name": "phpunit/php-text-template",
@@ -923,16 +875,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.27",
+            "version": "3.7.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4b024e753e3421837afbcca962c8724c58b39376"
+                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4b024e753e3421837afbcca962c8724c58b39376",
-                "reference": "4b024e753e3421837afbcca962c8724c58b39376",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
+                "reference": "3b97c8492bcafbabe6b6fbd2ab35f2f04d932a8d",
                 "shasum": ""
             },
             "require": {
@@ -993,7 +945,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-09-16 03:09:52"
+            "time": "2013-10-17 07:27:40"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
