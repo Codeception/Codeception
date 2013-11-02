@@ -298,7 +298,7 @@ class Doctrine2 extends \Codeception\Module
                     }
                 }
             }
-            if ($val == null) {
+            if ($val === null) {
                 $qb->andWhere("s.$key IS NULL");
             } else {
                 $qb->andWhere("s.$key = :$key");
