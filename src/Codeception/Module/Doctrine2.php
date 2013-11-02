@@ -298,8 +298,12 @@ class Doctrine2 extends \Codeception\Module
                     }
                 }
             }
-            $qb->andWhere("s.$key = :$key");
-            $qb->setParameter($key, $val);
+            if ($val == null) {
+                $qb->andWhere("s.$key IS NULL");
+            } else {
+                $qb->andWhere("s.$key = :$key");
+                $qb->setParameter($key, $val);
+            }
 
         }
     }
