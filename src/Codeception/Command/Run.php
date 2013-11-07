@@ -84,7 +84,7 @@ class Run extends Base
 
         $this->codecept = new \Codeception\Codecept((array) $options);
 
-        if ($suite and $test) $this->codecept->runSuite($suite, $test);
+        if ($suite and $test) $this->codecept->run($suite, $test);
 
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
@@ -121,7 +121,7 @@ class Run extends Base
         foreach ($suites as $suite) {
             if (in_array($suite, $skippedSuites)) continue;
             if (!in_array($suite, Configuration::suites())) continue;
-            $this->codecept->runSuite($suite);
+            $this->codecept->run($suite);
             $executed++;
         }
         return $executed;

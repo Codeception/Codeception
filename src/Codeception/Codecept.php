@@ -117,10 +117,25 @@ class Codecept
         }
     }
 
-    public function runSuite($suite, $test = null) {
+    public function run($suite, $test = null)
+    {
         ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
-
         $settings = Configuration::suiteSettings($suite, Configuration::config());
+
+        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+        if (empty($environments)) {
+            $environments = array($settings);
+        }
+
+        foreach ($environments as $env => $config) {
+            if (!is_int($env)) {
+                $suite .= "-$env";
+            }
+            $this->runSuite($settings, $suite, $test);
+        }
+    }
+
+    public function runSuite($settings, $suite, $test = null) {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test
@@ -131,6 +146,7 @@ class Codecept
 
         return $this->result;
     }
+
 
     public static function versionString() {
         return 'Codeception PHP Testing Framework v'.self::VERSION;
