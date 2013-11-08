@@ -340,7 +340,7 @@ When [WebDebug](http://codeception.com/docs/modules/WebDebug) is attached you ca
 
 ### Custom Methods
 
-In case you need to implement custom assertions or action you can extend a [Helper](http://codeception.com/docs/03-Modules#helpers) class.
+In case you need to implement custom assertions or action you can extend a [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) class.
 To perform operations on the current browser state you should access the [Mink Session](http://mink.behat.org/#control-the-browser-session) object.
 Here is the way you can do this:
 
