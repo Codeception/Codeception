@@ -72,6 +72,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     
     protected $wd_host;
     protected $capabilities;
+    protected $test;
 
     /**
      * @var \RemoteWebDriver
@@ -92,6 +93,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $this->test = $test;
         $size = $this->webDriver->manage()->window()->getSize();
         $this->debugSection("Window", $size->getWidth().'x'.$size->getHeight());
     }
@@ -100,7 +102,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
-            // \RemoteWebDriver consists of three parts, executor, mouse and keyboard, quit only set executor to null,
+            // \RemoteWebDriver consists of four parts, executor, mouse, keyboard and touch, quit only set executor to null,
             // but \RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;

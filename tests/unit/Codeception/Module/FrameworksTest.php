@@ -449,19 +449,19 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testDontSeeOptionIsSelectedByCss()
     {
         $this->module->amOnPage('/form/select');
-        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+        $this->module->dontSeeOptionIsSelected('form select[name=age]', '21-60');
     }
 
     public function testDontSeeOptionIsSelectedByXPath()
     {
         $this->module->amOnPage('/form/select');
-        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+        $this->module->dontSeeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '21-60');
     }
 
     public function testDontSeeOptionIsSelectedByLabel()
     {
         $this->module->amOnPage('/form/select');
-        $this->module->seeOptionIsSelected('Select your age', '60-100');
+        $this->module->dontSeeOptionIsSelected('Select your age', '21-60');
     }
 
     // fails
