@@ -6,6 +6,10 @@ This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
 Use it to cleanup the queue between tests.
 
+<div class="alert alert-info">
+To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em> package.
+</div>
+
 ## Status
 * Maintainer: **davert**, **tiger-seo**
 * Stability: **alpha**

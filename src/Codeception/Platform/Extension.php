@@ -2,7 +2,7 @@
 namespace Codeception\Platform;
 
 use Codeception\Exception\ModuleRequire;
-use Codeception\Output;
+use Codeception\Util\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Extension implements EventSubscriberInterface {
@@ -17,7 +17,7 @@ class Extension implements EventSubscriberInterface {
             $this->config = $config['extensions']['config'][get_class($this)];
 
         $this->options = $options;
-        $this->output = new Output($options['colors']);
+        $this->output = new Output($options);
         $this->_reconfigure();
     }
 
@@ -29,7 +29,7 @@ class Extension implements EventSubscriberInterface {
 
     protected function write($message)
     {
-        if (!$this->options['silent']) $this->output->put($message);
+        if (!$this->options['silent']) $this->output->write($message);
     }
 
     protected function writeln($message)

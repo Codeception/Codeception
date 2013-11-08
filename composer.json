@@ -17,16 +17,20 @@
         "php": ">=5.3.3",
         "behat/mink": "1.5.*",
         "phpunit/phpunit": "3.7.*",
-        "facebook/php-sdk": "3.*",
+        "facebook/webdriver": "*",
         "behat/mink-goutte-driver": "1.0.*",
-        "behat/mink-selenium-driver": "1.1.*",
         "behat/mink-selenium2-driver": "1.1.*",
-        "behat/mink-zombie-driver": "1.1.*",
         "monolog/monolog": "*",
         "symfony/finder": "~2.3",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
-        "symfony/yaml": "~2.3",
+        "symfony/yaml": "~2.3"
+
+    },
+    "require-dev": {
+        "behat/mink-selenium-driver": "1.1.*",
+        "facebook/php-sdk": "3.*",
+        "behat/mink-zombie-driver": "1.1.*",
         "videlalvaro/php-amqplib": "*"
     },
 

@@ -6,7 +6,7 @@ use Codeception\Event\Test as TestEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Step;
 
-class Cept extends \Codeception\TestCase
+class Cept extends \Codeception\TestCase implements ScenarioDriven
 {
     private $name;
     protected $testfile = null;

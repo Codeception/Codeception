@@ -428,5 +428,110 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
+    public function testSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('Select your age', '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('Select your age', '60-100');
+    }
+
+    // fails
+
+    public function testSeeFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->see('Text not here');
+    }
+
+    public function testSeeInElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->see('woups','p');
+    }
+
+    public function testDontSeeInElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('interesting','p');
+    }
+
+    public function testSeeInFieldFail()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','xxx');
+    }
+
+    public function testSeeInFieldOnTextareaFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunrise');
+    }
+
+    public function testSeeCheckboxIsNotCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/complex');
+        $this->module->dontSeeCheckboxIsChecked('#checkin');
+    }
+
+    public function testSeeCheckboxCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCheckboxIsChecked('#checkin');
+    }
+
+    public function testSeeElementOnPageFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('input[name=name]');
+    }
+
+    public function testDontSeeElementOnPageFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
+    }
+
+    protected function shouldFail()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
+
+
 
 }

@@ -315,7 +315,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         }
 
         if (!isset($input)) $input = $this->match($field);
-        if (!count($input)) throw new ElementNotFound($field, 'Form field for');
+        if (!count($input)) throw new ElementNotFound($field, 'Form field by Label or CSS');
         return $input->first();
 
     }
@@ -477,8 +477,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function matchSelectedOption($select)
     {
-        $nodes = $this->match($select);
-        $this->assertDomContains($nodes, "select '$select'");
+        $nodes = $this->getFieldByLabelOrCss($select);
         return $nodes->first()->filter('option[selected]');
     }
 

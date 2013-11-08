@@ -186,7 +186,7 @@ EOF;
             }
         }
 
-        if (!$doc) {
+        if (!$doc and $class->getParentClass()) {
             $parent = new \ReflectionClass($class->getParentClass()->name);
             if ($parent->hasMethod($refMethod->name)) {
                 $doc = $parent->getMethod($refMethod->name)->getDocComment();

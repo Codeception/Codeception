@@ -2,6 +2,9 @@
 namespace Codeception;
 
 use Codeception\Exception\ModuleConfig;
+use Codeception\Util\Debug;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Module
 {
@@ -43,7 +46,9 @@ abstract class Module
 
     protected $requiredFields = array();
 
-    public function __construct($config=null)
+    private $debugOutput;
+
+    public function __construct($config = null)
     {
         $this->backupConfig = $this->config;
         if (is_array($config)) {
@@ -51,6 +56,8 @@ abstract class Module
         }
     }
 
+
+    
     public function _setConfig($config)
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
@@ -72,10 +79,19 @@ abstract class Module
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
-            throw new ModuleConfig(get_class($this),"
+            throw new ModuleConfig($this->getName(),"
                 Options: ".implode(', ', $this->requiredFields)." are required\n
                 Update configuration and set all required fields\n\n
         ");
+    }
+
+    public function getName()
+    {
+        $module = get_class($this);
+         if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
+             $module = $matches[1];
+         }
+         return $module;
     }
 
     public function _hasRequiredFields()
@@ -122,21 +138,11 @@ abstract class Module
     }
 
     protected function debug($message) {
-        $this->debugStack[] = $message;
+        Debug::debug($message);
     }
 
     protected function debugSection($title, $message) {
         $this->debug("[$title] $message");
-    }
-
-    public function _clearDebugOutput() {
-        $this->debugStack = array();
-    }
-
-    public function _getDebugOutput() {
-        $debugStack = $this->debugStack;
-        $this->_clearDebugOutput();
-        return $debugStack;
     }
 
     protected function assert($arguments, $not = false) {
@@ -289,6 +295,18 @@ abstract class Module
     }
 
     /**
+     * Checks that variable is not NULL
+     *
+     * @param $actual
+     * @param string $message
+     */
+    protected function assertNotNull($actual, $message = '')
+    {
+        return \PHPUnit_Framework_Assert::assertNotNull($actual, $message);
+    }
+
+
+    /**
      * Checks that condition is positive.
      *
      * @param $condition
@@ -346,7 +364,7 @@ abstract class Module
     }
 
     protected function getModule($name) {
-        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module(__CLASS__, "Module $name couldn't be connected");
+        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module($this->getName(), "Module $name couldn't be connected");
         return \Codeception\SuiteManager::$modules[$name];
     }
 

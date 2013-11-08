@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.6.11";
+    const VERSION = "1.8.0-dev";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -54,6 +54,7 @@ class Codecept
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
+        'env' => null,
     );
 
     public function __construct($options = array()) {
@@ -117,10 +118,31 @@ class Codecept
         }
     }
 
-    public function runSuite($suite, $test = null) {
+    public function run($suite, $test = null)
+    {
         ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
-
         $settings = Configuration::suiteSettings($suite, Configuration::config());
+
+        $selectedEnvironments = $this->options['env'];
+        if (!$selectedEnvironments) {
+            $this->runSuite($settings, $suite, $test);
+            return;
+        }
+
+        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+
+        foreach ($environments as $env => $config) {
+            if (!in_array($env, $selectedEnvironments)) {
+                continue;
+            }
+            if (!is_int($env)) {
+                $suite .= "-$env";
+            }
+            $this->runSuite($config, $suite, $test);
+        }
+    }
+
+    public function runSuite($settings, $suite, $test = null) {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test
@@ -131,6 +153,7 @@ class Codecept
 
         return $this->result;
     }
+
 
     public static function versionString() {
         return 'Codeception PHP Testing Framework v'.self::VERSION;

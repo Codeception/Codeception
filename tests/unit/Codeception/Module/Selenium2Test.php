@@ -29,7 +29,7 @@ class Selenium2Test extends TestsForMink
             $url = 'http://testapp.com';
         }
 
-        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4455'));
+        $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444'));
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
@@ -53,13 +53,13 @@ class Selenium2Test extends TestsForMink
 
     protected function noSelenium()
     {
-        $fp = @fsockopen('localhost', 4455);
+        $fp = @fsockopen('localhost', 4444);
         if ($fp !== false) {
             fclose($fp);
             return true;
         }
         $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4455'
+            'Requires Selenium2 Server running on port 4444'
         );
         return false;
     }

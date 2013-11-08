@@ -89,8 +89,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('More info');
         $this->module->dontSeeLink('/info');
         $this->module->dontSeeLink('#info');
-        $this->module->amOnPage('/info');
-        $this->module->seeLink('Back');
+        $this->module->seeLink('More','/info');
     }
 
     public function testClick()
@@ -448,7 +447,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     {
         $this->shouldFail();
         $this->module->amOnPage('/info');
-        $this->module->dontSeeElement('.notice');
+        $this->module->dontSeeElement('#back');
     }
 
     public function testSeeInFieldFail()

@@ -40,6 +40,7 @@ class Run extends Base
             new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
             new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
             new InputOption('skip-group', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
+            new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
         ));
         parent::configure();
     }
@@ -53,7 +54,8 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
-        if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $options['verbosity'] = $output->getVerbosity();
 
         if (!extension_loaded('curl')) {
             throw new \Exception(
@@ -83,7 +85,7 @@ class Run extends Base
 
         $this->codecept = new \Codeception\Codecept((array) $options);
 
-        if ($suite and $test) $this->codecept->runSuite($suite, $test);
+        if ($suite and $test) $this->codecept->run($suite, $test);
 
         if (!$test) {
             $suites = $suite ? explode(',', $suite) : Configuration::suites();
@@ -120,7 +122,7 @@ class Run extends Base
         foreach ($suites as $suite) {
             if (in_array($suite, $skippedSuites)) continue;
             if (!in_array($suite, Configuration::suites())) continue;
-            $this->codecept->runSuite($suite);
+            $this->codecept->run($suite);
             $executed++;
         }
         return $executed;

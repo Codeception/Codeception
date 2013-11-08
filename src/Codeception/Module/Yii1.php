@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleConfig;
 use Yii;
 
 /**
@@ -42,16 +43,11 @@ use Yii;
  *             url: 'http://localhost/path/to/index.php'
  * </pre>
  *
- * You need to use CodeceptionHttpRequest from plugins directory (plugins\frameworks\yii\web), this component will be
- * imported when you include Yii1 module. There is also an alias "codeceptionsrc" available in Yii that points to the
- * codeception source directory, you can use it as always:
- * <pre>
- * Yii::getPathOfAlias('codeceptionsrc');
- * </pre>
- * This component extends yii CHttpRequest and handles headers() and cookie correctly. Also you can
- * modify it to be extended from your custom http-request component.
  *
- * You can test this module by creating new empty Yii application and creating this scenario:
+ * You will also need to install [Codeception-Yii Bridge](https://github.com/Codeception/YiiBridge)
+ * which include component wrappers for testing.
+ *
+ * When you are done, you can test this module by creating new empty Yii application and creating this scenario:
  * <pre>
  * $I = new TestGuy($scenario);
  * $I->wantTo('Test index page');
@@ -92,21 +88,41 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 
 	public function _initialize()
 	{
+        if (!file_exists($this->config['appPath'])) {
+            throw new ModuleConfig(__CLASS__,
+                "Couldn't load application config file {$this->config['appPath']}\n".
+                "Please provide application bootstrap file configured for testing"
+            );
+        }
+
 		$this->appSettings = include($this->config['appPath']); //get application settings in the entry script
 
 		// get configuration from array or file
 		if (is_array($this->appSettings['config'])) {
 			$this->_appConfig = $this->appSettings['config'];
 		} else {
+            if (!file_exists($this->appSettings['config'])) {
+                throw new ModuleConfig(__CLASS__,
+                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n".
+                    "Please provide valid 'config' parameter"
+                );
+            }
 			$this->_appConfig = include($this->appSettings['config']);
 		}
 
-		Yii::setPathOfAlias('codeceptionsrc',dirname(__FILE__).DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..');
+        defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER', false);
+        defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
 
-		require_once(Yii::getPathOfAlias('codeceptionsrc').'/plugins/frameworks/yii/yiit.php');
-
-		$_SERVER['SCRIPT_NAME'] = str_replace('http://localhost','',$this->config['url']);
+		$_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
 		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
+
+        if (!function_exists('launch_codeception_yii_bridge')) {
+            throw new ModuleConfig(__CLASS__,
+                "Codeception-Yii Bridge is not launched. In order to run tests you need to install https://github.com/Codeception/YiiBridge".
+                "Implement function 'launch_codeception_yii_bridge' to load all Codeception overrides"
+            );
+        }
+        launch_codeception_yii_bridge();
 
 		Yii::$enableIncludePath = false;
 		Yii::setApplication(null);

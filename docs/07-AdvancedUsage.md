@@ -95,8 +95,8 @@ Same annotation can be used in Cest classes.
 
 ## Cest Classes
 
-In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use Cest format.
-It is very simple and is fully compatible with Cept scenarios. It means If you feel like your test is long enough and you want to split it - you can easily move it into class. 
+In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use the Cest format.
+It is very simple and is fully compatible with Cept scenarios. It means if you feel like your test is long enough and you want to split it - you can easily move it into classes. 
 
 You can start Cest file by running the command:
 
@@ -161,6 +161,58 @@ As a workaround you can choose [Fixtures](https://github.com/Codeception/Codecep
 As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you want by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
 
 Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
+
+### Annotations
+
+*added in 1.7.0*
+
+You can control Cest files with annotations. You can use `@guy` annotation to pass Guy class different then set via config. This is quite useful if you want to pass a StepObject there (see below).
+
+``` php
+<?php
+/**
+ * @guy WebGuy\AdminSteps
+ */
+class AdminCest {
+
+    function banUser(WebGuy\AdminSteps $I)
+    {
+        // ...
+    }
+
+}
+?>
+```
+The guy annotation can be added to method DocBlock as well.
+
+You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
+
+``` php
+<?php
+class ModeratorCest {
+
+    protected function login(WebGuy $I)
+    {
+        $I->amOnPage('/login');
+        $I->fillField('Username', 'miles');
+        $I->fillField('Password', 'davis');
+        $I->click('Login');
+    }
+
+    /**
+     * @before login
+     */
+    function banUser(WebGuy $I)
+    {
+        $I->amOnPage('/users/charlie-parker');
+        $I->see('Ban', '.button');
+        $I->click('Ban');        
+    }
+}
+?>
+```
+
+You can use `@before` and `@after` for included functions also. But you can't have multiple annotations in one method.
 
 ## Refactoring
 

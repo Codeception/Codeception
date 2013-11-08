@@ -4,9 +4,9 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteTests;
+use Codeception\Util\Annotation;
 use Symfony\Component\Finder\Finder;
-use \Symfony\Component\EventDispatcher\EventDispatcher;
-
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager {
 
@@ -44,8 +44,13 @@ class SuiteManager {
         }
 
         require_once $settings['path'] . $settings['class_name'].'.php';
-        
+
         $this->initializeModules($settings);
+    }
+
+    public static function hasModule($moduleName)
+    {
+        return isset(self::$modules[$moduleName]);
     }
 
     protected function initializeModules($settings)
@@ -60,7 +65,7 @@ class SuiteManager {
 
     protected function createSuite($name) {
         $suiteClass = $this->settings['suite_class'];
-        if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class not found");
+        if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class $suiteClass not found");
         $suite = new $suiteClass;
         if ($this->settings['namespace']) $name = $this->settings['namespace'] . ".$name";
         $suite->setName($name);
@@ -113,19 +118,14 @@ class SuiteManager {
                 : $this->settings['class_name'];
 
             $unit = new $testClass;
-            $reflected = new \ReflectionClass($testClass);
-            if (preg_match('/@guy(?:[ \t]+(?P<guy>.*?))?[ \t]*\r?$/m', $reflected->getDocComment(), $annotations));
-            if (isset($annotations['guy'])) $guy = $annotations['guy'];
-            $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
-
+            $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
-                if ($method->isConstructor()) return;
-                if ($method->isDestructor()) return;
+                if ($method == '__construct') return;
 
-                $test = $this->createTestFromCestMethod($unit, $method->name, $file, $guy);
+                $test = $this->createTestFromCestMethod($unit, $method, $file, $guy);
 
                 if (!$test) continue;
-                $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
+                $groups = \PHPUnit_Util_Test::getGroups($testClass, $method);
                 $this->suite->addTest($test, $groups);
             }
         }
@@ -215,6 +215,14 @@ class SuiteManager {
     {
         $testClass = get_class($cestInstance);
         if (strpos($methodName, '_') === 0) return;
+
+        $overriddenGuy = Annotation::fetchForMethod($testClass, $methodName, 'guy');
+        if (!$overriddenGuy) {
+            $overriddenGuy = Annotation::fetchForClass($testClass, 'guy');
+        }
+        if ($overriddenGuy) {
+            $guy = $overriddenGuy;
+        }
 
         $cest = new TestCase\Cest($this->dispatcher, array(
             'name' => $methodName,

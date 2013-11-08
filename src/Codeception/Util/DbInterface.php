@@ -37,7 +37,7 @@ interface DbInterface
      *
      * ``` php
      * <?php
-     * $I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+     * $I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
      *
      * ```
      * Will generate:

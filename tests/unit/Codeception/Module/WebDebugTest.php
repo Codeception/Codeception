@@ -15,6 +15,7 @@ class WebDebugTest extends \PHPUnit_Framework_TestCase {
         ));
         $backend->session = new \Codeception\Maybe();
         $this->module = Stub::make('Codeception\Module\WebDebug', array('getModules' => array($backend)));
+        $this->module->_initialize();
         $this->module->_before(Stub::make('Codeception\TestCase\Cept'));
     }
 
@@ -28,5 +29,11 @@ class WebDebugTest extends \PHPUnit_Framework_TestCase {
         $this->module->makeAScreenshot("saved");
     }
 
+    public function testFailed()
+    {
+        $webDebug = Stub::make('Codeception\Module\WebDebug');
+        $webDebug->expects($this->once())->method('_saveScreenshot')->will($this->returnValue(null));
+        $webDebug->_failed(Stub::make('Codeception\TestCase'), new PHPUnit_Framework_AssertionFailedError());
+    }
 
 }

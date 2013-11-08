@@ -230,7 +230,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * You can use native PHPUnit asserts in the executed code. 
+     * You can use native PHPUnit asserts in the executed code.
      * These can be either static methods of the 'PHPUnit_Framework_assert' class,
      * or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
      * You should manually include this file, as these functions may conflict with functions in your code.
@@ -310,7 +310,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * Updates multiple properties of the selected object.
      * Can update even private and protected properties.
-     * 
+     *
      * Properties to be updated and their values are passed in the second parameter as an array:
      * array('theProperty'     => 'some value',
      *      ('anotherProperty' => 'another value')
@@ -1153,6 +1153,25 @@ class CodeGuy extends \Codeception\AbstractGuy
      */
     public function seeMethodNotReturns($object, $method, $value, $params = null) {
         $this->scenario->addStep(new \Codeception\Step\Assertion('seeMethodNotReturns', func_get_args()));
+        if ($this->scenario->running()) {
+            $result = $this->scenario->runStep();
+            return new Maybe($result);
+        }
+        return new Maybe();
+    }
+
+ 
+    /**
+     * This method is generated.
+     * Documentation taken from corresponding module.
+     * ----------------------------------------------
+     *
+     *
+     * @see Codeception\Module::getName()
+     * @return \Codeception\Maybe
+     */
+    public function getName() {
+        $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

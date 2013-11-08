@@ -45,17 +45,23 @@ class Configuration
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     );
 
-    public static function config($config_file = null)
+    public static function config($configFile = null)
     {
-        if (!$config_file && self::$config) return self::$config;
+        if (!$configFile && self::$config) return self::$config;
         if (self::$config && self::$lock) return self::$config;
 
-        if ($config_file === null) $config_file = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
-        if (is_dir($config_file)) $config_file = $config_file . DIRECTORY_SEPARATOR . 'codeception.yml';
-        $dir = dirname($config_file);
+        if ($configFile === null) $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
+        if (is_dir($configFile)) $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
+        $dir = dirname($configFile);
 
-        $config = self::loadConfigFile($dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml', self::$defaultConfig);
-        $config = self::loadConfigFile($config_file, $config);
+        $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
+
+        if (! (file_exists($configDistFile) || file_exists($configFile))) {
+            throw new ConfigurationException("Configuration file could not be found");
+        }
+
+        $config = self::loadConfigFile($configDistFile, self::$defaultConfig);
+        $config = self::loadConfigFile($configFile, $config);
 
         if ($config == self::$defaultConfig) throw new ConfigurationException("Configuration file is invalid");
 
@@ -100,7 +106,7 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        Autoload::registerSuffix('Helper', \Codeception\Configuration::helpersDir());
+        Autoload::registerSuffix('Helper', self::helpersDir());
     }
 
     protected static function loadSuites()
@@ -124,7 +130,9 @@ class Configuration
 
         $globalConf = $config['settings'];
         foreach (array('modules','coverage', 'namespace') as $key) {
-            if (isset($config[$key])) $globalConf[$key] = $config[$key];
+            if (isset($config[$key])) {
+                $globalConf[$key] = $config[$key];
+            }
         }
 
         $path = $config['paths']['tests'];
@@ -139,6 +147,19 @@ class Configuration
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
+    }
+
+    public static function suiteEnvironments($suite)
+    {
+        $settings = self::suiteSettings($suite, self::config());
+        if (!isset($settings['env'])) return array();
+        if (!is_array($settings['env'])) return array();
+        $environments = array();
+        foreach ($settings['env'] as $env => $envConfig) {
+            $environments[$env] = self::mergeConfigs($settings, $envConfig);
+
+        }
+        return $environments;
     }
 
     public static function suites()
@@ -169,6 +190,13 @@ class Configuration
         }
 
         return $modules;
+    }
+
+    public static function isExtensionEnabled($extensionName)
+    {
+        return isset(self::$config['extensions'])
+            && isset(self::$config['extensions']['enabled'])
+            && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     public static function actions($modules)
@@ -238,7 +266,7 @@ class Configuration
         return !(bool)self::$testsDir;
     }
 
-    protected static function mergeConfigs($a1, $a2)
+    public static function mergeConfigs($a1, $a2)
     {
         if (!is_array($a1) || !is_array($a2))
             return $a2;

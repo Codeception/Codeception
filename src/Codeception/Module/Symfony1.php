@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module;
 use Codeception\Util\Framework as Framework;
 
 /**
@@ -28,9 +29,8 @@ use Codeception\Util\Framework as Framework;
  *
  */
 
-class Symfony1 extends \Codeception\Module
+class Symfony1 extends Module
 {
-
     /**
      * @api
      * @var \sfBrowser
@@ -303,8 +303,12 @@ class Symfony1 extends \Codeception\Module
     protected function proceedCheckboxIsChecked($selector)
     {
         $node = $this->browser->getResponseDomCssSelector()->matchSingle($selector)->getNode();
-        if (!$node) return \PHPUnit_Framework_Assert::fail("there is no element $selector on page");
-        if ($node->getAttribute('type') != 'checkbox') return PHPUnit_Framework_Assert::fail("there is no checkbox $selector on page");
+        if (!$node) {
+            $this->fail("there is no element $selector on page");
+        }
+        if ($node->getAttribute('type') != 'checkbox') {
+            $this->fail("there is no checkbox $selector on page");
+        }
         return array('equals', $node->getAttribute('checked'), 'checked', "that checkbox $selector is checked");
     }
 
@@ -491,7 +495,7 @@ class Symfony1 extends \Codeception\Module
         foreach ($form->getErrorSchema() as $field => $desc) {
             $keys[] = $field;
         }
-        $this->assert(array('contains', $field, $keys, "$field"));
+        $this->assertContains($field, $keys);
     }
 
     protected function getForm()

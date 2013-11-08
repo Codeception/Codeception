@@ -5,6 +5,13 @@ namespace Codeception\Module;
  *
  * Uses Mink to launch and manipulate Selenium Server (formerly the Selenium RC Server).
  *
+ *
+ * <div class="alert alert-info">
+ * To use this module with Composer you need <em>"behat/mink-selenium-driver": "1.1.*"</em> package.
+ * This module is considered <strong>deprecated</strong> and will be replaced with WebDriver module.
+ * </div>
+ *
+ *
  * But we recommend you to use **Selenium 2 WebDriver** as it is an evolution of SeleniumRC and grants you more stable results.
  * For manipulation with Selenium WebDriver use [Selenium2](/docs/modules/Selenium2) module
  *
