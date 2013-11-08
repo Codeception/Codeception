@@ -41,7 +41,7 @@ class Crawler extends Page {
         );
     }
 
-    protected function failureDescription(DOMCrawler $other)
+    protected function failureDescription($other)
     {
         $desc = '';
         foreach ($other as $o) {
