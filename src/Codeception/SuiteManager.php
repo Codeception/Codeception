@@ -196,8 +196,10 @@ class SuiteManager {
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
                 $this->injectDispatcherAndGuyClass($t);
-                $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
-                $t->getScenario()->groups($groups);
+                if ($test instanceof TestCase\Test) {
+                    $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
+                    $t->getScenario()->groups($groups);
+                }
             }
             return $test;
         }
