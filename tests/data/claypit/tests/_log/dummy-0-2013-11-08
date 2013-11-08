@@ -1,8 +1,0 @@
-[2013-11-08 00:45:50] FileExistsCept.php.INFO: see file found "codeception.yml" [] []
-[2013-11-08 00:45:50] FileExistsCept.php.INFO: PASSED [] []
-[2013-11-08 00:45:51] AnotherCest.optimistic.INFO: i expect everything is ok  [] []
-[2013-11-08 00:45:51] AnotherCest.optimistic.INFO: PASSED [] []
-[2013-11-08 00:45:51] AnotherCest.pessimistic.INFO: i expect everything is bad  [] []
-[2013-11-08 00:45:51] AnotherCest.pessimistic.INFO: PASSED [] []
-[2013-11-08 00:45:51] AnotherCest.pessimistic.INFO: PASSED [] []
-[2013-11-08 00:45:51] AnotherCest.pessimistic.INFO: PASSED [] []
