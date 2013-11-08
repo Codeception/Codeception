@@ -5,7 +5,7 @@
 
 
 use \Codeception\Maybe;
-use Codeception\Module\OrderHelper;
+use Codeception\Module\PowerHelper;
 
 /**
  * Inherited methods
@@ -23,7 +23,7 @@ use Codeception\Module\OrderHelper;
  * @method void offsetUnset($offset)
 */
 
-class OrderGuy extends \Codeception\AbstractGuy
+class PowerGuy extends \Codeception\AbstractGuy
 {
     
     /**
@@ -32,49 +32,11 @@ class OrderGuy extends \Codeception\AbstractGuy
      * ----------------------------------------------
      *
      *
-     * @see Codeception\Module\OrderHelper::failNow()
+     * @see Codeception\Module\PowerHelper::gotThePower()
      * @return \Codeception\Maybe
      */
-    public function failNow() {
-        $this->scenario->addStep(new \Codeception\Step\Action('failNow', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
-     *
-     *
-     * @see Codeception\Module\OrderHelper::writeToFile()
-     * @return \Codeception\Maybe
-     */
-    public function writeToFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
-    }
-
- 
-    /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
-     *
-     *
-     * @see Codeception\Module\OrderHelper::appendToFile()
-     * @return \Codeception\Maybe
-     */
-    public function appendToFile($marker) {
-        $this->scenario->addStep(new \Codeception\Step\Action('appendToFile', func_get_args()));
+    public function gotThePower() {
+        $this->scenario->addStep(new \Codeception\Step\Action('gotThePower', func_get_args()));
         if ($this->scenario->running()) {
             $result = $this->scenario->runStep();
             return new Maybe($result);

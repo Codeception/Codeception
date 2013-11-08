@@ -54,6 +54,7 @@ class Codecept
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
+        'env' => null,
     );
 
     public function __construct($options = array()) {
@@ -122,16 +123,22 @@ class Codecept
         ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
-        $environments = \Codeception\Configuration::suiteEnvironments($suite);
-        if (empty($environments)) {
-            $environments = array($settings);
+        $selectedEnvironments = $this->options['env'];
+        if (!$selectedEnvironments) {
+            $this->runSuite($settings, $suite, $test);
+            return;
         }
 
+        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+
         foreach ($environments as $env => $config) {
+            if (!in_array($env, $selectedEnvironments)) {
+                continue;
+            }
             if (!is_int($env)) {
                 $suite .= "-$env";
             }
-            $this->runSuite($settings, $suite, $test);
+            $this->runSuite($config, $suite, $test);
         }
     }
 

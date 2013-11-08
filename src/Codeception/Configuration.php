@@ -157,6 +157,7 @@ class Configuration
         $environments = array();
         foreach ($settings['env'] as $env => $envConfig) {
             $environments[$env] = self::mergeConfigs($settings, $envConfig);
+
         }
         return $environments;
     }
