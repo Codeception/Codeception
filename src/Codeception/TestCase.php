@@ -20,7 +20,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     public function getFileName()
     {
-        return get_class($this) . '::' . $this->getName();
+        return get_class($this) . '::' . $this->getName(false);
     }
 
     public function runStep(\Codeception\Step $step)
@@ -65,5 +65,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     {
         return $this->getFeature();
     }
+
+
 
 }

@@ -103,7 +103,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order --skip unit');
+        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers');
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
         $I->dontSeeInShellOutput("Remote_server Tests");
@@ -125,6 +125,16 @@ class RunCest
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
         $I->seeShellOutputMatches("~\(AnotherCest.optimistic\)\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherCest.pessimistic');
+    }
+
+    public function runTestWithDataProviders(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/unit/DataProvidersTest.php');
+        $I->seeInShellOutput('Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Trying to test is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Trying to test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput("OK");
     }
 
 }

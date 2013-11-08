@@ -168,22 +168,10 @@ class Console implements EventSubscriberInterface
             return;
         }
         $this->output->writeln("* " . $e->getStep());
-//        if ($this->debug) {
-//            $this->message('<debug>');
-//        }
-        
     }
 
     public function afterStep(\Codeception\Event\Step $e)
     {
-//        if ($this->debug) {
-//            $this->message("</debug>\n");
-//        }
-//        $this->output->writeln(json_encode($e->getStep()->pullDebugOutput()));
-//        if ($output = $e->getStep()->pullDebugOutput()) {
-//            $this->output->write(implode(', ',$output));
-//            $this->output->debug($output);
-//        }
     }
 
     public function afterSuite(\Codeception\Event\Suite $e)
@@ -353,6 +341,14 @@ class Console implements EventSubscriberInterface
                 $this->columns[0] = max(
                     $this->columns[0],
                     20 + strlen($test->getFeature()) + strlen($test->getFileName())
+                );
+                continue;
+            }
+            if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
+                $test = $test->testAt(0);
+                $this->columns[0] = max(
+                    $this->columns[0],
+                    15 + strlen($test->getFeature()) + strlen($test->getFileName())
                 );
                 continue;
             }
