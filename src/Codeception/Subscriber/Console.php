@@ -346,10 +346,13 @@ class Console implements EventSubscriberInterface
             }
             if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
                 $test = $test->testAt(0);
-                $feature = $test instanceof \Codeception\TestCase ? $test->getFeature() : "";
+                $output_length = $test instanceof \Codeception\TestCase
+                    ? strlen($test->getFeature()) + strlen($test->getFileName())
+                    : $test->toString();
+
                 $this->columns[0] = max(
                     $this->columns[0],
-                    15 + strlen($feature) + strlen($test->getFileName())
+                    15 +$output_length
                 );
                 continue;
             }
