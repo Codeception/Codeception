@@ -336,10 +336,14 @@ class REST extends \Codeception\Module
         $parameters = $this->encodeApplicationJson($method, $parameters);
         
         if (is_array($parameters) || $method == 'GET') {
-            if (!empty($parameters)) {
+            if (!empty($parameters) && $method == 'GET') {
                 $url .= '?' . http_build_query($parameters);
             }
-            $this->debugSection("Request", "$method $url");
+            if($method == 'GET') {
+                $this->debugSection("Request", "$method $url");
+            } else {
+                $this->debugSection("Request", "$method $url ".json_encode($parameters));
+            }
             $this->client->request($method, $url, $parameters, $files);
 
         } else {
