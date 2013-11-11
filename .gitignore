@@ -9,3 +9,4 @@ tests/data/included/jazz/pianist/tests/_log/*
 tests/data/included/shire/tests/_log/*
 tests/data/claypit/c3tmp/*'
 composer.lock
+tests/data/claypit/tests/_log/*
