@@ -8,26 +8,25 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
         if (!($test instanceof \Codeception\TestCase\Cept)) return parent::startTest($test);
 
 
-        $testCase = $this->document->createElement('testcase');
+        $this->currentTestCase = $this->document->createElement('testcase');
 
         if ($test instanceof \Codeception\TestCase\Cept) {
-            $testCase->setAttribute('file', $test->getFileName());
+            $this->currentTestCase->setAttribute('file', $test->getFileName());
+            return;
         }
 
-        if ($test instanceof \Codeception\TestCase\Cest) {
+        if ($test instanceof \Codeception\TestCase) {
             $class = new \ReflectionClass($test->getTestClass());
             $methodName = $test->getTestMethod();
 
             if ($class->hasMethod($methodName)) {
                 $method = $class->getMethod($methodName);
 
-                $testCase->setAttribute('class', $class->getName());
-                $testCase->setAttribute('file', $class->getFileName());
-                $testCase->setAttribute('line', $method->getStartLine());
+                $this->currentTestCase->setAttribute('class', $class->getName());
+                $this->currentTestCase->setAttribute('file', $class->getFileName());
+                $this->currentTestCase->setAttribute('line', $method->getStartLine());
             }
         }
-
-        $this->currentTestCase = $testCase;
     }
 
     public function endTest(\PHPUnit_Framework_Test $test, $time) {

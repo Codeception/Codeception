@@ -3,6 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Util\Debug;
 use Symfony\Component\EventDispatcher\Event;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
@@ -66,6 +67,29 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         return $this->getFeature();
     }
 
+    protected $dependencies;
+
+    public function setDependencies(array $dependencies)
+    {
+        $this->dependencies = $dependencies;
+    }
+
+    protected function handleDependencies()
+    {
+        if (empty($this->dependencies)) return true;
+
+        $passed     = $this->getTestResultObject()->passed();
+        $testNames = array_map(function($testname) { return preg_replace('~with data set (.*?)~','', $testname); }, array_keys($passed));
+        $testNames = array_unique($testNames);
+
+        foreach ($this->dependencies as $dependency) {
+            if (in_array($dependency, $testNames)) continue;
+            $this->getTestResultObject()->addError($this, new \PHPUnit_Framework_SkippedTestError("This test depends on '$dependency' to pass."),0);
+            return false;
+        }
+
+        return true;
+    }
 
 
 }

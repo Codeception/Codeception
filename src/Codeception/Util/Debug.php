@@ -19,6 +19,12 @@ class Debug {
         self::$output->debug($message);
     }
 
+    static function obj($message)
+    {
+        if (!self::$output) return;
+        self::$output->debug(print_r($message, true));
+    }
+
 
 
 }

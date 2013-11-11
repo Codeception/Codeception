@@ -58,6 +58,10 @@ class Scenario {
         return $this->groups;
     }
 
+    public function depends()
+    {
+        
+    }
 
 	public function setFeature($feature) {
 	    $this->feature = $feature;

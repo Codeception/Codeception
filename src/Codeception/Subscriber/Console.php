@@ -18,6 +18,7 @@ class Console implements EventSubscriberInterface
     protected $color = true;
     protected $silent = false;
     protected $lastTestFailed = false;
+    protected $printedTest = null;
 
     protected $traceLength = 5;
 
@@ -60,8 +61,10 @@ class Console implements EventSubscriberInterface
     public function startTest(\Codeception\Event\Test $e)
     {
         $test = $e->getTest();
+        $this->printedTest = $test;
+
         if ($test instanceof TestCase) {
-            return;
+            if ($test->getFeature()) return;
         }
 
         $this->message($test->toString())
@@ -109,6 +112,7 @@ class Console implements EventSubscriberInterface
 
     public function endTest(\Codeception\Event\Test $e)
     {
+        $this->printedTest = null;
     }
 
     public function testFail(\Codeception\Event\Fail $e)
@@ -135,6 +139,9 @@ class Console implements EventSubscriberInterface
 
     public function testSkipped(\Codeception\Event\Fail $e)
     {
+        if (!$this->printedTest) {
+            return;
+        }
         $message = $this->message('Skipped');
         if ($this->isDetailed($e->getTest())) {
             $message->apply('strtoupper')->append("\n");
@@ -206,16 +213,16 @@ class Console implements EventSubscriberInterface
     {
         $feature = $failedTest->getScenario()->getFeature();
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-        $fail_message = $this->message($failedTest->getFilename())->style('bold');
+        $failMessage = $this->message($failedTest->getFilename())->style('bold');
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
             $this->printSkippedTest($feature, $failedTest->getFileName(), $failToString);
             return;
         }
         if ($feature) {
-            $fail_message->prepend("Failed to $feature in ");
+            $failMessage->prepend("Failed to $feature in ");
         }
-        $fail_message->writeln();
+        $failMessage->writeln();
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printException($fail);
@@ -230,7 +237,6 @@ class Console implements EventSubscriberInterface
     public function printException(\Exception $e)
     {
         static $limit = 10;
-        static $bottomCut = -9;
         $this->message("[%s] %s")->with(get_class($e), $e->getMessage())->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
@@ -238,25 +244,12 @@ class Console implements EventSubscriberInterface
         );
 
         $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
-        array_splice($trace, $bottomCut);
         $i = 0;
         foreach ($trace as $step) {
             $i++;
-            if (isset($step['file'])) {
-                if (strpos($step['file'], 'codecept.phar//') !== false) {
-                    continue;
-                }
-            }
 
             $message = $this->message($i)->prepend('#')->width(4);
-            if (!isset($step['file']) && isset($step['class'])) {
-                $message->append("[internal] " . $step['class'] . '.' . $step['function']);
-            }
-
-            if (isset($step['file'])) {
-                $message->append($step['file'] . ':' . $step['line']);
-            }
-
+            $message->append($step['file'] . ':' . $step['line']);
             $message->writeln();
 
             if ($i >= $limit) {
@@ -285,7 +278,7 @@ class Console implements EventSubscriberInterface
         }
         $message->append($fileName);
         if ($failToString) {
-            $message->append(" is $failToString");
+            $message->append(": $failToString");
         }
         $message->write(OutputInterface::VERBOSITY_VERBOSE);
     }

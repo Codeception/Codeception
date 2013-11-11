@@ -201,11 +201,13 @@ class SuiteManager {
                     $t->getScenario()->groups($groups);
                 }
             }
+            $test->setDependencies(\PHPUnit_Util_Test::getDependencies($class->name, $method->name));
             return $test;
         }
         $this->injectDispatcherAndGuyClass($test);
 
         if ($test instanceof TestCase\Test) {
+            $test->setDependencies(\PHPUnit_Util_Test::getDependencies($class->name, $method->name));
             $groups = \PHPUnit_Util_Test::getGroups($class->name, $method->name);
             $test->getScenario()->groups($groups);
         } else {
