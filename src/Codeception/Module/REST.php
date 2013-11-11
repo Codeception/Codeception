@@ -217,6 +217,28 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Sends a HEAD request to given uri.
+     *
+     * @param $url
+     * @param array $params
+     */
+    public function sendHEAD($url, $params = array())
+    {
+        $this->execute('HEAD', $url, $params);
+    }
+
+    /**
+     * Sends an OPTIONS request to given uri.
+     *
+     * @param $url
+     * @param array $params
+     */
+    public function sendOPTIONS($url, $params = array())
+    {
+        $this->execute('OPTIONS', $url, $params);
+    }
+
+    /**
      * Sends a GET request to given uri.
      *
      * @param $url
