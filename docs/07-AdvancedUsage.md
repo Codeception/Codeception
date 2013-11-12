@@ -277,7 +277,7 @@ Locators are represented with public static properties:
 <?php
 class LoginPage
 {
-    const URL = '/login';
+    static $URL = '/login';
 
     static $usernameField = '#mainForm #username';
     static $passwordField = '#mainForm input[name=password]';
@@ -292,7 +292,7 @@ And this is how this page object can be used in a test:
 <?php
 $I = new WebGuy($scenario);
 $I->wantTo('login to site');
-$I->amOnPage(LoginPage::URL);
+$I->amOnPage(LoginPage::$URL);
 $I->fillField(LoginPage::$usernameField, 'bill evans');
 $I->fillField(LoginPage::$passwordField, 'debby');
 $I->click(LoginPage::$loginButton);
@@ -318,7 +318,7 @@ This generated `UserLoginPage` class looks almost the same way as LoginPage clas
 class UserLoginPage
 {
     // include url of current page
-    const URL = '/login';
+    static $URL = '/login';
 
     /**
      * @var WebGuy;
@@ -402,7 +402,7 @@ class MemberSteps extends \WebGuy
     function login($name, $password)
     {
         $I = $this;
-        $I->amOnPage(LoginPage::URL);
+        $I->amOnPage(LoginPage::$URL);
         $I->fillField(LoginPage::$usernameField, $name);
         $I->fillField(LoginPage::$passwordField, $password);
         $I->click(LoginPage::$loginButton);
