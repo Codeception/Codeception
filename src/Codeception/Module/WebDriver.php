@@ -3,6 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
+use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\WebInterface;
 use Codeception\Util\RemoteInterface;
@@ -1151,6 +1152,17 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->matchFirstOrFail($this->webDriver, $cssOrXPath);
         $this->webDriver->getMouse()->contextClick($el->getCoordinates());
+    }
+
+    /**
+     * Pauses test execution in debug mode.
+     * To proceed test press "ENTER" in console.
+     *
+     * This method is recommended to use in test development, for additional page analysis, locator searing, etc.
+     */
+    public function pauseExecution()
+    {
+        Debug::pause();
     }
 
     /**

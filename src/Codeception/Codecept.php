@@ -124,12 +124,12 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
         $selectedEnvironments = $this->options['env'];
-        if (!$selectedEnvironments) {
+        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+
+        if (!$selectedEnvironments or empty($environments)) {
             $this->runSuite($settings, $suite, $test);
             return;
         }
-
-        $environments = \Codeception\Configuration::suiteEnvironments($suite);
 
         foreach ($environments as $env => $config) {
             if (!in_array($env, $selectedEnvironments)) {

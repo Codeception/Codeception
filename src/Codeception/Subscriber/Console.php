@@ -84,7 +84,7 @@ class Console implements EventSubscriberInterface
                 ->with($test->getFeature(), $filename)
                 ->width($this->columns[0])
                 ->write();
-
+ 
         } else {
             $this->message("Running <focus>%s</focus> ")
                 ->with($filename)
@@ -95,6 +95,7 @@ class Console implements EventSubscriberInterface
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) {
             $this->output->writeln("\nScenario:");
         }
+        
     }
 
     public function afterTest(\Codeception\Event\Test $e)

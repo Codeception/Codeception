@@ -319,4 +319,10 @@ class WebDriverTest extends TestsForMink
         $this->module->appendField('form input[name=terms]', 'Get Off123');
     }
 
+    public function testPauseExecution()
+    {
+        $this->module->amOnPage('/');
+        $this->module->pauseExecution();
+    }
+
 }
