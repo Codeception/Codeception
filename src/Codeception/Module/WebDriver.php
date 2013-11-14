@@ -828,7 +828,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Waits until element has changed according to callback function or for $time seconds to pass.
+     * Waits for element to change or for $timeout seconds to pass. Element "change" is determined
+     * by a callback function which is called repeatedly until it returns true.
      *
      * ``` php
      * <?php
@@ -849,7 +850,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!count($els)) throw new ElementNotFound($element, "CSS or XPath");
         $el = reset($els);
         $checker = function() use ($el, $callback) {
-            $callback($el);
+            return $callback($el);
         };
         $this->webDriver->wait($timeout)->until($checker);
     }
