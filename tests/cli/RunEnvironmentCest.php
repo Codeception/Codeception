@@ -56,7 +56,7 @@ class RunEnvironmentCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env dev');
         $I->seeInShellOutput('Trying to power of the universe (MageGuildCest.powerOfTheUniverse)');
-        $I->seeInShellOutput('OK (1 tests, 1 assertions)');
+        $I->seeInShellOutput('OK (1 test, 1 assertion)');
     }
 
 
