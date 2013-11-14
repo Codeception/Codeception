@@ -16,4 +16,9 @@ class PowerHelper extends \Codeception\Module
     {
         if (!$this->config['has_power']) $this->fail("I have no power :(");
     }
+
+    public function castFireball()
+    {
+        $this->assertTrue(true);
+    }
 }

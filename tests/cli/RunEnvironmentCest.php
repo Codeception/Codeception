@@ -26,7 +26,7 @@ class RunEnvironmentCest
     {
         $I->wantTo('execute check that env params applied');
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run powers --env=dev -vv');
+        $I->executeCommand('run powers PowerIsRisingCept.php --env=dev -vv');
         $I->seeInShellOutput('I got the power');
         $I->seeInShellOutput("PASSED");
         $I->seeInShellOutput("OK (");
@@ -36,10 +36,12 @@ class RunEnvironmentCest
     {
         $I->wantTo('execute check that env params applied');
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run powers -vv --no-exit');
+        $I->executeCommand('run powers PowerIsRisingCept.php -vv --no-exit');
         $I->seeInShellOutput("I have no power");
         $I->seeInShellOutput("FAIL");
     }
+
+
 
 
 }

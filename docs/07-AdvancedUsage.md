@@ -424,6 +424,96 @@ As you see, StepObject class looks much simpler and readable then classical Page
 As an alternative to StepObject we could use methods of `WebHelper` class. In a helper we do not have an access to `$I` object itself,
 thus it's better to use Helpers should be used to implement new actions, and StepObjects to combine common scenarios.
 
+## Environments
+
+*added in 1.8*
+
+For cases where you need to run tests over different configurations you can define different config environments.
+The most typical use cases are: run acceptance tests in different browsers, or run database tests over different database engines.
+
+Let's demonstrate usage of environments for the browsers case.
+
+We add new lines into `acceptance.suite.yml`:
+
+``` yaml
+class_name: WebGuy
+modules:
+    enabled:
+        - WebDriver
+        - WebHelper
+    config:
+        WebDriver:
+            url: 'http://127.0.0.1:8000/'
+            browser: 'firefox'
+
+env:
+    phantom:
+         modules:
+            config:
+                WebDriver:
+                    browser: 'phantomjs'
+
+    chrome:
+         modules:
+            config:
+                WebDriver:
+                    browser: 'chrome'
+
+    firefox:
+        # nothing changes
+```
+
+At first sight this trees of config looks ugly, but it is the most clean way of implementation.
+Basically you can define different environments inside the `env` root, name them (`phantom`, `chrome`),
+and then you can redefine any configuration parameter that was previously set.
+
+You can easily switch those configs by running tests with `--env` option. To run tests only in phanrom js you pass `--env phantom option`
+
+ ``` bash
+ php codecept.phar run acceptance --env phantom
+ ```
+
+ To run tests in all 3 browsers, just list all the environments
+
+ ```
+ php codecept.phar run acceptance --env phantom --env chrome --env firefox
+ ```
+
+and tests will be executed 3 times, each time in a different browser.
+
+Depending on environment you may choose which tests are to be executed.
+For example, you might need some tests that will be executed only in Firefox, and few tests only in Chrome.
+
+Desired environment for test can be specified eaither with `@env` annotation for Test and Cest formats
+
+``` php
+<?php
+/**
+ * This test will be executed only in firefox and phantom environments
+ *
+ * @env chrome
+ * @env phantom
+ * /
+function webkitOnlyTest(WebGuy $I)
+{
+  // I do something...
+}
+?>
+```
+
+For Cept you should use `$scenario->env()`:
+
+``` php
+<?php
+$scenario->env('firefox');
+$scenario->env('phantom');
+$scenario->env(array('phantom', 'firefox'));
+?>
+```
+
+This way you can easily control what tests will be executed for which browsers.
+
+
 ## Conclusion
 
 Codeception is a framework which may look simple at first sight. But it allows you to build powerful test with one  APIs, refactor them, and write them faster using interactive console. Codeception tests can easily be organized with groups or Cest classes, store locators in PageObjects and combine common steps in StepObjects.

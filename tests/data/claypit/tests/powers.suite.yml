@@ -7,3 +7,8 @@ env:
             config:
                 PowerHelper:
                     has_power: true
+    white:
+    dark:
+    magic:
+    green:
+    whisky:
