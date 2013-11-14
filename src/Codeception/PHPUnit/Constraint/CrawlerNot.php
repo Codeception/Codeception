@@ -4,16 +4,18 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerNot extends Crawler {
 
-    protected function matches(DomCrawler $nodes)
+    protected function matches($nodes)
     {
+        /** @var $nodes DomCrawler  **/
         return !parent::matches($nodes);
     }
 
-    protected function fail(DomCrawler $nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
         if (!$this->string) {
             throw new \PHPUnit_Framework_ExpectationFailedException("Element '$selector' was found", $comparisonFailure);
         }
+        /** @var $nodes DomCrawler  **/
 
         $output = "There was '$selector' element";
         $output .= $this->uriMessage('on page');
