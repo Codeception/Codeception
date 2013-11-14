@@ -41,6 +41,23 @@ class RunEnvironmentCest
         $I->seeInShellOutput("FAIL");
     }
 
+    public function runTestForSpecificEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run powers MageGuildCest.php  --env whisky');
+        $I->seeInShellOutput('Trying to red label (MageGuildCest.redLabel)');
+        $I->seeInShellOutput('Trying to black label (MageGuildCest.blackLabel)');
+        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest.powerOfTheUniverse)');
+        $I->seeInShellOutput('OK (3 tests, 3 assertions)');
+    }
+
+    public function runTestForNotIncludedEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run powers MageGuildCest.php  --env dev');
+        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest.powerOfTheUniverse)');
+        $I->seeInShellOutput('OK (1 tests, 1 assertions)');
+    }
 
 
 
