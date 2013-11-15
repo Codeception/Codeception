@@ -25,14 +25,12 @@
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
         "symfony/yaml": "~2.3"
-
     },
     "require-dev": {
         "behat/mink-selenium-driver": "1.1.*",
         "facebook/php-sdk": "3.*",
         "behat/mink-zombie-driver": "1.1.*",
-        "videlalvaro/php-amqplib": "*",
-        "codeception/phpbuiltinserver": "*"
+        "videlalvaro/php-amqplib": "*"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to starts and stops PHP builtin web server for your tests"
