@@ -23,7 +23,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * ## Migration Guide (Selenium2 -> WebDriver)
  *
  * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
- * 
+ *
  *
  *
  * ## Status
@@ -69,7 +69,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'wait' => 5,
         'capabilities' => array()
     );
-    
+
     protected $wd_host;
     protected $capabilities;
     protected $test;
@@ -123,7 +123,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             unset($this->webDriver);
         }
     }
-    
+
     public function _getResponseCode() {}
 
     public function _sendRequest($url) {}
@@ -827,7 +827,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Waits until element has changed according to callback function or for $time seconds to pass.
+     * Waits for element to change or for $timeout seconds to pass. Element "change" is determined
+     * by a callback function which is called repeatedly until the return value evaluates to true.
      *
      * ``` php
      * <?php
@@ -848,7 +849,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!count($els)) throw new ElementNotFound($element, "CSS or XPath");
         $el = reset($els);
         $checker = function() use ($el, $callback) {
-            $callback($el);
+            return $callback($el);
         };
         $this->webDriver->wait($timeout)->until($checker);
     }
@@ -1218,7 +1219,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
     }
-    
+
     /**
      * Append text to an element
      * Can add another selection to a select box
