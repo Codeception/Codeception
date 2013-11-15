@@ -36,6 +36,11 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 ## Actions
 
 
+### getName
+
+__not documented__
+
+
 ### haveHttpHeader
 
 

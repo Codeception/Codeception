@@ -49,3 +49,7 @@ for ($i = 0; $i<10; $i++) {
 
 ## Actions
 
+
+### getName
+
+__not documented__
