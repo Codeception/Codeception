@@ -18,6 +18,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.35.0.jar
   - java -jar selenium-server-standalone-2.35.0.jar -port 4444 &
+  - php -S localhost:8000 -t tests/data/app &
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
