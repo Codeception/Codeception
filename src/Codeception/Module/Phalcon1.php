@@ -9,6 +9,10 @@ use Codeception\Util\Connector\PhalconMemorySession;
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
  *
+ * ## Demo Project
+ *
+ * <https://github.com/phalcon/forum>
+ *
  * The following configurations are required for this module:
  * <ul>
  * <li>boostrap - the path of the application bootstrap file</li>
@@ -17,6 +21,18 @@ use Codeception\Util\Connector\PhalconMemorySession;
  * </ul>
  *
  * The application bootstrap file must return Application object but not call its handle() method.
+ *
+ * Sample bootstrap (`app/config/bootstrap.php`):
+ *
+ * ``` php
+ * <?php
+ * $config = include __DIR__ . "/config.php";
+ * include __DIR__ . "/loader.php";
+ * $di = new \Phalcon\DI\FactoryDefault();
+ * include __DIR__ . "/services.php";
+ * return new \Phalcon\Mvc\Application($di);
+ * ?>
+ * ```
  *
  * You can use this module by setting params in your functional.suite.yml:
  * <pre>
@@ -30,10 +46,12 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *             savepoints: true
  * </pre>
  *
+ *
  * ## Status
  *
  * Maintainer: **cujo**
  * Stability: **alfa**
+ *
  *
  */
 class Phalcon1 extends \Codeception\Util\Framework

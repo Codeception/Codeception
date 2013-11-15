@@ -162,7 +162,7 @@ As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPU
 
 Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
 
-### Annotations
+### Before/After Annotations
 
 *added in 1.7.0*
 
@@ -213,6 +213,35 @@ class ModeratorCest {
 ```
 
 You can use `@before` and `@after` for included functions also. But you can't have multiple annotations in one method.
+
+### Depends Annotation
+
+* new in 1.8 *
+
+With `@depends` annotation you can specify a test that should be passed before current one. If the test fails, current test will be skipped.
+You should pass a method name of a test you are relying on.
+
+``` php
+<?php
+class ModeratorCest {
+
+    public function login(WebGuy $I)
+    {
+        // logs moderator in
+    }
+
+    /**
+     * @depends login
+     */
+    function banUser(WebGuy $I)
+    {
+        // bans user
+    }
+}
+?>
+```
+
+Hint: `@depends` can be combined with `@before`.
 
 ## Refactoring
 
