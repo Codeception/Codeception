@@ -11,11 +11,6 @@ settings:
     log: true
 modules:
     config:
-        Db:
-            dsn: ''
-            user: ''
-            password: ''
-            dump: tests/data/dump.sql
         AMQP:
             host: 'localhost'
             port: '5672'
@@ -23,7 +18,14 @@ modules:
             password: 'guest'
             vhost: '/'
             queues: [queue1, queue2]
-
+extensions:
+    enabled:
+        - Codeception\Extension\PhpBuiltinServer
+    config:
+        Codeception\Extension\PhpBuiltinServer:
+            hostname: localhost
+            port: 8000
+            documentRoot: tests/data/app
 coverage:
     enabled: true
     include:

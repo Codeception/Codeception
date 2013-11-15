@@ -32,8 +32,6 @@ class GenerateScenarioTest extends BaseCommandRunner {
     public function testBasic()
     {
         $this->execute(array('suite' => 'dummy'));
-        $this->filename = $this->log[0]['filename'];
-        $this->content = $this->log[0]['content'];        
         $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/dummy/File_Exists.txt', $this->filename);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('I see file found "codeception.yml"', $this->content);

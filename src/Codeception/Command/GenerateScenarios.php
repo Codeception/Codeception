@@ -16,7 +16,7 @@ class GenerateScenarios extends Base
     protected function configure()
     {
         $this->setDefinition(array(
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite from which tests should be generated'),
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite from which texts should be generated'),
             new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
             new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
