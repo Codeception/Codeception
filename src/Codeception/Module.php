@@ -194,7 +194,7 @@ abstract class Module
      * @param $actual
      * @param string $message
      */
-    protected function assertGreaterThen($expected, $actual, $message = '')
+    protected function assertGreaterThan($expected, $actual, $message = '')
     {
         return \PHPUnit_Framework_Assert::assertGreaterThan($expected, $actual, $message);
     }
@@ -206,7 +206,7 @@ abstract class Module
      * @param $actual
      * @param string $message
      */
-    protected function assertGreaterThenOrEqual($expected, $actual, $message = '')
+    protected function assertGreaterThanOrEqual($expected, $actual, $message = '')
     {
         return \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $message);
     }
@@ -219,9 +219,9 @@ abstract class Module
      * @param string $message
      * @return mixed
      */
-    protected function assertLowerThen($expected, $actual, $message = '')
+    protected function assertLessThan($expected, $actual, $message = '')
     {
-        return \PHPUnit_Framework_Assert::assertLowerThan($expected, $actual, $message);
+        return \PHPUnit_Framework_Assert::assertLessThan($expected, $actual, $message);
     }
 
     /**
@@ -232,9 +232,9 @@ abstract class Module
      * @param string $message
      * @return mixed
      */
-    protected function assertLowerThenOrEqual($expected, $actual, $message = '')
+    protected function assertLessThanOrEqual($expected, $actual, $message = '')
     {
-        return \PHPUnit_Framework_Assert::assertLowerThanOrEqual($expected, $actual, $message);
+        return \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $message);
     }
 
     /**
@@ -377,5 +377,43 @@ abstract class Module
         }
 
         return $array;
+    }
+
+
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThan
+     * remove when not in use by any codeception-users
+     * @deprecated
+     */
+    protected function assertGreaterThen($expected, $actual, $message = '') {
+        return $this->assertGreaterThan($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThanOrEqual
+     * remove when not in use by any codeception-users
+     * @deprecated
+     */
+    protected function assertGreaterThenOrEqual($expected, $actual, $message = '') {
+        return $this->assertGreaterThanOrEqual($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThan
+     * remove when not in use by any codeception-users
+     * @deprecated
+     */
+    protected function assertLowerThen($expected, $actual, $message = '') {
+        return $this->assertLessThan($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThanOrEqual
+     * remove when not in use by any codeception-users
+     * @deprecated
+     */
+    protected function assertLowerThenOrEqual($expected, $actual, $message = '') {
+        return $this->assertLessThanOrEqual($expected, $actual, $message);
     }
 }
