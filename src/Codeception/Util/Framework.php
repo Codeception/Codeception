@@ -336,6 +336,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         }
 
         $form[$fieldName]->select($this->matchOption($field, $option));
+
     }
 
     protected function matchOption(Crawler $field, $option)
@@ -476,8 +477,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     protected function matchSelectedOption($select)
     {
-        $nodes = $this->match($select);
-        $this->assertDomContains($nodes, "select '$select'");
+        $nodes = $this->getFieldByLabelOrCss($select);
         return $nodes->first()->filter('option[selected]');
     }
 

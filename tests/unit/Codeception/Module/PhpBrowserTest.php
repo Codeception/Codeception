@@ -27,7 +27,7 @@ class PhpBrowserTest extends TestsForMink
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
     }
-
+    
     protected function tearDown() {
         $this->noPhpWebserver();
         if ($this->module) {
@@ -64,9 +64,8 @@ class PhpBrowserTest extends TestsForMink
         $this->assertTrue($opts[CURLOPT_NOBODY]);
 
     }
-
-    public function testSubmitForm()
-    {
+    
+    public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
                 'name' => 'Davert',
@@ -141,4 +140,5 @@ class PhpBrowserTest extends TestsForMink
         $I->submitForm('form', array('searchQuery' => 'test'));
         $I->see('Success');
     }
+
 }

@@ -2,6 +2,7 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Util\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class WebDriver extends Page {
@@ -24,17 +25,15 @@ class WebDriver extends Page {
     {
         if (!count($nodes)) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
 
-        $output = "Failed asserting that any element found by selector '$selector' ";
-        if ($this->uri) $output .= "on page '{$this->uri}' ";
+        $output = new Message("Failed asserting that any element by '$selector'");
+        $output .= $this->uriMessage('on page');
+
         if (count($nodes) < 5) {
             $output .= "\nElements: ";
-            foreach ($nodes as $node)
-            {
-                /** @var $node \WebDriverElement  **/
-                $output .= $node->getTagName().'['.$node->getText().'] ';
-            }
+            $output .= $this->nodesList($nodes);
         } else {
-            $output .= sprintf("(total %s elements)", count($nodes));
+            $message = new Message("[total %s elements]");
+            $output .= $message->with(count($nodes))->style('debug');
         }
         $output .= "\ncontains text '".$this->string."'";
 
@@ -44,14 +43,33 @@ class WebDriver extends Page {
         );
     }
 
-    protected function failureDescription(DOMCrawler $other)
+    protected function failureDescription($nodes)
     {
         $desc = '';
-        foreach ($other as $o) {
-            $desc .= parent::failureDescription($o->textContent);
+        foreach ($nodes as $node) {
+            $desc .= parent::failureDescription($node->getText());
         }
         return $desc;
     }
+
+    protected function nodesList($nodes, $contains = null)
+    {
+        $output = "";
+        foreach ($nodes as $node)
+        {
+            if ($contains) {
+                if (strpos($node->getText(), $contains) === false) {
+                    continue;
+                }
+            }
+            /** @var $node \WebDriverElement  **/
+            $message = new Message("<%s> %s");
+            $output .= $message->with($node->getTagName(), $node->getText())->style('info')->prepend("\n+ ");
+        }
+        return $output;
+
+    }
+
 
 
 }

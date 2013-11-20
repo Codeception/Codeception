@@ -53,7 +53,8 @@ class Run extends Base
     {
         $output->writeln(\Codeception\Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         $options = $input->getOptions();
-        if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        if ($options['debug']) $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $options['verbosity'] = $output->getVerbosity();
 
         if (!extension_loaded('curl')) {
             throw new \Exception(

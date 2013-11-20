@@ -230,7 +230,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * You can use native PHPUnit asserts in the executed code. 
+     * You can use native PHPUnit asserts in the executed code.
      * These can be either static methods of the 'PHPUnit_Framework_assert' class,
      * or functions taken from 'PHPUnit/Framework/Assert/Functions.php'. They start with 'assert_' prefix.
      * You should manually include this file, as these functions may conflict with functions in your code.
@@ -310,7 +310,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      *
      * Updates multiple properties of the selected object.
      * Can update even private and protected properties.
-     * 
+     *
      * Properties to be updated and their values are passed in the second parameter as an array:
      * array('theProperty'     => 'some value',
      *      ('anotherProperty' => 'another value')

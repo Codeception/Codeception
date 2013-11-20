@@ -85,8 +85,9 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped -g notorun');
-        $I->seeInShellOutput("Incomplete");
-        $I->dontSeeInShellOutput("Skipped");
+        $I->seeInShellOutput("IncompleteMeCept.php");
+        $I->dontSeeInShellOutput("CommentsCept.php");
+        $I->dontSeeInShellOutput("SkipMeCept.php");
 
     }
 
@@ -94,19 +95,19 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped,dummy --no-exit');
-        $I->seeInShellOutput("Suite skipped started");
-        $I->seeInShellOutput("Suite dummy started");
-        $I->dontSeeInShellOutput("Suite remote started");
+        $I->seeInShellOutput("Skipped Tests");
+        $I->seeInShellOutput("Dummy Tests");
+        $I->dontSeeInShellOutput("Remote Tests");
     }
 
     public function skipSuites(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order --skip unit');
-        $I->seeInShellOutput("Suite dummy started");
-        $I->dontSeeInShellOutput("Suite remote started");
-        $I->dontSeeInShellOutput("Suite remote_server started");
-        $I->dontSeeInShellOutput("Suite order started");
+        $I->seeInShellOutput("Dummy Tests");
+        $I->dontSeeInShellOutput("Remote Tests");
+        $I->dontSeeInShellOutput("Remote_server Tests");
+        $I->dontSeeInShellOutput("Order Tests");
 
     }
 
@@ -114,7 +115,7 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeInShellOutput('Running AnotherTest::testFirst - Ok');
+        $I->seeShellOutputMatches("~Running AnotherTest::testFirst\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherTest::testSecond');
     }
 
@@ -122,7 +123,7 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
-        $I->seeInShellOutput('(AnotherCest.optimistic) - Ok');
+        $I->seeShellOutputMatches("~\(AnotherCest.optimistic\)\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherCest.pessimistic');
     }
 

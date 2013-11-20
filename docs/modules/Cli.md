@@ -37,3 +37,8 @@ Executes a shell command
 Checks that output from last executed command contains text
 
  * param $text
+
+
+### seeShellOutputMatches
+
+__not documented__

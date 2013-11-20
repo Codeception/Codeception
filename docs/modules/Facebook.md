@@ -5,6 +5,10 @@
 Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
 
+<div class="alert alert-info">
+To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> package.
+</div>
+
 ## Status
 
 * Maintainer: **tiger-seo**

@@ -60,7 +60,7 @@ abstract class Module extends AssertWrapper
 
     public function _reconfigure($config)
     {
-        $this->config = array_merge($this->backupConfig, $config);
+        $this->config =  array_merge($this->backupConfig, $config);
         $this->validateConfig();
     }
 
@@ -76,7 +76,7 @@ abstract class Module extends AssertWrapper
             throw new Exception\ModuleConfig(
                 get_class($this),
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
-                Update configuration and set all required fields\n\n"
+                Please, update the configuration and set all the required fields\n\n"
             );
         }
     }

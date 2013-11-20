@@ -154,21 +154,10 @@ $I->click('Logout', '#nav');
 ### dontSee
 
 
-Check if current page doesn't contain the text specified.
-Specify the css selector to match only specific region.
+ * param string $text
+ * param string $selector
 
-Examples:
-
-```php
-<?php
-$I->dontSee('Login'); // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1'); // with XPath
-?>
-```
-
- * param $text
- * param null $selector
+ * return void
 
 
 ### dontSeeCheckboxIsChecked

@@ -3,18 +3,25 @@
 
 
 New generation Selenium2 module.
+*Included in Codeception 1.7.0*
 
 ## Installation
 
 Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
+## Migration Guide (Selenium2 -> WebDriver)
+
+* `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+
+
+
 ## Status
 
 * Maintainer: **davert**
-* Stability: **alpha**
+* Stability: **beta**
 * Contact: davert.codecept@mailican.com
-* Based on [faebook php-webdriver](https://github.com/facebook/php-webdriver)
+* Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
 
 ## Configuration
 
@@ -22,21 +29,21 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 * browser *required* - browser that would be launched
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
+* restart - set to false to share browser sesssion between tests (by default), or set to true to create a session per test
 * wait - set the implicit wait (5 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
 ### Example (`acceptance.suite.yml`)
 
     modules:
-       enabled: [Selenium2]
+       enabled: [WebDriver]
        config:
-          Selenium2:
+          WebDriver:
              url: 'http://localhost/'
              browser: firefox
+             wait: 10
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
-
-
 
 
 Class WebDriver
@@ -47,7 +54,10 @@ Class WebDriver
 
 ### acceptPopup
 
-__not documented__
+
+Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
+Don't confuse it with modal windows, created by [various libraries](http://jster.net/category/windows-modals-popups).
+
 
 
 ### amOnPage
@@ -72,7 +82,40 @@ $I->amOnPage('/register');
 
 ### amOnSubdomain
 
-__not documented__
+
+Sets 'url' configuration parameter to hosts subdomain.
+It does not open a page on subdomain. Use `amOnPage` for that
+
+``` php
+<?php
+// If config is: 'http://mysite.com'
+// or config is: 'http://www.mysite.com'
+// or config is: 'http://company.mysite.com'
+
+$I->amOnSubdomain('user');
+$I->amOnPage('/');
+// moves to http://user.mysite.com/
+?>
+```
+ * param $subdomain
+ * return mixed
+
+
+### appendField
+
+
+Append text to an element
+Can add another selection to a select box
+
+``` php
+<?php
+$I->appendField('#mySelectbox', 'SelectValue');
+$I->appendField('#myTextField', 'appended');
+?>
+```
+
+ * param string $field
+ * param string $value
 
 
 ### attachFile
@@ -95,7 +138,8 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
 
 ### cancelPopup
 
-__not documented__
+
+Dismisses active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt`.
 
 
 ### checkOption
@@ -148,6 +192,15 @@ $I->click('Logout', '#nav');
  * param $context
 
 
+### clickWithRightButton
+
+
+Performs contextual click with right mouse button on element matched by CSS or XPath.
+
+ * param $cssOrXPath
+ * throws \Codeception\Exception\ElementNotFound
+
+
 ### dontSee
 
 
@@ -188,7 +241,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ### dontSeeCookie
 
-__not documented__
+
+Checks that cookie doesn't exist
+
+ * param $cookie
+ * return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -323,6 +380,30 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
+### doubleClick
+
+
+Performs a double click on element matched by CSS or XPath.
+
+ * param $cssOrXPath
+ * throws \Codeception\Exception\ElementNotFound
+
+
+### dragAndDrop
+
+
+Performs a simple mouse drag and drop operation.
+
+``` php
+<?php
+$I->dragAndDrop('#drag', '#drop');
+?>
+```
+
+ * param string $source (CSS ID or XPath)
+ * param string $target (CSS ID or XPath)
+
+
 ### executeInSelenium
 
 
@@ -370,7 +451,11 @@ $I->fillField("//input[@type='text']", "Hello World!");
 
 ### grabCookie
 
-__not documented__
+
+Grabs a cookie value.
+
+ * param $cookie
+ * return mixed
 
 
 ### grabFromCurrentUrl
@@ -431,6 +516,22 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
  * return mixed
 
 
+### makeScreenshot
+
+
+Makes a screenshot of current window and saves it to `tests/_log/debug`.
+
+``` php
+<?php
+$I->amOnPage('/user/edit');
+$I->makeScreenshot('edit page');
+// saved to: tests/_log/debug/UserEdit - edit page.png
+?>
+```
+
+ * param $name
+
+
 ### maximizeWindow
 
 
@@ -449,6 +550,46 @@ Moves back in history
 Moves forward in history
 
 
+### moveMouseOver
+
+
+Move mouse over the first element matched by css or xPath on page
+
+https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
+
+ * param string $cssOrXPath css or xpath of the web element
+ * param int $offsetX
+ * param int $offsetY
+
+ * throws \Codeception\Exception\ElementNotFound
+ * return null
+
+
+### pressKey
+
+
+Presses key on element found by css, xpath is focused
+A char and modifier (ctrl, alt, shift, meta) can be provided.
+For special keys use key constants from \WebDriverKeys class.
+
+Example:
+
+``` php
+<?php
+// <input id="page" value="old" />
+$I->pressKey('#page','a'); // => olda
+$I->pressKey('#page',array('ctrl','a'),'new'); //=> new
+$I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
+$I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
+$I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
+?>
+```
+
+ * param $element
+ * param $char can be char or array with modifier. You can provide several chars.
+ * throws \Codeception\Exception\ElementNotFound
+
+
 ### reloadPage
 
 
@@ -457,7 +598,11 @@ Reloads current page
 
 ### resetCookie
 
-__not documented__
+
+Unsets cookie
+
+ * param $cookie
+ * return mixed
 
 
 ### resizeWindow
@@ -517,7 +662,11 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 
 ### seeCookie
 
-__not documented__
+
+Checks that cookie is set.
+
+ * param $cookie
+ * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -620,7 +769,10 @@ $I->seeInField('//form/*[@name=search]','Search');
 
 ### seeInPopup
 
-__not documented__
+
+Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
+
+ * param $text
 
 
 ### seeInTitle
@@ -702,7 +854,12 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
 ### setCookie
 
-__not documented__
+
+Sets a cookie.
+
+ * param $cookie
+ * param $value
+ * return mixed
 
 
 ### submitForm
@@ -808,7 +965,10 @@ $I->executeInSelenium(function (\Webdriver $webdriver) {
 
 ### typeInPopup
 
-__not documented__
+
+Enters text into native JavaScript prompt popup created by `window.prompt`.
+
+ * param $keys
 
 
 ### uncheckOption
@@ -827,10 +987,23 @@ $I->uncheckOption('#notify');
  * param $option
 
 
+### unselectOption
+
+__not documented__
+
+
+### wait
+
+
+Explicit wait.
+
+ * param $timeout secs
+
+
 ### waitForElement
 
 
-Waits for element to appear on page for specific amount of time.
+Waits for element to appear on page for $timeout seconds to pass.
 If element not appears, timeout exception is thrown.
 
 ``` php
@@ -848,7 +1021,8 @@ $I->click('#agree_button');
 ### waitForElementChange
 
 
-Waits until element has changed according to callback function
+Waits for element to change or for $timeout seconds to pass. Element "change" is determined
+by a callback function which is called repeatedly until the return value evaluates to true.
 
 ``` php
 <?php
@@ -860,7 +1034,7 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
 
  * param $element
  * param \Closure $callback
- * param int $timeout
+ * param int $timeout seconds
  * throws \Codeception\Exception\ElementNotFound
 
 
@@ -879,3 +1053,24 @@ $I->waitForJS("return $.active == 0;", 60);
 
  * param $script
  * param $timeout int seconds
+
+
+### waitForText
+
+
+Waits for text to appear on the page for a specific amount of time.
+Can also be passed a selector to search in.
+If text does not appear, timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForText('foo', 30); // secs
+$I->waitForText('foo', 30, '.title'); // secs
+?>
+```
+
+ * param string $text
+ * param int $timeout seconds
+ * param null $selector
+ * throws \Exception
+ * internal param string $element

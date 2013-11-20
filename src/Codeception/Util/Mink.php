@@ -73,7 +73,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
      */
     public function _getCookie($cookie)
     {
-    	$value = $this->session->getCookie($cookie);
+        $value = $this->session->getCookie($cookie);
         if (is_null($value)) {
             // try to parse headers because of bug in
             // \Behat\Mink\Driver\BrowserKitDriver::getCookie
@@ -272,24 +272,19 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
 
     public function seeElement($selector)
     {
-        try{
-            $this->findEl($selector);
-        } catch (ElementNotFound $e) {
-            $this->fail("Element '$selector' was not found");
-            return;
-        }
-        $this->assertTrue(true);
+        $el = $this->findEl($selector);
+        $this->assertNotEmpty($el);
     }
 
     public function dontSeeElement($selector)
     {
-        try{
-            $this->findEl($selector);
-        } catch (ElementNotFound $e) {
-            $this->assertTrue(true);
-            return;
+        $el = array();
+        try {
+            $el = $this->findEl($selector);
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            // ignore
         }
-        $this->fail("Element '$selector' was not found");
+        $this->assertEmpty($el);
     }
 
     /**
@@ -565,7 +560,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         if (!$node) {
             $this->fail(", checkbox not found");
         }
-        $this->assertTrue($node->isChecked());
+        $this->assertEquals('checked', $node->getAttribute('checked'));
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
@@ -574,7 +569,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         if (!$node) {
             $this->fail(", checkbox not found");
         }
-        $this->assertFalse($node->isChecked());
+        $this->assertNull($node->getAttribute('checked'));
     }
 
     public function seeInField($field, $value)

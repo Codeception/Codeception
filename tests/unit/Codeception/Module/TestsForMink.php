@@ -447,7 +447,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
     {
         $this->shouldFail();
         $this->module->amOnPage('/info');
-        $this->module->dontSeeElement('.notice');
+        $this->module->dontSeeElement('#back');
     }
 
     public function testSeeInFieldFail()

@@ -11,15 +11,13 @@ class UI extends \PHPUnit_TextUI_ResultPrinter {
     protected $dispatcher;
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null) {
-        parent::__construct($out, $options['steps'] || $options['debug'], $options['colors']);
+        parent::__construct($out, $options['verbosity'] > 1, $options['colors']);
         $this->dispatcher = $dispatcher;
     }
 
     protected function printDefect(\PHPUnit_Framework_TestFailure $defect, $count)
     {
-        $failedTest = $defect->failedTest();
         $this->write("\n---------\n");
-        if (!($failedTest instanceof \Codeception\TestCase)) return parent::printDefect($defect, $count);
         $this->dispatcher->dispatch('test.fail.print', new \Codeception\Event\Fail($defect->failedTest(), $defect->thrownException(), $count));
     }
 

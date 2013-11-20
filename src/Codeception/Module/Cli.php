@@ -57,4 +57,9 @@ class Cli extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertNotContains($text, $this->output);
     }
 
+    public function seeShellOutputMatches($regex)
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($regex, $this->output);
+    }
+
 }
