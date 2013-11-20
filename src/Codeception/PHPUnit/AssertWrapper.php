@@ -52,25 +52,25 @@ class AssertWrapper
     }
 
     /**
-     * Checks that expected is greater then actual
+     * Checks that expected is greater than actual
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
      */
-    protected function assertGreaterThen($expected, $actual, $message = '')
+    protected function assertGreaterThan($expected, $actual, $message = '')
     {
         \PHPUnit_Framework_Assert::assertGreaterThan($expected, $actual, $message);
     }
 
     /**
-     * Checks that expected is greater or equal then actual
+     * Checks that expected is greater or equal than actual
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
      */
-    protected function assertGreaterThenOrEqual($expected, $actual, $message = '')
+    protected function assertGreaterThanOrEqual($expected, $actual, $message = '')
     {
         \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $message);
     }
