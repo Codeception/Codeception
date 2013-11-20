@@ -1,12 +1,13 @@
 <?php
+
 namespace Codeception\Command;
 
+use Codeception\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use \Symfony\Component\Yaml\Yaml;
 
-class Base extends \Symfony\Component\Console\Command\Command
+class Base extends Command
 {
-
     public function addStyles($output)
     {
         $style = new OutputFormatterStyle('white', 'green', array('bold'));
@@ -29,11 +30,7 @@ class Base extends \Symfony\Component\Console\Command\Command
     protected function getNamespaceString($class)
     {
         $namespaces = $this->getNamespaces($class);
-        $ns = "";
-        if (count($namespaces)) {
-            $ns = "namespace ".implode('\\',$namespaces).";\n";
-        }
-        return $ns;
+        return $namespaces ? 'namespace ' . implode('\\', $namespaces) . ";\n" : '';
     }
 
     protected function getNamespaces($class)
@@ -51,61 +48,82 @@ class Base extends \Symfony\Component\Console\Command\Command
 
     protected function breakParts($class)
     {
-        $class = str_replace('/', '\\', $class);
+        $class      = str_replace('/', '\\', $class);
         $namespaces = explode('\\', $class);
-        if (count($namespaces)) $namespaces[0] = ltrim($namespaces[0],'\\');
-        if (!$namespaces[0]) array_shift($namespaces); // remove empty namespace caused of \\
+        if (count($namespaces)) {
+            $namespaces[0] = ltrim($namespaces[0], '\\');
+        }
+        if (!$namespaces[0]) {
+            array_shift($namespaces);
+        } // remove empty namespace caused of \\
         return $namespaces;
     }
 
     protected function completeSuffix($filename, $suffix)
     {
-        if (strpos(strrev($filename), strrev($suffix)) === 0) $filename .= '.php';
-        if (strpos(strrev($filename), strrev($suffix.'.php')) !== 0) $filename .= $suffix.'.php';
-        if (strpos(strrev($filename), strrev('.php')) !== 0) $filename .= '.php';
+        if (strpos(strrev($filename), strrev($suffix)) === 0) {
+            $filename .= '.php';
+        }
+        if (strpos(strrev($filename), strrev($suffix . '.php')) !== 0) {
+            $filename .= $suffix . '.php';
+        }
+        if (strpos(strrev($filename), strrev('.php')) !== 0) {
+            $filename .= '.php';
+        }
 
         return $filename;
     }
 
     protected function removeSuffix($classname, $suffix)
     {
-        $classname = preg_replace('~\.php$~','',$classname);
-        return preg_replace("~$suffix$~",'',$classname);
+        $classname = preg_replace('~\.php$~', '', $classname);
+        return preg_replace("~$suffix$~", '', $classname);
     }
 
     protected function save($filename, $contents, $force = false, $flags = null)
     {
-        if (file_exists($filename) && !$force) return false;
+        if (file_exists($filename) && !$force) {
+            return false;
+        }
         file_put_contents($filename, $contents, $flags);
         return true;
     }
 
     protected function getSuiteConfig($suite, $conf)
     {
-        $config = \Codeception\Configuration::config($conf);
-        return \Codeception\Configuration::suiteSettings($suite, $config);
+        $config = Configuration::config($conf);
+        return Configuration::suiteSettings($suite, $config);
     }
 
     protected function getGlobalConfig($conf)
     {
-        return \Codeception\Configuration::config($conf);
+        return Configuration::config($conf);
     }
 
     protected function getSuites($conf)
     {
-        \Codeception\Configuration::config($conf);
-        return \Codeception\Configuration::suites();
+        Configuration::config($conf);
+        return Configuration::suites();
     }
 
     protected function introduceAutoloader($file, $suffix, $relativePath)
     {
-        $line = '\Codeception\Util\Autoload::registerSuffix(\'%s\', __DIR__.DIRECTORY_SEPARATOR.\'%s\');';
-        $line = sprintf($line, $suffix, $relativePath);
-        if (!file_exists($file)) return $this->save($file, "<?php \n".$line);
+        $line = sprintf(
+            '\Codeception\Util\Autoload::registerSuffix(\'%s\', __DIR__.DIRECTORY_SEPARATOR.\'%s\');',
+            $suffix,
+            $relativePath
+        );
+
+        if (!file_exists($file)) {
+            return $this->save($file, "<?php \n" . $line);
+        }
+
         $contents = file_get_contents($file);
-        if (preg_match('~Autoload::registerSuffix\([\'"]'.$suffix.'[\'"]~', $contents)) return false;
-        $contents .= "\n".$line;
+        if (preg_match('~Autoload::registerSuffix\([\'"]' . $suffix . '[\'"]~', $contents)) {
+            return false;
+        }
+        $contents .= "\n" . $line;
+
         return $this->save($file, $contents, true);
     }
-
 }

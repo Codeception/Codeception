@@ -84,6 +84,7 @@ class SuiteManager {
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
             if ($reflected->isAbstract()) continue;
+
             foreach ($reflected->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
                 $test = $this->createTestFromPhpUnitMethod($reflected, $method);
                 if (!$test) continue;
@@ -211,7 +212,10 @@ class SuiteManager {
         $methodName = $test->getName(false);
         $test->setDependencies(\PHPUnit_Util_Test::getDependencies($className, $methodName));
 
-        if (!$test instanceof TestCase\Test) return;
+        if (!$test instanceof TestCase\Test) {
+            if ($this->settings['bootstrap']) require_once $this->settings['bootstrap'];
+            return;
+        }
 
         $guy = $this->settings['namespace']
             ? $this->settings['namespace'] . '\\' . $this->settings['class_name']

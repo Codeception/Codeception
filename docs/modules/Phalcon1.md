@@ -1,26 +1,52 @@
-# Kohana Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Kohana.php)**
+# Phalcon1 Module
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Phalcon1.php)**
 
 
-This module provides integration with [Kohana](http://kohanaframework.org/) v3.
-Functional tests can be run inside Kohana. All commands of this module are just the same as in other modules that share Framework interface.
+This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+
+## Demo Project
+
+<https://github.com/phalcon/forum>
+
+The following configurations are required for this module:
+<ul>
+<li>boostrap - the path of the application bootstrap file</li>
+<li>cleanup - cleanup database (using transactions)</li>
+<li>savepoints - use savepoints to emulate nested transactions</li>
+</ul>
+
+The application bootstrap file must return Application object but not call its handle() method.
+
+Sample bootstrap (`app/config/bootstrap.php`):
+
+``` php
+<?php
+$config = include __DIR__ . "/config.php";
+include __DIR__ . "/loader.php";
+$di = new \Phalcon\DI\FactoryDefault();
+include __DIR__ . "/services.php";
+return new \Phalcon\Mvc\Application($di);
+?>
+```
+
+You can use this module by setting params in your functional.suite.yml:
+<pre>
+class_name: TestGuy
+modules:
+    enabled: [FileSystem, TestHelper, Phalcon1]
+    config:
+        Phalcon1
+            bootstrap: 'app/config/bootstrap.php'
+            cleanup: true
+            savepoints: true
+</pre>
+
 
 ## Status
 
-* Maintainer: **Nikita Groshin**
-* Stability: **alpha**
-* Contact: nike-17@ya.ru
+Maintainer: **cujo**
+Stability: **alfa**
 
-### Installation
-
-This module sets $_SERVER['KOHANA_ENV'] = 'testing'
-
-1. Fix your bootstrap/index.php [like this](https://gist.github.com/2043592)
-2. You need install this module https://github.com/nike-17/codeception-kohana
-  or just fix your Cookie class like this https://github.com/nike-17/codeception-kohana/blob/master/classes/cookie.php 
-3. if you have some problem pls feel free to ask me nike-17@ya.ru
-
-Module is created by [Nikita Groshin](nike-17@ya.ru)
 
 
 ## Actions
@@ -286,6 +312,19 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
+### dontSeeRecord
+
+
+Checks that record does not exist in database.
+
+``` php
+$I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### fillField
 
 
@@ -326,6 +365,20 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
+### grabRecord
+
+
+Retrieves record from database
+
+``` php
+$category = $I->grabFromDatabase('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * param $model
+ * param array $attributes
+ * return mixed
+
+
 ### grabTextFrom
 
 
@@ -363,6 +416,32 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
 ```
 
  * param $field
+ * return mixed
+
+
+### haveInSession
+
+
+Sets value to session. Use for authorization.
+
+ * param $key
+ * param $val
+
+
+### haveRecord
+
+
+Inserts record into the database.
+
+``` php
+<?php
+$user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
+$I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
+?>
+```
+
+ * param $model
+ * param array $attributes
  * return mixed
 
 
@@ -489,6 +568,16 @@ $I->seeInField('//form/*[@name=search]','Search');
  * param $value
 
 
+### seeInSession
+
+
+Checks that session contains value.
+If value is `null` checks that session has key.
+
+ * param $key
+ * param null $value
+
+
 ### seeInTitle
 
 
@@ -543,6 +632,19 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 Asserts that current page has 404 response status code.
+
+
+### seeRecord
+
+
+Checks that record exists in database.
+
+``` php
+$I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * param $model
+ * param array $attributes
 
 
 ### seeResponseCodeIs
