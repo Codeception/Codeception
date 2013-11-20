@@ -49,7 +49,7 @@ use Codeception\TestCase;
  * ```
  *
  */
-class Sequence {
+class Sequence extends \Codeception\Module {
 
     static $hash = array();
 

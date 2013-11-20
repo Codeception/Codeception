@@ -40,32 +40,33 @@ abstract class Module extends AssertWrapper
 
     protected $config = array();
 
-    protected $defaultConfig = array();
+    protected $backupConfig = array();
 
     protected $requiredFields = array();
 
-    public function __construct($config = array())
+    public function __construct($config = null)
     {
-        if (!empty($config)) {
+        $this->backupConfig = $this->config;
+        if (is_array($config)) {
             $this->_setConfig($config);
         }
     }
 
     public function _setConfig($config)
     {
-        $this->config = $this->defaultConfig = array_merge($this->config, $config);
+        $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
     }
 
     public function _reconfigure($config)
     {
-        $this->config = array_merge($this->defaultConfig, $config);
+        $this->config = array_merge($this->backupConfig, $config);
         $this->validateConfig();
     }
 
     public function _resetConfig()
     {
-        $this->config = $this->defaultConfig;
+        $this->config = $this->backupConfig;
     }
 
     protected function validateConfig()

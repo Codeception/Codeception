@@ -92,23 +92,29 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
 
         if ($form === null)
             throw new TestRuntime("Form with selector: \"$selector\" was not found on given page.");
-
-        $fields = $this->session->getPage()->findAll('css', $selector.' input');
+        /** @var \Behat\Mink\Element\NodeElement[] $fields */
+        $fields = $this->session->getPage()->findAll('css', $selector . ' input:enabled, ' . $selector . ' input[type=hidden]');
         $url = '';
 
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getAttribute('value')).'&';
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();
+            $url .= sprintf('%s=%s', $fieldKey, $value) . '&';
         }
 
-        $fields = $this->session->getPage()->findAll('css', $selector.' textarea');
+        $fields = $this->session->getPage()->findAll('css', $selector . ' textarea:enabled');
         foreach ($fields as $field) {
-            $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();            
+            $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
         }
 
-        $fields = $this->session->getPage()->findAll('css', $selector.' select');
+        $fields = $this->session->getPage()->findAll('css', $selector . ' select:enabled');
         foreach ($fields as $field) {
-   		    $url .= sprintf('%s=%s',$field->getAttribute('name'), $field->getValue()).'&';
-   	 }
+            $fieldKey = $field->getAttribute('name');
+            $value = array_key_exists($fieldKey, $params) ? $params[$fieldKey] : $field->getValue();            
+       	    $url .= sprintf('%s=%s',$fieldKey, $value) . '&';
+        }
 
         $url .= '&'.http_build_query($params);
         parse_str($url, $params);
@@ -191,16 +197,20 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         return $headers[$header];
     }
 
-	protected function call($uri, $method = 'get', $params = array())
-	{
-		if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
+    protected function call($uri, $method = 'get', $params = array())
+    {
+	if (strpos($uri,'#')) $uri = substr($uri,0,strpos($uri,'#'));
         $browser = $this->session->getDriver()->getClient();
-
-		$browser->request($method, $uri, $params);
+        if ($browser instanceof Goutte && $method == 'get' && !empty($params)) {
+            $uri .= '?' . http_build_query($params);
+            $browser->request($method, $uri, array());
+        } else {
+            $browser->request($method, $uri, $params);
+        }
         $this->debugPageInfo();
-	}
+    }
 
-	public function _failed(\Codeception\TestCase $test, $fail) {
+    public function _failed(\Codeception\TestCase $test, $fail) {
 		$fileName = str_replace('::','-',$test->getFileName());
 		file_put_contents(\Codeception\Configuration::logDir().basename($fileName).'.page.fail.html', $this->session->getPage()->getContent());
 	}
@@ -216,4 +226,21 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->debugSection('Status', $this->session->getStatusCode());
     }
 
+    public function seeCheckboxIsChecked($checkbox)
+    {
+        $node = $this->findField($checkbox);
+        if (!$node) {
+            $this->fail(", checkbox not found");
+        }
+        $this->assertEquals('checked', $node->getAttribute('checked'));
+    }
+
+    public function dontSeeCheckboxIsChecked($checkbox)
+    {
+        $node = $this->findField($checkbox);
+        if (!$node) {
+            $this->fail(", checkbox not found");
+        }
+        $this->assertNull($node->getAttribute('checked'));
+    }
 }

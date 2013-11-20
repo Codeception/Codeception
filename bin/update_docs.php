@@ -1,5 +1,4 @@
 <?php
-
 require_once __DIR__ . '/../autoload.php';
 
 function clean_doc($doc, $indent = 3)

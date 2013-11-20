@@ -17,7 +17,7 @@ class GeneratePageObjectTest extends BaseCommandRunner {
     public function testBasic()
     {
         $this->execute(array('page' => 'Login'));
-        $this->assertEquals('tests/_pages//LoginPage.php', $this->filename);
+        $this->assertEquals('tests/_pages/LoginPage.php', $this->filename);
         $this->assertContains('class LoginPage', $this->content);
         $this->assertContains('public static', $this->content);
         $this->assertNotContains('public function __construct', $this->content);
@@ -28,7 +28,7 @@ class GeneratePageObjectTest extends BaseCommandRunner {
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('page' => 'Login'));
-        $this->assertEquals('tests/_pages//LoginPage.php', $this->filename);
+        $this->assertEquals('tests/_pages/LoginPage.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class LoginPage', $this->content);
         $this->assertContains('public static', $this->content);
@@ -38,7 +38,7 @@ class GeneratePageObjectTest extends BaseCommandRunner {
     public function testCreateForSuite()
     {
         $this->execute(array('suite' => 'shire','page' => 'Login'));
-        $this->assertEquals('tests/shire/_pages//LoginPage.php', $this->filename);
+        $this->assertEquals('tests/shire/_pages/LoginPage.php', $this->filename);
         $this->assertContains('class LoginPage', $this->content);
         $this->assertContains('protected $hobbitGuy;', $this->content);
         $this->assertContains('public function __construct(HobbitGuy $I)', $this->content);
@@ -50,12 +50,19 @@ class GeneratePageObjectTest extends BaseCommandRunner {
     {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('suite' => 'shire','page' => 'Login'));
-        $this->assertEquals('tests/shire/_pages//LoginPage.php', $this->filename);
+        $this->assertEquals('tests/shire/_pages/LoginPage.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class LoginPage', $this->content);
         $this->assertContains('protected $hobbitGuy;', $this->content);
         $this->assertContains('public function __construct(HobbitGuy $I)', $this->content);
         $this->assertContains('public static function of(HobbitGuy $I)', $this->content);
+        $this->assertIsValidPhp($this->content);
+    }
+
+    public function testCreateInSubpath()
+    {
+        $this->execute(array('page' => 'user/viewPage'));
+        $this->assertEquals('tests/_pages/viewPage.php', $this->filename);
         $this->assertIsValidPhp($this->content);
     }
 }

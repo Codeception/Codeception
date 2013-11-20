@@ -149,6 +149,11 @@ class Console implements EventSubscriberInterface
         if ($feature) $this->output->put("Couldn't [[$feature]] in ");
         $this->output->writeln('(('.$failedTest->getFilename().'))');
 
+        if (!($failedTest instanceof \Codeception\TestCase\Cept)) {
+            $this->output->writeln($failToString);
+            return;
+        }
+
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
         $last = array_shift($trace);
@@ -160,12 +165,6 @@ class Console implements EventSubscriberInterface
         if (strpos($action, "am") === 0) {
             $action = 'become' . substr($action, 2);
         }
-
-        // it's exception
-        if (!($fail instanceof \PHPUnit_Framework_AssertionFailedError)) {
-            $this->printException($fail);
-            return;
-        };
 
         // it's assertion
         if (strpos($action, "don't") === 0) {

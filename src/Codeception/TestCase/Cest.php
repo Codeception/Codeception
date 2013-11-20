@@ -31,12 +31,7 @@ class Cest extends Cept
         $this->scenario->run();
         $I = $this->makeIObject();
 
-        try {
-            $this->executeTestMethod($I);
-        } catch (\Exception $e) {
-            // fails and errors are now handled by Codeception\PHPUnit\Listener
-            throw $e;
-        }
+        $this->executeTestMethod($I);
         $this->fire('test.after', new TestEvent($this));
     }
 

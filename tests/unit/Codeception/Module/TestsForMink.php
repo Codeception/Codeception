@@ -380,6 +380,15 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
 
+    // regression test. https://github.com/Codeception/Codeception/issues/587
+    public function testSeeElementOnPageFails()
+    {
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('input[name=name]');
+    }
+
+
 	public function testCookies()
 	{
 		$cookie_name = 'test_cookie';
@@ -406,5 +415,77 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
+    public function testSeeFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/');
+        $this->module->see('Text not here');
+    }
+
+    public function testSeeInsideFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->see('woups','p');
+    }
+
+    public function testDontSeeInInsideFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('interesting','p');
+    }
+
+    public function testSeeElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->seeElement('.alert');
+    }
+
+    public function testDontSeeElementFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeElement('.notice');
+    }
+
+    public function testSeeInFieldFail()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/empty');
+        $this->module->seeInField('#empty_textarea','xxx');
+    }
+
+    public function testSeeInFieldOnTextareaFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/textarea');
+        $this->module->dontSeeInField('Description','sunrise');
+    }
+
+    public function testSeeCheckboxIsNotCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/complex');
+        $this->module->dontSeeCheckboxIsChecked('#checkin');
+    }
+
+    public function testSeeCheckboxCheckedFails() {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->seeCheckboxIsChecked('#checkin');
+    }
+
+    public function testDontSeeElementOnPageFails()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/field');
+        $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
+    }
+
+    protected function shouldFail()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
 
 }

@@ -19,7 +19,7 @@ class GenerateGroupTest extends BaseCommandRunner {
         $this->execute(array('group' => 'Core'));
 
         $generated = $this->log[1];
-        $this->assertEquals('tests/_groups//CoreGroup.php', $generated['filename']);
+        $this->assertEquals('tests/_groups/CoreGroup.php', $generated['filename']);
         $this->assertContains('class CoreGroup', $generated['content']);
         $this->assertContains('public function _before', $generated['content']);
         $this->assertContains('public function _after', $generated['content']);
@@ -33,7 +33,7 @@ class GenerateGroupTest extends BaseCommandRunner {
         $this->execute(array('group' => 'Core'));
 
         $generated = $this->log[1];
-        $this->assertEquals('tests/_groups//CoreGroup.php', $generated['filename']);
+        $this->assertEquals('tests/_groups/CoreGroup.php', $generated['filename']);
         $this->assertContains('namespace Shire;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
     }

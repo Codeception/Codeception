@@ -2,11 +2,12 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Util\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Crawler extends Page {
 
-    protected function matches(DomCrawler $nodes)
+    protected function matches($nodes)
     {
         if (!$nodes->count()) return false;
         if ($this->string === '') return true;
@@ -18,22 +19,22 @@ class Crawler extends Page {
         return false;
     }
 
-    protected function fail(DomCrawler $nodes, $selector, PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
     {
+        /** @var $nodes DomCrawler  **/
         if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
 
-        $output = "Failed asserting that any element found by selector '$selector' ";
-        if ($this->uri) $output .= "on page '{$this->uri}' ";
+        $output = "Failed asserting that any element by '$selector'";
+        $output .= $this->uriMessage('on page');
+        $output .= " ";
+
         if ($nodes->count() < 10) {
-            $output .= "(listed below)";
-            foreach ($nodes as $node)
-            {
-                $output .= "\n+ " . $node->C14N();
-            }
+            $output .= $this->nodesList($nodes);
         } else {
-            $output .= "(total {$nodes->count()} elements)";
+            $message = new Message("[total %s elements]");
+            $output .= $message->with($nodes->count())->style('debug')->getMessage();
         }
-        $output .= "\ncontains text '".$this->string."'";
+        $output .= "\ncontains text '{$this->string}'";
 
         throw new \PHPUnit_Framework_ExpectationFailedException(
           $output,
@@ -41,13 +42,28 @@ class Crawler extends Page {
         );
     }
 
-    protected function failureDescription(DOMCrawler $other)
+    protected function failureDescription($other)
     {
         $desc = '';
         foreach ($other as $o) {
             $desc .= parent::failureDescription($o->textContent);
         }
         return $desc;
+    }
+
+    protected function nodesList(DOMCrawler $nodes, $contains = null)
+    {
+        $output = "";
+        foreach ($nodes as $node)
+        {
+            if ($contains) {
+                if (strpos($node->nodeValue, $contains) === false) {
+                    continue;
+                }
+            }
+            $output .= "\n+ <info>" . $node->C14N()."</info>";
+        }
+        return $output;
     }
 
 

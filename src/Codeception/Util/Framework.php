@@ -32,8 +32,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        if (!$this->client || !$this->client->getResponse()) return;
-        file_put_contents(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html', $this->client->getResponse()->getContent());
+        if (!$this->client || !$this->client->getInternalResponse()) return;
+        file_put_contents(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html', $this->client->getInternalResponse()->getContent());
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -126,7 +126,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function dontSee($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageNotContains($text, $this->client->getResponse()->getContent());
+        if (!$selector) return $this->assertPageNotContains($text, $this->client->getInternalResponse()->getContent());
         $nodes = $this->match($selector);
         $this->assertDomNotContains($nodes, $selector, $text);
     }
@@ -386,7 +386,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     protected function getResponseStatusCode()
     {
         // depending on Symfony version
-        $response = $this->client->getResponse();
+        $response = $this->client->getInternalResponse();
         if (method_exists($response, 'getStatus')) return $response->getStatus();
         if (method_exists($response, 'getStatusCode')) return $response->getStatusCode();
         return "N/A";
@@ -414,7 +414,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         if ($nodes) {
             return $nodes->first()->text();
         }
-        if (@preg_match($cssOrXPathOrRegex, $this->client->getResponse()->getContent(), $matches)) {
+        if (@preg_match($cssOrXPathOrRegex, $this->client->getInternalResponse()->getContent(), $matches)) {
             return $matches[1];
         }
         throw new ElementNotFound($cssOrXPathOrRegex, 'Element that matches CSS or XPath or Regex');
@@ -520,13 +520,13 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
-        $this->assertThat($this->client->getResponse()->getContent(), $constraint,$message);
+        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint,$message);
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->client->getResponse()->getContent(), $constraint,$message);
+        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
     }
 
 
