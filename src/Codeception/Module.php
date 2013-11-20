@@ -188,7 +188,7 @@ abstract class Module
     }
 
     /**
-     * Checks that expected is greater then actual
+     * Checks that expected is greater than actual
      *
      * @param $expected
      * @param $actual
@@ -200,7 +200,7 @@ abstract class Module
     }
 
     /**
-     * Checks that expected is greater or equal then actual
+     * Checks that expected is greater or equal than actual
      *
      * @param $expected
      * @param $actual
@@ -212,7 +212,7 @@ abstract class Module
     }
 
     /**
-     * Checks that expected is lower then actual
+     * Checks that expected is less than actual
      *
      * @param $expected
      * @param $actual
@@ -225,7 +225,7 @@ abstract class Module
     }
 
     /**
-     * Checks that expected is lower or equal then actual
+     * Checks that expected is less or equal than actual
      *
      * @param $expected
      * @param $actual
