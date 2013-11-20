@@ -39,6 +39,11 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com
  * param array $values
 
 
+### getName
+
+__not documented__
+
+
 ### grabFromTable
 
 

@@ -1,0 +1,14 @@
+class_name: PowerGuy
+modules:
+    enabled: [PowerHelper]
+env:
+    dev:
+        modules:
+            config:
+                PowerHelper:
+                    has_power: true
+    white:
+    dark:
+    magic:
+    green:
+    whisky:

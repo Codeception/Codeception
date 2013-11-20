@@ -9,7 +9,7 @@ class GeneratePageObjectCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('generate:page Login');
         $I->seeFileWithGeneratedClass('LoginPage','tests/_pages');
-        $I->seeInThisFile('const URL = ');
+        $I->seeInThisFile('static $URL = ');
         $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
         $I->seeFileFound('tests/_bootstrap.php');
         $I->seeInThisFile("\\Codeception\\Util\\Autoload::registerSuffix('Page', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
@@ -22,6 +22,7 @@ class GeneratePageObjectCest
         $I->seeInThisFile('class LoginPage');
         $I->seeInThisFile('protected $dumbGuy;');
         $I->seeInThisFile('public static function of(DumbGuy $I)');
+        $I->seeInThisFile('@return LoginPage');
         $I->seeAutoloaderWasAdded('Page', 'tests/dummy');
 
     }

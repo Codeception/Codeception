@@ -38,7 +38,7 @@ class Test extends \Codeception\TestCase
         $guy = $this->guyClass;
         if ($guy) { 
             $property = lcfirst($guy);
-            $this->$property = new $guy($this->scenario);
+            $this->codeGuy = $this->$property = new $guy($this->scenario);
         }
         $this->scenario->run();
         $this->fire('test.before', new \Codeception\Event\Test($this));
@@ -91,5 +91,6 @@ class Test extends \Codeception\TestCase
         }
         throw new TestRuntime("Module $module is not enabled for this test suite");
     }
+
 
 }

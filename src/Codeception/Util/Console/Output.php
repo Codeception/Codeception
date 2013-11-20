@@ -12,7 +12,6 @@ class Output extends ConsoleOutput {
 
     protected $config = array(
         'colors' => true,
-        'defer_flush' => false,
         'verbosity' => self::VERBOSITY_NORMAL
     );
 
@@ -46,7 +45,7 @@ class Output extends ConsoleOutput {
 	}
 
 	public function debug($message) {
-		if (is_array($message)) $message = implode("\n  ", $message);
+		if (is_array($message)) $message = implode("\n ", $message);
         $this->writeln("<debug>  $message</debug>");
 	}
 

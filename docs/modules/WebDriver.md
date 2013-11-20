@@ -449,6 +449,11 @@ $I->fillField("//input[@type='text']", "Hello World!");
  * param $value
 
 
+### getName
+
+__not documented__
+
+
 ### grabCookie
 
 
@@ -563,6 +568,15 @@ https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/mov
 
  * throws \Codeception\Exception\ElementNotFound
  * return null
+
+
+### pauseExecution
+
+
+Pauses test execution in debug mode.
+To proceed test press "ENTER" in console.
+
+This method is recommended to use in test development, for additional page analysis, locator searing, etc.
 
 
 ### pressKey
@@ -1036,6 +1050,41 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
  * param \Closure $callback
  * param int $timeout seconds
  * throws \Codeception\Exception\ElementNotFound
+
+
+### waitForElementNotVisible
+
+
+Waits for element to not be visible on the page for $timeout seconds to pass.
+If element stays visible, timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElementNotVisible('#agree_button', 30); // secs
+?>
+```
+
+ * param $element
+ * param int $timeout seconds
+ * throws \Exception
+
+
+### waitForElementVisible
+
+
+Waits for element to be visible on the page for $timeout seconds to pass.
+If element doesn't appear, timeout exception is thrown.
+
+``` php
+<?php
+$I->waitForElementVisible('#agree_button', 30); // secs
+$I->click('#agree_button');
+?>
+```
+
+ * param $element
+ * param int $timeout seconds
+ * throws \Exception
 
 
 ### waitForJS

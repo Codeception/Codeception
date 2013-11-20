@@ -6,7 +6,6 @@ class CrawlerNot extends Crawler {
 
     protected function matches($nodes)
     {
-        /** @var $nodes DomCrawler  **/
         return !parent::matches($nodes);
     }
 

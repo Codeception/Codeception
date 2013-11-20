@@ -29,13 +29,6 @@ abstract class Step
         return end($class);
     }
 
-    public function pullDebugOutput()
-    {
-        $output = $this->debugOutput;
-        $this->debugOutput = null;
-        return $output;
-    }
-
     public function getAction()
     {
         return $this->action;
@@ -129,7 +122,6 @@ abstract class Step
             throw new \RuntimeException("Action can't be called");  
         } 
         
-        $this->debugOutput = $activeModule->_getDebugOutput();
         return call_user_func_array(array($activeModule, $this->action), $this->arguments);
     }
 }

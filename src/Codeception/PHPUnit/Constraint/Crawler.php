@@ -9,6 +9,7 @@ class Crawler extends Page {
 
     protected function matches($nodes)
     {
+        /** @var $nodes DomCrawler  **/
         if (!$nodes->count()) return false;
         if ($this->string === '') return true;
 

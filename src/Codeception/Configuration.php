@@ -130,7 +130,9 @@ class Configuration
 
         $globalConf = $config['settings'];
         foreach (array('modules','coverage', 'namespace') as $key) {
-            if (isset($config[$key])) $globalConf[$key] = $config[$key];
+            if (isset($config[$key])) {
+                $globalConf[$key] = $config[$key];
+            }
         }
 
         $path = $config['paths']['tests'];
@@ -145,6 +147,19 @@ class Configuration
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
+    }
+
+    public static function suiteEnvironments($suite)
+    {
+        $settings = self::suiteSettings($suite, self::config());
+        if (!isset($settings['env'])) return array();
+        if (!is_array($settings['env'])) return array();
+        $environments = array();
+        foreach ($settings['env'] as $env => $envConfig) {
+            $environments[$env] = $envConfig ? self::mergeConfigs($settings, $envConfig) : $settings;
+            $environments[$env]['current_environment'] = $env;
+        }
+        return $environments;
     }
 
     public static function suites()
@@ -251,7 +266,7 @@ class Configuration
         return !(bool)self::$testsDir;
     }
 
-    protected static function mergeConfigs($a1, $a2)
+    public static function mergeConfigs($a1, $a2)
     {
         if (!is_array($a1) || !is_array($a2))
             return $a2;

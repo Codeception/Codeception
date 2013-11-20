@@ -217,6 +217,28 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Sends a HEAD request to given uri.
+     *
+     * @param $url
+     * @param array $params
+     */
+    public function sendHEAD($url, $params = array())
+    {
+        $this->execute('HEAD', $url, $params);
+    }
+
+    /**
+     * Sends an OPTIONS request to given uri.
+     *
+     * @param $url
+     * @param array $params
+     */
+    public function sendOPTIONS($url, $params = array())
+    {
+        $this->execute('OPTIONS', $url, $params);
+    }
+
+    /**
      * Sends a GET request to given uri.
      *
      * @param $url
@@ -336,10 +358,14 @@ class REST extends \Codeception\Module
         $parameters = $this->encodeApplicationJson($method, $parameters);
         
         if (is_array($parameters) || $method == 'GET') {
-            if (!empty($parameters)) {
+            if (!empty($parameters) && $method == 'GET') {
                 $url .= '?' . http_build_query($parameters);
             }
-            $this->debugSection("Request", "$method $url");
+            if($method == 'GET') {
+                $this->debugSection("Request", "$method $url");
+            } else {
+                $this->debugSection("Request", "$method $url ".json_encode($parameters));
+            }
             $this->client->request($method, $url, $parameters, $files);
 
         } else {

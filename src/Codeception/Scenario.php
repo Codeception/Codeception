@@ -16,16 +16,12 @@ class Scenario {
      * @var    string
      */
 	protected $feature;
-
     protected $currentStep = 0;
-
     protected $running = false;
-
     protected $preloadedSteps = array();
-
     protected $blocker = null;
-
     protected $groups = array();
+    protected $env = array();
 
     /**
      * Constructor.
@@ -39,14 +35,26 @@ class Scenario {
 
     public function group($group)
     {
-        if (is_array($group)) {
-            foreach ($group as $t) {
-                $this->group($t);
-            }
-        } else {
+        if (!is_array($group)) {
             $this->groups[] = $group;
+            return;
+        }
+        foreach ($group as $t) {
+            $this->group($t);
         }
     }
+
+    public function env($env)
+    {
+        if (!is_array($env)) {
+            $this->env[] = $env;
+            return;
+        }
+        foreach ($env as $e) {
+            $this->env($e);
+        }
+    }
+       
 
     public function groups()
     {
@@ -58,6 +66,10 @@ class Scenario {
         return $this->groups;
     }
 
+    public function getEnv()
+    {
+        return $this->env;
+    }
 
 	public function setFeature($feature) {
 	    $this->feature = $feature;

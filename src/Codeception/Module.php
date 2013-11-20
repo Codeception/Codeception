@@ -3,6 +3,10 @@
 namespace Codeception;
 
 use Codeception\PHPUnit\AssertWrapper;
+use Codeception\Exception\ModuleConfig;
+use Codeception\Util\Debug;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class Module extends AssertWrapper
 {
@@ -81,6 +85,15 @@ abstract class Module extends AssertWrapper
         }
     }
 
+    public function getName()
+    {
+        $module = get_class($this);
+         if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
+             $module = $matches[1];
+         }
+         return $module;
+    }
+
     public function _hasRequiredFields()
     {
         return !empty($this->requiredFields);
@@ -133,7 +146,7 @@ abstract class Module extends AssertWrapper
 
     protected function debug($message)
     {
-        $this->debugStack[] = $message;
+        Debug::debug($message);
     }
 
     protected function debugSection($title, $message)
@@ -141,26 +154,14 @@ abstract class Module extends AssertWrapper
         $this->debug("[$title] $message");
     }
 
-    public function _clearDebugOutput()
+    protected function hasModule($name)
     {
-        $this->debugStack = array();
-    }
-
-    public function _getDebugOutput()
-    {
-        $debugStack = $this->debugStack;
-        $this->_clearDebugOutput();
-        return $debugStack;
+        return SuiteManager::hasModule($name);
     }
 
     protected function getModules()
     {
         return SuiteManager::$modules;
-    }
-
-    protected function hasModule($name)
-    {
-        return SuiteManager::hasModule($name);
     }
 
     protected function getModule($name)

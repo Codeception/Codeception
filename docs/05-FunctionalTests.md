@@ -176,14 +176,14 @@ modules:
 ## Integrating Other Frameworks
 
 Codeception doesn't provide any generic functional testing module because there are a lot of details we can't implement in general.
-We already discussed the common pitfalls for functional testing. And there is no one single recipe how to solve them for all PHP applications.
+We already discussed the common pitfalls for functional testing. There is no single recipe to solve them for all PHP applications.
 So if you don't use any of the frameworks listed above, you might want to integrate your framework into Codeception. That task requires some knowledge of Codeception internals and some time. Probably, you are ok with just acceptance tests, but any help in extending Codeception functionality will be appreciated. We will review what should be done to have your framework integrated.
 
 #### With HttpKernel
 
-If you have a framework that uses Symfony's `HttpKernel`, using it with Codeception will be like a piece of cake.
+If you have a framework that uses Symfony's `HttpKernel`, using it with Codeception will be a piece of cake.
 You will need to create a module for it and test it on your application.
-We already have a [guide for such integration](http://codeception.com/01-24-2013/connecting-php-frameworks-1.html).
+We already have a [guide for such an integration](http://codeception.com/01-24-2013/connecting-php-frameworks-1.html).
 Develop a module, try it and share with community.
 
 #### Any Other
@@ -231,7 +231,7 @@ class SomeFrameworkHelper extends \Codeception\Util\Framework {
 If you include this helper into your suite, it can already perform interactions with your applications.
 You can extend its abilities by connecting to the framework internals. 
 It's important to perform a proper clean up on each test run. 
-This can be done in the _before and _after methods of the helper module. Check that the framework doesn't cache any data or configuration between tests.
+This can be done in the _before_ and _after_ methods of the helper module. Check that the framework doesn't cache any data or configuration between tests.
 
 After you get your module stabilized, share it with the community. Fork a Codeception repository, add your module and make a Pull Request.
 

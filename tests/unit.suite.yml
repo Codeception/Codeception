@@ -4,4 +4,4 @@
 error_level: E_STRICT
 class_name: CodeGuy
 modules:
-    enabled: [Unit, CodeHelper, EmulateModuleHelper]
+    enabled: [CodeHelper, EmulateModuleHelper]

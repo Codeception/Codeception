@@ -3,6 +3,7 @@ namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
 use Codeception\PHPUnit\Log\JUnit;
+use Codeception\PHPUnit\Overrides\Filter;
 use Codeception\PHPUnit\ResultPrinter\HTML;
 use Codeception\PHPUnit\ResultPrinter\Report;
 
@@ -20,7 +21,13 @@ class Runner extends \PHPUnit_TextUI_TestRunner {
     {
         $this->config = Configuration::config();
         $this->log_dir = Configuration::logDir(); // prepare log dir
+        $this->phpUnitOverriders();
         parent::__construct();
+    }
+
+    public function phpUnitOverriders()
+    {
+        require_once __DIR__.DIRECTORY_SEPARATOR.'Overrides/Filter.php';
     }
 
     /**

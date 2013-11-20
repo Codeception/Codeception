@@ -46,14 +46,14 @@ class Cest extends Cept
 
     protected function executeBefore($testMethod, $I)
     {
-        $before = Annotation::fetchForMethod($this->testClassInstance, $testMethod, 'before');
+        $before = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('before');
         if (!$before) return;
         $this->executeContextMethod($before, $I);
     }
 
     protected function executeAfter($testMethod, $I)
     {
-        $after = Annotation::fetchForMethod($this->testClassInstance, $testMethod, 'after');
+        $after = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('after');
         if (!$after) return;
         $this->executeContextMethod($after, $I);
     }
