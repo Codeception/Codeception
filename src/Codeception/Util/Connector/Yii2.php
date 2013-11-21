@@ -71,7 +71,7 @@ class Yii2 extends Client
 			$sender->getHeaders()->removeAll();
 			$this->statusCode = $sender->getStatusCode();
 			$_POST = array();
-			$sender->setStatusCode(null);
+			$sender->setStatusCode(200);
 		});
 
 		$this->headers = array();
@@ -81,6 +81,6 @@ class Yii2 extends Client
 		$app->handleRequest($app->getRequest())->send();
 		$content = ob_get_clean();
 
-		return new Response($content, $this->statusCode === null ? 200 : $this->statusCode, $this->headers);
+		return new Response($content, $this->statusCode, $this->headers);
 	}
 }
