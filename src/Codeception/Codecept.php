@@ -74,7 +74,7 @@ class Codecept
     }
 
     private function mergeOptions($options) {
-        
+
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
@@ -153,7 +153,6 @@ class Codecept
 
         return $this->result;
     }
-
 
     public static function versionString() {
         return 'Codeception PHP Testing Framework v'.self::VERSION;
