@@ -673,8 +673,8 @@ We emulate that click by running this ajax request manually.
 
 ``` php
 <?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
 
 ```
 
