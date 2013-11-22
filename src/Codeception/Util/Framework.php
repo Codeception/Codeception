@@ -134,16 +134,18 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     public function seeLink($text, $url = null)
     {
         $links = $this->crawler->selectLink($text);
-        if (!$url) return $this->assertDomContains($links,'a');
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
+        if ($url) {
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+        }
         $this->assertDomContains($links, 'a');
     }
 
     public function dontSeeLink($text, $url = null)
     {
         $links = $this->crawler->selectLink($text);
-        if (!$url) return $this->assertDomNotContains($links, 'a');
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
+        if ($url) {
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+        }
         $this->assertDomNotContains($links, 'a');
     }
 
