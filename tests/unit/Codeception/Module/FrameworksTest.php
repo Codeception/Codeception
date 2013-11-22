@@ -49,7 +49,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
 
     public function testSee() {
         $this->module->amOnPage('/');
-        $this->module->see('Welcome to test app!');        
+        $this->module->see('Welcome to test app!');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!','h1');
@@ -67,19 +67,37 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testSeeLink() {
         $this->module->amOnPage('/');
         $this->module->seeLink('More info');
-        $this->module->dontSeeLink('/info');
-        $this->module->dontSeeLink('#info');
+        $this->module->seeLink('More info', '/info');
+        $this->module->dontSeeLink('More info', '#info');
 
         $this->module->amOnPage('/info');
         $this->module->seeLink('Back');
     }
-    
+
+    /**
+     * @expectedException \Codeception\Exception\ElementNotFound
+     * @expectedExceptionMessage Element located either by name, CSS or XPath 'a' was not found on page.
+     */
+    public function testSeeLinkFail() {
+        $this->module->amOnPage('/');
+        $this->module->seeLink('More info', '/foo');
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedExceptionMessage Element 'a' was found
+     */
+    public function testDontSeeLinkFail() {
+        $this->module->amOnPage('/');
+        $this->module->dontSeeLink('More info', '/info');
+    }
+
     public function testClick() {
         $this->module->amOnPage('/');
         $this->module->click('More info');
         $this->module->seeInCurrentUrl('/info');
     }
-    
+
     public function testClickByCss() {
         $this->module->amOnPage('/info');
         $this->module->click('form input[type=submit]');
