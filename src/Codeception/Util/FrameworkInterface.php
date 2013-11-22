@@ -85,6 +85,26 @@ interface FrameworkInterface extends WebInterface
     public function sendAjaxGetRequest($uri, $params = array());
 
     /**
+     * If your page triggers an ajax request, you can perform it manually.
+     * This action sends an ajax request with specified method and params.
+     *
+     * Example:
+     *
+     * You need to perform an ajax request specifying the HTTP method.
+     *
+     * ``` php
+     * <?php
+     * $I->sendAjaxRequest('/posts/7', 'DELETE');
+     *
+     * ```
+     *
+     * @param $uri
+     * @param $method
+     * @param $params
+     */
+    public function sendAjaxRequest($uri, $method, $params = array());
+
+    /**
      * Asserts that current page has 404 response status code.
      */
     public function seePageNotFound();
