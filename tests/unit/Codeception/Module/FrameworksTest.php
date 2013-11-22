@@ -49,7 +49,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
 
     public function testSee() {
         $this->module->amOnPage('/');
-        $this->module->see('Welcome to test app!');        
+        $this->module->see('Welcome to test app!');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!','h1');
@@ -73,13 +73,13 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/info');
         $this->module->seeLink('Back');
     }
-    
+
     public function testClick() {
         $this->module->amOnPage('/');
         $this->module->click('More info');
         $this->module->seeInCurrentUrl('/info');
     }
-    
+
     public function testClickByCss() {
         $this->module->amOnPage('/info');
         $this->module->click('form input[type=submit]');
