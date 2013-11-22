@@ -74,24 +74,6 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeLink('Back');
     }
 
-    /**
-     * @expectedException \Codeception\Exception\ElementNotFound
-     * @expectedExceptionMessage Element located either by name, CSS or XPath 'a' was not found on page.
-     */
-    public function testSeeLinkFail() {
-        $this->module->amOnPage('/');
-        $this->module->seeLink('More info', '/foo');
-    }
-
-    /**
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
-     * @expectedExceptionMessage Element 'a' was found
-     */
-    public function testDontSeeLinkFail() {
-        $this->module->amOnPage('/');
-        $this->module->dontSeeLink('More info', '/info');
-    }
-
     public function testClick() {
         $this->module->amOnPage('/');
         $this->module->click('More info');
@@ -489,6 +471,24 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         $this->module->amOnPage('/');
         $this->module->see('Text not here');
+    }
+
+    /**
+     * @expectedException \Codeception\Exception\ElementNotFound
+     * @expectedExceptionMessage Element located either by name, CSS or XPath 'a' was not found on page.
+     */
+    public function testSeeLinkFails() {
+        $this->module->amOnPage('/');
+        $this->module->seeLink('More info', '/foo');
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedExceptionMessage Element 'a' was found
+     */
+    public function testDontSeeLinkFails() {
+        $this->module->amOnPage('/');
+        $this->module->dontSeeLink('More info', '/info');
     }
 
     public function testSeeInElementFails()
