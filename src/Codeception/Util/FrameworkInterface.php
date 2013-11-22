@@ -94,15 +94,15 @@ interface FrameworkInterface extends WebInterface
      *
      * ``` php
      * <?php
-     * $I->sendAjaxRequest('/posts/7', 'DELETE');
+     * $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
      *
      * ```
      *
-     * @param $uri
      * @param $method
+     * @param $uri
      * @param $params
      */
-    public function sendAjaxRequest($uri, $method, $params = array());
+    public function sendAjaxRequest($method, $uri, $params = array());
 
     /**
      * Asserts that current page has 404 response status code.
