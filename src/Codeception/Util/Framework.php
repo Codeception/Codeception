@@ -119,16 +119,22 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function see($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageContains($text);
-        $nodes = $this->match($selector);
-        $this->assertDomContains($nodes, $selector, $text);
+        if (!$selector) {
+            $this->assertPageContains($text);
+        } else {
+            $nodes = $this->match($selector);
+            $this->assertDomContains($nodes, $selector, $text);
+        }
     }
 
     public function dontSee($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageNotContains($text);
-        $nodes = $this->match($selector);
-        $this->assertDomNotContains($nodes, $selector, $text);
+        if (!$selector) {
+            $this->assertPageNotContains($text);
+        } else {
+            $nodes = $this->match($selector);
+            $this->assertDomNotContains($nodes, $selector, $text);
+        }
     }
 
     public function seeLink($text, $url = null)
