@@ -68,6 +68,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/');
         $this->module->seeLink('More info');
         $this->module->seeLink('More info', '/info');
+        $this->module->dontSeeLink('More info', '/');
         $this->module->dontSeeLink('More info', '#info');
 
         $this->module->amOnPage('/info');
@@ -479,7 +480,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
      */
     public function testSeeLinkFails() {
         $this->module->amOnPage('/');
-        $this->module->seeLink('More info', '/foo');
+        $this->module->seeLink('More info', '/');
     }
 
     /**
