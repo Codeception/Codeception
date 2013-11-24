@@ -1,4 +1,5 @@
 <?php
+
 class FrameworksTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -310,6 +311,12 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('HTTP_X_REQUESTED_WITH', $_SERVER);
         $post = data::get('form');
         $this->assertEquals('author', $post['show']);
+
+        $this->module->sendAjaxRequest('DELETE', '/articles');
+        $this->assertEquals('DELETE', $_SERVER['REQUEST_METHOD']);
+
+        $this->module->sendAjaxRequest('PUT', '/articles/1', array('title' => 'foo'));
+        $this->assertEquals('PUT', $_SERVER['REQUEST_METHOD']);
     }
 
     public function testSeeWithNonLatin() {

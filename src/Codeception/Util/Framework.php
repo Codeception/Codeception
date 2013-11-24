@@ -368,13 +368,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function sendAjaxGetRequest($uri, $params = array())
     {
-        $this->client->request('GET', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
-        $this->debugResponse();
+        $this->sendAjaxRequest('GET', $uri, $params);
     }
 
     public function sendAjaxPostRequest($uri, $params = array())
     {
-        $this->client->request('POST', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
+        $this->sendAjaxRequest('POST', $uri, $params);
+    }
+
+    public function sendAjaxRequest($method, $uri, $params = array())
+    {
+        $this->client->request($method, $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
