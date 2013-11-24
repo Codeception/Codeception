@@ -72,20 +72,33 @@ class CodeCoverage implements EventSubscriberInterface
      */
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        if (!$this->enabled or $this->remote) return;
+        if (!$this->enabled) {
+            return;
+        }
 
         $coverage = $e->getResult()->getCodeCoverage();
 
+        if (!$this->remote) {
+            $this->coverage->merge($coverage);
+            return;
+        }
+
         $remoteModule = $this->getRemoteConnectionModule();
-        if (!$remoteModule) {
+        if (!($remoteModule instanceof RemoteInterface)) {
             $this->coverage->merge($coverage);
             return;
         };
 
-        $externalCoverage = $this->getRemoteCoverageFile($this->getRemoteConnectionModule() ,'serialized');
-        if (!$externalCoverage) return;
+        $externalCoverage = $this->getRemoteCoverageFile($remoteModule, 'serialized');
+        if (!$externalCoverage) {
+            return;
+        }
+
         $coverage = @unserialize($externalCoverage);
-        if ($coverage === false) return;
+        if ($coverage === false) {
+            return;
+        }
+
         $this->coverage->merge($coverage);
     }
 
