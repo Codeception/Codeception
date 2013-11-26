@@ -180,6 +180,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!is_dir($debugDir)) mkdir($debugDir, 0777);
         $caseName = str_replace('Cept.php', '', $this->test->getFileName());
         $caseName = str_replace('Cept.php', '', $caseName);
+        /**
+         * This is used for Cept only
+         *
+         * To be consistent with Cest, no sub-dir would be created, '/' and '\' in $caseName would be replaced with '.'
+         */
+        $search = array('/', '\\');
+        $replace = array('.', '.');
+        $caseName = str_replace($search, $replace, $caseName);
 
         $screenName = $debugDir . DIRECTORY_SEPARATOR . $caseName.' - '.$name.'.png';
         $this->_saveScreenshot($screenName);
