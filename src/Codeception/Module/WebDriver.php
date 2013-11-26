@@ -69,7 +69,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'restart' => false,
         'wait' => 5,
         'capabilities' => array()
-        );
+    );
 
     protected $wd_host;
     protected $capabilities;
@@ -183,7 +183,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         /**
          * This is used for Cept only
          *
-         * To be consistent with Cest, no sub-dir would be created, '\' and '/' in $caseName would be replaced with '.'
+         * To be consistent with Cest, no sub-dir would be created, '/' and '\' in $caseName would be replaced with '.'
          */
         $search = array('/', '\\');
         $replace = array('.', '.');
@@ -297,7 +297,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             ".//button[normalize-space(.)=$locator]",
             ".//a/img[normalize-space(@alt)=$locator]/ancestor::a",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][normalize-space(@value)=$locator]"
-            );
+        );
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) return reset($els);
@@ -308,7 +308,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]"
-            );
+        );
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) return reset($els);
@@ -328,7 +328,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $xpath = Locator::combine(
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
             ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
-            );
+        );
 
         $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) return reset($els);
@@ -344,13 +344,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
         if (!$url) return $this->assertNodesContain($text, $nodes, 'a');
         $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
-            $parts = parse_url($url);
-            if (!$parts) $this->fail("Link URL of '$url' couldn't be parsed");
-            $uri = "";
-            if (isset($parts['path'])) $uri .= $parts['path'];
-            if (isset($parts['query'])) $uri .= "?".$parts['query'];
-            if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
-            return $uri == trim($url);
+                $parts = parse_url($url);
+                if (!$parts) $this->fail("Link URL of '$url' couldn't be parsed");
+                $uri = "";
+                if (isset($parts['path'])) $uri .= $parts['path'];
+                if (isset($parts['query'])) $uri .= "?".$parts['query'];
+                if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+                return $uri == trim($url);
         });
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
@@ -426,8 +426,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->findField($field);
         if (!$el) throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
         $el_value = $el->getTagName() == 'textarea'
-        ? $el->getText()
-        : $el->getAttribute('value');
+            ? $el->getText()
+            : $el->getAttribute('value');
         $this->assertEquals($value, $el_value);
     }
 
@@ -435,8 +435,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->findField($field);
         $el_value = $el->getTagName() == 'textarea'
-        ? $el->getText()
-        : $el->getAttribute('value');
+            ? $el->getText()
+            : $el->getAttribute('value');
         $this->assertNotEquals($value, $el_value);
     }
 
@@ -529,13 +529,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'checkbox']",
             "//input[./@type = 'radio'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
             "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'radio']"
-            );
+        );
         if ($byValue) {
             $xpath = Locator::combine(
                 $xpath,
                 "//input[./@type = 'checkbox'][./@value = $locator]",
                 "//input[./@type = 'radio'][./@value = $locator]"
-                );
+            );
         }
         /** @var $context \WebDriverElement  **/
         $els = $context->findElements(\WebDriverBy::xpath($xpath));
@@ -1260,13 +1260,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         switch ($modifier) {
             case 'ctrl':
             case 'control':
-            return array(\WebDriverKeys::CONTROL, $key);
+                return array(\WebDriverKeys::CONTROL, $key);
             case 'alt':
-            return array(\WebDriverKeys::ALT, $key);
+                return array(\WebDriverKeys::ALT, $key);
             case 'shift':
-            return array(\WebDriverKeys::SHIFT, $key);
+                return array(\WebDriverKeys::SHIFT, $key);
             case 'meta':
-            return array(\WebDriverKeys::META, $key);
+                return array(\WebDriverKeys::META, $key);
         }
         return $keys;
     }
@@ -1313,44 +1313,44 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
              //Multiple select
             case "select":
-            $matched = false;
-            $wdSelect = new \WebDriverSelect($el);
-            try {
-                $wdSelect->selectByVisibleText($value);
-                $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+                $matched = false;
+                $wdSelect = new \WebDriverSelect($el);
+                try {
+                    $wdSelect->selectByVisibleText($value);
+                    $matched = true;
+                } catch (\NoSuchElementWebDriverError $e) {}
 
-            try {
-                $wdSelect->selectByValue($value);
-                $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
-            if ($matched) return;
+                 try {
+                    $wdSelect->selectByValue($value);
+                    $matched = true;
+                } catch (\NoSuchElementWebDriverError $e) {}
+                if ($matched) return;
 
-            throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
-            break;
+                throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
+                break;
             case "textarea":
-            $el->sendKeys($value);
-            return;
-            break;
+                    $el->sendKeys($value);
+                    return;
+                break;
             //Text, Checkbox, Radio
             case "input":
-            $type = $el->getAttribute('type');
+                $type = $el->getAttribute('type');
 
-            if ($type == 'checkbox') {
+                if ($type == 'checkbox') {
                     //Find by value or css,id,xpath
-                $field = $this->findCheckable($this->webDriver, $value, true);
-                if (!$field) throw new ElementNotFound($value, "Checkbox or Radio by Label or CSS or XPath");
-                if ($field->isSelected()) return;
-                $field->click();
-                return;
-            } elseif ($type == 'radio') {
-                $this->selectOption($field, $value);
-                return;
-            } else {
-                $el->sendKeys($value);
-                return;
-            }
-            break;
+                    $field = $this->findCheckable($this->webDriver, $value, true);
+                    if (!$field) throw new ElementNotFound($value, "Checkbox or Radio by Label or CSS or XPath");
+                    if ($field->isSelected()) return;
+                    $field->click();
+                    return;
+                } elseif ($type == 'radio') {
+                    $this->selectOption($field, $value);
+                    return;
+                } else {
+                    $el->sendKeys($value);
+                    return;
+                }
+                break;
             default:
         }
 
