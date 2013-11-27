@@ -76,6 +76,30 @@ class AssertWrapper
     }
 
     /**
+     * Checks that expected is less than actual
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     */
+    protected function assertLessThan($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertLessThan($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is less or equal than actual
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     */
+    protected function assertLessThanOrEqual($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $message);
+    }
+
+    /**
      * Checks that haystack contains needle
      *
      * @param        $needle
@@ -184,5 +208,41 @@ class AssertWrapper
     protected function fail($message)
     {
         \PHPUnit_Framework_Assert::fail($message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThan
+     * remove when not in use by any codeception-users
+     * @deprecated since since 1.8.1; to be removed in 2.0
+     */
+    protected function assertGreaterThen($expected, $actual, $message = '') {
+        return $this->assertGreaterThan($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThanOrEqual
+     * remove when not in use by any codeception-users
+     * @deprecated since since 1.8.1; to be removed in 2.0
+     */
+    protected function assertGreaterThenOrEqual($expected, $actual, $message = '') {
+        return $this->assertGreaterThanOrEqual($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThan
+     * remove when not in use by any codeception-users
+     * @deprecated since 1.8.1; to be removed in 2.0
+     */
+    protected function assertLowerThen($expected, $actual, $message = '') {
+        return $this->assertLessThan($expected, $actual, $message);
+    }
+
+    /**
+     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThanOrEqual
+     * remove when not in use by any codeception-users
+     * @deprecated since 1.8.1; to be removed in 2.0
+     */
+    protected function assertLowerThenOrEqual($expected, $actual, $message = '') {
+        return $this->assertLessThanOrEqual($expected, $actual, $message);
     }
 }

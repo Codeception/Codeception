@@ -1,12 +1,14 @@
 <?php
+
 namespace Codeception;
 
+use Codeception\PHPUnit\AssertWrapper;
 use Codeception\Exception\ModuleConfig;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class Module
+abstract class Module extends AssertWrapper
 {
     /**
      * By setting it to false module wan't inherit methods of parent class.
@@ -46,8 +48,6 @@ abstract class Module
 
     protected $requiredFields = array();
 
-    private $debugOutput;
-
     public function __construct($config = null)
     {
         $this->backupConfig = $this->config;
@@ -56,8 +56,6 @@ abstract class Module
         }
     }
 
-
-    
     public function _setConfig($config)
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
@@ -67,7 +65,7 @@ abstract class Module
     public function _reconfigure($config)
     {
         $this->config =  array_merge($this->backupConfig, $config);
-        $this->validateConfig();        
+        $this->validateConfig();
     }
 
     public function _resetConfig()
@@ -78,11 +76,13 @@ abstract class Module
     protected function validateConfig()
     {
         $fields = array_keys($this->config);
-        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields)
-            throw new ModuleConfig($this->getName(),"
-                Options: ".implode(', ', $this->requiredFields)." are required\n
-                Update configuration and set all required fields\n\n
-        ");
+        if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
+            throw new Exception\ModuleConfig(
+                get_class($this),
+                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
+                Please, update the configuration and set all the required fields\n\n"
+            );
+        }
     }
 
     public function getName()
@@ -100,11 +100,13 @@ abstract class Module
     }
 
     // HOOK: used after configuration is loaded
-    public function _initialize() {
+    public function _initialize()
+    {
     }
 
     // HOOK: on every Guy class initialization
-    public function _cleanup() {
+    public function _cleanup()
+    {
     }
 
     // HOOK: before each suite
@@ -118,302 +120,69 @@ abstract class Module
     }
 
     // HOOK: before every step
-    public function _beforeStep(\Codeception\Step $step) {
+    public function _beforeStep(Step $step)
+    {
     }
 
     // HOOK: after every  step
-    public function _afterStep(\Codeception\Step $step) {
+    public function _afterStep(Step $step)
+    {
     }
 
     // HOOK: before scenario
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(TestCase $test)
+    {
     }
 
     // HOOK: after scenario
-    public function _after(\Codeception\TestCase $test) {
+    public function _after(TestCase $test)
+    {
     }
 
     // HOOK: on fail
-    public function _failed(\Codeception\TestCase $test, $fail) {
+    public function _failed(TestCase $test, $fail)
+    {
     }
 
-    protected function debug($message) {
+    protected function debug($message)
+    {
         Debug::debug($message);
     }
 
-    protected function debugSection($title, $message) {
+    protected function debugSection($title, $message)
+    {
         $this->debug("[$title] $message");
-    }
-
-    protected function assert($arguments, $not = false) {
-
-        $not = $not ? 'Not' : '';
-        $method = ucfirst(array_shift($arguments));
-        if (($method === 'True') && $not) {
-            $method = 'False';
-            $not = '';
-        }
-        if (($method === 'False') && $not) {
-            $method = 'True';
-            $not = '';
-        }
-
-        call_user_func_array(array('\PHPUnit_Framework_Assert', 'assert'.$not.$method), $arguments);
-    }
-
-    /**
-     * Checks that two variables are equal.
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     * @return mixed
-     */
-    protected function assertEquals($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertEquals($expected, $actual, $message);
-    }
-
-
-    /**
-     * Checks that two variables are not equal
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertNotEquals($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertNotEquals($expected, $actual, $message);
-    }
-
-    /**
-     * Checks that expected is greater than actual
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertGreaterThan($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
-     * Checks that expected is greater or equal than actual
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertGreaterThanOrEqual($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * Checks that expected is less than actual
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     * @return mixed
-     */
-    protected function assertLessThan($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertLessThan($expected, $actual, $message);
-    }
-
-    /**
-     * Checks that expected is less or equal than actual
-     *
-     * @param $expected
-     * @param $actual
-     * @param string $message
-     * @return mixed
-     */
-    protected function assertLessThanOrEqual($expected, $actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * Checks that haystack contains needle
-     *
-     * @param $needle
-     * @param $haystack
-     * @param string $message
-     */
-    protected function assertContains($needle, $haystack, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertContains($needle, $haystack, $message);
-    }
-
-    /**
-     * Checks that haystack doesn't contain needle.
-     *
-     * @param $needle
-     * @param $haystack
-     * @param string $message
-     */
-    protected function assertNotContains($needle, $haystack, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertNotContains($needle, $haystack, $message);
-    }
-
-    /**
-     * Checks that variable is empty.
-     *
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertEmpty($actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertEmpty($actual, $message);
-    }
-
-    /**
-     * Checks that variable is not empty.
-     *
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertNotEmpty($actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertNotEmpty($actual, $message);
-    }
-
-    /**
-     * Checks that variable is NULL
-     *
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertNull($actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertNull($actual, $message);
-    }
-
-    /**
-     * Checks that variable is not NULL
-     *
-     * @param $actual
-     * @param string $message
-     */
-    protected function assertNotNull($actual, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertNotNull($actual, $message);
-    }
-
-
-    /**
-     * Checks that condition is positive.
-     *
-     * @param $condition
-     * @param string $message
-     */
-    protected function assertTrue($condition, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertTrue($condition, $message);
-    }
-
-    /**
-     * Checks that condition is negative.
-     *
-     * @param $condition
-     * @param string $message
-     */
-    protected function assertFalse($condition, $message = '')
-    {
-        return \PHPUnit_Framework_Assert::assertFalse($condition, $message);
-    }
-
-    protected function assertThat($haystack, $constraint, $message)
-    {
-        \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
-    }
-
-    protected function assertThatItsNot($haystack, $constraint, $message)
-    {
-        $constraint = new \PHPUnit_Framework_Constraint_Not($constraint);
-        \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
-    }
-
-    /**
-     * Fails the test with message.
-     *
-     * @param $message
-     */
-    protected function fail($message)
-    {
-        return \PHPUnit_Framework_Assert::fail($message);
-    }
-
-    protected function assertNot($arguments) {
-        $this->assert($arguments, true);
     }
 
     protected function hasModule($name)
     {
-        return isset(\Codeception\SuiteManager::$modules[$name]);
+        return SuiteManager::hasModule($name);
     }
 
     protected function getModules()
     {
-        return \Codeception\SuiteManager::$modules;
+        return SuiteManager::$modules;
     }
 
-    protected function getModule($name) {
-        if (!$this->hasModule($name)) throw new \Codeception\Exception\Module($this->getName(), "Module $name couldn't be connected");
-        return \Codeception\SuiteManager::$modules[$name];
+    protected function getModule($name)
+    {
+        if (!$this->hasModule($name)) {
+            throw new Exception\Module(__CLASS__, "Module $name couldn't be connected");
+        }
+
+        return SuiteManager::$modules[$name];
     }
 
     protected function scalarizeArray($array)
     {
         foreach ($array as $k => $v) {
-            if (! is_scalar($v)) {
-                $array[$k] = (is_array($v) || $v instanceof \ArrayAccess) ? $this->scalarizeArray($v) : (string)$v;
+            if (!is_scalar($v)) {
+                $array[$k] = (is_array($v) || $v instanceof \ArrayAccess)
+                    ? $this->scalarizeArray($v)
+                    : (string)$v;
             }
         }
 
         return $array;
-    }
-
-
-
-    /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThan
-     * remove when not in use by any codeception-users
-     * @deprecated since 1.9.0
-     */
-    protected function assertGreaterThen($expected, $actual, $message = '') {
-        return $this->assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThanOrEqual
-     * remove when not in use by any codeception-users
-     * @deprecated since 1.9.0
-     */
-    protected function assertGreaterThenOrEqual($expected, $actual, $message = '') {
-        return $this->assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThan
-     * remove when not in use by any codeception-users
-     * @deprecated since 1.9.0
-     */
-    protected function assertLowerThen($expected, $actual, $message = '') {
-        return $this->assertLessThan($expected, $actual, $message);
-    }
-
-    /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThanOrEqual
-     * remove when not in use by any codeception-users
-     * @deprecated since 1.9.0
-     */
-    protected function assertLowerThenOrEqual($expected, $actual, $message = '') {
-        return $this->assertLessThanOrEqual($expected, $actual, $message);
     }
 }

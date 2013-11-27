@@ -20,7 +20,7 @@ class CrawlerNot extends Crawler {
         $output .= $this->uriMessage('on page');
         $output .= str_replace($this->string,"<bold>{$this->string}</bold>",$this->nodesList($nodes, $this->string));
         $output .= "\ncontaining '{$this->string}'";
-        
+
         throw new \PHPUnit_Framework_ExpectationFailedException(
           $output,
           $comparisonFailure
