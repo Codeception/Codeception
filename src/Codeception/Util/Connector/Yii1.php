@@ -62,7 +62,7 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		$scriptName = trim(parse_url($this->url, PHP_URL_PATH), '/');
 		if (!empty($uriQuery)) {
 
-		    $uriPath .= '?' . $uriQuery;
+		    $uriPath .= "?{$uriQuery}";
 
 		    parse_str($uriQuery, $params);
 		    foreach ($params as $k => $v) {
@@ -72,7 +72,12 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 
 		// Add script name to request if none
 		if (strpos($uriPath, $scriptName) === false) {
-		    $uriPath = "{$scriptName}/{$uriPath}";
+		    $uriPath = "/{$scriptName}/{$uriPath}";
+		}
+
+		// Add forward slash if not exists
+		if (strpos($uriPath, '/') !== 0) {
+		    $uriPath = "/{$uriPath}";
 		}
 
 		$_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
@@ -81,7 +86,7 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		/**
 		 * Hack to be sure that CHttpRequest will resolve route correctly
 		 */
-		$_SERVER['SCRIPT_NAME'] = $scriptName;
+		$_SERVER['SCRIPT_NAME'] = "/{$scriptName}";
 		$_SERVER['SCRIPT_FILENAME'] = $this->appPath;
 
 		ob_start();
