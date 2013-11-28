@@ -56,25 +56,37 @@ class Yii1 extends \Symfony\Component\BrowserKit\Client
 		else
 			$_POST = $request->getParameters();
 
-		$uri = parse_url($request->getUri(), PHP_URL_PATH);
-		$scriptName = parse_url($this->url, PHP_URL_PATH);
+		// Parse url parts
+		$uriPath = trim(parse_url($request->getUri(), PHP_URL_PATH), '/');
+		$uriQuery = ltrim(parse_url($request->getUri(), PHP_URL_QUERY), '?');
+		$scriptName = trim(parse_url($this->url, PHP_URL_PATH), '/');
+		if (!empty($uriQuery)) {
 
-		$queryString = parse_url($uri,PHP_URL_QUERY);
-		parse_str($queryString,$params);
+		    $uriPath .= "?{$uriQuery}";
 
-		if (strpos($uri,$scriptName) === false)
-			$uri = $scriptName.$queryString;
+		    parse_str($uriQuery, $params);
+		    foreach ($params as $k => $v) {
+		        $_GET[$k] = $v;
+		    }
+		}
 
-		foreach($params as $k=>$v)
-			$_GET[$k] = $v;
+		// Add script name to request if none
+		if (strpos($uriPath, $scriptName) === false) {
+		    $uriPath = "/{$scriptName}/{$uriPath}";
+		}
+
+		// Add forward slash if not exists
+		if (strpos($uriPath, '/') !== 0) {
+		    $uriPath = "/{$uriPath}";
+		}
 
 		$_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-		$_SERVER['REQUEST_URI'] = $uri;
+		$_SERVER['REQUEST_URI'] = $uriPath;
 
 		/**
 		 * Hack to be sure that CHttpRequest will resolve route correctly
 		 */
-		$_SERVER['SCRIPT_NAME'] = $scriptName;
+		$_SERVER['SCRIPT_NAME'] = "/{$scriptName}";
 		$_SERVER['SCRIPT_FILENAME'] = $this->appPath;
 
 		ob_start();
