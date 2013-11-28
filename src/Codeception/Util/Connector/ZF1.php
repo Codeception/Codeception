@@ -46,6 +46,7 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
         $zendRequest->setParams($request->getParameters());
+        $zendRequest->setRawBody($request->getContent());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         $_FILES = $request->getFiles();
