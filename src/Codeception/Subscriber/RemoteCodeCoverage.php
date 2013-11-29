@@ -31,7 +31,9 @@ class RemoteCodeCoverage extends \Codeception\Subscriber\CodeCoverage implements
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled) return;
+        if (!$this->enabled || !$this->remote) {
+            return;
+        }
 
         $this->suite_name = $e->getSuite()->getName();
         $this->module = $this->getRemoteConnectionModule();
