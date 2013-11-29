@@ -81,6 +81,14 @@ class form {
     }
 }
 
+class articles {
+    function DELETE() {
+    }
+
+    function PUT() {
+    }
+}
+
 class search {
     function GET($matches) {
         $result = null;
