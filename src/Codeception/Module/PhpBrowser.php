@@ -134,17 +134,21 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
         $this->call($url, $method, $params);
     }
 
-    public function sendAjaxPostRequest($uri, $params = array()) {
-        $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        $this->call($uri, 'POST', $params);
-        $this->debug($this->session->getPage()->getContent());
-        $this->session->setRequestHeader('X-Requested-With', '');
+    public function sendAjaxPostRequest($uri, $params = array())
+    {
+        $this->sendAjaxRequest('POST', $uri, $params);
     }
 
-    public function sendAjaxGetRequest($uri, $params = array()) {
-        $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    public function sendAjaxGetRequest($uri, $params = array())
+    {
         $query = $params ? '?'. http_build_query($params) : '';
-        $this->call($uri.$query, 'GET', $params);
+        $this->sendAjaxRequest('GET', $uri.$query, $params);
+    }
+
+    public function sendAjaxRequest($method, $uri, $params = array())
+    {
+        $this->session->setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        $this->call($uri, $method, $params);
         $this->debug($this->session->getPage()->getContent());
         $this->session->setRequestHeader('X-Requested-With', '');
     }
