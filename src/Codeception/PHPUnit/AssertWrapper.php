@@ -211,26 +211,23 @@ class AssertWrapper
     }
 
     /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThan
-     * remove when not in use by any codeception-users
-     * @deprecated since since 1.8.1; to be removed in 2.0
+     * deprecated because of naming mismatch with \PHPUnit_Framework_Assert::assertGreaterThan
+     * @deprecated since 1.8.1; to be removed in 2.0
      */
     protected function assertGreaterThen($expected, $actual, $message = '') {
         return $this->assertGreaterThan($expected, $actual, $message);
     }
 
     /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertGreaterThanOrEqual
-     * remove when not in use by any codeception-users
-     * @deprecated since since 1.8.1; to be removed in 2.0
+     * deprecated because of naming mismatch with \PHPUnit_Framework_Assert::assertGreaterThanOrEqual
+     * @deprecated since 1.8.1; to be removed in 2.0
      */
     protected function assertGreaterThenOrEqual($expected, $actual, $message = '') {
         return $this->assertGreaterThanOrEqual($expected, $actual, $message);
     }
 
     /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThan
-     * remove when not in use by any codeception-users
+     * deprecated because of naming mismatch with \PHPUnit_Framework_Assert::assertLessThan
      * @deprecated since 1.8.1; to be removed in 2.0
      */
     protected function assertLowerThen($expected, $actual, $message = '') {
@@ -238,8 +235,7 @@ class AssertWrapper
     }
 
     /**
-     * deprecated because of naming mismatch with PHPUnit\\Framework\\Assert::assertLessThanOrEqual
-     * remove when not in use by any codeception-users
+     * deprecated because of naming mismatch with \PHPUnit_Framework_Assert::assertLessThanOrEqual
      * @deprecated since 1.8.1; to be removed in 2.0
      */
     protected function assertLowerThenOrEqual($expected, $actual, $message = '') {
