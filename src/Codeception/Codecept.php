@@ -73,7 +73,7 @@ class Codecept
     }
 
     private function mergeOptions($options) {
-        
+
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
