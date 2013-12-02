@@ -437,25 +437,33 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($field);
         if (!$nodes->count()) throw new ElementNotFound($field, 'Field');
-        $fields = $nodes;
-        foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') continue;
-            if ($field->getAttribute('type') == 'radio') continue;
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
+
+        if ($nodes->filter('textarea')->count()) {
+            return $nodes->filter('textarea')->text();
+        }
+        if ($nodes->filter('input')->count()) {
+            return $nodes->filter('input')->attr('value');
         }
 
-        $fields = $form->filter('textarea');
-        foreach ($fields as $field) {
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
-        }
-
-        $fields = $form->filter('select');
-        foreach ($fields as $field) {
-            foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected')
-                    $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+        if ($nodes->filter('select')->count()) {
+            $select = $nodes->filter('select');
+            $is_multiple = $select->attr('multiple');
+            $results = array();
+            foreach ($select->childNodes as $option) {
+                if ($option->getAttribute('selected') == 'selected') {
+                    $val = $option->attr('value');
+                    if (!$is_multiple) {
+                        return $val;
+                    }
+                    $results[] = $val;
+                }
             }
+            if (!$is_multiple) {
+                return null;
+            }
+            return $results;
         }
+        $this->fail("Element $field is not a form field or does not contain a form field");
     }
 
     public function seeElement($selector)
