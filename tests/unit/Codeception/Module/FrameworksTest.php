@@ -557,6 +557,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    public function testGrabValueFrom() {
+        $this->module->amOnPage('/form/hidden');
+        $result = $this->module->grabValueFrom('#action');
+        $this->assertEquals("kill_people", $result);
+        $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
+        $this->assertEquals("kill_people", $result);
+        $this->module->amOnPage('/form/textarea');
+    }
 
 
 }
