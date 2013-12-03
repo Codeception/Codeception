@@ -578,7 +578,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
-        $el->sendKeys(\Codeception\Configuration::dataDir().$filename);
+        // in order to be compatible on different OS
+        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        $el->sendKeys($filePath);
     }
 
     public function grabTextFrom($cssOrXPathOrRegex)
