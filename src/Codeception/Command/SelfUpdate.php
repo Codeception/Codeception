@@ -14,16 +14,11 @@ use Symfony\Component\Console\Input\InputDefinition,
 class SelfUpdate extends Base
 {
     /**
-     * Constants
+     * Class constants
      */
+    const NAME = 'Codeception';
+    const GITHUB = 'Codeception/Codeception';
     const SOURCE = 'http://codeception.com/codecept.phar';
-    const GITHUB_REPO = 'Codeception/Codeception';
-    
-    /**
-     * Holds the name .
-     * @var string
-     */
-    protected $name = 'Codeception';
 
     /**
      * Holds the current script filename.
@@ -63,7 +58,7 @@ class SelfUpdate extends Base
 
         $output->writeln(sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
-                $this->name, $version
+                self::NAME, $version
         ));
 
         $output->writeln("\n<info>Checking for a new version...</info>\n");
@@ -109,7 +104,7 @@ class SelfUpdate extends Base
      */
     private function isOutOfDate($version)
     {
-        $tags = $this->getGithubTags(self::GITHUB_REPO);
+        $tags = $this->getGithubTags(self::GITHUB);
 
         $this->liveVersion = array_reduce($tags, function ($a, $b) {
             return version_compare($a, $b, '>') ? $a : $b;
@@ -149,7 +144,7 @@ class SelfUpdate extends Base
             'follow_location' => 1,
             'max_redirects' => 20,
             'timeout' => 1,
-            'user_agent' => $this->name
+            'user_agent' => self::NAME
         ));
 
         $ctx  = stream_context_create($opts);
