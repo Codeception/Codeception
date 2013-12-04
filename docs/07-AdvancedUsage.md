@@ -258,8 +258,8 @@ It's pretty obvious that for such cases you can use your own PHP classes to defi
     public static function logMeIn($I)
     {
         $I->amOnPage('/login');
-        $I->fillField('username', 'jon');
-        $I->fillField('password','coltrane');
+        $I->fillField('username', self::$username);
+        $I->fillField('password', self::$password);
         $I->click('Enter');
     }
 }
