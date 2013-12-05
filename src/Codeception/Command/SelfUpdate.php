@@ -143,7 +143,7 @@ class SelfUpdate extends Base
         $opts = array('http' => array(
             'follow_location' => 1,
             'max_redirects' => 20,
-            'timeout' => 1,
+            'timeout' => 60,
             'user_agent' => self::NAME
         ));
 
