@@ -67,7 +67,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'wait' => 5,
+        'wait' => 0,
         'capabilities' => array()
     );
 
