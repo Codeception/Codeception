@@ -7,11 +7,24 @@ use Symfony\Component\BrowserKit\Response;
 
 class Universal extends Client
 {
+    protected $mockedResponse;
+    
     public function setIndex($index) {
         $this->index = $index;
     }
 
+    public function mockResponse($response)
+    {
+        $this->mockedResponse = $response;
+    }
+
     public function doRequest($request) {
+        if ($this->mockedResponse) {
+            $response = $this->mockedResponse;
+            $this->mockedResponse = null;
+            return $response;
+        }
+        
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
         $_FILES = $request->getFiles();
