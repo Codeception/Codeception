@@ -160,6 +160,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeHttpHeader('Content-Language','en-RU');
         $this->module->dontSeeHttpHeader('Content-Language1');
         $this->module->seeHttpHeaderOnce('Content-Language');
+        \Codeception\Util\Debug::debug($this->module->grabHttpHeader('Cache-Control', false));
         $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
         $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
         $this->assertEquals(array('no-cache', 'no-store'), $this->module->grabHttpHeader('Cache-Control', false));
@@ -171,7 +172,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->shouldFail();
         $response = new \Symfony\Component\BrowserKit\Response("", 200, array(
             'Cache-Control' => array('no-cache', 'no-store'),
-            'Content_Language' => 'en-US'
         ));
         $this->module->client->mockResponse($response);
         $this->module->sendGET('/');
