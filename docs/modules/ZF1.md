@@ -337,6 +337,11 @@ $I->fillField("//input[@type='text']", "Hello World!");
  * param $value
 
 
+### getName
+
+__not documented__
+
+
 ### grabFromCurrentUrl
 
 

@@ -162,6 +162,24 @@ class REST extends \Codeception\Module
         }
     }
 
+    /**
+     * Checks that http response header is received only once.
+     * HTTP RFC2616 allows multiple response headers with the same name.
+     * You can check that you didn't accidentally sent the same header twice.
+     *
+     * ``` php
+     * <?php
+     * $I->seeHttpHeaderOnce('Cache-Control');
+     * ?>>
+     * ```
+     *
+     * @param $name
+     */
+    public function seeHttpHeaderOnce($name)
+    {
+        $headers = $this->client->getInternalResponse()->getHeader($name, false);
+        $this->assertEquals(1, count($headers));
+    }
 
     /**
      * Returns the value of the specified header name
@@ -641,4 +659,5 @@ class REST extends \Codeception\Module
     {
         $this->assertNotEquals($code, $this->client->getInternalResponse()->getStatus());
     }
+
 }

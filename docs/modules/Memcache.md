@@ -42,6 +42,11 @@ Checks item in Memcached doesn't exist or is the same as expected.
  * param bool $value
 
 
+### getName
+
+__not documented__
+
+
 ### grabValueFromMemcached
 
 

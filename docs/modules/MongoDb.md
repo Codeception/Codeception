@@ -53,6 +53,11 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
  * param array $criteria
 
 
+### getName
+
+__not documented__
+
+
 ### grabFromCollection
 
 

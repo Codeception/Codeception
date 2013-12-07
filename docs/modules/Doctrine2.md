@@ -52,6 +52,11 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
 Performs $em->flush();
 
 
+### getName
+
+__not documented__
+
+
 ### grabFromRepository
 
 

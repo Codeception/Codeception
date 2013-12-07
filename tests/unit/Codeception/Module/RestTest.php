@@ -145,4 +145,42 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $request = $this->module->client->getRequest();
         $this->assertEquals('http://localhost/api/v1/users',$request->getUri());
     }
+
+    public function testSeeHeaders()
+    {
+        $response = new \Symfony\Component\BrowserKit\Response("", 200, array(
+            'Cache-Control' => array('no-cache', 'no-store'),
+            'Content_Language' => 'en-US'
+        ));
+        $this->module->client->mockResponse($response);
+        $this->module->sendGET('/');
+        $this->module->seeHttpHeader('Cache-Control');
+        $this->module->seeHttpHeader('content_language','en-US');
+        $this->module->seeHttpHeader('Content-Language','en-US');
+        $this->module->dontSeeHttpHeader('Content-Language','en-RU');
+        $this->module->dontSeeHttpHeader('Content-Language1');
+        $this->module->seeHttpHeaderOnce('Content-Language');
+        \Codeception\Util\Debug::debug($this->module->grabHttpHeader('Cache-Control', false));
+        $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
+        $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
+        $this->assertEquals(array('no-cache', 'no-store'), $this->module->grabHttpHeader('Cache-Control', false));
+
+    }
+    
+    public function testSeeHeadersOnce()
+    {
+        $this->shouldFail();
+        $response = new \Symfony\Component\BrowserKit\Response("", 200, array(
+            'Cache-Control' => array('no-cache', 'no-store'),
+        ));
+        $this->module->client->mockResponse($response);
+        $this->module->sendGET('/');
+        $this->module->seeHttpHeaderOnce('Cache-Control');
+    }
+
+    protected function shouldFail()
+    {
+        $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
+
 }

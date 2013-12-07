@@ -45,7 +45,8 @@ class Output extends ConsoleOutput {
 	}
 
 	public function debug($message) {
-		if (is_array($message)) $message = implode("\n ", $message);
+        $message = print_r($message, true);
+        $message = str_replace("\n","\n  ", $message);
         $this->writeln("<debug>  $message</debug>");
 	}
 

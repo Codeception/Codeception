@@ -24,7 +24,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * ## Migration Guide (Selenium2 -> WebDriver)
  *
  * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
- * 
+ *
  *
  *
  * ## Status
@@ -67,10 +67,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'wait' => 5,
+        'wait' => 0,
         'capabilities' => array()
     );
-    
+
     protected $wd_host;
     protected $capabilities;
     protected $test;
@@ -85,7 +85,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
-        $this->webDriver = new \RemoteWebDriver($this->wd_host, $this->capabilities);
+        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
     }
 
@@ -124,7 +124,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             unset($this->webDriver);
         }
     }
-    
+
     public function _getResponseCode() {}
 
     public function _sendRequest($url) {}
@@ -180,6 +180,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!is_dir($debugDir)) mkdir($debugDir, 0777);
         $caseName = str_replace('Cept.php', '', $this->test->getFileName());
         $caseName = str_replace('Cept.php', '', $caseName);
+        /**
+         * This is used for Cept only
+         *
+         * To be consistent with Cest, no sub-dir would be created, '\' and '/' in $caseName would be replaced with '.'
+         */
+        $search = array('/', '\\');
+        $replace = array('.', '.');
+        $caseName = str_replace($search, $replace, $caseName);
 
         $screenName = $debugDir . DIRECTORY_SEPARATOR . $caseName.' - '.$name.'.png';
         $this->_saveScreenshot($screenName);
@@ -570,7 +578,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
-        $el->sendKeys(\Codeception\Configuration::dataDir().$filename);
+        // in order to be compatible on different OS
+        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        $el->sendKeys($filePath);
     }
 
     public function grabTextFrom($cssOrXPathOrRegex)
@@ -828,7 +838,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Waits until element has changed according to callback function or for $time seconds to pass.
+     * Waits for element to change or for $timeout seconds to pass. Element "change" is determined
+     * by a callback function which is called repeatedly until the return value evaluates to true.
      *
      * ``` php
      * <?php
@@ -849,7 +860,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!count($els)) throw new ElementNotFound($element, "CSS or XPath");
         $el = reset($els);
         $checker = function() use ($el, $callback) {
-            $callback($el);
+            return $callback($el);
         };
         $this->webDriver->wait($timeout)->until($checker);
     }
@@ -1281,7 +1292,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
     }
-    
+
     /**
      * Append text to an element
      * Can add another selection to a select box

@@ -1,4 +1,5 @@
 <?php
+
 class FrameworksTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -49,7 +50,7 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
 
     public function testSee() {
         $this->module->amOnPage('/');
-        $this->module->see('Welcome to test app!');        
+        $this->module->see('Welcome to test app!');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!','h1');
@@ -67,19 +68,37 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testSeeLink() {
         $this->module->amOnPage('/');
         $this->module->seeLink('More info');
-        $this->module->dontSeeLink('/info');
-        $this->module->dontSeeLink('#info');
+        $this->module->seeLink('More info', '/info');
+        $this->module->dontSeeLink('More info', '#info');
 
         $this->module->amOnPage('/info');
         $this->module->seeLink('Back');
     }
-    
+
+    /**
+     * @expectedException \Codeception\Exception\ElementNotFound
+     * @expectedExceptionMessage Element located either by name, CSS or XPath 'a' was not found on page.
+     */
+    public function testSeeLinkFail() {
+        $this->module->amOnPage('/');
+        $this->module->seeLink('More info', '/foo');
+    }
+
+    /**
+     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedExceptionMessage Element 'a' was found
+     */
+    public function testDontSeeLinkFail() {
+        $this->module->amOnPage('/');
+        $this->module->dontSeeLink('More info', '/info');
+    }
+
     public function testClick() {
         $this->module->amOnPage('/');
         $this->module->click('More info');
         $this->module->seeInCurrentUrl('/info');
     }
-    
+
     public function testClickByCss() {
         $this->module->amOnPage('/info');
         $this->module->click('form input[type=submit]');
@@ -310,6 +329,12 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('HTTP_X_REQUESTED_WITH', $_SERVER);
         $post = data::get('form');
         $this->assertEquals('author', $post['show']);
+
+        $this->module->sendAjaxRequest('DELETE', '/articles');
+        $this->assertEquals('DELETE', $_SERVER['REQUEST_METHOD']);
+
+        $this->module->sendAjaxRequest('PUT', '/articles/1', array('title' => 'foo'));
+        $this->assertEquals('PUT', $_SERVER['REQUEST_METHOD']);
     }
 
     public function testSeeWithNonLatin() {
@@ -532,6 +557,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    public function testGrabValueFrom() {
+        $this->module->amOnPage('/form/hidden');
+        $result = $this->module->grabValueFrom('#action');
+        $this->assertEquals("kill_people", $result);
+        $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
+        $this->assertEquals("kill_people", $result);
+        $this->module->amOnPage('/form/textarea');
+    }
 
 
 }

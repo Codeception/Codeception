@@ -119,31 +119,39 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function see($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageContains($text);
-        $nodes = $this->match($selector);
-        $this->assertDomContains($nodes, $selector, $text);
+        if (!$selector) {
+            $this->assertPageContains($text);
+        } else {
+            $nodes = $this->match($selector);
+            $this->assertDomContains($nodes, $selector, $text);
+        }
     }
 
     public function dontSee($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageNotContains($text, $this->client->getInternalResponse()->getContent());
-        $nodes = $this->match($selector);
-        $this->assertDomNotContains($nodes, $selector, $text);
+        if (!$selector) {
+            $this->assertPageNotContains($text);
+        } else {
+            $nodes = $this->match($selector);
+            $this->assertDomNotContains($nodes, $selector, $text);
+        }
     }
 
     public function seeLink($text, $url = null)
     {
         $links = $this->crawler->selectLink($text);
-        if (!$url) return $this->assertDomContains($links,'a');
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
+        if ($url) {
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+        }
         $this->assertDomContains($links, 'a');
     }
 
     public function dontSeeLink($text, $url = null)
     {
         $links = $this->crawler->selectLink($text);
-        if (!$url) return $this->assertDomNotContains($links, 'a');
-        $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, "%s")]', Crawler::xpathLiteral(' ' . $this->escape($url) . ' ')));
+        if ($url) {
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+        }
         $this->assertDomNotContains($links, 'a');
     }
 
@@ -368,13 +376,17 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
     public function sendAjaxGetRequest($uri, $params = array())
     {
-        $this->client->request('GET', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
-        $this->debugResponse();
+        $this->sendAjaxRequest('GET', $uri, $params);
     }
 
     public function sendAjaxPostRequest($uri, $params = array())
     {
-        $this->client->request('POST', $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
+        $this->sendAjaxRequest('POST', $uri, $params);
+    }
+
+    public function sendAjaxRequest($method, $uri, $params = array())
+    {
+        $this->client->request($method, $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
         $this->debugResponse();
     }
 
@@ -425,25 +437,33 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $nodes = $this->match($field);
         if (!$nodes->count()) throw new ElementNotFound($field, 'Field');
-        $fields = $nodes;
-        foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') continue;
-            if ($field->getAttribute('type') == 'radio') continue;
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
+
+        if ($nodes->filter('textarea')->count()) {
+            return $nodes->filter('textarea')->text();
+        }
+        if ($nodes->filter('input')->count()) {
+            return $nodes->filter('input')->attr('value');
         }
 
-        $fields = $form->filter('textarea');
-        foreach ($fields as $field) {
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
-        }
-
-        $fields = $form->filter('select');
-        foreach ($fields as $field) {
-            foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected')
-                    $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+        if ($nodes->filter('select')->count()) {
+            $select = $nodes->filter('select');
+            $is_multiple = $select->attr('multiple');
+            $results = array();
+            foreach ($select->childNodes as $option) {
+                if ($option->getAttribute('selected') == 'selected') {
+                    $val = $option->attr('value');
+                    if (!$is_multiple) {
+                        return $val;
+                    }
+                    $results[] = $val;
+                }
             }
+            if (!$is_multiple) {
+                return null;
+            }
+            return $results;
         }
+        $this->fail("Element $field is not a form field or does not contain a form field");
     }
 
     public function seeElement($selector)
