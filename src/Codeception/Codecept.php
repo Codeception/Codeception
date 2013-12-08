@@ -54,7 +54,6 @@ class Codecept
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
-        'env' => null,
     );
 
     public function __construct($options = array()) {
@@ -101,7 +100,6 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
-        $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
 
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
@@ -119,31 +117,10 @@ class Codecept
         }
     }
 
-    public function run($suite, $test = null)
-    {
+    public function runSuite($suite, $test = null) {
         ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
+
         $settings = Configuration::suiteSettings($suite, Configuration::config());
-
-        $selectedEnvironments = $this->options['env'];
-        $environments = \Codeception\Configuration::suiteEnvironments($suite);
-
-        if (!$selectedEnvironments or empty($environments)) {
-            $this->runSuite($settings, $suite, $test);
-            return;
-        }
-
-        foreach ($environments as $env => $config) {
-            if (!in_array($env, $selectedEnvironments)) {
-                continue;
-            }
-            if (!is_int($env)) {
-                $suite .= "-$env";
-            }
-            $this->runSuite($config, $suite, $test);
-        }
-    }
-
-    public function runSuite($settings, $suite, $test = null) {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test
