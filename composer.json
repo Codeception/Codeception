@@ -33,7 +33,7 @@
         "videlalvaro/php-amqplib": "*"
     },
     "suggest": {
-        "codeception/phpbuiltinserver": "Extension to starts and stops PHP builtin web server for your tests"
+        "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests"
     },
 
     "autoload":{
