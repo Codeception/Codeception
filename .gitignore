@@ -1,6 +1,7 @@
 .idea
 composer.phar
 vendor
+package/codecept.phar
 tests/data/app/db
 tests/data/sandbox
 tests/data/included/_log/*
