@@ -815,6 +815,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $form = reset($form);
         /** @var $form \WebDriverElement  **/
         foreach ($params as $param => $value) {
+            if(!is_array($value) && !is_object($value)){
+                $value=(string)$value;
+            }
             $els = $form->findElements(\WebDriverBy::name($param));
             $el = reset($els);
             if ($el->getTagName() == 'textarea') $this->fillField($el, $value);
