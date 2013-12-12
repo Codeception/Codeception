@@ -176,7 +176,7 @@ class PhpBrowser extends \Codeception\Util\Mink implements \Codeception\Util\Fra
      * ```
      *
      * It is not recommended to use this command on a regular basis.
-     * If Codeception lacks important Guzzle Client methods, implement then and submit patches.
+     * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
      *
      * @param callable $function
      */
