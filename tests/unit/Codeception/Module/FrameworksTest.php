@@ -428,6 +428,42 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInTitle('TestEd Beta 2.0');
     }
 
+    public function testSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('form select[name=age]', '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '60-100');
+    }
+
+    public function testSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->seeOptionIsSelected('Select your age', '60-100');
+    }
+
+    public function testDontSeeOptionIsSelectedByCss()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->dontSeeOptionIsSelected('form select[name=age]', '21-60');
+    }
+
+    public function testDontSeeOptionIsSelectedByXPath()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->dontSeeOptionIsSelected("descendant-or-self::form/descendant::select[@name='age']", '21-60');
+    }
+
+    public function testDontSeeOptionIsSelectedByLabel()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->dontSeeOptionIsSelected('Select your age', '21-60');
+    }
+
     // fails
 
     public function testSeeFails()
@@ -496,6 +532,14 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    public function testGrabValueFrom() {
+        $this->module->amOnPage('/form/hidden');
+        $result = $this->module->grabValueFrom('#action');
+        $this->assertEquals("kill_people", $result);
+        $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
+        $this->assertEquals("kill_people", $result);
+        $this->module->amOnPage('/form/textarea');
+    }
 
 
 }

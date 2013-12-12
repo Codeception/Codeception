@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.7.1";
+    const VERSION = "1.7.4";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -73,7 +73,7 @@ class Codecept
     }
 
     private function mergeOptions($options) {
-        
+
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
