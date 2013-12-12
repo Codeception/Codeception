@@ -65,15 +65,6 @@ Run CLI utility:
 php codecept.phar
 ```
 
-Copy it into your project.
-
-Run CLI utility:
-
-```
-php codecept.phar
-```
-
-
 ### Composer
 
 ```
