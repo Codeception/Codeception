@@ -118,8 +118,7 @@ class Db
         );
     }
 
-    public function select($column, $table, array $criteria)
-    {
+    public function select($column, $table, array $criteria) {
         $where = $criteria ? "where %s" : '';
         $query = "select %s from `%s` $where";
         $params = array();
