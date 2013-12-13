@@ -29,7 +29,7 @@ use Symfony\Component\BrowserKit\Request;
  * ## Configuration
  *
  * * url *required* - start url of your app
- * * curl - curl options
+ * * curl - curl options. See http://curl.haxx.se/libcurl/c/options-in-examples.html
  *
  * ### Example (`acceptance.suite.yml`)
  *
