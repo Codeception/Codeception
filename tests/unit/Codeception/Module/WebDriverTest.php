@@ -140,9 +140,6 @@ class WebDriverTest extends TestsForMink
         $this->assertEquals('agree',$form['terms']);
         $this->assertEquals('child',$form['age']);
     }
-    /**
-     * @group admin
-     */
     public function testSubmitFormWithNumbers() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
