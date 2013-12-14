@@ -140,11 +140,14 @@ class WebDriverTest extends TestsForMink
         $this->assertEquals('agree',$form['terms']);
         $this->assertEquals('child',$form['age']);
     }
+    /**
+     * @group admin
+     */
     public function testSubmitFormWithNumbers() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
             'name' => 'Davert',
-            'age' => 10,
+            'age' => 'child',
             'terms' => 'agree',
             'description' => 10
         ));
@@ -153,7 +156,7 @@ class WebDriverTest extends TestsForMink
         $this->assertEquals('kill_all', $form['action']);
         $this->assertEquals('10', $form['description']);
         $this->assertEquals('agree',$form['terms']);
-        $this->assertEquals('10',$form['age']);
+        $this->assertEquals('child',$form['age']);
     }
 
     public function testRadioButtonByValue()
