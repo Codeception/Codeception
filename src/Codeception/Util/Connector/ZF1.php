@@ -23,7 +23,8 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
      */
     protected $zendRequest;
 
-    public function setBootstrap($bootstrap) {
+    public function setBootstrap($bootstrap)
+    {
         $this->bootstrap = $bootstrap;
 
         $this->front = $this->bootstrap->getBootstrap()->getResource('frontcontroller');
@@ -32,7 +33,8 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
             ->returnResponse(false);
     }
 
-    public function doRequest($request) {
+    public function doRequest($request)
+    {
 
         // redirector should not exit
         $redirector = \Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
@@ -46,8 +48,11 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
         $zendRequest->setParams($request->getParameters());
+        $zendRequest->setRawBody($request->getContent());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
-        $zendRequest->setHeaders($request->getServer());
+        $zendRequest->setHeaders(
+            $this->getNormalizedHeadersUsing($request->getServer())
+        );
         $_FILES = $request->getFiles();
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
@@ -60,17 +65,66 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
 
         $this->zendRequest = $zendRequest;
 
-        $response = new Response($zendResponse->getBody(), $zendResponse->getHttpResponseCode(), $zendResponse->getHeaders());
+        $response = new Response(
+            $zendResponse->getBody(),
+            $zendResponse->getHttpResponseCode(),
+            $this->getKeyValueHeaders($zendResponse)
+        );
         return $response;
     }
     /**
      * @return \Zend_Controller_Request_HttpTestCase
      */
-    public function getZendRequest() {
+    public function getZendRequest()
+    {
         return $this->zendRequest;
     }
 
+    private function getNormalizedHeadersUsing($values)
+    {
+        $fixedValues = $values;
+        foreach($values as $key => $value) {
+            if (substr($key, 0, 5) == "HTTP_") {
+                $key = str_replace(
+                        " ",
+                        "-",
+                        ucwords(strtolower(
+                            str_replace("_", " ", substr($key, 5))
+                        ))
+                );
+                $fixedValues[$key] = $value;
+            }
+            else {
+                $key = str_replace(
+                    " ",
+                    "-",
+                    ucwords(strtolower(
+                        str_replace("_", " ", $key)
+                    ))
+                );
+                $fixedValues[$key] = $value;
+            }
+        }
+        return $fixedValues;
+    }
 
-
-
+    private function getKeyValueHeaders($zendResponse)
+    {
+        $headers = array();
+        foreach ($zendResponse->getRawHeaders() as $header) {
+            $headers[] = $header;
+        }
+        foreach ($zendResponse->getHeaders() as $header) {
+            $name = $header['name'];
+            $key  = strtolower($name);
+            if (array_key_exists($name, $headers)) {
+                if ($header['replace']) {
+                    $headers[$key] = $header['value'];
+                }
+            } else {
+                $headers[$key] = $header['value'];
+            }
+        }
+        return $headers;
+    }
 }
