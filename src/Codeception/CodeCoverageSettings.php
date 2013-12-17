@@ -1,5 +1,7 @@
 <?php
+
 namespace Codeception;
+
 use \Symfony\Component\Finder\Finder;
 
 class CodeCoverageSettings
@@ -19,7 +21,7 @@ class CodeCoverageSettings
      */
     protected $filter = null;
 
-    function __construct($phpCoverage)
+    function __construct(\PHP_CodeCoverage $phpCoverage)
     {
         $this->phpCodeCoverage = $phpCoverage
             ? $phpCoverage
@@ -128,9 +130,9 @@ class CodeCoverageSettings
         if (count($parts)) {
             $last_path = array_pop($parts);
             if ($last_path === '*') {
-                $finder->in(\Codeception\Configuration::projectDir() . implode('/', $parts));
+                $finder->in(Configuration::projectDir() . implode('/', $parts));
             } else {
-                $finder->in(\Codeception\Configuration::projectDir() . implode('/', $parts) . '/' . $last_path);
+                $finder->in(Configuration::projectDir() . implode('/', $parts) . '/' . $last_path);
             }
         }
         $finder->ignoreVCS(true)->files();

@@ -1,33 +1,41 @@
 <?php
+
 namespace Codeception\TestCase;
 
-use Codeception\Event\Fail;
-use Codeception\Event\Test as TestEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\CodeceptionEvents;
+use Codeception\Event\TestEvent;
+use Codeception\Scenario;
 use Codeception\Step;
+use Codeception\TestCase;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class Cept extends \Codeception\TestCase implements ScenarioDriven
+class Cept extends TestCase implements ScenarioDriven
 {
     private $name;
-    protected $testfile = null;
+    protected $testFile = null;
     protected $output;
     protected $debug;
     protected $features = array();
     protected $bootstrap = null;
     protected $stopped = false;
-    protected $dispatcher;
 
     public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
+
         $this->dispatcher = $dispatcher;
 
-        if (!isset($data['file'])) throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
+        if (! isset($data['file'])) {
+            throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
+        }
 
-        $this->name = $data['name'];
-        $this->scenario = new \Codeception\Scenario($this);
-        $this->testfile = $data['file'];
-        $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
+        $this->name      = $data['name'];
+        $this->testFile  = $data['file'];
+        $this->scenario  = new Scenario($this);
+
+        if (isset($data['bootstrap']) && file_exists($data['bootstrap'])) {
+            $this->bootstrap = $data['bootstrap'];
+        }
     }
 
     public function getFileName()
@@ -42,11 +50,14 @@ class Cept extends \Codeception\TestCase implements ScenarioDriven
 
     public function getScenarioText($format = 'text')
     {
-        if ($format == 'html') return $this->scenario->getHtml();
+        if ($format == 'html') {
+            return $this->scenario->getHtml();
+        }
         return $this->scenario->getText();
     }
 
-    public function getFeature() {
+    public function getFeature()
+    {
         return $this->scenario->getFeature();
     }
 
@@ -57,25 +68,31 @@ class Cept extends \Codeception\TestCase implements ScenarioDriven
 
     public function preload()
     {
+        /** @noinspection PhpUnusedLocalVariableInspection */
         $scenario = $this->scenario;
-        // preload
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
-        require $this->testfile;
+        if ($this->bootstrap) {
+            /** @noinspection PhpIncludeInspection */
+            require $this->bootstrap;
+        }
+        /** @noinspection PhpIncludeInspection */
+        require $this->testFile;
 
-        $this->fire('test.parsed', new TestEvent($this));
+        $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
     }
 
     public function testCodecept()
     {
+        $this->fire(CodeceptionEvents::TEST_BEFORE, new TestEvent($this));
+
         $scenario = $this->scenario;
-
-        $this->fire('test.before', new TestEvent($this));
         $scenario->run();
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
+        if ($this->bootstrap) {
+            /** @noinspection PhpIncludeInspection */
+            require $this->bootstrap;
+        }
+        /** @noinspection PhpIncludeInspection */
+        require $this->testFile;
 
-        require $this->testfile;
-
-        $this->fire('test.after', new TestEvent($this));
+        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($this));
     }
-
 }

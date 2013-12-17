@@ -1,10 +1,14 @@
 <?php
 
+use Codeception\Event\TestEvent;
+
 class RunCest
 {
-    public function _before(\Codeception\Event\Test $t)
+    public function _before(TestEvent $t)
     {
-        if (floatval(phpversion()) == '5.3') $t->getTest()->getScenario()->skip();
+        if (floatval(phpversion()) == '5.3') {
+            $t->getTest()->getScenario()->skip();
+        }
     }
 
     public function runOneFile(\CliGuy $I)
@@ -17,17 +21,20 @@ class RunCest
 
     /**
      * @group reports
+     *
      * @param CliGuy $I
      */
-    public function runHtml(\CliGuy $I) {
+    public function runHtml(\CliGuy $I)
+    {
         $I->wantTo('execute tests with html output');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --html');
-        $I->seeFileFound('report.html','tests/_log');
+        $I->seeFileFound('report.html', 'tests/_log');
     }
 
     /**
      * @group reports
+     *
      * @param CliGuy $I
      */
     public function runJsonReport(\CliGuy $I)
@@ -35,13 +42,14 @@ class RunCest
         $I->wantTo('check json reports');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --json');
-        $I->seeFileFound('report.json','tests/_log');
+        $I->seeFileFound('report.json', 'tests/_log');
         $I->seeInThisFile('"suite":');
         $I->seeInThisFile('"dummy"');
     }
 
     /**
      * @group reports
+     *
      * @param CliGuy $I
      */
     public function runTapReport(\CliGuy $I)
@@ -49,11 +57,12 @@ class RunCest
         $I->wantTo('check tap reports');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --tap');
-        $I->seeFileFound('report.tap.log','tests/_log');
+        $I->seeFileFound('report.tap.log', 'tests/_log');
     }
 
     /**
      * @group reports
+     *
      * @param CliGuy $I
      */
     public function runXmlReport(\CliGuy $I)
@@ -61,7 +70,7 @@ class RunCest
         $I->wantTo('check xml reports');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --xml');
-        $I->seeFileFound('report.xml','tests/_log');
+        $I->seeFileFound('report.xml', 'tests/_log');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase file="FileExistsCept.php"');
@@ -69,6 +78,7 @@ class RunCest
 
     /**
      * @group reports
+     *
      * @param CliGuy $I
      */
     public function runReportMode(\CliGuy $I)
@@ -78,7 +88,6 @@ class RunCest
         $I->executeCommand('run dummy --report');
         $I->seeInShellOutput('FileExistsCept.php');
         $I->seeInShellOutput('........Ok');
-
     }
 
     public function runOneGroup(\CliGuy $I)
@@ -88,7 +97,6 @@ class RunCest
         $I->seeInShellOutput("IncompleteMeCept.php");
         $I->dontSeeInShellOutput("CommentsCept.php");
         $I->dontSeeInShellOutput("SkipMeCept.php");
-
     }
 
     public function runTwoSuites(\CliGuy $I)
@@ -103,12 +111,13 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers');
+        $I->executeCommand(
+          'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers'
+        );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
         $I->dontSeeInShellOutput("Remote_server Tests");
         $I->dontSeeInShellOutput("Order Tests");
-
     }
 
     public function runOneTestFromUnit(\CliGuy $I)
@@ -131,10 +140,11 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput('Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput(
+          'Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
+        );
         $I->seeInShellOutput('Trying to test is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput('Trying to test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput("OK");
     }
-
 }

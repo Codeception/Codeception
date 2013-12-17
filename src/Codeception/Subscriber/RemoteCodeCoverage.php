@@ -2,17 +2,22 @@
 
 namespace Codeception\Subscriber;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Codeception\CodeceptionEvents;
+use Codeception\Configuration;
+use Codeception\Event\StepEvent;
+use Codeception\Event\SuiteEvent;
 use Codeception\Exception\RemoteException;
 use Codeception\Module\PhpBrowser;
+use Codeception\Util\FileSystem;
 use Codeception\Util\RemoteInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterface
 {
     protected $options = array();
     protected $enabled = false;
     protected $remote = false;
-    protected $suite_name = "";
+    protected $suiteName = "";
 
     protected $settings = array(
         'enabled'        => false,
@@ -31,16 +36,16 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         $this->options = $options;
     }
 
-    public function beforeSuite(\Codeception\Event\Suite $e)
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled || !$this->remote) {
+        if (! $this->enabled || ! $this->remote) {
             return;
         }
 
-        $this->suite_name = $e->getSuite()->getName();
-        $this->module     = $this->getRemoteConnectionModule();
-        if (!$this->module) {
+        $this->suiteName = $e->getSuite()->getName();
+        $this->module    = $this->getRemoteConnectionModule();
+        if (! $this->module) {
             return;
         }
 
@@ -60,45 +65,47 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         }
     }
 
-    public function beforeStep(\Codeception\Event\Step $e)
+    public function beforeStep(StepEvent $e)
     {
-        if (!$this->module) {
+        if (! $this->module) {
             return;
         }
 
         $cookie = array(
             'CodeCoverage'        => $e->getTest()->getName(),
-            'CodeCoverage_Suite'  => $this->suite_name,
+            'CodeCoverage_Suite'  => $this->suiteName,
             'CodeCoverage_Config' => $this->settings['remote_config']
         );
         $this->module->setCookie('CODECEPTION_CODECOVERAGE', json_encode($cookie));
 
-        if (!method_exists($this->module, '_setHeader')) {
+        if (! method_exists($this->module, '_setHeader')) {
             return;
         }
         $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
-        $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
+        $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suiteName);
         if ($this->settings['remote_config']) {
             $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
         }
     }
 
-    public function afterStep(\Codeception\Event\Step $e)
+    public function afterStep(StepEvent $e)
     {
-        if (!$this->module) return;
-        if ($error  = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
+        if (! $this->module) {
+            return;
+        }
+        if ($error = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
             throw new RemoteException($error);
         }
         $this->module->resetCookie('CODECEPTION_CODECOVERAGE_ERROR');
         $this->module->resetCookie('CODECEPTION_CODECOVERAGE');
     }
 
-    public function afterSuite(\Codeception\Event\Suite $e)
+    public function afterSuite(SuiteEvent $e)
     {
-        if (!$this->module) {
+        if (! $this->module) {
             return;
         }
-        if (!$this->remote) {
+        if (! $this->remote) {
             return;
         }
 
@@ -116,9 +123,9 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
         file_put_contents($tempFile, $this->getRemoteCoverageFile($this->module, 'html'));
 
-        $destDir = \Codeception\Configuration::logDir() . $suite . '.remote.coverage';
+        $destDir = Configuration::logDir() . $suite . '.remote.coverage';
         if (is_dir($destDir)) {
-            \Codeception\Util\FileSystem::doEmptyDir($destDir);
+            FileSystem::doEmptyDir($destDir);
         } else {
             mkdir($destDir, 0777, true);
         }
@@ -131,7 +138,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
 
     protected function retrieveAndPrintXml($suite)
     {
-        $destFile = \Codeception\Configuration::logDir() . $suite . '.remote.coverage.xml';
+        $destFile = Configuration::logDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->getRemoteCoverageFile($this->module, 'clover'));
     }
 
@@ -150,10 +157,10 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
     static public function getSubscribedEvents()
     {
         return array(
-            'suite.after'  => 'afterSuite',
-            'suite.before' => 'beforeSuite',
-            'step.before'  => 'beforeStep',
-            'step.after'   => 'afterStep',
+            CodeceptionEvents::SUITE_AFTER  => 'afterSuite',
+            CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
+            CodeceptionEvents::STEP_BEFORE  => 'beforeStep',
+            CodeceptionEvents::STEP_AFTER   => 'afterStep',
         );
     }
 }

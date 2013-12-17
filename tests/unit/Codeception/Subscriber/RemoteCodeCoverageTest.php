@@ -1,6 +1,6 @@
 <?php
 
-use Codeception\Event\Suite;
+use Codeception\Event\SuiteEvent;
 
 class RemoteCodeCoverageTest extends PHPUnit_Framework_TestCase
 {
@@ -26,7 +26,7 @@ class RemoteCodeCoverageTest extends PHPUnit_Framework_TestCase
         $testSuite  = $this->getMock('PHPUnit_Framework_TestSuite', array(), array(), '', false);
         $testResult = new PHPUnit_Framework_TestResult;
         $testResult->setCodeCoverage(new \PHP_CodeCoverage());
-        $suiteEvent = new Suite($testSuite, $testResult);
+        $suiteEvent = new SuiteEvent($testSuite, $testResult);
 
         $codeCoverageMock->beforeSuite($suiteEvent);
     }

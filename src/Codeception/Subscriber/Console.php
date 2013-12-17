@@ -1,6 +1,11 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\CodeceptionEvents;
+use Codeception\Event\FailEvent;
+use Codeception\Event\StepEvent;
+use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\SuiteManager;
 use Codeception\TestCase\ScenarioDriven;
@@ -26,8 +31,8 @@ class Console implements EventSubscriberInterface
 
     public function __construct($options)
     {
-        $this->debug = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
-        $this->steps = $this->debug || $options['steps'];
+        $this->debug  = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->steps  = $this->debug || $options['steps'];
         $this->output = new Output($options);
         if ($this->debug) {
             Debug::setOutput($this->output);
@@ -35,7 +40,7 @@ class Console implements EventSubscriberInterface
     }
 
     // triggered for scenario based tests: cept, cest
-    public function beforeSuite(\Codeception\Event\Suite $e)
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->buildResultsTable($e);
 
@@ -52,13 +57,13 @@ class Console implements EventSubscriberInterface
         $message->style('info')
             ->prepend('Modules: ')
             ->writeln(OutputInterface::VERBOSITY_VERBOSE);
-        
+
         $this->message('')->width(array_sum($this->columns), '-')->writeln(OutputInterface::VERBOSITY_VERBOSE);
 
     }
 
     // triggered for all tests
-    public function startTest(\Codeception\Event\Test $e)
+    public function startTest(TestEvent $e)
     {
         $test = $e->getTest();
         $this->printedTest = $test;
@@ -74,7 +79,7 @@ class Console implements EventSubscriberInterface
             ->write();
     }
 
-    public function before(\Codeception\Event\Test $e)
+    public function before(TestEvent $e)
     {
         $test = $e->getTest();
         $filename = $test->getFileName();
@@ -84,7 +89,7 @@ class Console implements EventSubscriberInterface
                 ->with($test->getFeature(), $filename)
                 ->width($this->columns[0])
                 ->write();
- 
+
         } else {
             $this->message("Running <focus>%s</focus> ")
                 ->with($filename)
@@ -95,14 +100,14 @@ class Console implements EventSubscriberInterface
         if ($this->steps && count($e->getTest()->getScenario()->getSteps())) {
             $this->output->writeln("\nScenario:");
         }
-        
+
     }
 
-    public function afterTest(\Codeception\Event\Test $e)
+    public function afterTest(TestEvent $e)
     {
     }
 
-    public function testSuccess(\Codeception\Event\Test $e)
+    public function testSuccess(TestEvent $e)
     {
         if ($this->isDetailed($e->getTest())) {
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
@@ -111,12 +116,12 @@ class Console implements EventSubscriberInterface
         $this->message('Ok')->writeln();
     }
 
-    public function endTest(\Codeception\Event\Test $e)
+    public function endTest(TestEvent $e)
     {
         $this->printedTest = null;
     }
 
-    public function testFail(\Codeception\Event\Fail $e)
+    public function testFail(FailEvent $e)
     {
         if (!$this->steps && ($e->getFail() instanceof ConditionalAssertionFailed)) {
             $this->message('[F]')->style('error')->prepend(' ')->write();
@@ -129,7 +134,7 @@ class Console implements EventSubscriberInterface
         $this->message('Fail')->style('error')->writeln();
     }
 
-    public function testError(\Codeception\Event\Fail $e)
+    public function testError(FailEvent $e)
     {
         if ($this->isDetailed($e->getTest())) {
             $this->message('ERROR')->center(' ')->style('error')->append("\n")->writeln();
@@ -138,7 +143,7 @@ class Console implements EventSubscriberInterface
         $this->message('Error')->style('error')->writeln();
     }
 
-    public function testSkipped(\Codeception\Event\Fail $e)
+    public function testSkipped(FailEvent $e)
     {
         if (!$this->printedTest) {
             return;
@@ -150,7 +155,7 @@ class Console implements EventSubscriberInterface
         $message->writeln();
     }
 
-    public function testIncomplete(\Codeception\Event\Fail $e)
+    public function testIncomplete(FailEvent $e)
     {
         $message = $this->message('Incomplete');
         if ($this->isDetailed($e->getTest())) {
@@ -170,7 +175,7 @@ class Console implements EventSubscriberInterface
         return true;
     }
 
-    public function beforeStep(\Codeception\Event\Step $e)
+    public function beforeStep(StepEvent $e)
     {
         if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
@@ -178,16 +183,16 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("* " . $e->getStep());
     }
 
-    public function afterStep(\Codeception\Event\Step $e)
+    public function afterStep(StepEvent $e)
     {
     }
 
-    public function afterSuite(\Codeception\Event\Suite $e)
+    public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width(array_sum($this->columns), '-')->writeln();
     }
 
-    public function printFail(\Codeception\Event\Fail $e)
+    public function printFail(FailEvent $e)
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
@@ -216,7 +221,9 @@ class Console implements EventSubscriberInterface
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
         $failMessage = $this->message($failedTest->getFilename())->style('bold');
 
-        if ($fail instanceof \PHPUnit_Framework_SkippedTest or $fail instanceof \PHPUnit_Framework_IncompleteTest) {
+        if ($fail instanceof \PHPUnit_Framework_SkippedTest
+            or $fail instanceof \PHPUnit_Framework_IncompleteTest
+        ) {
             $this->printSkippedTest($feature, $failedTest->getFileName(), $failToString);
             return;
         }
@@ -325,9 +332,9 @@ class Console implements EventSubscriberInterface
     }
 
     /**
-     * @param \Codeception\Event\Suite $e
+     * @param SuiteEvent $e
      */
-    protected function buildResultsTable(\Codeception\Event\Suite $e)
+    protected function buildResultsTable(SuiteEvent $e)
     {
         $this->columns = array(40, 5);
         foreach ($e->getSuite()->tests() as $test) {
@@ -354,24 +361,23 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    // events
     static function getSubscribedEvents()
     {
         return array(
-            'suite.before' => 'beforeSuite',
-            'suite.after' => 'afterSuite',
-            'test.before' => 'before',
-            'test.after' => 'afterTest',
-            'test.start' => 'startTest',
-            'test.end' => 'endTest',
-            'step.before' => 'beforeStep',
-            'step.after' => 'afterStep',
-            'test.success' => 'testSuccess',
-            'test.fail' => 'testFail',
-            'test.error' => 'testError',
-            'test.incomplete' => 'testIncomplete',
-            'test.skipped' => 'testSkipped',
-            'test.fail.print' => 'printFail',
+            CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
+            CodeceptionEvents::SUITE_AFTER     => 'afterSuite',
+            CodeceptionEvents::TEST_BEFORE     => 'before',
+            CodeceptionEvents::TEST_AFTER      => 'afterTest',
+            CodeceptionEvents::TEST_START      => 'startTest',
+            CodeceptionEvents::TEST_END        => 'endTest',
+            CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
+            CodeceptionEvents::STEP_AFTER      => 'afterStep',
+            CodeceptionEvents::TEST_SUCCESS    => 'testSuccess',
+            CodeceptionEvents::TEST_FAIL       => 'testFail',
+            CodeceptionEvents::TEST_ERROR      => 'testError',
+            CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
+            CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
+            CodeceptionEvents::TEST_FAIL_PRINT => 'printFail',
         );
     }
 }

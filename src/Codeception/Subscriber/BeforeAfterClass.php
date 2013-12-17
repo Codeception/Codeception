@@ -1,17 +1,19 @@
 <?php
+
 namespace Codeception\Subscriber;
 
-use Codeception\Event\Suite;
+use Codeception\CodeceptionEvents;
+use Codeception\Event\SuiteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class BeforeAfterClass implements EventSubscriberInterface {
 
-    public function setUpBeforeClass(Suite $e)
+    public function setUpBeforeClass(SuiteEvent $e)
     {
         $this->processClassHooks($e->getSuite()->tests(), 'setUpBeforeClass');
     }
 
-    public function tearDownAfterClass(Suite $e)
+    public function tearDownAfterClass(SuiteEvent $e)
     {
         $this->processClassHooks($e->getSuite()->tests(), 'tearDownAfterClass');
     }
@@ -33,10 +35,8 @@ class BeforeAfterClass implements EventSubscriberInterface {
     static function getSubscribedEvents()
     {
         return array(
-            'suite.before'	=> 'setUpBeforeClass',
-            'suite.after'	=> 'tearDownAfterClass'
+            CodeceptionEvents::SUITE_BEFORE => 'setUpBeforeClass',
+            CodeceptionEvents::SUITE_AFTER  => 'tearDownAfterClass'
         );
     }
-
-
 }

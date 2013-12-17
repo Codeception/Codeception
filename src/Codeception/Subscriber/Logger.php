@@ -1,11 +1,18 @@
 <?php
+
 namespace Codeception\Subscriber;
 
-use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Codeception\CodeceptionEvents;
+use Codeception\Configuration;
+use Codeception\Event\FailEvent;
+use Codeception\Event\StepEvent;
+use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
+use Monolog\Handler\RotatingFileHandler;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Logger implements EventSubscriberInterface
 {
-
     protected $logHandler;
 
     /**
@@ -14,72 +21,79 @@ class Logger implements EventSubscriberInterface
     protected $logger;
 
     protected $path;
-    protected $max_files;
+    protected $maxFiles;
 
-    public function __construct($max_files = 3) {
-        $this->path = \Codeception\Configuration::logDir();
-        $this->max_files = $max_files;
+    public function __construct($maxFiles = 3)
+    {
+        $this->path     = Configuration::logDir();
+        $this->maxFiles = $maxFiles;
 
         // internal log
-        $logHandler = new \Monolog\Handler\RotatingFileHandler($this->path.'codeception.log', $this->max_files);
+        $logHandler   = new RotatingFileHandler($this->path . 'codeception.log', $this->maxFiles);
         $this->logger = new \Monolog\Logger('Codeception');
         $this->logger->pushHandler($logHandler);
-
     }
 
-    public function beforeSuite(\Codeception\Event\Suite $e) {
-        $suite = str_replace('\\', '_', $e->getSuite()->getName());
-        $this->logHandler = new \Monolog\Handler\RotatingFileHandler($this->path.$suite, $this->max_files);
+    public function beforeSuite(SuiteEvent $e)
+    {
+        $suite            = str_replace('\\', '_', $e->getSuite()->getName());
+        $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->maxFiles);
     }
 
-    public function beforeTest(\Codeception\Event\Test $e) {
+    public function beforeTest(TestEvent $e)
+    {
         $this->logger = new \Monolog\Logger($e->getTest()->getFileName());
         $this->logger->pushHandler($this->logHandler);
     }
 
-    public function afterTest(\Codeception\Event\Test $e) {
+    public function afterTest(TestEvent $e)
+    {
     }
 
-    public function endTest(\Codeception\Event\Test $e) {
+    public function endTest(TestEvent $e)
+    {
         $this->logger->info("PASSED");
     }
 
-    public function testFail(\Codeception\Event\Fail $e) {
+    public function testFail(FailEvent $e)
+    {
         $this->logger->alert($e->getFail()->getMessage());
         $this->logger->info("# FAILED #");
     }
 
-    public function testError(\Codeception\Event\Fail $e) {
+    public function testError(FailEvent $e)
+    {
         $this->logger->alert($e->getFail()->getMessage());
         $this->logger->info("# ERROR #");
     }
-    
-    public function testSkipped(\Codeception\Event\Fail $e) {
+
+    public function testSkipped(FailEvent $e)
+    {
         $this->logger->info("# Skipped #");
     }
-    
-    public function testIncomplete(\Codeception\Event\Fail $e) {
+
+    public function testIncomplete(FailEvent $e)
+    {
         $this->logger->info("# Incomplete #");
     }
 
-    public function beforeStep(\Codeception\Event\Step $e) {
+    public function beforeStep(StepEvent $e)
+    {
         $this->logger->info($e->getStep()->getHumanizedAction());
     }
 
     static function getSubscribedEvents()
     {
         return array(
-            'suite.before' => 'beforeSuite',
-            'test.before' => 'beforeTest',
-            'test.after' => 'afterTest',
-            'test.end' => 'endTest',
-            'step.before' => 'beforeStep',
-            'test.fail' => 'testFail',
-            'test.error' => 'testError',
-            'test.incomplete' => 'testIncomplete',
-            'test.skipped' => 'testSkipped',
+            CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
+            CodeceptionEvents::TEST_BEFORE     => 'beforeTest',
+            CodeceptionEvents::TEST_AFTER      => 'afterTest',
+            CodeceptionEvents::TEST_END        => 'endTest',
+            CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
+            CodeceptionEvents::TEST_FAIL       => 'testFail',
+            CodeceptionEvents::TEST_ERROR      => 'testError',
+            CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
+            CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
         );
     }
-
-
 }
