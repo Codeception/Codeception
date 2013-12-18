@@ -431,10 +431,10 @@ class MemberSteps extends \WebGuy
     function login($name, $password)
     {
         $I = $this;
-        $I->amOnPage(LoginPage::$URL);
-        $I->fillField(LoginPage::$usernameField, $name);
-        $I->fillField(LoginPage::$passwordField, $password);
-        $I->click(LoginPage::$loginButton);
+        $I->amOnPage(\LoginPage::$URL);
+        $I->fillField(\LoginPage::$usernameField, $name);
+        $I->fillField(\LoginPage::$passwordField, $password);
+        $I->click(\LoginPage::$loginButton);
     }
 }
 ?>
