@@ -23,7 +23,7 @@ namespace Codeception\Module;
  * Supported but not tested.
  *
  * * MSSQL
- * * Orcale
+ * * Oracle
  *
  * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
  * Check out drivers if you get problems loading dumps and cleaning databases.
