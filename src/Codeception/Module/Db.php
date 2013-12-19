@@ -139,8 +139,6 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
-        } else {
-            $this->removeInserted();
         }
         parent::_before($test);
     }
@@ -148,6 +146,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _after(\Codeception\TestCase $test)
     {
         $this->populated = false;
+        $this->removeInserted();
         parent::_after($test);
     }
 
