@@ -394,6 +394,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
     }
 
     protected function getResponseStatusCode()
