@@ -68,7 +68,7 @@ php codecept.phar
 ### Composer
 
 ```
-php composer.phar require "codeception/codeception:*"
+php composer.phar require "codeception/codeception":"*"
 ```
 
 Read Also [Installation](http://codeception.com/install) | **[QuickStart](http://codeception.com/quickstart)**
