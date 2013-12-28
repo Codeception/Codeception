@@ -5,23 +5,20 @@
 This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
 
 The following configurations are required for this module:
-<ul>
-<li>entryScript - the path of the entry script</li>
-<li>url - the URL of the entry script</li>
-</ul>
 
-The entry script must return the application configuration array.
+- `configFile` - the path of the application configuration file which returns the application configuration array
 
-You can use this module by setting params in your functional.suite.yml:
-<pre>
+
+You can use this module by setting params in your `functional.suite.yml`:
+
+```
 class_name: TestGuy
 modules:
     enabled: [FileSystem, TestHelper, Yii2]
     config:
         Yii2:
-            entryScript: '/path/to/index.php'
-            url: 'http://localhost/path/to/index.php'
-</pre>
+            configFile: 'tests/functional/_config.php'
+```
 
 ## Status
 
