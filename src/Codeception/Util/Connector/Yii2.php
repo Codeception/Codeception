@@ -8,7 +8,7 @@ use yii\web\Response as YiiResponse;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
-
+use Codeception\Util\Debug;
 
 class Yii2 extends Client
 {
@@ -68,6 +68,12 @@ class Yii2 extends Client
 		ob_start();
 		$app->handleRequest($app->getRequest())->send();
 		$content = ob_get_clean();
+
+		# catch "location" header and display it in debug, otherwise it would be handled 
+		# by symfony browser-kit and not displayed.
+		if (isset($this->headers['location'])) {
+			Debug::debug("[Headers] " . json_encode($this->headers));
+		}
 
 		return new Response($content, $this->statusCode, $this->headers);
 	}
