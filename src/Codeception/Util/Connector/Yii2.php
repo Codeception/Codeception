@@ -69,8 +69,8 @@ class Yii2 extends Client
 		$app->handleRequest($app->getRequest())->send();
 		$content = ob_get_clean();
 
-		# catch "location" header and display it in debug, otherwise it would be handled 
-		# by symfony browser-kit and not displayed.
+		// catch "location" header and display it in debug, otherwise it would be handled 
+		// by symfony browser-kit and not displayed.
 		if (isset($this->headers['location'])) {
 			Debug::debug("[Headers] " . json_encode($this->headers));
 		}
