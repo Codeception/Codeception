@@ -112,7 +112,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $form = $this->getFormFor($button);
 
         $this->debugSection('Uri', $domForm->getUri());
-        $this->debugSection($domForm->getMethod(), json_encode($form->getValues()));
+        $this->debugSection($domForm->getMethod(), str_replace('\\', '', json_encode($form->getValues())));
 
         $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
     }
@@ -271,7 +271,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
 
         $this->debugSection('Uri', $this->getFormUrl($form));
         $this->debugSection('Method', $method);
-        $this->debugSection('Parameters', json_encode($params));
+        $this->debugSection('Parameters', str_replace('\\', '', json_encode($params)));
 
         $this->crawler = $this->client->request($method, $this->getFormUrl($form), $params);
         $this->debugResponse();
@@ -394,8 +394,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
     {
         $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
-        $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
-        $this->debugSection('Headers', json_encode($this->client->getResponse()->getHeaders()));
+        $this->debugSection('Cookies', str_replace('\\', '', json_encode($this->client->getRequest()->getCookies())));
+        $this->debugSection('Headers', str_replace('\\', '', json_encode($this->client->getResponse()->getHeaders())));
     }
 
     protected function getResponseStatusCode()
