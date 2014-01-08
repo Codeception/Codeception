@@ -119,7 +119,9 @@ class SuiteManager {
         $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-
+            $reflected = new \ReflectionClass($testClass);
+            if ($reflected->isAbstract()) continue;
+            
             $guy = $this->settings['namespace']
                 ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
                 : $this->settings['class_name'];
