@@ -120,7 +120,10 @@ class SuiteManager {
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
-            if ($reflected->isAbstract()) continue;
+            
+            if ($reflected->isAbstract()) {
+                continue;
+            }
             
             $guy = $this->settings['namespace']
                 ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
