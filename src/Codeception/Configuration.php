@@ -115,7 +115,7 @@ class Configuration
         self::$suites = array();
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
-            self::$suites[] = $matches[1];
+            self::$suites[$matches[1]] = $matches[1];
         }
     }
 
