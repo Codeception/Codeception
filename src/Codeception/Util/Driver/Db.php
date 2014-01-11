@@ -39,7 +39,7 @@ class Db
             case 'oracle':
                 return new Oracle($dsn, $user, $password);
             case 'sqlsrv':
-            	return new SqlSrv($dsn, $user, $password);
+                return new SqlSrv($dsn, $user, $password);
             default:
                 return new Db($dsn, $user, $password);
         }
