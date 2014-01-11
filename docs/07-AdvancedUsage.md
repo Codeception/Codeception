@@ -1,6 +1,6 @@
 # Advanced Usage
 
-In this chapter we will cover some technics and options that you can use to improve your testing experience and stay with better organization of your project. 
+In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project. 
 
 ## Interactive Console
 
