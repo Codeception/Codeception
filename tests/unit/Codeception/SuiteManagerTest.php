@@ -94,6 +94,6 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
             )
         );
         $newSuiteMan->addCest($file);
-        $this->assertEquals(3, $this->suiteman->getSuite()->count());
+        $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
 }
