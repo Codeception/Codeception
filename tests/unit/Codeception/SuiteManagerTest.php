@@ -70,4 +70,30 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $this->suiteman->getSuite()->count());
     }
 
+    /**
+     * When running multiple environments, getClassesFromFile() method in SuiteManager is called once for each env.
+     * See \Codeception\Codecept::runSuite() - for each env new SuiteManager is created and tests loaded.
+     * Make sure that calling getClassesFromFile() multiple times will always return the same classes.
+     *
+     * @group core
+     */
+    public function testAddCestWithEnv() {
+        $file = \Codeception\Configuration::dataDir().'SimpleCestWithNamespace.php';
+        $this->suiteman->addCest($file);
+        $this->assertEquals(3, $this->suiteman->getSuite()->count());
+        $newSuiteMan = Stub::make(
+            '\Codeception\SuiteManager',
+            array(
+                 'dispatcher' => $this->dispatcher,
+                 'suite'      => new PHPUnit_Framework_TestSuite(),
+                 'settings'   => array(
+                     'bootstrap'  => false,
+                     'class_name' => 'CodeGuy',
+                     'namespace'  => '',
+                 )
+            )
+        );
+        $newSuiteMan->addCest($file);
+        $this->assertEquals(3, $this->suiteman->getSuite()->count());
+    }
 }
