@@ -195,10 +195,10 @@ class SuiteManager {
         $tokens     = token_get_all($sourceCode);
         $namespace  = '';
 
-        for ($i = 0; $i < count($tokens); $i++) {
+        for ($i = 0, $tokensCount = count($tokens); $i < $tokensCount; $i++) {
             if ($tokens[$i][0] === T_NAMESPACE) {
                 $namespace = '';
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
                     if ($tokens[$j][0] === T_STRING) {
                         $namespace .= $tokens[$j][1] . '\\';
                     } else {
@@ -210,7 +210,7 @@ class SuiteManager {
             }
 
             if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
                     if ($tokens[$j] === '{') {
                         $classes[] = $namespace . $tokens[$i + 2][1];
                         break;

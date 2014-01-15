@@ -136,7 +136,7 @@ class Codecept
             if (!in_array($env, $selectedEnvironments)) {
                 continue;
             }
-            $suiteToRun = !is_int($env) ? "{$suite}-{$env}" : $suite;
+            $suiteToRun = is_int($env) ? $suite : "{$suite}-{$env}";
             $this->runSuite($config, $suiteToRun, $test);
         }
     }
