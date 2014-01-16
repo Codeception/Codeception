@@ -4,6 +4,7 @@ namespace Codeception\TestCase;
 
 use Codeception\CodeceptionEvents;
 use Codeception\Event\TestEvent;
+use Codeception\Parser;
 use Codeception\Scenario;
 use Codeception\Step;
 use Codeception\TestCase;
@@ -68,21 +69,14 @@ class Cept extends TestCase implements ScenarioDriven
 
     public function preload()
     { 
-        $body = $this->getRawBody();
-        $this->setTitle();
-        $this->runScenario();
+        $parser = new Parser($this->scenario);
+        $parser->prepareToRun($this->getRawBody());
         $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
     }
 
     public function getRawBody()
     {
         return file_get_contents($this->testFile);
-    }
-    
-    protected function getFeatureTitle($body)
-    {
-
-
     }
 
     public function testCodecept()

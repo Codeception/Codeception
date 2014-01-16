@@ -13,7 +13,7 @@ class Parser {
         $this->scenario = $scenario;
     }
 
-    public function parse($code)
+    public function prepareToRun($code)
     {
         $this->parseFeature($code);
         $this->parseScenarioOptions($code);
