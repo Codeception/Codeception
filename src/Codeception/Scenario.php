@@ -54,7 +54,6 @@ class Scenario {
             $this->env($e);
         }
     }
-       
 
     public function groups()
     {

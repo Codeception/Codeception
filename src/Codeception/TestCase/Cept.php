@@ -67,17 +67,22 @@ class Cept extends TestCase implements ScenarioDriven
     }
 
     public function preload()
-    {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $scenario = $this->scenario;
-        if ($this->bootstrap) {
-            /** @noinspection PhpIncludeInspection */
-            require $this->bootstrap;
-        }
-        /** @noinspection PhpIncludeInspection */
-        require $this->testFile;
-
+    { 
+        $body = $this->getRawBody();
+        $this->setTitle();
+        $this->runScenario();
         $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
+    }
+
+    public function getRawBody()
+    {
+        return file_get_contents($this->testFile);
+    }
+    
+    protected function getFeatureTitle($body)
+    {
+
+
     }
 
     public function testCodecept()
