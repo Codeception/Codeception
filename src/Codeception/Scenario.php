@@ -142,7 +142,7 @@ class Scenario {
                 $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
             }
         }
-        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
         $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
         return $text;
 
@@ -151,7 +151,7 @@ class Scenario {
     public function getText()
     {
         $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
         $text = strtoupper('I want to ' . $this->getFeature()) . "\r\n\r\n" . $text;
         return $text;
 
@@ -167,12 +167,17 @@ class Scenario {
     }
     
     public function run() {
-        if ($this->running()) return;
-        if ($this->blocker) return $this->blocker->run();
+        if ($this->isBlocked()) {
+            return $this->blocker->run();
+        }
 
         $this->running = true;
-        $this->preloadedSteps = $this->steps;
         $this->steps = array();
+    }
+
+    public function isBlocked()
+    {
+        return (bool)$this->blocker;
     }
 
     public function running()

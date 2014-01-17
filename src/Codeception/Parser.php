@@ -32,7 +32,6 @@ class Parser {
             $this->scenario->setFeature("test ".$matches[1]);
             return;
         }
-
     }
 
     public function parseScenarioOptions($code)
@@ -46,7 +45,25 @@ class Parser {
         foreach ($matches[0] as $line) {
             eval($line);
         }
+    }
+
+    public function parseSteps($code)
+    {
+        $res = preg_match_all("~\\\$I->(.*)\((.*?)\);~", $code, $matches);
+        if (!$res) {
+            return;
+        }
+
+        foreach ($matches[0] as $k => $all) {
+            $action = $matches[1][$k];
+            $params = $matches[2][$k];
+            if (in_array($action, array('wantTo','wantToTest'))) {
+                continue;
+            }
+            $this->scenario->addStep(new Step\Action($action, explode(',', $params)));
+        }
 
     }
+
 
 }

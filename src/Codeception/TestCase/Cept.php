@@ -19,6 +19,7 @@ class Cept extends TestCase implements ScenarioDriven
     protected $features = array();
     protected $bootstrap = null;
     protected $stopped = false;
+    protected $parser;
 
     public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
     {
@@ -33,6 +34,7 @@ class Cept extends TestCase implements ScenarioDriven
         $this->name      = $data['name'];
         $this->testFile  = $data['file'];
         $this->scenario  = new Scenario($this);
+        $this->parser    = new Parser($this->scenario);
 
         if (isset($data['bootstrap']) && file_exists($data['bootstrap'])) {
             $this->bootstrap = $data['bootstrap'];
@@ -51,6 +53,9 @@ class Cept extends TestCase implements ScenarioDriven
 
     public function getScenarioText($format = 'text')
     {
+        $code = $this->getRawBody();
+        $this->parser->parseFeature($code);
+        $this->parser->parseSteps($code);
         if ($format == 'html') {
             return $this->scenario->getHtml();
         }
@@ -69,8 +74,7 @@ class Cept extends TestCase implements ScenarioDriven
 
     public function preload()
     { 
-        $parser = new Parser($this->scenario);
-        $parser->prepareToRun($this->getRawBody());
+        $this->parser->prepareToRun($this->getRawBody());
         $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
     }
 

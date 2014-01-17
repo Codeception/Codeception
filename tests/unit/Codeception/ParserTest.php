@@ -8,8 +8,8 @@ class ParserTest extends \Codeception\TestCase\Test
      */
     private $parser;
     /**
-    * @var \CodeGuy
-    */
+     * @var \CodeGuy
+     */
     protected $codeGuy;
 
     protected function _before()
@@ -20,13 +20,13 @@ class ParserTest extends \Codeception\TestCase\Test
 
     public function testParsingFeature()
     {
-            $code = "<?php\n \\\$I->wantTo('run this test'); ";
-            $this->parser->parseFeature($code);
-            $this->assertEquals('run this test', $this->scenario->getFeature());
+        $code = "<?php\n \\\$I->wantTo('run this test'); ";
+        $this->parser->parseFeature($code);
+        $this->assertEquals('run this test', $this->scenario->getFeature());
 
-            $code = "<?php\n \\\$I->wantToTest('this run'); ";
-            $this->parser->parseFeature($code);
-            $this->assertEquals('test this run', $this->scenario->getFeature());
+        $code = "<?php\n \\\$I->wantToTest('this run'); ";
+        $this->parser->parseFeature($code);
+        $this->assertEquals('test this run', $this->scenario->getFeature());
     }
 
     public function testScenarioOptions()
@@ -43,6 +43,7 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->setExpectedException('PHPUnit_Framework_SkippedTestError', 'pass along');
         $code = "<?php\n \$scenario->skip('pass along'); ";
         $this->parser->parseScenarioOptions($code);
+        $this->assertTrue($this->scenario->isBlocked());
         $this->scenario->run();
     }
 
@@ -51,7 +52,19 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->setExpectedException('PHPUnit_Framework_IncompleteTestError', 'not ready yet');
         $code = "<?php\n \$scenario->incomplete('not ready yet'); ";
         $this->parser->parseScenarioOptions($code);
+        $this->assertTrue($this->scenario->isBlocked());
         $this->scenario->run();
     }
 
+    public function testSteps()
+    {
+        $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/cli/UnitCept.php');
+        $this->assertContains('$I->seeInThisFile', $code);
+        $this->parser->parseSteps($code);
+        $text = $this->scenario->getText();
+        $this->assertContains("I see in this file", $text);
+        $this->assertContains('I see in this file \'<testsuite name="unit" tests="5" assertions="5"', $text);
+        \Codeception\Util\Debug::debug($text);
+    }
+    
 }
