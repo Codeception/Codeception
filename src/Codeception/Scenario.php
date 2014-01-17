@@ -16,9 +16,7 @@ class Scenario {
      * @var    string
      */
 	protected $feature;
-    protected $currentStep = 0;
     protected $running = false;
-    protected $preloadedSteps = array();
     protected $blocker = null;
     protected $groups = array();
     protected $env = array();
@@ -89,25 +87,12 @@ class Scenario {
         $this->blocker = new \Codeception\Step\Ignore;
     }
 
-    public function runStep()
+    public function runStep(Step $step)
     {
-        if (empty($this->steps)) return;
-
-        $step = $this->lastStep();
-        if (!$step->executed) {
-            $result = $this->test->runStep($step);
-            $this->currentStep++;
-            $step->executed = true;
-            return $result;
-        }
-    }
-
-    /**
-     * @return \Codeception\Step
-     */
-    protected function lastStep()
-    {
-        return end($this->steps);
+        $this->steps[] = $step;
+        $result = $this->test->runStep($step);
+        $step->executed = true;
+        return $result;
     }
 
     public function addStep(\Codeception\Step $step)
@@ -123,8 +108,7 @@ class Scenario {
      */
     public function getSteps()
     {
-        if (!$this->running) return $this->steps;
-        return $this->preloadedSteps;
+        return $this->steps;
     }
 
 	public function getFeature() {
@@ -158,14 +142,9 @@ class Scenario {
     }
 
 	public function comment($comment) {
-		$this->addStep(new \Codeception\Step\Comment($comment,array()));
+		$this->runStep(new \Codeception\Step\Comment($comment,array()));
 	}
 
-    public function getCurrentStep()
-    {
-        return $this->currentStep;
-    }
-    
     public function run() {
         if ($this->isBlocked()) {
             return $this->blocker->run();

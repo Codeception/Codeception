@@ -3,7 +3,7 @@ namespace Codeception;
 
 use Codeception\Step\Action;
 
-abstract class AbstractGuy implements \ArrayAccess
+abstract class AbstractGuy
 {
     public static $methods = array();
 
@@ -26,26 +26,18 @@ abstract class AbstractGuy implements \ArrayAccess
      */
     public function execute($callable)
     {
-        $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-        }
+        $this->scenario->runStep(new \Codeception\Step\Executor($callable, array()));
         return $this;
     }
 
     public function wantToTest($text)
     {
-        return $this->wantTo('test ' . $text);
+        $this->wantTo('test ' . $text);
     }
 
     public function wantTo($text)
     {
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
         $this->scenario->setFeature(mb_strtolower($text));
-        return $this;
     }
 
     public function expectTo($prediction)
@@ -72,49 +64,11 @@ abstract class AbstractGuy implements \ArrayAccess
         return $this->comment('So that I ' . $achieveValue);
     }
 
-    /**
-     * In order to have this nicely looking comments.
-     *
-     * ``` php
-     * <?php
-     *
-     * $I['click on a product'];
-     * $I['then I select Purchase'];
-     * $I['I select shipment delivery'];
-     * $I['purchase a product'];
-     *
-     * ```
-     *
-     * @param mixed $offset
-     * @return mixed|void
-     */
-    public function offsetGet($offset)
-    {
-        $this->comment($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        // not needed
-    }
-
-    public function offsetExists($offset)
-    {
-        return false;
-    }
-
-    public function offsetUnset($offset)
-    {
-       // not needed
-    }
 
     protected function comment($description)
     {
         $this->scenario->comment($description);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
+        return $this;
     }
 
     public function __call($method, $arguments) {
