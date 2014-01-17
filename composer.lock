@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a5476d41e4edcaabed5461f3c11caf89",
+    "hash": "f1fb92dd3e44a855ca150989704214e0",
     "packages": [
         {
             "name": "behat/mink",
@@ -1605,77 +1605,6 @@
                 "zombie"
             ],
             "time": "2013-04-13 23:52:11"
-        },
-        {
-            "name": "codeception/specify",
-            "version": "0.3.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Codeception/Specify.git",
-                "reference": "6c085ad38a35fef1b9765296a442a1c50665144a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Specify/zipball/6c085ad38a35fef1b9765296a442a1c50665144a",
-                "reference": "6c085ad38a35fef1b9765296a442a1c50665144a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Codeception\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Michael Bodnarchuk",
-                    "email": "davert.php@mailican.com",
-                    "homepage": "http://codeception.com"
-                }
-            ],
-            "description": "BDD code blocks for PHPUnit and Codeception",
-            "time": "2013-10-03 22:45:08"
-        },
-        {
-            "name": "codeception/verify",
-            "version": "0.2.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Codeception/Verify.git",
-                "reference": "2815ecdbf85b2c551e1416e90b8e040cef279999"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Verify/zipball/2815ecdbf85b2c551e1416e90b8e040cef279999",
-                "reference": "2815ecdbf85b2c551e1416e90b8e040cef279999",
-                "shasum": ""
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/Codeception/function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Michael Bodnarchuk",
-                    "email": "davert.php@mailican.com",
-                    "homepage": "http://codeception.com"
-                }
-            ],
-            "description": "BDD assertion library for PHPUnit",
-            "time": "2014-01-05 00:28:21"
         },
         {
             "name": "facebook/php-sdk",
