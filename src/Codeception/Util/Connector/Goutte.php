@@ -2,9 +2,9 @@
 
 namespace Codeception\Util\Connector;
 
+use Goutte\Client;
 use Guzzle\Http\Message\Response;
 use Guzzle\Http\Url;
-use Behat\Mink\Driver\Goutte\Client;
 use Symfony\Component\BrowserKit\Request;
 
 class Goutte extends Client {
