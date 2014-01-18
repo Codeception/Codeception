@@ -96,6 +96,12 @@ class PhpBrowser extends InnerBrowser {
         return $this->config['url'];
     }
 
+    public function _sendRequest($url)
+    {
+        $this->client->request('GET',$url);
+        return $this->client->getInternalResponse()->getContent();
+    }
+
     public function amOnSubdomain($subdomain)
     {
         $url = $this->config['url'];
