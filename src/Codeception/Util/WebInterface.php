@@ -62,6 +62,48 @@ interface WebInterface
     public function dontSee($text, $selector = null);
 
     /**
+     * Submits a form located on page.
+     * Specify the form by it's css or xpath selector.
+     * Fill the form fields values as array.
+     *
+     * Skipped fields will be filled by their values from page.
+     * You don't need to click the 'Submit' button afterwards.
+     * This command itself triggers the request to form's action.
+     *
+     * Examples:
+     *
+     * ``` php
+     * <?php
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     *
+     * ```
+     *
+     * For sample Sign Up form:
+     *
+     * ``` html
+     * <form action="/sign_up">
+     *     Login: <input type="text" name="user[login]" /><br/>
+     *     Password: <input type="password" name="user[password]" /><br/>
+     *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
+     *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+     *     <input type="submit" value="Submit" />
+     * </form>
+     * ```
+     * I can write this:
+     *
+     * ``` php
+     * <?php
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     *
+     * ```
+     * Note, that pricing plan will be set to Paid, as it's selected on page.
+     *
+     * @param $selector
+     * @param $params
+     */
+    public function submitForm($selector, $params);
+
+    /**
      * Perform a click on link or button.
      * Link or button are found by their names or CSS selector.
      * Submits a form if button is a submit type.
@@ -515,5 +557,47 @@ interface WebInterface
      * @return mixed
      */
     public function dontSeeInTitle($title);
+
+    /**
+     * Checks that cookie is set.
+     *
+     * @param $cookie
+     * @return mixed
+     */
+    public function seeCookie($cookie);
+
+    /**
+     * Checks that cookie doesn't exist
+     *
+     * @param $cookie
+     * @return mixed
+     */
+    public function dontSeeCookie($cookie);
+
+    /**
+     * Sets a cookie.
+     *
+     * @param $cookie
+     * @param $value
+     * @return mixed
+     */
+    public function setCookie($cookie, $value);
+
+    /**
+     * Unsets cookie
+     *
+     * @param $cookie
+     * @return mixed
+     */
+    public function resetCookie($cookie);
+
+    /**
+     * Grabs a cookie value.
+     *
+     * @param $cookie
+     * @return mixed
+     */
+    public function grabCookie($cookie);
+
 
 }

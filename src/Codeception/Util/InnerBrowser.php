@@ -9,7 +9,7 @@ use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
 
 
-class InnerBrowser extends \Codeception\Module implements FrameworkInterface {
+class InnerBrowser extends \Codeception\Module implements WebInterface {
 
 
     /**
@@ -377,16 +377,63 @@ class InnerBrowser extends \Codeception\Module implements FrameworkInterface {
         $form[$field->attr('name')]->upload($path);
     }
 
+    /**
+     * If your page triggers an ajax request, you can perform it manually.
+     * This action sends a GET ajax request with specified params.
+     *
+     * See ->sendAjaxPostRequest for examples.
+     *
+     * @param $uri
+     * @param $params
+     */
     public function sendAjaxGetRequest($uri, $params = array())
     {
         $this->sendAjaxRequest('GET', $uri, $params);
     }
 
+    /**
+     * If your page triggers an ajax request, you can perform it manually.
+     * This action sends a POST ajax request with specified params.
+     * Additional params can be passed as array.
+     *
+     * Example:
+     *
+     * Imagine that by clicking checkbox you trigger ajax request which updates user settings.
+     * We emulate that click by running this ajax request manually.
+     *
+     * ``` php
+     * <?php
+     * $I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
+     * $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
+     *
+     * ```
+     *
+     * @param $uri
+     * @param $params
+     */
     public function sendAjaxPostRequest($uri, $params = array())
     {
         $this->sendAjaxRequest('POST', $uri, $params);
     }
 
+    /**
+     * If your page triggers an ajax request, you can perform it manually.
+     * This action sends an ajax request with specified method and params.
+     *
+     * Example:
+     *
+     * You need to perform an ajax request specifying the HTTP method.
+     *
+     * ``` php
+     * <?php
+     * $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
+     *
+     * ```
+     *
+     * @param $method
+     * @param $uri
+     * @param $params
+     */
     public function sendAjaxRequest($method, $uri, $params = array())
     {
         $this->client->request($method, $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
@@ -542,11 +589,20 @@ class InnerBrowser extends \Codeception\Module implements FrameworkInterface {
         return $nodes->first()->filter('option[selected]');
     }
 
+    /**
+     * Asserts that current page has 404 response status code.
+     */
     public function seePageNotFound()
     {
         $this->seeResponseCodeIs(404);
     }
 
+    /**
+     * Checks that response code is equal to value provided.
+     *
+     * @param $code
+     * @return mixed
+     */
     public function seeResponseCodeIs($code)
     {
         $this->assertEquals($code, $this->getResponseStatusCode());

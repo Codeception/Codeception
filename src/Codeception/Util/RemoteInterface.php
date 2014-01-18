@@ -29,44 +29,4 @@ interface RemoteInterface
 
     public function _sendRequest($url);
 
-    /**
-     * Checks that cookie is set.
-     *
-     * @param $cookie
-     * @return mixed
-     */
-    public function seeCookie($cookie);
-
-    /**
-     * Checks that cookie doesn't exist
-     *
-     * @param $cookie
-     * @return mixed
-     */
-    public function dontSeeCookie($cookie);
-
-    /**
-     * Sets a cookie.
-     *
-     * @param $cookie
-     * @param $value
-     * @return mixed
-     */
-    public function setCookie($cookie, $value);
-
-    /**
-     * Unsets cookie
-     *
-     * @param $cookie
-     * @return mixed
-     */
-    public function resetCookie($cookie);
-
-    /**
-     * Grabs a cookie value.
-     *
-     * @param $cookie
-     * @return mixed
-     */
-    public function grabCookie($cookie);
 }

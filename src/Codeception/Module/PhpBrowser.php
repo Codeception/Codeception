@@ -4,6 +4,7 @@ namespace Codeception\Module;
 
 use Codeception\Util\Connector\Goutte;
 use Codeception\Util\InnerBrowser;
+use Codeception\Util\RemoteInterface;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 use Codeception\TestCase;
@@ -50,7 +51,7 @@ use Symfony\Component\BrowserKit\Request;
  * To configure CURL options use `curl` config parameter.
  *
  */
-class PhpBrowser extends InnerBrowser {
+class PhpBrowser extends InnerBrowser implements RemoteInterface {
 
     protected $requiredFields = array('url');
     protected $config = array('curl' => array());
@@ -108,6 +109,11 @@ class PhpBrowser extends InnerBrowser {
         $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
         $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
         $this->_reconfigure(array('url' => $url));
+    }
+
+    public function _getResponseCode()
+    {
+        return $this->getResponseStatusCode();
     }
 
 }

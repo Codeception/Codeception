@@ -15,6 +15,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  */
 
-abstract class Framework extends InnerBrowser implements FrameworkInterface
+abstract class Framework extends InnerBrowser
 {
+
 }
