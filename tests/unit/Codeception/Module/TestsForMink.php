@@ -319,7 +319,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
-        $this->module->seeInField('rus','Верно');
+        $this->module->seeInField('input[name=rus]','Верно');
     }
 
     public function testApostrophesInText() {

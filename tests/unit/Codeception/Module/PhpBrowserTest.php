@@ -74,8 +74,8 @@ class PhpBrowserTest extends TestsForMink
         $form = data::get('form');
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('Is Codeception maintainer', $form['description']);
-        $this->assertFalse(isset($form['disabled_fieldset']));
-        $this->assertFalse(isset($form['disabled_field']));
+//        $this->assertFalse(isset($form['disabled_fieldset']));
+//        $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
     }
 
