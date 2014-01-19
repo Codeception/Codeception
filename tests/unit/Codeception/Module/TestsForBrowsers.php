@@ -8,7 +8,7 @@
  *
  */
 
-abstract class TestsForMink extends \PHPUnit_Framework_TestCase
+abstract class TestsForBrowsers extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\PhpBrowser

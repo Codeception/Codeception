@@ -136,7 +136,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
         $this->assertDomContains($links, 'a');
     }
@@ -145,7 +145,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($this->escape($url))));
+            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
         $this->assertDomNotContains($links, 'a');
     }
@@ -163,22 +163,22 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
 
     public function seeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertContains($uri, $this->_getCurrentUri());
+        $this->assertContains($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotContains($uri, $this->_getCurrentUri());
+        $this->assertNotContains($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertEquals($uri, $this->_getCurrentUri());
+        $this->assertEquals($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeCurrentUrlEquals($uri)
     {
-        \PHPUnit_Framework_Assert::assertNotEquals($uri, $this->_getCurrentUri());
+        $this->assertNotEquals($uri, $this->_getCurrentUri());
     }
 
     public function seeCurrentUrlMatches($uri)
@@ -233,7 +233,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         if (!$currentValue) {
             $currentValue = $field->extract(array('value'));
         }
-        return array('Contains', $this->escape($value), $currentValue);
+        return array('Contains', $value, $currentValue);
     }
 
     public function submitForm($selector, $params)
@@ -457,11 +457,6 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         return "N/A";
     }
 
-    protected function escape($string)
-    {
-        return (string)$string;
-    }
-
     protected function match($selector)
     {
         try {
@@ -530,7 +525,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $this->debugSection('Cookies', json_encode($this->client->getCookieJar()->all()));
         $cookies = $this->client->getCookieJar()->get($name);
         if (!$cookies) {
-            $this->fail("Cookie by name '$name' not found");
+            return null;
         }
         return $cookies->getValue();
     }

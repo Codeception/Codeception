@@ -2,9 +2,9 @@
 
 use Codeception\Util\Stub;
 require_once 'tests/data/app/data.php';
-require_once __DIR__.'/TestsForMink.php';
+require_once __DIR__ . '/TestsForBrowsers.php';
 
-class PhpBrowserTest extends TestsForMink
+class PhpBrowserTest extends TestsForBrowsers
 {
     /**
      * @var \Codeception\Module\PhpBrowser

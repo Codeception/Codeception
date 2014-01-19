@@ -64,7 +64,7 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface {
     /**
      * @var \Codeception\Util\Connector\Goutte
      */
-    protected $goutte;
+    public $client;
 
     /**
      * @var \Guzzle\Http\Client
@@ -101,6 +101,11 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface {
     {
         $this->client->request('GET',$url);
         return $this->client->getInternalResponse()->getContent();
+    }
+
+    public function _setHeader($header, $value)
+    {
+        $this->client->setHeader($header, $value);
     }
 
     public function amOnSubdomain($subdomain)
