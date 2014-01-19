@@ -149,8 +149,17 @@ abstract class Module extends AssertWrapper
         Debug::debug($message);
     }
 
-    protected function debugSection($title, $message)
+	/**
+	 * Ouputs debug info.
+	 * @param string $title message title, will be in []
+	 * @param string $message
+	 * @param boolean $strip if need to strip quoting slashes.
+	 */
+    protected function debugSection($title, $message, $strip = false)
     {
+		if ($strip) {
+            $message = stripslashes($message);
+		}
         $this->debug("[$title] $message");
     }
 
