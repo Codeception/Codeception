@@ -1,10 +1,10 @@
 <?php
 namespace Codeception;
 
-use Codeception\Configuration;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use \Symfony\Component\Finder\Finder;
+use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Configuration;
 use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
@@ -50,19 +50,19 @@ class Codecept
         'colors' => false,
         'log' => false,
         'coverage' => false,
-	    'defer-flush' => false,
+        'defer-flush' => false,
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
         'env' => null,
     );
 
-    public function __construct($options = array()) {
+    public function __construct($options = array())
+    {
         $this->result = new \PHPUnit_Framework_TestResult;
 
         $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options);
-
 
         $this->dispatcher = new EventDispatcher();
         $this->registerSubscribers();
@@ -73,8 +73,8 @@ class Codecept
         $this->runner->setPrinter($printer);
     }
 
-    private function mergeOptions($options) {
-
+    private function mergeOptions($options)
+    {
         foreach ($this->options as $option => $default) {
             $value = isset($options[$option]) ? $options[$option] : $default;
             if (!$value) {
@@ -91,12 +91,14 @@ class Codecept
         return $options;
     }
 
-    protected function registerPHPUnitListeners() {
+    protected function registerPHPUnitListeners()
+    {
         $listener = new PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
 
-    public function registerSubscribers() {
+    public function registerSubscribers()
+    {
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
@@ -143,7 +145,8 @@ class Codecept
         }
     }
 
-    public function runSuite($settings, $suite, $test = null) {
+    public function runSuite($settings, $suite, $test = null)
+    {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
 
         $test
@@ -155,11 +158,13 @@ class Codecept
         return $this->result;
     }
 
-    public static function versionString() {
+    public static function versionString()
+    {
         return 'Codeception PHP Testing Framework v'.self::VERSION;
     }
 
-    public function printResult() {
+    public function printResult()
+    {
         $result = $this->getResult();
         $result->flushListeners();
 
@@ -172,11 +177,13 @@ class Codecept
     /**
      * @return \PHPUnit_Framework_TestResult
      */
-    public function getResult() {
+    public function getResult()
+    {
         return $this->result;
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 
