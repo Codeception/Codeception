@@ -20,7 +20,7 @@ abstract class AbstractGuy implements \ArrayAccess
     }
 
     /**
-     * Lazy-execution given anonymous function
+     * Lazily executing given anonymous function
      * @param $callable \Closure
      * @return null|void|bool|mixed
      */
@@ -63,7 +63,8 @@ abstract class AbstractGuy implements \ArrayAccess
         return $this->comment('I am going to ' . $argumentation);
     }
 
-    public function am($role) {
+    public function am($role)
+    {
         return $this->comment('As a ' . $role);
     }
 
@@ -73,7 +74,7 @@ abstract class AbstractGuy implements \ArrayAccess
     }
 
     /**
-     * In order to have this nicely looking comments.
+     * In order to have these nicely looking comments.
      *
      * ``` php
      * <?php
@@ -117,7 +118,8 @@ abstract class AbstractGuy implements \ArrayAccess
         }
     }
 
-    public function __call($method, $arguments) {
+    public function __call($method, $arguments)
+    {
         if ($this->scenario->running()) {
             $class = get_class($this);
             throw new \RuntimeException("Call to undefined method $class::$method");
