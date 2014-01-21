@@ -38,8 +38,6 @@ abstract class Module extends AssertWrapper
      */
     public static $aliases = array();
 
-    protected $debugStack = array();
-
     protected $storage = array();
 
     protected $config = array();

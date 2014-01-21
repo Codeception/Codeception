@@ -24,6 +24,12 @@ class redirect {
     }
 }
 
+class redirect2 {
+    function GET() {
+        include __DIR__.'/view/redirect2.php';
+    }
+}
+
 class login {
 
     function GET($matches) {

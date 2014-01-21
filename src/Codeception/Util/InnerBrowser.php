@@ -36,7 +36,6 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $this->client = null;
         $this->crawler = null;
         $this->forms = array();
-
     }
 
     /**

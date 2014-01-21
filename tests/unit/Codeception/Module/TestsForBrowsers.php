@@ -59,7 +59,6 @@ abstract class TestsForBrowsers extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('info');
     }
 
-
     public function testSee()
     {
         $this->module->amOnPage('/');

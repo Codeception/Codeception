@@ -141,4 +141,11 @@ class PhpBrowserTest extends TestsForBrowsers
         $I->see('Success');
     }
 
+    public function testHtmlRedirect()
+    {
+        $this->module->amOnPage('/redirect2');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeInCurrentUrl('/');
+    }
+
 }
