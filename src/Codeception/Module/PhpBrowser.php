@@ -4,6 +4,7 @@ namespace Codeception\Module;
 
 use Codeception\Util\Connector\Goutte;
 use Codeception\Util\InnerBrowser;
+use Codeception\Util\MultiSessionInterface;
 use Codeception\Util\RemoteInterface;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
@@ -51,7 +52,7 @@ use Symfony\Component\BrowserKit\Request;
  * To configure CURL options use `curl` config parameter.
  *
  */
-class PhpBrowser extends InnerBrowser implements RemoteInterface {
+class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionInterface {
 
     protected $requiredFields = array('url');
     protected $config = array('curl' => array());
@@ -72,23 +73,7 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface {
     public $guzzle;
 
     public function _initialize() {
-        $this->client = new Goutte();
-
-        // build up a Guzzle friendly list of configuration options
-        // passed in both from our defaults and the respective
-        // yaml configuration file (if applicable)
-        $curl_config['curl.options'] = $this->curl_defaults;
-        foreach ($this->config['curl'] as $key => $val) {
-            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
-        }
-
-        // Guzzle client requires that we set the ssl.certificate_authority config
-        // directive if we wish to disable SSL verification
-        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
-            $curl_config['ssl.certificate_authority'] = false;
-        }
-        $this->client->setClient($this->guzzle = new Client('', $curl_config));
-        $this->client->setBaseUri($this->config['url']);
+        $this->_initializeSession();
         parent::_initialize();
     }
 
@@ -121,4 +106,45 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface {
         return $this->getResponseStatusCode();
     }
 
+    public function _initializeSession()
+    {
+        // build up a Guzzle friendly list of configuration options
+        // passed in both from our defaults and the respective
+        // yaml configuration file (if applicable)
+        $curl_config['curl.options'] = $this->curl_defaults;
+        foreach ($this->config['curl'] as $key => $val) {
+            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
+        }
+
+        // Guzzle client requires that we set the ssl.certificate_authority config
+        // directive if we wish to disable SSL verification
+        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
+            $curl_config['ssl.certificate_authority'] = false;
+        }
+
+        $this->client = new Goutte();
+        $this->client->setClient($this->guzzle = new Client('', $curl_config));
+        $this->client->setBaseUri($this->config['url']);
+    }
+
+    public function _backupSessionData()
+    {
+        return [
+            'client'    => $this->client,
+            'guzzle'    => $this->guzzle,
+            'crawler'   => $this->crawler
+        ];
+    }
+
+    public function _loadSessionData($data)
+    {
+        foreach ($data as $key => $val) {
+            $this->$key = $val;
+        }
+    }
+
+    public function _closeSession($data)
+    {
+        unset($data);
+    }
 }

@@ -5,6 +5,7 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
+use Codeception\Util\MultiSessionInterface;
 use Codeception\Util\WebInterface;
 use Codeception\Util\RemoteInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -60,7 +61,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
@@ -482,10 +483,31 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
 
+    public function _initializeSession()
+    {
+        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+    }
+
+    public function _loadSessionData($data)
+    {
+        $this->webDriver = $data;
+    }
+
+    public function _backupSessionData()
+    {
+        return $this->webDriver;
+    }
+
+    public function _closeSession($webdriver)
+    {
+        $webdriver->close();
+    }
+
     /*
-    * Unselect an option in a select box
-    *
-    */
+        * Unselect an option in a select box
+        *
+        */
 
     public function unselectOption($select, $option)
     {

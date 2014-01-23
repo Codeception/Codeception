@@ -72,7 +72,6 @@ class Goutte extends Client {
         if (strpos($uri, 'http') === 0) {
             return $uri;
         }
-
         return $this->baseUri.$uri;
 
     }

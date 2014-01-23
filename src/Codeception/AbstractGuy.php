@@ -1,7 +1,7 @@
 <?php
 namespace Codeception;
 
-use Codeception\Step\Action;
+use Codeception\Util\Friend;
 
 abstract class AbstractGuy
 {
@@ -11,8 +11,8 @@ abstract class AbstractGuy
      * @var \Codeception\Scenario
      */
     protected $scenario;
+    protected $friends = [];
 
-    protected $running = false;
 
     public function __construct(\Codeception\Scenario $scenario)
     {
@@ -20,14 +20,15 @@ abstract class AbstractGuy
     }
 
     /**
-     * Lazy-execution given anonymous function
-     * @param $callable \Closure
-     * @return null|void|bool|mixed
+     * @param $name
+     * @return Friend
      */
-    public function execute($callable)
+    public function haveFriend($name)
     {
-        $this->scenario->runStep(new \Codeception\Step\Executor($callable, array()));
-        return $this;
+        if (!isset($this->friends[$name])) {
+            $this->friends[$name] = new Friend($name, $this);
+        }
+        return $this->friends[$name];
     }
 
     public function wantToTest($text)
@@ -64,18 +65,14 @@ abstract class AbstractGuy
         return $this->comment('So that I ' . $achieveValue);
     }
 
-
-    protected function comment($description)
+    public function comment($description)
     {
         $this->scenario->comment($description);
         return $this;
     }
 
     public function __call($method, $arguments) {
-        if ($this->scenario->running()) {
-            $class = get_class($this);
-            throw new \RuntimeException("Call to undefined method $class::$method");
-        }
-        $this->scenario->addStep(new Action($method, $arguments));
+        $class = get_class($this);
+        throw new \RuntimeException("Call to undefined method $class::$method");
     }
 }
