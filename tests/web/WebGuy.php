@@ -10,6 +10,7 @@ use Codeception\Module\WebHelper;
 
 /**
  * Inherited methods
+ * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -17,6 +18,7 @@ use Codeception\Module\WebHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class WebGuy extends \Codeception\AbstractGuy

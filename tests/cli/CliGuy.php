@@ -19,6 +19,7 @@ use Codeception\Module\CliHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class CliGuy extends \Codeception\AbstractGuy

@@ -71,7 +71,7 @@ Do not forget that after adding module in your functional.suite.yml you must run
 ### amHttpAuthenticated
 
 
-Authenticates user for HTTP_AUTH 
+Authenticates user for HTTP_AUTH
 
  * param $username
  * param $password
@@ -201,6 +201,15 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ```
 
  * param $checkbox
+
+
+### dontSeeCookie
+
+
+Checks that cookie doesn't exist
+
+ * param $cookie
+ * return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -350,6 +359,15 @@ $I->fillField("//input[@type='text']", "Hello World!");
 __not documented__
 
 
+### grabCookie
+
+
+Grabs a cookie value.
+
+ * param $cookie
+ * return mixed
+
+
 ### grabFromCurrentUrl
 
 
@@ -408,6 +426,15 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
  * return mixed
 
 
+### resetCookie
+
+
+Unsets cookie
+
+ * param $cookie
+ * return mixed
+
+
 ### see
 
 
@@ -445,6 +472,15 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 ```
 
  * param $checkbox
+
+
+### seeCookie
+
+
+Checks that cookie is set.
+
+ * param $cookie
+ * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -677,6 +713,16 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
  * param $method
  * param $uri
  * param $params
+
+
+### setCookie
+
+
+Sets a cookie.
+
+ * param $cookie
+ * param $value
+ * return mixed
 
 
 ### submitForm

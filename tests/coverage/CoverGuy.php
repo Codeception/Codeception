@@ -20,6 +20,7 @@ use Codeception\Module\CoverHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class CoverGuy extends \Codeception\AbstractGuy
