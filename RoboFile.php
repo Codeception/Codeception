@@ -25,10 +25,43 @@ class RoboFile extends \Robo\Tasks {
         $this->taskComposerUpdate()->run();
     }
 
-    public function runCli()
+    public function testPhpbrowser()
+    {
+        $this->taskServer(8000)
+            ->background()
+            ->dir('tests/data/app')
+            ->run();
+
+        $this->taskCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','tests/unit/Codeception/Module/PhpBrowserTest.php')
+            ->run();
+
+    }
+
+    public function testWebdriver($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    {
+        $this->taskServer(8000)
+            ->background()
+            ->dir('tests/data/app')
+            ->run();
+
+        $this->taskExec('java -jar '.$pathToSelenium)
+            ->background()
+            ->run();
+
+        $this->taskCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','tests/unit/Codeception/Module/WebDriverTest.php')
+            ->run();
+    }
+
+    public function testCli()
     {
         $this->taskCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','cli')
+            ->run();
+
+        $this->taskCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','tests/unit/Codeception/Command')
             ->run();
     }
 
