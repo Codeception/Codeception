@@ -16,7 +16,7 @@ class Goutte extends Client {
     protected function filterRequest(Request $request)
     {
         $server = $request->getServer();
-        $uri = Url::factory($this->baseUri.$request->getUri());
+        $uri = Url::factory($this->getAbsoluteUri($request->getUri()));
         $server['HTTP_HOST'] = $uri->getHost();
         $port = $uri->getPort();
         if ($port !== null && $port !== 443 && $port != 80) {
