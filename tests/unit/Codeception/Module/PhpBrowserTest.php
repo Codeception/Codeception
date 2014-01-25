@@ -15,7 +15,6 @@ class PhpBrowserTest extends TestsForBrowsers
     protected $is_local = false;
 
     protected function setUp() {
-        $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
         if (version_compare(PHP_VERSION, '5.4', '>=')) $url = 'http://localhost:8000';
@@ -29,7 +28,6 @@ class PhpBrowserTest extends TestsForBrowsers
     }
     
     protected function tearDown() {
-        $this->noPhpWebserver();
         if ($this->module) {
             $this->module->_after($this->makeTest());
         }
@@ -39,13 +37,6 @@ class PhpBrowserTest extends TestsForBrowsers
     protected function makeTest()
     {
         return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
-    }
-
-    protected function noPhpWebserver()
-    {
-        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
-            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
-        }
     }
 
     public function testCurlOptions()
@@ -145,7 +136,15 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->module->amOnPage('/redirect2');
         $this->module->seeResponseCodeIs(200);
-        $this->module->seeInCurrentUrl('/');
+        $this->module->seeCurrentUrlEquals('/info');
     }
+
+    public function testRefreshRedirect()
+    {
+        $this->module->amOnPage('/redirect3');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
 
 }

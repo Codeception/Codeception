@@ -4,6 +4,7 @@ namespace Codeception\Util\Connector;
 
 use Goutte\Client;
 use Guzzle\Http\Message\Response;
+use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 use Guzzle\Http\Url;
 use Symfony\Component\BrowserKit\Request;
 
@@ -31,6 +32,26 @@ class Goutte extends Client {
             $request->getCookies(),
             $server,
             $request->getContent());
+    }
+
+    protected function filterResponse($response)
+    {
+        /** @var $response BrowserKitResponse  **/
+        $status = $response->getStatus();
+        $headers = $response->getHeaders();
+
+        // maybe redirect?
+        // <meta http-equiv="refresh" content="0; url=http://localhost:8000/" />
+        if (preg_match('/\<meta[^\>]+http-equiv="refresh" content=".*?url=(.*?)"/i', $response->getContent(), $matches)) {
+            $status = 302;
+            $headers['Location'] = $matches[1];
+        }
+        if (preg_match('~url=(.*)~',(string)$response->getHeader('Refresh'), $matches)) {
+            $status = 302;
+            $headers['Location'] = $matches[1];
+
+        }
+        return new BrowserKitResponse($response->getContent(), $status, $headers);
     }
 
     public function resetAuth()

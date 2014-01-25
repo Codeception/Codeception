@@ -30,6 +30,12 @@ class redirect2 {
     }
 }
 
+class redirect3 {
+    function GET() {
+        header('Refresh:0;url=/info');
+    }
+}
+
 class login {
 
     function GET($matches) {
