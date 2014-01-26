@@ -37,12 +37,12 @@ class SuiteManager {
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
-        $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
 
-        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (isset($settings['current_environment'])) $this->env = $settings['current_environment'];
-        
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
+        $this->suite = $this->createSuite($name);
+
         if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
@@ -71,6 +71,7 @@ class SuiteManager {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class $suiteClass not found");
         $suite = new $suiteClass;
+        $suite->baseName = $this->env ? substr($name, 0, strpos($name, '-'.$this->env)) : $name;
         if ($this->settings['namespace']) $name = $this->settings['namespace'] . ".$name";
         $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");

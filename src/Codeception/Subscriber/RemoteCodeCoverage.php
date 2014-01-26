@@ -38,7 +38,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
             return;
         }
 
-        $this->suite_name = $e->getSuite()->getName();
+        $this->suite_name = $e->getSuite()->baseName;
         $this->module     = $this->getRemoteConnectionModule();
         if (!$this->module or !$this->remote) {
             return;
