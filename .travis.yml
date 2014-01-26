@@ -24,4 +24,4 @@ before_script:
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
 
-script: "php codecept run"
+script: "php codecept run --env webdriver --env default"
