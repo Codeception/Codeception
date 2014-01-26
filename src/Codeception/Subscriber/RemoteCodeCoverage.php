@@ -34,13 +34,13 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled || !$this->remote) {
+        if (!$this->enabled) {
             return;
         }
 
         $this->suite_name = $e->getSuite()->getName();
         $this->module     = $this->getRemoteConnectionModule();
-        if (!$this->module) {
+        if (!$this->module or !$this->remote) {
             return;
         }
 
@@ -95,10 +95,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
 
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        if (!$this->module) {
-            return;
-        }
-        if (!$this->remote) {
+        if (!$this->module or !$this->remote) {
             return;
         }
 
