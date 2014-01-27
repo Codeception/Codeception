@@ -75,6 +75,15 @@ class Laravel4 extends \Codeception\Util\Framework
         $this->kernel->shutdown();
     }
 
+    public function _beforeStep(\Codeception\Step $step)
+    {
+        // saving referer for redirecting back
+        $headers = $this->kernel->request->headers;
+        if (!$this->client->getHistory()->isEmpty()) {
+            $headers->set('referer', $this->client->getHistory()->current()->getUri());
+        }
+    }
+
     /**
      * Assert that the session has a given list of values.
      *
