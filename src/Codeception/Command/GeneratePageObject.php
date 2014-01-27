@@ -113,9 +113,9 @@ EOF;
 
     protected function pathToGlobalPageObject($config, $class)
     {
-        $path = Configuration::projectDir().$this->buildPath($config['paths']['tests'].'/_pages/', $class);
+        $path = $this->buildPath(Configuration::projectDir().$config['paths']['tests'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
-        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
+        $this->introduceAutoloader(Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
         return  $path.$filename;
     }
 
