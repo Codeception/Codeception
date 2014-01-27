@@ -58,6 +58,8 @@ namespace Codeception\Module;
  *
  */
 
+use \Codeception\Configuration as Configuration;
+
 class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
 {
     protected $config = array('env' => 'testing', 'config' => 'application/configs/application.ini',
@@ -83,10 +85,10 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
 
     public function _initialize() {
         defined('APPLICATION_ENV') || define('APPLICATION_ENV', $this->config['env']);
-        defined('APPLICATION_PATH') || define('APPLICATION_PATH', getcwd().DIRECTORY_SEPARATOR.$this->config['app_path']);
-        defined('LIBRARY_PATH') || define('LIBRARY_PATH', getcwd().DIRECTORY_SEPARATOR.$this->config['lib_path']);
+        defined('APPLICATION_PATH') || define('APPLICATION_PATH', Configuration::projectDir() . $this->config['app_path']);
+		defined('LIBRARY_PATH') || define('LIBRARY_PATH', Configuration::projectDir() . $this->config['lib_path']);
 
-        // Ensure library/ is on include_path
+		// Ensure library/ is on include_path
         set_include_path(implode(PATH_SEPARATOR, array(
             LIBRARY_PATH,
             get_include_path(),
@@ -99,8 +101,8 @@ class ZF1 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
 
     public function _before(\Codeception\TestCase $test) {
         \Zend_Session::$_unitTestEnabled = true;
-        $this->bootstrap = new \Zend_Application($this->config['env'], getcwd().DIRECTORY_SEPARATOR.$this->config['config']);
-        $this->bootstrap->bootstrap();
+        $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
+		$this->bootstrap->bootstrap();
         $this->client->setBootstrap($this->bootstrap);
 
         $db = $this->bootstrap->getBootstrap()->getResource('db');
