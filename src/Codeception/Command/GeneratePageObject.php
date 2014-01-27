@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Configuration;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -112,7 +113,7 @@ EOF;
 
     protected function pathToGlobalPageObject($config, $class)
     {
-        $path = $this->buildPath($config['paths']['tests'].'/_pages/', $class);
+        $path = Configuration::projectDir().$this->buildPath($config['paths']['tests'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
         $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
         return  $path.$filename;
