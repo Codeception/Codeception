@@ -189,10 +189,38 @@ class SuiteManager {
 
     protected function getClassesFromFile($file)
     {
-        $loaded_classes = get_declared_classes();
         require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-        return array_diff($extra_loaded_classes,$loaded_classes);
+
+        $sourceCode = file_get_contents($file);
+        $classes    = array();
+        $tokens     = token_get_all($sourceCode);
+        $namespace  = '';
+
+        for ($i = 0, $tokensCount = count($tokens); $i < $tokensCount; $i++) {
+            if ($tokens[$i][0] === T_NAMESPACE) {
+                $namespace = '';
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                    if ($tokens[$j][0] === T_STRING) {
+                        $namespace .= $tokens[$j][1] . '\\';
+                    } else {
+                        if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ($tokens[$i][0] === T_CLASS) {
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                    if ($tokens[$j] === '{') {
+                        $classes[] = $namespace . $tokens[$i + 2][1];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $classes;
     }
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
