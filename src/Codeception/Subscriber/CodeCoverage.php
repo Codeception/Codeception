@@ -95,11 +95,6 @@ class CodeCoverage implements EventSubscriberInterface
 
         $coverage = $e->getResult()->getCodeCoverage();
 
-        if (! $this->remote) {
-            $this->coverage->merge($coverage);
-            return;
-        }
-
         $remoteModule = $this->getRemoteConnectionModule();
         if (! ($remoteModule instanceof RemoteInterface)) {
             $this->coverage->merge($coverage);
@@ -113,6 +108,11 @@ class CodeCoverage implements EventSubscriberInterface
 
         $coverage = @unserialize($externalCoverage);
         if ($coverage === false) {
+            return;
+        }
+
+        if (! $this->remote) {
+            $this->coverage->merge($coverage);
             return;
         }
 

@@ -39,7 +39,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
     public function beforeSuite(SuiteEvent $e)
     {
         $this->applySettings($e->getSettings());
-        if (! $this->enabled || ! $this->remote) {
+        if (! $this->enabled && ! $this->remote) {
             return;
         }
 
