@@ -57,7 +57,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
             }
         }
 
-        return $this->val->key;
+        return $this->val->$key;
     }
 
     function __set($key, $val)
@@ -71,7 +71,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
             return;
         }
 
-        $this->val->key = $val;
+        $this->val->$key = $val;
     }
 
     function __call($method, $args)
