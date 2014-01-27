@@ -23,7 +23,7 @@ namespace Codeception\Module;
  * Supported but not tested.
  *
  * * MSSQL
- * * Orcale
+ * * Oracle
  *
  * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
  * Check out drivers if you get problems loading dumps and cleaning databases.
@@ -139,8 +139,6 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
-        } else {
-            $this->removeInserted();
         }
         parent::_before($test);
     }
@@ -148,6 +146,7 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     public function _after(\Codeception\TestCase $test)
     {
         $this->populated = false;
+        $this->removeInserted();
         parent::_after($test);
     }
 
