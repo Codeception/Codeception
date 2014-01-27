@@ -123,7 +123,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $request = $this->module->client->getRequest();
         $this->assertContains('application/json', $request->getServer());
         $server = $request->getServer();
-        $this->assertEquals('application/json', $server['HTTP_Content-Type']);
+        $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
         $this->assertJson($request->getContent());
         $this->assertEmpty($request->getParameters());
     }

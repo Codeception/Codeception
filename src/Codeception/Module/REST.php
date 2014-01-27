@@ -367,11 +367,13 @@ class REST extends \Codeception\Module
     protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
     {
         foreach ($this->headers as $header => $val) {
+            $header = str_replace('-','_',strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
-        }
-        # Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-        if ($this->is_functional and isset($this->headers['CONTENT_TYPE'])) {
-            $this->client->setServerParameter('CONTENT_TYPE', $this->headers['CONTENT_TYPE']);
+
+            # Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
+            if ($this->is_functional and $header == 'CONTENT_TYPE') {
+                $this->client->setServerParameter($header, $val);
+            }
         }
 
         // allow full url to be requested
