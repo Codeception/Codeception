@@ -38,6 +38,7 @@ namespace Codeception\Module;
  */
 
 use \Codeception\Util\Driver\MongoDb as MongoDbDriver;
+use Codeception\Configuration as Configuration;
 
 class MongoDb extends \Codeception\Module
 {
@@ -72,12 +73,12 @@ class MongoDb extends \Codeception\Module
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
-            if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
+            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new \Codeception\Exception\ModuleConfig(__CLASS__, "
                     File with dump doesn't exist.\n
                     Please, check path for dump file: " . $this->config['dump']);
             }
-            $this->dumpFile = getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'];
+            $this->dumpFile = Configuration::projectDir() . $this->config['dump'];
             $this->isDumpFileEmpty = false;
 
             $content = file_get_contents($this->dumpFile);
