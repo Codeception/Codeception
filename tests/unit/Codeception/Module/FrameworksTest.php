@@ -566,5 +566,17 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/textarea');
     }
 
+    public function testRealWorldExample()
+    {
+        $this->module->amOnPage('/form/realworld');
+        $this->module->seeCheckboxIsChecked('#User_totpRequired');
+        $this->module->checkOption('#regenerateSecret');
+        $this->module->uncheckOption('#User_totpRequired');
+        $this->module->click('Apply Changes');
+        $data = data::get('form');
+        $this->assertEquals(null, $data['User']['totpRequired']);
+        $this->assertEquals(1, $data['User']['regenerateSecret']);
+        $this->assertArrayHasKey('totpSecret', $data['User']);
+    }
 
 }
