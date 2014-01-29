@@ -566,5 +566,19 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/textarea');
     }
 
+    public function testExample1()
+    {
+        $this->module->amOnPage('/form/example1');
+        $this->module->see('Login','button');
+        $this->module->fillField('#LoginForm_username', 'davert');
+        $this->module->fillField('#LoginForm_password', '123456');
+        $this->module->checkOption('#LoginForm_rememberMe');
+        $this->module->click('Login');
+        $login = data::get('form');
+        $this->assertEquals('davert', $login['LoginForm']['username']);
+        $this->assertEquals('123456', $login['LoginForm']['password']);
+        $this->assertNotEmpty($login['LoginForm']['rememberMe']);
+        
+    }
 
 }
