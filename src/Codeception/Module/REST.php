@@ -608,7 +608,7 @@ class REST extends \Codeception\Module
         if (empty($commonkeys)) {
             foreach ($arr2 as $arr) {
                 $_return = $this->arrayIntersectAssocRecursive($arr1, $arr);
-                if ($_return) return $_return;
+                if ($_return && $_return == $arr1) return $_return;
             }
         }
 
