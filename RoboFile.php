@@ -6,8 +6,7 @@ use Symfony\Component\Finder\Finder;
 class RoboFile extends \Robo\Tasks {
 
     const BRANCH = '2.0';
-    use \Robo\Add\Composer;
-    use \Robo\Add\PackPhar;
+    use \Robo\Task\PackPhar;
 
     public function release()
     {
