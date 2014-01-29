@@ -227,10 +227,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function setCookie($cookie, $value)
     {
-        $url = $this->webDriver->getCurrentURL();
-        if (!$url or strpos($url, 'about:')===0) {
-            throw new TestRuntime("Cookies can be set only on active webpages. Please use amOnPage to open a webpage.");
-        }
         $this->webDriver->manage()->addCookie(array('name' => $cookie, 'value' => $value));
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
