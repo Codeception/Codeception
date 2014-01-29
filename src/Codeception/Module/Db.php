@@ -72,6 +72,7 @@ namespace Codeception\Module;
 use Codeception\Util\Driver\Db as Driver;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
+use Codeception\Configuration as Configuration;
 
 class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
 {
@@ -106,14 +107,14 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
     {
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
-            if (!file_exists(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump'])) {
+            if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
                     __CLASS__,
                     "\nFile with dump doesn't exist.
                     Please, check path for sql file: " . $this->config['dump']
                 );
             }
-            $sql = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->config['dump']);
+            $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
             $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
             $this->sql = explode("\n", $sql);
         }
