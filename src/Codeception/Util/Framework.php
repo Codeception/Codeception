@@ -115,6 +115,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $this->debugSection($domForm->getMethod(), json_encode($form->getValues()));
 
         $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->forms = array();
     }
 
     public function see($text, $selector = null)
