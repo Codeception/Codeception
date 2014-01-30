@@ -100,6 +100,15 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson(array('ticket' => array('labels' => null)));
     }
 
+    public function testSeeInJsonCollection()
+    {
+        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
+        $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
+    }
+
+
     public function testArrayJson()
     {
         $this->module->response = '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]';
