@@ -335,8 +335,8 @@ $I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
 ?>
 ```
 
-Not recommended this command too be used on regular basis.
-If Codeception lacks important Guzzle Client methods implement then and submit patches.
+It is not recommended to use this command on a regular basis.
+If Codeception lacks important Guzzle Client methods, implement them and submit patches.
 
  * param callable $function
 
@@ -707,11 +707,32 @@ We emulate that click by running this ajax request manually.
 
 ``` php
 <?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
 
 ```
 
+ * param $uri
+ * param $params
+
+
+### sendAjaxRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends an ajax request with specified method and params.
+
+Example:
+
+You need to perform an ajax request specifying the HTTP method.
+
+``` php
+<?php
+$I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
+
+```
+
+ * param $method
  * param $uri
  * param $params
 
