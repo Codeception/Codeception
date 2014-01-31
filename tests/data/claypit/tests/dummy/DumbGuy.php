@@ -4,13 +4,12 @@
 // @codingStandardsIgnoreFile
 
 
-use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
 use Codeception\Module\DumbHelper;
 
 /**
  * Inherited methods
- * @method void execute($callable)
+ * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -18,13 +17,14 @@ use Codeception\Module\DumbHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class DumbGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Enters a directory In local filesystem.
      * Project root directory is used by default
@@ -33,13 +33,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::amInPath()
      */
     public function amInPath($path) {
-        $step = new \Codeception\Step\Condition('amInPath', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Opens a file and stores it's content.
      *
@@ -56,13 +55,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::openFile()
      */
     public function openFile($filename) {
-        $step = new \Codeception\Step\Action('openFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
      *
@@ -76,13 +74,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::deleteFile()
      */
     public function deleteFile($filename) {
-        $step = new \Codeception\Step\Action('deleteFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes directory with all subdirectories
      *
@@ -96,13 +93,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::deleteDir()
      */
     public function deleteDir($dirname) {
-        $step = new \Codeception\Step\Action('deleteDir', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Copies directory with all contents
      *
@@ -117,13 +113,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::copyDir()
      */
     public function copyDir($src, $dst) {
-        $step = new \Codeception\Step\Action('copyDir', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file has `text` in it.
      *
@@ -141,11 +136,10 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeInThisFile()
      */
     public function canSeeInThisFile($text) {
-        $step = new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
     }
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file has `text` in it.
      *
@@ -162,13 +156,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeInThisFile()
      */
     public function seeInThisFile($text) {
-        $step = new \Codeception\Step\Assertion('seeInThisFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -187,11 +180,10 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function canSeeFileContentsEqual($text) {
-        $step = new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
     }
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -209,13 +201,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function seeFileContentsEqual($text) {
-        $step = new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -231,11 +222,10 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function cantSeeInThisFile($text) {
-        $step = new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
     }
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -250,25 +240,23 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function dontSeeInThisFile($text) {
-        $step = new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
      * @see Codeception\Module\Filesystem::deleteThisFile()
      */
     public function deleteThisFile() {
-        $step = new \Codeception\Step\Action('deleteThisFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -285,11 +273,10 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileFound()
      */
     public function canSeeFileFound($filename, $path = null) {
-        $step = new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
     }
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -305,13 +292,12 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::seeFileFound()
      */
     public function seeFileFound($filename, $path = null) {
-        $step = new \Codeception\Step\Assertion('seeFileFound', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Erases directory contents
      *
@@ -325,20 +311,18 @@ class DumbGuy extends \Codeception\AbstractGuy
      * @see Codeception\Module\Filesystem::cleanDir()
      */
     public function cleanDir($dirname) {
-        $step = new \Codeception\Step\Action('cleanDir', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
      * @see Codeception\Module::getName()
      */
     public function getName() {
-        $step = new \Codeception\Step\Action('getName', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 }
 

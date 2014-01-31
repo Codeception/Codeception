@@ -60,7 +60,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
                 return array('shire');
             },
             'getApplication' => function() {
-                return new \Codeception\Maybe;
+                return new \Codeception\Util\Maybe;
             }
         ));
     }

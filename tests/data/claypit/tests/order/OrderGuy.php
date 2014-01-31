@@ -4,12 +4,11 @@
 // @codingStandardsIgnoreFile
 
 
-use \Codeception\Maybe;
 use Codeception\Module\OrderHelper;
 
 /**
  * Inherited methods
- * @method void execute($callable)
+ * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -17,56 +16,53 @@ use Codeception\Module\OrderHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class OrderGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
      * @see Codeception\Module\OrderHelper::failNow()
      */
     public function failNow() {
-        $step = new \Codeception\Step\Action('failNow', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('failNow', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
      * @see Codeception\Module\OrderHelper::writeToFile()
      */
     public function writeToFile($text) {
-        $step = new \Codeception\Step\Action('writeToFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
      * @see Codeception\Module\OrderHelper::appendToFile()
      */
     public function appendToFile($marker) {
-        $step = new \Codeception\Step\Action('appendToFile', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('appendToFile', func_get_args()));
     }
 
  
     /**
-     * -> This method is proxified to corresponding module.
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
      * @see Codeception\Module::getName()
      */
     public function getName() {
-        $step = new \Codeception\Step\Action('getName', func_get_args());
-        return $this->scenario->runStep($step);
+        return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 }
 

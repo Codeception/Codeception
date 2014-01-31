@@ -7,6 +7,7 @@ class RoboFile extends \Robo\Tasks {
 
     const BRANCH = '2.0';
     use \Robo\Task\PackPhar;
+    use \Robo\Task\SymfonyCommand;
 
     public function release()
     {
@@ -31,7 +32,7 @@ class RoboFile extends \Robo\Tasks {
             ->dir('tests/data/app')
             ->run();
 
-        $this->taskCommand(new \Codeception\Command\Run('run'))
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','tests/unit/Codeception/Module/PhpBrowserTest.php')
             ->run();
 
@@ -48,18 +49,18 @@ class RoboFile extends \Robo\Tasks {
             ->background()
             ->run();
 
-        $this->taskCommand(new \Codeception\Command\Run('run'))
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','tests/unit/Codeception/Module/WebDriverTest.php')
             ->run();
     }
 
     public function testCli()
     {
-        $this->taskCommand(new \Codeception\Command\Run('run'))
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','cli')
             ->run();
 
-        $this->taskCommand(new \Codeception\Command\Run('run'))
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','tests/unit/Codeception/Command')
             ->run();
     }
@@ -324,6 +325,16 @@ class RoboFile extends \Robo\Tasks {
         ])->run();
     }
 
+    public function buildGuys()
+    {
+        $build = 'php codecept build';
+        $this->taskExec($build)->run();
+        $this->taskExec($build)->args('-c tests/data/claypit')->run();
+        $this->taskExec($build)->args('-c tests/data/included')->run();
+        $this->taskExec($build)->args('-c tests/data/included/jazz')->run();
+        $this->taskExec($build)->args('-c tests/data/included/shire')->run();
+    }
+
     protected function cloneSite()
     {
         @mkdir("package/site");
@@ -345,4 +356,5 @@ class RoboFile extends \Robo\Tasks {
         chdir('..');
         $this->say("Site build succesfully");
     }
+
 } 

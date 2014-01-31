@@ -7,7 +7,7 @@
  * Represents either empty values or defined from results.
  *
  */
-namespace Codeception;
+namespace Codeception\Util;
 
 class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 {

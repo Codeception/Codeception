@@ -4,7 +4,6 @@
 // @codingStandardsIgnoreFile
 
 
-use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
 use Codeception\Module\Cli;
 use Codeception\Module\CliHelper;

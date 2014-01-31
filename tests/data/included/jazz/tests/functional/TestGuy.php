@@ -4,13 +4,12 @@
 // @codingStandardsIgnoreFile
 
 namespace Jazz;
-use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
 use Jazz\Codeception\Module\TestHelper;
 
 /**
  * Inherited methods
- * @method void execute($callable)
+ * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -18,6 +17,7 @@ use Jazz\Codeception\Module\TestHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
 */
 
 class TestGuy extends \Codeception\AbstractGuy

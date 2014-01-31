@@ -18,7 +18,6 @@ class Build extends Base
 // @codingStandardsIgnoreFile
 
 %s
-use \Codeception\Maybe;
 %s
 
 %s %s extends %s
