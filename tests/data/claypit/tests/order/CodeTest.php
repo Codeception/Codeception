@@ -5,4 +5,14 @@ class CodeTest extends Codeception\TestCase\Test
     {
         \Codeception\Module\OrderHelper::appendToFile('C');
     }
+
+    public static function setUpBeforeClass()
+    {
+        \Codeception\Module\OrderHelper::appendToFile('{');
+    }
+
+    public static function tearDownAfterClass()
+    {
+        \Codeception\Module\OrderHelper::appendToFile('}');
+    }
 }

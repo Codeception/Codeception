@@ -67,7 +67,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'wait' => 5,
+        'wait' => 0,
         'capabilities' => array()
     );
 
@@ -85,7 +85,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
-        $this->webDriver = new \RemoteWebDriver($this->wd_host, $this->capabilities);
+        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
     }
 
@@ -578,7 +578,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
-        $el->sendKeys(\Codeception\Configuration::dataDir().$filename);
+        // in order to be compatible on different OS
+        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        $el->sendKeys($filePath);
     }
 
     public function grabTextFrom($cssOrXPathOrRegex)

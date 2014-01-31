@@ -26,7 +26,7 @@ class OrderCest {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BIBBBBSBSBS([BST][BSTF][BST])");
+        $I->seeFileContentsEqual("BIBBBBSBSBS({[BST][BSTF][BST])}");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -42,7 +42,7 @@ class OrderCest {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CodeTest.php --no-exit');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->expect('global bootstrap, initialization, beforeSuite, bootstrap, before, after, afterSuite');
-        $I->seeFileContentsEqual("BI(B[C])");
+        $I->expect('global bootstrap, initialization, beforeSuite, beforeClass, bootstrap, before, after, afterSuite, afterClass');
+        $I->seeFileContentsEqual("BI({B[C])}");
     }
 }

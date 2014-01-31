@@ -9,7 +9,6 @@ Powered by PHPUnit 3.7.
 
 | release |  branch  |  status  |
 | ------- | -------- | -------- |
-| **Bugfix** | **1.6** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.6)](http://travis-ci.org/Codeception/Codeception)
 | **Stable** | **1.7** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.7)](http://travis-ci.org/Codeception/Codeception)
 | **Current** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
 | **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
@@ -65,15 +64,6 @@ Run CLI utility:
 ```
 php codecept.phar
 ```
-
-Copy it into your project.
-
-Run CLI utility:
-
-```
-php codecept.phar
-```
-
 
 ### Composer
 

@@ -52,7 +52,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $user_id = $this->module->haveInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
         $this->assertInternalType('integer', $user_id);
         $this->module->seeInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
-        $this->module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        $this->module->_after(\Codeception\Util\Stub::make('\Codeception\TestCase'));
         $this->module->dontSeeInDatabase('users', array('name' => 'john'));
     }
 }
