@@ -409,12 +409,13 @@ class REST extends \Codeception\Module
     protected function encodeApplicationJson($method, $parameters)
     {
         if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
-            $parameters = $this->scalarizeArray($parameters);
             if (array_key_exists('Content-Type', $this->headers)
                 && $this->headers['Content-Type'] === 'application/json'
                 && $method != 'GET'
             ) {
                 return json_encode($parameters);
+            } else {
+                $parameters = $this->scalarizeArray($parameters);
             }
         }
         return $parameters;
