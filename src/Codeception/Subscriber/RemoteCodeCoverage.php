@@ -2,6 +2,8 @@
 
 namespace Codeception\Subscriber;
 
+use Codeception\Event\SuiteEvent;
+use Codeception\Event\StepEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Codeception\Exception\RemoteException;
 use Codeception\Module\PhpBrowser;
@@ -31,7 +33,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         $this->options = $options;
     }
 
-    public function beforeSuite(\Codeception\Event\Suite $e)
+    public function beforeSuite(SuiteEvent $e)
     {
         $this->applySettings($e->getSettings());
         if (!$this->enabled) {
@@ -60,7 +62,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         }
     }
 
-    public function beforeStep(\Codeception\Event\Step $e)
+    public function beforeStep(StepEvent $e)
     {
         if (!$this->module) {
             return;
@@ -83,7 +85,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         }
     }
 
-    public function afterStep(\Codeception\Event\Step $e)
+    public function afterStep(StepEvent $e)
     {
         if (!$this->module) return;
         if ($error  = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
@@ -93,7 +95,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         $this->module->resetCookie('CODECEPTION_CODECOVERAGE');
     }
 
-    public function afterSuite(\Codeception\Event\Suite $e)
+    public function afterSuite(SuiteEvent $e)
     {
         if (!$this->module or !$this->remote) {
             return;
