@@ -72,9 +72,8 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
      */
     public $guzzle;
 
-    public function _initialize() {
+    public function _before() {
         $this->_initializeSession();
-        parent::_initialize();
     }
 
     public function _getUrl()

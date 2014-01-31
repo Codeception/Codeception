@@ -2,6 +2,7 @@
 namespace Codeception\Util;
 use Codeception\Exception\ElementNotFound;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
+use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
 use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
@@ -627,7 +628,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
 
     protected function assertDomContains($nodes, $message, $text = '')
     {
-        $constraint = new Crawler($text, $this->_getCurrentUri());
+        $constraint = new CrawlerConstraint($text, $this->_getCurrentUri());
         $this->assertThat($nodes, $constraint, $message);
     }
 

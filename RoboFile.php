@@ -38,6 +38,19 @@ class RoboFile extends \Robo\Tasks {
 
     }
 
+    public function testFacebook()
+    {
+        $this->taskServer(8000)
+            ->background()
+            ->dir('tests/data/app')
+            ->run();
+
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','tests/unit/Codeception/Module/FacebookTest.php')
+            ->run();
+
+    }
+
     public function testWebdriver($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
     {
         $this->taskServer(8000)
