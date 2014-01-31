@@ -27,5 +27,17 @@ class GeneratePageObjectCest
 
     }
 
+    public function generateGlobalPageObjectInDifferentPath(CliGuy\GeneratorSteps $I)
+    {
+        $I->executeCommand('generate:page Login -c tests/data/sandbox');
+        $I->amInPath('tests/data/sandbox');
+        $I->seeFileWithGeneratedClass('LoginPage','tests/_pages');
+        $I->seeInThisFile('static $URL = ');
+        $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
+        $I->seeFileFound('tests/_bootstrap.php');
+        $I->seeInThisFile("\\Codeception\\Util\\Autoload::registerSuffix('Page', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
+
+    }
+
 
 }

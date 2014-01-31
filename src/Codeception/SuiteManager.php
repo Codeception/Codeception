@@ -2,7 +2,7 @@
 
 namespace Codeception;
 
-use Codeception\Event\SuiteEvent;
+use Codeception\Event\Suite;
 use Codeception\Util\Annotation;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,9 +11,6 @@ class SuiteManager {
 
     protected static $formats = array('Cest', 'Cept', 'Test');
 
-    /**
-     * @var Module[]
-     */
     public static $modules = array();
     public static $actions = array();
 
@@ -23,7 +20,7 @@ class SuiteManager {
     protected $suite = null;
 
     /**
-     * @var null|EventDispatcher
+     * @var null|\Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher = null;
 
@@ -45,6 +42,8 @@ class SuiteManager {
 
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (isset($settings['current_environment'])) $this->env = $settings['current_environment'];
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
+        $this->suite = $this->createSuite($name);
 
         if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
@@ -101,21 +100,18 @@ class SuiteManager {
     public function addCept($file)
     {
         $name = $this->relativeName($file);
-        $this->tests[$name] = $file;
+   	    $this->tests[$name] = $file;
 
         $cept = new TestCase\Cept($this->dispatcher, array(
-            'name'      => $name,
-            'file'      => $file,
+            'name' => $name,
+            'file' => $file,
             'bootstrap' => $this->settings['bootstrap']
         ));
 
         $cept->preload();
 
-        if (! $this->isCurrentEnvironment($cept->getScenario()->getEnv())) {
-            return;
-        }
-
-        $this->suite->addTest($cept, $cept->getScenario()->getGroups());
+        if (!$this->isCurrentEnvironment($cept->getScenario()->getEnv())) return;
+   	    $this->suite->addTest($cept, $cept->getScenario()->getGroups());
     }
 
     public function addCest($file) {
@@ -149,19 +145,11 @@ class SuiteManager {
         return $name = str_replace($this->path, '', $file);
     }
 
-    public function run(PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options)
-    {
-        $this->dispatcher->dispatch(
-                         CodeceptionEvents::SUITE_BEFORE,
-                         new SuiteEvent($this->suite, $result, $this->settings)
-        );
+    public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
 
+        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));
         $runner->doEnhancedRun($this->suite, $result, $options);
-
-        $this->dispatcher->dispatch(
-                         CodeceptionEvents::SUITE_AFTER,
-                         new SuiteEvent($this->suite, $result, $this->settings)
-        );
+        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite, $result, $this->settings));
     }
 
     public function loadTest($path) {

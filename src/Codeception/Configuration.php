@@ -115,7 +115,7 @@ class Configuration
         self::$suites = array();
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
-            self::$suites[] = $matches[1];
+            self::$suites[$matches[1]] = $matches[1];
         }
     }
 
@@ -124,7 +124,7 @@ class Configuration
         // cut namespace name from suite name
         if ($suite != $config['namespace'] && substr($suite, 0, strlen($config['namespace'])) == $config['namespace']) {
             $suite = substr($suite, strlen($config['namespace']));
-        }         
+        }
 
         if (!in_array($suite, self::$suites)) throw new \Exception("Suite $suite was not loaded");
 

@@ -16,9 +16,6 @@ class RemoteCodeCoverageTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(array('getRemoteConnectionModule'))
             ->getMock();
-        $codeCoverageMock
-            ->expects($this->never())
-            ->method('getRemoteConnectionModule');
 
         $settingsProperty->setValue($codeCoverageMock, array('enabled' => true, 'remote' => false));
 

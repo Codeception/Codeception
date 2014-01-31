@@ -335,8 +335,8 @@ $I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
 ?>
 ```
 
-Not recommended this command too be used on regular basis.
-If Codeception lacks important Guzzle Client methods implement then and submit patches.
+It is not recommended to use this command on a regular basis.
+If Codeception lacks important Guzzle Client methods, implement them and submit patches.
 
  * param callable $function
 

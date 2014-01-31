@@ -367,7 +367,13 @@ class REST extends \Codeception\Module
     protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
     {
         foreach ($this->headers as $header => $val) {
+            $header = str_replace('-','_',strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
+
+            # Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
+            if ($this->is_functional and $header == 'CONTENT_TYPE') {
+                $this->client->setServerParameter($header, $val);
+            }
         }
 
         // allow full url to be requested
@@ -393,8 +399,8 @@ class REST extends \Codeception\Module
         $this->response = $this->client->getInternalResponse()->getContent();
         $this->debugSection("Response", $this->response);
 
-        if (count($this->client->getRequest()->getCookies())) {
-            $this->debugSection('Cookies', json_encode($this->client->getRequest()->getCookies()));
+        if (count($this->client->getInternalRequest()->getCookies())) {
+            $this->debugSection('Cookies', json_encode($this->client->getInternalRequest()->getCookies()));
         }
         $this->debugSection("Headers", json_encode($this->client->getInternalResponse()->getHeaders()));
         $this->debugSection("Status", json_encode($this->client->getInternalResponse()->getStatus()));
@@ -591,7 +597,7 @@ class REST extends \Codeception\Module
         $ret = array();
         foreach ($commonkeys as $key) {
             $_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
-            if ($_return !== null) {
+            if ($_return) {
                 $ret[$key] = $_return;
                 continue;
             }
@@ -602,7 +608,7 @@ class REST extends \Codeception\Module
         if (empty($commonkeys)) {
             foreach ($arr2 as $arr) {
                 $_return = $this->arrayIntersectAssocRecursive($arr1, $arr);
-                if ($_return) return $_return;
+                if ($_return && $_return == $arr1) return $_return;
             }
         }
 

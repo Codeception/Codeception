@@ -368,7 +368,7 @@ class UserLoginPage
     {
         $I = $this->webGuy;
 
-        $I->amOnPage(self::URL);
+        $I->amOnPage(self::$URL);
         $I->fillField(LoginPage::$usernameField, $name);
         $I->fillField(LoginPage::$passwordField, $password);
         $I->click(LoginPage::$loginButton);

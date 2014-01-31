@@ -20,7 +20,7 @@ $urls = array(
     '/login' => 'login',
     '/redirect' => 'redirect',
     '/facebook\??.*' => 'facebookController',
-    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|realworld)(#)?' => 'form',
+    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1)(#)?' => 'form',
     '/articles\??.*' => 'articles'
 );
 

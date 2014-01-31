@@ -30,9 +30,6 @@ class CodeCoverageTest extends PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->setMethods(array('getRemoteConnectionModule'))
             ->getMock();
-        $codeCoverageMock
-            ->expects($this->never())
-            ->method('getRemoteConnectionModule');
 
         $coverageProperty->setValue($codeCoverageMock, $phpunitCodeCoverageMock);
         $enabledProperty->setValue($codeCoverageMock, true);
