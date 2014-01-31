@@ -1,6 +1,10 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\Event\PrintResultEvent;
+use Codeception\Event\SuiteEvent;
+use Codeception\Exception\RemoteException;
+use Codeception\PHPUnit\DummyCodeCoverage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Codeception\Util\RemoteInterface;
 use Codeception\Configuration;
@@ -8,7 +12,6 @@ use Codeception\Configuration;
 /**
  * Retrieves CodeCoverage data from remote server
  */
-
 class CodeCoverage implements EventSubscriberInterface
 {
     /**
@@ -23,7 +26,13 @@ class CodeCoverage implements EventSubscriberInterface
     protected $module = null;
 
     // defaults
-    protected $settings = array('enabled' => false, 'remote' => false, 'low_limit' => '35', 'high_limit' => '70', 'show_uncovered' => false);
+    protected $settings = array(
+        'enabled' => false,
+        'remote' => false,
+        'low_limit' => '35',
+        'high_limit' => '70',
+        'show_uncovered' => false
+    );
 
     protected $http = array('method' => "GET", 'header' => '');
 
@@ -47,14 +56,16 @@ class CodeCoverage implements EventSubscriberInterface
         return null;
     }
 
-    public function beforeSuite(\Codeception\Event\Suite $e)
+    public function beforeSuite(SuiteEvent $e)
     {
         $settings = $e->getSettings();
         $this->applySettings($settings);
 
-        $e->getResult()->setCodeCoverage(new \Codeception\PHPUnit\DummyCodeCoverage);
+        $e->getResult()->setCodeCoverage(new DummyCodeCoverage);
 
-        if (!$this->enabled or $this->remote) return;
+        if (!$this->enabled or $this->remote) {
+            return;
+        }
 
         \Codeception\CodeCoverageSettings::setup($this->coverage)
             ->filterWhiteList($settings)
@@ -68,9 +79,9 @@ class CodeCoverage implements EventSubscriberInterface
      * skip code coverage on remote server
      * fetch and merge
      *
-     * @param \Codeception\Event\Suite $e
+     * @param \Codeception\Event\SuiteEvent $e
      */
-    public function afterSuite(\Codeception\Event\Suite $e)
+    public function afterSuite(SuiteEvent $e)
     {
         if (!$this->enabled) {
             return;
@@ -107,7 +118,7 @@ class CodeCoverage implements EventSubscriberInterface
     {
         $this->addHeader('X-Codeception-CodeCoverage', 'remote-access');
         $context = stream_context_create(array('http' => $this->http));
-        $contents = file_get_contents($module->_getUrl() . '/c3/report/'.$type, false, $context);
+        $contents = file_get_contents($module->_getUrl() . '/c3/report/' . $type, false, $context);
         if ($contents === false) {
             $this->getRemoteError($http_response_header);
         }
@@ -117,8 +128,9 @@ class CodeCoverage implements EventSubscriberInterface
     protected function getRemoteError($headers)
     {
         foreach ($headers as $header) {
-            if (strpos($header, 'X-Codeception-CodeCoverage-Error') === 0)
-                throw new \Codeception\Exception\RemoteException($header);
+            if (strpos($header, 'X-Codeception-CodeCoverage-Error') === 0) {
+                throw new RemoteException($header);
+            }
         }
     }
 
@@ -128,13 +140,19 @@ class CodeCoverage implements EventSubscriberInterface
     }
 
 
-    public function printResult(\Codeception\Event\PrintResult $e)
+    public function printResult(PrintResultEvent $e)
     {
-        if ($this->options['steps']) return;
+        if ($this->options['steps']) {
+            return;
+        }
         $this->printText($e->getPrinter());
         $this->printPHP();
-        if ($this->options['html']) $this->printHtml();
-        if ($this->options['xml']) $this->printXml();
+        if ($this->options['html']) {
+            $this->printHtml();
+        }
+        if ($this->options['xml']) {
+            $this->printXml();
+        }
     }
 
     protected function printText(\PHPUnit_Util_Printer $printer)
@@ -152,7 +170,9 @@ class CodeCoverage implements EventSubscriberInterface
             true,
             $this->settings['low_limit'],
             $this->settings['high_limit'],
-            sprintf(', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>', \PHPUnit_Runner_Version::id()
+            sprintf(
+                ', <a href="http://codeception.com">Codeception</a> and <a href="http://phpunit.de/">PHPUnit %s</a>',
+                \PHPUnit_Runner_Version::id()
             )
         );
 
@@ -174,8 +194,9 @@ class CodeCoverage implements EventSubscriberInterface
     protected function applySettings($settings)
     {
 
-        if (!function_exists('xdebug_is_enabled'))
+        if (!function_exists('xdebug_is_enabled')) {
             throw new \Exception('XDebug is required to collect CodeCoverage. Please install xdebug extension and enable it in php.ini');
+        }
 
 
         $keys = array_keys($this->settings);
