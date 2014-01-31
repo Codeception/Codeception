@@ -333,6 +333,7 @@ class RoboFile extends \Robo\Tasks {
         $this->taskExec($build)->args('-c tests/data/included')->run();
         $this->taskExec($build)->args('-c tests/data/included/jazz')->run();
         $this->taskExec($build)->args('-c tests/data/included/shire')->run();
+        $this->taskExec($build)->args('-c tests/data/included/jazz')->run();
     }
 
     protected function cloneSite()
