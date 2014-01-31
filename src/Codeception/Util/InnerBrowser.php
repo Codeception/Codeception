@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Util;
-use Codeception\Exception\ContentNotFound;
 use Codeception\Exception\ElementNotFound;
-use Codeception\PHPUnit\Constraint\CrawlerNot;
+use Codeception\PHPUnit\Constraint\Page as PageConstraint;
+use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
@@ -53,6 +53,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     public function amOnPage($page)
     {
         $this->crawler = $this->client->request('GET', $page);
+        $this->forms = [];
         $this->debugResponse();
     }
 
@@ -68,6 +69,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
+            $this->forms = [];
             $this->debugResponse();
             return;
         }
@@ -85,6 +87,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         foreach ($nodes as $node) {
             if ($node->nodeName == 'a') {
                 $this->crawler = $this->client->click($nodes->first()->link());
+                $this->forms = [];
                 $this->debugResponse();
                 return;
             } elseif($node->nodeName == 'input' && $node->getAttribute('type') == 'submit') {
@@ -109,6 +112,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $this->debugSection($domForm->getMethod(), $form->getValues());
 
         $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->forms = [];
     }
 
     public function see($text, $selector = null)
@@ -605,38 +609,43 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     public function seeInTitle($title)
     {
         $nodes = $this->crawler->filter('title');
-        if (!$nodes->count()) throw new ElementNotFound("<title>","Tag");
+        if (!$nodes->count()) {
+            throw new ElementNotFound("<title>","Tag");
+        }
         $this->assertContains($title, $nodes->first()->text(), "page title contains $title");
     }
 
     public function dontSeeInTitle($title)
     {
         $nodes = $this->crawler->filter('title');
-        if (!$nodes->count()) return $this->assertTrue(true);
+        if (!$nodes->count()) {
+            $this->assertTrue(true);
+            return;
+        }
         $this->assertNotContains($title, $nodes->first()->text(), "page title contains $title");
     }
 
     protected function assertDomContains($nodes, $message, $text = '')
     {
-        $constraint = new \Codeception\PHPUnit\Constraint\Crawler($text, $this->_getCurrentUri());
+        $constraint = new Crawler($text, $this->_getCurrentUri());
         $this->assertThat($nodes, $constraint, $message);
     }
 
     protected function assertDomNotContains($nodes, $message, $text = '')
     {
-        $constraint = new \Codeception\PHPUnit\Constraint\CrawlerNot($text, $this->_getCurrentUri());
+        $constraint = new CrawlerNotConstraint($text, $this->_getCurrentUri());
         $this->assertThat($nodes, $constraint, $message);
     }
 
     protected function assertPageContains($needle, $message = '')
     {
-        $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint,$message);
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
-        $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
     }
 
