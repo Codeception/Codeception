@@ -1,0 +1,6 @@
+class_name: WebGuy
+modules:
+    enabled: [PhpBrowser, WebHelper]
+    config:
+      PhpBrowser:
+        url: http://localhost:8000

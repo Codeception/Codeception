@@ -97,7 +97,7 @@ class Console implements EventSubscriberInterface
                 ->write();
         }
 
-        if ($this->steps && count($e->getTest()->getScenario()->getSteps())) {
+        if ($this->steps && $this->isDetailed($test)) {
             $this->output->writeln("\nScenario:");
         }
 
@@ -166,13 +166,10 @@ class Console implements EventSubscriberInterface
 
     protected function isDetailed($test)
     {
-        if (!($test instanceof ScenarioDriven)) {
-            return false;
-        }
-        if (!$this->steps or (!count($test->getScenario()->getSteps()))) {
-            return false;
-        }
-        return true;
+        if ($test instanceof ScenarioDriven && $this->steps) {
+            return !$test->getScenario()->isBlocked();
+        };
+        return false;
     }
 
     public function beforeStep(StepEvent $e)

@@ -24,7 +24,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
     );
 
     /**
-     * @var RemoteInterface|PhpBrowser
+     * @var RemoteInterface
      */
     protected $module = null;
 

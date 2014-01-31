@@ -2,9 +2,9 @@
 
 use Codeception\Util\Stub;
 require_once 'tests/data/app/data.php';
-require_once __DIR__.'/TestsForMink.php';
+require_once __DIR__ . '/TestsForBrowsers.php';
 
-class PhpBrowserTest extends TestsForMink
+class PhpBrowserTest extends TestsForBrowsers
 {
     /**
      * @var \Codeception\Module\PhpBrowser
@@ -15,7 +15,6 @@ class PhpBrowserTest extends TestsForMink
     protected $is_local = false;
 
     protected function setUp() {
-        $this->noPhpWebserver();
         $this->module = new \Codeception\Module\PhpBrowser();
         $url = '';
         if (version_compare(PHP_VERSION, '5.4', '>=')) $url = 'http://localhost:8000';
@@ -29,7 +28,6 @@ class PhpBrowserTest extends TestsForMink
     }
     
     protected function tearDown() {
-        $this->noPhpWebserver();
         if ($this->module) {
             $this->module->_after($this->makeTest());
         }
@@ -39,13 +37,6 @@ class PhpBrowserTest extends TestsForMink
     protected function makeTest()
     {
         return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
-    }
-
-    protected function noPhpWebserver()
-    {
-        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
-            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
-        }
     }
 
     public function testCurlOptions()
@@ -74,8 +65,8 @@ class PhpBrowserTest extends TestsForMink
         $form = data::get('form');
         $this->assertEquals('Davert', $form['name']);
         $this->assertEquals('Is Codeception maintainer', $form['description']);
-        $this->assertFalse(isset($form['disabled_fieldset']));
-        $this->assertFalse(isset($form['disabled_field']));
+//        $this->assertFalse(isset($form['disabled_fieldset']));
+//        $this->assertFalse(isset($form['disabled_field']));
         $this->assertEquals('kill_all', $form['action']);
     }
 
@@ -140,5 +131,20 @@ class PhpBrowserTest extends TestsForMink
         $I->submitForm('form', array('searchQuery' => 'test'));
         $I->see('Success');
     }
+
+    public function testHtmlRedirect()
+    {
+        $this->module->amOnPage('/redirect2');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testRefreshRedirect()
+    {
+        $this->module->amOnPage('/redirect3');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
 
 }

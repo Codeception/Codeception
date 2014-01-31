@@ -95,7 +95,6 @@ class RunCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped -g notorun');
         $I->seeInShellOutput("IncompleteMeCept.php");
-        $I->dontSeeInShellOutput("CommentsCept.php");
         $I->dontSeeInShellOutput("SkipMeCept.php");
     }
 

@@ -22,13 +22,17 @@ class Cest extends Cept
 
     public function preload()
     {
-        if (file_exists($this->bootstrap)) {
-            require $this->bootstrap;
-        }
-        $I = $this->makeIObject();
-        $this->executeTestMethod($I);
+        $this->scenario->setFeature($this->getSpecFromMethod());
+        parent::preload();
+    }
 
-        $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
+    public function getRawBody()
+    {
+        $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
+        $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
+        $end_line = $method->getEndLine();
+        $source = file($method->getFileName());
+        return implode("", array_slice($source, $start_line, $end_line - $start_line));
     }
 
     public function testCodecept()

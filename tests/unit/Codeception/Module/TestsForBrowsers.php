@@ -8,7 +8,7 @@
  *
  */
 
-abstract class TestsForMink extends \PHPUnit_Framework_TestCase
+abstract class TestsForBrowsers extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\PhpBrowser
@@ -58,7 +58,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/redirect');
         $this->module->seeInCurrentUrl('info');
     }
-
 
     public function testSee()
     {
@@ -319,7 +318,7 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 
     public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
-        $this->module->seeInField('rus','Верно');
+        $this->module->seeInField('input[name=rus]','Верно');
     }
 
     public function testApostrophesInText() {

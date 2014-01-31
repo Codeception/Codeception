@@ -17,31 +17,20 @@ use Codeception\Module\CodeHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
- * @method void offsetGet($offset)
- * @method void offsetSet($offset, $value)
- * @method void offsetExists($offset)
- * @method void offsetUnset($offset)
 */
 
 class CodeGuy extends \Codeception\AbstractGuy
 {
     
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * -> This method is proxified to corresponding module.
      *
      *
      * @see Codeception\Module::getName()
-     * @return \Codeception\Maybe
      */
     public function getName() {
-        $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        $step = new \Codeception\Step\Action('getName', func_get_args());
+        return $this->scenario->runStep($step);
     }
 }
 

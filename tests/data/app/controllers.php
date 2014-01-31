@@ -24,6 +24,18 @@ class redirect {
     }
 }
 
+class redirect2 {
+    function GET() {
+        include __DIR__.'/view/redirect2.php';
+    }
+}
+
+class redirect3 {
+    function GET() {
+        header('Refresh:0;url=/info');
+    }
+}
+
 class login {
 
     function GET($matches) {

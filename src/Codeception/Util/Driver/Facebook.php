@@ -56,13 +56,13 @@ class Facebook extends \BaseFacebook
     public function api( /* polymorphic */ )
     {
         if (is_callable($this->logCallback)) {
-            call_user_func($this->logCallback, 'Facebook API request', json_encode(func_get_args()));
+            call_user_func($this->logCallback, 'Facebook API request', func_get_args());
         }
 
         $response = call_user_func_array('parent::api', func_get_args());
 
         if (is_callable($this->logCallback)) {
-            call_user_func($this->logCallback, 'Facebook API response', json_encode($response));
+            call_user_func($this->logCallback, 'Facebook API response', $response);
         }
 
         return $response;
