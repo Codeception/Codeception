@@ -304,10 +304,10 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
             $submit->setAttribute('name','codeception_added_auto_submit');
 
             // Symfony2.1 DOM component requires name for each field.
-            if (!$form->filter('input[type=submit]')->attr('name')) {
-                $form = $form->filter('input[type=submit][name=codeception_added_auto_submit]')->form();
+            if (!$form->filter('*[type=submit]')->attr('name')) {
+                $form = $form->filter('*[type=submit][name=codeception_added_auto_submit]')->form();
             } else {
-                $form = $form->filter('input[type=submit]')->form();
+                $form = $form->filter('*[type=submit]')->form();
             }
             $this->forms[$action] = $form;
         }
