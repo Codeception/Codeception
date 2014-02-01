@@ -72,7 +72,25 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
      */
     public $guzzle;
 
-    public function _before() {
+    public function _initialize()
+    {
+        // build up a Guzzle friendly list of configuration options
+        // passed in both from our defaults and the respective
+        // yaml configuration file (if applicable)
+        $curl_config['curl.options'] = $this->curl_defaults;
+        foreach ($this->config['curl'] as $key => $val) {
+            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
+        }
+
+        // Guzzle client requires that we set the ssl.certificate_authority config
+        // directive if we wish to disable SSL verification
+        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
+            $curl_config['ssl.certificate_authority'] = false;
+        }
+        $this->guzzle = new Client('', $curl_config);
+    }
+
+    public function _before(\Codeception\TestCase $test) {
         $this->_initializeSession();
     }
 
@@ -107,22 +125,8 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
 
     public function _initializeSession()
     {
-        // build up a Guzzle friendly list of configuration options
-        // passed in both from our defaults and the respective
-        // yaml configuration file (if applicable)
-        $curl_config['curl.options'] = $this->curl_defaults;
-        foreach ($this->config['curl'] as $key => $val) {
-            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
-        }
-
-        // Guzzle client requires that we set the ssl.certificate_authority config
-        // directive if we wish to disable SSL verification
-        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
-            $curl_config['ssl.certificate_authority'] = false;
-        }
-
         $this->client = new Goutte();
-        $this->client->setClient($this->guzzle = new Client('', $curl_config));
+        $this->client->setClient($this->guzzle);
         $this->client->setBaseUri($this->config['url']);
     }
 
