@@ -128,6 +128,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('adult', $form['age']);
     }
 
+    public function testSelectByName()
+    {
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption('age', 'adult');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('adult', $form['age']);
+
+    }
+
     public function testSelectByLabel()
     {
         $this->module->amOnPage('/form/select');

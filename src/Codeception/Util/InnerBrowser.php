@@ -328,9 +328,13 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
             $label = $label->first();
             if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
-
-        if (!isset($input)) $input = $this->match($field);
-        if (!count($input)) throw new ElementNotFound($field, 'Form field by Label or CSS');
+        if (!isset($input)) {
+            $input = $this->match($field);
+        }
+        if (!count($input)) {
+            $input = $this->crawler->filterXPath(sprintf('//*[@name="%s"]', $field));
+        }
+        if (!count($input)) throw new ElementNotFound($field, 'Form field by Name, Label or CSS');
         return $input->first();
 
     }

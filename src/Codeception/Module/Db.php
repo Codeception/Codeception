@@ -216,18 +216,20 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $this->debugSection('Query', $query);
 
         $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
-
+        if (!$sth) {
+            $this->fail("Query '$query' can't be executed.");
+        }
 	    $i = 1;
         foreach ($data as $val) {
             $sth->bindValue($i, $val);
             $i++;
         }
         $res = $sth->execute();
-        if (!$res) $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
+        if (!$res) {
+            $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
+        }
 
         $lastInsertId = (int) $this->driver->lastInsertId($table);
-
         $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
 
         return $lastInsertId;
@@ -251,7 +253,9 @@ class Db extends \Codeception\Module implements \Codeception\Util\DbInterface
         $this->debugSection('Query', $query, json_encode($criteria));
 
         $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) \PHPUnit_Framework_Assert::fail("Query '$query' can't be executed.");
+        if (!$sth) {
+            $this->fail("Query '$query' can't be executed.");
+        }
 
         $sth->execute(array_values($criteria));
         return $sth->fetchColumn();
