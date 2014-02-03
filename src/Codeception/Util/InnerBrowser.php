@@ -329,10 +329,10 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
             if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
         if (!isset($input)) {
-            $input = $this->match($field);
+            $input = $this->crawler->filterXPath(sprintf('descendant-or-self::*[@name="%s"]', $field));
         }
         if (!count($input)) {
-            $input = $this->crawler->filterXPath(sprintf('//*[@name="%s"]', $field));
+            $input = $this->match($field);
         }
         if (!count($input)) throw new ElementNotFound($field, 'Form field by Name, Label or CSS');
         return $input->first();
@@ -452,8 +452,8 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
-        $this->debugSection('Cookies', $this->client->getRequest()->getCookies());
-        $this->debugSection('Headers', $this->client->getResponse()->getHeaders());
+        $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
+        $this->debugSection('Headers', $this->client->getInternalRequest()->getServer());
     }
 
     protected function getResponseStatusCode()

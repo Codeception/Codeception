@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Configuration;
 use Codeception\Exception\ModuleConfig;
 use Codeception\TestCase;
 use Codeception\Util\InnerBrowser;
@@ -52,14 +53,27 @@ class Silex extends InnerBrowser
 
     public function _initialize()
     {
-        if (!file_exists($this->config['app'])) {
+        if (!file_exists(Configuration::projectDir().$this->config['app'])) {
             throw new ModuleConfig(__CLASS__, "Bootstrap file {$this->config['app']} not found");
         }
     }
 
     public function _before(TestCase $test)
     {
-        $this->app = require $this->config['app'];
+        $this->app = require Configuration::projectDir().$this->config['app'];
+
+        // if $app is not returned but exists
+        if (isset($app)) {
+            $this->app = $app;
+        }
+
+        if (!isset($this->app)) {
+            throw new ModuleConfig(__CLASS__, "\$app instance was not received from bootstrap file");
+        }
+        // some silex apps (like bolt) may rely on global $app variable
+        $GLOBALS['app'] = $this->app;
+
+
         $this->client = new \Symfony\Component\HttpKernel\Client($this->app);
     }
 
@@ -73,12 +87,12 @@ class Silex extends InnerBrowser
      * ?>
      * ```
      *
-     * @param  string $class
+     * @param  string $service
      * @return mixed
      */
-    public function grabService($class)
+    public function grabService($service)
     {
-        return $this->app[$class];
+        return $this->app[$service];
     }
 
 } 
