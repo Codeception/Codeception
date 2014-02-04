@@ -32,7 +32,8 @@ class Configuration
             'colors' => false,
             'log' => false,
             'bootstrap' => '_bootstrap.php',
-        )
+        ),
+        'coverage' => []
     );
 
     public static $defaultSuiteSettings = array(

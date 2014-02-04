@@ -1,10 +1,11 @@
 <?php
 
-namespace Codeception;
+namespace Codeception\Coverage;
 
 use \Symfony\Component\Finder\Finder;
+use \Codeception\Configuration;
 
-class CodeCoverageSettings
+class Filter
 {
     /**
      * @var \PHP_CodeCoverage
@@ -12,7 +13,7 @@ class CodeCoverageSettings
     protected $phpCodeCoverage = null;
 
     /**
-     * @var CodeCoverageSettings
+     * @var Filter
      */
     protected static $c3;
 
@@ -46,9 +47,9 @@ class CodeCoverageSettings
 
     /**
      * @param $config
-     * @return CodeCoverageSettings
+     * @return Filter
      */
-    public function filterWhiteList($config)
+    public function whiteList($config)
     {
         $filter = $this->filter;
         if (!isset($config['coverage'])) return $this;
@@ -86,9 +87,9 @@ class CodeCoverageSettings
 
     /**
      * @param $config
-     * @return CodeCoverageSettings
+     * @return Filter
      */
-    public function filterBlackList($config)
+    public function blackList($config)
     {
         $filter = $this->filter;
         if (!isset($config['coverage'])) return $this;

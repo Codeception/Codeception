@@ -1,56 +1,45 @@
 <?php
+namespace Codeception\Coverage\Subscriber;
 
-namespace Codeception\Subscriber;
-
+use Codeception\CodeceptionEvents;
+use Codeception\Coverage\C3Connector;
+use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\StepEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Codeception\Exception\RemoteException;
-use Codeception\Module\PhpBrowser;
 use Codeception\Util\RemoteInterface;
 
-class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterface
+class RemoteServer extends SuiteSubscriber
 {
-    protected $options = array();
-    protected $enabled = false;
-    protected $remote = false;
+    use C3Connector;
+
     protected $suite_name = "";
 
-    protected $settings = array(
-        'enabled'        => false,
-        'remote'         => false,
-        'xdebug_session' => 'codeception',
-        'remote_config'  => ''
-    );
+    static $events = [
+        CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
+        CodeceptionEvents::SUITE_AFTER  => 'afterSuite',
+        CodeceptionEvents::STEP_BEFORE  => 'beforeStep',
+        CodeceptionEvents::STEP_AFTER   => 'afterStep',
+    ];
 
-    /**
-     * @var RemoteInterface
-     */
-    protected $module = null;
-
-    function __construct($options)
+    public function isEnabled()
     {
-        $this->options = $options;
+        return $this->getServerConnectionModule() and $this->settings['remote'];
     }
 
     public function beforeSuite(SuiteEvent $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled) {
+        if (!$this->isEnabled()) {
             return;
         }
 
         $this->suite_name = $e->getSuite()->baseName;
-        $this->module     = $this->getRemoteConnectionModule();
-        if (!$this->module or !$this->remote) {
-            return;
-        }
 
         if ($this->settings['remote_config']) {
-            $this->addHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+            $this->addHeader(COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);
         }
 
-        $knock = $this->getRemoteCoverageFile($this->module, 'clear');
+        $knock = $this->c3Request($this->getServerConnectionModule()->_getUrl(), 'clear');
         if ($knock === false) {
             throw new RemoteException('
                 CodeCoverage Error.
@@ -64,7 +53,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
 
     public function beforeStep(StepEvent $e)
     {
-        if (!$this->module) {
+        if (!$this->isEnabled()) {
             return;
         }
 
@@ -73,31 +62,34 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
             'CodeCoverage_Suite'  => $this->suite_name,
             'CodeCoverage_Config' => $this->settings['remote_config']
         );
-        $this->module->setCookie('CODECEPTION_CODECOVERAGE', json_encode($cookie));
+        $this->module->setCookie(COVERAGE_COOKIE, json_encode($cookie));
 
         if (!method_exists($this->module, '_setHeader')) {
             return;
         }
-        $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
-        $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
+        $this->module->_setHeader(COVERAGE_HEADER, $e->getTest()->getName());
+        $this->module->_setHeader(COVERAGE_HEADER_SUITE, $this->suite_name);
         if ($this->settings['remote_config']) {
-            $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
+            $this->module->_setHeader(COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);
         }
     }
 
     public function afterStep(StepEvent $e)
     {
-        if (!$this->module) return;
-        if ($error  = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
+        if (!$this->isEnabled()) {
+            return;
+        }
+
+        if ($error = $this->module->grabCookie(COVERAGE_COOKIE_ERROR)) {
             throw new RemoteException($error);
         }
-        $this->module->resetCookie('CODECEPTION_CODECOVERAGE_ERROR');
-        $this->module->resetCookie('CODECEPTION_CODECOVERAGE');
+        $this->module->resetCookie(COVERAGE_COOKIE_ERROR);
+        $this->module->resetCookie(COVERAGE_COOKIE);
     }
 
     public function afterSuite(SuiteEvent $e)
     {
-        if (!$this->module or !$this->remote) {
+        if (!$this->isEnabled()) {
             return;
         }
 
@@ -134,25 +126,4 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         file_put_contents($destFile, $this->getRemoteCoverageFile($this->module, 'clover'));
     }
 
-    protected function applySettings($settings)
-    {
-        $keys = array_keys($this->settings);
-        foreach ($keys as $key) {
-            if (isset($settings['coverage'][$key])) {
-                $this->settings[$key] = $settings['coverage'][$key];
-            }
-        }
-        $this->enabled = $this->settings['enabled'] && function_exists('xdebug_is_enabled');
-        $this->remote  = $this->settings['remote'];
-    }
-
-    static public function getSubscribedEvents()
-    {
-        return array(
-            'suite.after'  => 'afterSuite',
-            'suite.before' => 'beforeSuite',
-            'step.before'  => 'beforeStep',
-            'step.after'   => 'afterStep',
-        );
-    }
 }
