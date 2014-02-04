@@ -7,7 +7,7 @@ class Db
 {
     protected $dbh;
     protected $dsn;
-	public $sqlToRun;
+    public $sqlToRun;
 
     public static function connect($dsn, $user, $password)
     {
@@ -18,9 +18,11 @@ class Db
 
     /**
      * @static
+     *
      * @param $dsn
      * @param $user
      * @param $password
+     *
      * @return Db|MsSql|MySql|Oracle|PostgreSql|Sqlite
      */
     public static function create($dsn, $user, $password)
@@ -41,7 +43,6 @@ class Db
             default:
                 return new Db($dsn, $user, $password);
         }
-
     }
 
     public static function getProvider($dsn)
@@ -54,12 +55,13 @@ class Db
         $this->dbh = new \PDO($dsn, $user, $password);
         $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $this->dsn = $dsn;
-        $this->user = $user;
+        $this->dsn      = $dsn;
+        $this->user     = $user;
         $this->password = $password;
     }
 
-    public function getDbh() {
+    public function getDbh()
+    {
         return $this->dbh;
     }
 
@@ -67,7 +69,9 @@ class Db
     {
         $matches = array();
         $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
-        if (!$matched) return false;
+        if (!$matched) {
+            return false;
+        }
         return $matches[1];
     }
 
@@ -95,8 +99,8 @@ class Db
 
             $query .= "\n" . rtrim($sqlLine);
 
-            if (substr($query, - 1 * $delimiterLength, $delimiterLength) == $delimiter) {
-                $this->sqlToRun = substr($query, 0, - 1 * $delimiterLength);
+            if (substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
+                $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
                 $this->sqlQuery($this->sqlToRun);
                 $query = "";
             }
@@ -118,9 +122,10 @@ class Db
         );
     }
 
-    public function select($column, $table, array $criteria) {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from `%s` $where";
+    public function select($column, $table, array $criteria)
+    {
+        $where  = $criteria ? "where %s" : '';
+        $query  = "select %s from `%s` $where";
         $params = array();
         foreach ($criteria as $k => $v) {
             $params[] = "$k = ? ";
@@ -136,8 +141,9 @@ class Db
         $this->sqlQuery($query);
     }
 
-    public function lastInsertId($table) {
-      return $this->getDbh()->lastInsertId();
+    public function lastInsertId($table)
+    {
+        return $this->getDbh()->lastInsertId();
     }
 
     public function getQuotedName($name)
@@ -147,9 +153,15 @@ class Db
 
     protected function sqlLine($sql)
     {
-        if (trim($sql) == "") return true;
-        if (trim($sql) == ";") return true;
-        if (preg_match('~^((--.*?)|(#))~s', $sql)) return true;
+        if (trim($sql) == "") {
+            return true;
+        }
+        if (trim($sql) == ";") {
+            return true;
+        }
+        if (preg_match('~^((--.*?)|(#))~s', $sql)) {
+            return true;
+        }
         return false;
     }
 
@@ -157,6 +169,4 @@ class Db
     {
         $this->dbh->exec($query);
     }
-
-
 }

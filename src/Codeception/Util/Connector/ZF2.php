@@ -2,13 +2,14 @@
 
 namespace Codeception\Util\Connector;
 
+use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
 use Zend\Stdlib\Parameters;
 use Zend\Uri\Http as HttpUri;
 
-class ZF2 extends \Symfony\Component\BrowserKit\Client
+class ZF2 extends Client
 {
     /**
      * @var \Zend\Mvc\ApplicationInterface
@@ -36,12 +37,12 @@ class ZF2 extends \Symfony\Component\BrowserKit\Client
      */
     public function doRequest($request)
     {
-        $zendRequest = $this->application->getRequest();
+        $zendRequest  = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
 
-        $uri = new HttpUri($request->getUri());
+        $uri         = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
-        $method = strtoupper($request->getMethod());
+        $method      = strtoupper($request->getMethod());
 
         if ($queryString) {
             parse_str($queryString, $query);
@@ -68,7 +69,12 @@ class ZF2 extends \Symfony\Component\BrowserKit\Client
             throw $exception;
         }
 
-        $response = new Response($zendResponse->getBody(), $zendResponse->getStatusCode(), $zendResponse->getHeaders()->toArray());
+        $response = new Response(
+            $zendResponse->getBody(),
+            $zendResponse->getStatusCode(),
+            $zendResponse->getHeaders()->toArray()
+        );
+
         return $response;
     }
 

@@ -5,58 +5,58 @@ namespace Codeception\Util\Connector;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
-class Kohana extends \Symfony\Component\BrowserKit\Client {
+class Kohana extends \Symfony\Component\BrowserKit\Client
+{
+    public function setIndex($index)
+    {
+        $this->index = $index;
+    }
 
-	public function setIndex($index) {
-		$this->index = $index;
-	}
+    public function doRequest($request)
+    {
+        $_COOKIE = $request->getCookies();
+        $_SERVER = $request->getServer();
+        $_FILES  = $request->getFiles();
 
-	public function doRequest($request) {
+        $uri = str_replace('http://localhost', '', $request->getUri());
 
-		$_COOKIE = $request->getCookies();
-		$_SERVER = $request->getServer();
-		$_FILES = $request->getFiles();
+        $_SERVER['KOHANA_ENV']     = 'testing';
+        $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
+        $_SERVER['REQUEST_URI']    = strtoupper($uri);
 
-		$uri = str_replace('http://localhost', '', $request->getUri());
+        $this->_initRequest();
 
-		$_SERVER['KOHANA_ENV'] = 'testing';
-		$_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-		$_SERVER['REQUEST_URI'] = strtoupper($uri);
+        $kohanaRequest = \Request::factory($uri);
+        $kohanaRequest->method($_SERVER['REQUEST_METHOD']);
 
-		$this->_initRequest();
+        if (strtoupper($request->getMethod()) == 'GET') {
+            $kohanaRequest->query($request->getParameters());
+        }
+        if (strtoupper($request->getMethod()) == 'POST') {
+            $kohanaRequest->post($request->getParameters());
+        }
 
-		$kohanaRequest = \Request::factory($uri);
-		$kohanaRequest->method($_SERVER['REQUEST_METHOD']);
+        $kohanaRequest->cookie($_COOKIE);
 
-		if (strtoupper($request->getMethod()) == 'GET') {
-			$kohanaRequest->query($request->getParameters());
-		}
-		if (strtoupper($request->getMethod()) == 'POST') {
-			$kohanaRequest->post($request->getParameters());
-		}
+        $kohanaRequest::$initial = $kohanaRequest;
+        $content                 = $kohanaRequest->execute()->render();
 
-		$kohanaRequest->cookie($_COOKIE);
+        $headers                 = (array)$kohanaRequest->response()->headers();
+        $headers['Content-type'] = "text/html; charset=UTF-8";
+        $response                = new Response($content, 200, $headers);
+        return $response;
+    }
 
-		$kohanaRequest::$initial = $kohanaRequest;
-		$content = $kohanaRequest->execute()->render();
+    protected function _initRequest()
+    {
+        static $is_first_call;
+        if ($is_first_call === null) {
+            $is_first_call = true;
+        }
+        if ($is_first_call) {
+            $is_first_call = false;
 
-		$headers = (array)$kohanaRequest->response()->headers();
-		$headers['Content-type'] = "text/html; charset=UTF-8";
-		$response = new Response($content, 200, $headers);
-		return $response;
-	}
-
-	protected function _initRequest() {
-		static $is_first_call;
-		if ($is_first_call === Null) {
-			$is_first_call = true;
-		}
-		if ($is_first_call) {
-			$is_first_call = false;
-			
-			include $this->index;
-
-		} 
-	}
-
+            include $this->index;
+        }
+    }
 }

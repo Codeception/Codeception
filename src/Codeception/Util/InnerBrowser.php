@@ -1,17 +1,16 @@
 <?php
 namespace Codeception\Util;
-use Codeception\Exception\ContentNotFound;
+
 use Codeception\Exception\ElementNotFound;
-use Codeception\PHPUnit\Constraint\CrawlerNot;
+use Codeception\Module;
+use Codeception\TestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
 
-
-class InnerBrowser extends \Codeception\Module implements WebInterface {
-
-
+class InnerBrowser extends Module implements WebInterface
+{
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
      */
@@ -25,17 +24,20 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
 
     protected $forms = array();
 
-    public function _failed(\Codeception\TestCase $test, $fail)
+    public function _failed(TestCase $test, $fail)
     {
-        if (!$this->client || !$this->client->getInternalResponse()) return;
-        file_put_contents(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html', $this->client->getInternalResponse()->getContent());
+        if (!$this->client || !$this->client->getInternalResponse()) {
+            return;
+        }
+        $fileName = \Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html';
+        file_put_contents($fileName, $this->client->getInternalResponse()->getContent());
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
-        $this->client = null;
+        $this->client  = null;
         $this->crawler = null;
-        $this->forms = array();
+        $this->forms   = array();
     }
 
     /**
@@ -65,7 +67,9 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         }
 
         $anchor = $this->crawler->filterXPath('.//a[.=' . $literal . ']');
-        if (!count($anchor)) $anchor = $this->crawler->selectLink($link);
+        if (!count($anchor)) {
+            $anchor = $this->crawler->selectLink($link);
+        }
         if (count($anchor)) {
             $this->crawler = $this->client->click($anchor->first()->link());
             $this->debugResponse();
@@ -80,14 +84,16 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         }
 
         $nodes = $this->match($link);
+        if (!$nodes->count()) {
+            throw new ElementNotFound($link, 'Link or Button by name or CSS or XPath');
+        }
 
-        if (!$nodes->count()) throw new ElementNotFound($link, 'Link or Button by name or CSS or XPath');
         foreach ($nodes as $node) {
             if ($node->nodeName == 'a') {
                 $this->crawler = $this->client->click($nodes->first()->link());
                 $this->debugResponse();
                 return;
-            } elseif($node->nodeName == 'input' && $node->getAttribute('type') == 'submit') {
+            } elseif ($node->nodeName == 'input' && $node->getAttribute('type') == 'submit') {
                 $this->submitFormWithButton($nodes->first());
                 $this->debugResponse();
                 return;
@@ -99,16 +105,21 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         foreach ($button as $node) {
             if (!$node->getAttribute('name')) {
-                $node->setAttribute('name','codeception_generated_button_name');
+                $node->setAttribute('name', 'codeception_generated_button_name');
             }
         }
         $domForm = $button->form();
-        $form = $this->getFormFor($button);
+        $form    = $this->getFormFor($button);
 
         $this->debugSection('Uri', $domForm->getUri());
         $this->debugSection($domForm->getMethod(), $form->getValues());
 
-        $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->crawler = $this->client->request(
+                                      $domForm->getMethod(),
+                                          $domForm->getUri(),
+                                          $form->getPhpValues(),
+                                          $form->getPhpFiles()
+        );
     }
 
     public function see($text, $selector = null)
@@ -135,7 +146,9 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+            $links = $links->filterXPath(
+                           sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url))
+            );
         }
         $this->assertDomContains($links, 'a');
     }
@@ -144,19 +157,27 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
+            $links = $links->filterXPath(
+                           sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url))
+            );
         }
         $this->assertDomNotContains($links, 'a');
     }
 
     public function _getCurrentUri()
     {
-        $url = $this->client->getHistory()->current()->getUri();
+        $url   = $this->client->getHistory()->current()->getUri();
         $parts = parse_url($url);
-        if (!$parts) $this->fail("URL couldn't be parsed");
+        if (!$parts) {
+            $this->fail("URL couldn't be parsed");
+        }
         $uri = "";
-        if (isset($parts['path'])) $uri .= $parts['path'];
-        if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['path'])) {
+            $uri .= $parts['path'];
+        }
+        if (isset($parts['query'])) {
+            $uri .= "?" . $parts['query'];
+        }
         return $uri;
     }
 
@@ -192,18 +213,24 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
 
     public function grabFromCurrentUrl($uri = null)
     {
-        if (!$uri) return $this->_getCurrentUri();
+        if (!$uri) {
+            return $this->_getCurrentUri();
+        }
         $matches = array();
-        $res = preg_match($uri, $this->_getCurrentUri(), $matches);
-        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
-        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        $res     = preg_match($uri, $this->_getCurrentUri(), $matches);
+        if (!$res) {
+            $this->fail("Couldn't match $uri in " . $this->_getCurrentUri());
+        }
+        if (!isset($matches[1])) {
+            $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        }
         return $matches[1];
     }
 
     public function seeCheckboxIsChecked($checkbox)
     {
         $checkboxes = $this->crawler->filter($checkbox);
-        $this->assertDomContains($checkboxes->filter('input[checked=checked]'),'checkbox');
+        $this->assertDomContains($checkboxes->filter('input[checked=checked]'), 'checkbox');
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
@@ -243,11 +270,15 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
             throw new ElementNotFound($selector, 'Form');
         }
 
-        $url = '';
+        $url    = '';
         $fields = $form->filter('input');
         foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') continue;
-            if ($field->getAttribute('type') == 'radio') continue;
+            if ($field->getAttribute('type') == 'checkbox') {
+                continue;
+            }
+            if ($field->getAttribute('type') == 'radio') {
+                continue;
+            }
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
         }
 
@@ -259,44 +290,49 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $fields = $form->filter('select');
         foreach ($fields as $field) {
             foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected')
+                if ($option->getAttribute('selected') == 'selected') {
                     $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+                }
             }
         }
 
         $url .= http_build_query($params);
         parse_str($url, $params);
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
-        $query = '';
+        $query  = '';
         if (strtoupper($method) == 'GET') {
-            $query = '?'.http_build_query($params);
+            $query = '?' . http_build_query($params);
         }
         $this->debugSection('Uri', $this->getFormUrl($form));
         $this->debugSection('Method', $method);
         $this->debugSection('Parameters', $params);
 
-        $this->crawler = $this->client->request($method, $this->getFormUrl($form).$query, $params);
+        $this->crawler = $this->client->request($method, $this->getFormUrl($form) . $query, $params);
         $this->debugResponse();
     }
 
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
-        if ((!$action) or ($action == '#')) $action = $this->client->getHistory()->current()->getUri();
+        if ((!$action) or ($action == '#')) {
+            $action = $this->client->getHistory()->current()->getUri();
+        }
         return $action;
     }
 
     protected function getFormFor($node)
     {
         $form = $node->parents()->filter('form')->first();
-        if (!$form) $this->fail('The selected node does not have a form ancestor.');
+        if (!$form) {
+            $this->fail('The selected node does not have a form ancestor.');
+        }
         $action = $this->getFormUrl($form);
 
         if (!isset($this->forms[$action])) {
             $submit = new \DOMElement('input');
             $submit = $form->current()->appendChild($submit);
-            $submit->setAttribute('type','submit'); // for forms with no submits
-            $submit->setAttribute('name','codeception_added_auto_submit');
+            $submit->setAttribute('type', 'submit'); // for forms with no submits
+            $submit->setAttribute('name', 'codeception_added_auto_submit');
 
             // Symfony2.1 DOM component requires name for each field.
             if (!$form->filter('input[type=submit]')->attr('name')) {
@@ -311,8 +347,8 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
 
     public function fillField($field, $value)
     {
-        $input = $this->getFieldByLabelOrCss($field);
-        $form = $this->getFormFor($input);
+        $input                      = $this->getFieldByLabelOrCss($field);
+        $form                       = $this->getFormFor($input);
         $form[$input->attr('name')] = $value;
     }
 
@@ -321,20 +357,27 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
         if (count($label)) {
             $label = $label->first();
-            if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
+            if ($label->attr('for')) {
+                $input = $this->crawler->filter('#' . $label->attr('for'));
+            }
         }
 
-        if (!isset($input)) $input = $this->match($field);
-        if (!count($input)) throw new ElementNotFound($field, 'Form field by Label or CSS');
+        if (!isset($input)) {
+            $input = $this->match($field);
+        }
+        if (!count($input)) {
+            throw new ElementNotFound($field, 'Form field by Label or CSS');
+        }
         return $input->first();
-
     }
 
     public function selectOption($select, $option)
     {
-        $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
+        $form      = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
         $fieldName = $field->attr('name');
-        if ($field->attr('multiple')) $fieldName = str_replace('[]', '', $fieldName);
+        if ($field->attr('multiple')) {
+            $fieldName = str_replace('[]', '', $fieldName);
+        }
 
         if (is_array($option)) {
             $options = array();
@@ -346,13 +389,14 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         }
 
         $form[$fieldName]->select($this->matchOption($field, $option));
-
     }
 
     protected function matchOption(Crawler $field, $option)
     {
         $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]', $option));
-        if ($options->count()) return $options->first()->attr('value');
+        if ($options->count()) {
+            return $options->first()->attr('value');
+        }
         return $option;
     }
 
@@ -372,7 +416,11 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
         $path = \Codeception\Configuration::dataDir() . $filename;
-        if (!is_readable($path)) $this->fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
+        if (!is_readable($path)) {
+            $this->fail(
+                 "file $filename not found in Codeception data path. Only files stored in data path accepted"
+            );
+        }
         $form[$field->attr('name')]->upload($path);
     }
 
@@ -451,8 +499,12 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     {
         // depending on Symfony version
         $response = $this->client->getInternalResponse();
-        if (method_exists($response, 'getStatus')) return $response->getStatus();
-        if (method_exists($response, 'getStatusCode')) return $response->getStatusCode();
+        if (method_exists($response, 'getStatus')) {
+            return $response->getStatus();
+        }
+        if (method_exists($response, 'getStatusCode')) {
+            return $response->getStatusCode();
+        }
         return "N/A";
     }
 
@@ -462,7 +514,9 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
             $selector = CssSelector::toXPath($selector);
         } catch (ParseException $e) {
         }
-        if (!Locator::isXPath($selector)) return null;
+        if (!Locator::isXPath($selector)) {
+            return null;
+        }
 
         return @$this->crawler->filterXPath($selector);
     }
@@ -482,7 +536,9 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     public function grabValueFrom($field)
     {
         $nodes = $this->match($field);
-        if (!$nodes->count()) throw new ElementNotFound($field, 'Field');
+        if (!$nodes->count()) {
+            throw new ElementNotFound($field, 'Field');
+        }
 
         if ($nodes->filter('textarea')->count()) {
             return $nodes->filter('textarea')->text();
@@ -492,9 +548,9 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         }
 
         if ($nodes->filter('select')->count()) {
-            $select = $nodes->filter('select');
+            $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
-            $results = array();
+            $results     = array();
             foreach ($select->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected') {
                     $val = $option->attr('value');
@@ -547,7 +603,6 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
-
     public function seeElement($selector)
     {
         $nodes = $this->match($selector);
@@ -595,6 +650,7 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
      * Checks that response code is equal to value provided.
      *
      * @param $code
+     *
      * @return mixed
      */
     public function seeResponseCodeIs($code)
@@ -605,14 +661,18 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     public function seeInTitle($title)
     {
         $nodes = $this->crawler->filter('title');
-        if (!$nodes->count()) throw new ElementNotFound("<title>","Tag");
+        if (!$nodes->count()) {
+            throw new ElementNotFound("<title>", "Tag");
+        }
         $this->assertContains($title, $nodes->first()->text(), "page title contains $title");
     }
 
     public function dontSeeInTitle($title)
     {
         $nodes = $this->crawler->filter('title');
-        if (!$nodes->count()) return $this->assertTrue(true);
+        if (!$nodes->count()) {
+            return $this->assertTrue(true);
+        }
         $this->assertNotContains($title, $nodes->first()->text(), "page title contains $title");
     }
 
@@ -631,14 +691,12 @@ class InnerBrowser extends \Codeception\Module implements WebInterface {
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
-        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint, $message);
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new \Codeception\PHPUnit\Constraint\Page($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint, $message);
     }
-
-
 }
