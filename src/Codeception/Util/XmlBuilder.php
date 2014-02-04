@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Util;
 
 class XmlBuilder
@@ -13,8 +14,10 @@ class XmlBuilder
      */
     protected $__currentNode__;
 
-    public function __construct() {
-        $this->__dom__ = new \DOMDocument();
+
+    public function __construct()
+    {
+        $this->__dom__         = new \DOMDocument();
         $this->__currentNode__ = $this->__dom__;
     }
 
@@ -22,9 +25,11 @@ class XmlBuilder
      * Appends child node
      *
      * @param $tag
+     *
      * @return XmlBuilder
      */
-    public function __get($tag) {
+    public function __get($tag)
+    {
         $node = $this->__dom__->createElement($tag);
         $this->__currentNode__->appendChild($node);
         $this->__currentNode__ = $node;
@@ -33,9 +38,11 @@ class XmlBuilder
 
     /**
      * @param $val
+     *
      * @return XmlBuilder
      */
-    public function val($val) {
+    public function val($val)
+    {
         $this->__currentNode__->nodeValue = $val;
         return $this;
     }
@@ -45,9 +52,11 @@ class XmlBuilder
      *
      * @param $attr
      * @param $val
+     *
      * @return XmlBuilder
      */
-    public function attr($attr, $val) {
+    public function attr($attr, $val)
+    {
         $this->__currentNode__->setAttribute($attr, $val);
         return $this;
     }
@@ -57,43 +66,50 @@ class XmlBuilder
      *
      * @return XmlBuilder
      */
-    public function parent() {
+    public function parent()
+    {
         $this->__currentNode__ = $this->__currentNode__->parentNode;
         return $this;
     }
-
 
     /**
      * Traverses to parent with $name
      *
      * @param $tag
+     *
      * @return XmlBuilder
      * @throws \Exception
      */
-    public function parents($tag) {
+    public function parents($tag)
+    {
         $traverseNode = $this->__currentNode__;
-        $elFound = false;
+        $elFound      = false;
         while ($traverseNode->parentNode) {
             $traverseNode = $traverseNode->parentNode;
             if ($traverseNode->tagName == $tag) {
                 $this->__currentNode__ = $traverseNode;
-                $elFound = true;
+                $elFound               = true;
                 break;
             }
         }
-        if (!$elFound) throw new \Exception("Parent $tag not found in XML");
+
+        if (!$elFound) {
+            throw new \Exception("Parent $tag not found in XML");
+        }
+
         return $this;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->__dom__->saveXML();
     }
 
     /**
      * @return \DOMDocument
      */
-    public function getDom() {
+    public function getDom()
+    {
         return $this->__dom__;
     }
-
 }

@@ -12,7 +12,6 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
      */
     protected $front;
 
-
     /**
      * @var \Zend_Application
      */
@@ -25,20 +24,23 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
 
     protected $host;
 
-    public function setBootstrap($bootstrap) {
+    public function setBootstrap($bootstrap)
+    {
         $this->bootstrap = $bootstrap;
-        $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
+        $this->front     = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
 
-         $this->front
+        $this->front
             ->throwExceptions(false)
             ->returnResponse(false);
     }
 
-    public function setHost($host) {
+    public function setHost($host)
+    {
         $this->host = $host;
     }
 
-    public function doRequest($request) {
+    public function doRequest($request)
+    {
 
         // redirector should not exit
         $redirector = \Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
@@ -52,28 +54,33 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
 
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
-        //$zendRequest->setParams($request->getParameters()); 
-        if (strtoupper($request->getMethod()) == 'GET') $_GET = $request->getParameters(); 
-        if (strtoupper($request->getMethod()) == 'POST') $_POST = $request->getParameters();
+        //$zendRequest->setParams($request->getParameters());
+        if (strtoupper($request->getMethod()) == 'GET') {
+            $_GET = $request->getParameters();
+        }
+        if (strtoupper($request->getMethod()) == 'POST') {
+            $_POST = $request->getParameters();
+        }
 
-        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+        $zendRequest->setRequestUri(str_replace('http://localhost', '', $request->getUri()));
         $zendRequest->setHeaders($request->getServer());
-        
 
         $_FILES = $request->getFiles();
 
         // это нужно для нормальной работы SE
-        $_SERVER['HTTP_HOST'] = str_replace('http://','',$this->host);
-        if(isset($_SERVER['HTTP_REFERER'])){
-            $_SERVER['HTTP_REFERER'] = str_replace('http://localhost','',$_SERVER['HTTP_REFERER']);
+        $_SERVER['HTTP_HOST'] = str_replace('http://', '', $this->host);
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $_SERVER['HTTP_REFERER'] = str_replace('http://localhost', '', $_SERVER['HTTP_REFERER']);
         }
-        //$_SERVER['SERVER_SOFTWARE'] = ''; 
+        //$_SERVER['SERVER_SOFTWARE'] = '';
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI'] = str_replace('http://localhost','',$request->getUri());
+        $_SERVER['REQUEST_URI']    = str_replace('http://localhost', '', $request->getUri());
 
         $zendResponse = new \Zend_Controller_Response_Http;
-        
-        $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->setRequest($zendRequest)->setResponse($zendResponse);
+
+        $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->setRequest($zendRequest)->setResponse(
+                                                                         $zendResponse
+        );
 
         ob_start();
         $this->bootstrap->run();
@@ -86,14 +93,12 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
         $response = new Response($zendResponse->getBody(), $zendResponse->getHttpResponseCode(), $headers);
         return $response;
     }
+
     /**
      * @return \Zend_Controller_Request_HttpTestCase
      */
-    public function getZendRequest() {
+    public function getZendRequest()
+    {
         return $this->zendRequest;
     }
-
-
-
-
 }

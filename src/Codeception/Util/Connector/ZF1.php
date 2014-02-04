@@ -1,17 +1,16 @@
 <?php
 namespace Codeception\Util\Connector;
 
+use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
-class ZF1 extends \Symfony\Component\BrowserKit\Client
+class ZF1 extends Client
 {
-
     /**
      * @var \Zend_Controller_Front
      */
     protected $front;
-
 
     /**
      * @var \Zend_Application
@@ -23,32 +22,36 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
      */
     protected $zendRequest;
 
-    public function setBootstrap($bootstrap) {
+    public function setBootstrap($bootstrap)
+    {
         $this->bootstrap = $bootstrap;
 
-        $this->front = $this->bootstrap->getBootstrap()->getResource('frontcontroller');
+        $this->front = $this->bootstrap
+            ->getBootstrap()
+            ->getResource('frontcontroller');
         $this->front
             ->throwExceptions(true)
             ->returnResponse(false);
     }
 
-    public function doRequest($request) {
+    public function doRequest($request)
+    {
 
         // redirector should not exit
         $redirector = \Zend_Controller_Action_HelperBroker::getStaticHelper('redirector');
         $redirector->setExit(false);
 
         // json helper should not exit
-        $json = \Zend_Controller_Action_HelperBroker::getStaticHelper('json');
+        $json               = \Zend_Controller_Action_HelperBroker::getStaticHelper('json');
         $json->suppressExit = true;
 
         $zendRequest = new \Zend_Controller_Request_HttpTestCase();
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
         $zendRequest->setParams($request->getParameters());
-        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+        $zendRequest->setRequestUri(str_replace('http://localhost', '', $request->getUri()));
         $zendRequest->setHeaders($request->getServer());
-        $_FILES = $request->getFiles();
+        $_FILES  = $request->getFiles();
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
         $zendResponse = new \Zend_Controller_Response_HttpTestCase;
@@ -60,17 +63,20 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
 
         $this->zendRequest = $zendRequest;
 
-        $response = new Response($zendResponse->getBody(), $zendResponse->getHttpResponseCode(), $zendResponse->getHeaders());
+        $response = new Response(
+            $zendResponse->getBody(),
+            $zendResponse->getHttpResponseCode(),
+            $zendResponse->getHeaders()
+        );
+
         return $response;
     }
+
     /**
      * @return \Zend_Controller_Request_HttpTestCase
      */
-    public function getZendRequest() {
+    public function getZendRequest()
+    {
         return $this->zendRequest;
     }
-
-
-
-
 }

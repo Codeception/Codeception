@@ -3,7 +3,8 @@ namespace Codeception\Util\Driver;
 
 class MySql extends Db
 {
-    public function cleanup() {
+    public function cleanup()
+    {
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=0;');
         $res = $this->dbh->query("SHOW FULL TABLES WHERE TABLE_TYPE LIKE '%TABLE';")->fetchAll();
         foreach ($res as $row) {
@@ -19,9 +20,10 @@ class MySql extends Db
         $this->dbh->exec('SET FOREIGN_KEY_CHECKS=1;');
     }
 
-    public function select($column, $table, array $criteria) {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from `%s` $where";
+    public function select($column, $table, array $criteria)
+    {
+        $where  = $criteria ? "where %s" : '';
+        $query  = "select %s from `%s` $where";
         $params = array();
         foreach ($criteria as $k => $v) {
             $k = $this->getQuotedName($k);

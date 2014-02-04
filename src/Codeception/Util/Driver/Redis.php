@@ -27,8 +27,9 @@ class Redis
 
     private function connect()
     {
-        if ($this->_sock)
+        if ($this->_sock) {
             return;
+        }
         if ($sock = fsockopen($this->host, $this->port, $errno, $errstr)) {
             $this->_sock = $sock;
             $this->debug('Connected');
@@ -106,7 +107,7 @@ class Redis
 
     function pipeline_begin()
     {
-        $this->pipeline = true;
+        $this->pipeline          = true;
         $this->pipeline_commands = 0;
     }
 
@@ -188,6 +189,7 @@ class Redis
      * so that this attack is infeasible.
      *
      * @param $password
+     *
      * @return string Status code reply
      */
     function auth($password)
@@ -208,6 +210,7 @@ class Redis
      * @param $key
      * @param $value
      * @param $preserve USE SETNX don't perform the operation if the target key already exists.
+     *
      * @return string Status code reply
      */
     function set($key, $value, $preserve = false)
@@ -234,6 +237,7 @@ class Redis
      *  $this->get('key1','key2')
      *
      * @param mixed $key
+     *
      * @return mixed Bulk reply | Multi bulk reply
      */
     function get($key)
@@ -275,6 +279,7 @@ class Redis
      *
      * @param $key
      * @param $value
+     *
      * @return string Bulk reply
      */
     function getset($key, $value)
@@ -296,6 +301,7 @@ class Redis
      *
      * @param $key
      * @param $amount
+     *
      * @return int this commands will reply with the new value of key after the increment or decrement.
      */
     function incr($key, $amount = 1)
@@ -319,6 +325,7 @@ class Redis
      *
      * @param $key
      * @param $amount
+     *
      * @return int this commands will reply with the new value of key after the increment or decrement.
      */
     function decr($key, $amount = 1)
@@ -338,6 +345,7 @@ class Redis
      * value will return "1".
      *
      * @param $key
+     *
      * @return int
      */
     function exists($key)
@@ -358,6 +366,7 @@ class Redis
      * The command always returns success.
      *
      * @param $key
+     *
      * @return int
      */
     function delete($key)
@@ -378,6 +387,7 @@ class Redis
      * be one of "none", "string", "list", "set". "none" is returned if the key does not exist.
      *
      * @param $key
+     *
      * @return string
      */
     function type($key)
@@ -392,6 +402,7 @@ class Redis
      * return all the keys matching a given pattern
      *
      * @param $pattern
+     *
      * @return string space separated list of keys
      */
     function keys($pattern)
@@ -418,9 +429,10 @@ class Redis
      * @param $src
      * @param $dst
      * @param $preserve
+     *
      * @return string Status code repy
      */
-    function rename($src, $dst, $preserve = False)
+    function rename($src, $dst, $preserve = false)
     {
         if ($preserve) {
             return $this->cmd(array("RENAMENX", $src, $dst));
@@ -441,7 +453,8 @@ class Redis
      * set a time to live in seconds on a key
      *
      * @param string $key
-     * @param int $ttl in seconds
+     * @param int    $ttl in seconds
+     *
      * @return int 1: the timeout was set. | 0: the timeout was not set since the key already has an associated timeout, or the key does not exist.
      */
     function expire($key, $ttl)
@@ -451,7 +464,9 @@ class Redis
 
     /**
      * get the time to live in seconds of a key
+     *
      * @param $key
+     *
      * @return int
      */
     function ttl($key)
@@ -470,6 +485,7 @@ class Redis
      * @param $key
      * @param $value
      * @param $tail
+     *
      * @return unknown_type
      */
     function push($key, $value, $tail = true)
@@ -482,6 +498,7 @@ class Redis
      * Return the length of the List value at key
      *
      * @param $key
+     *
      * @return unknown_type
      */
     function llen($key)
@@ -495,6 +512,7 @@ class Redis
      * @param $key
      * @param $start
      * @param $end
+     *
      * @return unknown_type
      */
     function lrange($key, $start, $end)
@@ -508,6 +526,7 @@ class Redis
      * @param $key
      * @param $start
      * @param $end
+     *
      * @return unknown_type
      */
     function ltrim($key, $start, $end)
@@ -520,6 +539,7 @@ class Redis
      *
      * @param $key
      * @param $index
+     *
      * @return unknown_type
      */
     function lindex($key, $index)
@@ -533,6 +553,7 @@ class Redis
      * @param $key
      * @param $value
      * @param $index
+     *
      * @return unknown_type
      */
     function lset($key, $value, $index)
@@ -557,6 +578,7 @@ class Redis
      * @param $key
      * @param $value
      * @param $count
+     *
      * @return int The number of removed elements if the operation succeeded
      */
     function lrem($key, $value, $count = 1)
@@ -569,6 +591,7 @@ class Redis
      *
      * @param $key
      * @param $tail
+     *
      * @return string Bulk reply
      */
     function pop($key, $tail = true)
@@ -586,6 +609,7 @@ class Redis
      *
      * @param $key
      * @param $value
+     *
      * @return unknown_type
      */
     function sadd($key, $value)
@@ -598,6 +622,7 @@ class Redis
      *
      * @param $key
      * @param $value
+     *
      * @return unknown_type
      */
     function srem($key, $value)
@@ -621,6 +646,7 @@ class Redis
      * @param $srckey
      * @param $dstkey
      * @param $member
+     *
      * @return int 1 if the element was moved | 0 if the element was not found on the first set and no operation was performed
      */
     function smove($srckey, $dstkey, $member)
@@ -632,6 +658,7 @@ class Redis
      * Return the number of elements (the cardinality) of the Set at key
      *
      * @param $key
+     *
      * @return int
      */
     function scard($key)
@@ -644,6 +671,7 @@ class Redis
      *
      * @param $key
      * @param $value
+     *
      * @return int
      */
     function sismember($key, $value)
@@ -655,6 +683,7 @@ class Redis
      * Return the intersection between the Sets stored at key1, key2, ..., keyN
      *
      * @param $key1
+     *
      * @return array
      */
     function sinter($key1)
@@ -673,6 +702,7 @@ class Redis
      *
      * @param $dstkey
      * @param $key1
+     *
      * @return string Status code reply
      */
     function sinterstore($dstkey, $key1)
@@ -691,6 +721,7 @@ class Redis
      * Return the union between the Sets stored at key1, key2, ..., keyN
      *
      * @param $key1
+     *
      * @return array
      */
     function sunion($key1)
@@ -709,6 +740,7 @@ class Redis
      *
      * @param $dstkey
      * @param $key1
+     *
      * @return string Status code reply
      */
     function sunionstore($dstkey, $key1)
@@ -727,6 +759,7 @@ class Redis
      * Return the difference between the Set stored at key1 and all the Sets key2, ..., keyN
      *
      * @param $key1
+     *
      * @return array
      */
     function sdiff($key1)
@@ -745,6 +778,7 @@ class Redis
      *
      * @param $dstkey
      * @param $key1
+     *
      * @return string Status code reply
      */
     function sdiffstore($dstkey, $key1)
@@ -763,6 +797,7 @@ class Redis
      * Return all the members of the Set value at key
      *
      * @param $key
+     *
      * @return array
      */
     function smembers($key)
@@ -777,7 +812,9 @@ class Redis
 
     /**
      * Select the DB having the specified index
+     *
      * @param $key
+     *
      * @return string Status code reply
      */
     function select_db($key)
@@ -787,8 +824,10 @@ class Redis
 
     /**
      * Move the key from the currently selected DB to the DB having as index dbindex
+     *
      * @param $key
      * @param $db
+     *
      * @return int 1 if the key was moved | 0 if the key was not moved because already present on the target DB or was not found in the current DB.
      */
     function move($key, $db)
@@ -820,8 +859,10 @@ class Redis
     ////////////////////////////////
     /**
      * Sort a Set or a List accordingly to the specified parameters
+     *
      * @param $key
      * @param $query BY pattern LIMIT start end GET pattern ASC|DESC ALPHA
+     *
      * @return array
      */
     function sort($key, $query = false)
@@ -838,10 +879,11 @@ class Redis
     ///// Persistence control commands
     ////////////////////////////////
 
-
     /**
      * Synchronously save the DB on disk (if background = Asynchronously save the DB on disk)
+     *
      * @param $background
+     *
      * @return string Status code reply
      */
     function save($background = false)
@@ -872,7 +914,9 @@ class Redis
     ////////////////////////////////
     /**
      * Provide information and statistics about the server
+     *
      * @param $section
+     *
      * @return unknown_type
      */
     function info($section = false)
@@ -925,13 +969,13 @@ class Redis
 
     /**
      * Call any non-implemented function of redis using the new unified request protocol
+     *
      * @param string $name
-     * @param array $params
+     * @param array  $params
      */
     function __call($name, $params)
     {
         array_unshift($params, strtoupper($name));
         return $this->cmd($params);
     }
-
 }

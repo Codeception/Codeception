@@ -1,6 +1,6 @@
 <?php
 namespace Codeception\Util\Console;
- 
+
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -8,10 +8,10 @@ use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Output extends ConsoleOutput {
-
+class Output extends ConsoleOutput
+{
     protected $config = array(
-        'colors' => true,
+        'colors'    => true,
         'verbosity' => self::VERBOSITY_NORMAL
     );
 
@@ -20,8 +20,8 @@ class Output extends ConsoleOutput {
      */
     public $formatHelper;
 
-	function __construct($config) {
-
+    function __construct($config)
+    {
         $this->config = array_merge($this->config, $config);
 
         $formatter = new OutputFormatter($this->config['colors']);
@@ -35,20 +35,21 @@ class Output extends ConsoleOutput {
         $this->formatHelper = new FormatterHelper();
 
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
-	}
+    }
 
-	protected function clean($message)
-	{
-		// clear json serialization
-		$message = str_replace('\/','/', $message);
-		return $message;
-	}
+    protected function clean($message)
+    {
+        // clear json serialization
+        $message = str_replace('\/', '/', $message);
+        return $message;
+    }
 
-	public function debug($message) {
+    public function debug($message)
+    {
         $message = print_r($message, true);
-        $message = str_replace("\n","\n  ", $message);
+        $message = str_replace("\n", "\n  ", $message);
         $this->writeln("<debug>  $message</debug>");
-	}
+    }
 
     function message($message)
     {
@@ -73,5 +74,4 @@ class Output extends ConsoleOutput {
         $this->writeln($e->getMessage());
         $this->writeln("");
     }
-
 }

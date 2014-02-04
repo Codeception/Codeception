@@ -29,10 +29,8 @@ class Phalcon1 extends Client
 
         if ($application instanceof \Closure) {
             return $application();
-
         } elseif (is_string($application)) {
             return require $application;
-
         } else {
             return $application;
         }
@@ -41,12 +39,13 @@ class Phalcon1 extends Client
     /**
      *
      * @param \Symfony\Component\BrowserKit\Request $request
+     *
      * @return \Symfony\Component\BrowserKit\Response
      */
     public function doRequest($request)
     {
         $application = $this->getApplication();
-        $di = $application->getDI();
+        $di          = $application->getDI();
         DI::reset();
         DI::setDefault($di);
 
@@ -59,27 +58,27 @@ class Phalcon1 extends Client
             throw new \Exception('Unsupported application class');
         }
 
-        $_COOKIE = $request->getCookies();
-        $_FILES = $request->getFiles();
+        $_COOKIE                   = $request->getCookies();
+        $_FILES                    = $request->getFiles();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         if (strtoupper($request->getMethod()) == 'GET') {
             $_GET = $request->getParameters();
         } else {
             $_POST = $request->getParameters();
         }
-        $_REQUEST = $request->getParameters();
-        $uri = str_replace('http://localhost','',$request->getUri());
-        $_SERVER['REQUEST_URI'] = $uri;
-        $_GET['_url'] = strtok($uri, '?');
+        $_REQUEST                = $request->getParameters();
+        $uri                     = str_replace('http://localhost', '', $request->getUri());
+        $_SERVER['REQUEST_URI']  = $uri;
+        $_GET['_url']            = strtok($uri, '?');
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
         $di['request'] = Stub::make($di->get('request'), array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();
 
         $headers = $response->getHeaders();
-        $status = (int)$headers->get('Status');
+        $status  = (int)$headers->get('Status');
 
         $headersProperty = new \ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);
@@ -98,7 +97,7 @@ class Phalcon1 extends Client
             $valueProperty->setAccessible(true);
             foreach ($cookies as $name => $cookie) {
                 if (!$restoredProperty->getValue($cookie)) {
-                    $clientCookie = new Cookie(
+                    $clientCookie            = new Cookie(
                         $name,
                         $valueProperty->getValue($cookie),
                         $cookie->getExpiration(),
@@ -162,7 +161,7 @@ class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\
     public function destroy()
     {
         $this->isStarted = false;
-        $this->data = array();
+        $this->data      = array();
     }
 
     public function getAll()
