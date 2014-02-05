@@ -3,7 +3,7 @@ namespace Codeception\Subscriber\Shared;
 
 trait StaticEvents {
 
-    static $events = [];
+    static $events;
 
     static function getSubscribedEvents()
     {

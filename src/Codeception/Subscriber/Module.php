@@ -13,9 +13,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Module implements EventSubscriberInterface
 {
-    public function createSuite(SuiteEvent $e)
-    {
-    }
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::TEST_BEFORE  => 'before',
+        CodeceptionEvents::TEST_AFTER   => 'after',
+        CodeceptionEvents::STEP_BEFORE  => 'beforeStep',
+        CodeceptionEvents::STEP_AFTER   => 'afterStep',
+        CodeceptionEvents::TEST_FAIL    => 'failed',
+        CodeceptionEvents::TEST_ERROR   => 'failed',
+        CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
+        CodeceptionEvents::SUITE_AFTER  => 'afterSuite'
+    ];
 
     public function beforeSuite(SuiteEvent $e)
     {
@@ -78,17 +87,4 @@ class Module implements EventSubscriberInterface
         }
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::TEST_BEFORE  => 'before',
-            CodeceptionEvents::TEST_AFTER   => 'after',
-            CodeceptionEvents::STEP_BEFORE  => 'beforeStep',
-            CodeceptionEvents::STEP_AFTER   => 'afterStep',
-            CodeceptionEvents::TEST_FAIL    => 'failed',
-            CodeceptionEvents::TEST_ERROR   => 'failed',
-            CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
-            CodeceptionEvents::SUITE_AFTER  => 'afterSuite'
-        );
-    }
 }

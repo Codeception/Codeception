@@ -8,6 +8,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ErrorHandler implements EventSubscriberInterface
 {
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::SUITE_BEFORE => 'handle'
+    ];
+
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
@@ -65,10 +71,4 @@ class ErrorHandler implements EventSubscriberInterface
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::SUITE_BEFORE => 'handle'
-        );
-    }
 }

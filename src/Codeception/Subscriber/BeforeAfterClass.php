@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Subscriber;
 
 use Codeception\CodeceptionEvents;
@@ -7,6 +6,12 @@ use Codeception\Event\SuiteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class BeforeAfterClass implements EventSubscriberInterface {
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::SUITE_BEFORE => 'setUpBeforeClass',
+        CodeceptionEvents::SUITE_AFTER  => 'tearDownAfterClass'
+    ];
 
     public function setUpBeforeClass(SuiteEvent $e)
     {
@@ -32,11 +37,4 @@ class BeforeAfterClass implements EventSubscriberInterface {
         }
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::SUITE_BEFORE => 'setUpBeforeClass',
-            CodeceptionEvents::SUITE_AFTER  => 'tearDownAfterClass'
-        );
-    }
 }

@@ -1,10 +1,10 @@
 <?php
-namespace Codeception\Subscriber\Collector;
+namespace Codeception\Coverage\Subscriber;
 
 use Codeception\CodeceptionEvents;
 use Codeception\Configuration;
 use Codeception\Coverage\SuiteSubscriber;
-use Codeception\Coverage\C3Connector;
+use Codeception\Coverage\Shared\C3Connector;
 use Codeception\Event\SuiteEvent;
 
 class LocalServer extends SuiteSubscriber

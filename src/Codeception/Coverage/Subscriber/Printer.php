@@ -4,9 +4,15 @@ namespace Codeception\Coverage\Subscriber;
 use Codeception\CodeceptionEvents;
 use Codeception\Configuration;
 use Codeception\Event\PrintResultEvent;
+use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Printer implements EventSubscriberInterface {
+    use StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::RESULT_PRINT_AFTER => 'printResult'
+    ];
 
     protected $settings = [
         'low_limit' => '35',
@@ -79,10 +85,4 @@ class Printer implements EventSubscriberInterface {
         $writer->process(self::$coverage, $this->logDir. 'coverage.serialized');
     }
 
-    static function getSubscribedEvents()
-    {
-        return [ CodeceptionEvents::RESULT_PRINT_AFTER => 'printResult' ];
-    }
-
-
-} 
+}

@@ -25,13 +25,25 @@ class RoboFile extends \Robo\Tasks {
         $this->taskComposerUpdate()->run();
     }
 
-    public function testPhpbrowser()
+    protected function server()
     {
         $this->taskServer(8000)
             ->background()
             ->dir('tests/data/app')
             ->run();
+    }
 
+    public function coverage()
+    {
+        $this->server();
+
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','coverage')
+            ->run();
+    }
+
+    public function testPhpbrowser()
+    {
         $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','tests/unit/Codeception/Module/PhpBrowserTest.php')
             ->run();
@@ -40,10 +52,7 @@ class RoboFile extends \Robo\Tasks {
 
     public function testFacebook()
     {
-        $this->taskServer(8000)
-            ->background()
-            ->dir('tests/data/app')
-            ->run();
+        $this->server();
 
         $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
             ->arg('suite','tests/unit/Codeception/Module/FacebookTest.php')

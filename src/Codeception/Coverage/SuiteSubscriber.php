@@ -4,10 +4,12 @@ namespace Codeception\Coverage;
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\PHPUnit\DummyCodeCoverage;
+use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Util\RemoteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface {
+    use StaticEvents;
 
     protected $defaultSettings = [
         'enabled' => true,
@@ -74,11 +76,5 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     {
         Printer::$coverage->merge($coverage);
     }
-
-    static function getSubscribedEvents()
-    {
-        return static::$events;
-    }
-
 
 }

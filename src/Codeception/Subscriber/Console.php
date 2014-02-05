@@ -18,6 +18,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Console implements EventSubscriberInterface
 {
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
+        CodeceptionEvents::SUITE_AFTER     => 'afterSuite',
+        CodeceptionEvents::TEST_BEFORE     => 'before',
+        CodeceptionEvents::TEST_AFTER      => 'afterTest',
+        CodeceptionEvents::TEST_START      => 'startTest',
+        CodeceptionEvents::TEST_END        => 'endTest',
+        CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
+        CodeceptionEvents::STEP_AFTER      => 'afterStep',
+        CodeceptionEvents::TEST_SUCCESS    => 'testSuccess',
+        CodeceptionEvents::TEST_FAIL       => 'testFail',
+        CodeceptionEvents::TEST_ERROR      => 'testError',
+        CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
+        CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
+        CodeceptionEvents::TEST_FAIL_PRINT => 'printFail',
+    ];
+
     protected $steps = true;
     protected $debug = false;
     protected $color = true;
@@ -358,23 +377,4 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
-            CodeceptionEvents::SUITE_AFTER     => 'afterSuite',
-            CodeceptionEvents::TEST_BEFORE     => 'before',
-            CodeceptionEvents::TEST_AFTER      => 'afterTest',
-            CodeceptionEvents::TEST_START      => 'startTest',
-            CodeceptionEvents::TEST_END        => 'endTest',
-            CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
-            CodeceptionEvents::STEP_AFTER      => 'afterStep',
-            CodeceptionEvents::TEST_SUCCESS    => 'testSuccess',
-            CodeceptionEvents::TEST_FAIL       => 'testFail',
-            CodeceptionEvents::TEST_ERROR      => 'testError',
-            CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
-            CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
-            CodeceptionEvents::TEST_FAIL_PRINT => 'printFail',
-        );
-    }
 }

@@ -13,6 +13,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Logger implements EventSubscriberInterface
 {
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
+        CodeceptionEvents::TEST_BEFORE     => 'beforeTest',
+        CodeceptionEvents::TEST_AFTER      => 'afterTest',
+        CodeceptionEvents::TEST_END        => 'endTest',
+        CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
+        CodeceptionEvents::TEST_FAIL       => 'testFail',
+        CodeceptionEvents::TEST_ERROR      => 'testError',
+        CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
+        CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
+    ];
+
     protected $logHandler;
 
     /**
@@ -82,18 +96,4 @@ class Logger implements EventSubscriberInterface
         $this->logger->info($e->getStep()->getHumanizedAction());
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
-            CodeceptionEvents::TEST_BEFORE     => 'beforeTest',
-            CodeceptionEvents::TEST_AFTER      => 'afterTest',
-            CodeceptionEvents::TEST_END        => 'endTest',
-            CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
-            CodeceptionEvents::TEST_FAIL       => 'testFail',
-            CodeceptionEvents::TEST_ERROR      => 'testError',
-            CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
-            CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
-        );
-    }
 }

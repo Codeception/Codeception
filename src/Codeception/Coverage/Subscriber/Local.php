@@ -1,8 +1,7 @@
 <?php
-namespace Codeception\Subscriber\Collector;
+namespace Codeception\Coverage\Subscriber;
 
 use Codeception\CodeceptionEvents;
-use Codeception\Coverage\AbstractSubscriber;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 

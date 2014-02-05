@@ -9,6 +9,14 @@ use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Cest implements EventSubscriberInterface
 {
+    use Shared\StaticEvents;
+
+    static $events = [
+        CodeceptionEvents::TEST_BEFORE => 'beforeTest',
+        CodeceptionEvents::TEST_AFTER  => 'afterTest',
+        CodeceptionEvents::TEST_FAIL   => 'failedTest'
+    ];
+
     public function beforeTest(TestEvent $e)
     {
         if (! ($e->getTest() instanceof \Codeception\TestCase\Cest)) {
@@ -42,12 +50,4 @@ class Cest implements EventSubscriberInterface
         }
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            CodeceptionEvents::TEST_BEFORE => 'beforeTest',
-            CodeceptionEvents::TEST_AFTER  => 'afterTest',
-            CodeceptionEvents::TEST_FAIL   => 'failedTest'
-        );
-    }
 }

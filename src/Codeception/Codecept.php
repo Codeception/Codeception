@@ -7,7 +7,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.9-dev";
+    const VERSION = "2.0-dev";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -106,8 +106,10 @@ class Codecept
         if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
 
         if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
-            $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\LocalServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
         }
 
         // custom event listeners

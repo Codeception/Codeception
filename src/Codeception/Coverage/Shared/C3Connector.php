@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Coverage;
+namespace Codeception\Coverage\Shared;
 use Codeception\Exception\RemoteException;
 
 // headers
