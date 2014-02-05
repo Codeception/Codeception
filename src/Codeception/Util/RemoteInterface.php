@@ -1,4 +1,5 @@
 <?php
+
 namespace Codeception\Util;
 
 interface RemoteInterface
@@ -18,7 +19,9 @@ interface RemoteInterface
      * // moves to http://user.mysite.com/
      * ?>
      * ```
+     *
      * @param $subdomain
+     *
      * @return mixed
      */
     public function amOnSubdomain($subdomain);
@@ -28,5 +31,4 @@ interface RemoteInterface
     public function _getResponseCode();
 
     public function _sendRequest($url);
-
 }

@@ -1,8 +1,9 @@
 <?php
+
 namespace Codeception\Util;
 
-interface MultiSessionInterface {
-
+interface MultiSessionInterface
+{
     public function _initializeSession();
 
     public function _loadSessionData($data);
@@ -13,4 +14,3 @@ interface MultiSessionInterface {
 
     public function getName();
 }
- 

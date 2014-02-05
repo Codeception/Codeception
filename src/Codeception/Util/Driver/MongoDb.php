@@ -11,7 +11,8 @@ class MongoDb
     private $user;
     private $password;
 
-    public static function connect($dsn, $user, $password) {
+    public static function connect($dsn, $user, $password)
+    {
         throw new \Exception(__CLASS__ . '::connect() - hm, it looked like this method had become obsolete...');
     }
 
@@ -19,13 +20,16 @@ class MongoDb
      * $dsn has to contain db_name after the host. E.g. "mongodb://localhost:27017/mongo_test_db"
      *
      * @static
+     *
      * @param $dsn
      * @param $user
      * @param $password
+     *
      * @return \Mongo
      * @throws \Exception
      */
-    public function __construct($dsn, $user, $password) {
+    public function __construct($dsn, $user, $password)
+    {
         /* defining DB name */
         $this->dbName = substr($dsn, strrpos($dsn, '/') + 1);
         if (strlen($this->dbName) == 0) {
@@ -41,7 +45,7 @@ class MongoDb
         $this->host = rtrim(str_replace($this->dbName, '', $this->host), '/');
 
         $options = array(
-            'connect' => TRUE
+            'connect' => true
         );
 
         if ($user && $password) {
@@ -52,23 +56,24 @@ class MongoDb
         }
 
         try {
-            $m = new \Mongo($dsn, $options);
+            $m         = new \Mongo($dsn, $options);
             $this->dbh = $m->selectDB($this->dbName);
         } catch (\MongoConnectionException $e) {
             throw new \Exception(sprintf('Failed to open Mongo connection: %s', $e->getMessage()));
         }
 
-        $this->dsn = $dsn;
-        $this->user = $user;
+        $this->dsn      = $dsn;
+        $this->user     = $user;
         $this->password = $password;
     }
 
-
     /**
      * @static
+     *
      * @param $dsn
      * @param $user
      * @param $password
+     *
      * @return MongoDb
      */
     public static function create($dsn, $user, $password)
@@ -98,17 +103,24 @@ class MongoDb
      *
      * @param $dumpFile
      */
-    public function load($dumpFile) {
+    public function load($dumpFile)
+    {
         if ($this->user && $this->password) {
-            $cmd = sprintf('mongo %s --username %s --password %s %s', $this->host . '/' . $this->dbName, $this->user, $this->password, $dumpFile);
+            $cmd = sprintf(
+                'mongo %s --username %s --password %s %s',
+                $this->host . '/' . $this->dbName,
+                $this->user,
+                $this->password,
+                $dumpFile
+            );
         } else {
             $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, $dumpFile);
         }
         shell_exec($cmd);
     }
 
-    public function getDbh() {
+    public function getDbh()
+    {
         return $this->dbh;
     }
-
 }

@@ -37,7 +37,7 @@ interface WebInterface
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
      */
     public function see($text, $selector = null);
@@ -56,7 +56,7 @@ interface WebInterface
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
      */
     public function dontSee($text, $selector = null);
@@ -130,6 +130,7 @@ interface WebInterface
      * $I->click('Logout', '#nav');
      * ?>
      * ```
+     *
      * @param $link
      * @param $context
      */
@@ -148,7 +149,7 @@ interface WebInterface
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
      */
     public function seeLink($text, $url = null);
@@ -165,7 +166,7 @@ interface WebInterface
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
      */
     public function dontSeeLink($text, $url = null);
@@ -269,6 +270,7 @@ interface WebInterface
      * ```
      *
      * @param null $uri
+     *
      * @internal param $url
      * @return mixed
      */
@@ -409,9 +411,9 @@ interface WebInterface
 
     /**
      * Fills a text field or textarea with value.
-     * 
+     *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
@@ -455,6 +457,7 @@ interface WebInterface
      * ```
      *
      * @param $cssOrXPathOrRegex
+     *
      * @return mixed
      */
     public function grabTextFrom($cssOrXPathOrRegex);
@@ -474,6 +477,7 @@ interface WebInterface
      * ```
      *
      * @param $field
+     *
      * @return mixed
      */
     public function grabValueFrom($field);
@@ -487,6 +491,7 @@ interface WebInterface
      * $I->seeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
      */
     public function seeElement($selector);
@@ -495,13 +500,14 @@ interface WebInterface
      * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
      * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
      */
     public function dontSeeElement($selector);
@@ -517,6 +523,7 @@ interface WebInterface
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
      */
     public function seeOptionIsSelected($selector, $optionText);
@@ -532,6 +539,7 @@ interface WebInterface
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
      */
     public function dontSeeOptionIsSelected($selector, $optionText);
@@ -546,6 +554,7 @@ interface WebInterface
      * ```
      *
      * @param $title
+     *
      * @return mixed
      */
     public function seeInTitle($title);
@@ -554,6 +563,7 @@ interface WebInterface
      * Checks that page title does not contain text.
      *
      * @param $title
+     *
      * @return mixed
      */
     public function dontSeeInTitle($title);
@@ -562,6 +572,7 @@ interface WebInterface
      * Checks that cookie is set.
      *
      * @param $cookie
+     *
      * @return mixed
      */
     public function seeCookie($cookie);
@@ -570,6 +581,7 @@ interface WebInterface
      * Checks that cookie doesn't exist
      *
      * @param $cookie
+     *
      * @return mixed
      */
     public function dontSeeCookie($cookie);
@@ -579,6 +591,7 @@ interface WebInterface
      *
      * @param $cookie
      * @param $value
+     *
      * @return mixed
      */
     public function setCookie($cookie, $value);
@@ -587,6 +600,7 @@ interface WebInterface
      * Unsets cookie
      *
      * @param $cookie
+     *
      * @return mixed
      */
     public function resetCookie($cookie);
@@ -595,9 +609,8 @@ interface WebInterface
      * Grabs a cookie value.
      *
      * @param $cookie
+     *
      * @return mixed
      */
     public function grabCookie($cookie);
-
-
 }

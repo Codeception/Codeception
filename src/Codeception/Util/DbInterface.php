@@ -1,9 +1,9 @@
 <?php
+
 namespace Codeception\Util;
 
 interface DbInterface
 {
-
     /**
      * Checks if a row with given column values exists.
      * Provide table name and column values.
@@ -22,7 +22,7 @@ interface DbInterface
      * ```
      * Fails if no such user found.
      *
-     * @param $table
+     * @param       $table
      * @param array $criteria
      */
     public function seeInDatabase($table, $criteria = array());
@@ -47,11 +47,10 @@ interface DbInterface
      * ```
      * Fails if such user was found.
      *
-     * @param $table
+     * @param       $table
      * @param array $criteria
      */
     public function dontSeeInDatabase($table, $criteria = array());
-
 
     /**
      * Fetches a single column value from a database.
@@ -66,11 +65,12 @@ interface DbInterface
      * ```
      *
      * @version 1.1
-     * @param $table
-     * @param $column
+     *
+     * @param       $table
+     * @param       $column
      * @param array $criteria
+     *
      * @return mixed
      */
     public function grabFromDatabase($table, $column, $criteria = array());
-
 }

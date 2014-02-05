@@ -1,8 +1,9 @@
 <?php
+
 namespace Codeception\Util;
 
-class Debug {
-
+class Debug
+{
     /**
      * @var Console\Output null
      */
@@ -13,19 +14,24 @@ class Debug {
         self::$output = $output;
     }
 
-    static function debug($message)
+    public static function debug($message)
     {
-        if (!self::$output) return;
+        if (!self::$output) {
+            return;
+        }
         self::$output->debug($message);
     }
 
-    static function pause()
+    public static function pause()
     {
-        if (!self::$output) return;
-        self::$output->writeln("<info>The execution paused. Press ENTER to continue</info>");
-        if (trim(fgets(fopen("php://stdin","r"))) != chr(13)) return;
+        if (!self::$output) {
+            return;
+        }
+
+        self::$output->writeln("<info>The execution has been paused. Press ENTER to continue</info>");
+
+        if (trim(fgets(STDIN)) != chr(13)) {
+            return;
+        }
     }
-
-
-
 }

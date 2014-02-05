@@ -1,8 +1,9 @@
 <?php
+
 namespace Codeception\Util;
 
-class Autoload {
-
+class Autoload
+{
     protected static $registered = false;
     protected static $map = array();
 
@@ -36,7 +37,7 @@ class Autoload {
     }
 
     /**
-     * Shortcut for Autoload::register for classes with empty namespaces.
+     * Shortcut for {@link self::register} for classes with empty namespaces.
      *
      * @param $suffix
      * @param $path
@@ -46,34 +47,39 @@ class Autoload {
         self::register('', $suffix, $path);
     }
 
-
     public static function load($class)
     {
         $map = array_reverse(self::$map);
         foreach ($map as $record) {
             list($regex, $path) = $record;
-            if (!preg_match($regex, $class)) continue;
+            if (!preg_match($regex, $class)) {
+                continue;
+            }
             $className = str_replace('\\', '', substr($class, (int)strrpos($class, '\\')));
-            $file = $path.DIRECTORY_SEPARATOR.$className.'.php';
-            if (!file_exists($file)) continue;
+            $file      = $path . DIRECTORY_SEPARATOR . $className . '.php';
+            if (!file_exists($file)) {
+                continue;
+            }
             include_once $file;
             return true;
         }
+
         return false;
     }
 
-    // is public for testing purposes
+    // being public for testing purposes
     public static function matches($class, $namespace, $suffix)
     {
-        return (bool) preg_match(self::regex($namespace, $suffix), $class);
+        return (bool)preg_match(self::regex($namespace, $suffix), $class);
     }
 
     protected static function regex($namespace, $suffix)
     {
-        $namespace = str_replace("\\",'\\\\', $namespace);
+        $namespace = str_replace("\\", '\\\\', $namespace);
         if ($namespace) {
             return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        } else {
+            return sprintf('~\w*?%s$~', $suffix);
         }
-        return sprintf('~\w*?%s$~', $suffix);
     }
 }

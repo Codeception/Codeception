@@ -8,8 +8,9 @@ use Symfony\Component\BrowserKit\Response;
 class Universal extends Client
 {
     protected $mockedResponse;
-    
-    public function setIndex($index) {
+
+    public function setIndex($index)
+    {
         $this->index = $index;
     }
 
@@ -18,18 +19,19 @@ class Universal extends Client
         $this->mockedResponse = $response;
     }
 
-    public function doRequest($request) {
+    public function doRequest($request)
+    {
         if ($this->mockedResponse) {
-            $response = $this->mockedResponse;
+            $response             = $this->mockedResponse;
             $this->mockedResponse = null;
             return $response;
         }
-        
+
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
-        $_FILES = $request->getFiles();
+        $_FILES  = $request->getFiles();
 
-        $uri = str_replace('http://localhost','',$request->getUri());
+        $uri = str_replace('http://localhost', '', $request->getUri());
 
         if (strtoupper($request->getMethod()) == 'GET') {
             $_GET = $request->getParameters();
@@ -39,7 +41,7 @@ class Universal extends Client
         $_REQUEST = $request->getParameters();
 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI'] = strtoupper($uri);
+        $_SERVER['REQUEST_URI']    = strtoupper($uri);
 
         ob_start();
         include $this->index;
@@ -47,7 +49,7 @@ class Universal extends Client
         $content = ob_get_contents();
         ob_end_clean();
 
-        $headers = array();
+        $headers     = array();
         $php_headers = headers_list();
         foreach ($php_headers as $value) {
             // Get the header name
@@ -58,7 +60,7 @@ class Universal extends Client
                 $headers[$name] = trim(implode(':', $parts));
             }
         }
-        $headers['Content-type'] = isset($headers['Content-type']) ? $headers['Content-type']: "text/html; charset=UTF-8";
+        $headers['Content-type'] = isset($headers['Content-type']) ? $headers['Content-type'] : "text/html; charset=UTF-8";
 
         $response = new Response($content, 200, $headers);
         return $response;
