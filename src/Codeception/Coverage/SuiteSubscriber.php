@@ -3,7 +3,7 @@ namespace Codeception\Coverage;
 
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
-use Codeception\PHPUnit\DummyCodeCoverage;
+use Codeception\Coverage\DummyCodeCoverage;
 use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Lib\RemoteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

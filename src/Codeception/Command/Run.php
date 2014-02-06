@@ -35,7 +35,6 @@ class Run extends Base
                  new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
                  new InputOption('coverage', '', InputOption::VALUE_NONE, 'Run with code coverage'),
                  new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
-                 new InputOption('defer-flush', '', InputOption::VALUE_NONE, 'Don\'t flush output during run'),
                  new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
                  new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
                  new InputOption('skip-group', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),

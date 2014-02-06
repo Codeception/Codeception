@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\PHPUnit;
+namespace Codeception\Coverage;
 
 class DummyCodeCoverage extends \PHP_CodeCoverage
 {

@@ -48,7 +48,6 @@ class Codecept
         'colors' => false,
         'log' => false,
         'coverage' => false,
-	    'defer-flush' => false,
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
