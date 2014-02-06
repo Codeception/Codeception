@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Codecept;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\Client;

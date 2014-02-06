@@ -339,10 +339,10 @@ class InnerBrowser extends Module implements WebInterface
             $submit->setAttribute('name', 'codeception_added_auto_submit');
 
             // Symfony2.1 DOM component requires name for each field.
-            if (!$form->filter('input[type=submit]')->attr('name')) {
-                $form = $form->filter('input[type=submit][name=codeception_added_auto_submit]')->form();
+            if (!$form->filter('*[type=submit]')->attr('name')) {
+                $form = $form->filter('*[type=submit][name=codeception_added_auto_submit]')->form();
             } else {
-                $form = $form->filter('input[type=submit]')->form();
+                $form = $form->filter('*[type=submit]')->form();
             }
             $this->forms[$action] = $form;
         }
@@ -358,6 +358,7 @@ class InnerBrowser extends Module implements WebInterface
 
     protected function getFieldByLabelOrCss($field)
     {
+        // by label
         $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
         if (count($label)) {
             $label = $label->first();
@@ -366,9 +367,16 @@ class InnerBrowser extends Module implements WebInterface
             }
         }
 
+        // by name
         if (!isset($input)) {
+            $input = $this->match(sprintf('descendant-or-self::*[@name="%s"]', $field));
+        }
+
+        // by CSS and XPath
+        if (!count($input)) {
             $input = $this->match($field);
         }
+
         if (!count($input)) {
             throw new ElementNotFound($field, 'Form field by Label or CSS');
         }
@@ -377,7 +385,8 @@ class InnerBrowser extends Module implements WebInterface
 
     public function selectOption($select, $option)
     {
-        $form      = $this->getFormFor($field = $this->getFieldByLabelOrCss($select));
+        $field = $this->getFieldByLabelOrCss($select);
+        $form      = $this->getFormFor($field);
         $fieldName = $field->attr('name');
         if ($field->attr('multiple')) {
             $fieldName = str_replace('[]', '', $fieldName);
