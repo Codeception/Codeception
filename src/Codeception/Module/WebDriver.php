@@ -41,7 +41,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * browser *required* - browser that would be launched
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
- * * restart - set to false to share browser sesssion between tests (by default), or set to true to create a session per test
+ * * restart - set to false to share browser sesssion between tests, or set to true (by default) to create a session per test
  * * wait - set the implicit wait (5 secs) by default.
  * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
@@ -67,7 +67,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected $config = array(
         'host' => '127.0.0.1',
         'port' => '4444',
-        'restart' => false,
+        'restart' => true,
         'wait' => 0,
         'capabilities' => array()
     );
