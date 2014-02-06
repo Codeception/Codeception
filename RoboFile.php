@@ -33,15 +33,6 @@ class RoboFile extends \Robo\Tasks {
             ->run();
     }
 
-    public function coverage()
-    {
-        $this->server();
-
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','coverage')
-            ->run();
-    }
-
     public function testPhpbrowser()
     {
         $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))

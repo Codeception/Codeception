@@ -9,29 +9,29 @@ use Codeception\Util\RemoteInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface {
+
     use StaticEvents;
 
     protected $defaultSettings = [
         'enabled' => true,
         'remote' => false,
         'xdebug_session' => 'codeception',
-        'remote_config'  => ''
+        'remote_config'  => null
     ];
     protected $settings = [];
+
     protected $coverage;
     protected $logDir;
     protected $options;
     static $events = [];
 
+    abstract protected function isEnabled();
 
     function __construct($options = [])
     {
         $this->options = $options;
         $this->logDir = Configuration::logDir();
     }
-
-
-    abstract protected function isEnabled();
 
     protected function applySettings($settings)
     {
@@ -40,6 +40,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
         }
         $this->coverage = new \PHP_CodeCoverage();
 
+        $this->settings = $this->defaultSettings;
         $keys = array_keys($this->defaultSettings);
         foreach ($keys as $key) {
             if (isset($settings['coverage'][$key])) {

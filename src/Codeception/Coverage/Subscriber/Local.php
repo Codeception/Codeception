@@ -6,7 +6,8 @@ use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 
 /**
- * Retrieves CodeCoverage data from remote server
+ * Collects code coverage from unit and functional tests.
+ * Results from all suites are merged.
  */
 class Local extends SuiteSubscriber
 {
