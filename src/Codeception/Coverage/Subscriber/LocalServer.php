@@ -8,7 +8,7 @@ use Codeception\Coverage\Shared\C3Collect;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Exception\RemoteException;
-use Codeception\Util\WebInterface;
+use Codeception\Lib\WebInterface;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.

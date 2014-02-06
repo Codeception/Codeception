@@ -4,7 +4,7 @@ require_once __DIR__ . '/TestsForWeb.php';
 class FrameworksTest extends TestsForWeb
 {
     /**
-     * @var \Codeception\Util\Framework
+     * @var \Codeception\Lib\Framework
      */
     protected $module;
 

@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfig;
 use Codeception\TestCase;
-use Codeception\Util\InnerBrowser;
+use Codeception\Lib\InnerBrowser;
 
 /**
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.

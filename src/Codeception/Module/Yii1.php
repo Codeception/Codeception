@@ -69,7 +69,7 @@ use Yii;
  *
  * @property Codeception\Util\Connector\Yii1 $client
  */
-class Yii1 extends \Codeception\Util\Framework
+class Yii1 extends \Codeception\Lib\Framework
 {
 
 	/**

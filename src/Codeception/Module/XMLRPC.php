@@ -65,7 +65,7 @@ class XMLRPC extends \Codeception\Module
             if (!strpos($this->config['url'], '://')) {
                 // not valid url
                 foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Util\Framework) {
+                    if ($module instanceof \Codeception\Lib\Framework) {
                         $this->client = $module->client;
                         $this->is_functional = true;
                         break;

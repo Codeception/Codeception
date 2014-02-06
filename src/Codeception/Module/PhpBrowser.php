@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Util\Connector\Goutte;
-use Codeception\Util\InnerBrowser;
+use Codeception\Lib\InnerBrowser;
 use Codeception\Util\MultiSessionInterface;
 use Codeception\Util\RemoteInterface;
 use Guzzle\Http\Client;

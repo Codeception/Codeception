@@ -45,7 +45,7 @@ namespace Codeception\Module;
  *
  */
 
-class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
+class Dbh extends \Codeception\Module implements \Codeception\Lib\DbInterface
 {
     public static $dbh;
 

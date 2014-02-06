@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Yii;
-use Codeception\Util\Framework;
+use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfig;
 
 /**

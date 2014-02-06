@@ -25,7 +25,7 @@ namespace Codeception\Module;
  * Module is created by [Artem Kovradin](http://tvorzasp.com)
  */
 
-class SocialEngine extends \Codeception\Util\Framework
+class SocialEngine extends \Codeception\Lib\Framework
 {
 
     protected $requiredFields = array('host');

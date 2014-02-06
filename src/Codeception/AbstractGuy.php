@@ -1,7 +1,7 @@
 <?php
 namespace Codeception;
 
-use Codeception\Util\Friend;
+use Codeception\Lib\Friend;
 
 abstract class AbstractGuy
 {

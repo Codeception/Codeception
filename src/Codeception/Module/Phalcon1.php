@@ -54,7 +54,7 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *
  *
  */
-class Phalcon1 extends \Codeception\Util\Framework
+class Phalcon1 extends \Codeception\Lib\Framework
 {
     protected $config = array(
         'bootstrap' => 'app/config/bootstrap.php',

@@ -59,7 +59,7 @@ namespace Codeception\Module;
  */
 use Codeception\Configuration as Configuration;
 
-class ZF1 extends \Codeception\Util\Framework
+class ZF1 extends \Codeception\Lib\Framework
 {
     protected $config = array('env' => 'testing', 'config' => 'application/configs/application.ini',
         'app_path' => 'application', 'lib_path' => 'library');

@@ -24,7 +24,7 @@ namespace Codeception\Module;
  *
  */
 
-class Kohana extends \Codeception\Util\Framework {
+class Kohana extends \Codeception\Lib\Framework {
 
 	public function _initialize() {
 		

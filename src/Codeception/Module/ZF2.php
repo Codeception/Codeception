@@ -32,7 +32,7 @@ use Zend\Version\Version;
  *
  */
 
-class ZF2 extends \Codeception\Util\Framework
+class ZF2 extends \Codeception\Lib\Framework
 {
     protected $config = array(
         'config' => 'tests/application.config.php',

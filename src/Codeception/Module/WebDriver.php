@@ -6,7 +6,7 @@ use Codeception\Exception\TestRuntime;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\MultiSessionInterface;
-use Codeception\Util\WebInterface;
+use Codeception\Lib\WebInterface;
 use Codeception\Util\RemoteInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
