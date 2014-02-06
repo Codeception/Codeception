@@ -3,7 +3,7 @@ namespace Codeception\Lib;
 use Codeception\AbstractGuy;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
-use Codeception\Util\MultiSessionInterface;
+use Codeception\Lib\MultiSessionInterface;
 
 class Friend {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeception\Util;
+namespace Codeception\Lib;
 
 interface MultiSessionInterface
 {

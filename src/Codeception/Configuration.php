@@ -2,7 +2,7 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
-use Codeception\Util\Autoload;
+use Codeception\Lib\Autoload;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
 

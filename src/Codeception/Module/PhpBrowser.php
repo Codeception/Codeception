@@ -2,10 +2,10 @@
 
 namespace Codeception\Module;
 
-use Codeception\Util\Connector\Goutte;
+use Codeception\Lib\Connector\Goutte;
 use Codeception\Lib\InnerBrowser;
-use Codeception\Util\MultiSessionInterface;
-use Codeception\Util\RemoteInterface;
+use Codeception\Lib\MultiSessionInterface;
+use Codeception\Lib\RemoteInterface;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 use Codeception\TestCase;
