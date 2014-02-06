@@ -5,7 +5,7 @@ namespace Codeception\Module;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Module as BaseModule;
-use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Driver\Facebook as FacebookDriver;
 
 /**
  * Provides testing for projects integrated with Facebook API.

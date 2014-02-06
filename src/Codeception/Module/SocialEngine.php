@@ -35,7 +35,7 @@ class SocialEngine extends \Codeception\Lib\Framework
     public $bootstrap;
 
     /**
-     * @var \Codeception\Util\Connector\SocialEngine
+     * @var \Codeception\Lib\Connector\SocialEngine
      */
     public $client;
 
@@ -143,7 +143,7 @@ class SocialEngine extends \Codeception\Lib\Framework
           require_once APPLICATION_PATH_LIB. DS .'Engine/Application.php';
         }
 
-        $this->client = new \Codeception\Util\Connector\SocialEngine();
+        $this->client = new \Codeception\Lib\Connector\SocialEngine();
         $this->client->setHost($this->config['host']);
     }
 

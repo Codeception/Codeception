@@ -63,7 +63,7 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
     );
 
     /**
-     * @var \Codeception\Util\Connector\Goutte
+     * @var \Codeception\Lib\Connector\Goutte
      */
     public $client;
 

@@ -31,7 +31,7 @@ class Kohana extends \Codeception\Lib\Framework {
 	}
 
 	public function _before(\Codeception\TestCase $test) {
-		$this->client = new \Codeception\Util\Connector\Kohana();
+		$this->client = new \Codeception\Lib\Connector\Kohana();
 		$this->client->setIndex('public/index.php');
 	}
 

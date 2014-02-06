@@ -3,7 +3,7 @@ namespace Codeception\Platform;
 
 use Codeception\Exception\ModuleRequire;
 use Codeception\Subscriber\Shared\StaticEvents;
-use Codeception\Util\Console\Output;
+use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Extension implements EventSubscriberInterface {

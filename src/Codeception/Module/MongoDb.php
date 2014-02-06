@@ -15,7 +15,7 @@ namespace Codeception\Module;
  * - clean database
  * - system collection system.users should contain the user which will be authenticated while script performs DB operations
  *
- * Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
+ * Connection is done by MongoDb driver, which is stored in Codeception\Lib\Driver namespace.
  * Check out the driver if you get problems loading dumps and cleaning databases.
  *
  * ## Status
@@ -37,7 +37,7 @@ namespace Codeception\Module;
  *
  */
 
-use \Codeception\Util\Driver\MongoDb as MongoDbDriver;
+use \Codeception\Lib\Driver\MongoDb as MongoDbDriver;
 use Codeception\Configuration as Configuration;
 
 class MongoDb extends \Codeception\Module
@@ -63,7 +63,7 @@ class MongoDb extends \Codeception\Module
     protected $populated = false;
 
     /**
-     * @var \Codeception\Util\Driver\MongoDb
+     * @var \Codeception\Lib\Driver\MongoDb
      */
     public $driver;
 

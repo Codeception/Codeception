@@ -75,7 +75,7 @@ class ZF1 extends \Codeception\Lib\Framework
     public $db;
 
     /**
-     * @var \Codeception\Util\Connector\ZF1
+     * @var \Codeception\Lib\Connector\ZF1
      */
     public $client;
 
@@ -95,7 +95,7 @@ class ZF1 extends \Codeception\Lib\Framework
 
         require_once 'Zend/Loader/Autoloader.php';
         \Zend_Loader_Autoloader::getInstance();
-        $this->client = new \Codeception\Util\Connector\ZF1();
+        $this->client = new \Codeception\Lib\Connector\ZF1();
     }
 
     public function _before(\Codeception\TestCase $test) {

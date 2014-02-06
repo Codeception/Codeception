@@ -51,7 +51,7 @@ class Yii2 extends Framework
 			throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
 		}
 
-		$this->client = new \Codeception\Util\Connector\Yii2();
+		$this->client = new \Codeception\Lib\Connector\Yii2();
 		$this->client->configFile = realpath($this->config['configFile']);
 	}
 

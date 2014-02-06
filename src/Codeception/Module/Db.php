@@ -25,7 +25,7 @@ namespace Codeception\Module;
  * * MSSQL
  * * Oracle
  *
- * Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
+ * Connection is done by database Drivers, which are stored in Codeception\Lib\Driver namespace.
  * Check out drivers if you get problems loading dumps and cleaning databases.
  *
  * ## Status
@@ -69,7 +69,7 @@ namespace Codeception\Module;
  *
  */
 
-use Codeception\Util\Driver\Db as Driver;
+use Codeception\Lib\Driver\Db as Driver;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Configuration as Configuration;
@@ -96,7 +96,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\DbInterface
 	protected $populated = false;
 
     /**
-     * @var \Codeception\Util\Driver\Db
+     * @var \Codeception\Lib\Driver\Db
      */
     public $driver;
     protected $insertedIds = array();
