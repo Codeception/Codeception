@@ -5,7 +5,7 @@ require_once 'tests/data/app/data.php';
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
 use Codeception\SuiteManager;
-use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
