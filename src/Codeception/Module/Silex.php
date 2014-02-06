@@ -10,7 +10,7 @@ use Codeception\Lib\InnerBrowser;
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
  *
- * This module may be considered experimental and require feedback and pull requests from
+ * This module may be considered experimental and require feedback and pull requests from you )
  *
  * ## Status
  *

@@ -222,7 +222,7 @@ class Filesystem extends \Codeception\Module
             \PHPUnit_Framework_Assert::assertFileExists($file);
             return;
         }
-        \PHPUnit_Framework_Assert::fail("$filename in $path");
+        $this->fail("$filename in $path");
     }
 
     /**

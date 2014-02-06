@@ -2,14 +2,16 @@
 
 namespace Codeception\Util;
 
+use Codeception\Lib\Console\Output;
+
 class Debug
 {
     /**
-     * @var Console\Output null
+     * @var Output null
      */
     protected static $output = null;
 
-    public static function setOutput(Console\Output $output)
+    public static function setOutput(Output $output)
     {
         self::$output = $output;
     }

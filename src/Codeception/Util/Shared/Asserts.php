@@ -1,8 +1,7 @@
 <?php
+namespace Codeception\Util\Shared;
 
-namespace Codeception\PHPUnit;
-
-class AssertWrapper
+trait Asserts
 {
     protected function assert($arguments, $not = false)
     {
@@ -185,4 +184,6 @@ class AssertWrapper
     {
         \PHPUnit_Framework_Assert::fail($message);
     }
-}
+
+
+} 

@@ -2,14 +2,13 @@
 
 namespace Codeception;
 
-use Codeception\PHPUnit\AssertWrapper;
-use Codeception\Exception\ModuleConfig;
 use Codeception\Util\Debug;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
+use Codeception\Util\Shared\Asserts;
 
-abstract class Module extends AssertWrapper
+abstract class Module
 {
+    use Asserts;
+
     /**
      * By setting it to false module wan't inherit methods of parent class.
      *
