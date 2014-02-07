@@ -24,8 +24,7 @@ use Codeception\Exception\ModuleConfig;
  *     enabled: [FileSystem, TestHelper, Yii2]
  *     config:
  *         Yii2:
- *             entryScript: '/path/to/index.php'
- *             url: 'http://localhost/path/to/index.php'
+ *             configFile: '/path/to/config.php'
  * </pre>
  *
  * ## Status
@@ -37,26 +36,22 @@ use Codeception\Exception\ModuleConfig;
 class Yii2 extends Framework
 {
 	/**
-	 * Application path and url must be set always
+	 * Application config file must be set.
 	 * @var array
 	 */
-	protected $requiredFields = array('entryScript', 'url');
+	protected $requiredFields = array('configFile');
 
 	public function _before(\Codeception\TestCase $test)
 	{
-		if (empty($this->config['entryScript'])) {
-			throw new ModuleConfig(__CLASS__, "Missing required config: entryScript");
+		if (empty($this->config['configFile'])) {
+			throw new ModuleConfig(__CLASS__, "Missing required config: configFile");
 		}
-		if (empty($this->config['url'])) {
-			throw new ModuleConfig(__CLASS__, "Missing required config: url");
-		}
-		if (!is_file($this->config['entryScript'])) {
-			throw new ModuleConfig(__CLASS__, "The entry script file does not exist: {$this->config['entryScript']}");
+		if (!is_file($this->config['configFile'])) {
+			throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
 		}
 
 		$this->client = new \Codeception\Util\Connector\Yii2();
-		$this->client->entryScript = realpath($this->config['entryScript']);
-		$this->client->url = $this->config['url'];
+		$this->client->configFile = realpath($this->config['configFile']);
 	}
 
 	public function _after(\Codeception\TestCase $test)
