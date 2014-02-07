@@ -94,9 +94,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
-        $this->test = $test;
-        $size = $this->webDriver->manage()->window()->getSize();
-        $this->debugSection("Window", $size->getWidth().'x'.$size->getHeight());
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -129,7 +126,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _getResponseCode() {}
 
-    public function _sendRequest($url) {}
+    public function _sendRequest($url) {
+        $this->webDriver->get($this->_getUrl().'');
+    }
 
     public function amOnSubdomain($subdomain)
     {
@@ -250,7 +249,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $host = rtrim($this->config['url'], '/');
         $page = ltrim($page, '/');
         $this->webDriver->get($host . '/' . $page);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
     public function see($text, $selector = null)
