@@ -126,10 +126,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _getResponseCode() {}
-
-    public function _sendRequest($url) {}
-
     public function amOnSubdomain($subdomain)
     {
         $url = $this->config['url'];

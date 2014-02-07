@@ -24,7 +24,7 @@ use Symfony\Component\BrowserKit\Request;
  * * Maintainer: **davert**
  * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
- * * relies on [Mink](http://mink.behat.org) and [Guzzle](http://guzzlephp.org/)
+ * * relies on [Goutte](https://github.com/fabpot/goutte) and [Guzzle](http://guzzlephp.org/)
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -97,12 +97,6 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
     public function _getUrl()
     {
         return $this->config['url'];
-    }
-
-    public function _sendRequest($url)
-    {
-        $this->client->request('GET',$url);
-        return $this->client->getInternalResponse()->getContent();
     }
 
     public function setHeader($header, $value)

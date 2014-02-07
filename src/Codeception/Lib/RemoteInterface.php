@@ -27,8 +27,4 @@ interface RemoteInterface
     public function amOnSubdomain($subdomain);
 
     public function _getUrl();
-
-    public function _getResponseCode();
-
-    public function _sendRequest($url);
 }

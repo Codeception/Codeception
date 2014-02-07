@@ -7,6 +7,7 @@ use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Coverage\Shared\C3Collect;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
 use Codeception\Exception\RemoteException;
 use Codeception\Lib\WebInterface;
 
@@ -21,14 +22,14 @@ use Codeception\Lib\WebInterface;
 class LocalServer extends SuiteSubscriber
 {
     // headers
-    const COVERAGE_HEADER = 'X-Codeception-CodeCoverage';
-    const COVERAGE_HEADER_ERROR = 'X-Codeception-CodeCoverage-Error';
-    const COVERAGE_HEADER_CONFIG = 'X-Codeception-CodeCoverage-Config';
-    const COVERAGE_HEADER_SUITE = 'X-Codeception-CodeCoverage-Suite';
+    const COVERAGE_HEADER           = 'X-Codeception-CodeCoverage';
+    const COVERAGE_HEADER_ERROR     = 'X-Codeception-CodeCoverage-Error';
+    const COVERAGE_HEADER_CONFIG    = 'X-Codeception-CodeCoverage-Config';
+    const COVERAGE_HEADER_SUITE     = 'X-Codeception-CodeCoverage-Suite';
 
     // cookie names
-    const COVERAGE_COOKIE = 'CODECEPTION_CODECOVERAGE';
-    const COVERAGE_COOKIE_ERROR = 'CODECEPTION_CODECOVERAGE_ERROR';
+    const COVERAGE_COOKIE           = 'CODECEPTION_CODECOVERAGE';
+    const COVERAGE_COOKIE_ERROR     = 'CODECEPTION_CODECOVERAGE_ERROR';
 
     protected $suiteName;
     protected $c3Access = [
@@ -43,7 +44,7 @@ class LocalServer extends SuiteSubscriber
 
     static $events = [
         CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
-        CodeceptionEvents::STEP_BEFORE  => 'beforeStep',
+        CodeceptionEvents::TEST_BEFORE  => 'beforeTest',
         CodeceptionEvents::STEP_AFTER   => 'afterStep',
         CodeceptionEvents::SUITE_AFTER => 'afterSuite',
     ];
@@ -80,7 +81,7 @@ class LocalServer extends SuiteSubscriber
 
     }
 
-    public function beforeStep(StepEvent $e)
+    public function beforeTest(TestEvent $e)
     {
         if (!$this->isEnabled()) {
             return;
@@ -94,7 +95,7 @@ class LocalServer extends SuiteSubscriber
         if (!$this->isEnabled()) {
             return;
         }
-        $this->stopCoverageCollection();
+        $this->fetchErrors();
     }
 
     public function afterSuite(SuiteEvent $e)
@@ -136,26 +137,16 @@ class LocalServer extends SuiteSubscriber
              'CodeCoverage_Suite'  => $this->suiteName,
              'CodeCoverage_Config' => $this->settings['remote_config']
          ];
+         $this->module->amOnPage('/');
          $this->module->setCookie(self::COVERAGE_COOKIE, json_encode($cookie));
-
-         if (!method_exists($this->module, 'setHeader')) {
-             return;
-         }
-         $this->module->setHeader(self::COVERAGE_HEADER, $testName);
-         $this->module->setHeader(self::COVERAGE_HEADER_SUITE, $this->suiteName);
-         if ($this->settings['remote_config']) {
-             $this->module->setHeader(self::COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);
-         }
      }
 
-    protected function stopCoverageCollection()
+    protected function fetchErrors()
     {
         if ($error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR)) {
+            $this->module->resetCookie(self::COVERAGE_COOKIE_ERROR);
             throw new RemoteException($error);
         }
-        $this->module->resetCookie(self::COVERAGE_COOKIE_ERROR);
-        $this->module->resetCookie(self::COVERAGE_COOKIE);
-
     }
 
      protected function getRemoteError($headers)
