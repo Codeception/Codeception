@@ -174,8 +174,8 @@ class Facebook extends BaseModule
         $phpBrowser = $this->getModule('PhpBrowser');
 
         // go to facebook and make login; it work only if you visit facebook.com first
-        $phpBrowser->_sendRequest('https://www.facebook.com/');
-        $phpBrowser->_sendRequest($this->grabFacebookTestUserLoginUrl());
+        $phpBrowser->amOnPage('https://www.facebook.com/');
+        $phpBrowser->amOnPage($this->grabFacebookTestUserLoginUrl());
         $phpBrowser->seeCurrentUrlMatches('~/profile.php~');
     }
 

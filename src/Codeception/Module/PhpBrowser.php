@@ -99,12 +99,6 @@ class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionIn
         return $this->config['url'];
     }
 
-    public function _sendRequest($url)
-    {
-        $this->client->request('GET',$url);
-        return $this->client->getInternalResponse()->getContent();
-    }
-
     public function setHeader($header, $value)
     {
         $this->client->setHeader($header, $value);
