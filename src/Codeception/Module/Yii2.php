@@ -24,8 +24,7 @@ use Codeception\Exception\ModuleConfig;
  *     enabled: [FileSystem, TestHelper, Yii2]
  *     config:
  *         Yii2:
- *             entryScript: '/path/to/index.php'
- *             url: 'http://localhost/path/to/index.php'
+ *             configFile: '/path/to/config.php'
  * </pre>
  *
  * ## Status
