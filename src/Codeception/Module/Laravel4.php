@@ -25,6 +25,9 @@ use Illuminate\Auth\UserInterface;
  * * Stability: **alpha**
  * * Contact: davert.codeception@mailican.com
  *
+ * ## Config
+ * * cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
+ *
  *
  * ## API
  *
@@ -39,6 +42,8 @@ use Illuminate\Auth\UserInterface;
  */
 class Laravel4 extends \Codeception\Util\Framework
 {
+
+    protected $config = array('cleanup' => true);
 
     public function _initialize()
     {
@@ -68,11 +73,22 @@ class Laravel4 extends \Codeception\Util\Framework
     {
         $this->client = new Client($this->kernel);
         $this->client->followRedirects(true);
+        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+            $this->kernel['db']->beginTransaction();
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
     {
+        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+            $this->kernel['db']->rollback();
+        }
         $this->kernel->shutdown();
+    }
+
+    protected function expectedLaravelVersion($ver)
+    {
+        return floatval(\Illuminate\Foundation\Application::VERSION) >= floatval($ver);
     }
 
     public function _beforeStep(\Codeception\Step $step)
@@ -171,5 +187,91 @@ class Laravel4 extends \Codeception\Util\Framework
     {
         return $this->kernel[$class];
     }
+
+    /**
+     * Inserts record into the database.
+     *
+     * ``` php
+     * <?php
+     * $user_id = $I->haveRecord('users', array('name' => 'Davert'));
+     * ?>
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
+    public function haveRecord($model, $attributes = array())
+    {
+        $id = $this->kernel['db']->table($model)->insertGetId($attributes);
+        if (!$id) {
+            $this->fail("Couldnt insert record into table $model");
+        }
+        return $id;
+    }
+
+    /**
+     * Checks that record exists in database.
+     *
+     * ``` php
+     * $I->seeRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
+    public function seeRecord($model, $attributes = array())
+    {
+        $record = $this->findRecord($model, $attributes);
+        if (!$record) {
+            $this->fail("Couldn't find $model with ".json_encode($attributes));
+        }
+        $this->debugSection($model, json_encode($record));
+    }
+
+    /**
+     * Checks that record does not exist in database.
+     *
+     * ``` php
+     * $I->dontSeeRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
+    public function dontSeeRecord($model, $attributes = array())
+    {
+        $record = $this->findRecord($model, $attributes);
+        $this->debugSection($model, json_encode($record));
+        if ($record) {
+            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+        }
+    }
+
+    /**
+     * Retrieves record from database
+     *
+     * ``` php
+     * $category = $I->grabRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
+    public function grabRecord($model, $attributes = array())
+    {
+        return $this->findRecord($model, $attributes);
+    }
+
+    protected function findRecord($model, $attributes = array())
+    {
+        $query = $this->kernel['db']->table[$model];
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+        return $query->first();
+    }
+
 
 }
