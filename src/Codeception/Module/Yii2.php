@@ -32,7 +32,7 @@ use Codeception\Exception\ModuleConfig;
  * Stability: **beta**
  *
  */
-class Yii2 extends Framework
+class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
 {
     /**
      * Application config file must be set.
