@@ -6,6 +6,7 @@ use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\Client;
 use Illuminate\Auth\UserInterface;
+use Illuminate\Support\MessageBag;
 
 /**
  *
@@ -138,6 +139,38 @@ class Laravel4 extends \Codeception\Util\Framework
         }
     }
 
+    /**
+     * @param array $bindings
+     *
+     * Assert that Session has error messages
+     *
+     * The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
+     *
+     * Useful for validation messages and generally messages array
+     *  e.g.
+     *  return Redirect::to('register')->withErrors($validator);
+     *
+     * Example of Usage
+     *
+     * $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
+     *
+     */
+
+    public function seeSessionErrorMessage($bindings){
+
+
+        $this->seeSessionHasErrors(); //check if  has errors at all
+
+        $errorMessageBag = $this->kernel['session']->get('errors');
+
+        foreach($bindings as $key => $value){
+
+            $this->assertEquals($value, $errorMessageBag->first($key));
+
+        }
+
+
+    }
     /**
      * Assert that the session has errors bound.
      *
