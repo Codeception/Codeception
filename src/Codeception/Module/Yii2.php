@@ -13,7 +13,6 @@ use Codeception\Exception\ModuleConfig;
  * ## Config
  *
  * * configFile *required* - the path to the application config file
- * * cleanup - if database should be cleaned up after tests (via transactions). default: true
  *
  * The entry script must return the application configuration array.
  *
@@ -39,7 +38,7 @@ class Yii2 extends Framework
      * Application config file must be set.
      * @var array
      */
-    protected $config = array('cleanup' => true);
+    protected $config = array('cleanup' => false);
     protected $requiredFields = array('configFile');
     protected $transaction;
 
@@ -59,6 +58,7 @@ class Yii2 extends Framework
         $this->app = $this->client->loadConfig();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
+            $this->debug('start transaction');
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -72,6 +72,7 @@ class Yii2 extends Framework
         $_COOKIE = array();
         $_REQUEST = array();
         if ($this->transaction and $this->config['cleanup']) {
+            $this->debug('end transaction');
             $this->transaction->rollback();
         }
 
