@@ -35,12 +35,12 @@ use Codeception\Exception\ModuleConfig;
  */
 class Yii2 extends Framework
 {
-	/**
-	 * Application config file must be set.
-	 * @var array
-	 */
+    /**
+     * Application config file must be set.
+     * @var array
+     */
     protected $config = array('cleanup' => true);
-	protected $requiredFields = array('configFile');
+    protected $requiredFields = array('configFile');
     protected $transaction;
 
     public $app;
@@ -48,40 +48,40 @@ class Yii2 extends Framework
     public function _initialize()
     {
         if (!is_file($this->config['configFile'])) {
-      			throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
+            throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
         $this->client = new \Codeception\Util\Connector\Yii2();
         $this->client->configFile = realpath($this->config['configFile']);
     }
 
-	public function _before(\Codeception\TestCase $test)
-	{
+    public function _before(\Codeception\TestCase $test)
+    {
         $this->app = $this->client->loadConfig();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
             $this->transaction = $this->app->db->beginTransaction();
         }
-	}
+    }
 
-	public function _after(\Codeception\TestCase $test)
-	{
-		$_SESSION = array();
-		$_FILES = array();
-		$_GET = array();
-		$_POST = array();
-		$_COOKIE = array();
-		$_REQUEST = array();
+    public function _after(\Codeception\TestCase $test)
+    {
+        $_SESSION = array();
+        $_FILES = array();
+        $_GET = array();
+        $_POST = array();
+        $_COOKIE = array();
+        $_REQUEST = array();
         if ($this->transaction and $this->config['cleanup']) {
             $this->transaction->rollback();
         }
 
-		if (Yii::$app) {
-			Yii::$app->session->close();
-		}
+        if (Yii::$app) {
+            Yii::$app->session->close();
+        }
 
 
-		parent::_after($test);
-	}
+        parent::_after($test);
+    }
 
     /**
      * Inserts record into the database.
@@ -98,7 +98,7 @@ class Yii2 extends Framework
      */
     public function haveRecord($model, $attributes = array())
     {
-        /** @var $record \yii\db\ActiveRecord  **/
+        /** @var $record \yii\db\ActiveRecord  * */
         $record = $this->getModelRecord($model);
         $record->setAttributes($attributes);
         $res = $record->save(false);
@@ -123,7 +123,7 @@ class Yii2 extends Framework
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with ".json_encode($attributes));
+            $this->fail("Couldn't find $model with " . json_encode($attributes));
         }
         $this->debugSection($model, json_encode($record));
     }
@@ -143,7 +143,7 @@ class Yii2 extends Framework
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
         }
     }
 
