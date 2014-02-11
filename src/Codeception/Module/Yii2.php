@@ -49,13 +49,13 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
         if (!is_file($this->config['configFile'])) {
             throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
-        $this->client = new \Codeception\Util\Connector\Yii2();
-        $this->client->configFile = realpath($this->config['configFile']);
     }
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->app = $this->client->loadConfig();
+        $this->client = new \Codeception\Util\Connector\Yii2();
+        $this->client->configFile = realpath($this->config['configFile']);
+        $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
             $this->debug('start transaction');

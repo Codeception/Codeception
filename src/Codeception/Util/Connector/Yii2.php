@@ -23,7 +23,7 @@ class Yii2 extends Client
     public $statusCode;
 
 
-    public function loadConfig()
+    public function startApp()
     {
         $config = require($this->configFile);
         if (!isset($config['class'])) {
@@ -65,7 +65,7 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
-        $app = $this->loadConfig();
+        $app = $this->startApp();
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, array($this, 'processResponse'));
 
         $this->headers    = array();
