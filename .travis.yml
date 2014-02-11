@@ -30,7 +30,7 @@ before_script:
 
   # Phalcon
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4
-  - cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; { phpize && ./configure --enable-phalcon && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini } &> /dev/null
+  - cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini
   - git clone git@github.com:DavertMik/forum.git frameworks-phalcon
   - php codecept build -c frameworks-phalcon
 
