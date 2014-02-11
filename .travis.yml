@@ -25,11 +25,16 @@ before_script:
   - psql -c 'create database codeception_test;' -U postgres
 
   # Yii2
-  - if [$TRAVIS_PHP_VERSION != '5.3']; then composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic # Yii2
-  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept build -c frameworks-yii-basic # yii2 tests
+  - if [$TRAVIS_PHP_VERSION != '5.3']; then composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic ; fi # Yii2
+  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept build -c frameworks-yii-basic ; fi # yii2 tests
+
+  # Phalcon
+  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4
+  - cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize && ./configure --enable-phalcon && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini
+
 script:
   - php codecept run # self tests
-  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept run functional -c frameworks-yii-basic # yii2 tests
+  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept run functional -c frameworks-yii-basic ; fi # yii2 tests
 
 # Laravel4 Tests
 
