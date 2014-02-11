@@ -20,8 +20,14 @@ before_script:
   - java -jar selenium-server-standalone-2.35.0.jar -port 4444 &
   - php -S localhost:8000 -t tests/data/app &
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install -n --prefer-source
+  - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
 
 script: "php codecept run"
+
+before_script:
+  - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
+
+script:
+  - php codecept run functional -c frameworks-yii-basic
