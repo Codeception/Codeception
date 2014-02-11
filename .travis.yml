@@ -23,11 +23,13 @@ before_script:
   - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
-  - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic # Yii2
 
+  # Yii2
+  - if [$TRAVIS_PHP_VERSION != '5.3']; then composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic # Yii2
+  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept build -c frameworks-yii-basic # yii2 tests
 script:
   - php codecept run # self tests
-  - php codecept run functional -c frameworks-yii-basic # yii2 tests
+  - if [$TRAVIS_PHP_VERSION != '5.3']; php codecept run functional -c frameworks-yii-basic # yii2 tests
 
 # Laravel4 Tests
 
