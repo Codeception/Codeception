@@ -23,11 +23,12 @@ before_script:
   - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
-
-script: "php codecept run"
-
-before_script:
-  - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
+  - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic # Yii2
 
 script:
-  - php codecept run functional -c frameworks-yii-basic
+  - php codecept run # self tests
+  - php codecept run functional -c frameworks-yii-basic # yii2 tests
+
+# Laravel4 Tests
+
+# Symfony2 Tests
