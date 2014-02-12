@@ -36,7 +36,6 @@ before_script:
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   - php codecept build -c frameworks-phalcon
 
-
   # Laravel
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - "mysql -e 'create database `l4-module`;'"
@@ -46,6 +45,6 @@ before_script:
 
 script:
   - php codecept run  # self tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept run functional -c frameworks-yii-basic # yii2 tests' # Yii2 tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept run functional -c frameworks-yii-basic' # Yii2 tests
   - php codecept run functional -c frameworks-laravel # Laravel4 Tests
   - php codecept run functional -c frameworks-phalcon # Phalcon tests

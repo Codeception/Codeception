@@ -46,7 +46,7 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
 
     public function _initialize()
     {
-        if (!is_file($this->config['configFile'])) {
+        if (!is_file(\Codeception\Configuration::projectDir().$this->config['configFile'])) {
             throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
     }
