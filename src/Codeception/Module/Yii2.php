@@ -54,7 +54,7 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
     public function _before(\Codeception\TestCase $test)
     {
         $this->client = new \Codeception\Util\Connector\Yii2();
-        $this->client->configFile = realpath($this->config['configFile']);
+        $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
