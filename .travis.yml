@@ -47,4 +47,4 @@ script:
   - php codecept run  # self tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept run functional -c frameworks-yii-basic' # Yii2 tests
   - php codecept run functional -c frameworks-laravel # Laravel4 Tests
-  - php codecept run functional -c frameworks-phalcon # Phalcon tests
+  - php codecept run functional -c frameworks-phalcon # Phalcon Tests
