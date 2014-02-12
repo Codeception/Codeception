@@ -58,7 +58,6 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
-            $this->debug('start transaction');
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -72,7 +71,6 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
         $_COOKIE = array();
         $_REQUEST = array();
         if ($this->transaction and $this->config['cleanup']) {
-            $this->debug('end transaction');
             $this->transaction->rollback();
         }
 

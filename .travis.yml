@@ -32,7 +32,10 @@ before_script:
   - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4
   - cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;
   - git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon
+  - "mysql -e 'CREATE DATABASE forum;'"
+  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   - php codecept build -c frameworks-phalcon
+
 
   # Laravel
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
@@ -42,7 +45,7 @@ before_script:
   - php codecept build -c frameworks-laravel
 
 script:
-  - php codecept run # self tests
+  - php codecept run  # self tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept run functional -c frameworks-yii-basic # yii2 tests' # Yii2 tests
   - php codecept run functional -c frameworks-laravel # Laravel4 Tests
   - php codecept run functional -c frameworks-phalcon # Phalcon tests
