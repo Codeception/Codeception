@@ -43,7 +43,5 @@ before_script:
 script:
   - php codecept run # self tests
   - if [$TRAVIS_PHP_VERSION != '5.3']; then php codecept run functional -c frameworks-yii-basic ; fi # yii2 tests
-
-# Laravel4 Tests
-
-# Symfony2 Tests
+  - php codecept run functional -c frameworks-laravel # Laravel4 Tests
+  #- php codecept run functional -c frameworks-phalcon
