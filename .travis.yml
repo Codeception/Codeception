@@ -36,7 +36,7 @@ before_script:
 
   # Laravel
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
-  - "mysql -e 'create database l4-module;'"
+  - "mysql -e 'create database `l4-module`;'"
   - composer install -d frameworks-laravel
   - php codecept build -c frameworks-laravel
 
