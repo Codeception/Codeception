@@ -19,6 +19,9 @@ Uses 'bootstrap/start.php' to launch.
 * Stability: **alpha**
 * Contact: davert.codeception@mailican.com
 
+## Config
+* cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
+
 
 ## API
 
@@ -37,7 +40,7 @@ Codeception creates internal form fields, so you get exception trying to save th
 ### amHttpAuthenticated
 
 
-Authenticates user for HTTP_AUTH
+Authenticates user for HTTP_AUTH 
 
  * param $username
  * param $password
@@ -179,15 +182,6 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
  * param $checkbox
 
 
-### dontSeeCookie
-
-
-Checks that cookie doesn't exist
-
- * param $cookie
- * return mixed
-
-
 ### dontSeeCurrentUrlEquals
 
 
@@ -313,6 +307,19 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
+### dontSeeRecord
+
+
+Checks that record does not exist in database.
+
+``` php
+$I->dontSeeRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### fillField
 
 
@@ -335,15 +342,6 @@ $I->fillField("//input[@type='text']", "Hello World!");
 __not documented__
 
 
-### grabCookie
-
-
-Grabs a cookie value.
-
- * param $cookie
- * return mixed
-
-
 ### grabFromCurrentUrl
 
 
@@ -359,6 +357,20 @@ $uri = $I->grabFromCurrentUrl();
 
  * param null $uri
  * internal param $url
+ * return mixed
+
+
+### grabRecord
+
+
+Retrieves record from database
+
+``` php
+$category = $I->grabRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
  * return mixed
 
 
@@ -428,12 +440,19 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
  * return mixed
 
 
-### resetCookie
+### haveRecord
 
 
-Unsets cookie
+Inserts record into the database.
 
- * param $cookie
+``` php
+<?php
+$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+?>
+```
+
+ * param $model
+ * param array $attributes
  * return mixed
 
 
@@ -474,15 +493,6 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and  * name=agree]');
 ```
 
  * param $checkbox
-
-
-### seeCookie
-
-
-Checks that cookie is set.
-
- * param $cookie
- * return mixed
 
 
 ### seeCurrentUrlEquals
@@ -635,6 +645,19 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 Asserts that current page has 404 response status code.
 
 
+### seeRecord
+
+
+Checks that record exists in database.
+
+``` php
+$I->seeRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### seeResponseCodeIs
 
 
@@ -642,6 +665,26 @@ Checks that response code is equal to value provided.
 
  * param $code
  * return mixed
+
+
+### seeSessionErrorMessage
+
+
+Assert that Session has error messages
+The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
+
+Useful for validation messages and generally messages array
+ e.g.
+ return `Redirect::to('register')->withErrors($validator);`
+
+Example of Usage
+
+``` php
+<?php
+$I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
+?>
+```
+ * param array $bindings
 
 
 ### seeSessionHasErrors
@@ -742,16 +785,6 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
  * param $method
  * param $uri
  * param $params
-
-
-### setCookie
-
-
-Sets a cookie.
-
- * param $cookie
- * param $value
- * return mixed
 
 
 ### submitForm

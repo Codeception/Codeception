@@ -1,10 +1,12 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Codecept;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\Client;
 use Illuminate\Auth\UserInterface;
+use Illuminate\Support\MessageBag;
 
 /**
  *
@@ -36,8 +38,10 @@ use Illuminate\Auth\UserInterface;
  * Codeception creates internal form fields, so you get exception trying to save them.
  *
  */
-class Laravel4 extends \Codeception\Lib\Framework
+class Laravel4 extends \Codeception\Util\Framework
 {
+
+    protected $config = array('cleanup' => true);
 
     public function _initialize()
     {
@@ -67,11 +71,22 @@ class Laravel4 extends \Codeception\Lib\Framework
     {
         $this->client = new Client($this->kernel);
         $this->client->followRedirects(true);
+        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+            $this->kernel['db']->beginTransaction();
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
     {
+        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+            $this->kernel['db']->rollback();
+        }
         $this->kernel->shutdown();
+    }
+
+    protected function expectedLaravelVersion($ver)
+    {
+        return floatval(\Illuminate\Foundation\Application::VERSION) >= floatval($ver);
     }
 
     public function _beforeStep(\Codeception\Step $step)
@@ -122,6 +137,31 @@ class Laravel4 extends \Codeception\Lib\Framework
     }
 
     /**
+     * Assert that Session has error messages
+     * The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
+     *
+     * Useful for validation messages and generally messages array
+     *  e.g.
+     *  return `Redirect::to('register')->withErrors($validator);`
+     *
+     * Example of Usage
+     *
+     * ``` php
+     * <?php
+     * $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
+     * ?>
+     * ```
+     * @param array $bindings
+     */
+    public function seeSessionErrorMessage(array $bindings)
+    {
+        $this->seeSessionHasErrors(); //check if  has errors at all
+        $errorMessageBag = $this->kernel['session']->get('errors');
+        foreach($bindings as $key => $value){
+            $this->assertEquals($value, $errorMessageBag->first($key));
+        }
+    }
+    /**
      * Assert that the session has errors bound.
      *
      * @return bool
@@ -170,5 +210,91 @@ class Laravel4 extends \Codeception\Lib\Framework
     {
         return $this->kernel[$class];
     }
+
+    /**
+     * Inserts record into the database.
+     *
+     * ``` php
+     * <?php
+     * $user_id = $I->haveRecord('users', array('name' => 'Davert'));
+     * ?>
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
+    public function haveRecord($model, $attributes = array())
+    {
+        $id = $this->kernel['db']->table($model)->insertGetId($attributes);
+        if (!$id) {
+            $this->fail("Couldnt insert record into table $model");
+        }
+        return $id;
+    }
+
+    /**
+     * Checks that record exists in database.
+     *
+     * ``` php
+     * $I->seeRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
+    public function seeRecord($model, $attributes = array())
+    {
+        $record = $this->findRecord($model, $attributes);
+        if (!$record) {
+            $this->fail("Couldn't find $model with ".json_encode($attributes));
+        }
+        $this->debugSection($model, json_encode($record));
+    }
+
+    /**
+     * Checks that record does not exist in database.
+     *
+     * ``` php
+     * $I->dontSeeRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     */
+    public function dontSeeRecord($model, $attributes = array())
+    {
+        $record = $this->findRecord($model, $attributes);
+        $this->debugSection($model, json_encode($record));
+        if ($record) {
+            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+        }
+    }
+
+    /**
+     * Retrieves record from database
+     *
+     * ``` php
+     * $category = $I->grabRecord('users', array('name' => 'davert'));
+     * ```
+     *
+     * @param $model
+     * @param array $attributes
+     * @return mixed
+     */
+    public function grabRecord($model, $attributes = array())
+    {
+        return $this->findRecord($model, $attributes);
+    }
+
+    protected function findRecord($model, $attributes = array())
+    {
+        $query = $this->kernel['db']->table[$model];
+        foreach ($attributes as $key => $value) {
+            $query->where($key, $value);
+        }
+        return $query->first();
+    }
+
 
 }
