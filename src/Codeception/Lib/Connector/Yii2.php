@@ -22,6 +22,17 @@ class Yii2 extends Client
     public $headers;
     public $statusCode;
 
+    public function startApp()
+    {
+        $config = require($this->configFile);
+        if (!isset($config['class'])) {
+            $config['class'] = 'yii\web\Application';
+        }
+        /** @var \yii\web\Application $app */
+        return Yii::createObject($config);
+    }
+
+
     /**
      *
      * @param \Symfony\Component\BrowserKit\Request $request
@@ -54,12 +65,7 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
-        $config = require($this->configFile);
-        if (!isset($config['class'])) {
-            $config['class'] = 'yii\web\Application';
-        }
-        /** @var \yii\web\Application $app */
-        $app = Yii::createObject($config);
+        $app = $this->startApp();
 
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, array($this, 'processResponse'));
 

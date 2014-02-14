@@ -64,7 +64,18 @@ class ParserTest extends \Codeception\TestCase\Test
         $text = $this->scenario->getText();
         $this->assertContains("I see in this file", $text);
         $this->assertContains('I see in this file \'<testsuite name="unit" tests="5" assertions="5"', $text);
-        \Codeception\Util\Debug::debug($text);
+    }
+
+    public function testStepsWithFriends()
+    {
+        $code = file_get_contents(\Codeception\Configuration::projectDir().'tests/web/FriendsCept.php');
+        $this->assertContains('$I->haveFriend', $code);
+        $this->parser->parseSteps($code);
+        $text = $this->scenario->getText();
+        $this->assertContains("jon does", $text);
+        $this->assertContains("I have friend", $text);
+        $this->assertContains("back to me", $text);
+
     }
     
 }

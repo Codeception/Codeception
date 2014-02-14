@@ -49,17 +49,17 @@ class Friend {
         return $ret;
     }
 
-    public function amGoingTo($argumentation)
+    public function isGoingTo($argumentation)
     {
         $this->guy->amGoingTo($argumentation);
     }
 
-    public function expect($prediction)
+    public function expects($prediction)
     {
         $this->guy->expect($prediction);
     }
 
-    public function expectTo($prediction)
+    public function expectsTo($prediction)
     {
         $this->guy->expectTo($prediction);
     }

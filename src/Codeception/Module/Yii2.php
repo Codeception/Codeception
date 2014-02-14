@@ -53,7 +53,7 @@ class Yii2 extends Framework
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new \Codeception\Util\Connector\Yii2();
+        $this->client = new \Codeception\Lib\Connector\Yii2();
         $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
         $this->app = $this->client->startApp();
 
