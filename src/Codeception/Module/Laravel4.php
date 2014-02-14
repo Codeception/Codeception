@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Codecept;
+use Codeception\Lib\Framework;
+use Codeception\Lib\ActiveRecordInterface;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\Client;
@@ -38,7 +39,7 @@ use Illuminate\Support\MessageBag;
  * Codeception creates internal form fields, so you get exception trying to save them.
  *
  */
-class Laravel4 extends \Codeception\Util\Framework
+class Laravel4 extends Framework implements ActiveRecordInterface
 {
 
     protected $config = array('cleanup' => true);

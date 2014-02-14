@@ -1,9 +1,7 @@
 <?php
-namespace Codeception\Util;
-
+namespace Codeception\Lib;
 
 interface ActiveRecordInterface {
-
     public function haveRecord($model, $attributes = array());
     public function seeRecord($model, $attributes = array());
     public function dontSeeRecord($model, $attributes = array());
