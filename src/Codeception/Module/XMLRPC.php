@@ -75,7 +75,7 @@ class XMLRPC extends \Codeception\Module
                 if (!$this->hasModule('PhpBrowser')) {
                     throw new ModuleConfigException(__CLASS__, "For XMLRPC testing via HTTP please enable PhpBrowser module");
                 }
-                $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
+                $this->client = $this->getModule('PhpBrowser')->client;
             }
             if (!$this->client) {
                 throw new ModuleConfigException(__CLASS__, "Client for XMLRPC requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");

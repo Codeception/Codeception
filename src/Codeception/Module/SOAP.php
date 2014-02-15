@@ -69,7 +69,7 @@ class SOAP extends \Codeception\Module
             } else {
                 if (!$this->hasModule('PhpBrowser'))
                     throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For Soap testing via HTTP please enable PhpBrowser module");
-                $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
+                $this->client = $this->getModule('PhpBrowser')->client;
             }
             if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
         }
@@ -385,7 +385,7 @@ class SOAP extends \Codeception\Module
         }
         $this->fail("No node matched CSS or XPath '$cssOrXPath'");
     }
-    
+
 
     protected function structureMatches($schema, $xml)
     {
