@@ -12,41 +12,41 @@ class Configuration
     protected static $suites = array();
 
     /**
-     * @var array current loaded configration
+     * @var array Current configuration
      */
     protected static $config = null;
 
     /**
-     * @var string directory containing main configuration file.
+     * @var string Directory containing main configuration file.
      * @see self::projectDir() 
      */
     protected static $dir = null;
 
     /**
-     * @var string current project logs directory.
+     * @var string Current project logs directory.
      */
     protected static $logDir = null;
 
     /**
-     * @var string current project data directory. This directory is used to hold
+     * @var string Current project data directory. This directory is used to hold
      * sql dumps and other things needed for current project tests.
      */
     protected static $dataDir = null;
 
     /**
-     * @var string diretory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
+     * @var string Directory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
      */
     protected static $helpersDir = null;
 
     /**
-     * @var string directory containing tests and suites of the current project.
+     * @var string Directory containing tests and suites of the current project.
      */
     protected static $testsDir = null;
 
     public static $lock = false;
 
     /**
-     * @var array application default config
+     * @var array Default config
      */
     public static $defaultConfig = array(
         'namespace' => '',
@@ -149,9 +149,7 @@ class Configuration
         if (!$bootstrap) {
             return;
         }
-
         $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir.DIRECTORY_SEPARATOR.$bootstrap;
-
         if (file_exists($bootstrap)) {
             include_once $bootstrap;
         }
@@ -186,7 +184,7 @@ class Configuration
             $suite = substr($suite, strlen($config['namespace']));
         }
 
-		if (!in_array($suite, self::$suites)) {
+        if (!in_array($suite, self::$suites)) {
             throw new \Exception("Suite $suite was not loaded");
         }
 
@@ -237,15 +235,16 @@ class Configuration
 
     /**
      * Return instances of enabled modules according suite config.
-     * Includes guy class if it exists.
+     * Requires Guy class if it exists.
      * 
      * @param array $settings suite settings
      * @return array|\Codeception\Module[]
      */
     public static function modules($settings)
     {
-        if (file_exists($guy = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php')) {
-            require_once $guy;
+        $guyFile = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php';
+        if (file_exists($guyFile)) {
+            require_once $guyFile;
         }
 
         $modules = array();
@@ -255,55 +254,47 @@ class Configuration
 
         foreach ($moduleNames as $moduleName) {
             $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
-            $moduleConfig['class'] = $moduleName;
-            $modules[$moduleName] = static::createModule($moduleConfig, $namespace);
+            $modules[$moduleName] = static::createModule($moduleName, $moduleConfig, $namespace);
         }
 
         return $modules;
     }
 
     /**
-     * Creates new module and configures it. Module config should include valid "class" element
-     * that represents module class. Module class is searched and resolves according following rules:
-     * 
+     * Creates new module and configures it.
+     * Module class is searched and resolves according following rules:
+     *
      * 1. if "class" element is fully qualified class name, it will be taken to create module;
-     * 2. module class will be searched under default namespace, according $namespace parameter: 
+     * 2. module class will be searched under default namespace, according $namespace parameter:
      * $namespace.'\Codeception\Module\' . $class;
-     * 3. module class will be searched under codeception module namespace, that is "\Codeception\Module".
-     * 
+     * 3. module class will be searched under Codeception module namespace, that is "\Codeception\Module".
+     *
+     * @param $class
      * @param array $config module configuration
      * @param string $namespace default namespace for module.
-     * @throws ConfigurationException if config contains wrong module configuration or module is not found.
+     * @throws Exception\Configuration
+     * @return \Codeception\Module
      */
-    public static function createModule($config, $namespace = '')
+    public static function createModule($class, $config, $namespace = '')
     {
-        if (!isset($config['class'])) {
-            throw new ConfigurationException('Module configuration must be an array containing a "class" element.');
+        $hasNamespace = (mb_strpos($class, '\\') !== false);
+
+        if ($hasNamespace) {
+            return new $class($config);
         }
 
-        $class = $config['class'];
-        unset($config['class']);
+        // try find module under users suite namespace setting
+        $className = $namespace.'\\Codeception\\Module\\' . $class;
 
-        $isNamespaced = (mb_strpos($class, '\\') !== false);
-
-        if ($isNamespaced) {
-            $classname = $class;
-        } else {
-
-            // try find module under users suite namespace setting
-            $classname = $namespace.'\\Codeception\\Module\\' . $class;
-
-            if (!class_exists($classname)) {
-
-                // fallback to default namespace
-                $classname = '\\Codeception\\Module\\' . $class;
-                if (!class_exists($classname)) {
-                    throw new ConfigurationException($class.' could not be found and loaded');
-                }
+        if (!class_exists($className)) {
+            // fallback to default namespace
+            $className = '\\Codeception\\Module\\' . $class;
+            if (!class_exists($className)) {
+                throw new ConfigurationException($class.' could not be found and loaded');
             }
         }
 
-        return new $classname($config);
+        return new $className($config);
     }
 
     public static function isExtensionEnabled($extensionName)
@@ -346,16 +337,35 @@ class Configuration
         return $actions;
     }
 
+    /**
+     * Returns current path to `_data` dir.
+     * Use it to store database fixtures, sql dumps, or other files required by your tests.
+     *
+     * @return string
+     */
     public static function dataDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR . self::$dataDir . DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Return current path to `_helpers` dir.
+     * Helpers are custom modules.
+     *
+     * @return string
+     */
     public static function helpersDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR . self::$helpersDir . DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Returns actual path to current `_log` dir.
+     * Use it in Helpers or Groups to save result or temporary files.
+     *
+     * @return string
+     * @throws Exception\Configuration
+     */
     public static function logDir()
     {
         if (!self::$logDir) {
@@ -376,11 +386,23 @@ class Configuration
         return $dir;
     }
 
+    /**
+     * Returns path to the root of your project.
+     * Basically returns path to current `codeception.yml` loaded.
+     * Use this method instead of `__DIR__`, `getcwd()` or anything else.
+     * @return string
+     */
     public static function projectDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Is this a meta-configuration file that just points to other `codeception.yml`?
+     * If so, it may have no tests by itself.
+     *
+     * @return bool
+     */
     public static function isEmpty()
     {
         return !(bool)self::$testsDir;
