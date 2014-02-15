@@ -207,7 +207,15 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
             $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
         }
         $this->debugSection($model, json_encode($record));
-        return $record->id;
+        
+        $reflectedProperty =   new ReflectionPropert($record, 'id');
+        
+        if($reflectedProperty->isProtected() || $reflectedProperty->isPrivate()) {
+            return $record->getId();
+        }
+        else {
+           return $record->id; 
+        }
     }
 
     /**
