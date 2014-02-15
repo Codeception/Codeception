@@ -252,8 +252,9 @@ class Configuration
         $moduleNames = $settings['modules']['enabled'];
 
         foreach ($moduleNames as $moduleName) {
+            $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
             $moduleConfig['class'] = $moduleName;
-            $modules[$moduleName] = static::createModule($moduleConfig); #new $classname($moduleConfig);
+            $modules[$moduleName] = static::createModule($moduleConfig);
         }
 
         return $modules;
