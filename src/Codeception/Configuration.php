@@ -11,43 +11,43 @@ class Configuration
 {
     protected static $suites = array();
 
-	/**
-	 * @var array current loaded configration
-	 */
+    /**
+     * @var array current loaded configration
+     */
     protected static $config = null;
 
-	/**
-	 * @var string directory containing main configuration file.
-	 * @see self::projectDir() 
-	 */
+    /**
+     * @var string directory containing main configuration file.
+     * @see self::projectDir() 
+     */
     protected static $dir = null;
 
-	/**
-	 * @var string current project logs directory.
-	 */
+    /**
+     * @var string current project logs directory.
+     */
     protected static $logDir = null;
 
-	/**
-	 * @var string current project data directory. This directory is used to hold
-	 * sql dumps and other things needed for current project tests.
-	 */
+    /**
+     * @var string current project data directory. This directory is used to hold
+     * sql dumps and other things needed for current project tests.
+     */
     protected static $dataDir = null;
 
-	/**
-	 * @var string diretory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
-	 */
+    /**
+     * @var string diretory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
+     */
     protected static $helpersDir = null;
 
-	/**
-	 * @var string directory containing tests and suites of the current project.
-	 */
+    /**
+     * @var string directory containing tests and suites of the current project.
+     */
     protected static $testsDir = null;
 
     public static $lock = false;
 
-	/**
-	 * @var array application default config
-	 */
+    /**
+     * @var array application default config
+     */
     public static $defaultConfig = array(
         'namespace' => '',
         'include' => array(),
@@ -78,18 +78,19 @@ class Configuration
     {
         if (!$configFile && self::$config) {
             return self::$config;
-		}
-		if (self::$config && self::$lock) {
+        }
+
+        if (self::$config && self::$lock) {
             return self::$config;
-		}
+        }
 
         if ($configFile === null) {
             $configFile = getcwd() . DIRECTORY_SEPARATOR . 'codeception.yml';
-		}
+        }
 
-		if (is_dir($configFile)) {
+        if (is_dir($configFile)) {
             $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
-		}
+        }
 
         $dir = dirname($configFile);
 
@@ -102,7 +103,7 @@ class Configuration
         $config = self::loadConfigFile($configDistFile, self::$defaultConfig);
         $config = self::loadConfigFile($configFile, $config);
 
-	    if ($config == self::$defaultConfig) {
+        if ($config == self::$defaultConfig) {
             throw new ConfigurationException("Configuration file is invalid");
         }
 
@@ -145,7 +146,7 @@ class Configuration
 
     protected static function loadBootstrap($bootstrap)
     {
-		if (!$bootstrap) {
+        if (!$bootstrap) {
             return;
         }
 
@@ -171,6 +172,7 @@ class Configuration
     {
         $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir.DIRECTORY_SEPARATOR.self::$testsDir)->depth('< 1');
         self::$suites = array();
+
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
             self::$suites[$matches[1]] = $matches[1];
