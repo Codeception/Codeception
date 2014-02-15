@@ -208,7 +208,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         }
         $this->debugSection($model, json_encode($record));
         
-        $reflectedProperty =   new ReflectionPropert($record, 'id');
+        $reflectedProperty =   new ReflectionProperty($record, 'id');
         
         if($reflectedProperty->isProtected() || $reflectedProperty->isPrivate()) {
             return $record->getId();
