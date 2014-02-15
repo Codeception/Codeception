@@ -4,6 +4,7 @@ namespace Codeception\Lib\Generator;
 use Codeception\Util\Template;
 
 class Cest {
+    use Shared\Classname;
     use Shared\Namespaces;
 
     protected $template  = <<<EOF
@@ -28,22 +29,22 @@ class {{name}}Cest
 EOF;
 
     protected $settings;
-    protected $className;
+    protected $name;
 
     public function __construct($className, $settings)
     {
-        $this->className = $className;
+        $this->name = $this->removeSuffix($className, 'Cest');
         $this->settings = $settings;
     }
 
     public function produce()
     {
         $guy = $this->settings['class_name'];
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->className);
+        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
         $ns .= "use ".$this->settings['namespace'].'\\'.$guy.";";
 
         return (new Template($this->template))
-            ->place('name', $this->className)
+            ->place('name', $this->getShortClassName($this->name))
             ->place('namespace', $ns)
             ->place('guy', $guy)
             ->produce();

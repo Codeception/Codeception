@@ -5,6 +5,7 @@ use Codeception\Util\Template;
 
 class StepObject {
     use Shared\Namespaces;
+    use Shared\Classname;
 
     protected $template = <<<EOF
 <?php
@@ -29,7 +30,7 @@ EOF;
     public function __construct($settings, $name)
     {
         $this->settings = $settings;
-        $this->name = $name;
+        $this->name = $this->removeSuffix($name, 'Steps');
     }
 
     public function produce()

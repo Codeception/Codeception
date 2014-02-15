@@ -71,4 +71,14 @@ class GenerateCestTest extends BaseCommandRunner {
         $this->assertIsValidPhp($this->content);
     }
 
+    public function testCreateWithNamespace()
+    {
+        $this->execute(array('suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillCest'));
+        $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->filename);
+        $this->assertContains('namespace MiddleEarth;', $this->content);
+        $this->assertContains('class HallUnderTheHillCest', $this->content);
+        $this->assertContains('Test was created in tests/shire/MiddleEarth/HallUnderTheHillCest.php', $this->output);
+    }
+
+
 }

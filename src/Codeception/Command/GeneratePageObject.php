@@ -41,13 +41,13 @@ class GeneratePageObject extends Base
             ? $this->getSuiteConfig($suite, $input->getOption('config'))
             : $this->getGlobalConfig($input->getOption('config'));
 
-        $className = $this->getClassName($this->removeSuffix($class, 'Page'));
+        $className = $this->getClassName($class);
 
         $filename = $suite
             ? $this->pathToSuitePageObject($conf, $className)
             : $this->pathToGlobalPageObject($conf, $className);
 
-        $gen = new PageObjectGenerator($conf, $className);
+        $gen = new PageObjectGenerator($conf, $class);
         $res = $this->save($filename, $gen->produce());
 
         if (!$res) {

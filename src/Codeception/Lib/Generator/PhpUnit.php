@@ -5,6 +5,7 @@ use Codeception\Util\Template;
 
 class PhpUnit {
     use Shared\Namespaces;
+    use Shared\Classname;
 
     protected $template  = <<<EOF
 <?php
@@ -42,7 +43,7 @@ EOF;
 
         return (new Template($this->template))
             ->place('namespace', $ns)
-            ->place('name', $this->getClassName($this->name))
+            ->place('name', $this->getShortClassName($this->name))
             ->produce();
     }
 

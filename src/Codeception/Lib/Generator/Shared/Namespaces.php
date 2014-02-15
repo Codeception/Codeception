@@ -3,13 +3,8 @@ namespace Codeception\Lib\Generator\Shared;
 
 trait Namespaces
 {
-    protected function removeSuffix($classname, $suffix)
-    {
-        $classname = preg_replace('~\.php$~', '', $classname);
-        return preg_replace("~$suffix$~", '', $classname);
-    }
 
-    protected function getClassName($class)
+    protected function getShortClassName($class)
     {
         $namespaces = $this->breakParts($class);
         return array_pop($namespaces);

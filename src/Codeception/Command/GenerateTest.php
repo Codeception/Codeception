@@ -2,8 +2,6 @@
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Test as TestGenerator;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

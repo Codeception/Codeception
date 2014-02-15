@@ -39,9 +39,7 @@ class GenerateCest extends Base
             $output->writeln("<error>Test $filename already exists</error>");
             return;
         }
-        $className = $this->removeSuffix($className, 'Cest');
-
-        $gen = new CestGenerator($className, $config);
+        $gen = new CestGenerator($class, $config);
         $res = $this->save($filename, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
