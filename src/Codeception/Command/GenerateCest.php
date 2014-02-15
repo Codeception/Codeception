@@ -1,8 +1,7 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
+use Codeception\Lib\Generator\Cest as CestGenerator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,38 +10,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateCest extends Base
 {
-    protected $template  = <<<EOF
-<?php
-%s
-
-%s %sCest
-{
-
-    public function _before()
-    {
-    }
-
-    public function _after()
-    {
-    }
-
-    // tests
-    %s
-
-}
-EOF;
-
-    protected $methodTemplate = "public function %s(%s %s) {\n    \n    }";
-
     protected function configure()
     {
         $this->setDefinition(array(
-
             new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
             new InputArgument('class', InputArgument::REQUIRED, 'test name'),
             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
-        parent::configure();
     }
 
     public function getDescription() {
@@ -54,35 +28,26 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $className = $this->getClassName($class);
+        $path = $this->buildPath($config['path'], $class);
 
-        $guy = $suiteconf['class_name'];
-
-        $classname = $this->getClassName($class);
-        $path = $this->buildPath($suiteconf['path'], $class);
-
-        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
-        $ns .= "use ".$suiteconf['namespace'].'\\'.$guy.";";
-
-        $filename = $this->completeSuffix($classname, 'Cest');
+        $filename = $this->completeSuffix($className, 'Cest');
         $filename = $path.$filename;
 
         if (file_exists($filename)) {
             $output->writeln("<error>Test $filename already exists</error>");
-            exit;
+            return;
         }
+        $className = $this->removeSuffix($className, 'Cest');
 
-        $classname = $this->removeSuffix($classname, 'Cest');
-
-        $tests = sprintf($this->methodTemplate, "tryToTest", $guy, '$I');
-
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $tests));
+        $gen = new CestGenerator($className, $config);
+        $res = $this->save($filename, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             return;
         }
 
         $output->writeln("<info>Test was created in $filename</info>");
-
     }
 }

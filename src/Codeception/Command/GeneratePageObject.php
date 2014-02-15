@@ -6,62 +6,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Codeception\Lib\Generator\PageObject as PageObjectGenerator;
 
 
 class GeneratePageObject extends Base
 {
-
-
-    protected $template  = <<<EOF
-<?php
-%s
-%s %sPage
-{
-    // include url of current page
-    static \$URL = '';
-
-    /**
-     * Declare UI map for this page here. CSS or XPath allowed.
-     * public static \$usernameField = '#username';
-     * public static \$formSubmitButton = "#mainForm input[type=submit]";
-     */
-
-    /**
-     * Basic route example for your current URL
-     * You can append any additional parameter to URL
-     * and use it in tests like: EditPage::route('/123-post');
-     */
-     public static function route(\$param)
-     {
-        return static::\$URL.\$param;
-     }
-
-%s
-}
-EOF;
-
-    protected $actionsTemplate  = <<<EOF
-    /**
-     * @var %s;
-     */
-    protected \$%s;
-
-    public function __construct(%s \$I)
-    {
-        \$this->%s = \$I;
-    }
-
-    /**
-     * @return %s
-     */
-    public static function of(%s \$I)
-    {
-        return new static(\$I);
-    }
-EOF;
-
-    protected $actions = '';
-
 
     protected function configure()
     {
@@ -92,17 +41,14 @@ EOF;
             ? $this->getSuiteConfig($suite, $input->getOption('config'))
             : $this->getGlobalConfig($input->getOption('config'));
 
-        $classname = $this->getClassName($class);
-        $classname = $this->removeSuffix($classname, 'Page');
-        $ns = $this->getNamespaceString($conf['namespace'].'\\'.$classname);
+        $className = $this->getClassName($this->removeSuffix($class, 'Page'));
 
         $filename = $suite
-            ? $this->pathToSuitePageObject($conf, $classname)
-            : $this->pathToGlobalPageObject($conf, $classname);
+            ? $this->pathToSuitePageObject($conf, $className)
+            : $this->pathToGlobalPageObject($conf, $className);
 
-        if ($suite) $this->createActions($conf, $classname);
-
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $this->actions));
+        $gen = new PageObjectGenerator($conf, $className);
+        $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
             $output->writeln("<error>PageObject $filename already exists</error>");
@@ -125,13 +71,6 @@ EOF;
         $filename = $this->completeSuffix($class, 'Page');
         $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'],'Page','_pages');
         return  $path.$filename;
-    }
-
-    protected function createActions($conf, $pageobject)
-    {
-        $guyClass = $conf['class_name'];
-        $guy = lcfirst($conf['class_name']);
-        $this->actions = sprintf($this->actionsTemplate, $guyClass, $guy, $guyClass, $guy, $pageobject.'Page', $guyClass);
     }
 
 }

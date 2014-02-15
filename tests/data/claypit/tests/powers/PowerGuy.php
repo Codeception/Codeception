@@ -6,27 +6,14 @@
 
 use Codeception\Module\PowerHelper;
 
-/**
- * Inherited methods
- * @method void haveFriend($name)
- * @method void wantToTest($text)
- * @method void wantTo($text)
- * @method void expectTo($prediction)
- * @method void expect($prediction)
- * @method void amGoingTo($argumentation)
- * @method void am($role)
- * @method void lookForwardTo($achieveValue)
- * @method void comment($description)
-*/
-
 class PowerGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\PowerHelper::gotThePower()
+     * @see \Codeception\Module\PowerHelper::gotThePower()
      */
     public function gotThePower() {
         return $this->scenario->runStep(new \Codeception\Step\Action('gotThePower', func_get_args()));
@@ -37,7 +24,7 @@ class PowerGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\PowerHelper::castFireball()
+     * @see \Codeception\Module\PowerHelper::castFireball()
      */
     public function castFireball() {
         return $this->scenario->runStep(new \Codeception\Step\Action('castFireball', func_get_args()));
@@ -48,10 +35,9 @@ class PowerGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
         return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 }
-

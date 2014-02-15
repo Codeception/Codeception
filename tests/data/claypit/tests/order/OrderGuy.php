@@ -6,27 +6,14 @@
 
 use Codeception\Module\OrderHelper;
 
-/**
- * Inherited methods
- * @method void haveFriend($name)
- * @method void wantToTest($text)
- * @method void wantTo($text)
- * @method void expectTo($prediction)
- * @method void expect($prediction)
- * @method void amGoingTo($argumentation)
- * @method void am($role)
- * @method void lookForwardTo($achieveValue)
- * @method void comment($description)
-*/
-
 class OrderGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::failNow()
+     * @see \Codeception\Module\OrderHelper::failNow()
      */
     public function failNow() {
         return $this->scenario->runStep(new \Codeception\Step\Action('failNow', func_get_args()));
@@ -37,7 +24,7 @@ class OrderGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::writeToFile()
+     * @see \Codeception\Module\OrderHelper::writeToFile()
      */
     public function writeToFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
@@ -48,7 +35,7 @@ class OrderGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::appendToFile()
+     * @see \Codeception\Module\OrderHelper::appendToFile()
      */
     public function appendToFile($marker) {
         return $this->scenario->runStep(new \Codeception\Step\Action('appendToFile', func_get_args()));
@@ -59,10 +46,9 @@ class OrderGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
         return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 }
-

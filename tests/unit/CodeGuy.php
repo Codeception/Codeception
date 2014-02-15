@@ -8,7 +8,7 @@ use Codeception\Module\CodeHelper;
 use Codeception\Module\EmulateModuleHelper;
 
 /**
- * Inherited methods
+ [!] Inherited Methods
  * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
@@ -19,15 +19,14 @@ use Codeception\Module\EmulateModuleHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-
 class CodeGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
         return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
@@ -38,8 +37,8 @@ class CodeGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\EmulateModuleHelper::seeEquals()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\EmulateModuleHelper::seeEquals()
      */
     public function canSeeEquals($expected, $actual) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeEquals', func_get_args()));
@@ -48,7 +47,7 @@ class CodeGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\EmulateModuleHelper::seeEquals()
+     * @see \Codeception\Module\EmulateModuleHelper::seeEquals()
      */
     public function seeEquals($expected, $actual) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeEquals', func_get_args()));
@@ -59,8 +58,8 @@ class CodeGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
      */
     public function canSeeFeaturesEquals($expected) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFeaturesEquals', func_get_args()));
@@ -69,10 +68,9 @@ class CodeGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
+     * @see \Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
      */
     public function seeFeaturesEquals($expected) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFeaturesEquals', func_get_args()));
     }
 }
-

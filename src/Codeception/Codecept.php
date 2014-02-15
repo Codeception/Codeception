@@ -106,9 +106,12 @@ class Codecept
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
+
         if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
-            $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\LocalServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
         }
 
         // custom event listeners

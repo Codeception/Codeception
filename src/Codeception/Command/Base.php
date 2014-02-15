@@ -27,19 +27,6 @@ class Base extends Command
         return $path;
     }
 
-    protected function getNamespaceString($class)
-    {
-        $namespaces = $this->getNamespaces($class);
-        return $namespaces ? 'namespace ' . implode('\\', $namespaces) . ";\n" : '';
-    }
-
-    protected function getNamespaces($class)
-    {
-        $namespaces = $this->breakParts($class);
-        array_pop($namespaces);
-        return $namespaces;
-    }
-
     protected function getClassName($class)
     {
         $namespaces = $this->breakParts($class);

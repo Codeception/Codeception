@@ -9,7 +9,7 @@ use Codeception\Module\Cli;
 use Codeception\Module\CliHelper;
 
 /**
- * Inherited methods
+ [!] Inherited Methods
  * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
@@ -20,10 +20,9 @@ use Codeception\Module\CliHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-
 class CliGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -31,7 +30,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * Project root directory is used by default
      *
      * @param $path
-     * @see Codeception\Module\Filesystem::amInPath()
+     * @see \Codeception\Module\Filesystem::amInPath()
      */
     public function amInPath($path) {
         return $this->scenario->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
@@ -53,7 +52,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::openFile()
+     * @see \Codeception\Module\Filesystem::openFile()
      */
     public function openFile($filename) {
         return $this->scenario->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
@@ -72,7 +71,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::deleteFile()
+     * @see \Codeception\Module\Filesystem::deleteFile()
      */
     public function deleteFile($filename) {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
@@ -91,7 +90,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::deleteDir()
+     * @see \Codeception\Module\Filesystem::deleteDir()
      */
     public function deleteDir($dirname) {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
@@ -111,7 +110,7 @@ class CliGuy extends \Codeception\AbstractGuy
      *
      * @param $src
      * @param $dst
-     * @see Codeception\Module\Filesystem::copyDir()
+     * @see \Codeception\Module\Filesystem::copyDir()
      */
     public function copyDir($src, $dst) {
         return $this->scenario->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
@@ -133,8 +132,8 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeInThisFile()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function canSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
@@ -154,7 +153,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeInThisFile()
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function seeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
@@ -177,8 +176,8 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function canSeeFileContentsEqual($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
@@ -199,7 +198,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function seeFileContentsEqual($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
@@ -219,8 +218,8 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function cantSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
@@ -238,7 +237,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function dontSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
@@ -249,7 +248,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
-     * @see Codeception\Module\Filesystem::deleteThisFile()
+     * @see \Codeception\Module\Filesystem::deleteThisFile()
      */
     public function deleteThisFile() {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
@@ -270,8 +269,8 @@ class CliGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileFound()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function canSeeFileFound($filename, $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
@@ -290,7 +289,7 @@ class CliGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-     * @see Codeception\Module\Filesystem::seeFileFound()
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function seeFileFound($filename, $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
@@ -309,7 +308,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::cleanDir()
+     * @see \Codeception\Module\Filesystem::cleanDir()
      */
     public function cleanDir($dirname) {
         return $this->scenario->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
@@ -320,7 +319,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
         return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
@@ -333,7 +332,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * Executes a shell command
      *
      * @param $command
-     * @see Codeception\Module\Cli::runShellCommand()
+     * @see \Codeception\Module\Cli::runShellCommand()
      */
     public function runShellCommand($command) {
         return $this->scenario->runStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
@@ -346,8 +345,8 @@ class CliGuy extends \Codeception\AbstractGuy
      * Checks that output from last executed command contains text
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::seeInShellOutput()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function canSeeInShellOutput($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
@@ -358,7 +357,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * Checks that output from last executed command contains text
      *
      * @param $text
-     * @see Codeception\Module\Cli::seeInShellOutput()
+     * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function seeInShellOutput($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
@@ -372,8 +371,8 @@ class CliGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::dontSeeInShellOutput()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function cantSeeInShellOutput($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
@@ -385,7 +384,7 @@ class CliGuy extends \Codeception\AbstractGuy
      *
      * @param $text
      *
-     * @see Codeception\Module\Cli::dontSeeInShellOutput()
+     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function dontSeeInShellOutput($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
@@ -396,8 +395,8 @@ class CliGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::seeShellOutputMatches()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function canSeeShellOutputMatches($regex) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
@@ -406,7 +405,7 @@ class CliGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\Cli::seeShellOutputMatches()
+     * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function seeShellOutputMatches($regex) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
@@ -417,10 +416,9 @@ class CliGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\CliHelper::executeCommand()
+     * @see \Codeception\Module\CliHelper::executeCommand()
      */
     public function executeCommand($command) {
         return $this->scenario->runStep(new \Codeception\Step\Action('executeCommand', func_get_args()));
     }
 }
-

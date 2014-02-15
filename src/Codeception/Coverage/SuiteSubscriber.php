@@ -15,6 +15,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     protected $defaultSettings = [
         'enabled' => true,
         'remote' => false,
+        'local' => false,
         'xdebug_session' => 'codeception',
         'remote_config'  => null
     ];

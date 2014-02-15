@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Lib\Generator\Test as TestGenerator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,34 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateTest extends Base
 {
-    protected $template  = <<<EOF
-<?php
-%suse Codeception\Util\Stub;
-
-%s %sTest extends \Codeception\TestCase\Test
-{
-   /**
-    * @var \%s
-    */
-    protected $%s;
-
-    protected function _before()
-    {
-    }
-
-    protected function _after()
-    {
-    }
-
-    // tests
-    public function testMe()
-    {
-
-    }
-
-}
-EOF;
-
 
     protected function configure()
     {
@@ -59,22 +32,17 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
 
+        $className = $this->getClassName($class);
+        $path = $this->buildPath($config['path'], $class);
 
-        $guy = $suiteconf['class_name'];
-        if ($suiteconf['namespace']) $guy = $suiteconf['namespace'].'\\'.$guy;
-
-        $classname = $this->getClassName($class);
-        $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
-
-        $filename = $this->completeSuffix($classname, 'Test');
+        $filename = $this->completeSuffix($className, 'Test');
         $filename = $path.$filename;
 
-        $classname = $this->removeSuffix($classname, 'Test');
+        $gen = new TestGenerator($config, $class);
 
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname, $guy, lcfirst($suiteconf['class_name'])));
+        $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");

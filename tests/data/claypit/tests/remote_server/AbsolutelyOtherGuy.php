@@ -8,22 +8,20 @@ use Codeception\Module\PhpBrowser;
 use Codeception\Module\Filesystem;
 use Codeception\Module\OtherHelper;
 
-/**
- * Inherited methods
- * @method void haveFriend($name)
- * @method void wantToTest($text)
- * @method void wantTo($text)
- * @method void expectTo($prediction)
- * @method void expect($prediction)
- * @method void amGoingTo($argumentation)
- * @method void am($role)
- * @method void lookForwardTo($achieveValue)
- * @method void comment($description)
-*/
-
 class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
 {
-    
+   
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \Codeception\Module\PhpBrowser::setHeader()
+     */
+    public function setHeader($header, $value) {
+        return $this->scenario->runStep(new \Codeception\Step\Action('setHeader', func_get_args()));
+    }
+
+ 
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -41,9 +39,11 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * // moves to http://user.mysite.com/
      * ?>
      * ```
+     *
      * @param $subdomain
+     *
      * @return mixed
-     * @see Codeception\Module\PhpBrowser::amOnSubdomain()
+     * @see \Codeception\Module\PhpBrowser::amOnSubdomain()
      */
     public function amOnSubdomain($subdomain) {
         return $this->scenario->runStep(new \Codeception\Step\Condition('amOnSubdomain', func_get_args()));
@@ -57,7 +57,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $username
      * @param $password
-     * @see Codeception\Util\InnerBrowser::amHttpAuthenticated()
+     * @see \Codeception\Lib\InnerBrowser::amHttpAuthenticated()
      */
     public function amHttpAuthenticated($username, $password) {
         return $this->scenario->runStep(new \Codeception\Step\Condition('amHttpAuthenticated', func_get_args()));
@@ -82,7 +82,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $page
-     * @see Codeception\Util\InnerBrowser::amOnPage()
+     * @see \Codeception\Lib\InnerBrowser::amOnPage()
      */
     public function amOnPage($page) {
         return $this->scenario->runStep(new \Codeception\Step\Condition('amOnPage', func_get_args()));
@@ -118,9 +118,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * $I->click('Logout', '#nav');
      * ?>
      * ```
+     *
      * @param $link
      * @param $context
-     * @see Codeception\Util\InnerBrowser::click()
+     * @see \Codeception\Lib\InnerBrowser::click()
      */
     public function click($link, $context = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('click', func_get_args()));
@@ -143,10 +144,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::see()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::see()
      */
     public function canSee($text, $selector = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('see', func_get_args()));
@@ -167,9 +168,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
-     * @see Codeception\Util\InnerBrowser::see()
+     * @see \Codeception\Lib\InnerBrowser::see()
      */
     public function see($text, $selector = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('see', func_get_args()));
@@ -192,10 +193,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSee()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function cantSee($text, $selector = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSee', func_get_args()));
@@ -216,9 +217,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $selector
-     * @see Codeception\Util\InnerBrowser::dontSee()
+     * @see \Codeception\Lib\InnerBrowser::dontSee()
      */
     public function dontSee($text, $selector = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSee', func_get_args()));
@@ -240,10 +241,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeLink()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function canSeeLink($text, $url = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeLink', func_get_args()));
@@ -263,9 +264,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
-     * @see Codeception\Util\InnerBrowser::seeLink()
+     * @see \Codeception\Lib\InnerBrowser::seeLink()
      */
     public function seeLink($text, $url = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeLink', func_get_args()));
@@ -286,10 +287,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeLink()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function cantSeeLink($text, $url = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeLink', func_get_args()));
@@ -308,9 +309,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ?>
      * ```
      *
-     * @param $text
+     * @param      $text
      * @param null $url
-     * @see Codeception\Util\InnerBrowser::dontSeeLink()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeLink()
      */
     public function dontSeeLink($text, $url = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeLink', func_get_args()));
@@ -332,8 +333,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeInCurrentUrl()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function canSeeInCurrentUrl($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInCurrentUrl', func_get_args()));
@@ -353,7 +354,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::seeInCurrentUrl()
+     * @see \Codeception\Lib\InnerBrowser::seeInCurrentUrl()
      */
     public function seeInCurrentUrl($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInCurrentUrl', func_get_args()));
@@ -372,8 +373,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeInCurrentUrl()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function cantSeeInCurrentUrl($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInCurrentUrl', func_get_args()));
@@ -390,7 +391,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::dontSeeInCurrentUrl()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInCurrentUrl()
      */
     public function dontSeeInCurrentUrl($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInCurrentUrl', func_get_args()));
@@ -411,8 +412,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeCurrentUrlEquals()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function canSeeCurrentUrlEquals($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlEquals', func_get_args()));
@@ -431,7 +432,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::seeCurrentUrlEquals()
+     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlEquals()
      */
     public function seeCurrentUrlEquals($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCurrentUrlEquals', func_get_args()));
@@ -452,8 +453,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeCurrentUrlEquals()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function cantSeeCurrentUrlEquals($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlEquals', func_get_args()));
@@ -472,7 +473,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::dontSeeCurrentUrlEquals()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlEquals()
      */
     public function dontSeeCurrentUrlEquals($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlEquals', func_get_args()));
@@ -492,8 +493,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeCurrentUrlMatches()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function canSeeCurrentUrlMatches($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlMatches', func_get_args()));
@@ -511,7 +512,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::seeCurrentUrlMatches()
+     * @see \Codeception\Lib\InnerBrowser::seeCurrentUrlMatches()
      */
     public function seeCurrentUrlMatches($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCurrentUrlMatches', func_get_args()));
@@ -531,8 +532,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeCurrentUrlMatches()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function cantSeeCurrentUrlMatches($uri) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlMatches', func_get_args()));
@@ -550,7 +551,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $uri
-     * @see Codeception\Util\InnerBrowser::dontSeeCurrentUrlMatches()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCurrentUrlMatches()
      */
     public function dontSeeCurrentUrlMatches($uri) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlMatches', func_get_args()));
@@ -571,9 +572,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param null $uri
+     *
      * @internal param $url
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::grabFromCurrentUrl()
+     * @see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
      */
     public function grabFromCurrentUrl($uri = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('grabFromCurrentUrl', func_get_args()));
@@ -597,8 +599,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $checkbox
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeCheckboxIsChecked()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function canSeeCheckboxIsChecked($checkbox) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCheckboxIsChecked', func_get_args()));
@@ -620,7 +622,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $checkbox
-     * @see Codeception\Util\InnerBrowser::seeCheckboxIsChecked()
+     * @see \Codeception\Lib\InnerBrowser::seeCheckboxIsChecked()
      */
     public function seeCheckboxIsChecked($checkbox) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCheckboxIsChecked', func_get_args()));
@@ -643,8 +645,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $checkbox
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeCheckboxIsChecked()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function cantSeeCheckboxIsChecked($checkbox) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCheckboxIsChecked', func_get_args()));
@@ -665,7 +667,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $checkbox
-     * @see Codeception\Util\InnerBrowser::dontSeeCheckboxIsChecked()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCheckboxIsChecked()
      */
     public function dontSeeCheckboxIsChecked($checkbox) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCheckboxIsChecked', func_get_args()));
@@ -692,8 +694,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $value
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeInField()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function canSeeInField($field, $value) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInField', func_get_args()));
@@ -718,7 +720,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $value
-     * @see Codeception\Util\InnerBrowser::seeInField()
+     * @see \Codeception\Lib\InnerBrowser::seeInField()
      */
     public function seeInField($field, $value) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInField', func_get_args()));
@@ -744,8 +746,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $value
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeInField()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function cantSeeInField($field, $value) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInField', func_get_args()));
@@ -769,7 +771,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $value
-     * @see Codeception\Util\InnerBrowser::dontSeeInField()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInField()
      */
     public function dontSeeInField($field, $value) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInField', func_get_args()));
@@ -817,7 +819,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $selector
      * @param $params
-     * @see Codeception\Util\InnerBrowser::submitForm()
+     * @see \Codeception\Lib\InnerBrowser::submitForm()
      */
     public function submitForm($selector, $params) {
         return $this->scenario->runStep(new \Codeception\Step\Action('submitForm', func_get_args()));
@@ -828,9 +830,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Fills a text field or textarea with value.
-     * 
+     *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
@@ -839,7 +841,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $value
-     * @see Codeception\Util\InnerBrowser::fillField()
+     * @see \Codeception\Lib\InnerBrowser::fillField()
      */
     public function fillField($field, $value) {
         return $this->scenario->runStep(new \Codeception\Step\Action('fillField', func_get_args()));
@@ -871,7 +873,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $select
      * @param $option
-     * @see Codeception\Util\InnerBrowser::selectOption()
+     * @see \Codeception\Lib\InnerBrowser::selectOption()
      */
     public function selectOption($select, $option) {
         return $this->scenario->runStep(new \Codeception\Step\Action('selectOption', func_get_args()));
@@ -893,7 +895,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $option
-     * @see Codeception\Util\InnerBrowser::checkOption()
+     * @see \Codeception\Lib\InnerBrowser::checkOption()
      */
     public function checkOption($option) {
         return $this->scenario->runStep(new \Codeception\Step\Action('checkOption', func_get_args()));
@@ -914,7 +916,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $option
-     * @see Codeception\Util\InnerBrowser::uncheckOption()
+     * @see \Codeception\Lib\InnerBrowser::uncheckOption()
      */
     public function uncheckOption($option) {
         return $this->scenario->runStep(new \Codeception\Step\Action('uncheckOption', func_get_args()));
@@ -937,7 +939,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $field
      * @param $filename
-     * @see Codeception\Util\InnerBrowser::attachFile()
+     * @see \Codeception\Lib\InnerBrowser::attachFile()
      */
     public function attachFile($field, $filename) {
         return $this->scenario->runStep(new \Codeception\Step\Action('attachFile', func_get_args()));
@@ -954,7 +956,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $uri
      * @param $params
-     * @see Codeception\Util\InnerBrowser::sendAjaxGetRequest()
+     * @see \Codeception\Lib\InnerBrowser::sendAjaxGetRequest()
      */
     public function sendAjaxGetRequest($uri, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('sendAjaxGetRequest', func_get_args()));
@@ -982,7 +984,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $uri
      * @param $params
-     * @see Codeception\Util\InnerBrowser::sendAjaxPostRequest()
+     * @see \Codeception\Lib\InnerBrowser::sendAjaxPostRequest()
      */
     public function sendAjaxPostRequest($uri, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('sendAjaxPostRequest', func_get_args()));
@@ -1008,7 +1010,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * @param $method
      * @param $uri
      * @param $params
-     * @see Codeception\Util\InnerBrowser::sendAjaxRequest()
+     * @see \Codeception\Lib\InnerBrowser::sendAjaxRequest()
      */
     public function sendAjaxRequest($method, $uri, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('sendAjaxRequest', func_get_args()));
@@ -1032,8 +1034,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $cssOrXPathOrRegex
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::grabTextFrom()
+     * @see \Codeception\Lib\InnerBrowser::grabTextFrom()
      */
     public function grabTextFrom($cssOrXPathOrRegex) {
         return $this->scenario->runStep(new \Codeception\Step\Action('grabTextFrom', func_get_args()));
@@ -1057,8 +1060,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $field
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::grabValueFrom()
+     * @see \Codeception\Lib\InnerBrowser::grabValueFrom()
      */
     public function grabValueFrom($field) {
         return $this->scenario->runStep(new \Codeception\Step\Action('grabValueFrom', func_get_args()));
@@ -1072,8 +1076,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $cookie
      * @param $value
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::setCookie()
+     * @see \Codeception\Lib\InnerBrowser::setCookie()
      */
     public function setCookie($name, $val) {
         return $this->scenario->runStep(new \Codeception\Step\Action('setCookie', func_get_args()));
@@ -1086,8 +1091,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Grabs a cookie value.
      *
      * @param $cookie
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::grabCookie()
+     * @see \Codeception\Lib\InnerBrowser::grabCookie()
      */
     public function grabCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\Action('grabCookie', func_get_args()));
@@ -1100,9 +1106,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that cookie is set.
      *
      * @param $cookie
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeCookie()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function canSeeCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCookie', func_get_args()));
@@ -1113,8 +1120,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that cookie is set.
      *
      * @param $cookie
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::seeCookie()
+     * @see \Codeception\Lib\InnerBrowser::seeCookie()
      */
     public function seeCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCookie', func_get_args()));
@@ -1127,9 +1135,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that cookie doesn't exist
      *
      * @param $cookie
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeCookie()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function cantSeeCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCookie', func_get_args()));
@@ -1140,8 +1149,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that cookie doesn't exist
      *
      * @param $cookie
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::dontSeeCookie()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeCookie()
      */
     public function dontSeeCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCookie', func_get_args()));
@@ -1154,8 +1164,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Unsets cookie
      *
      * @param $cookie
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::resetCookie()
+     * @see \Codeception\Lib\InnerBrowser::resetCookie()
      */
     public function resetCookie($name) {
         return $this->scenario->runStep(new \Codeception\Step\Action('resetCookie', func_get_args()));
@@ -1173,9 +1184,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * $I->seeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeElement()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function canSeeElement($selector) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeElement', func_get_args()));
@@ -1191,8 +1203,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * $I->seeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
-     * @see Codeception\Util\InnerBrowser::seeElement()
+     * @see \Codeception\Lib\InnerBrowser::seeElement()
      */
     public function seeElement($selector) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeElement', func_get_args()));
@@ -1205,16 +1218,17 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
      * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeElement()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function cantSeeElement($selector) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeElement', func_get_args()));
@@ -1225,15 +1239,16 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
      *
      * Example:
-     * 
+     *
      * ``` php
      * <?php
      * $I->dontSeeElement('.error');
      * $I->dontSeeElement('//form/input[1]');
      * ?>
      * ```
+     *
      * @param $selector
-     * @see Codeception\Util\InnerBrowser::dontSeeElement()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeElement()
      */
     public function dontSeeElement($selector) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeElement', func_get_args()));
@@ -1253,9 +1268,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeOptionIsSelected()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function canSeeOptionIsSelected($select, $optionText) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeOptionIsSelected', func_get_args()));
@@ -1273,8 +1289,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::seeOptionIsSelected()
+     * @see \Codeception\Lib\InnerBrowser::seeOptionIsSelected()
      */
     public function seeOptionIsSelected($select, $optionText) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeOptionIsSelected', func_get_args()));
@@ -1294,9 +1311,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeOptionIsSelected()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function cantSeeOptionIsSelected($select, $optionText) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeOptionIsSelected', func_get_args()));
@@ -1314,8 +1332,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $selector
      * @param $optionText
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::dontSeeOptionIsSelected()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeOptionIsSelected()
      */
     public function dontSeeOptionIsSelected($select, $optionText) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeOptionIsSelected', func_get_args()));
@@ -1326,8 +1345,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that current page has 404 response status code.
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seePageNotFound()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function canSeePageNotFound() {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seePageNotFound', func_get_args()));
@@ -1336,7 +1355,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Asserts that current page has 404 response status code.
-     * @see Codeception\Util\InnerBrowser::seePageNotFound()
+     * @see \Codeception\Lib\InnerBrowser::seePageNotFound()
      */
     public function seePageNotFound() {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seePageNotFound', func_get_args()));
@@ -1349,9 +1368,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that response code is equal to value provided.
      *
      * @param $code
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeResponseCodeIs()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function canSeeResponseCodeIs($code) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeResponseCodeIs', func_get_args()));
@@ -1362,8 +1382,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that response code is equal to value provided.
      *
      * @param $code
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::seeResponseCodeIs()
+     * @see \Codeception\Lib\InnerBrowser::seeResponseCodeIs()
      */
     public function seeResponseCodeIs($code) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeResponseCodeIs', func_get_args()));
@@ -1382,9 +1403,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $title
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::seeInTitle()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function canSeeInTitle($title) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInTitle', func_get_args()));
@@ -1401,8 +1423,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $title
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::seeInTitle()
+     * @see \Codeception\Lib\InnerBrowser::seeInTitle()
      */
     public function seeInTitle($title) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInTitle', func_get_args()));
@@ -1415,9 +1438,10 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that page title does not contain text.
      *
      * @param $title
+     *
      * @return mixed
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Util\InnerBrowser::dontSeeInTitle()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function cantSeeInTitle($title) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInTitle', func_get_args()));
@@ -1428,8 +1452,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Checks that page title does not contain text.
      *
      * @param $title
+     *
      * @return mixed
-     * @see Codeception\Util\InnerBrowser::dontSeeInTitle()
+     * @see \Codeception\Lib\InnerBrowser::dontSeeInTitle()
      */
     public function dontSeeInTitle($title) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInTitle', func_get_args()));
@@ -1440,7 +1465,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
         return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
@@ -1454,7 +1479,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * Project root directory is used by default
      *
      * @param $path
-     * @see Codeception\Module\Filesystem::amInPath()
+     * @see \Codeception\Module\Filesystem::amInPath()
      */
     public function amInPath($path) {
         return $this->scenario->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
@@ -1476,7 +1501,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::openFile()
+     * @see \Codeception\Module\Filesystem::openFile()
      */
     public function openFile($filename) {
         return $this->scenario->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
@@ -1495,7 +1520,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::deleteFile()
+     * @see \Codeception\Module\Filesystem::deleteFile()
      */
     public function deleteFile($filename) {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
@@ -1514,7 +1539,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::deleteDir()
+     * @see \Codeception\Module\Filesystem::deleteDir()
      */
     public function deleteDir($dirname) {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
@@ -1534,7 +1559,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $src
      * @param $dst
-     * @see Codeception\Module\Filesystem::copyDir()
+     * @see \Codeception\Module\Filesystem::copyDir()
      */
     public function copyDir($src, $dst) {
         return $this->scenario->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
@@ -1556,8 +1581,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeInThisFile()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function canSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
@@ -1577,7 +1602,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeInThisFile()
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function seeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
@@ -1600,8 +1625,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function canSeeFileContentsEqual($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
@@ -1622,7 +1647,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function seeFileContentsEqual($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
@@ -1642,8 +1667,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function cantSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
@@ -1661,7 +1686,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function dontSeeInThisFile($text) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
@@ -1672,7 +1697,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
-     * @see Codeception\Module\Filesystem::deleteThisFile()
+     * @see \Codeception\Module\Filesystem::deleteThisFile()
      */
     public function deleteThisFile() {
         return $this->scenario->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
@@ -1693,8 +1718,8 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileFound()
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function canSeeFileFound($filename, $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
@@ -1713,7 +1738,7 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-     * @see Codeception\Module\Filesystem::seeFileFound()
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function seeFileFound($filename, $path = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
@@ -1732,10 +1757,9 @@ class AbsolutelyOtherGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::cleanDir()
+     * @see \Codeception\Module\Filesystem::cleanDir()
      */
     public function cleanDir($dirname) {
         return $this->scenario->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
     }
 }
-
