@@ -237,8 +237,8 @@ class Configuration
 
     /**
      * Return instances of enabled modules according suite config.
-	 * Includes guy class if it exists.
-	 * 
+     * Includes guy class if it exists.
+     * 
      * @param array $settings suite settings
      * @return array|\Codeception\Module[]
      */
