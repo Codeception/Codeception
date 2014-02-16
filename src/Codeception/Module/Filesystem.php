@@ -134,7 +134,7 @@ class Filesystem extends \Codeception\Module
      */
     public function seeInThisFile($text)
     {
-        \PHPUnit_Framework_Assert::assertContains($text, $this->file, "text $text in currently opened file");
+        $this->assertContains($text, $this->file, "text $text in currently opened file");
     }
 
 
@@ -173,7 +173,7 @@ class Filesystem extends \Codeception\Module
      */
     public function dontSeeInThisFile($text)
     {
-        \PHPUnit_Framework_Assert::assertNotContains($text, $this->file, "text $text in currently opened file");
+        $this->assertNotContains($text, $this->file, "text $text in currently opened file");
     }
 
     /**
@@ -224,6 +224,8 @@ class Filesystem extends \Codeception\Module
         }
         $this->fail("$filename in $path");
     }
+    
+    
 
     /**
      * Erases directory contents
@@ -241,4 +243,17 @@ class Filesystem extends \Codeception\Module
         $path = $this->absolutizePath($dirname);
         Util::doEmptyDir($path);
     }
+
+    /**
+     * Saves contents to file
+     *
+     * @param $filename
+     * @param $contents
+     */
+    public function writeToFile($filename, $contents)
+    {
+        file_put_contents($filename, $contents);
+    }
+
+
 }

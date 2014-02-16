@@ -102,6 +102,7 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
+        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
 
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
@@ -117,7 +118,9 @@ class Codecept
         // custom event listeners
         foreach ($this->config['extensions']['enabled'] as $subscriber) {
             if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
-            if ($subscriber instanceof EventSubscriberInterface) throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
+            if ($subscriber instanceof EventSubscriberInterface) {
+                throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
+            }
             $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
         }
     }

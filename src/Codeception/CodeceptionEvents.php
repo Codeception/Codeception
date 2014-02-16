@@ -16,6 +16,14 @@ final class CodeceptionEvents
     {
     }
 
+
+    /**
+     * The <b>SUITE_INIT</b> event occurs when suite is initialized.
+     *
+     * The event listener method receives a {@link Codeception\Event\SuiteEvent} instance.
+     */
+    const SUITE_INIT = 'suite.init';
+
     /**
      * The <b>SUITE_BEFORE</b> event occurs before suite is executed.
      *

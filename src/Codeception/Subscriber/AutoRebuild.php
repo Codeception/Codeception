@@ -1,0 +1,39 @@
+<?php
+namespace Codeception\Subscriber;
+
+use Codeception\CodeceptionEvents;
+use Codeception\Event\SuiteEvent;
+use Codeception\Lib\Generator\Guy;
+use Codeception\SuiteManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class AutoRebuild implements EventSubscriberInterface
+{
+    use Shared\StaticEvents;
+
+    static $events = [CodeceptionEvents::SUITE_INIT => 'updateGuy'];
+
+
+    public function updateGuy(SuiteEvent $e)
+    {
+        $settings = $e->getSettings();
+        $guyFile = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php';
+
+        // load guy class to see hash
+        $handle = fopen($guyFile, "r");
+        if ($handle) {
+            $line = fgets($handle);
+            if (preg_match('~\[STAMP\] ([a-f0-9]*?)~', $line, $matches)) {
+                $hash = $matches[1];
+                $currentHash = Guy::genHash(SuiteManager::$actions, $settings);
+
+                // regenerate guy class when hashes do not match
+                if ($hash != $currentHash) {
+                    codecept_debug("Rebuilding {$settings['class_name']}...");
+                    $guyGenerator = new Guy($settings);
+                    file_put_contents($guyFile, $guyGenerator->produce());
+                }
+            }
+        }
+    }
+}

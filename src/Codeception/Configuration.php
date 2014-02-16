@@ -243,11 +243,6 @@ class Configuration
      */
     public static function modules($settings)
     {
-        $guyFile = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php';
-        if (file_exists($guyFile)) {
-            require_once $guyFile;
-        }
-
         $modules = array();
         $namespace = isset($settings['namespace']) ? $settings['namespace'] : '';
 
