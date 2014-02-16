@@ -2,7 +2,9 @@
 
 namespace Codeception\Command;
 
+use Codeception\Lib\Generator\Helper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -14,6 +16,8 @@ use Symfony\Component\Yaml\Yaml;
 class Bootstrap extends Command
 {
     protected $namespace = '';
+    protected $actor = 'Guy';
+    protected $availableActors = ['Guy', 'Girl', 'Person', 'Engineer', 'Ninja', 'Dev'];
 
     protected function configure()
     {
@@ -32,9 +36,9 @@ class Bootstrap extends Command
         return new InputDefinition(
             array(
                  new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
-                 new InputOption(
-                     'namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for guy classes and helpers'
-                 ),
+                 new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for guy classes and helpers'),
+                 new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Guy'),
+                 new InputOption('silent', '', InputOption::VALUE_OPTIONAL, 'Don\'t ask stupid questions')
             )
         );
     }
@@ -42,6 +46,18 @@ class Bootstrap extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->namespace = rtrim($input->getOption('namespace'), '\\');
+        
+        /** @var $dialog DialogHelper  **/
+        $dialog = $this->getHelper('dialog');
+        $output->writeln("Before proceed you can choose default actor:");
+        $output->writeln("\n\$I = new {{ACTOR}}");
+
+        if ($input->getOption('actor')) {
+            $this->actor = $input->getOption('Guy');
+        } elseif (!$input->getOption('silent')) {
+            $index = $dialog->select($output, "<question>  Select an actor. Guy is default  </question>", $this->availableActors, $this->actor);
+            $this->actor = $this->availableActors[$index];
+        }
 
         $path = $input->getArgument('path');
 
@@ -90,7 +106,7 @@ class Bootstrap extends Command
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading \n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
 
-        $output->writeln("<info>Building initial Guy classes</info>");
+        $output->writeln("<info>Building initial {{$this->actor}} classes</info>");
         $this->getApplication()->find('build')->run(
             new ArrayInput(array('command' => 'build')),
             $output
@@ -101,6 +117,7 @@ class Bootstrap extends Command
     public function createGlobalConfig()
     {
         $basicConfig = array(
+            'actor' => $this->actor,
             'paths'    => array(
                 'tests'   => 'tests',
                 'log'     => 'tests/_log',
@@ -109,7 +126,6 @@ class Bootstrap extends Command
             ),
             'settings' => array(
                 'bootstrap'    => '_bootstrap.php',
-                'suite_class'  => '\PHPUnit_Framework_TestSuite',
                 'colors'       => (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'),
                 'memory_limit' => '1024M',
                 'log'          => true
@@ -136,7 +152,7 @@ class Bootstrap extends Command
     protected function createFunctionalSuite()
     {
         $suiteConfig = array(
-            'class_name' => 'TestGuy',
+            'class_name' => 'Test'.$this->actor,
             'modules'    => array('enabled' => array('Filesystem', 'TestHelper')),
         );
 
@@ -148,12 +164,13 @@ class Bootstrap extends Command
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents(
+            'tests/_helpers/TestHelper.php',
+            (new Helper('Test', $this->namespace))->produce()
+        );
+
+        file_put_contents(
             'tests/functional/_bootstrap.php',
             "<?php\n// Here you can initialize variables that will for your tests\n"
-        );
-        file_put_contents(
-            'tests/_helpers/TestHelper.php',
-            "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for TestGuy \n\nclass TestHelper extends \\Codeception\\Module\n{\n}\n"
         );
         file_put_contents('tests/functional.suite.yml', $str);
     }
@@ -161,7 +178,7 @@ class Bootstrap extends Command
     protected function createAcceptanceSuite()
     {
         $suiteConfig = array(
-            'class_name' => 'WebGuy',
+            'class_name' => 'Web'.$this->actor,
             'modules'    => array(
                 'enabled' => array('PhpBrowser', 'WebHelper'),
                 'config'  => array(
@@ -174,11 +191,9 @@ class Bootstrap extends Command
 
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for acceptance tests.\n";
-        $str .= "# perform tests in browser using the Selenium-like tools.\n";
-        $str .= "# powered by Mink (http://mink.behat.org).\n";
+        $str .= "# perform tests in browser using the WebDriver or PhpBrowser.\n";
         $str .= "# (tip: that's what your customer will see).\n";
-        $str .= "# (tip: test your ajax and javascript by one of Mink drivers).\n\n";
-        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
+        $str .= "# (tip: test your ajax and javascript only with WebDriver).\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
 
@@ -188,7 +203,7 @@ class Bootstrap extends Command
         );
         file_put_contents(
             'tests/_helpers/WebHelper.php',
-            "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for WebGuy \n\nclass WebHelper extends \\Codeception\\Module\n{\n}\n"
+            (new Helper('Web', $this->namespace))->produce()
         );
         file_put_contents('tests/acceptance.suite.yml', $str);
     }
@@ -197,7 +212,7 @@ class Bootstrap extends Command
     {
         // CodeGuy
         $suiteConfig = array(
-            'class_name' => 'CodeGuy',
+            'class_name' => 'Code'.$this->actor,
             'modules'    => array('enabled' => array('CodeHelper')),
         );
 
@@ -212,7 +227,7 @@ class Bootstrap extends Command
         );
         file_put_contents(
             'tests/_helpers/CodeHelper.php',
-            "<?php\nnamespace {$this->namespace}Codeception\\Module;\n\n// here you can define custom functions for CodeGuy \n\nclass CodeHelper extends \\Codeception\\Module\n{\n}\n"
+            (new Helper('Code', $this->namespace))->produce()
         );
         file_put_contents('tests/unit.suite.yml', $str);
     }

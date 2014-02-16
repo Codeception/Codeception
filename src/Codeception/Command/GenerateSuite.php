@@ -1,8 +1,7 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
+use Codeception\Lib\Generator\Helper;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,48 +13,62 @@ class GenerateSuite extends Base
 {
     protected function configure()
     {
-        $this->setDefinition(array(
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
-            new InputArgument('guy', InputArgument::REQUIRED, 'name of new Guy class'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-        ));
-        parent::configure();
+        $this->setDefinition(
+            array(
+                new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
+                new InputArgument('actor', InputArgument::OPTIONAL, 'name of new actor class'),
+                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            )
+        );
     }
 
-    public function getDescription() 
+    public function getDescription()
     {
         return 'Generates new test suite';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $suite = $input->getArgument('suite');
-        $guy = $input->getArgument('guy');
+        $suite = lcfirst($input->getArgument('suite'));
+        $actor = $input->getArgument('actor');
 
         $config = \Codeception\Configuration::config($input->getOption('config'));
-        $namespace = $config['namespace'] ? $config['namespace'] . '\\' : '';
+        if (!$actor) {
+            $actor = ucfirst($suite) . $config['actor'];
+        }
+        $config['class_name'] = $actor;
 
-        $dir = \Codeception\Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR;
-        if (file_exists($dir.$suite)) throw new \Exception("Directory $suite already exists.");
-        if (file_exists($dir.$suite.'.suite.yml')) throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
+        $dir = \Codeception\Configuration::testsDir() . DIRECTORY_SEPARATOR;
+        if (file_exists($dir . $suite)) {
+            throw new \Exception("Directory $suite already exists.");
+        }
+        if (file_exists($dir . $suite . '.suite.yml')) {
+            throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
+        }
 
-        $this->buildPath($dir.$suite.DIRECTORY_SEPARATOR, '_bootstrap.php');
+        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, '_bootstrap.php');
 
         // generate bootstrap
-        $this->save($dir.$suite.DIRECTORY_SEPARATOR.'_bootstrap.php', "<?php\n// Here you can initialize variables that will for your tests\n", true);
-
-        $guyname = $this->removeSuffix($guy, 'Guy');
+        $this->save($dir . $suite . DIRECTORY_SEPARATOR . '_bootstrap.php',
+            "<?php\n// Here you can initialize variables that will for your tests\n",
+            true
+        );
+        $actorName = $this->removeSuffix($actor, $config['actor']);
 
         // generate helper
-        $this->save(\Codeception\Configuration::projectDir().$config['paths']['helpers'].DIRECTORY_SEPARATOR.$guyname.'Helper.php',
-            "<?php\nnamespace {$namespace}Codeception\\Module;\n\n// here you can define custom functions for $guy \n\nclass {$guyname}Helper extends \\Codeception\\Module\n{\n}\n");
-
-        $conf = array(
-            'class_name' => $guy,
-            'modules' => array('enabled' => array($guyname.'Helper'))   ,
+        $this->save(
+            \Codeception\Configuration::helpersDir() . $actorName . 'Helper.php',
+            (new Helper($actorName, $config['namespace']))->produce()
         );
 
-        $this->save($dir.$suite.'.suite.yml', Yaml::dump($conf, 2));
+        $conf = array(
+            'class_name' => $actorName.$config['actor'],
+            'modules' => array(
+                'enabled' => array($actorName . 'Helper')
+            ),
+        );
+
+        $this->save($dir . $suite . '.suite.yml', Yaml::dump($conf, 2));
 
         $output->writeln("<info>Suite $suite generated</info>");
     }

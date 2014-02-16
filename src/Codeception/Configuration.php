@@ -49,6 +49,7 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = array(
+        'actor' => 'Guy',
         'namespace' => '',
         'include' => array(),
         'paths' => array(),
@@ -391,6 +392,11 @@ class Configuration
     public static function projectDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR;
+    }
+
+    public static function testsDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR;
     }
 
     /**
