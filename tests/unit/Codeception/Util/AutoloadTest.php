@@ -1,7 +1,7 @@
 <?php
 
 
-use Codeception\Lib\Autoload;
+use Codeception\Util\Autoload;
 
 class AutoloadTest extends PHPUnit_Framework_TestCase {
 

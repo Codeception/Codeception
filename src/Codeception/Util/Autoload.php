@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeception\Lib;
+namespace Codeception\Util;
 
 class Autoload
 {
