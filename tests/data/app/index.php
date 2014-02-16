@@ -19,8 +19,10 @@ $urls = array(
     '/search.*' => 'search',
     '/login' => 'login',
     '/redirect' => 'redirect',
+    '/redirect2' => 'redirect2',
+    '/redirect3' => 'redirect3',
     '/facebook\??.*' => 'facebookController',
-    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1)(#)?' => 'form',
+    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1|example2)(#)?' => 'form',
     '/articles\??.*' => 'articles'
 );
 

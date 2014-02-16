@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.8.3";
+    const VERSION = "2.0-dev";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -106,9 +106,12 @@ class Codecept
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
+
         if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
-            $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\LocalServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
         }
 
         // custom event listeners
@@ -164,7 +167,7 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatcher->dispatch('result.print.after', new Event\PrintResult($result, $printer));
+        $this->dispatcher->dispatch(CodeceptionEvents::RESULT_PRINT_AFTER, new Event\PrintResultEvent($result, $printer));
     }
 
     /**

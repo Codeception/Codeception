@@ -37,8 +37,10 @@ class SuiteManager {
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
+        $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
 
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (isset($settings['current_environment'])) $this->env = $settings['current_environment'];
         if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         $this->suite = $this->createSuite($name);
@@ -121,11 +123,11 @@ class SuiteManager {
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
-            
+
             if ($reflected->isAbstract()) {
                 continue;
             }
-            
+
             $guy = $this->settings['namespace']
                 ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
                 : $this->settings['class_name'];
@@ -151,9 +153,9 @@ class SuiteManager {
 
     public function run(\Codeception\PHPUnit\Runner $runner, \PHPUnit_Framework_TestResult $result, $options) {
 
-        $this->dispatcher->dispatch('suite.before', new Event\Suite($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch('suite.before', new Event\SuiteEvent($this->suite, $result, $this->settings));
         $runner->doEnhancedRun($this->suite, $result, $options);
-        $this->dispatcher->dispatch('suite.after', new Event\Suite($this->suite, $result, $this->settings));
+        $this->dispatcher->dispatch('suite.after', new Event\SuiteEvent($this->suite, $result, $this->settings));
     }
 
     public function loadTest($path) {
@@ -189,6 +191,7 @@ class SuiteManager {
 
     protected function getClassesFromFile($file)
     {
+        $loaded_classes = get_declared_classes();
         require_once $file;
 
         $sourceCode = file_get_contents($file);
@@ -196,10 +199,10 @@ class SuiteManager {
         $tokens     = token_get_all($sourceCode);
         $namespace  = '';
 
-        for ($i = 0, $tokensCount = count($tokens); $i < $tokensCount; $i++) {
+        for ($i = 0; $i < count($tokens); $i++) {
             if ($tokens[$i][0] === T_NAMESPACE) {
                 $namespace = '';
-                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                for ($j = $i + 1; $j < count($tokens); $j++) {
                     if ($tokens[$j][0] === T_STRING) {
                         $namespace .= $tokens[$j][1] . '\\';
                     } else {
@@ -211,7 +214,7 @@ class SuiteManager {
             }
 
             if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                for ($j = $i + 1; $j < count($tokens); $j++) {
                     if ($tokens[$j] === '{') {
                         $classes[] = $namespace . $tokens[$i + 2][1];
                         break;

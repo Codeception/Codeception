@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Codeception\Util;
 
-
-class Annotation {
-
+class Annotation
+{
     protected static $reflectedClasses = array();
     protected static $regex = '/@%s(?:[ \t]+(.*?))?[ \t]*\r?$/m';
     protected static $lastReflected = null;
@@ -32,20 +30,26 @@ class Annotation {
      * ```
      *
      * @param $class
+     *
      * @return $this
      */
     public static function forClass($class)
     {
-        if (is_object($class)) $class = get_class($class);
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
         if (!isset(static::$reflectedClasses[$class])) {
             static::$reflectedClasses[$class] = new \ReflectionClass($class);
         }
+
         return new static(static::$reflectedClasses[$class]);
     }
 
     /**
      * @param $class
      * @param $method
+     *
      * @return $this
      */
     public static function forMethod($class, $method)
@@ -60,6 +64,7 @@ class Annotation {
 
     /**
      * @param $method
+     *
      * @return $this
      */
     public function method($method)
@@ -71,19 +76,18 @@ class Annotation {
     public function fetch($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();
-        $matched = array();
-        $res = preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched);
-        if (!$res) return null;
-        return $matched[1];
+        if (preg_match(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
+            return $matched[1];
+        }
+        return null;
     }
 
     public function fetchAll($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();
-        $matched = array();
-        $res = preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched);
-        if (!$res) return array();
-        return $matched[1];
+        if (preg_match_all(sprintf(self::$regex, $annotation), $docBlock, $matched)) {
+            return $matched[1];
+        }
+        return [];
     }
-
 }

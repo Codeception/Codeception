@@ -67,7 +67,7 @@ class REST extends \Codeception\Module
             if (!strpos($this->config['url'], '://')) {
                 // not valid url
                 foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Util\Framework) {
+                    if ($module instanceof \Codeception\Lib\Framework) {
                         $this->client = $module->client;
                         $this->is_functional = true;
                         break;
@@ -77,7 +77,7 @@ class REST extends \Codeception\Module
                 if (!$this->hasModule('PhpBrowser')) {
                     throw new ModuleConfigException(__CLASS__, "For REST testing via HTTP please enable PhpBrowser module");
                 }
-                $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
+                $this->client = $this->getModule('PhpBrowser')->client;
             }
             if (!$this->client) {
                 throw new ModuleConfigException(__CLASS__, "Client for REST requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
@@ -380,7 +380,7 @@ class REST extends \Codeception\Module
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
         $parameters = $this->encodeApplicationJson($method, $parameters);
-        
+
         if (is_array($parameters) || $method == 'GET') {
             if (!empty($parameters) && $method == 'GET') {
                 $url .= '?' . http_build_query($parameters);

@@ -67,9 +67,9 @@ use Yii;
  * You must see "OK" and that all steps are marked with asterisk (*).
  * Do not forget that after adding module in your functional.suite.yml you must run codeception "build" command.
  *
- * @property Codeception\Util\Connector\Yii1 $client
+ * @property Codeception\Lib\Connector\Yii1 $client
  */
-class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
+class Yii1 extends \Codeception\Lib\Framework
 {
 
 	/**
@@ -134,7 +134,7 @@ class Yii1 extends \Codeception\Util\Framework implements \Codeception\Util\Fram
 	 */
 	public function _createClient()
 	{
-		$this->client = new \Codeception\Util\Connector\Yii1();
+		$this->client = new \Codeception\Lib\Connector\Yii1();
 		$this->client->appPath = $this->config['appPath'];
 		$this->client->url = $this->config['url'];
 		$this->client->appSettings = array(

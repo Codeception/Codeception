@@ -24,6 +24,33 @@ if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
 }
 
+// Autoload Codeception classes
+if (!class_exists('\\Codeception\\Codecept')) {
+    if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
+        require_once __DIR__ . '/vendor/autoload.php';
+    } elseif (file_exists(__DIR__ . '/codecept.phar')) {
+        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
+    } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
+        require_once 'Codeception/autoload.php';
+    } else {
+        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
+    }
+}
+
+// Load Codeception Config
+$config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
+if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
+    $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
+}
+if (!file_exists($config_file)) {
+    __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
+}
+try {
+    \Codeception\Configuration::config($config_file);
+} catch (\Exception $e) {
+    __c3_error($e->getMessage());
+}
+
 if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     // workaround for 'zend_mm_heap corrupted' problem
@@ -33,8 +60,8 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         ini_set('memory_limit', '384M');
     }
 
-    define('C3_CODECOVERAGE_MEDIATE_STORAGE', __DIR__ . '/c3tmp');
-    define('C3_CODECOVERAGE_PROJECT_ROOT', __DIR__);
+    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
+    define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
     function __c3_build_html_report(PHP_CodeCoverage $codeCoverage, $path)
@@ -108,9 +135,9 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         }
 
         try {
-            \Codeception\CodeCoverageSettings::setup($phpCoverage)
-                ->filterWhiteList($settings)
-                ->filterBlackList($settings);
+            \Codeception\Coverage\Filter::setup($phpCoverage)
+                ->whiteList($settings)
+                ->blackList($settings);
         } catch (Exception $e) {
             __c3_error($e->getMessage());
         }
@@ -128,7 +155,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
 
     function __c3_error($message)
     {
-        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . time() . '-error.txt', $message);
+        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
         if (!headers_sent()) {
             header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
         }
@@ -148,51 +175,14 @@ if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
     }
 }
 
-// Autoload Codeception classes
-if (!class_exists('\\Codeception\\Codecept')) {
-    if (stream_resolve_include_path(__DIR__ . '/vendor/autoload.php')) {
-        require_once __DIR__ . '/vendor/autoload.php';
-    } elseif (file_exists(__DIR__ . '/codecept.phar')) {
-        require_once 'phar://'.__DIR__ . '/codecept.phar/autoload.php';
-    } elseif (stream_resolve_include_path('Codeception/autoload.php')) {
-        require_once 'Codeception/autoload.php';
-    } else {
-        __c3_error('Codeception is not loaded. Please check that either PHAR or Composer or PEAR package can be used');
-    }
-}
-
-// Load Codeception Config
-$config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
-if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
-    $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
-}
-if (!file_exists($config_file)) {
-    __c3_error(sprintf("Codeception config file '%s' not found", $config_file));
-}
-
-try {
-    \Codeception\Configuration::config($config_file);
-} catch (\Exception $e) {
-    __c3_error($e->getMessage());
-}
-
-
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
 
 $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
-$current_report = $path;
-$complete_report = $path . '.serialized';
+$complete_report = $current_report = $path . '.serialized';
 if ($requested_c3_report) {
     set_time_limit(0);
-    if (file_exists($current_report)) {
-        if (file_exists($complete_report)) {
-            unlink($complete_report);
-        }
-
-        rename($current_report, $complete_report);
-    }
 
     $route = ltrim(strrchr($_SERVER['REQUEST_URI'], '/'), '/');
 
@@ -228,9 +218,6 @@ if ($requested_c3_report) {
     }
 
 } else {
-    if (file_exists($complete_report)) {
-        unlink($complete_report);
-    }
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
     register_shutdown_function(

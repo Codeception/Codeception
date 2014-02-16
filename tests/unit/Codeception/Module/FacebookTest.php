@@ -5,7 +5,7 @@ require_once 'tests/data/app/data.php';
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
 use Codeception\SuiteManager;
-use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
@@ -29,13 +29,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
      * @var FacebookDriver
      */
     protected $facebook;
-
-    protected function noPhpWebserver()
-    {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            $this->markTestSkipped('Requires PHP built-in web server, available since PHP 5.4.0.');
-        }
-    }
 
     protected function makeTest()
     {
@@ -94,8 +87,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     public function testLoginToFacebook()
     {
         // preconditions: #1 php web server being run
-        $this->noPhpWebserver();
-
         $browserModule = new PhpBrowser;
         $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
         $browserModule->_initialize();

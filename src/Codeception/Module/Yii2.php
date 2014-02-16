@@ -1,10 +1,10 @@
 <?php
-
 namespace Codeception\Module;
 
 use Yii;
-use Codeception\Util\Framework;
+use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\ActiveRecordInterface;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -32,7 +32,7 @@ use Codeception\Exception\ModuleConfig;
  * Stability: **beta**
  *
  */
-class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
+class Yii2 extends Framework implements ActiveRecordInterface
 {
     /**
      * Application config file must be set.
@@ -53,7 +53,7 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new \Codeception\Util\Connector\Yii2();
+        $this->client = new \Codeception\Lib\Connector\Yii2();
         $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
         $this->app = $this->client->startApp();
 

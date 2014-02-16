@@ -2,10 +2,13 @@
 namespace Codeception\Platform;
 
 use Codeception\Exception\ModuleRequire;
-use Codeception\Util\Console\Output;
+use Codeception\Subscriber\Shared\StaticEvents;
+use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Extension implements EventSubscriberInterface {
+
+    use StaticEvents;
     
     protected $config;
     protected $options;
@@ -44,9 +47,5 @@ class Extension implements EventSubscriberInterface {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
-    static function getSubscribedEvents()
-    {
-        return static::$events;
-    }
 
 }

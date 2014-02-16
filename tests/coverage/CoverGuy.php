@@ -4,15 +4,14 @@
 // @codingStandardsIgnoreFile
 
 
-use \Codeception\Maybe;
 use Codeception\Module\Filesystem;
 use Codeception\Module\Cli;
 use Codeception\Module\CliHelper;
 use Codeception\Module\CoverHelper;
 
 /**
- * Inherited methods
- * @method void execute($callable)
+ [!] Inherited Methods
+ * @method void haveFriend($name)
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void expectTo($prediction)
@@ -20,41 +19,27 @@ use Codeception\Module\CoverHelper;
  * @method void amGoingTo($argumentation)
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
- * @method void offsetGet($offset)
- * @method void offsetSet($offset, $value)
- * @method void offsetExists($offset)
- * @method void offsetUnset($offset)
+ * @method void comment($description)
 */
-
 class CoverGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Enters a directory In local filesystem.
      * Project root directory is used by default
      *
      * @param $path
-     * @see Codeception\Module\Filesystem::amInPath()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::amInPath()
      */
     public function amInPath($path) {
-        $this->scenario->addStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Opens a file and stores it's content.
      *
@@ -68,23 +53,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::openFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::openFile()
      */
     public function openFile($filename) {
-        $this->scenario->addStep(new \Codeception\Step\Action('openFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
      *
@@ -95,23 +72,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $filename
-     * @see Codeception\Module\Filesystem::deleteFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::deleteFile()
      */
     public function deleteFile($filename) {
-        $this->scenario->addStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes directory with all subdirectories
      *
@@ -122,23 +91,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::deleteDir()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::deleteDir()
      */
     public function deleteDir($dirname) {
-        $this->scenario->addStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Copies directory with all contents
      *
@@ -150,23 +111,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $src
      * @param $dst
-     * @see Codeception\Module\Filesystem::copyDir()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::copyDir()
      */
     public function copyDir($src, $dst) {
-        $this->scenario->addStep(new \Codeception\Step\Action('copyDir', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file has `text` in it.
      *
@@ -180,22 +133,14 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeInThisFile()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function canSeeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file has `text` in it.
      *
@@ -209,23 +154,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeInThisFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function seeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -240,22 +177,14 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function canSeeFileContentsEqual($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks the strict matching of file contents.
      * Unlike `seeInThisFile` will fail if file has something more then expected lines.
@@ -270,23 +199,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::seeFileContentsEqual()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function seeFileContentsEqual($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -298,22 +219,14 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function cantSeeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks If opened file doesn't contain `text` in it
      *
@@ -325,42 +238,26 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $text
-     * @see Codeception\Module\Filesystem::dontSeeInThisFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function dontSeeInThisFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Deletes a file
-     * @see Codeception\Module\Filesystem::deleteThisFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::deleteThisFile()
      */
     public function deleteThisFile() {
-        $this->scenario->addStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -373,22 +270,14 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Filesystem::seeFileFound()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function canSeeFileFound($filename, $path = null) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks if file exists in path.
      * Opens a file when it's exists
@@ -401,23 +290,15 @@ class CoverGuy extends \Codeception\AbstractGuy
      *
      * @param $filename
      * @param string $path
-     * @see Codeception\Module\Filesystem::seeFileFound()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function seeFileFound($filename, $path = null) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Erases directory contents
      *
@@ -428,196 +309,117 @@ class CoverGuy extends \Codeception\AbstractGuy
      * ```
      *
      * @param $dirname
-     * @see Codeception\Module\Filesystem::cleanDir()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Filesystem::cleanDir()
      */
     public function cleanDir($dirname) {
-        $this->scenario->addStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
-        $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Executes a shell command
      *
      * @param $command
-     * @see Codeception\Module\Cli::runShellCommand()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Cli::runShellCommand()
      */
     public function runShellCommand($command) {
-        $this->scenario->addStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from last executed command contains text
      *
      * @param $text
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::seeInShellOutput()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function canSeeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from last executed command contains text
      *
      * @param $text
-     * @see Codeception\Module\Cli::seeInShellOutput()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function seeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from latest command doesn't contain text
      *
      * @param $text
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::dontSeeInShellOutput()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function cantSeeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that output from latest command doesn't contain text
      *
      * @param $text
      *
-     * @see Codeception\Module\Cli::dontSeeInShellOutput()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function dontSeeInShellOutput($text) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-    * Conditional Assertion: Test won't be stopped on fail
-     * @see Codeception\Module\Cli::seeShellOutputMatches()
-     * @return \Codeception\Maybe
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function canSeeShellOutputMatches($regex) {
-        $this->scenario->addStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
     }
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\Cli::seeShellOutputMatches()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function seeShellOutputMatches($regex) {
-        $this->scenario->addStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\CliHelper::executeCommand()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\CliHelper::executeCommand()
      */
     public function executeCommand($command) {
-        $this->scenario->addStep(new \Codeception\Step\Action('executeCommand', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('executeCommand', func_get_args()));
     }
 }
-

@@ -1,32 +1,29 @@
 <?php
+
 namespace Codeception\Module;
 
-// here you can define custom functions for OrderGuy 
+use Codeception\Configuration;
+use Codeception\Module;
+use Codeception\TestCase;
 
-use Codeception\Codecept;
-use Codeception\Event\Suite;
-use Codeception\Event\Test;
-use Codeception\TestCase\Cept;
-
-class OrderHelper extends \Codeception\Module
+class OrderHelper extends Module
 {
-
     public function _initialize()
     {
         self::appendToFile('I');
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         self::appendToFile('[');
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         self::appendToFile(']');
     }
 
-    public function _failed(\Codeception\TestCase $test, $fail)
+    public function _failed(TestCase $test, $fail)
     {
         self::appendToFile('F');
     }
@@ -53,8 +50,7 @@ class OrderHelper extends \Codeception\Module
 
     public static function appendToFile($marker)
     {
-        $fh = fopen(\Codeception\Configuration::logDir().'order.txt', 'a');
+        $fh = fopen(Configuration::logDir().'order.txt', 'a');
         fwrite($fh, $marker);
     }
-    
 }

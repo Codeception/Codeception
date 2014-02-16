@@ -2,7 +2,7 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
-use Codeception\Util\Console\Message;
+use Codeception\Lib\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class WebDriver extends Page {

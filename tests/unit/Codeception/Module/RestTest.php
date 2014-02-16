@@ -11,7 +11,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->module = new \Codeception\Module\REST();
-        $connector = new \Codeception\Util\Connector\Universal();
+        $connector = new \Codeception\Lib\Connector\Universal();
         $connector->setIndex(\Codeception\Configuration::dataDir().'/rest/index.php');
         $this->module->client = $connector;
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));

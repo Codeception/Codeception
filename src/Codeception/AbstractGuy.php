@@ -1,9 +1,9 @@
 <?php
 namespace Codeception;
 
-use Codeception\Step\Action;
+use Codeception\Lib\Friend;
 
-abstract class AbstractGuy implements \ArrayAccess
+abstract class AbstractGuy
 {
     public static $methods = array();
 
@@ -11,8 +11,8 @@ abstract class AbstractGuy implements \ArrayAccess
      * @var \Codeception\Scenario
      */
     protected $scenario;
+    protected $friends = [];
 
-    protected $running = false;
 
     public function __construct(\Codeception\Scenario $scenario)
     {
@@ -20,32 +20,25 @@ abstract class AbstractGuy implements \ArrayAccess
     }
 
     /**
-     * Lazy-execution given anonymous function
-     * @param $callable \Closure
-     * @return null|void|bool|mixed
+     * @param $name
+     * @return Friend
      */
-    public function execute($callable)
+    public function haveFriend($name)
     {
-        $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
+        if (!isset($this->friends[$name])) {
+            $this->friends[$name] = new Friend($name, $this);
         }
-        return $this;
+        return $this->friends[$name];
     }
 
     public function wantToTest($text)
     {
-        return $this->wantTo('test ' . $text);
+        $this->wantTo('test ' . $text);
     }
 
     public function wantTo($text)
     {
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
         $this->scenario->setFeature(mb_strtolower($text));
-        return $this;
     }
 
     public function expectTo($prediction)
@@ -72,56 +65,14 @@ abstract class AbstractGuy implements \ArrayAccess
         return $this->comment('So that I ' . $achieveValue);
     }
 
-    /**
-     * In order to have this nicely looking comments.
-     *
-     * ``` php
-     * <?php
-     *
-     * $I['click on a product'];
-     * $I['then I select Purchase'];
-     * $I['I select shipment delivery'];
-     * $I['purchase a product'];
-     *
-     * ```
-     *
-     * @param mixed $offset
-     * @return mixed|void
-     */
-    public function offsetGet($offset)
-    {
-        $this->comment($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        // not needed
-    }
-
-    public function offsetExists($offset)
-    {
-        return false;
-    }
-
-    public function offsetUnset($offset)
-    {
-       // not needed
-    }
-
-    protected function comment($description)
+    public function comment($description)
     {
         $this->scenario->comment($description);
-        if ($this->scenario->running()) {
-            $this->scenario->runStep();
-            return $this;
-        }
+        return $this;
     }
 
     public function __call($method, $arguments) {
-        if ($this->scenario->running()) {
-            $class = get_class($this);
-            throw new \RuntimeException("Call to undefined method $class::$method");
-        }
-        $this->scenario->addStep(new Action($method, $arguments));
+        $class = get_class($this);
+        throw new \RuntimeException("Call to undefined method $class::$method");
     }
 }

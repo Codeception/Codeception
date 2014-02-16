@@ -1,6 +1,6 @@
 <?php
 
-use \Codeception\Util\Driver\Db;
+use \Codeception\Lib\Driver\Db;
 
 class postgresTest extends \PHPUnit_Framework_TestCase
 {

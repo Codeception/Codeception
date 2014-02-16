@@ -1,6 +1,6 @@
 # Advanced Usage
 
-In this chapter we will cover some technics and options that you can use to improve your testing experience and stay with better organization of your project. 
+In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project. 
 
 ## Interactive Console
 
@@ -431,10 +431,10 @@ class MemberSteps extends \WebGuy
     function login($name, $password)
     {
         $I = $this;
-        $I->amOnPage(LoginPage::$URL);
-        $I->fillField(LoginPage::$usernameField, $name);
-        $I->fillField(LoginPage::$passwordField, $password);
-        $I->click(LoginPage::$loginButton);
+        $I->amOnPage(\LoginPage::$URL);
+        $I->fillField(\LoginPage::$usernameField, $name);
+        $I->fillField(\LoginPage::$passwordField, $password);
+        $I->click(\LoginPage::$loginButton);
     }
 }
 ?>

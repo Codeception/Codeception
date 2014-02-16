@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\PHPUnit\Constraint;
 
-use Codeception\Util\Console\Message;
+use Codeception\Lib\Console\Message;
 
 class Page extends \PHPUnit_Framework_Constraint_StringContains
 {

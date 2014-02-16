@@ -32,7 +32,7 @@ use Zend\Version\Version;
  *
  */
 
-class ZF2 extends \Codeception\Util\Framework implements \Codeception\Util\FrameworkInterface
+class ZF2 extends \Codeception\Lib\Framework
 {
     protected $config = array(
         'config' => 'tests/application.config.php',
@@ -49,7 +49,7 @@ class ZF2 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
     public $db;
 
     /**
-     * @var \Codeception\Util\Connector\ZF2
+     * @var \Codeception\Lib\Connector\ZF2
      */
     public $client;
 
@@ -59,7 +59,7 @@ class ZF2 extends \Codeception\Util\Framework implements \Codeception\Util\Frame
     public function _initialize() {
         require \Codeception\Configuration::projectDir().'init_autoloader.php';
 
-        $this->client = new \Codeception\Util\Connector\ZF2();
+        $this->client = new \Codeception\Lib\Connector\ZF2();
     }
 
     public function _before(\Codeception\TestCase $test) {

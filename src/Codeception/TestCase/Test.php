@@ -1,9 +1,15 @@
 <?php
+
 namespace Codeception\TestCase;
 
+use Codeception\CodeceptionEvents;
+use Codeception\Event\TestEvent;
 use Codeception\Exception\TestRuntime;
+use Codeception\Scenario;
+use Codeception\SuiteManager;
+use Codeception\TestCase;
 
-class Test extends \Codeception\TestCase
+class Test extends TestCase
 {
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -18,11 +24,13 @@ class Test extends \Codeception\TestCase
 
     protected $guyClass;
 
-    public function setDispatcher($dispatcher) {
+    public function setDispatcher($dispatcher)
+    {
         $this->dispatcher = $dispatcher;
     }
 
-    public function setBootstrap($bootstrap) {
+    public function setBootstrap($bootstrap)
+    {
         $this->bootstrap = $bootstrap;
     }
 
@@ -33,15 +41,17 @@ class Test extends \Codeception\TestCase
 
     protected function setUp()
     {
-        if ($this->bootstrap) require $this->bootstrap;
-        $this->scenario = new \Codeception\Scenario($this);
-        $guy = $this->guyClass;
-        if ($guy) { 
-            $property = lcfirst($guy);
+        if ($this->bootstrap) {
+            require $this->bootstrap;
+        }
+        $this->scenario = new Scenario($this);
+        $guy            = $this->guyClass;
+        if ($guy) {
+            $property      = lcfirst($guy);
             $this->codeGuy = $this->$property = new $guy($this->scenario);
         }
         $this->scenario->run();
-        $this->fire('test.before', new \Codeception\Event\Test($this));
+        $this->fire(CodeceptionEvents::TEST_BEFORE, new TestEvent($this));
         $this->_before();
     }
 
@@ -50,13 +60,12 @@ class Test extends \Codeception\TestCase
      */
     protected function _before()
     {
-
     }
 
     protected function tearDown()
     {
         $this->_after();
-        $this->fire('test.after', new \Codeception\Event\Test($this));
+        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($this));
     }
 
     /**
@@ -64,15 +73,16 @@ class Test extends \Codeception\TestCase
      */
     protected function _after()
     {
-
     }
 
-    public function __construct($name = NULL, array $data = array(), $dataName = '') {
+    public function __construct($name = null, array $data = array(), $dataName = '')
+    {
         parent::__construct($name, $data, $dataName);
-        $this->scenario = new \Codeception\Scenario($this);
+        $this->scenario = new Scenario($this);
     }
-    
-    public function getFeature() {
+
+    public function getFeature()
+    {
         $text = $this->getName();
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
@@ -81,16 +91,16 @@ class Test extends \Codeception\TestCase
 
     /**
      * @param $module
+     *
      * @return \Codeception\Module
      * @throws \Codeception\Exception\TestRuntime
      */
     public function getModule($module)
     {
-        if (isset(\Codeception\SuiteManager::$modules[$module])) {
-            return \Codeception\SuiteManager::$modules[$module];
+        if (SuiteManager::hasModule($module)) {
+            return SuiteManager::$modules[$module];
         }
+
         throw new TestRuntime("Module $module is not enabled for this test suite");
     }
-
-
 }

@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Codeception\Util\Framework as Framework;
+use Codeception\Lib\Framework as Framework;
 
 /**
  * Module that interacts with Symfony 1.4 applications.

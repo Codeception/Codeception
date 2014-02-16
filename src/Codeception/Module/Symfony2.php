@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  */
 
-class Symfony2 extends \Codeception\Util\Framework
+class Symfony2 extends \Codeception\Lib\Framework
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel

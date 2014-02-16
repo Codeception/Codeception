@@ -21,7 +21,7 @@ class c3Test extends PHPUnit_Framework_TestCase
         }
 
         $this->c3 = Configuration::dataDir() . 'claypit/c3.php';
-        $this->c3_dir = Configuration::dataDir() . 'claypit/c3tmp/';
+        $this->c3_dir = Codeception\Configuration::logDir() . 'c3tmp/';
 
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE'] = 'test';
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 'debug';
@@ -31,6 +31,7 @@ class c3Test extends PHPUnit_Framework_TestCase
     {
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG']);
         unset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
+        \Codeception\Util\FileSystem::deleteDir($this->c3_dir);
     }
 
     public function testC3CodeCoverageStarted()

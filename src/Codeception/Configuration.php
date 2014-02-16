@@ -3,7 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
-use Codeception\Util\Autoload;
+use Codeception\Lib\Autoload;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
 
@@ -61,7 +61,8 @@ class Configuration
             'colors' => false,
             'log' => false,
             'bootstrap' => '_bootstrap.php',
-        )
+        ),
+        'coverage' => []
     );
 
     public static $defaultSuiteSettings = array(

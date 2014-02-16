@@ -5,7 +5,7 @@ namespace Codeception\Module;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Module as BaseModule;
-use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Driver\Facebook as FacebookDriver;
 
 /**
  * Provides testing for projects integrated with Facebook API.
@@ -174,8 +174,8 @@ class Facebook extends BaseModule
         $phpBrowser = $this->getModule('PhpBrowser');
 
         // go to facebook and make login; it work only if you visit facebook.com first
-        $phpBrowser->_sendRequest('https://www.facebook.com/');
-        $phpBrowser->_sendRequest($this->grabFacebookTestUserLoginUrl());
+        $phpBrowser->amOnPage('https://www.facebook.com/');
+        $phpBrowser->amOnPage($this->grabFacebookTestUserLoginUrl());
         $phpBrowser->seeCurrentUrlMatches('~/profile.php~');
     }
 

@@ -3,9 +3,9 @@
 use Codeception\Util\Stub;
 
 require_once 'tests/data/app/data.php';
-require_once __DIR__ . '/TestsForMink.php';
+require_once __DIR__ . '/TestsForBrowsers.php';
 
-class WebDriverTest extends TestsForMink
+class WebDriverTest extends TestsForBrowsers
 {
     /**
      * @var \Codeception\Module\WebDriver

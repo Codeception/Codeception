@@ -4,101 +4,51 @@
 // @codingStandardsIgnoreFile
 
 
-use \Codeception\Maybe;
 use Codeception\Module\OrderHelper;
-
-/**
- * Inherited methods
- * @method void execute($callable)
- * @method void wantToTest($text)
- * @method void wantTo($text)
- * @method void expectTo($prediction)
- * @method void expect($prediction)
- * @method void amGoingTo($argumentation)
- * @method void am($role)
- * @method void lookForwardTo($achieveValue)
- * @method void offsetGet($offset)
- * @method void offsetSet($offset, $value)
- * @method void offsetExists($offset)
- * @method void offsetUnset($offset)
-*/
 
 class OrderGuy extends \Codeception\AbstractGuy
 {
-    
+   
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::failNow()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\OrderHelper::failNow()
      */
     public function failNow() {
-        $this->scenario->addStep(new \Codeception\Step\Action('failNow', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('failNow', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::writeToFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\OrderHelper::writeToFile()
      */
     public function writeToFile($text) {
-        $this->scenario->addStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module\OrderHelper::appendToFile()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module\OrderHelper::appendToFile()
      */
     public function appendToFile($marker) {
-        $this->scenario->addStep(new \Codeception\Step\Action('appendToFile', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('appendToFile', func_get_args()));
     }
 
  
     /**
-     * This method is generated.
-     * Documentation taken from corresponding module.
-     * ----------------------------------------------
+     * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
-     * @see Codeception\Module::getName()
-     * @return \Codeception\Maybe
+     * @see \Codeception\Module::getName()
      */
     public function getName() {
-        $this->scenario->addStep(new \Codeception\Step\Action('getName', func_get_args()));
-        if ($this->scenario->running()) {
-            $result = $this->scenario->runStep();
-            return new Maybe($result);
-        }
-        return new Maybe();
+        return $this->scenario->runStep(new \Codeception\Step\Action('getName', func_get_args()));
     }
 }
-

@@ -1,10 +1,11 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
 use Codeception\Step;
-use Codeception\Util\Connector\PhalconMemorySession;
+use Codeception\Lib\Framework;
+use Codeception\Lib\ActiveRecordInterface;
+use Codeception\LIb\Connector\PhalconMemorySession;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
@@ -54,7 +55,7 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *
  *
  */
-class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\ActiveRecordInterface
+class Phalcon1 extends Framework implements ActiveRecordInterface
 {
     protected $config = array(
         'bootstrap' => 'app/config/bootstrap.php',
@@ -83,7 +84,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
                 'return new \Phalcon\Mvc\Application($di);'
             );
         }
-        $this->client = new \Codeception\Util\Connector\Phalcon1();
+        $this->client = new \Codeception\Lib\Connector\Phalcon1();
 
     }
 

@@ -7,6 +7,6 @@ $I->seeFileFound('File_Exists.txt','tests/_data/scenarios');
 $I->seeFileContentsEqual(<<<EOF
 I WANT TO CHECK CONFIG EXISTS
 
-I see file found "codeception.yml"
+I see file found "\$codeception"
 EOF
 );

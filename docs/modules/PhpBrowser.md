@@ -48,7 +48,7 @@ To configure CURL options use `curl` config parameter.
 ### amHttpAuthenticated
 
 
-Adds HTTP authentication via username/password.
+Authenticates user for HTTP_AUTH
 
  * param $username
  * param $password
@@ -58,6 +58,18 @@ Adds HTTP authentication via username/password.
 
 
 Opens the page.
+Requires relative uri as parameter
+
+Example:
+
+``` php
+<?php
+// opens front page
+$I->amOnPage('/');
+// opens /register page
+$I->amOnPage('/register');
+?>
+```
 
  * param $page
 
@@ -154,10 +166,21 @@ $I->click('Logout', '#nav');
 ### dontSee
 
 
- * param string $text
- * param string $selector
+Check if current page doesn't contain the text specified.
+Specify the css selector to match only specific region.
 
- * return void
+Examples:
+
+```php
+<?php
+$I->dontSee('Login'); // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1'); // with XPath
+?>
+```
+
+ * param $text
+ * param null $selector
 
 
 ### dontSeeCheckboxIsChecked
@@ -312,35 +335,6 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
-### executeInGuzzle
-
-
-Low-level API method.
-If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
-
-Example:
-
-``` php
-<?php
-// from the official Guzzle manual
-$I->amGoingTo('Sign all requests with OAuth');
-$I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
-     $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
-                 'consumer_key'    => '***',
-                 'consumer_secret' => '***',
-                 'token'           => '***',
-                 'token_secret'    => '***'
-     )));
-});
-?>
-```
-
-It is not recommended to use this command on a regular basis.
-If Codeception lacks important Guzzle Client methods, implement them and submit patches.
-
- * param callable $function
-
-
 ### fillField
 
 
@@ -428,24 +422,6 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
 
  * param $field
  * return mixed
-
-
-### moveBack
-
-
-Moves back in history
-
-
-### moveForward
-
-
-Moves forward in history
-
-
-### reloadPage
-
-
-Reloads current page
 
 
 ### resetCookie
