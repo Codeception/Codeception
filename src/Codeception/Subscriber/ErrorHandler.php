@@ -2,7 +2,7 @@
 
 namespace Codeception\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\SuiteEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -11,7 +11,7 @@ class ErrorHandler implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        CodeceptionEvents::SUITE_BEFORE => 'handle'
+        Events::SUITE_BEFORE => 'handle'
     ];
 
     /**

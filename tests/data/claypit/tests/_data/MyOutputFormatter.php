@@ -1,6 +1,6 @@
 <?php
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Platform\Extension;
 
@@ -14,11 +14,11 @@ class MyOutputFormatter extends Extension
 
     // we are listening for events
     static $events = array(
-        CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
-        CodeceptionEvents::TEST_END     => 'after',
-        CodeceptionEvents::TEST_SUCCESS => 'success',
-        CodeceptionEvents::TEST_FAIL    => 'fail',
-        CodeceptionEvents::TEST_ERROR   => 'error',
+        Events::SUITE_BEFORE => 'beforeSuite',
+        Events::TEST_END     => 'after',
+        Events::TEST_SUCCESS => 'success',
+        Events::TEST_FAIL    => 'fail',
+        Events::TEST_ERROR   => 'error',
     );
 
     public function beforeSuite()

@@ -2,7 +2,7 @@
 
 namespace Codeception\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\TestEvent;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -12,9 +12,9 @@ class Cest implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        CodeceptionEvents::TEST_BEFORE => 'beforeTest',
-        CodeceptionEvents::TEST_AFTER  => 'afterTest',
-        CodeceptionEvents::TEST_FAIL   => 'failedTest'
+        Events::TEST_BEFORE => 'beforeTest',
+        Events::TEST_AFTER  => 'afterTest',
+        Events::TEST_FAIL   => 'failedTest'
     ];
 
     public function beforeTest(TestEvent $e)

@@ -2,7 +2,7 @@
 
 namespace Codeception\TestCase;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\TestRuntime;
 use Codeception\Scenario;
@@ -51,7 +51,7 @@ class Test extends TestCase
             $this->codeGuy = $this->$property = new $guy($this->scenario);
         }
         $this->scenario->run();
-        $this->fire(CodeceptionEvents::TEST_BEFORE, new TestEvent($this));
+        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
     }
 
@@ -65,7 +65,7 @@ class Test extends TestCase
     protected function tearDown()
     {
         $this->_after();
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($this));
+        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
     /**

@@ -7,7 +7,7 @@ namespace Codeception;
  *
  * @author tiger-seo <tiger.seo@gmail.com>
  */
-final class CodeceptionEvents
+final class Events
 {
     /**
      * Private constructor. This class cannot be instantiated.
@@ -19,6 +19,7 @@ final class CodeceptionEvents
 
     /**
      * The <b>SUITE_INIT</b> event occurs when suite is initialized.
+     * Modules are initialized, but Guy class is not loaded.
      *
      * The event listener method receives a {@link Codeception\Event\SuiteEvent} instance.
      */

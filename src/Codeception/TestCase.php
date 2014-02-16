@@ -62,17 +62,17 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
     public function runStep(Step $step)
     {
         $this->trace[] = $step;
-        $this->fire(CodeceptionEvents::STEP_BEFORE, new StepEvent($this, $step));
+        $this->fire(Events::STEP_BEFORE, new StepEvent($this, $step));
         try {
             $result = $step->run();
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->getTestResultObject();
             $result->addFailure(clone($this), $f, $result->time());
         } catch (\Exception $e) {
-            $this->fire(CodeceptionEvents::STEP_AFTER, new StepEvent($this, $step));
+            $this->fire(Events::STEP_AFTER, new StepEvent($this, $step));
             throw $e;
         }
-        $this->fire(CodeceptionEvents::STEP_AFTER, new StepEvent($this, $step));
+        $this->fire(Events::STEP_AFTER, new StepEvent($this, $step));
         return $result;
     }
 

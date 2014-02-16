@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
@@ -21,20 +21,20 @@ class Console implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        CodeceptionEvents::SUITE_BEFORE    => 'beforeSuite',
-        CodeceptionEvents::SUITE_AFTER     => 'afterSuite',
-        CodeceptionEvents::TEST_BEFORE     => 'before',
-        CodeceptionEvents::TEST_AFTER      => 'afterTest',
-        CodeceptionEvents::TEST_START      => 'startTest',
-        CodeceptionEvents::TEST_END        => 'endTest',
-        CodeceptionEvents::STEP_BEFORE     => 'beforeStep',
-        CodeceptionEvents::STEP_AFTER      => 'afterStep',
-        CodeceptionEvents::TEST_SUCCESS    => 'testSuccess',
-        CodeceptionEvents::TEST_FAIL       => 'testFail',
-        CodeceptionEvents::TEST_ERROR      => 'testError',
-        CodeceptionEvents::TEST_INCOMPLETE => 'testIncomplete',
-        CodeceptionEvents::TEST_SKIPPED    => 'testSkipped',
-        CodeceptionEvents::TEST_FAIL_PRINT => 'printFail',
+        Events::SUITE_BEFORE    => 'beforeSuite',
+        Events::SUITE_AFTER     => 'afterSuite',
+        Events::TEST_BEFORE     => 'before',
+        Events::TEST_AFTER      => 'afterTest',
+        Events::TEST_START      => 'startTest',
+        Events::TEST_END        => 'endTest',
+        Events::STEP_BEFORE     => 'beforeStep',
+        Events::STEP_AFTER      => 'afterStep',
+        Events::TEST_SUCCESS    => 'testSuccess',
+        Events::TEST_FAIL       => 'testFail',
+        Events::TEST_ERROR      => 'testError',
+        Events::TEST_INCOMPLETE => 'testIncomplete',
+        Events::TEST_SKIPPED    => 'testSkipped',
+        Events::TEST_FAIL_PRINT => 'printFail',
     ];
 
     protected $steps = true;

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Coverage\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Configuration;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Coverage\Shared\C3Collect;
@@ -43,10 +43,10 @@ class LocalServer extends SuiteSubscriber
     protected $module;
 
     static $events = [
-        CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
-        CodeceptionEvents::TEST_BEFORE  => 'beforeTest',
-        CodeceptionEvents::STEP_AFTER   => 'afterStep',
-        CodeceptionEvents::SUITE_AFTER => 'afterSuite',
+        Events::SUITE_BEFORE => 'beforeSuite',
+        Events::TEST_BEFORE  => 'beforeTest',
+        Events::STEP_AFTER   => 'afterStep',
+        Events::SUITE_AFTER => 'afterSuite',
     ];
 
     protected function isEnabled()

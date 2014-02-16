@@ -2,7 +2,7 @@
 
 namespace Codeception\TestCase;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Util\Annotation;
 
@@ -37,7 +37,7 @@ class Cest extends Cept
 
     public function testCodecept()
     {
-        $this->fire(CodeceptionEvents::TEST_BEFORE, new TestEvent($this));
+        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
 
         if (file_exists($this->bootstrap)) {
             require $this->bootstrap;
@@ -56,7 +56,7 @@ class Cest extends Cept
         }
         $this->executeAfter($this->testMethod, $I);
 
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($this));
+        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
     protected function executeBefore($testMethod, $I)

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Generator\Guy;
 use Codeception\SuiteManager;
@@ -11,7 +11,7 @@ class AutoRebuild implements EventSubscriberInterface
 {
     use Shared\StaticEvents;
 
-    static $events = [CodeceptionEvents::SUITE_INIT => 'updateGuy'];
+    static $events = [Events::SUITE_INIT => 'updateGuy'];
 
 
     public function updateGuy(SuiteEvent $e)

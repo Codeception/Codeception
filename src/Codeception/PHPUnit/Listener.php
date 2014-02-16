@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
@@ -25,29 +25,29 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(CodeceptionEvents::TEST_FAIL, new FailEvent($test, $e));
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($test, $time));
+        $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
+        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(CodeceptionEvents::TEST_ERROR, new FailEvent($test, $e));
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($test, $time));
+        $this->fire(Events::TEST_ERROR, new FailEvent($test, $e));
+        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
     }
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(CodeceptionEvents::TEST_INCOMPLETE, new FailEvent($test, $e));
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($test, $time));
+        $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $e));
+        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
-        $this->fire(CodeceptionEvents::TEST_SKIPPED, new FailEvent($test, $e));
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($test, $time));
+        $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $e));
+        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -62,16 +62,16 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
-        $this->dispatcher->dispatch(CodeceptionEvents::TEST_START, new TestEvent($test));
+        $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
     }
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
         if (! in_array(spl_object_hash($test), $this->unsuccessfulTests)) {
-            $this->fire(CodeceptionEvents::TEST_SUCCESS, new TestEvent($test));
+            $this->fire(Events::TEST_SUCCESS, new TestEvent($test));
         }
 
-        $this->dispatcher->dispatch(CodeceptionEvents::TEST_END, new TestEvent($test, $time));
+        $this->dispatcher->dispatch(Events::TEST_END, new TestEvent($test, $time));
     }
 
     protected function fire($event, TestEvent $eventType)

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Coverage\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 
@@ -12,8 +12,8 @@ use Codeception\Event\SuiteEvent;
 class Local extends SuiteSubscriber
 {
     static $events = [
-        CodeceptionEvents::SUITE_BEFORE => 'beforeSuite',
-        CodeceptionEvents::SUITE_AFTER => 'afterSuite',
+        Events::SUITE_BEFORE => 'beforeSuite',
+        Events::SUITE_AFTER => 'afterSuite',
     ];
 
     protected function isEnabled()

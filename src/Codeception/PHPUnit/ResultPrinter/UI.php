@@ -2,7 +2,7 @@
 
 namespace Codeception\PHPUnit\ResultPrinter;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\TestCase\Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -24,7 +24,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
     {
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
-                         CodeceptionEvents::TEST_FAIL_PRINT,
+                         Events::TEST_FAIL_PRINT,
                          new FailEvent($defect->failedTest(), $defect->thrownException(), $count)
         );
     }

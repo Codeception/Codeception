@@ -2,7 +2,7 @@
 
 namespace Codeception\TestCase;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Parser;
 use Codeception\Scenario;
@@ -75,7 +75,7 @@ class Cept extends TestCase implements ScenarioDriven
     public function preload()
     { 
         $this->parser->prepareToRun($this->getRawBody());
-        $this->fire(CodeceptionEvents::TEST_PARSED, new TestEvent($this));
+        $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
 
     public function getRawBody()
@@ -85,7 +85,7 @@ class Cept extends TestCase implements ScenarioDriven
 
     public function testCodecept()
     {
-        $this->fire(CodeceptionEvents::TEST_BEFORE, new TestEvent($this));
+        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
 
         $scenario = $this->scenario;
         $scenario->run();
@@ -96,6 +96,6 @@ class Cept extends TestCase implements ScenarioDriven
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;
 
-        $this->fire(CodeceptionEvents::TEST_AFTER, new TestEvent($this));
+        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 }

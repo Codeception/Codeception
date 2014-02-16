@@ -58,7 +58,7 @@ class SuiteManager
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
         $this->initializeModules($settings);
-        $this->dispatcher->dispatch(CodeceptionEvents::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
         require_once $this->settings['path'] . DIRECTORY_SEPARATOR . $this->settings['class_name'] . '.php';
     }
 

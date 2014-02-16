@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Coverage\Subscriber;
 
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Configuration;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Subscriber\Shared\StaticEvents;
@@ -11,7 +11,7 @@ class Printer implements EventSubscriberInterface {
     use StaticEvents;
 
     static $events = [
-        CodeceptionEvents::RESULT_PRINT_AFTER => 'printResult'
+        Events::RESULT_PRINT_AFTER => 'printResult'
     ];
 
     protected $settings = [

@@ -4,7 +4,7 @@ namespace Codeception\Command;
 
 use Codeception\AbstractGuy;
 use Codeception\Codecept;
-use Codeception\CodeceptionEvents;
+use Codeception\Events;
 use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
@@ -70,17 +70,17 @@ class Console extends Base
         $output->writeln("<info>type 'actions' to see all available actions for this suite</info>");
 
         $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
-        $dispatcher->dispatch(CodeceptionEvents::SUITE_BEFORE, $suiteEvent);
+        $dispatcher->dispatch(Events::SUITE_BEFORE, $suiteEvent);
 
-        $dispatcher->dispatch(CodeceptionEvents::TEST_PARSED, new TestEvent($this->test));
-        $dispatcher->dispatch(CodeceptionEvents::TEST_BEFORE, new TestEvent($this->test));
+        $dispatcher->dispatch(Events::TEST_PARSED, new TestEvent($this->test));
+        $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
 
         $output->writeln("\n\n\$I = new {$settings['class_name']}(\$scenario);");
         $scenario->run();
         $this->executeCommands($output, $I, $settings['bootstrap']);
 
-        $dispatcher->dispatch(CodeceptionEvents::TEST_AFTER, new TestEvent($this->test));
-        $dispatcher->dispatch(CodeceptionEvents::SUITE_AFTER, new SuiteEvent($this->suite));
+        $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));
+        $dispatcher->dispatch(Events::SUITE_AFTER, new SuiteEvent($this->suite));
 
         $output->writeln("<info>Bye-bye!</info>");
     }
