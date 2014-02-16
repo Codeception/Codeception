@@ -103,6 +103,7 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
+        $this->dispatcher->addSubscriber(new Subscriber\SaveResults());
 
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));

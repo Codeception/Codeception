@@ -6,7 +6,7 @@ class BootstrapCest
 
     public function bootstrapProject(\CliGuy $I) {
         $I->amInPath('tests/data/sandbox/tests/_data/');
-        $I->executeCommand('bootstrap');
+        $I->executeCommand('bootstrap --silent');
         $I->seeFileFound('codeception.yml');
         $this->checkFilesCreated($I);
         $I->seeInShellOutput('Building Guy classes for suites');
@@ -15,7 +15,7 @@ class BootstrapCest
     public function bootstrapWithNamespace(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox/tests/_data/');
-        $I->executeCommand('bootstrap --namespace Generated');
+        $I->executeCommand('bootstrap --namespace Generated --silent');
 
         $I->seeInShellOutput('Building Guy classes for suites');
         $I->seeFileFound('codeception.yml');

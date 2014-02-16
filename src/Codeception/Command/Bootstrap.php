@@ -21,40 +21,31 @@ class Bootstrap extends Command
 
     protected function configure()
     {
-        $this
-            ->setDefinition($this->createDefinition())
-            ->setDescription('Initializes empty test suite and default configuration file');
-
-        parent::configure();
+        $this->setDefinition([
+            new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
+            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for guy classes and helpers'),
+            new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Guy'),
+            new InputOption('silent', null, InputOption::VALUE_NONE, 'Don\'t ask stupid questions')
+        ]);
     }
 
-    /**
-     * @return InputDefinition
-     */
-    protected function createDefinition()
+    public function getDescription()
     {
-        return new InputDefinition(
-            array(
-                 new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
-                 new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for guy classes and helpers'),
-                 new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Guy'),
-                 new InputOption('silent', '', InputOption::VALUE_OPTIONAL, 'Don\'t ask stupid questions')
-            )
-        );
+        return "Creates default test suites and generates all requires file";
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->namespace = rtrim($input->getOption('namespace'), '\\');
-        
         /** @var $dialog DialogHelper  **/
         $dialog = $this->getHelper('dialog');
-        $output->writeln("Before proceed you can choose default actor:");
-        $output->writeln("\n\$I = new {{ACTOR}}");
 
         if ($input->getOption('actor')) {
-            $this->actor = $input->getOption('Guy');
+            $this->actor = $input->getOption('actor');
+
         } elseif (!$input->getOption('silent')) {
+            $output->writeln("Before proceed you can choose default actor:");
+            $output->writeln("\n\$I = new {{ACTOR}}");
             $index = $dialog->select($output, "<question>  Select an actor. Guy is default  </question>", $this->availableActors, $this->actor);
             $this->actor = $this->availableActors[$index];
         }
@@ -93,9 +84,6 @@ class Bootstrap extends Command
 
         file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
 
-        if ($this->namespace) {
-            $this->namespace = $this->namespace . '\\';
-        }
         $this->createUnitSuite();
         $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
         $this->createFunctionalSuite();
@@ -106,7 +94,7 @@ class Bootstrap extends Command
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading \n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
 
-        $output->writeln("<info>Building initial {{$this->actor}} classes</info>");
+        $output->writeln("<info>Building initial {$this->actor} classes</info>");
         $this->getApplication()->find('build')->run(
             new ArrayInput(array('command' => 'build')),
             $output
