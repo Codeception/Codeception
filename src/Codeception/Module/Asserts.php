@@ -12,18 +12,18 @@ use Codeception\Module;
 class Asserts extends Module {
 
     use \Codeception\Util\Shared\Asserts {
-        assertEquals as public;
-        assertNotEquals as public;
-        assertGreaterThen as public;
-        assertGreaterThenOrEqual as public;
-        assertContains as public;
-        assertNotContains as public;
-        assertEmpty as public;
-        assertNotEmpty as public;
-        assertNull as public;
-        assertNotNull as public;
-        assertTrue as public;
-        assertFalse as public;
+        assertEquals as public seeEquals;
+        assertNotEquals as public dontSeeEquals;
+        assertGreaterThen as public seeGreaterThen;
+        assertGreaterThenOrEqual as public seeGreaterThenOrEqual;
+        assertContains as public seeContains;
+        assertNotContains as public dontSeeContains;
+        assertEmpty as public seeEmpty;
+        assertNotEmpty as public dontSeeEmpty;
+        assertNull as public seeNull;
+        assertNotNull as public dontSeeNull;
+        assertTrue as public seeTrue;
+        assertFalse as public seeFalse;
         fail as public;
     }
 } 
