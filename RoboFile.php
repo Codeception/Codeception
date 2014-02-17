@@ -175,6 +175,12 @@ class RoboFile extends \Robo\Tasks {
 
             $this->taskGenDoc('docs/utils/' . $utilName . '.md')
                 ->docClass($className)
+                ->processMethod(function(ReflectionMethod $r, $text) use ($utilName) {
+                    $line = $r->getStartLine();
+                    $text = preg_replace("~@(.*?)~"," * $1 ", $text);
+                    $text .= "\n[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/$utilName.php#L$line)";
+                    return $text;
+                })
                 ->reorderMethods('ksort')
                 ->run();
         }

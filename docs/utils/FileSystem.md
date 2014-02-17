@@ -6,20 +6,17 @@ Set of functions to work with filesystem
 
 ### Methods
 
-#### public static **copyDir**
 
-@param $src
-@param $dst
+ *  param $src
+ *  param $dst
 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L69)
 
-#### public static **deleteDir**
+ *  param $dir
+ *  return bool
 
-@param $dir
-@return bool
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L39)
 
+ *  param $path
 
-#### public static **doEmptyDir**
-
-@param $path
-
-
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L13)

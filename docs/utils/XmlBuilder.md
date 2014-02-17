@@ -4,57 +4,49 @@
 
 ### Methods
 
-#### public **__construct**
 
-
-#### public **__get**
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L18)
 
 Appends child node
 
-@param $tag
+ *  param $tag
 
-@return XmlBuilder
+ *  return XmlBuilder
 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L31)
 
-#### public **__toString**
-
-
-#### public **attr**
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
 
 Sets attribute for current node
 
-@param $attr
-@param $val
+ *  param $attr
+ *  param $val
 
-@return XmlBuilder
+ *  return XmlBuilder
 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L58)
 
-#### public **getDom**
+ *  return \DOMDocument
 
-@return \DOMDocument
-
-
-#### public **parent**
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L111)
 
 Traverses to parent
 
-@return XmlBuilder
+ *  return XmlBuilder
 
-
-#### public **parents**
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L69)
 
 Traverses to parent with $name
 
-@param $tag
+ *  param $tag
 
-@return XmlBuilder
-@throws \Exception
+ *  return XmlBuilder
+ *  throws \Exception
 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L83)
 
-#### public **val**
+ *  param $val
 
-@param $val
+ *  return XmlBuilder
 
-@return XmlBuilder
-
-
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L44)
