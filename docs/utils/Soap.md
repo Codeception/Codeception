@@ -6,13 +6,13 @@
 
 
 #### *public static* arrayToXml
- *  static
+ * `static` 
 
- *  param \DOMDocument $xml
- *  param \DOMNode     $node
- *  param array       $array
+ * `param`  \DOMDocument $xml
+ * `param`  \DOMNode     $node
+ * `param`  array       $array
 
- *  return \DOMDocument
+ * `return`  \DOMDocument
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Soap.php#L16)
 
@@ -23,10 +23,10 @@
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Soap.php#L65)
 
 #### *public static* toXml
- *  static
+ * `static` 
 
- *  param $xml
+ * `param`  $xml
 
- *  return \DOMDocument|\DOMNode
+ * `return`  \DOMDocument|\DOMNode
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Soap.php#L35)

@@ -11,7 +11,7 @@ In other cases method of this class won't be seen.
 #### *public static* debug
 Prints data to screen. Message can be any time of data
 
- *  param $message
+ * `param`  $message
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Debug.php#L28)
 

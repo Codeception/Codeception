@@ -180,7 +180,7 @@ class RoboFile extends \Robo\Tasks {
                     $modifiers = implode(' ', \Reflection::getModifierNames($r->getModifiers()));
                     $title = "\n#### *$modifiers* {$r->name}";
 
-                    $text = preg_replace("~@(.*?)~"," * $1 ", $text);
+                    $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
                     $text .= "\n[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/$utilName.php#L$line)";
                     return $title.$text;
                 })

@@ -9,18 +9,18 @@ Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
 
 
 #### *public static* load
- *  param $class
- *  return bool
+ * `param`  $class
+ * `return`  bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L58)
 
 #### *public static* matches
 *is public for testing purposes*
 
- *  param $class
- *  param $namespace
- *  param $suffix
- *  return bool
+ * `param`  $class
+ * `param`  $namespace
+ * `param`  $suffix
+ * `return`  bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L86)
 
@@ -40,16 +40,16 @@ Autoload::register('app\tests','Controller', __DIR__.'/controllers/');
 ?>
 ```
 
- *  param $namespace
- *  param $suffix
- *  param $path
+ * `param`  $namespace
+ * `param`  $suffix
+ * `param`  $path
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L34)
 
 #### *public static* registerSuffix
-Shortcut for { *  link self::register} for classes with empty namespaces.
+Shortcut for { * `link`  self::register} for classes with empty namespaces.
 
- *  param $suffix
- *  param $path
+ * `param`  $suffix
+ * `param`  $path
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L49)
