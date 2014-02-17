@@ -9,6 +9,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
+/**
+ * Generates skeleton for unit test as in classical PHPUnit.
+ *
+ * `codecept g:phpunit unit UserTest`
+ * `codecept g:phpunit unit User`
+ * `codecept g:phpunit unit "App\User"`
+ *
+ */
 class GeneratePhpUnit extends Base {
 
     protected function configure()

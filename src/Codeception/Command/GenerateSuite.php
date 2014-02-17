@@ -9,6 +9,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 
 
+/**
+ * Create new test suite. Requires suite name and actor name
+ *
+ * `codecept g:suite api Api` -> api + ApiGuy
+ * `codecept g:suite frontend Front` -> frontend + FrontGuy
+ *
+ */
 class GenerateSuite extends Base
 {
     protected function configure()

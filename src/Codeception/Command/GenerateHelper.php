@@ -7,6 +7,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Creates empty Helper class.
+ *
+ * `codecept g:helper MyHelper`
+ *
+ */
 class GenerateHelper extends Base {
 
     protected function configure()

@@ -188,6 +188,22 @@ class RoboFile extends \Robo\Tasks {
                 ->run();
         }
 
+        $this->say("Commands");
+
+        $commands = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Command');
+
+        $commandGenerator = $this->taskGenDoc('docs/reference/commands.md');
+        foreach ($commands as $command) {
+            $commandName = basename(substr($command, 0, -4));
+            $className = '\Codeception\Command\\' . $commandName;
+            $commandGenerator->docClass($className);
+        }
+        $commandGenerator
+            ->prepend("# Console Commands\n")
+            ->processClass(function ($r, $text) { $name = $r->getShortName();return "## $name\n$text";  })
+            ->filterMethods(function(ReflectionMethod $r) { return false; })
+            ->run();
+
     }
 
     /**

@@ -9,7 +9,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+/**
+ * Cleans `log` directory
+ * `codecept clean`
+ * `codecept clean -c path/to/project`
+ *
+ */
 class Clean extends Base {
 
     public function getDescription() {

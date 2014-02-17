@@ -10,7 +10,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 
-
+/**
+ * Generates Cept (scenario-driven test) file:
+ *
+ * `codecept generate:cept suite Login`
+ * `codecept g:cept suite subdir/subdir/testnameCept.php`
+ * `codecept g:cept suite LoginCept -c path/to/project`
+ *
+ */
 class GenerateCept extends Base
 {
     protected function configure()

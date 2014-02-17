@@ -12,6 +12,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
+/**
+ * Scans all scenario driven tests (Cept, Cest files) and finds calls to undefined methods.
+ * Those undefined methods will be added to Helper classes, so you could implement them.
+ *
+ * `codecept analyze acceptance`
+ */
 class Analyze extends Base
 {
     protected $methodTemplate = <<<EOF

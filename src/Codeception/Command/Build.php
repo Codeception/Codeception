@@ -9,6 +9,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use \Symfony\Component\Console\Helper\DialogHelper;
 
+/**
+ * Generates Actor classes (initially Guy classes) from suite configs.
+ * Starting from Codeception 2.0 actor classes are auto-generated. Use this command to generate them manually.
+ *
+ * `codecept build`
+ * `codecept build path/to/project`
+ *
+ */
 class Build extends Base
 {
 

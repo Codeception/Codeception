@@ -7,7 +7,9 @@ use Symfony\Component\Console\Input\InputDefinition,
     Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Provides a selfupdate command to the phar distribution.
+ * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
+ *
+ * `php codecept.phar self-update`
  *
  * @author Franck Cassedanne <franck@cassedanne.com>
  */

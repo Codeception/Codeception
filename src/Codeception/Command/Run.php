@@ -9,6 +9,53 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Executes tests.
+ *
+ * `php codecept.phar run` - executes all tests in all suites
+ * `php codecept.phar run tests/suitename/testnameCept.php` - executes test by it's path.
+ * `php codecept.phar run tests/suitename/foldername` - executes tests from folder.
+ * `php codecept.phar run suitename` - executes all test from this suite
+ * `php codecept.phar run suitename testnameTest.php` - executes one test of this suite (provide local path for
+suite directory).
+ * `php codecept.phar run -g admin` - executes tests by group.
+ *
+ * ```
+ * 	Usage:
+ * 	 run [-c|--config="..."] [--report] [--html] [--xml] [--tap] [--json] [--colors] [--no-colors] [--silent] [--steps] [-d|--debug] [--coverage] [--no-exit] [-g|--group="..."] [-s|--skip="..."] [--skip-group="..."] [--env="..."] [suite] [test]
+ *
+ * 	Arguments:
+ * 	 suite                 suite to be tested
+ * 	 test                  test to be run
+ *
+ * 	Options:
+ * 	 --config (-c)         Use custom path for config
+ * 	 --report              Show output in compact style
+ * 	 --html                Generate html with results
+ * 	 --xml                 Generate JUnit XML Log
+ * 	 --tap                 Generate Tap Log
+ * 	 --json                Generate Json Log
+ * 	 --colors              Use colors in output
+ * 	 --no-colors           Force no colors in output (useful to override config file)
+ * 	 --silent              Only outputs suite names and final results
+ * 	 --steps               Show steps in output
+ * 	 --debug (-d)          Show debug and scenario output
+ * 	 --coverage            Run with code coverage
+ * 	 --no-exit             Don't finish with exit code
+ * 	 --group (-g)          Groups of tests to be executed (multiple values allowed)
+ * 	 --skip (-s)           Skip selected suites (multiple values allowed)
+ * 	 --skip-group          Skip selected groups (multiple values allowed)
+ * 	 --env                 Run tests in selected environments. (multiple values allowed)
+ * 	 --help (-h)           Display this help message.
+ * 	 --quiet (-q)          Do not output any message.
+ * 	 --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+ * 	 --version (-V)        Display this application version.
+ * 	 --ansi                Force ANSI output.
+ * 	 --no-ansi             Disable ANSI output.
+ * 	 --no-interaction (-n) Do not ask any interactive question.
+ * ```
+ *
+ */
 class Run extends Base
 {
     /**

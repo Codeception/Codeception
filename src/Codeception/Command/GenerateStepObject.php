@@ -7,16 +7,22 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+/**
+ * Generates StepObject class. You will be asked for steps you want to implement.
+ *
+ * `codecept g:step acceptance AdminSteps`
+ * `codecept g:step acceptance UserSteps --silent` - skip action questions
+ *
+ */
 class GenerateStepObject extends Base
 {
     protected function configure()
      {
          $this->setDefinition(array(
-             new InputArgument('suite', InputArgument::REQUIRED, 'Suite where for StepObject'),
+             new InputArgument('suite', InputArgument::REQUIRED, 'Suite for StepObject'),
              new InputArgument('step', InputArgument::REQUIRED, 'StepObject name'),
              new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-             new InputOption('force', '',InputOption::VALUE_NONE, 'skip verification question'),
+             new InputOption('silent', '',InputOption::VALUE_NONE, 'skip verification question'),
          ));
      }
 
@@ -41,7 +47,7 @@ class GenerateStepObject extends Base
 
         $gen = new StepObjectGenerator($conf, $class);
 
-        if (!$input->getOption('force')) {
+        if (!$input->getOption('silent')) {
             do {
                 $action = $dialog->ask($output, "Add action to StepObject class (ENTER to exit): ", null);
                 if ($action) {

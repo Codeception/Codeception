@@ -7,7 +7,15 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
+/**
+ * Generates Cest (scenario-driven object-oriented test) file:
+ *
+ * `codecept generate:cest suite Login`
+ * `codecept g:cest suite subdir/subdir/testnameCest.php`
+ * `codecept g:cest suite LoginCest -c path/to/project`
+ * `codecept g:cest "App\Login"`
+ *
+ */
 class GenerateCest extends Base
 {
     protected function configure()

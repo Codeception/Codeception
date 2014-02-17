@@ -8,6 +8,15 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
+/**
+ * If you want to implement namespace to your test config (for multi-app), this command will scan your test classes and add the namespace.
+ * Be careful running this.
+ *
+ * `codecept r:add-namespace Frontend` - applies Frontend namespace
+ * `codecept r:add-namespace Frontend --silent`
+ *
+ *
+ */
 class RefactorAddNamespace extends Base {
 
     protected $namespace;
@@ -20,7 +29,7 @@ class RefactorAddNamespace extends Base {
     {
         $this->setDefinition(array(
             new InputArgument('namespace', InputArgument::REQUIRED, 'namespace to add for guy classes and helpers'),
-            new InputOption('force', '',InputOption::VALUE_NONE, 'skip verification question'),
+            new InputOption('silent', '',InputOption::VALUE_NONE, 'skip verification question'),
             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
         parent::configure();
@@ -38,7 +47,7 @@ class RefactorAddNamespace extends Base {
             return;
         }
 
-        if (!$input->getOption('force')) {
+        if (!$input->getOption('silent')) {
             $dialog = $this->getHelperSet()->get('dialog');
             if (!$dialog->askConfirmation($output, '<question>Do you want to proceed?</question>', false)) {
                 return;
@@ -51,7 +60,7 @@ class RefactorAddNamespace extends Base {
         $output->writeln("+ Config file updated with namespace {$this->namespace}");
 
         $this->getApplication()->find('build')->run(new ArrayInput(array('command' => 'build', '-c' => $input->getOption('config'))), $output);
-        $output->writeln('+ Guy classes rebuilt');
+        $output->writeln('+ Actor classes rebuilt');
 
         $this->updateHelpers();
         $output->writeln("+ Helpers updated with namespace {$this->namespace}\\Codeception\\Module)");

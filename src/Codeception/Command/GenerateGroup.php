@@ -7,7 +7,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use Codeception\Lib\Generator\Group as GroupGenerator;
 
-
+/**
+ * Creates empty Group file - extension which handles all group events.
+ *
+ * `codecept g:group Admin`
+ */
 class GenerateGroup extends Base
 {
     protected function configure()
