@@ -19,7 +19,7 @@ use Codeception\Module\OrderHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class OrderGuy extends \Codeception\AbstractGuy
+class OrderGuy extends \Codeception\Actor
 {
    
     /**

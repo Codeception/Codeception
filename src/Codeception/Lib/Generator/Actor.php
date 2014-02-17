@@ -4,7 +4,7 @@ namespace Codeception\Lib\Generator;
 use Codeception\Codecept;
 use Codeception\Util\Template;
 
-class Guy
+class Actor
 {
     protected $template = <<<EOF
 <?php //[STAMP] {{hash}}
@@ -20,7 +20,7 @@ class Guy
  [!] Inherited Methods
 {{inheritedMethods}}
 */
-class {{guy}} extends \Codeception\AbstractGuy
+class {{guy}} extends \Codeception\Actor
 {
    {{methods}}
 }

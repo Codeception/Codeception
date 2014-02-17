@@ -4,7 +4,7 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
-use Codeception\Lib\Generator\Guy;
+use Codeception\Lib\Generator\Actor;
 use Codeception\Util\Annotation;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
@@ -110,10 +110,7 @@ class SuiteManager
                 if (!$test) {
                     continue;
                 }
-                if (!$this->isCurrentEnvironment(
-                    Annotation::forMethod($testClass, $method->name)->fetchAll('env')
-                )
-                ) {
+                if (!$this->isCurrentEnvironment(Annotation::forMethod($testClass, $method->name)->fetchAll('env'))) {
                     continue;
                 }
                 $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);

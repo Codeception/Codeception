@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Command;
 
-use Codeception\Lib\Generator\Guy as GuyGenerator;
+use Codeception\Lib\Generator\Actor as GuyGenerator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

@@ -20,7 +20,7 @@ use Codeception\Module\WebHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class WebGuy extends \Codeception\AbstractGuy
+class WebGuy extends \Codeception\Actor
 {
    
     /**

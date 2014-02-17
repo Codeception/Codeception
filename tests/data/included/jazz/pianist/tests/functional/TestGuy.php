@@ -20,7 +20,7 @@ use Jazz\Pianist\Codeception\Module\TestHelper;
  * @method void lookForwardTo($achieveValue)
 */
 
-class TestGuy extends \Codeception\AbstractGuy
+class TestGuy extends \Codeception\Actor
 {
     
     /**

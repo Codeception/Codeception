@@ -21,7 +21,7 @@ use Codeception\Module\OtherHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class OtherGuy extends \Codeception\AbstractGuy
+class OtherGuy extends \Codeception\Actor
 {
    
     /**

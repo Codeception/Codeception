@@ -20,7 +20,7 @@ use Codeception\Module\DumbHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class DumbGuy extends \Codeception\AbstractGuy
+class DumbGuy extends \Codeception\Actor
 {
    
     /**

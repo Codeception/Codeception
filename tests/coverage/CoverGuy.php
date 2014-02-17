@@ -22,7 +22,7 @@ use Codeception\Module\CoverHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class CoverGuy extends \Codeception\AbstractGuy
+class CoverGuy extends \Codeception\Actor
 {
    
     /**

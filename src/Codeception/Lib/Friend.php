@@ -1,6 +1,6 @@
 <?php
 namespace Codeception\Lib;
-use Codeception\AbstractGuy;
+use Codeception\Actor;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\Lib\MultiSessionInterface;
@@ -12,7 +12,7 @@ class Friend {
     protected $data = [];
     protected $multiSessionModules = [];
 
-    public function __construct($name, AbstractGuy $guy)
+    public function __construct($name, Actor $guy)
     {
         $this->name = $name;
         $this->guy = $guy;

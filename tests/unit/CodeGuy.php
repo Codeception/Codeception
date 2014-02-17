@@ -20,7 +20,7 @@ use Codeception\Module\EmulateModuleHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class CodeGuy extends \Codeception\AbstractGuy
+class CodeGuy extends \Codeception\Actor
 {
    
     /**

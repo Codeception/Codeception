@@ -19,7 +19,7 @@ use Codeception\Module\SkipHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class SkipGuy extends \Codeception\AbstractGuy
+class SkipGuy extends \Codeception\Actor
 {
    
     /**

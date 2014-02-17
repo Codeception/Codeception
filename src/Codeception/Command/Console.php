@@ -2,7 +2,7 @@
 
 namespace Codeception\Command;
 
-use Codeception\AbstractGuy;
+use Codeception\Actor;
 use Codeception\Codecept;
 use Codeception\Events;
 use Codeception\Configuration;
@@ -85,7 +85,7 @@ class Console extends Base
         $output->writeln("<info>Bye-bye!</info>");
     }
 
-    protected function executeCommands(OutputInterface $output, AbstractGuy $I, $bootstrap)
+    protected function executeCommands(OutputInterface $output, Actor $I, $bootstrap)
     {
         $dialog = $this->getHelperSet()->get('dialog');
 

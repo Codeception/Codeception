@@ -22,7 +22,7 @@ use Codeception\Module\CodeHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class CliGuy extends \Codeception\AbstractGuy
+class CliGuy extends \Codeception\Actor
 {
    
     /**

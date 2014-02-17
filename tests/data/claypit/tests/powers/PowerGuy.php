@@ -19,7 +19,7 @@ use Codeception\Module\PowerHelper;
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
 */
-class PowerGuy extends \Codeception\AbstractGuy
+class PowerGuy extends \Codeception\Actor
 {
    
     /**
