@@ -42,6 +42,7 @@ use Illuminate\Support\MessageBag;
 class Laravel4 extends Framework implements ActiveRecordInterface
 {
 
+    public $kernel;
     protected $config = array('cleanup' => true);
 
     public function _initialize()
