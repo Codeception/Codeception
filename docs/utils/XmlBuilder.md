@@ -2,11 +2,70 @@
 ## Codeception\Util\XmlBuilder
 
 
+That's a pretty simple yet powerful class to build XML structures in jQuery-like style. With no XML line actually written!
+Uses DOM extension to manipulate XML data.
+
+```php
+<?php
+$xml = new \Codeception\Util\XmlBuilder();
+$xml->users
+	->user
+		->val(1)
+		->email
+			->val('davert@mail.ua')
+			->attr('valid','true')
+			->parent()
+		->cart
+			->attr('empty','false')
+			->items
+				->item
+					->val('useful item');
+				->parents('user')
+		->active
+			->val(1);
+echo $xml;
+```
+
+This will produce this XML
+
+```xml
+<?xml version="1.0"?>
+<users>
+	<user>
+		1
+		<email valid="true">davert@mail.ua</email>
+		<cart empty="false">
+			<items>
+				<item>useful item</item>
+			</items>
+		</cart>
+		<active>1</active>
+	</user>
+</users>
+```
+
+### Usage
+
+Builder uses chained calls. So each call to builder returns a builder object. Except for `getDom` and `__toString` methods.
+
+ * `$xml->node` - create new xml node and go inside of it.
+ * `$xml->node->val('value')` - sets the inner value of node
+ * `$xml->attr('name','value')` - set the attribute of node
+ * `$xml->parent()` - go back to parent node.
+ * `$xml->parents('user')` - go back through all parents to `user` node.
+
+Export:
+
+ * `$xml->getDom` - get a DOMDocument object
+ * `$xml->__toString` - get a string representation of XML.
+
+[Source code](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php)
+
 ### Methods
 
 
 #### *public* __construct
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L18)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L77)
 
 #### *public* __get
 Appends child node
@@ -15,10 +74,10 @@ Appends child node
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L31)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L90)
 
 #### *public* __toString
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
 
 #### *public* attr
 Sets attribute for current node
@@ -28,19 +87,19 @@ Sets attribute for current node
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L58)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L117)
 
 #### *public* getDom
  * `return`  \DOMDocument
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L111)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)
 
 #### *public* parent
 Traverses to parent
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L69)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L128)
 
 #### *public* parents
 Traverses to parent with $name
@@ -50,11 +109,11 @@ Traverses to parent with $name
  * `return`  XmlBuilder
  * `throws`  \Exception
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L83)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L142)
 
 #### *public* val
  * `param`  $val
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L44)
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
