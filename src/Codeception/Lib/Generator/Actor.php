@@ -17,7 +17,7 @@ class Actor
 {{use}}
 
 /**
- [!] Inherited Methods
+ * Inherited Methods
 {{inheritedMethods}}
 */
 class {{guy}} extends \Codeception\Actor
@@ -198,7 +198,7 @@ EOF;
     {
         $inherited = array();
 
-        $class = new \ReflectionClass('\Codeception\\AbstractGuy');
+        $class = new \ReflectionClass('\Codeception\\Actor');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
         foreach ($methods as $method) {
