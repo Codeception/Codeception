@@ -1,6 +1,6 @@
 # REST Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
 
 Module for testing REST WebService.
 
@@ -41,27 +41,21 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 ## Actions
 
-
 ### amDigestAuthenticated
-
 
 s Digest authentication via username/password.
 
 ram $username
 ram $password
 
-
 ### amHttpAuthenticated
-
 
 Adds HTTP authentication via username/password.
 
  * param $username
  * param $password
 
-
 ### dontSeeHttpHeader
-
 
 Checks over the given HTTP header and (optionally)
 its value, asserting that are not there
@@ -69,38 +63,25 @@ its value, asserting that are not there
  * param $name
  * param $value
 
-
 ### dontSeeResponseCodeIs
-
 
 Checks that response code is not equal to provided value.
 
  * param $code
 
-
 ### dontSeeResponseContains
-
 
 Checks whether last response do not contain text.
 
  * param $text
 
-
 ### dontSeeResponseContainsJson
-
 
 Opposite to seeResponseContainsJson
 
  * param array $json
 
-
-### getName
-
-__not documented__
-
-
 ### grabDataFromJsonResponse
-
 
 Returns data from the current JSON response using specified path
 so that it can be used in next scenario steps
@@ -121,9 +102,7 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 
  * author tiger.seo@gmail.com
 
-
 ### grabHttpHeader
-
 
 Returns the value of the specified header name
 
@@ -132,9 +111,7 @@ Returns the value of the specified header name
 
  * return string|array The first header value if $first is true, an array of values otherwise
 
-
 ### grabResponse
-
 
 Returns current response so that it can be used in next scenario steps.
 
@@ -150,18 +127,14 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
  * version 1.1
  * return string
 
-
 ### haveHttpHeader
-
 
 Sets HTTP header
 
  * param $name
  * param $value
 
-
 ### seeHttpHeader
-
 
 Checks over the given HTTP header and (optionally)
 its value, asserting that are there
@@ -169,9 +142,7 @@ its value, asserting that are there
  * param $name
  * param $value
 
-
 ### seeHttpHeaderOnce
-
 
 Checks that http response header is received only once.
 HTTP RFC2616 allows multiple response headers with the same name.
@@ -185,25 +156,19 @@ $I->seeHttpHeaderOnce('Cache-Control');
 
  * param $name
 
-
 ### seeResponseCodeIs
-
 
 Checks response code equals to provided value.
 
  * param $code
 
-
 ### seeResponseContains
-
 
 Checks whether the last response contains text.
 
  * param $text
 
-
 ### seeResponseContainsJson
-
 
 Checks whether the last JSON response contains provided array.
 The response is converted to array with json_decode($response, true)
@@ -227,33 +192,25 @@ This method recursively checks if one array can be found inside of another.
 
  * param array $json
 
-
 ### seeResponseEquals
-
 
 Checks if response is exactly the same as provided.
 
  * param $response
 
-
 ### seeResponseIsJson
-
 
 Checks whether last response was valid JSON.
 This is done with json_last_error function.
 
 
-
 ### seeResponseIsXml
-
 
 Checks whether last response was valid XML.
 This is done with libxml_get_last_error function.
 
 
-
 ### sendDELETE
-
 
 Sends DELETE request to given uri.
 
@@ -261,27 +218,21 @@ Sends DELETE request to given uri.
  * param array $params
  * param array $files
 
-
 ### sendGET
-
 
 Sends a GET request to given uri.
 
  * param $url
  * param array $params
 
-
 ### sendHEAD
-
 
 Sends a HEAD request to given uri.
 
  * param $url
  * param array $params
 
-
 ### sendLINK
-
 
 Sends LINK request to given uri.
 
@@ -292,18 +243,14 @@ Sends LINK request to given uri.
 
  * author samva.ua@gmail.com
 
-
 ### sendOPTIONS
-
 
 Sends an OPTIONS request to given uri.
 
  * param $url
  * param array $params
 
-
 ### sendPATCH
-
 
 Sends PATCH request to given uri.
 
@@ -311,9 +258,7 @@ Sends PATCH request to given uri.
  * param array $params
  * param array $files
 
-
 ### sendPOST
-
 
 Sends a POST request to given uri.
 
@@ -323,9 +268,7 @@ Parameters and files (as array of filenames) can be provided.
  * param array $params
  * param array $files
 
-
 ### sendPUT
-
 
 Sends PUT request to given uri.
 
@@ -333,9 +276,7 @@ Sends PUT request to given uri.
  * param array $params
  * param array $files
 
-
 ### sendUNLINK
-
 
 Sends UNLINK request to given uri.
 
@@ -345,3 +286,4 @@ Sends UNLINK request to given uri.
  * link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 
  * author samva.ua@gmail.com
+

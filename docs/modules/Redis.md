@@ -1,6 +1,6 @@
 # Redis Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis.php)**
 
 Works with Redis database.
 
@@ -26,17 +26,11 @@ Cleans up Redis database after each run.
 
 Report an issue if this module doesn't work for you.
 
- * author judgedim
+@author judgedim
 
 ## Actions
 
-
 ### cleanupRedis
-
 
 Cleans up Redis database.
 
-
-### getName
-
-__not documented__

@@ -82,7 +82,7 @@ abstract class Module
         }
     }
 
-    public function getName()
+    public function _getName()
     {
         $module = get_class($this);
          if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {

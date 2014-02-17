@@ -2,6 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
+use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
@@ -138,67 +139,46 @@ class RoboFile extends \Robo\Tasks {
         $this->taskCleanDir('docs/modules')->run();
         $this->say('generating documentation from source files');
 
-        $clean_doc = function($doc, $indent = 3) {
-            $lines = explode("\n", $doc);
-            $lines = array_map(function ($line) use ($indent) {
-                return substr($line, $indent);
-            }, $lines);
-            $doc = implode("\n", $lines);
-            $doc = str_replace(array('@since'), array(' * available since version'), $doc);
-            $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
-            return $doc;
-        };
-
-        $modules = Finder::create()->files('*.php')->in(__DIR__ . '/src/Codeception/Module');
+        $this->say("Modules");
+        $modules = Finder::create()->files()->name('*.php')->in(__DIR__ . '/src/Codeception/Module');
 
         foreach ($modules as $module) {
-
             $moduleName = basename(substr($module, 0, -4));
-            $text = '# ' . $moduleName . " Module\n";
-            $this->say($moduleName);
-
-            $text .= "**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**\n\n";
-
             $className = '\Codeception\Module\\' . $moduleName;
-            $class = new ReflectionClass($className);
-            $doc = $class->getDocComment();
-            if ($doc) $text .= $clean_doc($doc, 3);
-            $text .= "\n## Actions\n\n";
 
-            $reference = array();
-            foreach ($class->getMethods() as $method) {
-                if ($method->isConstructor() or $method->isDestructor()) continue;
-                if (strpos($method->name, '_') === 0) continue;
-                if ($method->isPublic()) {
-                    $title = "\n### " . $method->name . "\n\n";
-                    $doc = $method->getDocComment();
-                    if (!$doc) {
-                        $interfaces = $class->getInterfaces();
-                        foreach ($interfaces as $interface) {
-                            $i = new \ReflectionClass($interface->name);
-                            if ($i->hasMethod($method->name)) {
-                                $doc = $i->getMethod($method->name)->getDocComment();
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!$doc) {
-                        $parent = new \ReflectionClass($class->getParentClass()->name);
-                        if ($parent->hasMethod($method->name)) {
-                            $doc = $parent->getMethod($method->name)->getDocComment();
-                        }
-                    }
-                    $doc = $doc ? $clean_doc($doc, 7) : "__not documented__\n";
-                    $reference[$method->name] = $title . $doc;
-                }
-            }
-            ksort($reference);
-            $text .= implode("\n", $reference);
-
-            file_put_contents(__DIR__ . '/docs/modules/' . $moduleName . '.md', $text);
-
+            $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
+                ->docClass($className)
+                ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**")
+                ->processClass(function($r, $text) {
+                    return $text . "\n## Actions\n\n";
+                })->filterMethods(function(\ReflectionMethod $method) {
+                    if ($method->isConstructor() or $method->isDestructor()) return false;
+                    if (!$method->isPublic()) return false;
+                    if (strpos($method->name, '_') === 0) return false;
+                    return true;
+                })->processMethod(function(\ReflectionMethod $method, $text) {
+                    $title = "### {$method->name}\n";
+                    if (!$text) return $title."__not documented__\n";
+                    $text = str_replace(array('@since'), array(' * available since version'), $text);
+                    $text = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $text);
+                    return $title . $text;
+                })->reorderMethods('ksort')
+                ->run();
         }
+        $this->say("Util Classes");
+
+        $utils = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Util');
+
+        foreach ($utils as $util) {
+            $utilName = basename(substr($util, 0, -4));
+            $className = '\Codeception\Util\\' . $utilName;
+
+            $this->taskGenDoc('docs/utils/' . $utilName . '.md')
+                ->docClass($className)
+                ->reorderMethods('ksort')
+                ->run();
+        }
+
     }
 
     /**

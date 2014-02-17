@@ -29,13 +29,14 @@ class Friend {
         $currentUserData = [];
 
         foreach ($this->multiSessionModules as $module) {
-            $currentUserData[$module->getName()] = $module->_backupSessionData();
+            $name = $module->_getName();
+            $currentUserData[$name] = $module->_backupSessionData();
             if (empty($this->data)) {
                 $module->_initializeSession();
-                $this->data[$module->getName()] = $module->_backupSessionData();
+                $this->data[$name] = $module->_backupSessionData();
                 continue;
             }
-            $module->_loadSessionData($this->data[$module->getName()]);
+            $module->_loadSessionData($this->data[$name]);
         };
 
         $this->guy->comment(strtoupper("<info>{$this->name} does</info>:"));
@@ -43,8 +44,9 @@ class Friend {
         $this->guy->comment(strtoupper("<info>{$this->name} finished</info>"));
 
         foreach ($this->multiSessionModules as $module) {
-            $this->data[$module->getName()] = $module->_backupSessionData();
-            $module->_loadSessionData($currentUserData[$module->getName()]);
+            $name = $module->_getName();
+            $this->data[$name] = $module->_backupSessionData();
+            $module->_loadSessionData($currentUserData[$name]);
         };
         return $ret;
     }

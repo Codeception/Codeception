@@ -1,6 +1,6 @@
 # Db Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
 
 Works with SQL database.
 
@@ -25,7 +25,7 @@ Supported but not tested.
 * MSSQL
 * Oracle
 
-Connection is done by database Drivers, which are stored in Codeception\Util\Driver namespace.
+Connection is done by database Drivers, which are stored in Codeception\Lib\Driver namespace.
 Check out drivers if you get problems loading dumps and cleaning databases.
 
 ## Status
@@ -70,9 +70,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 
 ## Actions
 
-
 ### dontSeeInDatabase
-
 
 Effect is opposite to ->seeInDatabase
 
@@ -93,17 +91,10 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.
 ```
 Fails if such user was found.
 
- * param $table
+ * param       $table
  * param array $criteria
 
-
-### getName
-
-__not documented__
-
-
 ### grabFromDatabase
-
 
 Fetches a single column value from a database.
 Provide table name, desired column and criteria.
@@ -117,14 +108,14 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 ```
 
  * version 1.1
- * param $table
- * param $column
+
+ * param       $table
+ * param       $column
  * param array $criteria
+
  * return mixed
 
-
 ### haveInDatabase
-
 
 Inserts SQL record into database. This record will be erased after the test.
 
@@ -138,9 +129,7 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com
  * param array $data
  * return integer $id
 
-
 ### seeInDatabase
-
 
 Checks if a row with given column values exists.
 Provide table name and column values.
@@ -159,5 +148,6 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.
 ```
 Fails if no such user found.
 
- * param $table
+ * param       $table
  * param array $criteria
+

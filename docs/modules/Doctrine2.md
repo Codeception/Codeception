@@ -1,6 +1,6 @@
 # Doctrine2 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
 
 Allows integration and testing for projects with Doctrine2 ORM.
 
@@ -36,29 +36,18 @@ It can be done in bootstrap file, by setting static $em property:
 
 ## Actions
 
-
 ### dontSeeInRepository
-
 
 Flushes changes to database and performs ->findOneBy() call for current repository.
 
  * param $entity
  * param array $params
 
-
 ### flushToDatabase
-
 
 Performs $em->flush();
 
-
-### getName
-
-__not documented__
-
-
 ### grabFromRepository
-
 
 Selects field value from repository.
 It builds query based on array of parameters.
@@ -78,9 +67,7 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * param array $params
  * return array
 
-
 ### haveFakeRepository
-
 
 Mocks the repository.
 
@@ -101,15 +88,11 @@ This creates a stub class for Entity\User repository with redefined method findB
  * param $classname
  * param array $methods
 
-
 ### haveInRepository
-
 
 Saves data in repository
 
-
 ### persistEntity
-
 
 Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
 
@@ -124,9 +107,7 @@ $I->persistEntity($user, array('name' => 'Miles'));
  * param $obj
  * param array $values
 
-
 ### seeInRepository
-
 
 Flushes changes to database executes a query defined by array.
 It builds query based on array of parameters.
@@ -146,3 +127,4 @@ Fails if record for given criteria can\'t be found,
 
  * param $entity
  * param array $params
+

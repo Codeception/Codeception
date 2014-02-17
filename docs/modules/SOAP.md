@@ -1,6 +1,6 @@
 # SOAP Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
 
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
@@ -33,9 +33,7 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 ## Actions
 
-
 ### dontSeeSoapResponseContainsXPath
-
 
 Checks XML response doesn't contain XPath locator
 
@@ -47,9 +45,7 @@ $I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
 
  * param $xpath
 
-
 ### dontSeeSoapResponseEquals
-
 
 Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
@@ -58,9 +54,7 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
 
  * param $xml
 
-
 ### dontSeeSoapResponseIncludes
-
 
 Checks XML response does not include provided XML.
 Comparison is done by canonicalizing both xml`s.
@@ -68,14 +62,7 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
 
  * param $xml
 
-
-### getName
-
-__not documented__
-
-
 ### grabAttributeFrom
-
 
 Finds and returns attribute of element.
 Element is matched by either CSS or XPath
@@ -85,9 +72,7 @@ Element is matched by either CSS or XPath
  * param $attribute
  * return string
 
-
 ### grabTextContentFrom
-
 
 Finds and returns text contents of element.
 Element is matched by either CSS or XPath
@@ -96,9 +81,7 @@ Element is matched by either CSS or XPath
  * param $cssOrXPath
  * return string
 
-
 ### haveSoapHeader
-
 
 Prepare SOAP header.
 Receives header name and parameters as array.
@@ -125,17 +108,13 @@ Will produce header:
  * param $header
  * param array $params
 
-
 ### seeResponseCodeIs
-
 
 Checks response code from server.
 
  * param $code
 
-
 ### seeSoapResponseContainsStructure
-
 
 Checks XML response contains provided structure.
 Response elements will be compared with XML provided.
@@ -157,9 +136,7 @@ This method does not require path from root to match the structure.
 
  * param $xml
 
-
 ### seeSoapResponseContainsXPath
-
 
 Checks XML response with XPath locator
 
@@ -171,9 +148,7 @@ $I->seeSoapResponseContainsXPath('//root/user[@id=1]');
 
  * param $xpath
 
-
 ### seeSoapResponseEquals
-
 
 Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
@@ -194,9 +169,7 @@ $I->seeSoapRequestIncludes($dom);
 
  * param $xml
 
-
 ### seeSoapResponseIncludes
-
 
 Checks XML response includes provided XML.
 Comparison is done by canonicalizing both xml`s.
@@ -217,9 +190,7 @@ $I->seeSoapRequestIncludes($dom);
 
  * param $xml
 
-
 ### sendSoapRequest
-
 
 Submits request to endpoint.
 
@@ -239,3 +210,4 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
 
  * param $request
  * param $body
+

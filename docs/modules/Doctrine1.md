@@ -1,6 +1,6 @@
 # Doctrine1 Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
 
 Performs DB operations with Doctrine ORM 1.x
 
@@ -20,9 +20,7 @@ This module cleans all cached data after each test.
 
 ## Actions
 
-
 ### dontSeeInTable
-
 
 Checks table doesn't contain row with specified values
 Provide Doctrine model name and criteria that can be passed to addWhere DQL
@@ -38,14 +36,7 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com
  * param $model
  * param array $values
 
-
-### getName
-
-__not documented__
-
-
 ### grabFromTable
-
 
 Fetches single value from a database.
 Provide Doctrine model name, desired field, and criteria that can be passed to addWhere DQL
@@ -63,9 +54,7 @@ $mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
  * param array $values
  * return mixed
 
-
 ### seeInTable
-
 
 Checks table contains row with specified values
 Provide Doctrine model name can be passed to addWhere DQL
@@ -80,3 +69,4 @@ $I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
  * param $model
  * param array $values
+

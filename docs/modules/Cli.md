@@ -1,6 +1,6 @@
 # Cli Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Cli.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Cli.php)**
 
 Wrapper for basic shell commands and shell output
 
@@ -13,37 +13,25 @@ Wrapper for basic shell commands and shell output
 
 ## Actions
 
-
 ### dontSeeInShellOutput
-
 
 Checks that output from latest command doesn't contain text
 
  * param $text
 
 
-
-### getName
-
-__not documented__
-
-
 ### runShellCommand
-
 
 Executes a shell command
 
  * param $command
 
-
 ### seeInShellOutput
-
 
 Checks that output from last executed command contains text
 
  * param $text
 
-
 ### seeShellOutputMatches
-
 __not documented__
+

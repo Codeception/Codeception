@@ -2,6 +2,9 @@
 
 namespace Codeception\Util;
 
+/**
+ * Simple annotation parser. Take only key-value annotations for methods or class.
+ */
 class Annotation
 {
     protected static $reflectedClasses = array();
@@ -73,6 +76,10 @@ class Annotation
         return $this;
     }
 
+    /**
+     * @param $annotation
+     * @return null
+     */
     public function fetch($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();
@@ -82,6 +89,10 @@ class Annotation
         return null;
     }
 
+    /**
+     * @param $annotation
+     * @return array
+     */
     public function fetchAll($annotation)
     {
         $docBlock = $this->currentReflectedItem->getDocComment();

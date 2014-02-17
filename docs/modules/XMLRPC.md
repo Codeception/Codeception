@@ -1,6 +1,6 @@
 # XMLRPC Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/XMLRPC.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/XMLRPC.php)**
 
 Module for testing XMLRPC WebService.
 
@@ -30,46 +30,34 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 * params - array of sent data
 * response - last response (string)
 
- * available since version 1.1.5
- * author tiger.seo@gmail.com
+@since 1.1.5
+@author tiger.seo@gmail.com
 
 ## Actions
 
-
-### getName
-
-__not documented__
-
-
 ### haveHttpHeader
-
 
 Sets HTTP header
 
  * param string $name
  * param string $value
 
-
 ### seeResponseCodeIs
-
 
 Checks response code.
 
  * param $num
 
-
 ### seeResponseIsXMLRPC
-
 
 Checks weather last response was valid XMLRPC.
 This is done with xmlrpc_decode function.
 
 
-
 ### sendXMLRPCMethodCall
-
 
 Sends a XMLRPC method call to remote XMLRPC-server.
 
  * param string $methodName
  * param array $parameters
+

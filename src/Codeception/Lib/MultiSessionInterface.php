@@ -12,5 +12,5 @@ interface MultiSessionInterface
 
     public function _closeSession($data);
 
-    public function getName();
+    public function _getName();
 }

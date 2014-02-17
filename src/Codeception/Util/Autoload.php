@@ -2,6 +2,10 @@
 
 namespace Codeception\Util;
 
+/**
+ * Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
+ *
+ */
 class Autoload
 {
     protected static $registered = false;
@@ -47,6 +51,10 @@ class Autoload
         self::register('', $suffix, $path);
     }
 
+    /**
+     * @param $class
+     * @return bool
+     */
     public static function load($class)
     {
         $map = array_reverse(self::$map);
@@ -67,7 +75,14 @@ class Autoload
         return false;
     }
 
-    // being public for testing purposes
+    /**
+     * *is public for testing purposes*
+     *
+     * @param $class
+     * @param $namespace
+     * @param $suffix
+     * @return bool
+     */
     public static function matches($class, $namespace, $suffix)
     {
         return (bool)preg_match(self::regex($namespace, $suffix), $class);

@@ -1,6 +1,6 @@
 # MongoDb Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
 
 Works with MongoDb database.
 
@@ -15,7 +15,7 @@ The DB preparation should as following:
 - clean database
 - system collection system.users should contain the user which will be authenticated while script performs DB operations
 
-Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
+Connection is done by MongoDb driver, which is stored in Codeception\Lib\Driver namespace.
 Check out the driver if you get problems loading dumps and cleaning databases.
 
 ## Status
@@ -38,9 +38,7 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 ## Actions
 
-
 ### dontSeeInCollection
-
 
 Checks if collection doesn't contain an item.
 
@@ -52,14 +50,7 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
  * param $collection
  * param array $criteria
 
-
-### getName
-
-__not documented__
-
-
 ### grabFromCollection
-
 
 Grabs a data from collection
 
@@ -72,9 +63,7 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
  * param array $criteria
  * return \MongoCursor
 
-
 ### haveInCollection
-
 
 Inserts data into collection
 
@@ -86,9 +75,7 @@ $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
  * param $collection
  * param array $data
 
-
 ### seeInCollection
-
 
 Checks if collection contains an item.
 
@@ -99,3 +86,4 @@ $I->seeInCollection('users', array('name' => 'miles'));
 
  * param $collection
  * param array $criteria
+

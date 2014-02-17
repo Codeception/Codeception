@@ -1,6 +1,6 @@
 # Memcache Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
 
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
 
@@ -26,29 +26,18 @@ Be sure you don't use the production server to connect.
 
 ## Actions
 
-
 ### clearMemcache
-
 
 Flushes all Memcached data.
 
-
 ### dontSeeInMemcached
-
 
 Checks item in Memcached doesn't exist or is the same as expected.
 
  * param $key
  * param bool $value
 
-
-### getName
-
-__not documented__
-
-
 ### grabValueFromMemcached
-
 
 Grabs value from memcached by key
 
@@ -63,11 +52,10 @@ $users_count = $I->grabValueFromMemcached('users_count');
  * param $key
  * return array|string
 
-
 ### seeInMemcached
-
 
 Checks item in Memcached exists and the same as expected.
 
  * param $key
  * param $value
+

@@ -1,14 +1,23 @@
 <?php
-/**
- * Author: davert
- * Date: 30.07.12
- *
- * Class Maybe
- * Represents either empty values or defined from results.
- *
- */
 namespace Codeception\Util;
 
+/**
+ * Class to represent any type of content.
+ * This class can act as an object, array, or string.
+ * Method or property calls to this class won't cause any errors.
+ *
+ * Maybe was used in Codeception 1.x to represent data on parsing step.
+ * Not widely used in 2.0 anymore, but left for compatibility.
+ *
+ * For instance, you may use `Codeception\Util\Maybe` as a test dummies.
+ *
+ * ```php
+ * <?php
+ * $user = new Maybe;
+ * $user->posts->comments->count();
+ * ?>
+ * ```
+ */
 class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 {
     protected $position = 0;

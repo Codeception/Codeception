@@ -3,10 +3,13 @@
 namespace Codeception\Util;
 
 /**
- * @author tiger
+ * Set of functions to work with filesystem
  */
 class FileSystem
 {
+    /**
+     * @param $path
+     */
     public static function doEmptyDir($path)
     {
         /** @var $iterator \RecursiveIteratorIterator|\SplFileObject[] */
@@ -29,6 +32,10 @@ class FileSystem
         }
     }
 
+    /**
+     * @param $dir
+     * @return bool
+     */
     public static function deleteDir($dir)
     {
         if (!file_exists($dir)) {
@@ -55,6 +62,10 @@ class FileSystem
         return rmdir($dir);
     }
 
+    /**
+     * @param $src
+     * @param $dst
+     */
     public static function copyDir($src, $dst)
     {
         $dir = opendir($src);

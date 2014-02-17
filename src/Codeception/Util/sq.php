@@ -1,6 +1,7 @@
 <?php
 use \Codeception\Module\Sequence;
 
+if (!function_exists('sq')) {
 function sq($id = null)
 {
     if ($id and isset(Sequence::$hash[$id])) {
@@ -11,4 +12,6 @@ function sq($id = null)
         Sequence::$hash[$id] = $sequence;
     }
     return $sequence;
+}
+
 }
