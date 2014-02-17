@@ -8,11 +8,13 @@ Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
 ### Methods
 
 
+#### *public static* load
  *  param $class
  *  return bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L58)
 
+#### *public static* matches
 *is public for testing purposes*
 
  *  param $class
@@ -22,6 +24,7 @@ Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L86)
 
+#### *public static* register
 A very basic yet useful autoloader, not compatible with PSR-0.
 It is used to autoload classes by namespaces with suffixes.
 
@@ -43,6 +46,7 @@ Autoload::register('app\tests','Controller', __DIR__.'/controllers/');
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L34)
 
+#### *public static* registerSuffix
 Shortcut for { *  link self::register} for classes with empty namespaces.
 
  *  param $suffix

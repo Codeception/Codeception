@@ -5,8 +5,10 @@
 ### Methods
 
 
+#### *public* __construct
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L18)
 
+#### *public* __get
 Appends child node
 
  *  param $tag
@@ -15,8 +17,10 @@ Appends child node
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L31)
 
+#### *public* __toString
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
 
+#### *public* attr
 Sets attribute for current node
 
  *  param $attr
@@ -26,16 +30,19 @@ Sets attribute for current node
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L58)
 
+#### *public* getDom
  *  return \DOMDocument
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L111)
 
+#### *public* parent
 Traverses to parent
 
  *  return XmlBuilder
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L69)
 
+#### *public* parents
 Traverses to parent with $name
 
  *  param $tag
@@ -45,6 +52,7 @@ Traverses to parent with $name
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L83)
 
+#### *public* val
  *  param $val
 
  *  return XmlBuilder

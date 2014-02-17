@@ -9,6 +9,7 @@ Please check them before writing complex functional or acceptance tests.
 ### Methods
 
 
+#### *public static* combine
 Applies OR operator to any number of CSS or XPath selectors.
 You can mix up CSS and XPath selectors here.
 
@@ -40,6 +41,7 @@ As a result the Locator will produce a mixed XPath value that will be used in fi
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L46)
 
+#### *public static* find
 Finds element by it's attribute(s)
 
  *  static
@@ -51,6 +53,7 @@ Finds element by it's attribute(s)
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L137)
 
+#### *public static* href
 Matches the *a* element with given URL
 
 ```php
@@ -67,16 +70,19 @@ $I->see('Log In', Locator::href('/login.php'));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L73)
 
+#### *public static* isCSS
  *  param $selector
  *  return bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L154)
 
+#### *public static* isID
 Checks that string and CSS selector for element by ID
 
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L181)
 
+#### *public static* isXPath
 Checks that locator is an XPath
 
  *  param $locator
@@ -84,6 +90,7 @@ Checks that locator is an XPath
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L170)
 
+#### *public static* option
 Matches option by text
 
  *  param $value
@@ -92,6 +99,7 @@ Matches option by text
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L109)
 
+#### *public static* tabIndex
 Matches the element with given tab index
 
 Do you often use the `TAB` key to navigate through the web page? How do your site respond to this navigation?

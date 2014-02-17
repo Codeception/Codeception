@@ -5,6 +5,7 @@
 ### Methods
 
 
+#### *public static* atLeastOnce
 Checks if a method has been invoked at least one
 time.
 
@@ -24,6 +25,7 @@ $user->getName();
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L613)
 
+#### *public static* construct
 Instantiates a class instance by running constructor.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
@@ -62,6 +64,7 @@ Stub::construct('User', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L266)
 
+#### *public static* constructEmpty
 Instantiates a class instance by running constructor with all methods replaced with dummies.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
@@ -100,6 +103,7 @@ Stub::constructEmpty('User', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L316)
 
+#### *public static* constructEmptyExcept
 Instantiates a class instance by running constructor with all methods replaced with dummies, except one.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
@@ -139,6 +143,7 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L371)
 
+#### *public static* copy
 Clones an object and redefines it's properties (even protected and private)
 
  *  param       $obj
@@ -148,6 +153,7 @@ Clones an object and redefines it's properties (even protected and private)
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L221)
 
+#### *public static* exactly
 Checks if a method has been invoked a certain amount
 of times.
 If the number of invocations exceeds the value it will immediately throw an
@@ -171,6 +177,7 @@ $user->getName();
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L643)
 
+#### *public static* factory
 Creates $num instances of class through `Stub::make`.
 
  *  param       $class
@@ -181,6 +188,7 @@ Creates $num instances of class through `Stub::make`.
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L77)
 
+#### *public static* make
 Instantiates a class without executing a constructor.
 Properties and methods can be set as a second parameter.
 Even protected and private properties can be set.
@@ -218,6 +226,7 @@ Stub::make('User', array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L45)
 
+#### *public static* makeEmpty
 Instantiates class having all methods replaced with dummies.
 Constructor is not triggered.
 Properties and methods can be set as a second parameter.
@@ -255,6 +264,7 @@ Stub::makeEmpty('User', array('save' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L196)
 
+#### *public static* makeEmptyExcept
 Instantiates class having all methods replaced with dummies except one.
 Constructor is not triggered.
 Properties and methods can be replaced.
@@ -293,6 +303,7 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L124)
 
+#### *public static* never
 Checks if a method never has been invoked
 
 If method invoked, it will immediately throw an
@@ -311,6 +322,7 @@ $user->someMethod();
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L560)
 
+#### *public static* once
 Checks if a method has been invoked exactly one
 time.
 
@@ -331,6 +343,7 @@ $this->assertEquals('Davert', $userName);
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L587)
 
+#### *public static* update
 Replaces properties and methods of current stub
 
  *  param \PHPUnit_Framework_MockObject_MockObject $mock
