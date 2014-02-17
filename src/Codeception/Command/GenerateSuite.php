@@ -38,7 +38,7 @@ class GenerateSuite extends Base
         }
         $config['class_name'] = $actor;
 
-        $dir = \Codeception\Configuration::testsDir() . DIRECTORY_SEPARATOR;
+        $dir = \Codeception\Configuration::testsDir();
         if (file_exists($dir . $suite)) {
             throw new \Exception("Directory $suite already exists.");
         }

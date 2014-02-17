@@ -71,7 +71,7 @@ class Console implements EventSubscriberInterface
             ->writeln();
 
         $message = $this->message(implode(', ',array_map(function ($module) {
-            return $module->getName();
+            return $module->_getName();
         }, SuiteManager::$modules)));
         $message->style('info')
             ->prepend('Modules: ')

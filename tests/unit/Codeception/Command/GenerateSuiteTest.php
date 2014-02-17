@@ -10,10 +10,10 @@ class GenerateSuiteTest extends BaseCommandRunner {
 
     public function testBasic()
     {
-        $this->execute(array('suite' => 'shire', 'guy' => 'Hobbit'));
+        $this->execute(array('suite' => 'shire', 'actor' => 'Hobbit'));
         $this->assertEquals(\Codeception\Configuration::projectDir().'tests/shire.suite.yml',$this->filename);
         $conf = \Symfony\Component\Yaml\Yaml::parse($this->content);
-        $this->assertEquals('Hobbit',$conf['class_name']);
+        $this->assertEquals('HobbitGuy',$conf['class_name']);
         $this->assertContains('HobbitHelper',$conf['modules']['enabled']);
         $this->assertContains('Suite shire generated', $this->output);
 
@@ -27,7 +27,7 @@ class GenerateSuiteTest extends BaseCommandRunner {
 
     public function testGuyWithSuffix()
     {
-        $this->execute(array('suite' => 'shire', 'guy' => 'HobbitGuy'));
+        $this->execute(array('suite' => 'shire', 'actor' => 'HobbitGuy'));
         $conf = \Symfony\Component\Yaml\Yaml::parse($this->content);
         $this->assertEquals('HobbitGuy',$conf['class_name']);
         $this->assertContains('HobbitHelper',$conf['modules']['enabled']);

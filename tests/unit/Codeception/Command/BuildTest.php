@@ -17,7 +17,7 @@ class BuildTest extends BaseCommandRunner {
     public function testBuild()
     {
         $this->execute();
-        $this->assertContains('class HobbitGuy extends \Codeception\AbstractGuy', $this->content);
+        $this->assertContains('class HobbitGuy extends \Codeception\Actor', $this->content);
 
         // methods from Filesystem module
         $this->assertContains('public function amInPath($path)', $this->content);
@@ -40,7 +40,7 @@ class BuildTest extends BaseCommandRunner {
         $this->config['namespace'] = 'Shire';
         $this->execute();
         $this->assertContains('namespace Shire;', $this->content);
-        $this->assertContains('class HobbitGuy extends \Codeception\AbstractGuy', $this->content);
+        $this->assertContains('class HobbitGuy extends \Codeception\Actor', $this->content);
         $this->assertContains('public function amInPath($path)', $this->content);
         $this->assertIsValidPhp($this->content);
     }
