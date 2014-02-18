@@ -61,7 +61,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements Web, Remote {
+class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(

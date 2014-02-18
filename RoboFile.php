@@ -123,7 +123,7 @@ class RoboFile extends \Robo\Tasks {
             ->addFile('codecept', 'package/bin')
             ->run();
         
-        $code = $this->taskExec('php package/codecept.phar')->run();
+        $code = $this->taskExec('php package/codecept.phar')->run()->getExitCode();
         if ($code !== 0) {
             throw new Exception("There was problem compiling phar");
         }
@@ -226,13 +226,13 @@ class RoboFile extends \Robo\Tasks {
         if (strpos($version, self::STABLE_BRANCH) === 0) {
             $this->say("publishing to release branch");
             copy('../codecept.phar','codecept.phar');
+            $this->taskExec('git add codecept.phar')->run();
         }
 
         @mkdir("releases/$version");
-        copy('package/codecept.phar',"releases/$version/codecept.phar");
+        copy('../codecept.phar',"releases/$version/codecept.phar");
 
-        $this->taskExec('git add codecept.phar')->run();
-        $this->taskExec('git add releases/$version/codecept.phar')->run();
+        $this->taskExec("git add releases/$version/codecept.phar")->run();
         $this->publishSite();
     }
 
