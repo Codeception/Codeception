@@ -6,9 +6,7 @@ use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
-    const BRANCH = '2.0';
-    use \Robo\Task\PackPhar;
-    use \Robo\Task\SymfonyCommand;
+    const STABLE_BRANCH = '1.8';
 
     public function release()
     {
@@ -139,7 +137,7 @@ class RoboFile extends \Robo\Tasks {
         $this->say('generating documentation from source files');
         $this->buildDocsModules();
         $this->buildDocsUtils();
-        $this->buildDocsReference();
+        $this->buildDocsCommands();
     }
 
     public function buildDocsModules()
@@ -176,7 +174,6 @@ class RoboFile extends \Robo\Tasks {
     public function buildDocsUtils()
     {
         $this->say("Util Classes");
-
         $utils = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Util');
 
         foreach ($utils as $util) {
@@ -199,7 +196,7 @@ class RoboFile extends \Robo\Tasks {
         }
     }
 
-    public function buildDocsReference()
+    public function buildDocsCommands()
     {
         $this->say("Commands");
 
@@ -216,6 +213,7 @@ class RoboFile extends \Robo\Tasks {
             ->processClass(function ($r, $text) { $name = $r->getShortName();return "## $name\n$text";  })
             ->filterMethods(function(ReflectionMethod $r) { return false; })
             ->run();
+
     }
 
     /**
@@ -225,7 +223,7 @@ class RoboFile extends \Robo\Tasks {
     {
         $this->cloneSite();
         $version = \Codeception\Codecept::VERSION;
-        if (strpos($version, self::BRANCH) === 0) {
+        if (strpos($version, self::STABLE_BRANCH) === 0) {
             $this->say("publishing to release branch");
             copy('../codecept.phar','codecept.phar');
         }
@@ -243,7 +241,7 @@ class RoboFile extends \Robo\Tasks {
      */
     public function publishDocs()
     {
-        if (strpos(\Codeception\Codecept::VERSION, self::BRANCH) !== 0) {
+        if (strpos(\Codeception\Codecept::VERSION, self::STABLE_BRANCH) !== 0) {
             $this->say("The ".\Codeception\Codecept::VERSION." is not in release branch. Site is not build");
             return;
         }
