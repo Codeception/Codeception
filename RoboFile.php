@@ -136,9 +136,15 @@ class RoboFile extends \Robo\Tasks {
      */
     public function buildDocs()
     {
-        $this->taskCleanDir('docs/modules')->run();
         $this->say('generating documentation from source files');
+        $this->buildDocsModules();
+        $this->buildDocsUtils();
+        $this->buildDocsReference();
+    }
 
+    public function buildDocsModules()
+    {
+        $this->taskCleanDir('docs/modules')->run();
         $this->say("Modules");
         $modules = Finder::create()->files()->name('*.php')->in(__DIR__ . '/src/Codeception/Module');
 
@@ -165,6 +171,10 @@ class RoboFile extends \Robo\Tasks {
                 })->reorderMethods('ksort')
                 ->run();
         }
+    }
+
+    public function buildDocsUtils()
+    {
         $this->say("Util Classes");
 
         $utils = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Util');
@@ -187,7 +197,10 @@ class RoboFile extends \Robo\Tasks {
                 ->reorderMethods('ksort')
                 ->run();
         }
+    }
 
+    public function buildDocsReference()
+    {
         $this->say("Commands");
 
         $commands = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Command');
@@ -203,7 +216,6 @@ class RoboFile extends \Robo\Tasks {
             ->processClass(function ($r, $text) { $name = $r->getShortName();return "## $name\n$text";  })
             ->filterMethods(function(ReflectionMethod $r) { return false; })
             ->run();
-
     }
 
     /**

@@ -10,7 +10,7 @@ class RefactorAddNamespaceTest extends BaseCommandRunner
 
     public function testBasic()
     {
-        $this->execute(array('namespace' => 'MiddleEarth', '--force' => true));
+        $this->execute(array('namespace' => 'MiddleEarth', '--silent' => true));
         $this->assertContains('adds namespaces to your Helper and Guy classes and Cepts', $this->output);
         
         $config = $this->log[0];
