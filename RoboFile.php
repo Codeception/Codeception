@@ -229,7 +229,7 @@ class RoboFile extends \Robo\Tasks {
         }
 
         @mkdir("releases/$version");
-        copy('codecept.phar',"releases/$version/codecept.phar");
+        copy('package/codecept.phar',"releases/$version/codecept.phar");
 
         $this->taskExec('git add codecept.phar')->run();
         $this->taskExec('git add releases/$version/codecept.phar')->run();

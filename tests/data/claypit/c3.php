@@ -223,6 +223,9 @@ if ($requested_c3_report) {
     register_shutdown_function(
         function () use ($codeCoverage, $current_report) {
             $codeCoverage->stop();
+            if (!file_exists(dirname($current_report))) {
+                mkdir(dirname($current_report),0777,true);
+            }
             file_put_contents($current_report, serialize($codeCoverage));
         }
     );
