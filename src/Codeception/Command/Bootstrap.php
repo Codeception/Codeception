@@ -56,7 +56,7 @@ class Bootstrap extends Command
         } elseif (!$input->getOption('silent')) {
             $output->writeln("Before proceed you can choose default actor:");
             $output->writeln("\n\$I = new {{ACTOR}}");
-            $index = $dialog->select($output, "<question>  Select an actor. Guy is default  </question>", $this->availableActors, $this->actor);
+            $index = $dialog->select($output, "<question>  Select an actor. Default: Guy  </question>", $this->availableActors, $this->actor);
             $this->actor = $this->availableActors[$index];
         }
 
