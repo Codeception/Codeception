@@ -1,8 +1,8 @@
 <?php
 
-namespace Codeception\Lib;
+namespace Codeception\Lib\Interfaces;
 
-interface RemoteInterface
+interface Remote
 {
     /**
      * Sets 'url' configuration parameter to hosts subdomain.

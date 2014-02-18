@@ -1,8 +1,8 @@
 <?php
 
-namespace Codeception\Lib;
+namespace Codeception\Lib\Interfaces;
 
-interface WebInterface
+interface Web
 {
     /**
      * Opens the page.

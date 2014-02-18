@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Yii;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfig;
-use Codeception\Lib\ActiveRecordInterface;
+use Codeception\Lib\Interfaces\ActiveRecord;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -32,7 +32,7 @@ use Codeception\Lib\ActiveRecordInterface;
  * Stability: **beta**
  *
  */
-class Yii2 extends Framework implements ActiveRecordInterface
+class Yii2 extends Framework implements ActiveRecord
 {
     /**
      * Application config file must be set.

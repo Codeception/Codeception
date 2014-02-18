@@ -1,8 +1,8 @@
 <?php
 
-namespace Codeception\Lib;
+namespace Codeception\Lib\Interfaces;
 
-interface MultiSessionInterface
+interface MultiSession
 {
     public function _initializeSession();
 

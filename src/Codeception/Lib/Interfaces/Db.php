@@ -1,8 +1,8 @@
 <?php
 
-namespace Codeception\Lib;
+namespace Codeception\Lib\Interfaces;
 
-interface DbInterface
+interface Db
 {
     /**
      * Checks if a row with given column values exists.

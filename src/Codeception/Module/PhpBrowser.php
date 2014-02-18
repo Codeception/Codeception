@@ -4,8 +4,8 @@ namespace Codeception\Module;
 
 use Codeception\Lib\Connector\Goutte;
 use Codeception\Lib\InnerBrowser;
-use Codeception\Lib\MultiSessionInterface;
-use Codeception\Lib\RemoteInterface;
+use Codeception\Lib\Interfaces\MultiSession;
+use Codeception\Lib\Interfaces\Remote;
 use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 use Codeception\TestCase;
@@ -52,7 +52,7 @@ use Symfony\Component\BrowserKit\Request;
  * To configure CURL options use `curl` config parameter.
  *
  */
-class PhpBrowser extends InnerBrowser implements RemoteInterface, MultiSessionInterface {
+class PhpBrowser extends InnerBrowser implements Remote, MultiSession {
 
     protected $requiredFields = array('url');
     protected $config = array('curl' => array());

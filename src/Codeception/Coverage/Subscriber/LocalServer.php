@@ -9,7 +9,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\RemoteException;
-use Codeception\Lib\WebInterface;
+use Codeception\Lib\Interfaces\Web;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.
@@ -38,7 +38,7 @@ class LocalServer extends SuiteSubscriber
     ];
 
     /**
-     * @var WebInterface
+     * @var \Codeception\Lib\Interfaces\Web
      */
     protected $module;
 

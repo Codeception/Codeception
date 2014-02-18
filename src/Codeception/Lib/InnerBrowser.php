@@ -8,13 +8,13 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\Module;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
-use Codeception\Lib\WebInterface;
+use Codeception\Lib\Interfaces\Web;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
 
-class InnerBrowser extends Module implements WebInterface
+class InnerBrowser extends Module implements Web
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler

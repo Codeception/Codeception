@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Exception\ModuleConfig;
 use Codeception\Step;
 use Codeception\Lib\Framework;
-use Codeception\Lib\ActiveRecordInterface;
+use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\LIb\Connector\PhalconMemorySession;
 
 /**
@@ -55,7 +55,7 @@ use Codeception\LIb\Connector\PhalconMemorySession;
  *
  *
  */
-class Phalcon1 extends Framework implements ActiveRecordInterface
+class Phalcon1 extends Framework implements ActiveRecord
 {
     protected $config = array(
         'bootstrap' => 'app/config/bootstrap.php',

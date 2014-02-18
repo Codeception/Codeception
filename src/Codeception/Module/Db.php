@@ -74,7 +74,7 @@ use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Configuration as Configuration;
 
-class Db extends \Codeception\Module implements \Codeception\Lib\DbInterface
+class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 {
 
     /**

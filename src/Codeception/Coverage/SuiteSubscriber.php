@@ -5,7 +5,7 @@ use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
 use Codeception\Coverage\DummyCodeCoverage;
 use Codeception\Subscriber\Shared\StaticEvents;
-use Codeception\Lib\RemoteInterface;
+use Codeception\Lib\Interfaces\Remote;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface {
@@ -51,12 +51,12 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     }
 
     /**
-     * @return RemoteInterface|null
+     * @return \Codeception\Lib\Interfaces\Remote|null
      */
     protected function getServerConnectionModule()
     {
         foreach (\Codeception\SuiteManager::$modules as $module) {
-            if ($module instanceof RemoteInterface) {
+            if ($module instanceof Remote) {
                 return $module;
             }
         }
