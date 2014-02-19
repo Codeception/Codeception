@@ -249,7 +249,7 @@ class SuiteManager
 
             if ($tokens[$i][0] === T_CLASS) {
                 for ($j = $i + 1; $j < count($tokens); $j++) {
-                    if ($tokens[$j] === '{') {
+                    if ($tokens[$j] === '{' && isset($tokens[$i + 2][1])) {
                         $classes[] = $namespace . $tokens[$i + 2][1];
                         break;
                     }
