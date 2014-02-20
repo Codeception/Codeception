@@ -52,7 +52,8 @@ use Symfony\Component\BrowserKit\Request;
  * To configure CURL options use `curl` config parameter.
  *
  */
-class PhpBrowser extends InnerBrowser implements Remote, MultiSession {
+class PhpBrowser extends InnerBrowser implements Remote, MultiSession
+{
 
     protected $requiredFields = array('url');
     protected $config = array('curl' => array());

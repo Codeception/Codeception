@@ -323,13 +323,15 @@ class RoboFile extends \Robo\Tasks {
     /**
      * @desc creates a new version tag and pushes to github
      */
-    public function publishGit()
+    public function publishGit($branch = null)
     {
         $version = \Codeception\Codecept::VERSION;
         $this->say('creating new tag for '.$version);
-        $branch = explode('.', $version);
-        array_pop($branch);
-        $branch = implode('.',$branch);
+        if (!$branch) {
+            $branch = explode('.', $version);
+            array_pop($branch);
+            $branch = implode('.',$branch);
+        }
         $this->taskExec("git tag $version")->run();
         $this->taskExec("git push origin $branch --tags")->run();
     }
