@@ -14,7 +14,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.19",
         "behat/mink": "1.5.*",
         "phpunit/phpunit": "3.7.*",
         "facebook/webdriver": "~0.3",
