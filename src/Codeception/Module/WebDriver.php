@@ -817,11 +817,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         foreach ($params as $param => $value) {
             $els = $form->findElements(\WebDriverBy::name($param));
             $el = reset($els);
+            if (empty($el)) throw new ElementNotFound($param);
             if ($el->getTagName() == 'textarea') $this->fillField($el, $value);
             if ($el->getTagName() == 'select') $this->selectOption($el, $value);
             if ($el->getTagName() == 'input') {
                 $type = $el->getAttribute('type');
-                if ($type == 'text') $this->fillField($el, $value);
+                if ($type == 'text'  or $type == 'password') $this->fillField($el, $value);
                 if ($type == 'radio' or $type == 'checkbox') {
                     foreach ($els as $radio) {
                         if ($radio->getAttribute('value') == $value) $this->checkOption($radio);
