@@ -146,5 +146,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testSetCookieByHeader()
+    {
+        $this->module->amOnPage('/cookies2');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCookie('a');
+        $this->assertEquals('b', $this->module->grabCookie('a'));
+    }
 
 }

@@ -16,6 +16,7 @@ $urls = array(
     '/' => 'index',
     '/info' => 'info',
     '/cookies' => 'cookies',
+    '/cookies2' => 'cookiesHeader',
     '/search.*' => 'search',
     '/login' => 'login',
     '/redirect' => 'redirect',

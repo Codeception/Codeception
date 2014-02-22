@@ -63,7 +63,7 @@ For regression testing, and real world HTML page examples that you can add a htm
 
 Learn by examples! There are pretty much other tests already written. Please follow their structure. 
 
-By default you are supposed to access module methods via `method` property. 
+By default you are supposed to access module methods via `module` property. 
 
 ```php
 <?php

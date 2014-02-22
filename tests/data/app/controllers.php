@@ -68,7 +68,14 @@ class cookies {
         data::set('form', $_POST);
         include __DIR__.'/view/cookies.php';
     }
+}
 
+class cookiesHeader {
+    public function GET()
+    {
+        header("Set-Cookie: a=b;Path=/;");
+        include __DIR__.'/view/index.php';
+    }
 }
 
 class facebookController {
