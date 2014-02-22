@@ -968,7 +968,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             }
             if ($el->getTagName() == 'input') {
                 $type = $el->getAttribute('type');
-                if ($type == 'text') {
+                if ($type == 'text' or $type == 'password') {
                     $this->fillField($el, $value);
                 }
                 if ($type == 'radio' or $type == 'checkbox') {
