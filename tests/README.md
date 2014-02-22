@@ -114,7 +114,7 @@ public function testAppendFieldRadioButtonByValueFails()
 
 For most cases Codeception is self-tested using acceptance tests in *cli* suite. That is how Codeception core classes are tested. And actually there is no possibility to unit test many cases. Because you can't ask PHPUnit to mock PHPUnit classes.
 
-If you send Pull Request to Codeception core and you don't know how to get it tested, just create new cli test for that.
+If you send Pull Request to Codeception core and you don't know how to get it tested, just create new cli test for that. Probably you will need some additional files, maybe another suite configurations, so add them. 
 
 That is why Codeception can't have code coverage reports, as we rely on acceptance tests in testing core.
 
