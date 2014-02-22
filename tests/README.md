@@ -59,7 +59,7 @@ And into `tests/data/app/controllers.php`.
 
 For regression testing, and real world HTML page examples that you can add a html page into `tests/data/app/view/form/exampleX.php` file and add its name to routes. 
 
-## How to write tests
+### How to write module tests
 
 Learn by examples! There are pretty much other tests already written. Please follow their structure. 
 
