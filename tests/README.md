@@ -31,7 +31,7 @@ Requirements:
 
 ### Demo Application
 
-This modules requre a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
+When module requre a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
 
 ```
 php -S 127.0.0.1:8000 -t tests/data/app
