@@ -34,7 +34,7 @@ before_script:
 
   # Phalcon
   - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
-  - '[ "$TRAVIS_PHP_VERSION" == "hhvm" ] && (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] && (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
