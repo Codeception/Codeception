@@ -31,7 +31,7 @@ Requirements:
 
 ### Demo Application
 
-When module requre a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
+When module require a web server with demo application running. You can find this app in `tests/data/app`. To execute tests for **PhpBrowser**, **WebDriver** you need to start a web server in this dir:
 
 ```
 php -S 127.0.0.1:8000 -t tests/data/app
@@ -63,7 +63,7 @@ For regression testing, and real world HTML page examples that you can add a htm
 
 Learn by examples! There are pretty much other tests already written. Please follow their structure. 
 
-By default you are supposed to access module methods via `module` property. 
+By default you are supposed to access module methods via `method` property. 
 
 ```php
 <?php

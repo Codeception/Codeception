@@ -9,7 +9,8 @@ use Codeception\Module;
  * Class Asserts
  * @package Codeception\Module
  */
-class Asserts extends Module {
+class Asserts extends Module
+{
 
     use \Codeception\Util\Shared\Asserts {
         assertEquals as public seeEquals;

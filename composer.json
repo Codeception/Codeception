@@ -26,6 +26,7 @@
         "symfony/yaml": "~2.3"
     },
     "require-dev": {
+        "codeception/specify": "*",
         "facebook/php-sdk": "3.*",
         "videlalvaro/php-amqplib": "*"
     },

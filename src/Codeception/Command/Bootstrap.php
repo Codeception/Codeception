@@ -211,7 +211,7 @@ class Bootstrap extends Command
         // CodeGuy
         $suiteConfig = array(
             'class_name' => 'Code'.$this->actor,
-            'modules'    => array('enabled' => array('CodeHelper')),
+            'modules'    => array('enabled' => array('Asserts', 'CodeHelper')),
         );
 
         $str = "# Codeception Test Suite Configuration\n\n";
