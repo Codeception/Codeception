@@ -12,13 +12,11 @@ The Codeception testing framework distinguishes these levels of testing. Out of 
 
 Let's review the listed testing paradigms in reverse order.
 
-### Acceptance Tests (WebGuy)
+### Acceptance Tests
 
 How does your client, manager, or tester, or any other non-technical person, know your site is working? She opens the browser, enters the site, clicks on links, fills the forms, and sees the proper pages as a result. She has no idea of the framework, database, web-server, or programming language you are using. If she sees improper behavior, she will create a bug report. Still this person has no idea why the application didn't work as expected.
 
 Acceptance tests can cover standard but complex scenarios from a user perspective. With acceptance tests you can be confident that users, following all defined scenarios, won't get errors. 
-
-Codeception provides browser emulation powered by [Mink](http://mink.behat.org) for writing and executing acceptance tests. This can be done with tools like **Selenium**, but Codeception with Mink is more flexible for such tests. 
 
 Please, note that **any site** can be covered with acceptance tests. Even if you use a very custom CMS or framework.
 
@@ -47,7 +45,7 @@ $I->see('Thank you for Signing Up!');
 * yep, they are really slow.
 
 
-### Functional Tests (TestGuy)
+### Functional Tests
 
 Let's say your application is tested by a technically advanced guy. He also opens the browser, enters the site, clicks links and submits forms, but when an error occurs he can report to you the exception that was thrown, or check the database for expected values. This guy already knows some aspects of your application, and by knowing that his tests can cover more technical details.
 
@@ -59,7 +57,7 @@ Codeception provides connectors to several popular PHP frameworks, but you can w
 
 #### Sample functional test
 
-``` php
+```php
 <?php
 $I = new TestGuy($scenario);
 $I->amOnPage('/');
@@ -84,7 +82,7 @@ $I->seeInDatabase('users', array('email' => 'miles@davis.com'));
 * by emulating the browser you might get more false-positive results.
 * require a framework.
 
-### Unit Tests (CodeGuy)
+### Unit Tests
 
 Only the developer understands how and what is tested here. It can be either unit or integration tests, but they are limited to check one method per test.
 
@@ -96,18 +94,17 @@ But Codeception provides some good tools to make your unit tests simpler and cle
 
 #### Sample integration test
 
-``` php
+```php
 <?php
-// we are testing the public method of User class.
-// It requires the user_id and array of parameters.
-
-$I = new CodeGuy($scenario);
-$I->testMethod('User.update');
-$I->haveStubClass($unit = Stub::make('User'));
-$I->dontSeeInDatabase('users', array('id' => 1, 'username' => 'miles'));
-$I->executeTestedMethodOn($unit, 1, array('username' => 'miles'));
-$I->seeMethodInvoked($unit, 'save');
-$I->seeInDatabase('users', array('id' => 1, 'username' => 'miles'));
+function testSavingUser()
+{
+    $user = new User();
+    $user->setName('Miles');
+    $user->setSurname('Davis');
+    $user->save();
+    $this->assertEquals('Miles Davis', $user->getFullName());
+    $this->codeGuy->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+}
 ?>
 ```
 

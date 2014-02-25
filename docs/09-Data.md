@@ -102,11 +102,9 @@ You can use the [Faker](https://github.com/fzaninotto/Faker) library to create t
 
 ### Per Test Fixtures
 
-* New in 1.6.2 *
-
 If you want to create special database record for one test, you can use [`haveInDatabase`](http://codeception.com/docs/modules/Db#haveInDatabase) method of `Db` module.
 
-``` php
+```php
 <?php 
 $I = new TestGuy($scenario);
 $I->haveInDatabase('posts', array('title' => 'Top 10 Testing Frameworks', 'body' => '1. Codeception'));

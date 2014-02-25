@@ -9,7 +9,7 @@ Codeception can connect to different web frameworks which support functional tes
 
 Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them! This is a sample functional test.
 
-``` php
+```php
 <?php
 $I = new TestGuy($scenario);
 $I->amOnPage('/');
@@ -46,13 +46,6 @@ Keep your memory clean, avoid memory leaks and clean global and static variables
 
 You have a functional testing suite in `tests/functional` dir.
 To start you need to include one of the framework's module in suite config file: `tests/functional.suite.yml`.
-Examples on framework configurations you will find below th this chapter.
-
-Then you should rebuild your Guy-classes
-
-```
-php codecept.phar build
-```
 
 To generate a test you can use standard `generate:cept` command:
 
@@ -74,12 +67,12 @@ By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting 
 In functional tests you might want to change this values depending on framework's error policy.
 The error reporting value can be set at suite configuraion file:
 
-{% highlight yaml %}
+```yaml
 class_name: TestGuy
 modules:
     enabled: [Yii1, TestHelper]
 error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
-{% endhighlight %}
+```
 
 `error_level` can be set globally in `codeception.yml` file.
 
@@ -117,6 +110,11 @@ class_name: TestGuy
 modules:
     enabled: [Laravel4, TestHelper]
 ```
+
+
+### Yii2
+
+Yii2 tests are included in [Basic](https://github.com/yiisoft/yii2-app-basic) and [Advanced](https://github.com/yiisoft/yii2-app-advanced) application templates. Follow Yii2 guides to start.
 
 ### Yii
 
