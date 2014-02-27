@@ -4,7 +4,7 @@
 
 
 This module allows you to run functional tests for Laravel 4.
-Module is very fresh and should be improved with Laravel testing capabilities.
+Module is very fresh and should be improved with Laravel testing capaitbilities.
 Please try it and leave your feedbacks. If you want to maintain it - connect Codeception team.
 
 Uses 'bootstrap/start.php' to launch.
@@ -104,7 +104,7 @@ Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
 
 If link is an image it's found by alt attribute value of image.
-If button is image button is found by it's value
+If button is image button is found by its value
 If link or button can't be found by name they are searched by CSS selector.
 
 The second parameter is a context: CSS or XPath locator to narrow the search.
@@ -391,7 +391,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
 ### grabValueFrom
 
-Finds and returns field and returns it's value.
+Finds and returns field and returns its value.
 Searches by field name, then by CSS, then by XPath
 
 Example:
