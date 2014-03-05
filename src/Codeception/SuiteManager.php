@@ -5,6 +5,7 @@ namespace Codeception;
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Generator\Actor;
+use Codeception\Lib\Parser;
 use Codeception\Util\Annotation;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Finder\Finder;
@@ -97,7 +98,7 @@ class SuiteManager
 
     public function addTest($path)
     {
-        $testClasses = $this->getClassesFromFile($path);
+        $testClasses = Parser::getClassesFromFile($path);
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
@@ -124,11 +125,12 @@ class SuiteManager
         $name = $this->relativeName($file);
         $this->tests[$name] = $file;
 
-        $cept = new TestCase\Cept($this->dispatcher, array(
-            'name' => $name,
-            'file' => $file,
-            'bootstrap' => $this->settings['bootstrap']
-        ));
+        $cept = new TestCase\Cept();
+        $cept->configDispatcher($this->dispatcher)
+            ->configName($name)
+            ->configFile($file)
+            ->configBootstrap($this->settings['bootstrap'])
+            ->initConfig();
 
         $cept->preload();
 
@@ -143,7 +145,7 @@ class SuiteManager
         $name = $this->relativeName($file);
         $this->tests[$name] = $file;
 
-        $testClasses = $this->getClassesFromFile($file);
+        $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
@@ -223,43 +225,6 @@ class SuiteManager
         }
     }
 
-    protected function getClassesFromFile($file)
-    {
-        $loaded_classes = get_declared_classes();
-        require_once $file;
-
-        $sourceCode = file_get_contents($file);
-        $classes = array();
-        $tokens = token_get_all($sourceCode);
-        $namespace = '';
-
-        for ($i = 0; $i < count($tokens); $i++) {
-            if ($tokens[$i][0] === T_NAMESPACE) {
-                $namespace = '';
-                for ($j = $i + 1; $j < count($tokens); $j++) {
-                    if ($tokens[$j][0] === T_STRING) {
-                        $namespace .= $tokens[$j][1] . '\\';
-                    } else {
-                        if ($tokens[$j] === '{' || $tokens[$j] === ';') {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
-                    if ($tokens[$j] === '{') {
-                        $classes[] = $namespace . $tokens[$i + 2][1];
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $classes;
-    }
-
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
     {
         if (!\PHPUnit_Framework_TestSuite::isTestMethod($method)) {
@@ -296,9 +261,10 @@ class SuiteManager
             ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
             : $this->settings['class_name'];
 
-        $test->setBootstrap($this->settings['bootstrap']);
-        $test->setDispatcher($this->dispatcher);
-        $test->setGuyClass($guy);
+        $test->configBootstrap($this->settings['bootstrap'])
+            ->configDispatcher($this->dispatcher)
+            ->configActor($guy)
+            ->initConfig();
 
         $test->getScenario()->groups(\PHPUnit_Util_Test::getGroups($className, $methodName));
         $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
@@ -311,22 +277,15 @@ class SuiteManager
             return;
         }
 
-        $overriddenGuy = Annotation::forMethod($testClass, $methodName)->fetch('guy');
-        if (!$overriddenGuy) {
-            $overriddenGuy = Annotation::forClass($testClass)->fetch('guy');
-        }
-        if ($overriddenGuy) {
-            $guy = $overriddenGuy;
-        }
-
-        $cest = new TestCase\Cest($this->dispatcher, array(
-            'name' => $methodName,
-            'instance' => $cestInstance,
-            'method' => $methodName,
-            'file' => $file,
-            'bootstrap' => $this->settings['bootstrap'],
-            'guy' => $guy
-        ));
+        $cest = new TestCase\Cest();
+        $cest->configDispatcher($this->dispatcher)
+            ->configName($methodName)
+            ->configBootstrap($this->settings['bootstrap'])
+            ->configFile($file)
+            ->config('testClassInstance', $cestInstance)
+            ->config('testMethod', $methodName)
+            ->configActor($guy)
+            ->initConfig();
 
         $cest->getScenario()->env(Annotation::forMethod($testClass, $methodName)->fetchAll('env'));
         $cest->getScenario()->groups(\PHPUnit_Util_Test::getGroups($testClass, $methodName));

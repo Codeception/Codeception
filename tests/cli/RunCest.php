@@ -21,6 +21,7 @@ class RunCest
 
     /**
      * @group reports
+     * @group core
      *
      * @param CliGuy $I
      */

@@ -11,7 +11,7 @@ class CestTest extends Codeception\TestCase\Test
                 'getTestClass' => new \Codeception\Util\Locator(),
                 'getTestMethod' => 'combine'
         ));
-        $this->assertEquals('Codeception.Util.Locator.combine', $cest->getFileName());
+        $this->assertEquals('Codeception\Util\Locator::combine', $cest->getSignature());
     }
 
 }

@@ -6,24 +6,25 @@ use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Util\Annotation;
 
-class Cest extends Cept
+class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive
 {
+    use Shared\ScenarioRunner;
+    use Shared\Dependencies;
+
     protected $testClassInstance = null;
     protected $testMethod = null;
     protected $guy;
 
-    public function __construct($dispatcher, array $data = array(), $dataName = '')
+    public function __construct(array $data = array(), $dataName = '')
     {
-        parent::__construct($dispatcher, $data, $dataName);
-        $this->testClassInstance = $data['instance'];
-        $this->testMethod        = $data['method'];
-        $this->guy               = $data['guy'];
+        parent::__construct('testCodecept', $data, $dataName);
     }
 
     public function preload()
     {
         $this->scenario->setFeature($this->getSpecFromMethod());
-        parent::preload();
+        $this->parser->prepareToRun($this->getRawBody());
+        $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
 
     public function getRawBody()
@@ -91,13 +92,13 @@ class Cest extends Cept
 
     protected function makeIObject()
     {
-        $className = '\\' . $this->guy;
-        $I          = new $className($this->scenario);
+        $className = '\\' . $this->actor;
+        $I = new $className($this->scenario);
+        $spec = $this->getSpecFromMethod();
 
-        if ($spec = $this->getSpecFromMethod()) {
+        if ($spec) {
             $I->wantTo($spec);
         }
-
         return $I;
     }
 
@@ -129,9 +130,32 @@ class Cest extends Cept
         return $text;
     }
 
+    public function configActor($actor)
+    {
+        foreach (['actor', 'guy'] as $annotation) {
+            $definedActor = Annotation::forMethod($this->testClassInstance, $this->testMethod)->fetch($annotation);
+            if (!$definedActor) {
+                $definedActor = Annotation::forClass($this->testClassInstance)->fetch($annotation);
+            }
+            if ($definedActor) {
+                $this->actor = $definedActor;
+                return $this;
+            }
+        }
+
+        $this->actor = $actor;
+        return $this;
+    }
+
+
+    public function getSignature()
+    {
+        return get_class($this->getTestClass()) . "::" . $this->getTestMethod();
+    }
+
     public function getFileName()
     {
-        $class = str_replace('\\', '.', get_class($this->getTestClass()));
-        return $class . "." . $this->getTestMethod();
+        return $this->testFile;
     }
+
 }

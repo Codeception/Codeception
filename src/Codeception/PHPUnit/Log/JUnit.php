@@ -10,11 +10,6 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
 
         $this->currentTestCase = $this->document->createElement('testcase');
 
-        if ($test instanceof \Codeception\TestCase\Cept) {
-            $this->currentTestCase->setAttribute('file', $test->getFileName());
-            return;
-        }
-
         if ($test instanceof \Codeception\TestCase) {
             $class = new \ReflectionClass($test->getTestClass());
             $methodName = $test->getTestMethod();
@@ -33,7 +28,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
 
         if ($test instanceof \Codeception\TestCase\Cept) {
             $this->currentTestCase->setAttribute(
-              'name', $test->toString()
+              'name', htmlspecialchars($test->toString())
             );
         }
         return parent::endTest($test, $time);

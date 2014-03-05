@@ -1,7 +1,8 @@
 <?php
-namespace Codeception;
+namespace Codeception\Lib;
 
-use Codeception\Util\Debug;
+use Codeception\Scenario;
+use Codeception\Step;
 
 class Parser {
 
@@ -94,6 +95,41 @@ class Parser {
     protected function addCommentStep($comment)
     {
         $this->scenario->addStep(new \Codeception\Step\Comment($comment,array()));
+    }
+
+    public static function getClassesFromFile($file)
+    {
+        require_once $file;
+        $sourceCode = file_get_contents($file);
+        $classes = array();
+        $tokens = token_get_all($sourceCode);
+        $namespace = '';
+
+        for ($i = 0; $i < count($tokens); $i++) {
+            if ($tokens[$i][0] === T_NAMESPACE) {
+                $namespace = '';
+                for ($j = $i + 1; $j < count($tokens); $j++) {
+                    if ($tokens[$j][0] === T_STRING) {
+                        $namespace .= $tokens[$j][1] . '\\';
+                    } else {
+                        if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ($tokens[$i][0] === T_CLASS) {
+                for ($j = $i + 1; $j < count($tokens); $j++) {
+                    if ($tokens[$j] === '{') {
+                        $classes[] = $namespace . $tokens[$i + 2][1];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $classes;
     }
 
 }
