@@ -15,12 +15,12 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
-        $this->testcase = $this->getMockForAbstractClass('\Codeception\TestCase\Cept', array(
-            $this->dispatcher, array(
-                'name' => 'mocked test',
-                'file' => \Codeception\Configuration::dataDir().'SimpleCept.php'
-            )
-        ));
+        $this->testcase = new \Codeception\TestCase\Cept;
+        $this->testcase->configDispatcher($this->dispatcher)
+            ->configName('mocked test')
+            ->configFile(\Codeception\Configuration::dataDir().'SimpleCept.php')
+            ->initConfig();
+
         \Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions = 0;
     }
 

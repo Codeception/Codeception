@@ -4,9 +4,9 @@ use \Codeception\Util\Stub;
 class ParserTest extends \Codeception\TestCase\Test
 {
     /**
-     * @var \Codeception\Parser
+     * @var \Codeception\Lib\Parser
      */
-    private $parser;
+    protected $parser;
     /**
      * @var \CodeGuy
      */
@@ -15,7 +15,7 @@ class ParserTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         $this->scenario = new \Codeception\Scenario(Stub::make('Codeception\TestCase\Cept'));
-        $this->parser = new \Codeception\Parser($this->scenario);
+        $this->parser = new \Codeception\Lib\Parser($this->scenario);
     }
 
     public function testParsingFeature()

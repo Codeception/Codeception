@@ -77,7 +77,6 @@ SOAP web services are often more complex. You will need PHP [configured with SOA
 Let's configure SOAP module to be used with PhpBrowser:
 
 ``` yaml
-
 class_name: ApiGuy
 modules:
     enabled: [PhpBrowser, SOAP, ApiHelper]

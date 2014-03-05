@@ -7,9 +7,8 @@ All actions and assertions that can be performed by the Guy object in a class ar
 
 Let's look at this test.
 
-``` php
+```php
 <?php
-
 $I = new TestGuy($scenario);
 $I->amOnPage('/');
 $I->see('Hello');
@@ -26,7 +25,7 @@ For example, in `tests/functional.suite.yml` we should see.
 ```yaml
 class_name: TestGuy
 modules:
-    enabled: [Symfony1, Db, Filesystem]
+    enabled: [Symfony2, Db, Filesystem]
 ```
 
 The TestGuy class has it's methods defined in modules. Actually, it doesn't contain any of them, but acts as a proxy for them. It knows which module executes this action and passes parameters into it. To make your IDE see all of the TestGuy methods, you use the `build` command. It generates the definition of the TestGuy class by copying the signatures from the configured modules.
@@ -46,7 +45,7 @@ It's a good idea to define missing actions or assertion commands in helpers.
 
 Let's say we are going to extend the TestHelper class. By default it's linked with a TestGuy class and a functional test suite.
 
-``` php
+```php
 <?php
 namespace Codeception\Module;
 // here you can define custom functions for TestGuy
@@ -116,38 +115,6 @@ function seeCanCheckEverything($thing)
 
 Just type `$this->assert` to see all of them.
 
-Also each module has special `$this->assert` and `$this->assertNot` methods. They both take the same arguments and are useful if you need to define both positive and negative assertions in your module. These functions take an array as a parameter, where the first value of the array is the name of the PHPUnit assert function.
-
-```php
-<?php
-
-$this->assert(array('Equals',$int,3));
-$this->assertNot(array('internalType',$int,'bool'));
-$this->assert(array('Contains', array(3,5,9), 3));
-?>
-```
-Let's see how to define both `see` and `dontSee` actions without code duplication.
-
-```php
-<?php
-
-public function seeClassExist($class)
-{
-    $this->assert($this->proceedSeeClassExist($class));
-}
-
-public function dontSeeClassExist($class)
-{
-    $this->assertNot($this->proceedSeeClassExist($class));
-}
-
-protected function proceedSeeClassExist($class)
-{
-    return array('True',get_class($class));
-}
-?>
-```
-For `dontSeeClassExist`, the `assertFalse` will be called.
 
 ### Resolving Collisions
 
@@ -199,7 +166,7 @@ In case you have an action in test which is not defined yet, you can automatical
 
 So, you can assign writing tests to non-technical guys or QAs. In case they lack some actions they define them in test.
 
-``` php
+```php
 <?php
 $I->doManyCoolThings();
 ?>
@@ -272,9 +239,9 @@ Here is an example of how it works for PhpBrowser:
 
 ```php
 <?php
-    $this->debug('Request ('.$method.'): '.$uri.' '. json_encode($params));
-    $browser->request($method, $uri, $params);
-    $this->debug('Response code: '.$this->session->getStatusCode());
+    $this->debugSection('Request', $params));
+    $client->request($method, $uri, $params);
+    $this->debug('Response Code: ' . $this->client->getStatusCode());
 ?>    
 ```
 
@@ -285,6 +252,8 @@ I click "All pages"
 * Request (GET) http://localhost/pages {}
 * Response code: 200
 ```
+
+
 
 ### Configuration
 
@@ -303,7 +272,7 @@ For optional parameters, you should set default values. The `$config` property i
 
 ```php
 <?php
-class Selenium extends \Codeception\Util\MinkJS
+class WebDriver extends \Codeception\Module
 {
     protected $requiredFields = array('browser', 'url');    
     protected $config = array('host' => '127.0.0.1', 'port' => '4444');
@@ -315,10 +284,10 @@ The host and port parameter can be redefined in the suite config. Values are set
 ```yaml
 modules:
     enabled:
-        - Selenium
+        - WebDriver
         - Db
     config:
-        Selenium:
+        WebDriver:
             url: 'http://mysite.com/'
             browser: 'firefox'
         Db:
@@ -337,22 +306,20 @@ You may call it from helper class and pass in all the fields you want to change.
 
 ``` php
 <?php
-$this->getModule('Selenium2')->_reconfigure(array('browser' => 'chrome'));
+$this->getModule('WebDriver')->_reconfigure(array('browser' => 'chrome'));
 ?>
 ```
 
 By the end of a test all your changes will be rolled back to the original config values.
 
-### Extension options
-
-*new in 1.6.3*
+### Additional options
 
 Like each class, a Helper can be inherited from a module.
 
-``` php
+```php
 <?php
 namespace Codeception\Module;
-class MySeleniumHelper extends Selenium2 {
+class MySeleniumHelper extends \Codeception\Module\WebDriver  {
 }
 ?>
 ```
@@ -362,10 +329,11 @@ You can also replace `_before` and `_after` hooks, which might be an option when
 
 If some of the methods of the parent class should not be used in child module, you can disable them. Codeception has several options for this.
 
-``` php
+```php
 <?php
 namespace Codeception\Module;
-class MySeleniumHelper extends Selenium2 {
+class MySeleniumHelper extends \Codeception\Module\WebDriver 
+{
     // disable all inherited actions
     public static $includeInheritedActions = false;
 
@@ -382,7 +350,7 @@ Option `$includeInheritedActions` set to false adds the ability to create aliase
  It allows you to resolve conflicts between modules. Let's say we want to use the `Db` module with our `SecondDbHelper`
  that actually inherits from `Db`. How can we use `seeInDatabase` methods from both modules? Let's find out.
 
-``` php
+```php
 <?php
 namespace Codeception\Module;
 class SecondDbHelper extends Db {

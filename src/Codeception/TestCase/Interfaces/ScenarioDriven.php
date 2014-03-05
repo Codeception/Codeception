@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\TestCase;
+namespace Codeception\TestCase\Interfaces;
 
 interface ScenarioDriven {
 

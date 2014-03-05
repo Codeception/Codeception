@@ -2,6 +2,153 @@
 
 In this chapter we will cover some techniques and options that you can use to improve your testing experience and stay with better organization of your project. 
 
+## Cest Classes
+
+In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use the Cest format.
+It is very simple and is fully compatible with Cept scenarios. It means if you feel like your test is long enough and you want to split it - you can easily move it into classes. 
+
+You can start Cest file by running the command:
+
+```
+php codecept.phar generate:cest suitename CestName
+```
+
+The generated file will look like:
+
+```php
+<?php
+class BasicCest
+{
+
+    public function _before()
+    {
+    }
+
+    public function _after()
+    {
+    }
+
+    // tests
+    public function tryToTest(\WebGuy $I) {
+    
+    }
+}
+?>
+```
+
+**Each public method of Cest (except, those starting from `_`) will be executed as a test** and will receive Guy class as the first parameter and `$scenario` variable as a second. 
+
+In `_before` and `_after` method you can use common setups, teardowns for the tests in the class. That actually makes Cest tests more flexible, then Cepts that rely only on similar methods in Helper classes.
+
+As you see we are passing Guy class into `tryToTest` stub. That allows us to write a scenarios the way we did before.
+
+```php
+<?php
+class BasicCest
+{
+    // test
+    public function checkLogin(\WebGuy $I) {
+        $I->wantTo('log in to site');
+        $I->amOnPage('/');
+        $I->click('Login');
+        $I->fillField('username', 'jon');
+        $I->fillField('password','coltrane');
+        $I->click('Enter');
+        $I->see('Hello, Jon');
+        $I->seeInCurrentUrl('/account');
+    }
+}
+?>
+```
+
+But there is a limitation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
+It was useful to store some variables in bootstraps that should be passed into scenario.
+In Cest files you should inject all external variables manually, using static or global variables.
+
+As a workaround you can choose [Fixtures](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php) class which is nothing more then global storage to your variables. You can pass variables from `_bootstrap.php` or any other place just with `Fixtures::add()` call. But probably you can use Cest classes `_before` and `_after` methods to load fixtures on the start of test, and deleting them afterwards. Pretty useful too.
+
+As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you want by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
+
+Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
+
+### Before/After Annotations
+
+You can control Cest files with annotations. You can use `@guy` annotation to pass Guy class different then set via config. This is quite useful if you want to pass a StepObject there (see below).
+
+```php
+<?php
+/**
+ * @guy WebGuy\AdminSteps
+ */
+class AdminCest {
+
+    function banUser(WebGuy\AdminSteps $I)
+    {
+        // ...
+    }
+
+}
+?>
+```
+The guy annotation can be added to method DocBlock as well.
+
+You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
+
+``` php
+<?php
+class ModeratorCest {
+
+    protected function login(WebGuy $I)
+    {
+        $I->amOnPage('/login');
+        $I->fillField('Username', 'miles');
+        $I->fillField('Password', 'davis');
+        $I->click('Login');
+    }
+
+    /**
+     * @before login
+     */
+    function banUser(WebGuy $I)
+    {
+        $I->amOnPage('/users/charlie-parker');
+        $I->see('Ban', '.button');
+        $I->click('Ban');        
+    }
+}
+?>
+```
+
+You can use `@before` and `@after` for included functions also. But you can't have multiple annotations in one method.
+
+### Depends Annotation
+
+With `@depends` annotation you can specify a test that should be passed before current one. If the test fails, current test will be skipped.
+You should pass a method name of a test you are relying on.
+
+``` php
+<?php
+class ModeratorCest {
+
+    public function login(WebGuy $I)
+    {
+        // logs moderator in
+    }
+
+    /**
+     * @depends login
+     */
+    function banUser(WebGuy $I)
+    {
+        // bans user
+    }
+}
+?>
+```
+
+Hint: `@depends` can be combined with `@before`.
+
+
 ## Interactive Console
 
 Interactive console was added to try Codeception commands before executing them inside a test. 
@@ -92,156 +239,6 @@ public function testAdminUser()
 ?>
 ```
 Same annotation can be used in Cest classes.
-
-## Cest Classes
-
-In case you want to get a class-like structure for your Cepts, instead of plain PHP, you can use the Cest format.
-It is very simple and is fully compatible with Cept scenarios. It means if you feel like your test is long enough and you want to split it - you can easily move it into classes. 
-
-You can start Cest file by running the command:
-
-```
-php codecept.phar generate:cest suitename CestName
-```
-
-The generated file will look like:
-
-``` php
-<?php
-class BasicCest
-{
-
-    public function _before()
-    {
-    }
-
-    public function _after()
-    {
-    }
-
-    // tests
-    public function tryToTest(\WebGuy $I) {
-    
-    }
-}
-?>
-```
-
-**Each public method of Cest (except, those starting from `_`) will be executed as a test** and will receive Guy class as the first parameter and `$scenario` variable as a second. 
-
-In `_before` and `_after` method you can use common setups, teardowns for the tests in the class. That actually makes Cest tests more flexible, then Cepts that rely only on similar methods in Helper classes.
-
-As you see we are passing Guy class into `tryToTest` stub. That allows us to write a scenarios the way we did before.
-
-``` php
-<?php
-class BasicCest
-{
-    // test
-    public function checkLogin(\WebGuy $I) {
-        $I->wantTo('log in to site');
-        $I->amOnPage('/');
-        $I->click('Login');
-        $I->fillField('username', 'jon');
-        $I->fillField('password','coltrane');
-        $I->click('Enter');
-        $I->see('Hello, Jon');
-        $I->seeInCurrentUrl('/account');
-    }
-}
-?>
-```
-
-But there is a limitation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
-It was useful to store some variables in bootstraps that should be passed into scenario.
-In Cest files you should inject all external variables manually, using static or global variables.
-
-As a workaround you can choose [Fixtures](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php) class which is nothing more then global storage to your variables. You can pass variables from `_bootstrap.php` or any other place just with `Fixtures::add()` call. But probably you can use Cest classes `_before` and `_after` methods to load fixtures on the start of test, and deleting them afterwards. Pretty useful too.
-
-As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you want by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
-
-Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
-
-### Before/After Annotations
-
-*added in 1.7.0*
-
-You can control Cest files with annotations. You can use `@guy` annotation to pass Guy class different then set via config. This is quite useful if you want to pass a StepObject there (see below).
-
-``` php
-<?php
-/**
- * @guy WebGuy\AdminSteps
- */
-class AdminCest {
-
-    function banUser(WebGuy\AdminSteps $I)
-    {
-        // ...
-    }
-
-}
-?>
-```
-The guy annotation can be added to method DocBlock as well.
-
-You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
-
-``` php
-<?php
-class ModeratorCest {
-
-    protected function login(WebGuy $I)
-    {
-        $I->amOnPage('/login');
-        $I->fillField('Username', 'miles');
-        $I->fillField('Password', 'davis');
-        $I->click('Login');
-    }
-
-    /**
-     * @before login
-     */
-    function banUser(WebGuy $I)
-    {
-        $I->amOnPage('/users/charlie-parker');
-        $I->see('Ban', '.button');
-        $I->click('Ban');        
-    }
-}
-?>
-```
-
-You can use `@before` and `@after` for included functions also. But you can't have multiple annotations in one method.
-
-### Depends Annotation
-
-* new in 1.8 *
-
-With `@depends` annotation you can specify a test that should be passed before current one. If the test fails, current test will be skipped.
-You should pass a method name of a test you are relying on.
-
-``` php
-<?php
-class ModeratorCest {
-
-    public function login(WebGuy $I)
-    {
-        // logs moderator in
-    }
-
-    /**
-     * @depends login
-     */
-    function banUser(WebGuy $I)
-    {
-        // bans user
-    }
-}
-?>
-```
-
-Hint: `@depends` can be combined with `@before`.
 
 ## Refactoring
 
