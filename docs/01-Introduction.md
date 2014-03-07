@@ -6,7 +6,7 @@ Having your application covered with tests gives you more trust in the stability
 In most cases tests don't guarantee that the application works 100% as it is supposed to. You can't predict all possible scenarios and exceptional situations for complex apps.
 But you can cover with tests the most important parts of your app and at least be sure they work as predicted.
 
-There are plenty of ways to test your application. The most popular paradigm is [Unit Testing](http://en.wikipedia.org/wiki/Unit_testing Unit Testing). As for web applications, testing the controller, or model in isolation doesn't prove your application is working. To test the behavior of your application as a whole, you should write functional or acceptance tests.
+There are plenty of ways to test your application. The most popular paradigm is [Unit Testing](http://en.wikipedia.org/wiki/Unit_testing). As for web applications, testing the controller, or model in isolation doesn't prove your application is working. To test the behavior of your application as a whole, you should write functional or acceptance tests.
 
 The Codeception testing framework distinguishes these levels of testing. Out of the box you have tools for writing unit, functional, and acceptance tests in a single manner.
 

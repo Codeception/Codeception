@@ -1,6 +1,6 @@
 # Working with Data
 
-Tests should not affect each other. That's a rule. When tests interact with databases they may change data inside them. This leads to data inconsistency. A test may try to insert a record that is already inserted, or retrieve a deleted record. To avoid test failures, the database should be brought to it's initial state. Codeception has different methods and approaches to get your data cleaned.
+Tests should not affect each other. That's a rule. When tests interact with databases they may change data inside them. This leads to data inconsistency. A test may try to insert a record that is already inserted, or retrieve a deleted record. To avoid test failures, the database should be brought to its initial state. Codeception has different methods and approaches to get your data cleaned.
 
 This chapter summarizes all of the notices on clean ups from previous chapters and suggests the best strategies to choose data storage backends.
 
@@ -30,7 +30,7 @@ In acceptance tests, your test is interacting with the application through a web
 
 ## Shared connections
 
-When an application or it's parts are run within the Codeception process, you can use your application connection in your tests. 
+When an application or its parts are run within the Codeception process, you can use your application connection in your tests. 
 If you can access the connection, all database operations can be put into one global transaction and rolled back at the end. That will dramatically improve performance. Nothing will be written to the database at the end, thus no database repopulation is actually needed.
 
 ### ORM modules
