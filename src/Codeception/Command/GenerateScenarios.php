@@ -4,6 +4,7 @@ namespace Codeception\Command;
 use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -71,12 +72,10 @@ class GenerateScenarios extends Base
         $scenarios = "";
 
         foreach ($tests as $test) {
-            if (!($test instanceof \Codeception\TestCase\Cept)) continue;
+            if (!($test instanceof ScenarioDriven)) continue;
             $feature = $test->getScenarioText($format);
 
-            $name = $test instanceof \Codeception\TestCase\Cest
-                ? $this->underscore($test->getFileName())
-                : $this->underscore(substr($test->getFileName(), 0, -8));
+            $name = $this->underscore(basename($test->getFileName(),'.php'));
 
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
@@ -120,6 +119,8 @@ class GenerateScenarios extends Base
         $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
         $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
         $name = str_replace(array('/','\\'),array('.','.'), $name);
+        $name = preg_replace('/_Cept$/', '', $name);
+        $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
 

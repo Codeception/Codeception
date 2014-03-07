@@ -33,10 +33,7 @@ class Report extends \Codeception\PHPUnit\ResultPrinter
 	    $line = $name . str_repeat('.', 75 - strlen($name));
 	    $line .= $status;
 
-
 	    $this->write($line."\n");
-
-
     }
 
 	protected function endRun()

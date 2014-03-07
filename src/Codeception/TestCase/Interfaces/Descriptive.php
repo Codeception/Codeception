@@ -5,6 +5,6 @@ interface Descriptive
 {
     public function getFileName();
     public function getSignature();
-    public function getName();
+    public function getName($withDataSet = TRUE);
     public function toString();
 }

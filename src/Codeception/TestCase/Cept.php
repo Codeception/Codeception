@@ -7,7 +7,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Step;
 use Codeception\TestCase;
 
-class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive
+class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported
 {
     use Shared\ScenarioRunner;
 
@@ -25,7 +25,12 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
     {
         return $this->testFile;
     }
-    
+
+    public function toString()
+    {
+        return $this->getFeature(). " (".$this->getSignature().")";
+    }
+
     public function preload()
     { 
         $this->parser->prepareToRun($this->getRawBody());
@@ -51,5 +56,10 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
         require $this->testFile;
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this));
+    }
+
+    public function getReportFields()
+    {
+        return ['name' => basename($this->getFileName()), 'file' => $this->getFileName()];
     }
 }

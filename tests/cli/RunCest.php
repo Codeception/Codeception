@@ -74,7 +74,7 @@ class RunCest
         $I->seeFileFound('report.xml', 'tests/_log');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
-        $I->seeInThisFile('<testcase file="FileExistsCept.php"');
+        $I->seeInThisFile('<testcase name="FileExistsCept.php"');
     }
 
     /**
@@ -132,7 +132,7 @@ class RunCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
-        $I->seeShellOutputMatches("~\(AnotherCest.optimistic\)\s*?Ok~");
+        $I->seeShellOutputMatches("~\(AnotherCest::optimistic\)\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherCest.pessimistic');
     }
 

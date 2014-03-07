@@ -6,18 +6,22 @@ use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Util\Annotation;
 
-class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive
+class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported
 {
     use Shared\ScenarioRunner;
     use Shared\Dependencies;
 
     protected $testClassInstance = null;
     protected $testMethod = null;
-    protected $guy;
 
     public function __construct(array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
+    }
+
+    public function getName($withDataSet = TRUE)
+    {
+        return $this->testMethod;
     }
 
     public function preload()
@@ -156,6 +160,23 @@ class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, I
     public function getFileName()
     {
         return $this->testFile;
+    }
+
+    public function toString()
+    {
+        return $this->getFeature(). " (".$this->getSignature().")";
+    }
+    
+    /**
+     * @return array
+     */
+    public function getReportFields()
+    {
+        return [
+            'file' => $this->getFileName(),
+            'name' => $this->getTestMethod(),
+            'class' => get_class($this->getTestClass()),
+        ];
     }
 
 }

@@ -42,9 +42,9 @@ class IncludedCest {
         $I->seeInThisFile('<testsuite name="Jazz.functional" tests="1" assertions="1"');
         $I->seeInThisFile('<testsuite name="Jazz\Pianist.functional" tests="1" assertions="1"');
         $I->seeInThisFile('<testsuite name="Shire.functional" tests="1" assertions="1"');
-        $I->seeInThisFile('<testcase file="HobbitCept.php"');
-        $I->seeInThisFile('<testcase file="DemoCept.php"');
-        $I->seeInThisFile('<testcase file="PianistCept.php"');
+        $I->seeInThisFile('<testcase name="HobbitCept.php"');
+        $I->seeInThisFile('<testcase name="DemoCept.php"');
+        $I->seeInThisFile('<testcase name="PianistCept.php"');
     }
 
     /**
