@@ -233,9 +233,13 @@ class Console implements EventSubscriberInterface
 
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
-        $feature = $failedTest->getScenario()->getFeature();
+        $feature = $failedTest->getFeature();
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-        $failMessage = $this->message($failedTest->getFilename())->style('bold');
+        $failMessage = $this->message($failedTest->getSignature())
+            ->style('bold')
+            ->append(' (')
+            ->append($failedTest->getFileName())
+            ->append(')');
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest
             or $fail instanceof \PHPUnit_Framework_IncompleteTest
