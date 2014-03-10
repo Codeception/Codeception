@@ -37,12 +37,12 @@ class SuiteManager {
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
-        $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
 
-        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         if (isset($settings['current_environment'])) $this->env = $settings['current_environment'];
-        
+        if ($settings['bootstrap']) $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
+        $this->suite = $this->createSuite($name);
+
         if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
             throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
@@ -71,6 +71,7 @@ class SuiteManager {
         $suiteClass = $this->settings['suite_class'];
         if (!class_exists($suiteClass)) throw new \Codeception\Exception\Configuration("Suite class $suiteClass not found");
         $suite = new $suiteClass;
+        $suite->baseName = $this->env ? substr($name, 0, strpos($name, '-'.$this->env)) : $name;
         if ($this->settings['namespace']) $name = $this->settings['namespace'] . ".$name";
         $suite->setName($name);
         if (!($suite instanceof \PHPUnit_Framework_TestSuite)) throw new \Codeception\Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
@@ -119,7 +120,12 @@ class SuiteManager {
         $testClasses = $this->getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-
+            $reflected = new \ReflectionClass($testClass);
+            
+            if ($reflected->isAbstract()) {
+                continue;
+            }
+            
             $guy = $this->settings['namespace']
                 ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
                 : $this->settings['class_name'];
@@ -183,10 +189,38 @@ class SuiteManager {
 
     protected function getClassesFromFile($file)
     {
-        $loaded_classes = get_declared_classes();
         require_once $file;
-        $extra_loaded_classes = get_declared_classes();
-        return array_diff($extra_loaded_classes,$loaded_classes);
+
+        $sourceCode = file_get_contents($file);
+        $classes    = array();
+        $tokens     = token_get_all($sourceCode);
+        $namespace  = '';
+
+        for ($i = 0, $tokensCount = count($tokens); $i < $tokensCount; $i++) {
+            if ($tokens[$i][0] === T_NAMESPACE) {
+                $namespace = '';
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                    if ($tokens[$j][0] === T_STRING) {
+                        $namespace .= $tokens[$j][1] . '\\';
+                    } else {
+                        if ($tokens[$j] === '{' || $tokens[$j] === ';') {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ($tokens[$i][0] === T_CLASS) {
+                for ($j = $i + 1; $j < $tokensCount; $j++) {
+                    if ($tokens[$j] === '{') {
+                        $classes[] = $namespace . $tokens[$i + 2][1];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $classes;
     }
 
     protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)

@@ -94,9 +94,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
-        $this->test = $test;
-        $size = $this->webDriver->manage()->window()->getSize();
-        $this->debugSection("Window", $size->getWidth().'x'.$size->getHeight());
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -107,6 +104,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             // but \RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
+        } else {
+            $this->webDriver->manage()->deleteAllCookies();
         }
     }
 
@@ -127,7 +126,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _getResponseCode() {}
 
-    public function _sendRequest($url) {}
+    public function _sendRequest($url) {
+        $this->webDriver->get($this->_getUrl().'');
+    }
 
     public function amOnSubdomain($subdomain)
     {
@@ -248,7 +249,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $host = rtrim($this->config['url'], '/');
         $page = ltrim($page, '/');
         $this->webDriver->get($host . '/' . $page);
-        $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
     public function see($text, $selector = null)
@@ -820,11 +820,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
             $els = $form->findElements(\WebDriverBy::name($param));
             $el = reset($els);
+            if (empty($el)) throw new ElementNotFound($param);
             if ($el->getTagName() == 'textarea') $this->fillField($el, $value);
             if ($el->getTagName() == 'select') $this->selectOption($el, $value);
             if ($el->getTagName() == 'input') {
                 $type = $el->getAttribute('type');
-                if ($type == 'text') $this->fillField($el, $value);
+                if ($type == 'text'  or $type == 'password') $this->fillField($el, $value);
                 if ($type == 'radio' or $type == 'checkbox') {
                     foreach ($els as $radio) {
                         if ($radio->getAttribute('value') == $value) $this->checkOption($radio);
@@ -1035,12 +1036,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * If the window has no name, the only way to access it is via the `executeInSelenium()` method like so:
      *
-     * ```
+     * ``` php
      * <?php
      * $I->executeInSelenium(function (\Webdriver $webdriver) {
-     *      $handles=$webDriver->getWindowHandles();
+     *      $handles=$webdriver->getWindowHandles();
      *      $last_window = end($handles);
-     *      $webDriver->switchTo()->window($name);
+     *      $webdriver->switchTo()->window($last_window);
      * });
      * ?>
      * ```

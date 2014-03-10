@@ -223,29 +223,37 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
     public function _initialize() {
     }
 
-	// HOOK: on every Guy class initialization
-	public function _cleanup() {
-	}
+    // HOOK: on every Guy class initialization
+    public function _cleanup() {
+    }
 
-	// HOOK: before each step
-	public function _beforeStep(\Codeception\Step $step) {
-	}
+    // HOOK: before each suite
+    public function _beforeSuite($settings = array()) {
+    }
 
-	// HOOK: after each  step
-	public function _afterStep(\Codeception\Step $step) {
-	}
+    // HOOK: after suite
+    public function _afterSuite() {
+    }    
 
-	// HOOK: before test
-	public function _before(\Codeception\TestCase $test) {
-	}
+    // HOOK: before each step
+    public function _beforeStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: after test
-	public function _after(\Codeception\TestCase $test) {
-	}
+    // HOOK: after each  step
+    public function _afterStep(\Codeception\Step $step) {
+    }
 
-	// HOOK: on fail
-	public function _failed(\Codeception\TestCase $test, $fail) {
-	}
+    // HOOK: before test
+    public function _before(\Codeception\TestCase $test) {
+    }
+
+    // HOOK: after test
+    public function _after(\Codeception\TestCase $test) {
+    }
+
+    // HOOK: on fail
+    public function _failed(\Codeception\TestCase $test, $fail) {
+    }
 ?>
 ```
 

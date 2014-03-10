@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.8.1";
+    const VERSION = "1.8.3";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -136,10 +136,8 @@ class Codecept
             if (!in_array($env, $selectedEnvironments)) {
                 continue;
             }
-            if (!is_int($env)) {
-                $suite .= "-$env";
-            }
-            $this->runSuite($config, $suite, $test);
+            $suiteToRun = is_int($env) ? $suite : "{$suite}-{$env}";
+            $this->runSuite($config, $suiteToRun, $test);
         }
     }
 

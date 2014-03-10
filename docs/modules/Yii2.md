@@ -4,11 +4,10 @@
 
 This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
 
-The following configurations are required for this module:
-<ul>
-<li>entryScript - the path of the entry script</li>
-<li>url - the URL of the entry script</li>
-</ul>
+
+## Config
+
+* configFile *required* - the path to the application config file
 
 The entry script must return the application configuration array.
 
@@ -16,11 +15,10 @@ You can use this module by setting params in your functional.suite.yml:
 <pre>
 class_name: TestGuy
 modules:
-    enabled: [FileSystem, TestHelper, Yii2]
+    enabled: [Yii2, TestHelper]
     config:
         Yii2:
-            entryScript: '/path/to/index.php'
-            url: 'http://localhost/path/to/index.php'
+            configFile: '/path/to/config.php'
 </pre>
 
 ## Status
@@ -292,6 +290,19 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
+### dontSeeRecord
+
+
+Checks that record does not exist in database.
+
+``` php
+$I->dontSeeRecord('app\models\User', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### fillField
 
 
@@ -332,6 +343,20 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
+### grabRecord
+
+
+Retrieves record from database
+
+``` php
+$category = $I->grabRecord('app\models\User', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+ * return mixed
+
+
 ### grabTextFrom
 
 
@@ -369,6 +394,22 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
 ```
 
  * param $field
+ * return mixed
+
+
+### haveRecord
+
+
+Inserts record into the database.
+
+``` php
+<?php
+$user_id = $I->haveRecord('app\models\User', array('name' => 'Davert'));
+?>
+```
+
+ * param $model
+ * param array $attributes
  * return mixed
 
 
@@ -551,6 +592,19 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 Asserts that current page has 404 response status code.
 
 
+### seeRecord
+
+
+Checks that record exists in database.
+
+``` php
+$I->seeRecord('app\models\User', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### seeResponseCodeIs
 
 
@@ -613,11 +667,32 @@ We emulate that click by running this ajax request manually.
 
 ``` php
 <?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
 
 ```
 
+ * param $uri
+ * param $params
+
+
+### sendAjaxRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends an ajax request with specified method and params.
+
+Example:
+
+You need to perform an ajax request specifying the HTTP method.
+
+``` php
+<?php
+$I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
+
+```
+
+ * param $method
  * param $uri
  * param $params
 

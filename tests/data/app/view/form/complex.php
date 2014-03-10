@@ -22,6 +22,7 @@
         <option value="dead">100-210</option>
     </select>
 
+    <input type="password" name="password" >
     <label for="checkin">I Agree</label>
     <input type="checkbox" id="checkin" name="terms" value="agree" checked="checked" />
     <input type="submit" value="Submit" />

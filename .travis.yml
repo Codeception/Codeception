@@ -20,8 +20,31 @@ before_script:
   - java -jar selenium-server-standalone-2.35.0.jar -port 4444 &
   - php -S localhost:8000 -t tests/data/app &
   - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install -n --prefer-source
+  - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
 
-script: "php codecept run"
+  # Yii2
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept build -c frameworks-yii-basic'
+
+  # Phalcon
+  - git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4
+  - cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;
+  - git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon
+  - "mysql -e 'CREATE DATABASE forum;'"
+  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
+  - php codecept build -c frameworks-phalcon
+
+  # Laravel
+  - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
+  - "mysql -e 'create database `l4-module`;'"
+  - composer install -d frameworks-laravel
+  - php frameworks-laravel/artisan migrate --seed
+  - php codecept build -c frameworks-laravel
+
+script:
+  - php codecept run  # self tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.3" ]] || php codecept run functional -c frameworks-yii-basic' # Yii2 tests
+  - php codecept run functional -c frameworks-laravel # Laravel4 Tests
+  - php codecept run functional -c frameworks-phalcon # Phalcon Tests

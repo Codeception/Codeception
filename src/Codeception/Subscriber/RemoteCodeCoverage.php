@@ -34,13 +34,13 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
     public function beforeSuite(\Codeception\Event\Suite $e)
     {
         $this->applySettings($e->getSettings());
-        if (!$this->enabled || !$this->remote) {
+        if (!$this->enabled) {
             return;
         }
 
-        $this->suite_name = $e->getSuite()->getName();
+        $this->suite_name = $e->getSuite()->baseName;
         $this->module     = $this->getRemoteConnectionModule();
-        if (!$this->module) {
+        if (!$this->module or !$this->remote) {
             return;
         }
 
@@ -60,7 +60,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         }
     }
 
-    public function beforeStep(\Codeception\Event\Step $e)
+    public function beforeTest(\Codeception\Event\Test $e)
     {
         if (!$this->module) {
             return;
@@ -71,16 +71,9 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
             'CodeCoverage_Suite'  => $this->suite_name,
             'CodeCoverage_Config' => $this->settings['remote_config']
         );
-        $this->module->setCookie('CODECEPTION_CODECOVERAGE', json_encode($cookie));
 
-        if (!method_exists($this->module, '_setHeader')) {
-            return;
-        }
-        $this->module->_setHeader('X-Codeception-CodeCoverage', $e->getTest()->getName());
-        $this->module->_setHeader('X-Codeception-CodeCoverage-Suite', $this->suite_name);
-        if ($this->settings['remote_config']) {
-            $this->module->_setHeader('X-Codeception-CodeCoverage-Config', $this->settings['remote_config']);
-        }
+        $this->module->amOnPage('/');
+        $this->module->setCookie('CODECEPTION_CODECOVERAGE', json_encode($cookie));
     }
 
     public function afterStep(\Codeception\Event\Step $e)
@@ -89,16 +82,11 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         if ($error  = $this->module->grabCookie('CODECEPTION_CODECOVERAGE_ERROR')) {
             throw new RemoteException($error);
         }
-        $this->module->resetCookie('CODECEPTION_CODECOVERAGE_ERROR');
-        $this->module->resetCookie('CODECEPTION_CODECOVERAGE');
     }
 
     public function afterSuite(\Codeception\Event\Suite $e)
     {
-        if (!$this->module) {
-            return;
-        }
-        if (!$this->remote) {
+        if (!$this->module or !$this->remote) {
             return;
         }
 
@@ -152,7 +140,7 @@ class RemoteCodeCoverage extends CodeCoverage implements EventSubscriberInterfac
         return array(
             'suite.after'  => 'afterSuite',
             'suite.before' => 'beforeSuite',
-            'step.before'  => 'beforeStep',
+            'test.before'  => 'beforeTest',
             'step.after'   => 'afterStep',
         );
     }

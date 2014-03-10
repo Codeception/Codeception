@@ -77,7 +77,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         if (is_null($value)) {
             // try to parse headers because of bug in
             // \Behat\Mink\Driver\BrowserKitDriver::getCookie
-            $value = $this->_parseCookieFromHeaders($cookie);
+            $value = $this->parseCookieFromHeaders($cookie);
         }
         return $value;
     }
@@ -98,7 +98,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
      * @param string $name
      * @return null|string
      */
-    private function _parseCookieFromHeaders($name)
+    private function parseCookieFromHeaders($name)
     {
         try {
             $headers = $this->session->getResponseHeaders();
@@ -111,7 +111,7 @@ abstract class Mink extends Module implements RemoteInterface, WebInterface
         }
 
         foreach ($headers['set-cookie'] as $cookieString) {
-            if (!stripos($cookieString, $name) === 0) {
+            if (!(stripos($cookieString, $name . '=') === 0)) {
                 continue;
             }
             $cookiePieces = explode(';', $cookieString);

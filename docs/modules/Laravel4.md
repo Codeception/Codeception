@@ -19,6 +19,9 @@ Uses 'bootstrap/start.php' to launch.
 * Stability: **alpha**
 * Contact: davert.codeception@mailican.com
 
+## Config
+* cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
+
 
 ## API
 
@@ -46,11 +49,11 @@ Authenticates user for HTTP_AUTH
 ### amLoggedAs
 
 
- the currently logged in user for the application.
+Set the currently logged in user for the application.
 
-ram  \Illuminate\Auth\UserInterface  $user
-ram  string  $driver
-turn void
+ * param  \Illuminate\Auth\UserInterface $user
+ * param  string $driver
+ * return void
 
 
 ### amOnPage
@@ -304,6 +307,19 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * return mixed
 
 
+### dontSeeRecord
+
+
+Checks that record does not exist in database.
+
+``` php
+$I->dontSeeRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### fillField
 
 
@@ -344,30 +360,44 @@ $uri = $I->grabFromCurrentUrl();
  * return mixed
 
 
+### grabRecord
+
+
+Retrieves record from database
+
+``` php
+$category = $I->grabRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+ * return mixed
+
+
 ### grabService
 
 
-urn an instance of a class from the IoC Container.
-tp://laravel.com/docs/ioc)
+Return an instance of a class from the IoC Container.
+(http://laravel.com/docs/ioc)
 
-mple
- php
+Example
+``` php
 <?php
-In Laravel
-::bind('foo', function($app)
+// In Laravel
+App::bind('foo', function($app)
+{
+    return new FooBar;
+});
 
- return new FooBar;
+// Then in test
+$service = $I->grabService('foo');
 
-
-Then in test
-rvice = $I->grabService('foo');
-
-Will return an instance of FooBar, also works for singletons.
+// Will return an instance of FooBar, also works for singletons.
 ?>
+```
 
-
-ram  string  $class
-turn mixed
+ * param  string $class
+ * return mixed
 
 
 ### grabTextFrom
@@ -407,6 +437,22 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'u
 ```
 
  * param $field
+ * return mixed
+
+
+### haveRecord
+
+
+Inserts record into the database.
+
+``` php
+<?php
+$user_id = $I->haveRecord('users', array('name' => 'Davert'));
+?>
+```
+
+ * param $model
+ * param array $attributes
  * return mixed
 
 
@@ -536,11 +582,11 @@ $I->seeInField('//form/*[@name=search]','Search');
 ### seeInSession
 
 
-ert that the session has a given list of values.
+Assert that the session has a given list of values.
 
-ram  string|array  $key
-ram  mixed  $value
-turn void
+ * param  string|array $key
+ * param  mixed $value
+ * return void
 
 
 ### seeInTitle
@@ -599,6 +645,19 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 Asserts that current page has 404 response status code.
 
 
+### seeRecord
+
+
+Checks that record exists in database.
+
+``` php
+$I->seeRecord('users', array('name' => 'davert'));
+```
+
+ * param $model
+ * param array $attributes
+
+
 ### seeResponseCodeIs
 
 
@@ -608,21 +667,41 @@ Checks that response code is equal to value provided.
  * return mixed
 
 
+### seeSessionErrorMessage
+
+
+Assert that Session has error messages
+The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
+
+Useful for validation messages and generally messages array
+ e.g.
+ return `Redirect::to('register')->withErrors($validator);`
+
+Example of Usage
+
+``` php
+<?php
+$I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
+?>
+```
+ * param array $bindings
+
+
 ### seeSessionHasErrors
 
 
-ert that the session has errors bound.
+Assert that the session has errors bound.
 
-turn bool
+ * return bool
 
 
 ### seeSessionHasValues
 
 
-ert that the session has a given list of values.
+Assert that the session has a given list of values.
 
-ram  array  $bindings
-turn void
+ * param  array $bindings
+ * return void
 
 
 ### selectOption
@@ -678,11 +757,32 @@ We emulate that click by running this ajax request manually.
 
 ``` php
 <?php
-$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true); // POST
-$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
+$I->sendAjaxPostRequest('/updateSettings', array('notifications' => true)); // POST
+$I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GET
 
 ```
 
+ * param $uri
+ * param $params
+
+
+### sendAjaxRequest
+
+
+If your page triggers an ajax request, you can perform it manually.
+This action sends an ajax request with specified method and params.
+
+Example:
+
+You need to perform an ajax request specifying the HTTP method.
+
+``` php
+<?php
+$I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
+
+```
+
+ * param $method
  * param $uri
  * param $params
 
