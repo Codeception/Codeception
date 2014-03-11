@@ -58,6 +58,7 @@ class Configuration
             'enabled' => array(),
             'config' => array(),
         ),
+        'groups' => [],
         'settings' => array(
             'colors' => false,
             'log' => false,
@@ -192,7 +193,7 @@ class Configuration
 
         $globalConf = $config['settings'];
 
-        foreach (array('modules','coverage', 'namespace') as $key) {
+        foreach (array('modules','coverage', 'namespace', 'groups') as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }

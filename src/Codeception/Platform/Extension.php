@@ -1,12 +1,14 @@
 <?php
 namespace Codeception\Platform;
 
+use Codeception\Exception\Configuration;
 use Codeception\Exception\ModuleRequire;
 use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class Extension implements EventSubscriberInterface {
+class Extension implements EventSubscriberInterface
+{
 
     use StaticEvents;
     
@@ -47,5 +49,24 @@ class Extension implements EventSubscriberInterface {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
+    public function getTestsDir()
+    {
+        return \Codeception\Configuration::testsDir();
+    }
+
+    public function getLogDir()
+    {
+        return \Codeception\Configuration::logDir();
+    }
+
+    public function getDataDir()
+    {
+        return \Codeception\Configuration::dataDir();
+    }
+
+    public function getRootDir()
+    {
+        return \Codeception\Configuration::projectDir();
+    }
 
 }

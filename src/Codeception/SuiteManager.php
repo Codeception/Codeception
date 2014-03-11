@@ -5,6 +5,7 @@ namespace Codeception;
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Generator\Actor;
+use Codeception\Lib\GroupManager;
 use Codeception\Lib\Parser;
 use Codeception\Util\Annotation;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -28,12 +29,17 @@ class SuiteManager
      */
     protected $dispatcher = null;
 
+    /**
+     * @var GroupManager
+     */
+    protected $groupManager;
+
     protected $tests = array();
     protected $debug = false;
     protected $path = '';
-    protected $testcaseClass = 'Codeception\TestCase';
     protected $printer = null;
     protected $env = null;
+
 
     protected $settings = array();
 
@@ -43,6 +49,7 @@ class SuiteManager
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
+        $this->groupManager = new GroupManager($settings['groups']);
 
         if ($settings['bootstrap']) {
             $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
@@ -114,8 +121,7 @@ class SuiteManager
                 if (!$this->isCurrentEnvironment(Annotation::forMethod($testClass, $method->name)->fetchAll('env'))) {
                     continue;
                 }
-                $groups = \PHPUnit_Util_Test::getGroups($testClass, $method->name);
-                $this->suite->addTest($test, $groups);
+                $this->addToSuite($test);
             }
         }
     }
@@ -137,7 +143,7 @@ class SuiteManager
         if (!$this->isCurrentEnvironment($cept->getScenario()->getEnv())) {
             return;
         }
-        $this->suite->addTest($cept, $cept->getScenario()->getGroups());
+        $this->addToSuite($cept);
     }
 
     public function addCest($file)
@@ -162,9 +168,15 @@ class SuiteManager
                 if (!$this->isCurrentEnvironment($test->getScenario()->getEnv())) {
                     continue;
                 }
-                $this->suite->addTest($test, \PHPUnit_Util_Test::getGroups($testClass, $method));
+                $this->addToSuite($test);
             }
         }
+    }
+
+    protected function addToSuite($test)
+    {
+        $groups = $this->groupManager->groupsForTest($test);
+        $this->suite->addTest($test, $groups);
     }
 
     protected function relativeName($file)
@@ -249,7 +261,6 @@ class SuiteManager
             ->configActor($this->getActor())
             ->initConfig();
 
-        $test->getScenario()->groups(\PHPUnit_Util_Test::getGroups($className, $methodName));
         $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
     }
 
@@ -271,7 +282,6 @@ class SuiteManager
             ->initConfig();
 
         $cest->getScenario()->env(Annotation::forMethod($testClass, $methodName)->fetchAll('env'));
-        $cest->getScenario()->groups(\PHPUnit_Util_Test::getGroups($testClass, $methodName));
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         $cest->preload();
         return $cest;

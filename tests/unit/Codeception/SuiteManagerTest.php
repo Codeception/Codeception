@@ -18,6 +18,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $this->suiteman = Stub::make('\Codeception\SuiteManager', array(
                 'dispatcher' => $this->dispatcher,
+                'groupManager' => new \Codeception\Lib\GroupManager([]),
                 'suite' => new PHPUnit_Framework_TestSuite(), 
                 'settings' => array(
                     'bootstrap' => false, 
@@ -85,6 +86,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
             '\Codeception\SuiteManager',
             array(
                  'dispatcher' => $this->dispatcher,
+                 'groupManager' => new \Codeception\Lib\GroupManager([]),
                  'suite'      => new PHPUnit_Framework_TestSuite(),
                  'settings'   => array(
                      'bootstrap'  => false,

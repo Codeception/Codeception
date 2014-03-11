@@ -7,7 +7,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Step;
 use Codeception\TestCase;
 
-class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported
+class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported, Interfaces\Plain
 {
     use Shared\ScenarioRunner;
 

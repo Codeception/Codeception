@@ -102,9 +102,9 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
-        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
 
         // optional
+        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
 
@@ -131,7 +131,7 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
         $selectedEnvironments = $this->options['env'];
-        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+        $environments = Configuration::suiteEnvironments($suite);
 
         if (!$selectedEnvironments or empty($environments)) {
             $this->runSuite($settings, $suite, $test);
