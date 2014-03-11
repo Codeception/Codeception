@@ -8,11 +8,23 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require_once __DIR__ . '/../../autoload.php';
 }
 
-// function not autoloaded in PHP, thus its a good place for it
+// function not autoloaded in PHP, thus its a good place for them
 function codecept_debug($data)
 {
-//    if (!class_exists('\Codeception\Util\Debug')) {
-//        return;
-//    }
     \Codeception\Util\Debug::debug($data);
+}
+
+function codecept_root_dir()
+{
+    return \Codeception\Configuration::projectDir();
+}
+
+function codecept_log_dir()
+{
+    return \Codeception\Configuration::logDir();
+}
+
+function codecept_data_dir()
+{
+    return \Codeception\Configuration::dataDir();
 }

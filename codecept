@@ -6,8 +6,7 @@
 
 require_once dirname(__FILE__).'/autoload.php';
 
-use Symfony\Component\Console\Application,
-    Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Application;
 
 $app = new Application('Codeception', Codeception\Codecept::VERSION);
 $app->add(new Codeception\Command\Build('build'));
