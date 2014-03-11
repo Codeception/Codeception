@@ -22,6 +22,7 @@ class c3Test extends PHPUnit_Framework_TestCase
 
         $this->c3 = Configuration::dataDir() . 'claypit/c3.php';
         $this->c3_dir = Codeception\Configuration::logDir() . 'c3tmp/';
+        @mkdir($this->c3_dir, 0777, true);
 
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE'] = 'test';
         $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG'] = 'debug';

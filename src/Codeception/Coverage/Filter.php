@@ -31,6 +31,10 @@ class Filter
         $this->filter = $this->phpCodeCoverage->filter();
     }
 
+    /**
+     * @param \PHP_CodeCoverage $phpCoverage
+     * @return Filter
+     */
     public static function setup(\PHP_CodeCoverage $phpCoverage)
     {
         self::$c3 = new self($phpCoverage);
