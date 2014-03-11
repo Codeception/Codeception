@@ -6,6 +6,8 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\TestCase;
+use Exception;
+use PHPUnit_Framework_Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Listener implements \PHPUnit_Framework_TestListener
@@ -13,6 +15,7 @@ class Listener implements \PHPUnit_Framework_TestListener
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
+
     protected $dispatcher;
 
     protected $unsuccessfulTests = array();
@@ -20,6 +23,19 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function __construct(EventDispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
+    }
+
+    /**
+     * Risky test.
+     *
+     * @param PHPUnit_Framework_Test $test
+     * @param Exception $e
+     * @param float $time
+     * @since  Method available since Release 4.0.0
+     */
+    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    {
+        // TODO: Implement addRiskyTest() method.
     }
 
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)

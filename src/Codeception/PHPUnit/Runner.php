@@ -73,14 +73,23 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             $result->addListener($listener);
         }
 
-        $suite->run(
-              $result,
-              $arguments['filter'],
-              $arguments['groups'],
-              $arguments['excludeGroups'],
-              $arguments['processIsolation']
-        );
+        $filterFactory = new \PHPUnit_Runner_Filter_Factory();
+        if ($arguments['groups']) {
+            $filterFactory->addFilter(
+                new \ReflectionClass('PHPUnit_Runner_Filter_Group_Include'),
+                $arguments['groups']
+            );
+        }
 
+        if ($arguments['filter']) {
+            $filterFactory->addFilter(
+                new \ReflectionClass('PHPUnit_Runner_Filter_Test'),
+                $arguments['filter']
+            );
+        }
+
+        $suite->injectFilter($filterFactory);
+        $suite->run($result);
         unset($suite);
 
         foreach ($arguments['listeners'] as $listener) {

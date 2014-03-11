@@ -16,8 +16,8 @@
 
     "require": {
         "php": ">=5.4.0",
-        "phpunit/phpunit": "3.7.*",
-        "facebook/webdriver": "~0.3",
+        "phpunit/phpunit": "4.0.*",
+        "facebook/webdriver": "~0.4",
         "fabpot/goutte": "*",
         "monolog/monolog": "*",
         "symfony/finder": "~2.3",

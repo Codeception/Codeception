@@ -434,7 +434,7 @@ class Stub
     private static function doGenerateMock($args, $isAbstract = false)
     {
         $testCase   = self::extractTestCaseFromArgs($args);
-        $class      = $testCase instanceof \PHPUnit_Framework_TestCase ? $testCase : '\PHPUnit_Framework_MockObject_Generator';
+        $class      = $testCase instanceof \PHPUnit_Framework_TestCase ? $testCase : new \PHPUnit_Framework_MockObject_Generator;
         $methodName = $isAbstract ? 'getMockForAbstractClass' : 'getMock';
 
         $mock = call_user_func_array([$class, $methodName], $args);

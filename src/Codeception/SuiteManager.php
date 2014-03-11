@@ -87,11 +87,7 @@ class SuiteManager
     
     protected function createSuite($name)
     {
-        $suiteClass = $this->settings['suite_class'];
-        if (!class_exists($suiteClass)) {
-            throw new Exception\Configuration("Suite class $suiteClass not found");
-        }
-        $suite = new $suiteClass;
+        $suite = new \PHPUnit_Framework_TestSuite();
         $suite->baseName = $this->env ? substr($name, 0, strpos($name, '-' . $this->env)) : $name;
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
