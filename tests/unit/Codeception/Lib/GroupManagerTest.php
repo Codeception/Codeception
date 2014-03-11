@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\Util\Stub;
 

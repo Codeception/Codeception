@@ -18,7 +18,7 @@ class AutoRebuild implements EventSubscriberInterface
     public function updateGuy(SuiteEvent $e)
     {
         $settings = $e->getSettings();
-        $guyFile = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php';
+        $guyFile = $settings['path'] . $settings['class_name'] . '.php';
 
         // load guy class to see hash
         $handle = fopen($guyFile, "r");
@@ -32,9 +32,13 @@ class AutoRebuild implements EventSubscriberInterface
                 if ($hash != $currentHash) {
                     codecept_debug("Rebuilding {$settings['class_name']}...");
                     $guyGenerator = new Actor($settings);
-                    file_put_contents($guyFile, $guyGenerator->produce());
+                    fclose($handle);
+                    $generated = $guyGenerator->produce();
+                    file_put_contents($guyFile, $generated);
+                    return;
                 }
             }
+            fclose($handle);
         }
     }
 }

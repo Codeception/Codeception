@@ -87,7 +87,7 @@ EOF;
 
     public static function genHash($actions, $settings)
     {
-        return md5(Codecept::VERSION.serialize($actions).serialize($settings));
+        return md5(Codecept::VERSION.serialize($actions).serialize($settings['modules']));
     }
 
     protected function addMethod(\ReflectionMethod $refMethod)
