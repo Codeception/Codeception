@@ -1,12 +1,7 @@
 <?php
-
-
 namespace Codeception\TestCase\Interfaces;
-
-
 /**
- * For testcases which are not stored in files
- *
+ * TestCases that do not follow OOP
  */
 interface Plain
 {
