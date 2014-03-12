@@ -14,17 +14,17 @@ function codecept_debug($data)
     \Codeception\Util\Debug::debug($data);
 }
 
-function codecept_root_dir()
+function codecept_root_dir($appendPath = '')
 {
-    return \Codeception\Configuration::projectDir();
+    return \Codeception\Configuration::projectDir() . $appendPath;
 }
 
-function codecept_log_dir()
+function codecept_log_dir($appendPath = '')
 {
-    return \Codeception\Configuration::logDir();
+    return \Codeception\Configuration::logDir() . $appendPath;
 }
 
-function codecept_data_dir()
+function codecept_data_dir($appendPath = '')
 {
-    return \Codeception\Configuration::dataDir();
+    return \Codeception\Configuration::dataDir() . $appendPath;
 }

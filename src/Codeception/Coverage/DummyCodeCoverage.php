@@ -8,7 +8,7 @@ class DummyCodeCoverage extends \PHP_CodeCoverage
 
     }
 
-    function stop($append = TRUE)
+    function stop($append = true, $linesToBeCovered = array(), array $linesToBeUsed = array())
     {
 
     }

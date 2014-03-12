@@ -144,4 +144,12 @@ class Filter
         return $finder;
     }
 
+    /**
+     * @return \PHP_CodeCoverage_Filter
+     */
+    public function getFilter()
+    {
+        return $this->filter;
+    }
+
 }
