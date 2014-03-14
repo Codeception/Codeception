@@ -21,6 +21,11 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
         return $this->name;
     }
 
+    public function getName($withDataSet = true)
+    {
+        return $this->getFeature() ? $this->getFeature() : $this->getSignature();
+    }
+
     public function getFileName()
     {
         return $this->testFile;

@@ -17,9 +17,12 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
         'remote' => false,
         'local' => false,
         'xdebug_session' => 'codeception',
-        'remote_config'  => null
+        'remote_config'  => null,
     ];
+
     protected $settings = [];
+    protected $filters = [];
+
 
     protected $coverage;
     protected $logDir;
@@ -41,6 +44,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
         }
         $this->coverage = new \PHP_CodeCoverage();
 
+        $this->filters = $settings;
         $this->settings = $this->defaultSettings;
         $keys = array_keys($this->defaultSettings);
         foreach ($keys as $key) {
@@ -68,8 +72,8 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
         $result->setCodeCoverage(new DummyCodeCoverage());
 
         Filter::setup($this->coverage)
-            ->whiteList($this->settings)
-            ->blackList($this->settings);
+            ->whiteList($this->filters)
+            ->blackList($this->filters);
 
         $result->setCodeCoverage($this->coverage);
     }

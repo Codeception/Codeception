@@ -73,6 +73,7 @@ class Console implements EventSubscriberInterface
         $message = $this->message(implode(', ',array_map(function ($module) {
             return $module->_getName();
         }, SuiteManager::$modules)));
+
         $message->style('info')
             ->prepend('Modules: ')
             ->writeln(OutputInterface::VERBOSITY_VERBOSE);
@@ -88,7 +89,7 @@ class Console implements EventSubscriberInterface
         $this->printedTest = $test;
 
         if ($test instanceof TestCase) {
-            if ($test->getFeature()) return;
+            return;
         }
 
         $this->message($test->toString())

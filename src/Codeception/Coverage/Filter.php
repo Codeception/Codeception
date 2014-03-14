@@ -75,6 +75,7 @@ class Filter
                 }
             }
         }
+
         if (isset($coverage['whitelist']['exclude'])) {
             foreach ($coverage['whitelist']['exclude'] as $fileOrDir) {
                 $finder = strpos($fileOrDir, '*') === false

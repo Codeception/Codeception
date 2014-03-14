@@ -40,6 +40,14 @@ class RoboFile extends \Robo\Tasks {
 
     }
 
+    public function testCoverage()
+    {
+        $this->server();
+        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
+            ->arg('suite','coverage')
+            ->run();
+    }
+
     public function testFacebook()
     {
         $this->server();

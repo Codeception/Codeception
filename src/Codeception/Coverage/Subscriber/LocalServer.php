@@ -4,12 +4,10 @@ namespace Codeception\Coverage\Subscriber;
 use Codeception\Events;
 use Codeception\Configuration;
 use Codeception\Coverage\SuiteSubscriber;
-use Codeception\Coverage\Shared\C3Collect;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\RemoteException;
-use Codeception\Lib\Interfaces\Web;
 
 /**
  * When collecting code coverage data from local server HTTP requests are sent to c3.php file.

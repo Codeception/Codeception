@@ -39,13 +39,17 @@ class Printer implements EventSubscriberInterface {
             return;
         }
 
-        $this->printText($e->getPrinter());
+        $printer = $e->getPrinter();
+        $this->printText($printer);
         $this->printPHP();
+        $printer->write("\n");
         if ($this->options['html']) {
             $this->printHtml();
+            $printer->write("HTML report generated in {$this->logDir}coverage/index.html\n");
         }
         if ($this->options['xml']) {
             $this->printXml();
+            $printer->write("XML report generated in {$this->logDir}coverage.xml\n");
         }
     }
 
