@@ -94,6 +94,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $this->test=$test;
     }
 
     public function _after(\Codeception\TestCase $test)
