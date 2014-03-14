@@ -94,6 +94,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $this->test=$test;
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -815,6 +816,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $form = reset($form);
         /** @var $form \WebDriverElement  **/
         foreach ($params as $param => $value) {
+            if(!is_array($value) && !is_object($value)){
+                $value=(string)$value;
+            }
             $els = $form->findElements(\WebDriverBy::name($param));
             $el = reset($els);
             if (empty($el)) throw new ElementNotFound($param);
