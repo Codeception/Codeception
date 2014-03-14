@@ -81,6 +81,8 @@ class Run extends Base
                  new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
                  new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
                  new InputOption('coverage', '', InputOption::VALUE_NONE, 'Run with code coverage'),
+                 new InputOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path (default: tests/_logs/coverage). '),
+                 new InputOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file (default: tests/_logs/coverage.xml'),
                  new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
                  new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
                  new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),

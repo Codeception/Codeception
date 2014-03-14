@@ -81,6 +81,14 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             );
         }
 
+        if ($arguments['excludeGroups']) {
+            $filterFactory->addFilter(
+                new \ReflectionClass('PHPUnit_Runner_Filter_Group_Exclude'),
+                $arguments['excludeGroups']
+            );
+        }
+
+
         if ($arguments['filter']) {
             $filterFactory->addFilter(
                 new \ReflectionClass('PHPUnit_Runner_Filter_Test'),

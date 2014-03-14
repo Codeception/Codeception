@@ -99,6 +99,14 @@ class RunCest
         $I->dontSeeInShellOutput("SkipMeCept.php");
     }
 
+    public function skipRunOneGroup(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run skipped --skip-group notorun');
+        $I->seeInShellOutput("SkipMeCept.php");
+        $I->dontSeeInShellOutput("IncompleteMeCept.php");
+    }
+
     public function runTwoSuites(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
