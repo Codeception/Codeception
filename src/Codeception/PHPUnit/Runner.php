@@ -18,13 +18,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         'json' => false
     );
 
-    protected $defaultDestination = array(
-        'html' => 'report.html',
-        'xml' => 'report.xml',
-        'tap' => 'report.tap.log',
-        'json' => 'report.json'
-    );
-
     protected $config = array();
 
     protected $logDir = null;
