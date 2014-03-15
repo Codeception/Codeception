@@ -7,6 +7,7 @@ use Codeception\Configuration;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -71,22 +72,22 @@ class Run extends Base
                  new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
                  new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use custom path for config'),
                  new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
-                 new InputOption('html', '', InputOption::VALUE_NONE, 'Generate html with results'),
-                 new InputOption('xml', '', InputOption::VALUE_NONE, 'Generate JUnit XML Log'),
-                 new InputOption('tap', '', InputOption::VALUE_NONE, 'Generate Tap Log'),
-                 new InputOption('json', '', InputOption::VALUE_NONE, 'Generate Json Log'),
+                 new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'result.html'),
+                 new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'result.xml'),
+                 new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'result.tap.log'),
+                 new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'result.json'),
                  new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
                  new InputOption('no-colors', '', InputOption::VALUE_NONE, 'Force no colors in output (useful to override config file)'),
                  new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
                  new InputOption('steps', '', InputOption::VALUE_NONE, 'Show steps in output'),
                  new InputOption('debug', 'd', InputOption::VALUE_NONE, 'Show debug and scenario output'),
-                 new InputOption('coverage', '', InputOption::VALUE_NONE, 'Run with code coverage'),
-                 new InputOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path (default: tests/_logs/coverage). '),
-                 new InputOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file (default: tests/_logs/coverage.xml'),
+                 new InputOption('coverage', '', InputOption::VALUE_OPTIONAL, 'Run with code coverage', 'coverage.serialized'),
+                 new InputOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path', 'coverage'),
+                 new InputOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file', 'coverage.xml'),
                  new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
                  new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
                  new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
-                 new InputOption('skip-group', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
+                 new InputOption('skip-group', 'sg', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
                  new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
              )
         );
@@ -104,6 +105,7 @@ class Run extends Base
         $output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
 
         $options = $input->getOptions();
+        $options = array_merge($options, $this->booleanOptions($input, ['xml','html','coverage','coverage-xml','coverage-html']));
         if ($options['debug']) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
@@ -217,6 +219,22 @@ class Run extends Base
         }
 
         return null;
+    }
+
+    protected function booleanOptions(InputInterface $input, $options = [])
+    {
+        $values = [];
+        $request = (string) $input;
+        foreach ($options as $option) {
+            if (strpos($request, "--$option")) {
+                $values[$option] = $input->hasParameterOption($option)
+                    ? $input->getParameterOption($option)
+                    : $input->getOption($option);
+            } else {
+                $values[$option] = false;
+            }
+        }
+        return $values;
     }
 
     private function ensureCurlIsAvailable()

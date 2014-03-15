@@ -50,6 +50,8 @@ class Codecept
         'colors' => false,
         'log' => false,
         'coverage' => false,
+        'coverage-xml' => false,
+        'coverage-html' => false,
 	    'defer-flush' => false,
         'groups' => null,
         'excludeGroups' => null,
@@ -69,7 +71,7 @@ class Codecept
         $this->registerPHPUnitListeners();
 
         $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
-        $this->runner = new PHPUnit\Runner($this->config);
+        $this->runner = new PHPUnit\Runner($this->options);
         $this->runner->setPrinter($printer);
     }
 
@@ -83,10 +85,11 @@ class Codecept
                     : $this->options[$option];
             }
         }
-        if (isset($options['no-colors']) && $options['no-colors']) $options['colors'] = false;
-        if (isset($options['report']) && $options['report']) $options['silent'] = true;
-        if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
-        if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if ($options['no-colors']) $options['colors'] = false;
+        if ($options['report']) $options['silent'] = true;
+        if ($options['group']) $options['groups'] = $options['group'];
+        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
 
         return $options;
     }
@@ -102,9 +105,9 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
+        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
 
         // optional
-        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
 

@@ -18,9 +18,16 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         'json' => false
     );
 
+    protected $defaultDestination = array(
+        'html' => 'report.html',
+        'xml' => 'report.xml',
+        'tap' => 'report.tap.log',
+        'json' => 'report.json'
+    );
+
     protected $config = array();
 
-    protected $log_dir = null;
+    protected $logDir = null;
 
     protected $defaultArguments = array(
         'report' => false,
@@ -29,7 +36,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     public function __construct()
     {
         $this->config  = Configuration::config();
-        $this->log_dir = Configuration::logDir(); // prepare log dir
+        $this->logDir = Configuration::logDir(); // prepare log dir
         $this->phpUnitOverriders();
         parent::__construct();
     }
@@ -88,7 +95,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
             );
         }
 
-
         if ($arguments['filter']) {
             $filterFactory->addFilter(
                 new \ReflectionClass('PHPUnit_Runner_Filter_Test'),
@@ -122,20 +128,28 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
 
         if ($arguments['html']) {
-            self::$persistentListeners[] = new HTML($this->log_dir . 'report.html');
+            self::$persistentListeners[] = new HTML($this->absolutePath($arguments['html']));
         }
         if ($arguments['xml']) {
-            self::$persistentListeners[] = new JUnit($this->log_dir . 'report.xml', false);
+            self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), true);
         }
         if ($arguments['tap']) {
-            self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP($this->log_dir . 'report.tap.log');
+            self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP($this->absolutePath($arguments['tap']));
         }
         if ($arguments['json']) {
-            self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->log_dir . 'report.json');
+            self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->absolutePath($arguments['json']));
         }
 
         foreach (self::$persistentListeners as $listener) {
             $result->addListener($listener);
         }
+    }
+
+    private function absolutePath($path)
+    {
+        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+            return $path;
+        }
+        return $this->logDir . $path;
     }
 }

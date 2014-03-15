@@ -23,6 +23,7 @@ class Printer implements EventSubscriberInterface {
     static $coverage;
     protected $options;
     protected $logDir;
+    protected $destination = [];
 
     public function __construct($options)
     {
@@ -30,7 +31,14 @@ class Printer implements EventSubscriberInterface {
         $this->logDir = Configuration::logDir();
         $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
         self::$coverage = new \PHP_CodeCoverage();
+    }
 
+    protected function absolutePath($path)
+    {
+        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+            return $path;
+        }
+        return $this->logDir . $path;
     }
 
     public function printResult(PrintResultEvent $e)
@@ -43,13 +51,13 @@ class Printer implements EventSubscriberInterface {
         $this->printText($printer);
         $this->printPHP();
         $printer->write("\n");
-        if ($this->options['html']) {
+        if ($this->options['coverage-html']) {
             $this->printHtml();
-            $printer->write("HTML report generated in {$this->logDir}coverage/index.html\n");
+            $printer->write("HTML report generated in {$this->options['coverage-html']}\n");
         }
-        if ($this->options['xml']) {
+        if ($this->options['coverage-xml']) {
             $this->printXml();
-            $printer->write("XML report generated in {$this->logDir}coverage.xml\n");
+            $printer->write("XML report generated in {$this->options['coverage-xml']}\n");
         }
     }
 
@@ -64,8 +72,6 @@ class Printer implements EventSubscriberInterface {
     protected function printHtml()
     {
         $writer = new \PHP_CodeCoverage_Report_HTML(
-            'UTF-8',
-            true,
             $this->settings['low_limit'],
             $this->settings['high_limit'],
             sprintf(
@@ -74,19 +80,19 @@ class Printer implements EventSubscriberInterface {
             )
         );
 
-        $writer->process(self::$coverage, $this->logDir . 'coverage');
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-html']));
     }
 
     protected function printXml()
     {
         $writer = new \PHP_CodeCoverage_Report_Clover;
-        $writer->process(self::$coverage, $this->logDir . 'coverage.xml');
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage-xml']));
     }
 
     protected function printPHP()
     {
         $writer = new \PHP_CodeCoverage_Report_PHP;
-        $writer->process(self::$coverage, $this->logDir. 'coverage.serialized');
+        $writer->process(self::$coverage, $this->absolutePath($this->options['coverage']));
     }
 
 }
