@@ -49,7 +49,7 @@ class SimpleOutput extends Extension
         $seconds = (int)($milliseconds = (int)($seconds_input * 1000)) / 1000;
         $time    = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
-        $this->write(\Codeception\TestCase::getTestSignature($e->getTest()));
+        $this->write($e->getTest()->toString());
         $this->writeln(' (' . $time . 's)');
     }
 }

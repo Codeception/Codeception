@@ -1,18 +1,9 @@
 <?php
+namespace Codeception\Command\Shared;
 
-namespace Codeception\Command;
 
-use Codeception\Configuration;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-
-class Base extends Command
+trait FileSystem
 {
-    public function addStyles($output)
-    {
-        $style = new OutputFormatterStyle('white', 'green', array('bold'));
-        $output->getFormatter()->setStyle('notice', $style);
-    }
 
     protected function buildPath($basePath, $testName)
     {
@@ -76,23 +67,6 @@ class Base extends Command
         return true;
     }
 
-    protected function getSuiteConfig($suite, $conf)
-    {
-        $config = Configuration::config($conf);
-        return Configuration::suiteSettings($suite, $config);
-    }
-
-    protected function getGlobalConfig($conf)
-    {
-        return Configuration::config($conf);
-    }
-
-    protected function getSuites($conf)
-    {
-        Configuration::config($conf);
-        return Configuration::suites();
-    }
-
     protected function introduceAutoloader($file, $suffix, $relativePath)
     {
         $line = sprintf(
@@ -113,4 +87,6 @@ class Base extends Command
 
         return $this->save($file, $contents, true);
     }
-}
+
+
+} 

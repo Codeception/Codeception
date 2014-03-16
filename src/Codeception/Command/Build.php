@@ -3,11 +3,9 @@ namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Actor as GuyGenerator;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
-use \Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Generates Actor classes (initially Guy classes) from suite configs.
@@ -17,12 +15,15 @@ use \Symfony\Component\Console\Helper\DialogHelper;
  * `codecept build path/to/project`
  *
  */
-class Build extends Base
+class Build extends Command
 {
+    use Shared\Config;
+    use Shared\FileSystem;
 
     protected $inheritedMethodTemplate = ' * @method void %s(%s)';
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return 'Generates base classes for all suites';
     }
 

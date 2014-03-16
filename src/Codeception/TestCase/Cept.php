@@ -18,7 +18,7 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
 
     public function getSignature()
     {
-        return $this->getName();
+        return $this->name;
     }
 
     public function getName($withDataSet = true)

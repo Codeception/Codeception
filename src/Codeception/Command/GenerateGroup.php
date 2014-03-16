@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,8 +13,11 @@ use Codeception\Lib\Generator\Group as GroupGenerator;
  *
  * `codecept g:group Admin`
  */
-class GenerateGroup extends Base
+class GenerateGroup extends Command
 {
+    use Shared\FileSystem;
+    use Shared\Config;
+
     protected function configure()
     {
         $this->setDefinition(array(

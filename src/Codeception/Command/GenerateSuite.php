@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Console\Command\Command;
 
 
 /**
@@ -16,8 +17,11 @@ use Symfony\Component\Yaml\Yaml;
  * `codecept g:suite frontend Front` -> frontend + FrontGuy
  *
  */
-class GenerateSuite extends Base
+class GenerateSuite extends Command
 {
+    use Shared\FileSystem;
+    use Shared\Config;
+
     protected function configure()
     {
         $this->setDefinition(

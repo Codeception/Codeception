@@ -11,6 +11,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
 use Codeception\TestCase\Cept;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,11 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * `codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
  */
-class Console extends Base
+class Console extends Command
 {
     protected $test;
     protected $codecept;
     protected $suite;
+    protected $output;
 
     protected function configure()
     {

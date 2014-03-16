@@ -2,6 +2,7 @@
 namespace Codeception\Command;
 
 use Codeception\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,8 +17,10 @@ use Codeception\Lib\Generator\PageObject as PageObjectGenerator;
  * `codecept g:page Registration`
  * `codecept g:page acceptance Login`
  */
-class GeneratePageObject extends Base
+class GeneratePageObject extends Command
 {
+    use Shared\FileSystem;
+    use Shared\Config;
 
     protected function configure()
     {

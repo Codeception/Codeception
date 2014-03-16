@@ -1,10 +1,9 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Input\InputDefinition,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console\Input\InputInterface,
+use Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -13,7 +12,7 @@ use Symfony\Component\Console\Input\InputDefinition,
  *
  * @author Franck Cassedanne <franck@cassedanne.com>
  */
-class SelfUpdate extends Base
+class SelfUpdate extends Command
 {
     /**
      * Class constants

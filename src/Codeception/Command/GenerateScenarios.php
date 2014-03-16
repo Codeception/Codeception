@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Command;
 
-use Codeception\Codecept;
 use Codeception\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,8 +19,11 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * `codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
  *
  */
-class GenerateScenarios extends Base
+class GenerateScenarios extends Command
 {
+    use Shared\FileSystem;
+    use Shared\Config;
+
     protected function configure()
     {
         $this->setDefinition(array(

@@ -11,7 +11,6 @@ use Symfony\Component\Console\Application,
  $app = new Application('Codeception', Codeception\Codecept::VERSION);
  $app->add(new Codeception\Command\Build('build'));
  $app->add(new Codeception\Command\Run('run'));
- $app->add(new Codeception\Command\Analyze('analyze'));
  $app->add(new Codeception\Command\Bootstrap('bootstrap'));
  $app->add(new Codeception\Command\Console('console'));
  $app->add(new Codeception\Command\GenerateCept('generate:cept'));
@@ -22,7 +21,6 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\GenerateSuite('generate:suite'));
  $app->add(new Codeception\Command\GenerateHelper('generate:helper'));
  $app->add(new Codeception\Command\GenerateScenarios('generate:scenarios'));
- $app->add(new Codeception\Command\RefactorAddNamespace('refactor:add-namespace'));
  $app->add(new Codeception\Command\Clean('clean'));
  $app->add(new Codeception\Command\GenerateGroup('generate:group'));
  $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
