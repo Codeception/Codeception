@@ -35,7 +35,7 @@ class Filesystem extends \Codeception\Module
      */
     public function amInPath($path)
     {
-        chdir($this->path = $this->absolutizePath($path));
+        chdir($this->path = $this->absolutizePath($path) . DIRECTORY_SEPARATOR);
         $this->debug('Moved to ' . getcwd());
     }
 
@@ -46,7 +46,7 @@ class Filesystem extends \Codeception\Module
         // windows
         if (strpos($path, ':\\') === 1) return $path;
 
-        return $this->path . DIRECTORY_SEPARATOR . $path;
+        return $this->path . $path;
     }
 
     /**
@@ -199,18 +199,16 @@ class Filesystem extends \Codeception\Module
      */
     public function seeFileFound($filename, $path = '')
     {
-        if (file_exists($filename)) {
+        if (file_exists($filename) and !$path) {
             $this->openFile($filename);
             $this->filepath = $filename;
             $this->debug($filename);
-            \PHPUnit_Framework_Assert::assertFileExists($filename);
+            \PHPUnit_Framework_Assert::assertFileExists($path . $filename);
             return;
         }
+
         $path = $this->absolutizePath($path);
-
         $this->debug($path);
-
-
         if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
 
         $files = Finder::create()->files()->name($filename)->in($path);
@@ -222,7 +220,19 @@ class Filesystem extends \Codeception\Module
             \PHPUnit_Framework_Assert::assertFileExists($file);
             return;
         }
+        \Codeception\Util\Debug::pause();
         $this->fail("$filename in $path");
+    }
+
+    /**
+     * Checks if file does not exists in path
+     *
+     * @param $filename
+     * @param string $path
+     */
+    public function dontSeeFileFound($filename, $path = '')
+    {
+        \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
     }
     
     

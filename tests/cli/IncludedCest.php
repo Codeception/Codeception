@@ -70,7 +70,7 @@ class IncludedCest {
      */
     public function runIncludedWithCoverage(\CliGuy $I)
     {
-        $I->executeCommand('run --xml --coverage');
+        $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
         $I->seeFileFound('coverage.xml');
         $I->seeInThisFile('<class name="BillEvans" namespace="Jazz\Pianist">');

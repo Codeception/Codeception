@@ -155,4 +155,19 @@ class RunCest
         $I->seeInShellOutput('Trying to test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput("OK");
     }
+
+    public function runWithCustomOuptutPath(\CliGuy $I)
+    {
+        $I->wantTo('check xml reports');
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
+        $I->seeFileFound('myverycustom.xml', 'tests/_log');
+        $I->seeInThisFile('<?xml');
+        $I->seeInThisFile('<testsuite name="dummy"');
+        $I->seeInThisFile('<testcase name="FileExists"');
+        $I->seeFileFound('myownhtmlreport.html', 'tests/_log');
+        $I->dontSeeFileFound('report.xml','tests/_log');
+        $I->dontSeeFileFound('report.html','tests/_log');
+
+    }
 }
