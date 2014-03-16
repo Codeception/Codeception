@@ -533,7 +533,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             try {
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {
+            } catch (\NoSuchElementException $e) {
             }
         }
         if ($matched) {
@@ -543,7 +543,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             try {
                 $wdSelect->selectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {
+            } catch (\NoSuchElementException $e) {
             }
         }
         if ($matched) {
@@ -594,13 +594,13 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             try {
                 $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {
+            } catch (\NoSuchElementException $e) {
             }
 
             try {
                 $wdSelect->deselectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {
+            } catch (\NoSuchElementException $e) {
             }
 
         }
@@ -1565,13 +1565,13 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
                 try {
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
-                } catch (\NoSuchElementWebDriverError $e) {
+                } catch (\NoSuchElementException $e) {
                 }
 
                 try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
-                } catch (\NoSuchElementWebDriverError $e) {
+                } catch (\NoSuchElementException $e) {
                 }
                 if ($matched) {
                     return;
