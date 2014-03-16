@@ -126,7 +126,7 @@ class Bootstrap extends Command
                 'bootstrap'    => '_bootstrap.php',
                 'colors'       => (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'),
                 'memory_limit' => '1024M',
-                'log'          => true
+                'log'          => false
             ),
             'modules'  => array(
                 'config' => array(
