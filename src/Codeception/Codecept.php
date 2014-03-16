@@ -48,7 +48,6 @@ class Codecept
         'tap' => false,
         'report' => false,
         'colors' => false,
-        'log' => false,
         'coverage' => false,
         'coverage-xml' => false,
         'coverage-html' => false,
@@ -106,10 +105,10 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
+        $this->dispatcher->addSubscriber(new Subscriber\Logger());
 
         // optional
         if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
-        if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
 
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));

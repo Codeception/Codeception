@@ -7,6 +7,10 @@ use Codeception\TestCase\Interfaces\Reported;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase\Interfaces\Plain;
 
+/**
+ * Loads information for groups from external sources (config, filesystem)
+ *
+ */
 class GroupManager
 {
     protected $configuredGroups;

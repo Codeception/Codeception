@@ -1,10 +1,10 @@
 <?php
+namespace Codeception\Platform;
 
 use Codeception\Events;
 use Codeception\Event\TestEvent;
-use Codeception\Platform\Extension;
 
-class MyOutputFormatter extends Extension
+class SimpleOutput extends Extension
 {
     public function _reconfigure()
     {
@@ -49,7 +49,7 @@ class MyOutputFormatter extends Extension
         $seconds = (int)($milliseconds = (int)($seconds_input * 1000)) / 1000;
         $time    = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
-        $this->write($e->getTest()->getFeature());
+        $this->write(\Codeception\TestCase::getTestSignature($e->getTest()));
         $this->writeln(' (' . $time . 's)');
     }
 }

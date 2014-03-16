@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Platform;
 
-use Codeception\Exception\Configuration;
+use Codeception\Configuration as Config;
 use Codeception\Exception\ModuleRequire;
 use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Lib\Console\Output;
@@ -9,17 +9,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Extension implements EventSubscriberInterface
 {
-
     use StaticEvents;
     
     protected $config;
     protected $options;
     protected $output;
+    protected $globalConfig;
 
     function __construct($config, $options)
     {
-        if (isset($config['extensions']['config'][get_class($this)]))
+        if (isset($config['extensions']['config'][get_class($this)])) {
             $this->config = $config['extensions']['config'][get_class($this)];
+        }
 
         $this->options = $options;
         $this->output = new Output($options);
@@ -51,22 +52,27 @@ class Extension implements EventSubscriberInterface
 
     public function getTestsDir()
     {
-        return \Codeception\Configuration::testsDir();
+        return Config::testsDir();
     }
 
     public function getLogDir()
     {
-        return \Codeception\Configuration::logDir();
+        return Config::logDir();
     }
 
     public function getDataDir()
     {
-        return \Codeception\Configuration::dataDir();
+        return Config::dataDir();
     }
 
     public function getRootDir()
     {
-        return \Codeception\Configuration::projectDir();
+        return Config::projectDir();
+    }
+
+    public function getGlobalConfig()
+    {
+        return Config::config();
     }
 
 }

@@ -5,11 +5,10 @@ namespace Codeception\TestCase;
 use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\TestRuntime;
-use Codeception\Scenario;
 use Codeception\SuiteManager;
 use Codeception\TestCase;
 
-class Test extends TestCase
+class Test extends TestCase implements Interfaces\Descriptive
 {
     use Shared\Configuration;
     use Shared\Dependencies;

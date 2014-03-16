@@ -9,7 +9,9 @@ settings:
     silent: true
     log: false
 extensions:
-    enabled: [MyOutputFormatter]
+    enabled:
+      - Codeception\Platform\SimpleOutput
+      - Codeception\Platform\LogFailed
 modules:
     config:
         Db:
