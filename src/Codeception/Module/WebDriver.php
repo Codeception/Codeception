@@ -1070,7 +1070,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param string|null $name
      */
     public function switchToIFrame($name = null) {
-        $this->webDriver->switchTo()->frame($name);
+    	if (is_null($name)) {
+    		$this->webDriver->switchTo()->defaultContent();
+    	} else {
+        	$this->webDriver->switchTo()->frame($name);	
+    	}
     }
 
     /**
