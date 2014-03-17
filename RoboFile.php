@@ -24,6 +24,14 @@ class RoboFile extends \Robo\Tasks {
         $this->taskComposerUpdate()->run();
     }
 
+    public function changed($change)
+    {
+        $this->taskChangelog()
+            ->version(\Codeception\Codecept::VERSION)
+            ->change($change)
+            ->run();
+    }
+
     protected function server()
     {
         $this->taskServer(8000)
