@@ -58,14 +58,21 @@ class Codecept
         'env' => null,
     );
 
+    /**
+     * @var array
+     */
+    protected $extensions = array();
+
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
 
+
         $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options);
-
-
+        
         $this->dispatcher = new EventDispatcher();
+
+        $this->registerExtensions();
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
 
@@ -93,6 +100,24 @@ class Codecept
         return $options;
     }
 
+    protected function registerExtensions()
+    {
+        // custom event listeners
+        foreach ($this->config['extensions']['enabled'] as $extension) {
+            if (!class_exists($extension)) {
+                throw new ConfigurationException("Class $extension not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
+            }
+            if ($extension instanceof EventSubscriberInterface) {
+                throw new ConfigurationException("Class $extension is not a EventListener. Please create it as Extension or Group class.");
+            }
+            $extensionConfig =  isset($this->config['extensions']['config'][$extension])
+                ? $this->config['extensions']['config'][$extension]
+                : [];
+
+            $this->extensions[] = new $extension($extensionConfig, $this->options);
+        }
+    }
+
     protected function registerPHPUnitListeners() {
         $listener = new PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
@@ -117,13 +142,9 @@ class Codecept
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
         }
 
-        // custom event listeners
-        foreach ($this->config['extensions']['enabled'] as $subscriber) {
-            if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
-            if ($subscriber instanceof EventSubscriberInterface) {
-                throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
-            }
-            $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
+        // extensions
+        foreach ($this->extensions as $subscriber) {
+            $this->dispatcher->addSubscriber($subscriber);
         }
     }
 

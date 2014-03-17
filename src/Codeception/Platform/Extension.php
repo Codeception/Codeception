@@ -11,25 +11,30 @@ class Extension implements EventSubscriberInterface
 {
     use StaticEvents;
     
-    protected $config;
+    protected $config = array();
     protected $options;
     protected $output;
     protected $globalConfig;
 
     function __construct($config, $options)
     {
-        if (isset($config['extensions']['config'][get_class($this)])) {
-            $this->config = $config['extensions']['config'][get_class($this)];
-        }
-
+        $this->config = array_merge($this->config, $config);
         $this->options = $options;
         $this->output = new Output($options);
         $this->_reconfigure();
+        $this->_initialize();
     }
 
     static $events = array();
 
-    public function _reconfigure()
+    public function _reconfigure($config = array())
+    {
+        if (is_array($config)) {
+            Config::append($config);
+        }
+    }
+
+    public function _initialize()
     {
     }
 

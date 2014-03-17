@@ -411,6 +411,17 @@ class Configuration
         return !(bool)self::$testsDir;
     }
 
+    /**
+     * Adds parameters to config
+     *
+     * @param array $config
+     * @return array
+     */
+    public static function append(array $config = array())
+    {
+        return self::$config = self::mergeConfigs(self::$config, $config);
+    }
+
     public static function mergeConfigs($a1, $a2)
     {
         if (!is_array($a1) || !is_array($a2)) {
