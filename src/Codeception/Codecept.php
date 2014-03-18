@@ -121,7 +121,6 @@ class Codecept
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
-        $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());

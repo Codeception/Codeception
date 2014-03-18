@@ -1,20 +1,15 @@
 <?php
 
-use Codeception\Event\TestEvent;
-
 class RunCest
 {
-    public function _before(TestEvent $t)
+    public function _before(\CliGuy $I)
     {
-        if (floatval(phpversion()) == '5.3') {
-            $t->getTest()->getScenario()->skip();
-        }
+        $I->amInPath('tests/data/sandbox');
     }
 
     public function runOneFile(\CliGuy $I)
     {
         $I->wantTo('execute one test');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php');
         $I->seeInShellOutput("OK (");
     }
@@ -28,7 +23,6 @@ class RunCest
     public function runHtml(\CliGuy $I)
     {
         $I->wantTo('execute tests with html output');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --html');
         $I->seeFileFound('report.html', 'tests/_log');
     }
@@ -41,7 +35,6 @@ class RunCest
     public function runJsonReport(\CliGuy $I)
     {
         $I->wantTo('check json reports');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --json');
         $I->seeFileFound('report.json', 'tests/_log');
         $I->seeInThisFile('"suite":');
@@ -56,7 +49,6 @@ class RunCest
     public function runTapReport(\CliGuy $I)
     {
         $I->wantTo('check tap reports');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --tap');
         $I->seeFileFound('report.tap.log', 'tests/_log');
     }
@@ -69,7 +61,6 @@ class RunCest
     public function runXmlReport(\CliGuy $I)
     {
         $I->wantTo('check xml reports');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --xml');
         $I->seeFileFound('report.xml', 'tests/_log');
         $I->seeInThisFile('<?xml');
@@ -85,7 +76,6 @@ class RunCest
     public function runReportMode(\CliGuy $I)
     {
         $I->wantTo('try the reporting mode');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --report');
         $I->seeInShellOutput('FileExistsCept.php');
         $I->seeInShellOutput('........Ok');
@@ -93,7 +83,6 @@ class RunCest
 
     public function runOneGroup(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped -g notorun');
         $I->seeInShellOutput("IncompleteMeCept.php");
         $I->dontSeeInShellOutput("SkipMeCept.php");
@@ -101,7 +90,6 @@ class RunCest
 
     public function skipRunOneGroup(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped --skip-group notorun');
         $I->seeInShellOutput("SkipMeCept.php");
         $I->dontSeeInShellOutput("IncompleteMeCept.php");
@@ -109,7 +97,6 @@ class RunCest
 
     public function runTwoSuites(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run skipped,dummy --no-exit');
         $I->seeInShellOutput("Skipped Tests");
         $I->seeInShellOutput("Dummy Tests");
@@ -118,7 +105,6 @@ class RunCest
 
     public function skipSuites(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand(
           'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers'
         );
@@ -130,7 +116,6 @@ class RunCest
 
     public function runOneTestFromUnit(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
         $I->seeShellOutputMatches("~Running AnotherTest::testFirst\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherTest::testSecond');
@@ -138,7 +123,6 @@ class RunCest
 
     public function runOneTestFromCest(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
         $I->seeShellOutputMatches("~\(AnotherCest::optimistic\)\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherCest::pessimistic');
@@ -146,7 +130,6 @@ class RunCest
 
     public function runTestWithDataProviders(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput(
           'Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
@@ -158,8 +141,6 @@ class RunCest
 
     public function runWithCustomOuptutPath(\CliGuy $I)
     {
-        $I->wantTo('check xml reports');
-        $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
         $I->seeFileFound('myverycustom.xml', 'tests/_log');
         $I->seeInThisFile('<?xml');

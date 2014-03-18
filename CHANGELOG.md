@@ -2,6 +2,7 @@
 
 #### 2.0.0-beta 03/18/2014
 
+* before/after methods of Cest can take  object
 * moved logger to extension
 * bootstrap files are loaded before suite only
 * extension can reconfigure global config

@@ -63,15 +63,24 @@ class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, I
 
     protected function executeBefore($testMethod, $I)
     {
+        if (method_exists($this->testClassInstance, '_before')) {
+            $this->testClassInstance->_before($I);
+        }
+
         if ($before = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('before')) {
             $this->executeContextMethod($before, $I);
         }
+
     }
 
     protected function executeAfter($testMethod, $I)
     {
         if ($after = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('after')) {
             $this->executeContextMethod($after, $I);
+        }
+
+        if (method_exists($this->testClassInstance, '_after')) {
+            $this->testClassInstance->_after($I);
         }
     }
 
