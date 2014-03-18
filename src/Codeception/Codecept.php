@@ -26,11 +26,6 @@ class Codecept
     protected $coverage;
 
     /**
-     * @var \Monolog\Handler\StreamHandler
-     */
-    protected $logHandler;
-
-    /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher;
@@ -129,7 +124,6 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Cest());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
-        $this->dispatcher->addSubscriber(new Subscriber\Logger());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
 
         // optional

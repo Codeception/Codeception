@@ -16,16 +16,16 @@
 
     "require": {
         "php": ">=5.4.0",
-        "phpunit/phpunit": "4.0.*",
+        "phpunit/phpunit": "~4.0",
         "facebook/webdriver": "~0.4",
         "fabpot/goutte": "*",
-        "monolog/monolog": "*",
         "symfony/finder": "~2.3",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
         "symfony/yaml": "~2.3"
     },
     "require-dev": {
+        "monolog/monolog": "*",
         "codeception/specify": "*",
         "facebook/php-sdk": "3.*",
         "videlalvaro/php-amqplib": "*"
