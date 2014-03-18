@@ -10,14 +10,11 @@ use Codeception\TestCase;
 
 class Test extends TestCase implements Interfaces\Descriptive
 {
-    use Shared\Configuration;
+    use Shared\Actor;
     use Shared\Dependencies;
 
     protected function setUp()
     {
-        if ($this->bootstrap) {
-            require $this->bootstrap;
-        }
         $guy = $this->actor;
         if ($guy) {
             $property      = lcfirst($guy);

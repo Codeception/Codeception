@@ -4,7 +4,6 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
-use Codeception\Lib\Generator\Actor;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\Parser;
 use Codeception\Util\Annotation;
@@ -51,14 +50,8 @@ class SuiteManager
         $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
 
-        if ($settings['bootstrap']) {
-            $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
-        }
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
-        }
-        if ($settings['bootstrap']) {
-            $this->settings['bootstrap'] = $this->path . $settings['bootstrap'];
         }
         $this->suite = $this->createSuite($name);
 
@@ -131,7 +124,6 @@ class SuiteManager
         $cept->configDispatcher($this->dispatcher)
             ->configName($name)
             ->configFile($file)
-            ->configBootstrap($this->settings['bootstrap'])
             ->initConfig();
 
         $cept->preload();
@@ -246,14 +238,10 @@ class SuiteManager
         $test->setDependencies(\PHPUnit_Util_Test::getDependencies($className, $methodName));
 
         if (!$test instanceof TestCase\Test) {
-            if ($this->settings['bootstrap']) {
-                require_once $this->settings['bootstrap'];
-            }
             return;
         }
 
-        $test->configBootstrap($this->settings['bootstrap'])
-            ->configDispatcher($this->dispatcher)
+        $test->configDispatcher($this->dispatcher)
             ->configActor($this->getActor())
             ->initConfig();
 
@@ -270,7 +258,6 @@ class SuiteManager
         $cest = new TestCase\Cest();
         $cest->configDispatcher($this->dispatcher)
             ->configName($methodName)
-            ->configBootstrap($this->settings['bootstrap'])
             ->configFile($file)
             ->config('testClassInstance', $cestInstance)
             ->config('testMethod', $methodName)

@@ -2,10 +2,9 @@
 namespace Codeception\TestCase\Shared;
 
 use Codeception\Exception\Configuration as ConfigurationException;
-use Codeception\Lib\Parser;
-use Codeception\Scenario;
-use Symfony\Component\EventDispatcher\Event;
+use Codeception\Step;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+
 
 trait Configuration
 {
@@ -16,17 +15,6 @@ trait Configuration
     protected $actor;
     protected $name;
     protected $testFile;
-    protected $bootstrap;
-
-    /**
-     * @var Scenario
-     */
-    protected $scenario;
-
-    /**
-     * @var \Codeception\Lib\Parser
-     */
-    protected $parser;
 
     public function configActor($actor)
     {
@@ -56,14 +44,6 @@ trait Configuration
         return $this;
     }
 
-    public function configBootstrap($bootstrap)
-    {
-        if ($bootstrap and !is_file($bootstrap)) {
-            throw new ConfigurationException("Bootstrap file $bootstrap can't be loaded");
-        }
-        $this->bootstrap = $bootstrap;
-        return $this;
-    }
 
     public function config($property, $value)
     {
@@ -71,28 +51,6 @@ trait Configuration
         return $this;
     }
 
-    public function initConfig()
-    {
-        $this->scenario  = new Scenario($this);
-        $this->parser    = new Parser($this->scenario);
-        return $this;
-    }
-
-    protected function fire($event, Event $eventType)
-    {
-        foreach ($this->scenario->getGroups() as $group) {
-            $this->dispatcher->dispatch($event . '.' . $group, $eventType);
-        }
-        $this->dispatcher->dispatch($event, $eventType);
-    }
-
-    /**
-     * @return \Codeception\Scenario
-     */
-    public function getScenario()
-    {
-        return $this->scenario;
-    }
-
+    abstract public function initConfig();
 
 }

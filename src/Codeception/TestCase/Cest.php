@@ -8,8 +8,9 @@ use Codeception\Util\Annotation;
 
 class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported
 {
-    use Shared\ScenarioRunner;
+    use Shared\Actor;
     use Shared\Dependencies;
+    use Shared\ScenarioPrint;
 
     protected $testClassInstance = null;
     protected $testMethod = null;
@@ -43,10 +44,6 @@ class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, I
     public function testCodecept()
     {
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
-
-        if (file_exists($this->bootstrap)) {
-            require $this->bootstrap;
-        }
 
         $this->scenario->run();
         $I = $this->makeIObject();

@@ -9,7 +9,8 @@ use Codeception\TestCase;
 
 class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported, Interfaces\Plain
 {
-    use Shared\ScenarioRunner;
+    use Shared\Actor;
+    use Shared\ScenarioPrint;
 
     public function __construct(array $data = array(), $dataName = '')
     {
@@ -53,10 +54,7 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
 
         $scenario = $this->scenario;
         $scenario->run();
-        if ($this->bootstrap) {
-            /** @noinspection PhpIncludeInspection */
-            require $this->bootstrap;
-        }
+
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;
 
