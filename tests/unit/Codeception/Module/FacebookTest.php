@@ -86,6 +86,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
+        $this->markTestSkipped();
         // preconditions: #1 php web server being run
         $browserModule = new PhpBrowser;
         $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
