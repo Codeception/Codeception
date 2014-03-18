@@ -21,12 +21,16 @@ class Extension implements EventSubscriberInterface
         $this->config = array_merge($this->config, $config);
         $this->options = $options;
         $this->output = new Output($options);
-        $this->_reconfigure();
         $this->_initialize();
     }
 
     static $events = array();
 
+    /**
+     * Pass config variables that should be injected into global config.
+     *
+     * @param array $config
+     */
     public function _reconfigure($config = array())
     {
         if (is_array($config)) {
@@ -34,8 +38,13 @@ class Extension implements EventSubscriberInterface
         }
     }
 
+    /**
+     * You can do all preperations here. No need to override constructor.
+     * Also you can skip calling `_reconfigure` if you don't need to.
+     */
     public function _initialize()
     {
+        $this->_reconfigure(); // hook for BC only.
     }
 
     protected function write($message)

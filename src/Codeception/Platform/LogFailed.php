@@ -16,6 +16,12 @@ class LogFailed extends Extension
 
     protected $config = ['file' => 'failed'];
 
+    public function _initialize()
+    {
+        $logPath = str_replace($this->getRootDir(), '', $this->getLogDir());
+        $this->_reconfigure(['groups' => ['failed' => $logPath . $this->config['file']]]);
+    }
+
     public function saveFailed(PrintResultEvent $e)
     {
         $file = $this->getLogDir().$this->config['file'];

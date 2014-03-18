@@ -65,14 +65,12 @@ class Codecept
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
-
+        $this->dispatcher = new EventDispatcher();
+        $this->loadExtensions($options);
 
         $this->config = Configuration::config();
         $this->options = $this->mergeOptions($options);
-        
-        $this->dispatcher = new EventDispatcher();
 
-        $this->registerExtensions();
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
 
@@ -100,10 +98,11 @@ class Codecept
         return $options;
     }
 
-    protected function registerExtensions()
+    protected function loadExtensions($options)
     {
+        $config = Configuration::config();
         // custom event listeners
-        foreach ($this->config['extensions']['enabled'] as $extension) {
+        foreach ($config['extensions']['enabled'] as $extension) {
             if (!class_exists($extension)) {
                 throw new ConfigurationException("Class $extension not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
             }
@@ -114,7 +113,7 @@ class Codecept
                 ? $this->config['extensions']['config'][$extension]
                 : [];
 
-            $this->extensions[] = new $extension($extensionConfig, $this->options);
+            $this->extensions[] = new $extension($extensionConfig, $options);
         }
     }
 

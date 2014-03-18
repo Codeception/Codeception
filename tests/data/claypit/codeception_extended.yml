@@ -6,7 +6,6 @@ paths:
 settings:
     bootstrap: _bootstrap.php
     colors: false
-    silent: true
     log: false
 extensions:
     enabled:

@@ -95,7 +95,7 @@ class Configuration
             $configFile = $configFile . DIRECTORY_SEPARATOR . 'codeception.yml';
         }
 
-        $dir = dirname($configFile);
+        $dir = realpath(dirname($configFile));
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 

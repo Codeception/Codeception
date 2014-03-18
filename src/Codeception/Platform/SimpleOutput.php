@@ -6,10 +6,11 @@ use Codeception\Event\TestEvent;
 
 class SimpleOutput extends Extension
 {
-    public function _reconfigure()
+    public function _initialize()
     {
-        // we silenced default formatter
-        $this->options['silent'] = false;
+        $this->options['silent'] = false; // turn on printing for this extension
+        $this->_reconfigure(['settings' => ['silent' => true]]); // turn off printing for everything else
+        $this->writeln(print_r(\Codeception\Configuration::config()));
     }
 
     // we are listening for events
