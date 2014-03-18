@@ -18,8 +18,6 @@ modules:
             password: 'guest'
             vhost: '/'
             queues: [queue1, queue2]
-groups:
-    failed: tests/log/failed
 
 extensions:
     enabled: [Codeception\Platform\LogFailed]
