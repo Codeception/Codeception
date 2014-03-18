@@ -13,3 +13,4 @@
 * added options to set output files for xml, html reports, and coverage
 * added extension to rerun failed tests
 * webdriver upgraded to 0.4
+* upgraded to PHPUnit 4

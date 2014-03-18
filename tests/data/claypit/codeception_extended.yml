@@ -10,7 +10,7 @@ settings:
 extensions:
     enabled:
       - Codeception\Platform\SimpleOutput
-      - Codeception\Platform\LogFailed
+      - Codeception\Platform\RunFailed
 modules:
     config:
         Db:

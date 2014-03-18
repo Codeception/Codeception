@@ -6,5 +6,5 @@ Patform is base classes for any kind of extensions that relies on Codeception's 
 
 There are 2 sample extensions you may try:
 
-* LogFailed - for saving information of all failed tests into file, in order to run them afterwards
+* RunFailed - for saving information of all failed tests into file, in order to run them afterwards
 * SimpleOutput - alternative output formatter

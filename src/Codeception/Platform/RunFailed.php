@@ -14,7 +14,7 @@ use Codeception\TestCase;
  * php codecept run -g failed
  * ```
  */
-class LogFailed extends Extension
+class RunFailed extends Extension
 {
     static $events = [
       Events::RESULT_PRINT_AFTER => 'saveFailed'
