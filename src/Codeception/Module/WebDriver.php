@@ -95,6 +95,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
+        $this->test = $test;
     }
 
     public function _after(\Codeception\TestCase $test)

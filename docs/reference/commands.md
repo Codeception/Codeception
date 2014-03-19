@@ -8,16 +8,6 @@ Create new test suite. Requires suite name and actor name
 `codecept g:suite frontend Front` -> frontend + FrontGuy
 
 
-## RefactorAddNamespace
-
-If you want to implement namespace to your test config (for multi-app), this command will scan your test classes and add the namespace.
-Be careful running this.
-
-`codecept r:add-namespace Frontend` - applies Frontend namespace
-`codecept r:add-namespace Frontend --silent`
-
-
-
 ## Console
 
 Try to execute test commands in run-time. You may try commands before writing the test.
@@ -147,8 +137,6 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 `codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
 
 
-## Base
-
 ## GenerateStepObject
 
 Generates StepObject class. You will be asked for steps you want to implement.
@@ -182,11 +170,4 @@ If PageObject is generated globally it will act as UIMap, without any logic in i
 `codecept g:page Login`
 `codecept g:page Registration`
 `codecept g:page acceptance Login`
-
-## Analyze
-
-Scans all scenario driven tests (Cept, Cest files) and finds calls to undefined methods.
-Those undefined methods will be added to Helper classes, so you could implement them.
-
-`codecept analyze acceptance`
 

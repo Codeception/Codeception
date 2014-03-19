@@ -307,6 +307,33 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * return mixed
 
+### executeInGuzzle
+
+Low-level API method.
+If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
+
+Example:
+
+``` php
+<?php
+// from the official Guzzle manual
+$I->amGoingTo('Sign all requests with OAuth');
+$I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
+     $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
+                 'consumer_key'    => '***',
+                 'consumer_secret' => '***',
+                 'token'           => '***',
+                 'token_secret'    => '***'
+     )));
+});
+?>
+```
+
+It is not recommended to use this command on a regular basis.
+If Codeception lacks important Guzzle Client methods, implement them and submit patches.
+
+ * param callable $function
+
 ### fillField
 
 Fills a text field or textarea with value.

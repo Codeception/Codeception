@@ -75,6 +75,13 @@ $I->deleteFile('composer.lock');
 
 Deletes a file
 
+### dontSeeFileFound
+
+Checks if file does not exists in path
+
+ * param $filename
+ * param string $path
+
 ### dontSeeInThisFile
 
 Checks If opened file doesn't contain `text` in it

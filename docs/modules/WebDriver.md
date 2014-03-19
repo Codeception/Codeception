@@ -110,6 +110,7 @@ $I->appendField('#myTextField', 'appended');
 
  * param string $field
  * param string $value
+ * throws \Codeception\Exception\ElementNotFound
 
 ### attachFile
 
