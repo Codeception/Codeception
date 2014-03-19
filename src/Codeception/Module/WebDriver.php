@@ -1176,10 +1176,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
                     $text
                 );
             }
-            if (!$condition and Locator::isCSS(
-                    $selector
-                )
-            ) {
+            if (!$condition and Locator::isCSS($selector)) {
                 $condition = \WebDriverExpectedCondition::textToBePresentInElement(
                     \WebDriverBy::cssSelector($selector),
                     $text
@@ -1558,6 +1555,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      *
      * @param string $field
      * @param string $value
+     * @throws \Codeception\Exception\ElementNotFound
      */
     public function appendField($field, $value)
     {

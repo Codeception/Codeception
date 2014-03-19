@@ -113,6 +113,38 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->_reconfigure(array('url' => $url));
     }
 
+    /**
+     * Low-level API method.
+     * If Codeception commands are not enough, use [Guzzle HTTP Client](http://guzzlephp.org/) methods directly
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // from the official Guzzle manual
+     * $I->amGoingTo('Sign all requests with OAuth');
+     * $I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
+     *      $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
+     *                  'consumer_key'    => '***',
+     *                  'consumer_secret' => '***',
+     *                  'token'           => '***',
+     *                  'token_secret'    => '***'
+     *      )));
+     * });
+     * ?>
+     * ```
+     *
+     * It is not recommended to use this command on a regular basis.
+     * If Codeception lacks important Guzzle Client methods, implement them and submit patches.
+     *
+     * @param callable $function
+     */
+    public function executeInGuzzle(\Closure $function)
+    {
+        return $function($this->guzzle);
+    }
+
+
     public function _getResponseCode()
     {
         return $this->getResponseStatusCode();
