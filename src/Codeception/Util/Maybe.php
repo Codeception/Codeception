@@ -91,6 +91,23 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         return call_user_func_array(array($this->val, $method), $args);
     }
 
+    function __clone()
+    {
+        if (is_object($this->val)) {
+            $this->val = clone $this->val;
+        }
+    }
+
+    public function __unset($key)
+    {
+        if (is_object($this->val)) {
+            if (isset($this->val->{$key}) || property_exists($this->val, $key)) {
+                unset($this->val->{$key});
+                return;
+            }
+        }
+    }
+
     public function offsetExists($offset)
     {
         if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) {

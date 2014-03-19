@@ -959,6 +959,9 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         /** @var $form \WebDriverElement  * */
         foreach ($params as $param => $value) {
             $els = $form->findElements(\WebDriverBy::name($param));
+            if (empty($el)) {
+                throw new ElementNotFound($param);
+            }
             $el = reset($els);
             if ($el->getTagName() == 'textarea') {
                 $this->fillField($el, $value);
@@ -1292,7 +1295,11 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      */
     public function switchToIFrame($name = null)
     {
-        $this->webDriver->switchTo()->frame($name);
+        if (is_null($name)) {
+            $this->webDriver->switchTo()->defaultContent();
+        } else {
+            $this->webDriver->switchTo()->frame($name);
+        }
     }
 
     /**

@@ -208,7 +208,10 @@ class Phalcon1 extends Framework implements ActiveRecord
             $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
         }
         $this->debugSection($model, json_encode($record));
-        return $record->id;
+        
+        $reflectedProperty =   new \ReflectionProperty(get_class($record), 'id');
+        $reflectedProperty->setAccessible(true);
+        return $reflectedProperty->getValue($record);
     }
 
     /**
