@@ -59,6 +59,4 @@ class RunEnvironmentCest
         $I->seeInShellOutput('OK (1 test, 1 assertion)');
     }
 
-
-
 }

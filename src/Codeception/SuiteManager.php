@@ -17,6 +17,8 @@ class SuiteManager
 
     public static $modules = array();
     public static $actions = array();
+    public static $environment;
+    public static $name;
 
     /**
      * @var \PHPUnit_Framework_TestSuite
@@ -124,6 +126,7 @@ class SuiteManager
         $cept->configDispatcher($this->dispatcher)
             ->configName($name)
             ->configFile($file)
+            ->configEnv($this->env)
             ->initConfig();
 
         $cept->preload();

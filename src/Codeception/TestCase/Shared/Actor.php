@@ -21,6 +21,7 @@ trait Actor
     protected $actor;
     protected $name;
     protected $testFile;
+    protected $env;
 
     /**
      * @var Scenario
@@ -113,6 +114,11 @@ trait Actor
         return $this;
     }
 
+    public function configEnv($env)
+    {
+        $this->env = $env;
+        return $this;
+    }
 
     public function config($property, $value)
     {

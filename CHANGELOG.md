@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0-beta 03/19/2014
+
+* environment can be accessed via ->env in test
+
+
 #### 2.0.0-beta 03/18/2014
 
 * before/after methods of Cest can take  object

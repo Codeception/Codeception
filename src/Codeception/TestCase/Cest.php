@@ -157,6 +157,11 @@ class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, I
         return $this;
     }
 
+    public function configEnv($env)
+    {
+        $this->testClassInstance->env = $env;
+        return $this;
+    }
 
     public function getSignature()
     {
