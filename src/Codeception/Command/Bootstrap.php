@@ -196,7 +196,7 @@ class Bootstrap extends Command
 
         file_put_contents(
             'tests/acceptance/_bootstrap.php',
-            "<?php\n// Here you can initialize variables that will for your tests\n"
+            "<?php\n// Here you can initialize variables that will be used for your tests\n"
         );
         file_put_contents(
             'tests/_helpers/WebHelper.php',
