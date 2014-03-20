@@ -105,8 +105,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             // but \RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
-        } else {
-            $this->webDriver->manage()->deleteAllCookies();
         }
     }
 
