@@ -960,7 +960,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         /** @var $form \WebDriverElement  * */
         foreach ($params as $param => $value) {
             $els = $form->findElements(\WebDriverBy::name($param));
-            if (empty($el)) {
+            if (empty($els)) {
                 throw new ElementNotFound($param);
             }
             $el = reset($els);
