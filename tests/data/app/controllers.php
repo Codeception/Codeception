@@ -86,8 +86,8 @@ class facebookController {
 
 class form {
     function GET($matches) {
-        $object = strtolower($matches[1]);
-        include __DIR__.'/view/form/'.$object.'.php';
+        $url = strtolower($matches[1]);
+        include __DIR__.'/view/form/'.$url.'.php';
     }
 
     function POST() {

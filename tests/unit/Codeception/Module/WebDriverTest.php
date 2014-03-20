@@ -349,4 +349,14 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->submitForm('form111', array());
     }
 
+    // fails in PhpBrowser :(
+    public function testSubmitUnchecked()
+    {
+        $this->module->amOnPage('/form/unchecked');
+        $this->module->seeCheckboxIsChecked('#checkbox');
+        $this->module->uncheckOption('#checkbox');
+        $this->module->click('#submit');;
+        $this->module->see('0','#notice');
+    }
+
 }
