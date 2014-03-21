@@ -1,6 +1,6 @@
 # Changelog
 
-#### 2.0.0-beta 03/21/2014
+#### 2.0.0-RC 03/21/2014
 
 * added grabAttributeFrom
 * seeElement to accept attributes in second parameter: seeElement('input',['name'=>'login'])
