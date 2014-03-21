@@ -47,7 +47,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->markTestSkipped("Somehow facebook tests are failing");
         $this->module = new Facebook;
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
@@ -55,6 +54,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $reflection = new ReflectionProperty('Codeception\Module\Facebook', 'facebook');
         $reflection->setAccessible(true);
         $this->facebook = $reflection->getValue($this->module);
+        $this->markTestSkipped("Somehow facebook tests are failing");
     }
 
     protected function tearDown()
