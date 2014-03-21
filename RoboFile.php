@@ -121,6 +121,7 @@ class RoboFile extends \Robo\Tasks {
             ->name('*.png')
             ->name('*.js')
             ->name('*.css')
+            ->name('*.eot')
             ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
