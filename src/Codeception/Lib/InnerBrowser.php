@@ -560,6 +560,15 @@ class InnerBrowser extends Module implements Web
         throw new ElementNotFound($cssOrXPathOrRegex, 'Element that matches CSS or XPath or Regex');
     }
 
+    public function grabAttributeFrom($cssOrXpath, $attribute)
+    {
+        $nodes = $this->match($cssOrXpath);
+        if (!$nodes->count()) {
+            throw new ElementNotFound($cssOrXpath, 'Element that matches CSS or XPath');
+        }
+        return $nodes->first()->attr($attribute);
+    }
+
     public function grabValueFrom($field)
     {
         $nodes = $this->match($field);

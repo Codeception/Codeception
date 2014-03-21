@@ -344,6 +344,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/textarea');
     }
 
+    public function testGrabAttributeFrom()
+    {
+        $this->module->amOnPage('/search');
+        $this->assertEquals('get', $this->module->grabAttributeFrom('form', 'method'));
+    }
+
     public function testLinksWithSimilarNames() {
         $this->module->amOnPage('/');
         $this->module->click('Test Link');

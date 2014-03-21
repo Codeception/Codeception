@@ -714,6 +714,15 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
     }
 
+    public function grabAttributeFrom($cssOrXpath, $attribute)
+    {
+        $els = $this->match($this->webDriver, $cssOrXpath);
+        if (count($els)) {
+            return $els[0]->getAttribute($attribute);
+        }
+        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+    }
+
     public function grabValueFrom($field)
     {
         $el = $this->findField($field);

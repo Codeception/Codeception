@@ -482,6 +482,25 @@ interface Web
      */
     public function grabValueFrom($field);
 
+
+    /**
+     * Grabs attribute value from an element.
+     * Fails if element is not found.
+     *
+     * ``` php
+     * <?php
+     * $I->grabAttributeFrom('#tooltip', 'title');
+     * ?>
+     * ```
+     *
+     *
+     * @param $cssOrXpath
+     * @param $attribute
+     * @internal param $element
+     * @return mixed
+     */
+    public function grabAttributeFrom($cssOrXpath, $attribute);
+
     /**
      * Checks if element exists on a page, matching it by CSS or XPath.
      * You can also specify expected attributes of this element.
