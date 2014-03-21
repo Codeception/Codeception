@@ -61,7 +61,8 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession {
+class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
+{
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
@@ -126,10 +127,13 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         }
     }
 
-    public function _getResponseCode() {}
+    public function _getResponseCode()
+    {
+    }
 
-    public function _sendRequest($url) {
-        $this->webDriver->get($this->_getUrl().'');
+    public function _sendRequest($url)
+    {
+        $this->webDriver->get($this->_getUrl() . '');
     }
 
     public function amOnSubdomain($subdomain)
@@ -721,6 +725,18 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         return $el->getAttribute('value');
     }
 
+
+    protected function filterByAttributes($els, array $attributes)
+    {
+        foreach ($attributes as $attr => $value) {
+            $els = array_filter($els, function (\WebDriverElement $el) use ($attr, $value) {
+                return $el->getAttribute($attr) == $value;
+            });
+        }
+        return $els;
+    }
+
+
     /**
      * Checks for a visible element on a page, matching it by CSS or XPath
      *
@@ -732,14 +748,14 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      * ```
      * @param $selector
      */
-    public function seeElement($selector)
+    public function seeElement($selector, $attributes = array())
     {
-        $els = array_filter(
-            $this->match($this->webDriver, $selector),
-            function (\WebDriverElement $el) {
+        $els = array_filter($this->match($this->webDriver, $selector),
+            function (\WebDriverElement $el) use ($attributes) {
                 return $el->isDisplayed();
             }
         );
+        $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
 
@@ -755,7 +771,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      *
      * @param $selector
      */
-    public function dontSeeElement($selector)
+    public function dontSeeElement($selector, $attributes = array())
     {
         $els = array_filter(
             $this->match($this->webDriver, $selector),
@@ -763,6 +779,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
                 return $el->isDisplayed();
             }
         );
+        $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
 
@@ -777,9 +794,11 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      *
      * @param $selector
      */
-    public function seeElementInDOM($selector)
+    public function seeElementInDOM($selector, $attributes = array())
     {
-        $this->assertNotEmpty($this->match($this->webDriver, $selector));
+        $els = $this->match($this->webDriver, $selector);
+        $els = $this->filterByAttributes($els, $attributes);
+        $this->assertNotEmpty($els);
     }
 
 
@@ -788,9 +807,11 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      *
      * @param $selector
      */
-    public function dontSeeElementInDOM($selector)
+    public function dontSeeElementInDOM($selector, $attributes = array())
     {
-        $this->assertEmpty($this->match($this->webDriver, $selector));
+        $els = $this->match($this->webDriver, $selector);
+        $els = $this->filterByAttributes($els, $attributes);
+        $this->assertEmpty($els);
     }
 
     public function seeOptionIsSelected($selector, $optionText)
@@ -824,14 +845,9 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             foreach ($els as $k => $el) {
                 $els[$k] = $this->findCheckable($el, $optionText, true);
             }
-            $this->assertEmpty(
-                array_filter(
-                    $els,
-                    function ($e) {
-                        return $e->isSelected();
-                    }
-                )
-            );
+            $this->assertEmpty(array_filter($els, function ($e) {
+                return $e->isSelected();
+            }));
             return;
         }
         $select = new \WebDriverSelect($el);

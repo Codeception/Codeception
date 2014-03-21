@@ -293,7 +293,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('#empty_textarea','');
     }
 
-
     public function testDontSeeInFieldOnInput()
     {
         $this->module->amOnPage('/form/field');
@@ -368,8 +367,11 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/form/field');
         $this->module->seeElement('input[name=name]');
+        $this->module->seeElement('input', ['name' => 'name']);
+        $this->module->seeElement('input', ['id' => 'name']);
         $this->module->seeElement('descendant-or-self::input[@id="name"]');
         $this->module->dontSeeElement('#something-beyond');
+        $this->module->dontSeeElement('input', ['id' => 'something-beyond']);
         $this->module->dontSeeElement('descendant-or-self::input[@id="something-beyond"]');
     }
 

@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0-beta 03/21/2014
+
+* seeElement to accept attributes in second parameter: seeElement('input',['name'=>'login'])
+
+
 #### 2.0.0-beta 03/19/2014
 
 * executeInGuzzle is back in PhpBrowser
