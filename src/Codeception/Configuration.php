@@ -236,14 +236,15 @@ class Configuration
     /**
      * Return instances of enabled modules according suite config.
      * Requires Guy class if it exists.
-     * 
+     *
      * @param array $settings suite settings
+     * @param bool $requireGuy
      * @return array|\Codeception\Module[]
      */
-    public static function modules($settings)
+    public static function modules($settings, $requireGuy = true)
     {
         $guyFile = $settings['path'] . DIRECTORY_SEPARATOR . $settings['class_name'] . '.php';
-        if (file_exists($guyFile)) {
+        if (file_exists($guyFile) and $requireGuy) {
             require_once $guyFile;
         }
 
