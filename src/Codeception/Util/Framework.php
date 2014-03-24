@@ -93,7 +93,8 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
                 $this->crawler = $this->client->click($nodes->first()->link());
                 $this->debugResponse();
                 return;
-            } elseif($node->nodeName == 'input' && $node->getAttribute('type') == 'submit') {
+            } elseif(($node->nodeName == 'input' && $node->getAttribute('type') == 'submit')  
+                || (($node->nodeName == 'button') && ($node->getAttribute('type') == 'submit') && ($node->getAttribute('type') == '')))) {
                 $this->submitFormWithButton($nodes->first());
                 $this->debugResponse();
                 return;
