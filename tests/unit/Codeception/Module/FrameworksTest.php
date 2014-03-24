@@ -318,7 +318,27 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('val', $form['text']);
     }
-    
+
+    public function testSubmitFormByImage() {
+        $this->module->amOnPage('/form/image');
+        $this->module->click('Submit');
+        $this->module->seeInCurrentUrl('/');
+    }
+
+    public function testSubmitFormByImageCss() {
+        $this->module->amOnPage('/form/image');
+        $this->module->click("form input[type=image]");
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
+    }
+
+    public function testSubmitFormByImageXpath() {
+        $this->module->amOnPage('/form/image');
+        $this->module->click("descendant-or-self::input[@type='image']");
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
+    }
+
     public function testAjax() {
         $this->module->sendAjaxGetRequest('/info', array('show' => 'author'));
         $this->assertArrayHasKey('HTTP_X_REQUESTED_WITH', $_SERVER);
