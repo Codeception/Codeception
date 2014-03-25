@@ -45,14 +45,12 @@ class ZF2 extends \Symfony\Component\BrowserKit\Client
 
         if ($queryString) {
             parse_str($queryString, $query);
+            $zendRequest->setQuery(new Parameters($query));
         }
 
         if ($method == HttpRequest::METHOD_POST) {
             $post = $request->getParameters();
             $zendRequest->setPost(new Parameters($post));
-        } elseif ($method == HttpRequest::METHOD_GET) {
-            $query = $request->getParameters();
-            $zendRequest->setQuery(new Parameters($query));
         } elseif ($method == HttpRequest::METHOD_PUT) {
             $zendRequest->setContent($request->getContent());
         }
