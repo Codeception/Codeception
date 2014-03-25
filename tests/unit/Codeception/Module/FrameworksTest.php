@@ -322,7 +322,8 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
     public function testSubmitFormByImage() {
         $this->module->amOnPage('/form/image');
         $this->module->click('Submit');
-        $this->module->seeInCurrentUrl('/');
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
     }
 
     public function testSubmitFormByImageCss() {
