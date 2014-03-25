@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "6440b0193e98e173081e80600aaa993d",
+    "hash": "d4970b30ace19dc06b6017b37d1e2b2f",
     "packages": [
         {
             "name": "behat/mink",
@@ -284,22 +284,20 @@
         },
         {
             "name": "facebook/webdriver",
-            "version": "v0.4",
+            "version": "v0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/php-webdriver.git",
-                "reference": "342df507312ea5ae5337be47e16e4268d7ed661f"
+                "reference": "1b0facc33133f0ff990df8cebe7f2e19b2603da3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/342df507312ea5ae5337be47e16e4268d7ed661f",
-                "reference": "342df507312ea5ae5337be47e16e4268d7ed661f",
+                "url": "https://api.github.com/repos/facebook/php-webdriver/zipball/1b0facc33133f0ff990df8cebe7f2e19b2603da3",
+                "reference": "1b0facc33133f0ff990df8cebe7f2e19b2603da3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.19"
-            },
-            "require-dev": {
+                "php": ">=5.3.19",
                 "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
@@ -320,7 +318,7 @@
                 "selenium",
                 "webdriver"
             ],
-            "time": "2014-02-21 18:22:11"
+            "time": "2013-11-26 23:16:02"
         },
         {
             "name": "guzzle/common",
