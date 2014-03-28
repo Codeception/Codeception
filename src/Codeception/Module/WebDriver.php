@@ -469,14 +469,24 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
         }
         if ($matched) return;
         foreach ($option as $opt) {
             try {
                 $wdSelect->selectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
+        }
+        if ($matched) return;
+                foreach ($option as $opt) {
+            try {
+                $optElement = $el->findElement(\WebDriverBy::xpath('//option [contains (., "'.$opt.'")]'));
+                $matched = true;
+                if (!$optElement->isSelected()) {
+                    $optElement->click();
+                }
+            } catch (\NoSuchElementException $e) {}
         }
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
