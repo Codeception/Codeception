@@ -60,6 +60,7 @@ class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\
         $unitTesting = true;
         $testEnvironment = 'testing';
         $app = require $projectDir . 'bootstrap/start.php';
+        $app->boot();
         $this->kernel = $app;
 
         $this->revertErrorHandler();
