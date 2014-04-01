@@ -294,7 +294,7 @@ class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\
 
     protected function findRecord($model, $attributes = array())
     {
-        $query = $this->kernel['db']->table[$model];
+        $query = $this->kernel['db']->table($model);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
