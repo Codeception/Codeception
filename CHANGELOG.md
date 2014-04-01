@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0-RC 04/02/2014
+
+* [WebDriver] makeScreenshot does not use filename of a test
+
+
 #### 2.0.0-RC 03/21/2014
 
 * added grabAttributeFrom
