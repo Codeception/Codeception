@@ -8,6 +8,7 @@ use Codeception\Util\Locator;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Lib\Interfaces\Remote;
+use Monolog\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
@@ -75,7 +76,6 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
 
     protected $wd_host;
     protected $capabilities;
-    protected $test;
 
     /**
      * @var \RemoteWebDriver
@@ -96,7 +96,6 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
-        $this->test = $test;
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -114,7 +113,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $this->_saveScreenshot(\Codeception\Configuration::logDir() . basename($test->getFileName()) . '.fail.png');
+        $this->_saveScreenshot(codecept_log_dir(basename(\Codeception\TestCase::getTestFileName($test) . '.fail.png')));
         $this->debug("Screenshot was saved into 'log' dir");
     }
 
@@ -183,8 +182,8 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      * ``` php
      * <?php
      * $I->amOnPage('/user/edit');
-     * $I->makeScreenshot('edit page');
-     * // saved to: tests/_log/debug/UserEdit - edit page.png
+     * $I->makeScreenshot('edit_page');
+     * // saved to: tests/_log/debug/edit_page.png
      * ?>
      * ```
      *
@@ -192,22 +191,11 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
      */
     public function makeScreenshot($name)
     {
-        $debugDir = \Codeception\Configuration::logDir() . 'debug';
+        $debugDir = codecept_log_dir().'debug';
         if (!is_dir($debugDir)) {
             mkdir($debugDir, 0777);
         }
-        $caseName = str_replace('Cept.php', '', $this->test->getFileName());
-        $caseName = str_replace('Cept.php', '', $caseName);
-        /**
-         * This is used for Cept only
-         *
-         * To be consistent with Cest, no sub-dir would be created, '\' and '/' in $caseName would be replaced with '.'
-         */
-        $search = array('/', '\\');
-        $replace = array('.', '.');
-        $caseName = str_replace($search, $replace, $caseName);
-
-        $screenName = $debugDir . DIRECTORY_SEPARATOR . $caseName . ' - ' . $name . '.png';
+        $screenName = $debugDir . DIRECTORY_SEPARATOR . $name . '.png';
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
     }
