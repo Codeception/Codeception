@@ -291,7 +291,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     protected function findRecord($model, $attributes = array())
     {
-        $query = $this->kernel['db']->table[$model];
+        $query = $this->kernel['db']->table($model);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
