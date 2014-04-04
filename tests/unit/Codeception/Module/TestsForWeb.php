@@ -8,7 +8,7 @@
  *
  */
 
-abstract class TestsForMink extends \PHPUnit_Framework_TestCase
+abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\PhpBrowser
@@ -26,17 +26,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->see('Information');
     }
 
-    public function testAmOnSubdomain()
-    {
-        $this->module->_reconfigure(array('url' => 'http://google.com'));
-        $this->module->amOnSubdomain('user');
-        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
-
-        $this->module->_reconfigure(array('url' => 'http://www.google.com'));
-        $this->module->amOnSubdomain('user');
-        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
-    }
-
     public function testCurrentUrl()
     {
         $this->module->amOnPage('/');
@@ -51,12 +40,6 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeCurrentUrlEquals('/');
         $this->module->dontSeeCurrentUrlMatches('~form/a~');
         $this->module->dontSeeInCurrentUrl('user');
-    }
-
-    function testRedirect()
-    {
-        $this->module->amOnPage('/redirect');
-        $this->module->seeInCurrentUrl('info');
     }
 
 
