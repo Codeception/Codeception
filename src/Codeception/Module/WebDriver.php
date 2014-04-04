@@ -328,7 +328,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         $xpath = Locator::combine(
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
-            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
+            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
+            ".//*[self::input | self::textarea | self::select][@name = $locator]"
         );
 
         $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));

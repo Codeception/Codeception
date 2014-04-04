@@ -223,6 +223,18 @@ abstract class TestsForMink extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Nothing special', $form['name']);
     }
 
+    public function testTextFieldByName()
+    {
+        $this->module->amOnPage('/form/example1');
+        $this->module->fillField('LoginForm[username]', 'davert');
+        $this->module->fillField('LoginForm[password]', '123456');
+        $this->module->click('Login');
+        $login = data::get('form');
+        $this->assertEquals('davert', $login['LoginForm']['username']);
+        $this->assertEquals('123456', $login['LoginForm']['password']);
+    }
+
+
     public function testTextFieldByLabel()
     {
         $this->module->amOnPage('/form/field');
