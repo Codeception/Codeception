@@ -58,6 +58,7 @@ class Laravel4 extends Framework implements ActiveRecord
         $unitTesting = true;
         $testEnvironment = 'testing';
         $app = require $projectDir . 'bootstrap/start.php';
+        $app->boot();
         $this->kernel = $app;
 
         $this->revertErrorHandler();
@@ -291,7 +292,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     protected function findRecord($model, $attributes = array())
     {
-        $query = $this->kernel['db']->table[$model];
+        $query = $this->kernel['db']->table($model);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }

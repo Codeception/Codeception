@@ -62,8 +62,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
-{
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
@@ -76,6 +75,7 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
 
     protected $wd_host;
     protected $capabilities;
+    protected $test;
 
     /**
      * @var \RemoteWebDriver
@@ -330,13 +330,18 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
             ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
-            ".//button[contains(normalize-space(string(.)), $locator)]"
+            ".//button[contains(normalize-space(string(.)), $locator)]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
+            ".//button[./@name = $locator]"
         );
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) {
             return reset($els);
         }
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
         return null;
     }
 
@@ -352,11 +357,16 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         }
         $locator = Crawler::xpathLiteral(trim($selector));
 
+        // by text or label
         $xpath = Locator::combine(
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
             ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
         );
+        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
 
+        // by name
+        $xpath = ".//*[self::input | self::textarea | self::select][@name = $locator]";
         $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) {
             return reset($els);
@@ -542,6 +552,19 @@ class WebDriver extends \Codeception\Module implements Web, Remote, MultiSession
         if ($matched) {
             return;
         }
+        if ($matched) return;
+
+        // partially matching
+        foreach ($option as $opt) {
+            try {
+                $optElement = $el->findElement(\WebDriverBy::xpath('//option [contains (., "'.$opt.'")]'));
+                $matched = true;
+                if (!$optElement->isSelected()) {
+                    $optElement->click();
+                }
+            } catch (\NoSuchElementWebDriverError $e) {}
+        }
+        if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
 

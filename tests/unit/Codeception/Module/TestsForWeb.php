@@ -1,5 +1,4 @@
 <?php
-require_once 'tests/data/app/data.php';
 /**
  * Author: davert
  * Date: 13.01.12
@@ -9,7 +8,7 @@ require_once 'tests/data/app/data.php';
  *
  */
 
-abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
+abstract class TestsForMink extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \Codeception\Module\PhpBrowser
@@ -27,6 +26,17 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->see('Information');
     }
 
+    public function testAmOnSubdomain()
+    {
+        $this->module->_reconfigure(array('url' => 'http://google.com'));
+        $this->module->amOnSubdomain('user');
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
+
+        $this->module->_reconfigure(array('url' => 'http://www.google.com'));
+        $this->module->amOnSubdomain('user');
+        $this->assertEquals('http://user.google.com', $this->module->_getUrl());
+    }
+
     public function testCurrentUrl()
     {
         $this->module->amOnPage('/');
@@ -42,6 +52,13 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeCurrentUrlMatches('~form/a~');
         $this->module->dontSeeInCurrentUrl('user');
     }
+
+    function testRedirect()
+    {
+        $this->module->amOnPage('/redirect');
+        $this->module->seeInCurrentUrl('info');
+    }
+
 
     public function testSee()
     {
@@ -87,7 +104,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/');
         $this->module->click("descendant-or-self::a[@id = 'link']");
-        $this->module->seeInCurrentUrl('/info');
+        $this->module->seeInCurrentUrl('/info');               
+    }
+
+    public function testClickByName()
+    {
+        $this->module->amOnPage('/form/button');
+        $this->module->click("btn0");
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
+
     }
 
     public function testClickOnContext()
@@ -155,7 +181,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('adult', $form['age']);
     }
-
+    
     public function testSeeSelectedOption()
     {
         $this->module->amOnPage('/form/select');
@@ -215,6 +241,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('Nothing special', $form['name']);
     }
+
+    public function testTextFieldByName()
+    {
+        $this->module->amOnPage('/form/example1');
+        $this->module->fillField('LoginForm[username]', 'davert');
+        $this->module->fillField('LoginForm[password]', '123456');
+        $this->module->click('Login');
+        $login = data::get('form');
+        $this->assertEquals('davert', $login['LoginForm']['username']);
+        $this->assertEquals('123456', $login['LoginForm']['password']);
+    }
+
 
     public function testTextFieldByLabel()
     {
@@ -293,6 +331,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('#empty_textarea','');
     }
 
+
     public function testDontSeeInFieldOnInput()
     {
         $this->module->amOnPage('/form/field');
@@ -311,7 +350,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     public function testSeeInFieldWithNonLatin() {
         $this->module->amOnPage('/info');
-        $this->module->seeInField('input[name=rus]','Верно');
+        $this->module->seeInField('rus','Верно');
     }
 
     public function testApostrophesInText() {
