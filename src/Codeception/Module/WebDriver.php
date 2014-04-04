@@ -596,7 +596,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->findField($field);
         $el->clear();
-        $el->sendKeys($value);
+        $el->sendKeys((string) $value);
     }
 
     public function attachFile($field, $filename)
