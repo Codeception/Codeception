@@ -304,12 +304,18 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (count($els)) return reset($els);
 
         // wide
+
         $xpath = Locator::combine(
             ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
-            ".//button[contains(normalize-space(string(.)), $locator)]"
+            ".//button[contains(normalize-space(string(.)), $locator)]",
+            ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][./@name = $locator]",
+            ".//button[./@name = $locator]"
         );
+
+        $els = $page->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) return reset($els);
@@ -326,12 +332,16 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if ($selector instanceof \WebDriverElement) return $selector;
         $locator = Crawler::xpathLiteral(trim($selector));
 
+        // by text or label
         $xpath = Locator::combine(
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
-            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]",
-            ".//*[self::input | self::textarea | self::select][@name = $locator]"
+            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
         );
+        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (count($els)) return reset($els);
 
+        // by name
+        $xpath = ".//*[self::input | self::textarea | self::select][@name = $locator]";
         $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) return reset($els);
 

@@ -122,6 +122,15 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->seeInCurrentUrl('/info');
     }
 
+    public function testClickByName()
+    {
+        $this->module->amOnPage('/form/button');
+        $this->module->click("btn0");
+        $form = data::get('form');
+        $this->assertEquals('val', $form['text']);
+
+    }
+
     public function testRadioButton()
     {
         $this->module->amOnPage('/form/radio');
@@ -258,6 +267,17 @@ class FrameworksTest extends \PHPUnit_Framework_TestCase
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('Nothing special', $form['name']);
+    }
+
+    public function testTextFieldByName()
+    {
+        $this->module->amOnPage('/form/example1');
+        $this->module->fillField('LoginForm[username]', 'davert');
+        $this->module->fillField('LoginForm[password]', '123456');
+        $this->module->click('Login');
+        $login = data::get('form');
+        $this->assertEquals('davert', $login['LoginForm']['username']);
+        $this->assertEquals('123456', $login['LoginForm']['password']);
     }
 
     public function testFileFieldByCss() {

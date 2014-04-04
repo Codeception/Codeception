@@ -323,6 +323,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
             if ($label->attr('for')) $input = $this->crawler->filter('#' . $label->attr('for'));
         }
 
+        if (!isset($input)) $input = $this->match(sprintf('.//*[self::input | self::textarea | self::select][@name = "%s"]', $field));
         if (!isset($input)) $input = $this->match($field);
         if (!count($input)) throw new ElementNotFound($field, 'Form field by Label or CSS');
         return $input->first();
