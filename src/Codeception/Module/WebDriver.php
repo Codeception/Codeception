@@ -481,14 +481,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
         }
         if ($matched) return;
         foreach ($option as $opt) {
             try {
                 $wdSelect->selectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
         }
         if ($matched) return;
 
@@ -525,12 +525,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
 
             try {
                 $wdSelect->deselectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
 
         }
 
@@ -1352,12 +1352,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 try {
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
-                } catch (\NoSuchElementWebDriverError $e) {}
+                } catch (\NoSuchElementException $e) {}
 
                  try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
-                } catch (\NoSuchElementWebDriverError $e) {}
+                } catch (\NoSuchElementException $e) {}
                 if ($matched) return;
 
                 throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
