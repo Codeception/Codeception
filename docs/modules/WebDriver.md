@@ -29,7 +29,8 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 * browser *required* - browser that would be launched
 * host  - Selenium server host (localhost by default)
 * port - Selenium server port (4444 by default)
-* restart - set to false to share browser sesssion between tests (by default), or set to true to create a session per test
+* restart - set to false to share Selenium sesssion between tests (by default), or set to true to create a new Selenium session per test
+* clearCookies - set to true to clear browser sesssion between tests (by default), or set to false to keep cookies between test cases.
 * wait - set the implicit wait (5 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
