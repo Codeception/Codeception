@@ -103,7 +103,7 @@ class Db
         }
     }
 
-    public function insert($tableName, array $data)
+    public function insert($tableName, array &$data)
     {
         $columns = array_map(
             array($this, 'getQuotedName'),
