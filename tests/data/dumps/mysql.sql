@@ -1,6 +1,7 @@
 CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
+  `enabled` boolean DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -8,9 +9,9 @@ CREATE TABLE `groups` (
 
 
 
-insert  into `groups`(`id`,`name`,`created_at`) values (1,'coders','2012-02-01 21:17:50');
+insert  into `groups`(`id`,`name`,`enabled`,`created_at`) values (1,'coders',1,'2012-02-01 21:17:50');
 
-insert  into `groups`(`id`,`name`,`created_at`) values (2,'jazzman','2012-02-01 21:18:40');
+insert  into `groups`(`id`,`name`,`enabled`,`created_at`) values (2,'jazzman',0,'2012-02-01 21:18:40');
 
 
 
