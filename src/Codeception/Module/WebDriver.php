@@ -5,10 +5,9 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
-use Codeception\Lib\Interfaces\MultiSession;
-use Codeception\Lib\Interfaces\Web;
-use Codeception\Lib\Interfaces\Remote;
-use Monolog\TestCase;
+use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
+use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
@@ -62,7 +61,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * Class WebDriver
  * @package Codeception\Module
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface {
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
