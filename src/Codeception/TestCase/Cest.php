@@ -187,6 +187,7 @@ class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, I
             'file' => $this->getFileName(),
             'name' => $this->getTestMethod(),
             'class' => get_class($this->getTestClass()),
+            'feature' => $this->getFeature()
         ];
     }
 

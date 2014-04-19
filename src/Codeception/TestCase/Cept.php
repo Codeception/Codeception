@@ -63,6 +63,6 @@ class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Des
 
     public function getReportFields()
     {
-        return ['name' => basename($this->getFileName(),'Cept.php'), 'file' => $this->getFileName()];
+        return ['name' => basename($this->getFileName(),'Cept.php'), 'file' => $this->getFileName(), 'feature' => $this->getFeature()];
     }
 }
