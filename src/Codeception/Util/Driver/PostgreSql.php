@@ -51,6 +51,18 @@ class PostgreSql extends Db
         }
     }
 
+    public function insert($tableName, array &$data)
+    {
+	foreach ($data as &$value) {
+		if ($value === false) {
+			// Convert false to 0 because PDO doesn't do it
+			// automatically for us.
+			$value = '0';
+		}
+	}	
+	return parent::insert($tableName, $data);
+    }
+
     public function select($column, $table, array $criteria) {
         $where = $criteria ? "where %s" : '';
         $query = 'select %s from "%s" '.$where;
