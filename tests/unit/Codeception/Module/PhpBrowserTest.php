@@ -162,4 +162,19 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/somepage.php');
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/933
+     */
+    public function testSubmitFormWithQueries()
+    {
+        $this->module->amOnPage('/form/example3');
+        $this->module->seeElement('form');
+        $this->module->submitForm('form', array(
+                'name' => 'jon',
+        ));
+        $form = data::get('form');
+        $this->assertEquals('jon', $form['name']);
+        $this->module->seeCurrentUrlEquals('/form/example3?validate=yes');
+    }
+
 }
