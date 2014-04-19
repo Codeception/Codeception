@@ -285,6 +285,11 @@ class Console implements EventSubscriberInterface
                 break;
             }
         }
+
+        $prev = $e->getPrevious();
+        if ($prev) {
+            $this->printException($prev);
+        }
     }
 
     protected function message($text = '')

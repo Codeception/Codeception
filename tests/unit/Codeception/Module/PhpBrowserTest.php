@@ -154,4 +154,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('b', $this->module->grabCookie('a'));
     }
 
+    public function testUrlSlashesFormatting()
+    {
+        $this->module->amOnPage('somepage.php');
+        $this->module->seeCurrentUrlEquals('/somepage.php');
+        $this->module->amOnPage('///somepage.php');
+        $this->module->seeCurrentUrlEquals('/somepage.php');
+    }
+
 }

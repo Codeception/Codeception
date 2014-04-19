@@ -99,7 +99,12 @@ class Goutte extends Client
         if (strpos($uri, 'http') === 0) {
             return $uri;
         }
+        $url = rtrim($this->baseUri, '/') . '/' . ltrim($uri, '/');
 
-        return $this->baseUri . $uri;
+        if (parse_url($url) === false) {
+            throw new \Codeception\Exception\TestRuntime("Url '$url' is malformed");
+        }
+
+        return $url;
     }
 }
