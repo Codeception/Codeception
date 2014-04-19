@@ -10,7 +10,6 @@ class SimpleOutput extends Extension
     {
         $this->options['silent'] = false; // turn on printing for this extension
         $this->_reconfigure(['settings' => ['silent' => true]]); // turn off printing for everything else
-        $this->writeln(print_r(\Codeception\Configuration::config()));
     }
 
     // we are listening for events

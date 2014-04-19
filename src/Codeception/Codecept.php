@@ -51,6 +51,7 @@ class Codecept
         'excludeGroups' => null,
         'filter' => null,
         'env' => null,
+        'fail-fast' => false
     );
 
     /**
@@ -126,7 +127,8 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
 
         // optional
-        if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        if (!$this->options['silent'])    $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        if ($this->options['fail-fast'])  $this->dispatcher->addSubscriber(new Subscriber\FailFast());
 
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));

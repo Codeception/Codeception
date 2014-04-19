@@ -139,6 +139,16 @@ class RunCest
         $I->seeInShellOutput("OK");
     }
 
+    public function runTestWithFailFast(\CliGuy $I)
+    {
+        $I->executeCommand('run unit --no-exit');
+        $I->seeInShellOutput('Running FailingTest::testMe');
+        $I->seeInShellOutput("PassingTest::testMe");
+        $I->executeCommand('run unit --fail-fast --no-exit');
+        $I->seeInShellOutput('There was 1 failure');
+        $I->dontSeeInShellOutput("PassingTest::testMe");
+    }
+
     public function runWithCustomOuptutPath(\CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');

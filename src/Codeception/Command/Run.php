@@ -47,6 +47,7 @@ suite directory).
  * 	 --skip (-s)           Skip selected suites (multiple values allowed)
  * 	 --skip-group          Skip selected groups (multiple values allowed)
  * 	 --env                 Run tests in selected environments. (multiple values allowed)
+ *   --fail-fast (-f)      Stop after first failure
  * 	 --help (-h)           Display this help message.
  * 	 --quiet (-q)          Do not output any message.
  * 	 --verbose (-v|vv|vvv) Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
@@ -89,6 +90,7 @@ class Run extends Command
                  new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),
                  new InputOption('skip-group', 'sg', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
                  new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
+                 new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
              )
         );
 
