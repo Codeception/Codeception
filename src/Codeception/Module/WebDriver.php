@@ -561,7 +561,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 if (!$optElement->isSelected()) {
                     $optElement->click();
                 }
-            } catch (\NoSuchElementWebDriverError $e) {}
+            } catch (\NoSuchElementException $e) {}
         }
         if ($matched) return;
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
