@@ -41,7 +41,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
  * * restart - set to false to share selenium sesssion between tests (by default), or set to true to create a new selenium session per test
- * * clearCookies - set to false to keep cookies (not default), or set to true to delete all cookies between cases.
+ * * clear_cookies - set to false to keep cookies (not default), or set to true to delete all cookies between cases.
  * * wait - set the implicit wait (5 secs) by default.
  * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
@@ -68,7 +68,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'clearCookies' => true,
+        'clear_cookies' => true,
         'wait' => 0,
         'capabilities' => array()
     );
@@ -108,7 +108,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
         }
-        if ($this->config['clearCookies'] && isset($this->webDriver)) {
+        if ($this->config['clear_cookies'] && isset($this->webDriver)) {
             $this->webDriver->manage()->deleteAllCookies();
         }
     }
