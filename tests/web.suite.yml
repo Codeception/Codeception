@@ -1,6 +1,8 @@
 class_name: WebGuy
 modules:
-    enabled: [PhpBrowser, WebHelper]
+    enabled: [WebDriver, WebHelper]
     config:
-      PhpBrowser:
+      WebDriver:
         url: http://localhost:8000
+        browser: firefox
+        window_size: 1200x768

@@ -29,7 +29,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     public function testCurrentUrl()
     {
         $this->module->amOnPage('/info');
-        $this->module->seeCurrentUrlEquals('/info ');
+        $this->module->seeCurrentUrlEquals('/info');
         $this->module->dontSeeInCurrentUrl('/user');
         $this->module->dontSeeCurrentUrlMatches('~user~');
 
