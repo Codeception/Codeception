@@ -18,7 +18,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\Db();
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
-        // $this->loadDump(); enable this when you want to change fixtures
+        // $this->loadDump(); // enable this when you want to change fixtures
     }
 
     protected function loadDump()
