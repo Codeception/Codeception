@@ -62,8 +62,8 @@ class PostgreSql extends Db
 	}	
 	return parent::insert($tableName, $data);
     }
-
-    public function select($column, $table, array $criteria) {
+   
+    public function select($column, $table, array &$criteria) {
         $where = $criteria ? "where %s" : '';
         $query = 'select %s from "%s" '.$where;
         $params = array();
