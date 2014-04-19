@@ -20,7 +20,7 @@ SET default_with_oids = false;
 --
 -- Name: empty_table; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
-
+DROP TABLE IF EXISTS empty_table CASCADE;
 CREATE TABLE empty_table (
     id integer NOT NULL,
     field character varying
@@ -50,8 +50,10 @@ ALTER SEQUENCE empty_table_id_seq OWNED BY empty_table.id;
 -- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
+DROP TABLE IF EXISTS groups CASCADE;
 CREATE TABLE groups (
     name character varying(50),
+    enabled boolean,
     created_at timestamp without time zone DEFAULT now(),
     id integer NOT NULL
 );
@@ -80,6 +82,7 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 -- Name: permissions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
+DROP TABLE IF EXISTS permissions CASCADE;
 CREATE TABLE permissions (
     user_id integer,
     group_id integer,
@@ -111,6 +114,7 @@ ALTER SEQUENCE permissions_id_seq OWNED BY permissions.id;
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     name character varying(30),
     email character varying(50),
@@ -185,9 +189,9 @@ SELECT pg_catalog.setval('empty_table_id_seq', 1, false);
 -- Data for Name: groups; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY groups (name, created_at, id) FROM stdin;
-coders	2012-02-02 22:33:30.807	1
-jazzman	2012-02-02 22:33:35.271	2
+COPY groups (name, enabled, created_at, id) FROM stdin;
+coders	t	2012-02-02 22:33:30.807	1
+jazzman	f	2012-02-02 22:33:35.271	2
 \.
 
 

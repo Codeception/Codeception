@@ -41,8 +41,9 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * browser *required* - browser that would be launched
  * * host  - Selenium server host (localhost by default)
  * * port - Selenium server port (4444 by default)
- * * window_size - initial window size. Values `maximize` or dimensions in format `640x480` are accepted.
  * * restart - set to false to share browser sesssion between tests, or set to true (by default) to create a session per test
+ * * window_size - initial window size. Values `maximize` or dimensions in format `640x480` are accepted.
+ * * clear_cookies - set to false to keep cookies (not default), or set to true to delete all cookies between cases.
  * * wait - set the implicit wait (5 secs) by default.
  * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
@@ -71,6 +72,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'port' => '4444',
         'restart' => false,
         'wait' => 0,
+        'clear_cookies' => true,
         'window_size' => false,
         'capabilities' => array()
     );
@@ -86,7 +88,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _initialize()
     {
-        $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
+        $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
@@ -121,7 +123,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             // but \RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
-        } else {
+        }
+        if ($this->config['clearCookies'] && isset($this->webDriver)) {
             $this->webDriver->manage()->deleteAllCookies();
         }
     }
@@ -724,7 +727,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->findField($field);
         // in order to be compatible on different OS
-        $filePath = realpath(\Codeception\Configuration::dataDir() . $filename);
+        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
         $el->sendKeys($filePath);
     }
 
@@ -1116,7 +1119,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         $this->webDriver->wait($timeout)->until($condition);
     }
-
+    
     /**
      * Waits for element to be visible on the page for $timeout seconds to pass.
      * If element doesn't appear, timeout exception is thrown.

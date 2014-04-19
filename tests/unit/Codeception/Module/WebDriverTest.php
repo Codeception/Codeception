@@ -146,6 +146,21 @@ class WebDriverTest extends TestsForBrowsers
         $this->assertEquals('agree',$form['terms']);
         $this->assertEquals('child',$form['age']);
     }
+    public function testSubmitFormWithNumbers() {
+        $this->module->amOnPage('/form/complex');
+        $this->module->submitForm('form', array(
+            'name' => 'Davert',
+            'age' => 'child',
+            'terms' => 'agree',
+            'description' => 10
+        ));
+        $form = data::get('form');
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('kill_all', $form['action']);
+        $this->assertEquals('10', $form['description']);
+        $this->assertEquals('agree',$form['terms']);
+        $this->assertEquals('child',$form['age']);
+    }
 
     public function testRadioButtonByValue()
     {
