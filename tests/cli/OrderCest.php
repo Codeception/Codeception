@@ -42,7 +42,21 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CodeTest.php --no-exit');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->expect('global bootstrap, initialization, beforeSuite, beforeClass, bootstrap, before, after, afterSuite, afterClass');
-        $I->seeFileContentsEqual("BI({B[C])}");
+        $I->expect('
+            global bootstrap,
+            initialization,
+            beforeSuite,
+            beforeClass,
+            @beforeClass,
+            bootstrap,
+            before,
+            @before
+            test,
+            after,
+            @after,
+            afterSuite,
+            afterClass,
+            @afterClass');
+        $I->seeFileContentsEqual("BI({{B[<C]>)}}");
     }
 }
