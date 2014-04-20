@@ -124,7 +124,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
         }
-        if ($this->config['clearCookies'] && isset($this->webDriver)) {
+        if ($this->config['clear_cookies'] && isset($this->webDriver)) {
             $this->webDriver->manage()->deleteAllCookies();
         }
     }
