@@ -21,9 +21,7 @@ class BeforeAfterTest implements EventSubscriberInterface {
         foreach ($e->getSuite()->tests() as $test) {
             $testClass = get_class($test);
             $this->hooks[$testClass] = \PHPUnit_Util_Test::getHookMethods($testClass);
-            foreach ($this->hooks[$testClass]['beforeClass'] as $method) {
-                call_user_func([$testClass, $method]);
-            }
+            $this->runHooks($testClass, 'beforeClass');
         }
     }
 
@@ -31,8 +29,14 @@ class BeforeAfterTest implements EventSubscriberInterface {
     public function afterClass(SuiteEvent $e)
     {
         foreach ($e->getSuite()->tests() as $test) {
-            $testClass = get_class($test);
-            foreach ($this->hooks[$testClass]['afterClass'] as $method) {
+            $this->runHooks(get_class($test), 'afterClass');
+        }
+    }
+
+    protected function runHooks($testClass, $hook)
+    {
+        foreach ($this->hooks[$testClass][$hook] as $method) {
+            if (is_callable([$testClass, $method])) {
                 call_user_func([$testClass, $method]);
             }
         }
