@@ -96,12 +96,17 @@ class InnerBrowser extends Module implements Web
         }
 
         foreach ($nodes as $node) {
-            if ($node->nodeName == 'a') {
+            $tag = $node->nodeName;
+            $type = $node->getAttribute('type');
+            if ($tag == 'a') {
                 $this->crawler = $this->client->click($nodes->first()->link());
                 $this->forms = [];
                 $this->debugResponse();
                 return;
-            } elseif ($node->getAttribute('type') == 'submit') {
+            } elseif(
+                ($tag == 'input' && in_array($type, array('submit', 'image'))) ||
+                ($tag == 'button' && $type == 'submit'))
+            {
                 $this->submitFormWithButton($nodes->first());
                 $this->debugResponse();
                 return;

@@ -102,7 +102,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $this->_initialize();
         }
     }
-    
+
     protected function initialWindowSize()
     {
         if ($this->config['window_size'] == 'maximize') {
@@ -112,7 +112,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $size = explode('x', $this->config['window_size']);
         if (count($size) == 2) {
             $this->resizeWindow(intval($size[0]), intval($size[1]));
-        }        
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
