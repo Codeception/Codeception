@@ -4,6 +4,7 @@ namespace Codeception\TestCase\Shared;
 trait Dependencies
 {
     protected $dependencies;
+    protected $dependencyInput = array();
 
     protected function handleDependencies()
     {
@@ -17,19 +18,26 @@ trait Dependencies
             }, array_keys($passed)
         );
 
-        $testNames = array_unique($testNames);
+        $passedKeys = array_keys($passed);
+        $dependencyInput = [];
 
         foreach ($this->dependencies as $dependency) {
-            if (in_array($dependency, $testNames)) {
-                continue;
+            if (strpos($dependency, '::') === false) {
+                $dependency = str_replace($this->getName(false), $dependency, $this->getSignature());
             }
-            $this->getTestResultObject()->addError(
-                 $this,
-                 new \PHPUnit_Framework_SkippedTestError("This test depends on '$dependency' to pass."),
-                 0
-            );
-            return false;
+            if (!in_array($dependency, $passedKeys)) {
+                $this->getTestResultObject()->addError($this, new \PHPUnit_Framework_SkippedTestError(sprintf("This test depends on '$dependency' to pass.")), 0);
+                return false;
+            }
+
+            if (isset($passed[$dependency])) {
+                $dependencyInput[] = $passed[$dependency]['result'];
+            } else {
+                $dependencyInput[] = null;
+            }
         }
+        $this->setDependencyInput($dependencyInput);
+
         return true;
     }
 
