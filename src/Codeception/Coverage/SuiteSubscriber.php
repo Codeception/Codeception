@@ -18,6 +18,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
         'local' => false,
         'xdebug_session' => 'codeception',
         'remote_config'  => null,
+        'show_uncovered' => false
     ];
 
     protected $settings = [];
@@ -52,6 +53,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
                 $this->settings[$key] = $settings['coverage'][$key];
             }
         }
+        $this->coverage->setProcessUncoveredFilesFromWhitelist($this->settings['show_uncovered']);
     }
 
     /**

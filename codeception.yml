@@ -24,6 +24,7 @@ extensions:
 
 coverage:
     enabled: true
+    show_uncovered: true
     include:
         - src/*
         - tests/data/claypit/c3.php
