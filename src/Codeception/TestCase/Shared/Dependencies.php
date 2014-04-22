@@ -14,7 +14,9 @@ trait Dependencies
 
         $passed = $this->getTestResultObject()->passed();
         $passedKeys = array_map(function ($testname) {
-                $testname = str_replace('Codeception\TestCase\Cest::', get_class($this->getTestClass()).'::', $testname);
+                if ($this instanceof \Codeception\TestCase\Cest) {
+                    $testname = str_replace('Codeception\TestCase\Cest::', get_class($this->getTestClass()).'::', $testname);
+                }
                 return preg_replace('~with data set (.*?)~', '', $testname);
             }, array_keys($passed)
         );
