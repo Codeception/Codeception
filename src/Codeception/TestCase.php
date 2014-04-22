@@ -87,11 +87,26 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
         }, array_keys($passed));
         $testNames = array_unique($testNames);
 
+        $dependencyInput = array();
         foreach ($this->dependencies as $dependency) {
-            if (in_array($dependency, $testNames)) continue;
-            $this->getTestResultObject()->addError($this, new \PHPUnit_Framework_SkippedTestError("This test depends on '$dependency' to pass."),0);
-            return false;
+            if (strpos($dependency, '::') === FALSE) {
+                $className = $this instanceof \Codeception\TestCase\Cest
+                    ? get_class($this->getTestClass())
+                    : get_class($this);
+                $dependency = "$className::$dependency";
+            }
+
+            if (!in_array($dependency, $testNames)) {
+                $this->getTestResultObject()->addError($this, new \PHPUnit_Framework_SkippedTestError("This test depends on '$dependency' to pass."),0);
+                return false;
+            }
+            if (isset($passed[$dependency])) {
+                $dependencyInput[] = $passed[$dependency]['result'];
+            } else {
+                $dependencyInput[] = NULL;
+            }
         }
+        $this->setDependencyInput($dependencyInput);
 
         return true;
     }

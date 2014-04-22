@@ -5,7 +5,7 @@ class DependentCest {
 
     public function firstOne(OrderGuy $I)
     {
-//        $I->failNow();
+        $I->failNow();
     }
 
     /**
