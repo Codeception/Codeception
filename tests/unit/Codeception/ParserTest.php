@@ -83,8 +83,14 @@ class ParserTest extends \Codeception\TestCase\Test
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleTest.php'));
         $this->assertEquals(['SampleTest'], $classes);
+    }
+
+    public function testParseFileWithClass()
+    {
+        if (PHP_MAJOR_VERSION == 5 and PHP_MAJOR_VERSION == 4) {
+            $this->markTestSkipped('only for php 5.4');
+        }
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test.php'));
         $this->assertEquals(['php55Test'], $classes);
-
     }
 }
