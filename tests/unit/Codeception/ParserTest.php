@@ -1,10 +1,11 @@
 <?php
+use Codeception\Lib\Parser;
 use \Codeception\Util\Stub;
 
 class ParserTest extends \Codeception\TestCase\Test
 {
     /**
-     * @var \Codeception\Lib\Parser
+     * @var Parser
      */
     protected $parser;
     /**
@@ -15,7 +16,7 @@ class ParserTest extends \Codeception\TestCase\Test
     protected function _before()
     {
         $this->scenario = new \Codeception\Scenario(Stub::make('Codeception\TestCase\Cept'));
-        $this->parser = new \Codeception\Lib\Parser($this->scenario);
+        $this->parser = new Parser($this->scenario);
     }
 
     public function testParsingFeature()
@@ -77,5 +78,13 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->assertContains("back to me", $text);
 
     }
-    
+
+    public function testParseFile()
+    {
+        $classes = Parser::getClassesFromFile(codecept_data_dir('SimpleTest.php'));
+        $this->assertEquals(['SampleTest'], $classes);
+        $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test.php'));
+        $this->assertEquals(['php55Test'], $classes);
+
+    }
 }
