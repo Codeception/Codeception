@@ -109,6 +109,12 @@ class Bootstrap extends Command
             new ArrayInput(array('command' => 'build')),
             $output
         );
+        if (file_exists('.gitignore')) {
+            file_put_contents('tests/_log/.gitignore', '');
+            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_log/*");
+            $output->writeln("tests/_log was added to .gitignore");
+        }
+
         $output->writeln("<info>\nBootstrap is done. Check out " . realpath($path) . "/tests directory</info>");
     }
 
