@@ -87,7 +87,7 @@ class ParserTest extends \Codeception\TestCase\Test
 
     public function testParseFileWithClass()
     {
-        if (PHP_MAJOR_VERSION == 5 and PHP_MAJOR_VERSION == 4) {
+        if (version_compare(PHP_VERSION, '5.4', '==')) {
             $this->markTestSkipped('only for php 5.4');
         }
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test.php'));
