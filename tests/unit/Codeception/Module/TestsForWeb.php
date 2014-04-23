@@ -506,6 +506,32 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('descendant-or-self::input[@id="name"]');
     }
 
+    public function testStrictLocators()
+    {
+        $this->module->amOnPage('/login');
+        $this->module->seeElement(['id' => 'submit-label']);
+        $this->module->seeElement(['name' => 'password']);
+        $this->module->seeElement(['class' => 'optional']);
+        $this->module->seeElement(['css' => 'form.global_form_box']);
+        $this->module->seeElement(['xpath' => \Codeception\Util\Locator::tabIndex(4)]);
+        $this->module->fillField(['name' => 'password'], '123456');
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption(['name' => 'age'], 'child');
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(['name' => 'terms']);
+        $this->module->amOnPage('/');
+        $this->module->seeElement(['link' => 'Test']);
+        $this->module->click(['link' => 'Test']);
+        $this->module->seeCurrentUrlEquals('/form/hidden');
+    }
+
+    public function testFailStrictLocators()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(['name' => 'age']);
+    }
+
     public function testExample1()
     {
         $this->module->amOnPage('/form/example1');

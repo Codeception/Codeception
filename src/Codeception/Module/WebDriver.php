@@ -328,6 +328,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findClickable($page, $link)
     {
+        if (is_array($link) or ($link instanceof \WebDriverBy)) {
+            return $this->matchFirstOrFail($page, $link);
+        }
+
         $locator = Crawler::xpathLiteral(trim($link));
 
         // narrow
@@ -373,6 +377,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if ($selector instanceof \WebDriverElement) {
             return $selector;
         }
+        if (is_array($selector) or ($selector instanceof \WebDriverBy)) {
+            return $this->matchFirstOrFail($this->webDriver, $selector);
+        }
+
         $locator = Crawler::xpathLiteral(trim($selector));
 
         // by text or label
@@ -656,6 +664,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if ($radio_or_checkbox instanceof \WebDriverElement) {
             return $radio_or_checkbox;
         }
+        if (is_array($radio_or_checkbox) or ($radio_or_checkbox instanceof \WebDriverBy)) {
+            return $this->matchFirstOrFail($this->webDriver, $radio_or_checkbox);
+        }
 
         $locator = Crawler::xpathLiteral($radio_or_checkbox);
         $xpath = Locator::combine(
@@ -749,7 +760,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (count($els)) {
             return $els[0]->getAttribute($attribute);
         }
-        throw new ElementNotFound($cssOrXPath, 'CSS or XPath');
+        throw new ElementNotFound($cssOrXpath, 'CSS or XPath');
     }
 
     public function grabValueFrom($field)
@@ -785,6 +796,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ?>
      * ```
      * @param $selector
+     * @param array $attributes
      */
     public function seeElement($selector, $attributes = array())
     {
@@ -808,6 +820,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ```
      *
      * @param $selector
+     * @param array $attributes
      */
     public function dontSeeElement($selector, $attributes = array())
     {
@@ -1254,6 +1267,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * Explicit wait.
      *
      * @param $timeout secs
+     * @throws \Codeception\Exception\TestRuntime
      */
     public function wait($timeout)
     {
@@ -1478,6 +1492,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function match($page, $selector)
     {
         $nodes = array();
+        if (is_array($selector)) {
+            return $page->findElements($this->getWebDriverLocator($selector));
+        }
+        if ($selector instanceof \WebDriverBy) {
+            return $page->findElements($selector);
+        }
+        
         if (Locator::isID($selector)) {
             $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
         }
@@ -1494,6 +1515,28 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $nodes = $page->findElements(\WebDriverBy::xpath($selector));
         }
         return $nodes;
+    }
+
+    protected function getWebDriverLocator(array $by)
+    {
+        $type = key($by);
+        $locator = $by[$type];
+        switch ($type) {
+            case 'id':
+                return \WebDriverBy::id($locator);
+            case 'name':
+                return \WebDriverBy::name($locator);
+            case 'css':
+                return  \WebDriverBy::cssSelector($locator);
+            case 'xpath':
+                return \WebDriverBy::xpath($locator);
+            case 'link':
+                return \WebDriverBy::linkText($locator);
+            case 'class':
+                return \WebDriverBy::className($locator);
+            default:
+                throw new TestRuntime("Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name");
+        }
     }
 
     /**

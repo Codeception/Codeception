@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\TestRuntime;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
 use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
@@ -66,13 +67,15 @@ class InnerBrowser extends Module implements Web
 
     public function click($link, $context = null)
     {
-        $literal = Crawler::xpathLiteral($link);
-
         if ($context) {
             $this->crawler = $this->match($context);
         }
 
-        $anchor = $this->crawler->filterXPath('.//a[.=' . $literal . ']');
+        if (is_array($link)) {
+            $this->clickByLocator($link);
+            return;
+        }
+        $anchor = $this->strictMatch(['link' => $link]);
         if (!count($anchor)) {
             $anchor = $this->crawler->selectLink($link);
         }
@@ -90,7 +93,13 @@ class InnerBrowser extends Module implements Web
             return;
         }
 
+        $this->clickByLocator($link);
+    }
+
+    protected function clickByLocator($link)
+    {
         $nodes = $this->match($link);
+
         if (!$nodes->count()) {
             throw new ElementNotFound($link, 'Link or Button by name or CSS or XPath');
         }
@@ -112,6 +121,7 @@ class InnerBrowser extends Module implements Web
                 return;
             }
         }
+
     }
 
     protected function submitFormWithButton($button)
@@ -155,9 +165,7 @@ class InnerBrowser extends Module implements Web
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(
-                           sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url))
-            );
+            $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
         $this->assertDomContains($links, 'a');
     }
@@ -166,9 +174,7 @@ class InnerBrowser extends Module implements Web
     {
         $links = $this->crawler->selectLink($text);
         if ($url) {
-            $links = $links->filterXPath(
-                           sprintf('descendant-or-self::a[contains(@href, %s)]', Crawler::xpathLiteral($url))
-            );
+            $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
         $this->assertDomNotContains($links, 'a');
     }
@@ -363,18 +369,26 @@ class InnerBrowser extends Module implements Web
 
     protected function getFieldByLabelOrCss($field)
     {
+        if (is_array($field)) {
+            $input = $this->strictMatch($field);
+            if (!count($input)) {
+                throw new ElementNotFound($field);
+            }
+            return $input->first();
+        }
+
         // by label
-        $label = $this->match(sprintf('descendant-or-self::label[text()="%s"]', $field));
+        $label = $this->strictMatch(['xpath' => sprintf('.//label[text()=%s]', Crawler::xpathLiteral($field))]);
         if (count($label)) {
             $label = $label->first();
             if ($label->attr('for')) {
-                $input = $this->crawler->filter('#' . $label->attr('for'));
+                $input = $this->strictMatch(['id' => $label->attr('for')]);
             }
         }
 
         // by name
         if (!isset($input)) {
-            $input = $this->match(sprintf('descendant-or-self::*[@name="%s"]', $field));
+            $input = $this->strictMatch(['name' => $field]);
         }
 
         // by CSS and XPath
@@ -531,6 +545,9 @@ class InnerBrowser extends Module implements Web
      */
     protected function match($selector)
     {
+        if (is_array($selector)) {
+            return $this->strictMatch($selector);
+        }
         try {
             $selector = CssSelector::toXPath($selector);
         } catch (ParseException $e) {
@@ -540,6 +557,28 @@ class InnerBrowser extends Module implements Web
         }
 
         return @$this->crawler->filterXPath($selector);
+    }
+
+    protected function strictMatch(array $by)
+    {
+        $type = key($by);
+        $locator = $by[$type];
+        switch ($type) {
+            case 'id':
+                return $this->crawler->filter("#$locator");
+            case 'name':
+                return @$this->crawler->filterXPath(sprintf('.//*[@name=%s]', Crawler::xpathLiteral($locator)));
+            case 'css':
+                return $this->crawler->filter($locator);
+            case 'xpath':
+                return @$this->crawler->filterXPath($locator);
+            case 'link':
+                return @$this->crawler->filterXPath(sprintf('.//a[.=%s]', Crawler::xpathLiteral($locator)));
+            case 'class':
+                return $this->crawler->filter(".$locator");
+            default:
+                throw new TestRuntime("Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name");
+        }
     }
 
     protected function filterByAttributes(Crawler $nodes, array $attributes)

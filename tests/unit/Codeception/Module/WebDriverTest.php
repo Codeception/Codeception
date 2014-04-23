@@ -364,6 +364,32 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->submitForm('form111', array());
     }
 
+    public function testWebDriverByLocators()
+    {
+        $this->module->amOnPage('/login');
+        $this->module->seeElement(WebDriverBy::id('submit-label'));
+        $this->module->seeElement(WebDriverBy::name('password'));
+        $this->module->seeElement(WebDriverBy::className('optional'));
+        $this->module->seeElement(WebDriverBy::cssSelector('form.global_form_box'));
+        $this->module->seeElement(WebDriverBy::xpath(\Codeception\Util\Locator::tabIndex(4)));
+        $this->module->fillField(WebDriverBy::name('password'), '123456');
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption(WebDriverBy::name('age'), 'child');
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(WebDriverBy::name('terms'));
+        $this->module->amOnPage('/');
+        $this->module->seeElement(WebDriverBy::linkText('Test'));
+        $this->module->click(WebDriverBy::linkText('Test'));
+        $this->module->seeCurrentUrlEquals('/form/hidden');
+    }
+
+    public function testFailWebDriverByLocator()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(WebDriverBy::name('age'));
+    }
+
     // fails in PhpBrowser :(
     public function testSubmitUnchecked()
     {
