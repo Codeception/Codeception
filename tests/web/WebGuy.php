@@ -1130,6 +1130,7 @@ class WebGuy extends \Codeception\Actor
      * ?>
      * ```
      * @param $selector
+     * @param array $attributes
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\WebDriver::seeElement()
      */
@@ -1148,6 +1149,7 @@ class WebGuy extends \Codeception\Actor
      * ?>
      * ```
      * @param $selector
+     * @param array $attributes
      * @see \Codeception\Module\WebDriver::seeElement()
      */
     public function seeElement($selector, $attributes = null) {
@@ -1168,6 +1170,7 @@ class WebGuy extends \Codeception\Actor
      * ```
      *
      * @param $selector
+     * @param array $attributes
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\WebDriver::dontSeeElement()
      */
@@ -1187,6 +1190,7 @@ class WebGuy extends \Codeception\Actor
      * ```
      *
      * @param $selector
+     * @param array $attributes
      * @see \Codeception\Module\WebDriver::dontSeeElement()
      */
     public function dontSeeElement($selector, $attributes = null) {
@@ -1678,6 +1682,7 @@ class WebGuy extends \Codeception\Actor
      * Explicit wait.
      *
      * @param $timeout secs
+     * @throws \Codeception\Exception\TestRuntime
      * @see \Codeception\Module\WebDriver::wait()
      */
     public function wait($timeout) {
