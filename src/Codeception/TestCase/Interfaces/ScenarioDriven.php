@@ -11,4 +11,6 @@ interface ScenarioDriven {
     public function getScenario();
 
     public function getScenarioText();
+
+    public function preload();
 }

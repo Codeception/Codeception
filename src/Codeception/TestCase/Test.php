@@ -8,7 +8,9 @@ use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\TestCase;
 
-class Test extends TestCase implements Interfaces\Descriptive
+class Test extends TestCase implements
+    Interfaces\Descriptive,
+    Interfaces\Configurable
 {
     use Shared\Actor;
     use Shared\Dependencies;
@@ -20,7 +22,7 @@ class Test extends TestCase implements Interfaces\Descriptive
             $property      = lcfirst($guy);
             $this->$property = new $guy($this->scenario);
         }
-        $this->scenario->run();
+        $this->getScenario()->run();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
     }

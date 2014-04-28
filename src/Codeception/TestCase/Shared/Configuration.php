@@ -51,6 +51,4 @@ trait Configuration
         return $this;
     }
 
-    abstract public function initConfig();
-
 }

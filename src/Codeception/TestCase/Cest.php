@@ -6,7 +6,11 @@ use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Util\Annotation;
 
-class Cest extends \Codeception\TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported
+class Cest extends \Codeception\TestCase implements
+    Interfaces\ScenarioDriven,
+    Interfaces\Descriptive,
+    Interfaces\Reported,
+    Interfaces\Configurable
 {
     use Shared\Actor;
     use Shared\Dependencies;

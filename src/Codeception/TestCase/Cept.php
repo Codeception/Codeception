@@ -7,7 +7,12 @@ use Codeception\Event\TestEvent;
 use Codeception\Step;
 use Codeception\TestCase;
 
-class Cept extends TestCase implements Interfaces\ScenarioDriven, Interfaces\Descriptive, Interfaces\Reported, Interfaces\Plain
+class Cept extends TestCase implements
+    Interfaces\ScenarioDriven,
+    Interfaces\Descriptive,
+    Interfaces\Reported,
+    Interfaces\Plain,
+    Interfaces\Configurable
 {
     use Shared\Actor;
     use Shared\ScenarioPrint;

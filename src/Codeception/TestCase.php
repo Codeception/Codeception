@@ -12,6 +12,8 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 {
     protected $backupGlobalsBlacklist = array('app');
 
+    abstract public function getScenario();
+
     public static function getTestSignature(\PHPUnit_Framework_TestCase $testCase)
     {
         if ($testCase instanceof TestCase\Interfaces\Descriptive) {
