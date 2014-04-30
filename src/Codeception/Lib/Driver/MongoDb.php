@@ -56,7 +56,7 @@ class MongoDb
         }
 
         try {
-            $m         = new \Mongo($dsn, $options);
+            $m         = new \MongoClient($dsn, $options);
             $this->dbh = $m->selectDB($this->dbName);
         } catch (\MongoConnectionException $e) {
             throw new \Exception(sprintf('Failed to open Mongo connection: %s', $e->getMessage()));

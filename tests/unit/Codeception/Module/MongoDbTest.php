@@ -34,7 +34,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Mongo is not installed');
         }
 
-        $mongo = new \Mongo();
+        $mongo = new \MongoClient();
         
         $this->module = new MongoDb();
         $this->module->_setConfig($this->mongoConfig);
