@@ -15,6 +15,7 @@ trait Configuration
     protected $actor;
     protected $name;
     protected $testFile;
+    protected $env;
 
     public function configActor($actor)
     {

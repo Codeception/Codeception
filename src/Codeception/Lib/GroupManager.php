@@ -6,10 +6,11 @@ use Codeception\TestCase\Interfaces\Descriptive;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase\Interfaces\Plain;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Loads information for groups from external sources (config, filesystem)
- *
  */
 class GroupManager
 {
@@ -19,7 +20,36 @@ class GroupManager
     public function __construct(array $groups)
     {
         $this->configuredGroups = $groups;
+        $this->loadGroupsByPattern();
         $this->loadConfiguredGroupSettings();
+    }
+
+    /**
+     * proceeds group names with asterisk:
+     *
+     * "tests/_log/group_*" => [
+     *      "tests/_log/group_1",
+     *      "tests/_log/group_2",
+     *      "tests/_log/group_3",
+     * ]
+     */
+    protected function loadGroupsByPattern()
+    {
+        foreach ($this->configuredGroups as $group => $pattern) {
+            if (strpos($group, '*') === false) {
+                continue;
+            }
+            $files = Finder::create()->files()
+                ->name(basename($pattern))
+                ->path(dirname($pattern))
+                ->in(Configuration::projectDir());
+
+            foreach ($files as $file) {
+                /** @var SplFileInfo $file  **/
+                $this->configuredGroups[$file->getBasename()] = $file->getRelativePathname();
+            }
+            unset($this->configuredGroups[$group]);
+        }
     }
 
     protected function loadConfiguredGroupSettings()

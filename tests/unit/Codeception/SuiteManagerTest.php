@@ -1,7 +1,4 @@
 <?php
-
-use \Codeception\Util\Stub as Stub;
-
 class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -16,15 +13,7 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
-        $this->suiteman = Stub::make('\Codeception\SuiteManager', array(
-                'dispatcher' => $this->dispatcher,
-                'groupManager' => new \Codeception\Lib\GroupManager([]),
-                'suite' => new PHPUnit_Framework_TestSuite(), 
-                'settings' => array(
-                    'bootstrap' => false, 
-                    'class_name' => 'CodeGuy',
-                    'namespace' => '',
-        )));
+        $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', \Codeception\Configuration::$defaultSuiteSettings);
     }
 
     /**
@@ -43,32 +32,14 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @group core
      */
-    public function testAddCest() {
+    public function testFewTests() {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
-        $this->suiteman->addCest($file);
+        $this->suiteman->loadTests($file);
         $this->assertEquals(2, $this->suiteman->getSuite()->count());
 
         $file = \Codeception\Configuration::dataDir().'SimpleWithNoClassCest.php';
-        $this->suiteman->addCest($file);
+        $this->suiteman->loadTests($file);
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
-    }
-
-    /**
-     * @group core
-     */
-    public function testAddCept() {
-        $file = $file = \Codeception\Configuration::dataDir().'SimpleCept.php';
-        $this->suiteman->addCept($file);
-        $this->assertEquals(1, $this->suiteman->getSuite()->count());
-    }
-
-    /**
-     * @group core
-     */
-    public function testAddTest() {
-        $file = $file = \Codeception\Configuration::dataDir().'SimpleTest.php';
-        $this->suiteman->addTest($file);
-        $this->assertEquals(1, $this->suiteman->getSuite()->count());
     }
 
     /**
@@ -79,23 +50,11 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      * @group core
      */
     public function testAddCestWithEnv() {
-        $file = \Codeception\Configuration::dataDir().'SimpleCestWithNamespace.php';
-        $this->suiteman->addCest($file);
+        $file = \Codeception\Configuration::dataDir().'SimpleNamespacedTest.php';
+        $this->suiteman->loadTests($file);
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
-        $newSuiteMan = Stub::make(
-            '\Codeception\SuiteManager',
-            array(
-                 'dispatcher' => $this->dispatcher,
-                 'groupManager' => new \Codeception\Lib\GroupManager([]),
-                 'suite'      => new PHPUnit_Framework_TestSuite(),
-                 'settings'   => array(
-                     'bootstrap'  => false,
-                     'class_name' => 'CodeGuy',
-                     'namespace'  => '',
-                 )
-            )
-        );
-        $newSuiteMan->addCest($file);
+        $newSuiteMan = new \Codeception\SuiteManager($this->dispatcher, 'suite', \Codeception\Configuration::$defaultSuiteSettings);
+        $newSuiteMan->loadTests($file);
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
 }

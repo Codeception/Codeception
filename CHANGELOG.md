@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0-RC 04/29/2014
+
+* group configuration can accept groups by patterns
+
+
 #### 2.0.0-RC 04/02/2014
 
 * [WebDriver] makeScreenshot does not use filename of a test

@@ -34,6 +34,16 @@ class GroupManagerTest extends \Codeception\TestCase\Test
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
+    public function testGroupsByPattern()
+    {
+        $this->manager = new GroupManager(['group_*' => 'tests/data/group_*']);
+        $test1 = $this->makeTestCase('tests/UserTest.php');
+        $test2 = $this->makeTestCase('tests/PostTest.php');
+        $this->assertContains('group_1', $this->manager->groupsForTest($test1));
+        $this->assertContains('group_2', $this->manager->groupsForTest($test2));
+
+    }
+
     protected function makeTestCase($file, $name = '')
     {
         return Stub::make('\Codeception\Lib\DescriptiveTestCase', [
@@ -46,5 +56,6 @@ class GroupManagerTest extends \Codeception\TestCase\Test
 
 class DescriptiveTestCase extends \Codeception\TestCase implements Reported
 {
+    public function getScenario() {}
     public function getReportFields() {}
 }

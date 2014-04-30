@@ -3,7 +3,7 @@
  * Also test multiple namespaces/classes per single file.
  */
 namespace SimpleA {
-    class SimpleTest
+    class SimpleTest extends \Codeception\TestCase\Test
     {
 
         public function testFoo() {
@@ -18,7 +18,7 @@ namespace SimpleA {
 }
 
 namespace SimpleB {
-    class SimpleTest
+    class SimpleTest extends \Codeception\TestCase\Test
     {
         public function testBaz() {
             return true;

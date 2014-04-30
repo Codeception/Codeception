@@ -12,6 +12,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 {
     protected $backupGlobalsBlacklist = array('app');
 
+    /**
+     * scenario stores steps and test settings: groups, environment, etc
+     */
     abstract public function getScenario();
 
     public static function getTestSignature(\PHPUnit_Framework_TestCase $testCase)

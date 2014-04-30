@@ -45,28 +45,42 @@ class SuiteManager
     protected $printer = null;
     protected $env = null;
 
-
-    protected $settings = array();
-
-    public function __construct(EventDispatcher $dispatcher, $name, $settings)
+    public function __construct(EventDispatcher $dispatcher, $name, array $settings)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
-        $this->testLoader = new TestLoader($settings['path']);
 
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
         }
         $this->suite = $this->createSuite($name);
+    }
 
-        if (!file_exists($settings['path'] . $settings['class_name'] . '.php')) {
-            throw new Exception\Configuration($settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
-        }
-        $this->initializeModules($settings);
+    public function initialize()
+    {
+        $this->initializeModules();
         $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->initializeActors();
+    }
+
+    protected function initializeModules()
+    {
+        self::$modules = Configuration::modules($this->settings);
+        self::$actions = Configuration::actions(self::$modules);
+
+        foreach (self::$modules as $module) {
+            $module->_initialize();
+        }
+    }
+
+    protected function initializeActors()
+    {
+        if (!file_exists($this->path . $this->settings['class_name'] . '.php')) {
+            throw new Exception\Configuration($this->settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
+        }
         require_once $this->settings['path'] . DIRECTORY_SEPARATOR . $this->settings['class_name'] . '.php';
     }
 
@@ -75,23 +89,14 @@ class SuiteManager
         return isset(self::$modules[$moduleName]);
     }
 
-    protected function initializeModules($settings)
-    {
-        self::$modules = Configuration::modules($settings);
-        self::$actions = Configuration::actions(self::$modules);
-        
-        foreach (self::$modules as $module) {
-            $module->_initialize();
-        }             
-    }
-
     public function loadTests($path = null)
     {
+        $testLoader = new TestLoader($this->settings['path']);
         $path
-            ? $this->testLoader->loadTest($this->settings['path'] . $path)
-            : $this->testLoader->loadTests();
+            ? $testLoader->loadTest($path)
+            : $testLoader->loadTests();
 
-        $tests = $this->testLoader->getTests();
+        $tests = $testLoader->getTests();
         foreach ($tests as $test) {
             $this->addToSuite($test);
         }
@@ -107,18 +112,19 @@ class SuiteManager
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
+                if (!$test instanceof TestCase\Interfaces\Configurable) {
+                    continue;
+                }
                 $t->configDispatcher($this->dispatcher);
                 $t->configActor($this->getActor());
                 $t->configEnv($this->env);
             }
         }
 
-        if ($test instanceof \Codeception\TestCase) {
+        if ($test instanceof TestCase\Interfaces\ScenarioDriven) {
             if (!$this->isCurrentEnvironment($test->getScenario()->getEnv())) {
                 return;
             }
-        }
-        if ($test instanceof TestCase\Interfaces\ScenarioDriven) {
             $test->preload();
         }
 

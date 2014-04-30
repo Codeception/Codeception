@@ -12,7 +12,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\Lib\TestLoader('tests/unit');
+ * $testLoader = new \Codeception\TestLoader('tests/unit');
  * $testLoader->loadTests();
  * $tests = $testLoader->getTests();
  * ?>
@@ -21,7 +21,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\Lib\TestLoader('tests/unit');
+ * $testLoader = new \Codeception\TestLoader('tests/unit');
  * $testLoader->loadTest('UserTest.php');
  * $testLoader->loadTest('PostTest.php');
  * $tests = $testLoader->getTests();
@@ -31,7 +31,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ``` php
  * <?php
- * $testLoader = new \Codeception\Lib\TestLoader('tests/unit');
+ * $testLoader = new \Codeception\TestLoader('tests/unit');
  * $testLoader->loadTest('models'); // all tests from tests/unit/models
  * $tests = $testLoader->getTests();
  * ?>
@@ -62,6 +62,7 @@ class TestLoader {
 
     public function loadTest($path)
     {
+        $path = $this->path . $this->relativeName($path);
         if (!file_exists($path)) {
             throw new \Exception("File $path not found");
         }
@@ -74,8 +75,10 @@ class TestLoader {
         }
 
         if (is_dir($path)) {
+            $currentPath = $this->path;
             $this->path = $path;
             $this->loadTests();
+            $this->path = $currentPath;
             return;
         }
         throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
@@ -128,7 +131,6 @@ class TestLoader {
 
     public function addCest($file)
     {
-        $name = $this->relativeName($file);
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
@@ -177,7 +179,6 @@ class TestLoader {
         if (!$test instanceof \Codeception\TestCase) {
             return;
         }
-
         $test->initConfig();
         $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
     }
