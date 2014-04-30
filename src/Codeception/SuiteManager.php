@@ -112,7 +112,7 @@ class SuiteManager
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
-                if (!$test instanceof TestCase\Interfaces\Configurable) {
+                if (!$t instanceof TestCase\Interfaces\Configurable) {
                     continue;
                 }
                 $t->configDispatcher($this->dispatcher);
