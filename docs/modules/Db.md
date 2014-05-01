@@ -1,6 +1,10 @@
 # Db Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
+## Codeception\Module\Db
+
+* *Extends* `Codeception\Module`
+* *Implements* `Codeception\Lib\Interfaces\Db`
 
 Works with SQL database.
 
@@ -67,12 +71,67 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * dbh - contains PDO connection.
 * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
 
+#### *public* dbh* `api` 
+ * `var`
 
-## Actions
 
+
+#### *public* driver* `var`  \Codeception\Lib\Driver\Db
+
+
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
+
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
+
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
+
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
+
+ * `var`  array
+
+
+
+
+
+
+
+### haveInDatabase
+#### *public* haveInDatabase($table, array $data)Inserts SQL record into database. This record will be erased after the test.
+
+``` php
+<?php
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
+?>
+```
+
+ * `param`  $table
+ * `param`  array $data
+ * `return`  integer $id
+### seeInDatabase
+#### *public* seeInDatabase($table, $criteria = null)Checks if a row with given column values exists.
+Provide table name and column values.
+
+Example:
+
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+
+```
+Will generate:
+
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
+```
+Fails if no such user found.
+
+ * `param`        $table
+ * `param`  array $criteria
 ### dontSeeInDatabase
-
-Effect is opposite to ->seeInDatabase
+#### *public* dontSeeInDatabase($table, $criteria = null)Effect is opposite to ->seeInDatabase
 
 Checks if there is no record with such column values in database.
 Provide table name and column values.
@@ -81,22 +140,21 @@ Example:
 
 ``` php
 <?php
-$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
 ```
 Fails if such user was found.
 
- * param       $table
- * param array $criteria
+ * `param`        $table
+ * `param`  array $criteria
 
 ### grabFromDatabase
-
-Fetches a single column value from a database.
+#### *public* grabFromDatabase($table, $column, $criteria = null)Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 Example:
@@ -107,47 +165,46 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 ```
 
- * version 1.1
+ * `version`  1.1
 
- * param       $table
- * param       $column
- * param array $criteria
+ * `param`        $table
+ * `param`        $column
+ * `param`  array $criteria
 
- * return mixed
+ * `return`  mixed
 
-### haveInDatabase
 
-Inserts SQL record into database. This record will be erased after the test.
 
-``` php
-<?php
-$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
-?>
-```
 
- * param $table
- * param array $data
- * return integer $id
 
-### seeInDatabase
 
-Checks if a row with given column values exists.
-Provide table name and column values.
 
-Example:
 
-``` php
-<?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
-```
-Will generate:
 
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
-```
-Fails if no such user found.
 
- * param       $table
- * param array $criteria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

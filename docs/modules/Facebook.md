@@ -1,6 +1,9 @@
 # Facebook Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Facebook.php)**
+## Codeception\Module\Facebook
+
+* *Extends* `Codeception\Module`
 
 Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
@@ -71,50 +74,89 @@ $I->see('Welcome, ' . $fbUserFirstName);
 @since 1.6.3
 @author tiger.seo@gmail.com
 
-## Actions
 
-### grabFacebookTestUserAccessToken
 
-Returns the test user access token.
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * return string
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
-### grabFacebookTestUserEmail
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
-Returns the test user email.
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
 
- * return string
+ * `var`  array
 
-### grabFacebookTestUserFirstName
 
-Returns the test user first name.
 
- * return string
 
-### grabFacebookTestUserLoginUrl
-
-Returns URL for test user auto-login.
-
- * return string
 
 ### haveFacebookTestUserAccount
-
-Get facebook test user be created.
+#### *public* haveFacebookTestUserAccount($renew = null)Get facebook test user be created.
 
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
- * param bool $renew true if the test user should be recreated
-
+ * `param`  bool $renew true if the test user should be recreated
 ### haveTestUserLoggedInOnFacebook
+#### *public* haveTestUserLoggedInOnFacebook()Get facebook test user be logged in on facebook.
 
-Get facebook test user be logged in on facebook.
+ * `throws`  ModuleConfigException
+### grabFacebookTestUserAccessToken
+#### *public* grabFacebookTestUserAccessToken()Returns the test user access token.
 
- * throws ModuleConfigException
+ * `return`  string
+### grabFacebookTestUserEmail
+#### *public* grabFacebookTestUserEmail()Returns the test user email.
 
+ * `return`  string
+### grabFacebookTestUserLoginUrl
+#### *public* grabFacebookTestUserLoginUrl()Returns URL for test user auto-login.
+
+ * `return`  string
+### grabFacebookTestUserFirstName
+#### *public* grabFacebookTestUserFirstName()Returns the test user first name.
+
+ * `return`  string
 ### seePostOnFacebookWithAttachedPlace
+#### *public* seePostOnFacebookWithAttachedPlace($placeId)Please, note that you must have publish_stream permission to be able to publish to user's feed.
+
+ * `param`  string $placeId Place identifier to be verified against user published posts
 
 
-Please, note that you must have publish_stream permission to be able to publish to user's feed.
 
- * param string $placeId Place identifier to be verified against user published posts
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

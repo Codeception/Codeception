@@ -1,6 +1,9 @@
 # XMLRPC Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/XMLRPC.php)**
+## Codeception\Module\XMLRPC
+
+* *Extends* `Codeception\Module`
 
 Module for testing XMLRPC WebService.
 
@@ -33,31 +36,78 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 @since 1.1.5
 @author tiger.seo@gmail.com
 
-## Actions
+#### *public* client* `var`  \Symfony\Component\BrowserKit\Client
+#### *public* is_functional
+#### *public* headers
+#### *public* params
+#### *public* response
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
+
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
+
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
+
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
+
+ * `var`  array
+
+
+
 
 ### haveHttpHeader
+#### *public* haveHttpHeader($name, $value)Sets HTTP header
 
-Sets HTTP header
-
- * param string $name
- * param string $value
-
+ * `param`  string $name
+ * `param`  string $value
 ### seeResponseCodeIs
+#### *public* seeResponseCodeIs($num)Checks response code.
 
-Checks response code.
-
- * param $num
-
+ * `param`  $num
 ### seeResponseIsXMLRPC
-
-Checks weather last response was valid XMLRPC.
+#### *public* seeResponseIsXMLRPC()Checks weather last response was valid XMLRPC.
 This is done with xmlrpc_decode function.
-
-
 ### sendXMLRPCMethodCall
+#### *public* sendXMLRPCMethodCall($methodName, $parameters = null)Sends a XMLRPC method call to remote XMLRPC-server.
 
-Sends a XMLRPC method call to remote XMLRPC-server.
+ * `param`  string $methodName
+ * `param`  array $parameters
 
- * param string $methodName
- * param array $parameters
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

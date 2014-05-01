@@ -2,6 +2,7 @@
 ## Codeception\Util\Fixtures
 
 
+
 Really basic class to store data in global array and use it in Cests/Tests.
 
 ```php
@@ -13,14 +14,11 @@ Fixtures::get('user1');
 ```
 
 
-### Methods
-
-
-#### *public static* add
+#### *public static* add#### *public static* add($name, $data)
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L21)
 
-#### *public static* cleanup
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L35)
-
-#### *public static* get
+#### *public static* get#### *public static* get($name)
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L26)
+
+#### *public static* cleanup#### *public static* cleanup()
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L35)

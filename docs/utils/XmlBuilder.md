@@ -2,6 +2,7 @@
 ## Codeception\Util\XmlBuilder
 
 
+
 That's a pretty simple yet powerful class to build XML structures in jQuery-like style. With no XML line actually written!
 Uses DOM extension to manipulate XML data.
 
@@ -61,59 +62,45 @@ Export:
 
 [Source code](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php)
 
-### Methods
 
-
-#### *public* __construct
+#### *public* __construct#### *public* __construct()
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L77)
 
-#### *public* __get
-Appends child node
+#### *public* __get#### *public* __get($tag)Appends child node
 
  * `param`  $tag
 
  * `return`  XmlBuilder
-
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L90)
 
-#### *public* __toString
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
+#### *public* val#### *public* val($val)* `param`  $val
 
-#### *public* attr
-Sets attribute for current node
+ * `return`  XmlBuilder
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
+
+#### *public* attr#### *public* attr($attr, $val)Sets attribute for current node
 
  * `param`  $attr
  * `param`  $val
 
  * `return`  XmlBuilder
-
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L117)
 
-#### *public* getDom
- * `return`  \DOMDocument
-
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)
-
-#### *public* parent
-Traverses to parent
+#### *public* parent#### *public* parent()Traverses to parent
 
  * `return`  XmlBuilder
-
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L128)
 
-#### *public* parents
-Traverses to parent with $name
+#### *public* parents#### *public* parents($tag)Traverses to parent with $name
 
  * `param`  $tag
 
  * `return`  XmlBuilder
  * `throws`  \Exception
-
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L142)
 
-#### *public* val
- * `param`  $val
+#### *public* __toString#### *public* __toString()
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
 
- * `return`  XmlBuilder
-
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
+#### *public* getDom#### *public* getDom()* `return`  \DOMDocument
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)

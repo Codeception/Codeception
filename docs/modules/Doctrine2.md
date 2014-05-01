@@ -1,6 +1,9 @@
 # Doctrine2 Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
+## Codeception\Module\Doctrine2
+
+* *Extends* `Codeception\Module`
 
 Allows integration and testing for projects with Doctrine2 ORM.
 
@@ -34,42 +37,41 @@ It can be done in bootstrap file, by setting static $em property:
            Doctrine2:
               cleanup: false
 
-## Actions
+#### *public static* em* `var`  \Doctrine\ORM\EntityManager
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
-### dontSeeInRepository
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
-Flushes changes to database and performs ->findOneBy() call for current repository.
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * param $entity
- * param array $params
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
+
+ * `var`  array
+
+
+
+
 
 ### flushToDatabase
-
-Performs $em->flush();
-
-### grabFromRepository
-
-Selects field value from repository.
-It builds query based on array of parameters.
-You can use entity associations to build complex queries.
+#### *public* flushToDatabase()Performs $em->flush();
+### persistEntity
+#### *public* persistEntity($obj, $values = null)Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
 
 Example:
 
 ``` php
 <?php
-$email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
-?>
+$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
+$I->persistEntity($user, array('name' => 'Miles'));
 ```
 
- * version 1.1
- * param $entity
- * param $field
- * param array $params
- * return array
-
+ * `param`  $obj
+ * `param`  array $values
 ### haveFakeRepository
-
-Mocks the repository.
+#### *public* haveFakeRepository($classname, $methods = null)Mocks the repository.
 
 With this action you can redefine any method of any repository.
 Please, note: this fake repositories will be accessible through entity manager till the end of test.
@@ -85,31 +87,12 @@ $I->haveFakeRepository('Entity\User', array('findByUsername' => function($userna
 
 This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
 
- * param $classname
- * param array $methods
-
+ * `param`  $classname
+ * `param`  array $methods
 ### haveInRepository
-
-Saves data in repository
-
-### persistEntity
-
-Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
-
-Example:
-
-``` php
-<?php
-$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
-$I->persistEntity($user, array('name' => 'Miles'));
-```
-
- * param $obj
- * param array $values
-
+#### *public* haveInRepository($repository, array $data)Saves data in repository
 ### seeInRepository
-
-Flushes changes to database executes a query defined by array.
+#### *public* seeInRepository($entity, $params = null)Flushes changes to database executes a query defined by array.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
 
@@ -125,6 +108,67 @@ $I->seeInRepository('Client', array('User' => array('Company' => array('name' =>
 
 Fails if record for given criteria can\'t be found,
 
- * param $entity
- * param array $params
+ * `param`  $entity
+ * `param`  array $params
+### dontSeeInRepository
+#### *public* dontSeeInRepository($entity, $params = null)Flushes changes to database and performs ->findOneBy() call for current repository.
+
+ * `param`  $entity
+ * `param`  array $params
+
+### grabFromRepository
+#### *public* grabFromRepository($entity, $field, $params = null)Selects field value from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
+
+Example:
+
+``` php
+<?php
+$email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+?>
+```
+
+ * `version`  1.1
+ * `param`  $entity
+ * `param`  $field
+ * `param`  array $params
+ * `return`  array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,6 +1,9 @@
 # Sequence Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Sequence.php)**
+## Codeception\Module\Sequence
+
+* *Extends* `Codeception\Module`
 
 Sequence solves data cleanup issue in alternative way.
 Instead cleaning up the database between tests,
@@ -46,7 +49,58 @@ for ($i = 0; $i<10; $i++) {
 ?>
 ```
 
+#### *public static* hash
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
-## Actions
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
+
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
+
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
+
+ * `var`  array
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

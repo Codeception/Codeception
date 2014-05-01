@@ -11,6 +11,7 @@ class RoboFile extends \Robo\Tasks {
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
+        $this->update();
         $this->buildDocs();
         $this->publishSite();
         $this->buildPhar();
@@ -398,8 +399,11 @@ class RoboFile extends \Robo\Tasks {
 
     protected function publishSite()
     {
-        $this->taskExec('git commit')->args('-m "auto updated documentation"')->run();
-        $this->taskExec('git push')->run();
+        $this->taskGit()
+            ->add('docs/*')
+            ->commit("auto updated documentation")
+            ->push()
+            ->run();
 
         chdir('..');
         sleep(2);

@@ -1,6 +1,9 @@
 # MongoDb Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
+## Codeception\Module\MongoDb
+
+* *Extends* `Codeception\Module`
 
 Works with MongoDb database.
 
@@ -35,55 +38,106 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
+#### *public* dbh* `api` 
+ * `var`
 
-## Actions
 
-### dontSeeInCollection
 
-Checks if collection doesn't contain an item.
 
-``` php
-<?php
-$I->dontSeeInCollection('users', array('name' => 'miles'));
-```
+#### *public* driver* `var`  \Codeception\Lib\Driver\MongoDb
 
- * param $collection
- * param array $criteria
+#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
-### grabFromCollection
+ * `var`  bool
+#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
-Grabs a data from collection
+ * `var`  array
+#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
-``` php
-<?php
-$cursor = $I->grabFromCollection('users', array('name' => 'miles'));
-```
+ * `var`  array
+#### *public static* aliasesAllows to rename actions
 
- * param $collection
- * param array $criteria
- * return \MongoCursor
+ * `var`  array
+
+
+
+
+
 
 ### haveInCollection
-
-Inserts data into collection
+#### *public* haveInCollection($collection, array $data)Inserts data into collection
 
 ``` php
-$I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
-$user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
+$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
 ```
 
- * param $collection
- * param array $data
-
+ * `param`  $collection
+ * `param`  array $data
 ### seeInCollection
-
-Checks if collection contains an item.
+#### *public* seeInCollection($collection, $criteria = null)Checks if collection contains an item.
 
 ``` php
 <?php
 $I->seeInCollection('users', array('name' => 'miles'));
 ```
 
- * param $collection
- * param array $criteria
+ * `param`  $collection
+ * `param`  array $criteria
+### dontSeeInCollection
+#### *public* dontSeeInCollection($collection, $criteria = null)Checks if collection doesn't contain an item.
+
+``` php
+<?php
+$I->dontSeeInCollection('users', array('name' => 'miles'));
+```
+
+ * `param`  $collection
+ * `param`  array $criteria
+### grabFromCollection
+#### *public* grabFromCollection($collection, $criteria = null)Grabs a data from collection
+
+``` php
+<?php
+$cursor = $I->grabFromCollection('users', array('name' => 'miles'));
+```
+
+ * `param`  $collection
+ * `param`  array $criteria
+ * `return`  \MongoCursor
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
