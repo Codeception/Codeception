@@ -169,6 +169,7 @@ abstract class Framework extends \Codeception\Module implements FrameworkInterfa
         $uri = "";
         if (isset($parts['path'])) $uri .= $parts['path'];
         if (isset($parts['query'])) $uri .= "?".$parts['query'];
+        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
         return $uri;
     }
 
