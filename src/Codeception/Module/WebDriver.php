@@ -1393,4 +1393,33 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
     }
+    
+    //added by nick 4-15-2014
+    public function goToUrl($url)
+    {
+        return $this->webDriver->navigate()->to($url);
+    }
+
+
+    public function findElementById($element_id)
+    {
+        return $this->webDriver->findElement(\WebDriverBy::id($element_id));
+    }
+
+    public function findElementByXpath($xpath)
+    {
+        return $this->webDriver->findElement(\WebDriverBy::xpath($xpath));
+    }
+
+    public function clickByXpath($xpath)
+    {
+        return $this->findElementByXpath($xpath)->click();
+    }
+
+    public function clickById($element_id)
+    {
+        return $this->findElementById($element_id)->click();
+    }
+
+//Added by Nick
 }
