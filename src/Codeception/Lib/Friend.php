@@ -69,7 +69,9 @@ class Friend {
     public function __destruct()
     {
         foreach ($this->multiSessionModules as $module) {
-            $module->_closeSession($this->data[$module->_getName()]);
+            if (isset($this->data[$module->_getName()])) {
+                $module->_closeSession($this->data[$module->_getName()]);
+            }
         }
     }
 

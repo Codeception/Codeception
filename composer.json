@@ -28,7 +28,8 @@
         "monolog/monolog": "*",
         "codeception/specify": "*",
         "facebook/php-sdk": "3.*",
-        "videlalvaro/php-amqplib": "*"
+        "videlalvaro/php-amqplib": "*",
+        "codeception/robo-paracept": "@dev"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",

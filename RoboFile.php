@@ -6,14 +6,15 @@ use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
+    use \Codeception\Task\MergeReports;
+
     const STABLE_BRANCH = '1.8';
 
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
         $this->update();
-        $this->buildDocs();
-        $this->publishSite();
+        $this->publishDocs();
         $this->buildPhar();
         $this->publishPhar();
         $this->publishGit();
@@ -31,6 +32,30 @@ class RoboFile extends \Robo\Tasks {
             ->version(\Codeception\Codecept::VERSION)
             ->change($change)
             ->run();
+    }
+
+    public function testParallel()
+    {
+        $res = $this->taskParallelExec()
+            ->isPrinted(true)
+            ->process($this->taskCodecept('./codecept')->silent()->suite('cli')->xml('core1.xml'))
+            ->process($this->taskCodecept('./codecept')->silent()->suite('unit')->group('core')->xml('core2.xml'))
+            ->process($this->taskCodecept('./codecept')->silent()->suite('tests/unit/Codeception/Command')->xml('core3.xml'))
+            ->run();
+        
+        if (!$res()) {
+            $this->say("Tests failed :(" . $res->getMessage());
+            exit;
+        }
+        
+        $this->taskMergeXmlReports([
+                'tests/log/core1.xml',
+                'tests/log/core2.xml',
+                'tests/log/core3.xml'])
+            ->to('tests/log/core-all.xml')
+            ->run();
+
+
     }
 
     protected function server()
@@ -399,11 +424,8 @@ class RoboFile extends \Robo\Tasks {
 
     protected function publishSite()
     {
-        $this->taskGit()
-            ->add('docs/*')
-            ->commit("auto updated documentation")
-            ->push()
-            ->run();
+        $this->taskExec('git commit')->args('-m "auto updated documentation"')->run();
+        $this->taskExec('git push')->run();
 
         chdir('..');
         sleep(2);

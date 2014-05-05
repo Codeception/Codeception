@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ff59618f265827397d766c2cb8fc75ff",
+    "hash": "246ea3eb82647508db9c822e505fa7eb",
     "packages": [
         {
             "name": "fabpot/goutte",
@@ -1307,6 +1307,43 @@
     ],
     "packages-dev": [
         {
+            "name": "codeception/robo-paracept",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Codeception/robo-paracept.git",
+                "reference": "77b1b6ac13930bbcdd341bec6a59bf9b31e2b495"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Codeception/robo-paracept/zipball/77b1b6ac13930bbcdd341bec6a59bf9b31e2b495",
+                "reference": "77b1b6ac13930bbcdd341bec6a59bf9b31e2b495",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codeception/codeception": "dev-master",
+                "codegyre/robo": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Codeception\\Task\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Davert",
+                    "email": "davert.php@resend.cc"
+                }
+            ],
+            "description": "Codeception Parallel Execution Tasks via Robo Task Runner",
+            "time": "2014-04-30 03:28:46"
+        },
+        {
             "name": "codeception/specify",
             "version": "0.3.6",
             "source": {
@@ -1588,9 +1625,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "codeception/robo-paracept": 20
+    },
     "platform": {
         "php": ">=5.4.0"
     },

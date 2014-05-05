@@ -46,10 +46,11 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadAllTests()
     {
+        $this->testLoader = new \Codeception\TestLoader(codecept_data_dir().'claypit/tests');
         $this->testLoader->loadTests();
-        $this->assertContainsTestName('SimpleCept.php', $this->testLoader->getTests());
-        $this->assertContainsTestName('SimpleCest::helloWorld', $this->testLoader->getTests());
-        $this->assertContainsTestName('SampleTest::testOfTest', $this->testLoader->getTests());
+        $this->assertContainsTestName('/order/AnotherCept.php', $this->testLoader->getTests());
+        $this->assertContainsTestName('MageGuildCest::darkPower', $this->testLoader->getTests());
+        $this->assertContainsTestName('FailingTest::testMe', $this->testLoader->getTests());
     }
 
     protected function assertContainsTestName($name, $tests)
