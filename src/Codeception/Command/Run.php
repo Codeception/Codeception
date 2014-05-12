@@ -108,6 +108,12 @@ class Run extends Command
         if (!$options['silent']) {
             $output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         }
+        if ($options['no-colors']) {
+            $output->setDecorated(!$options['no-colors']);
+        }
+        if ($options['colors']) {
+            $output->setDecorated($options['colors']);
+        }
 
         $options = array_merge($options, $this->booleanOptions($input, ['xml','html','coverage','coverage-xml','coverage-html']));
         if ($options['debug']) {
