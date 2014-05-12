@@ -55,7 +55,7 @@ class REST extends \Codeception\Module
      * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
      */
     public $client = null;
-    public $is_functional = false;
+    public $isFunctional = false;
 
     public $headers = array();
     public $params = array();
@@ -69,7 +69,7 @@ class REST extends \Codeception\Module
                 foreach ($this->getModules() as $module) {
                     if ($module instanceof \Codeception\Lib\Framework) {
                         $this->client = $module->client;
-                        $this->is_functional = true;
+                        $this->isFunctional = true;
                         break;
                     }
                 }
@@ -90,25 +90,14 @@ class REST extends \Codeception\Module
 
         $this->client->setServerParameters(array());
 
-        $timeout = $this->config['timeout'];
-
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
             && xdebug_is_enabled()
             && ini_get('xdebug.remote_enable')
+            && !$this->isFunctional
         ) {
             $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
             $this->client->getCookieJar()->set($cookie);
-
-            // timeout is disabled, so we can debug gently :)
-            $timeout = 0;
-        }
-
-        if (method_exists($this->client, 'getClient')) {
-            $clientConfig = $this->client->getClient()->getConfig();
-            $curlOptions = $clientConfig->get('curl.options');
-            $curlOptions[CURLOPT_TIMEOUT] = $timeout;
-            $clientConfig->set('curl.options', $curlOptions);
         }
     }
 
@@ -201,7 +190,7 @@ class REST extends \Codeception\Module
      */
     public function amHttpAuthenticated($username, $password)
     {
-        if ($this->is_functional) {
+        if ($this->isFunctional) {
             $this->client->setServerParameter('PHP_AUTH_USER', $username);
             $this->client->setServerParameter('PHP_AUTH_PW', $password);
         } else {
@@ -371,7 +360,7 @@ class REST extends \Codeception\Module
             $this->client->setServerParameter("HTTP_$header", $val);
 
             # Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->is_functional and $header == 'CONTENT_TYPE') {
+            if ($this->isFunctional and $header == 'CONTENT_TYPE') {
                 $this->client->setServerParameter($header, $val);
             }
         }
