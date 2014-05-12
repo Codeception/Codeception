@@ -122,15 +122,8 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
      *
      * ``` php
      * <?php
-     * // from the official Guzzle manual
-     * $I->amGoingTo('Sign all requests with OAuth');
-     * $I->executeInGuzzle(function (\Guzzle\Http\Client $client) {
-     *      $client->addSubscriber(new Guzzle\Plugin\Oauth\OauthPlugin(array(
-     *                  'consumer_key'    => '***',
-     *                  'consumer_secret' => '***',
-     *                  'token'           => '***',
-     *                  'token_secret'    => '***'
-     *      )));
+     * $I->executeInGuzzle(function (\GuzzleHttp\Client $client) {
+     *      $client->get('/get', ['query' => ['foo' => 'bar']]);
      * });
      * ?>
      * ```
