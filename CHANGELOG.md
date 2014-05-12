@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0-RC 05/12/2014
+
+* removed fabpot/goutte, added Guzzle4 connector
+
+
 #### 2.0.0-RC 04/29/2014
 
 * group configuration can accept groups by patterns

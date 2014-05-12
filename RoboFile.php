@@ -6,8 +6,6 @@ use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
-    use \Codeception\Task\MergeReports;
-
     const STABLE_BRANCH = '1.8';
 
     public function release()
@@ -34,31 +32,7 @@ class RoboFile extends \Robo\Tasks {
             ->run();
     }
 
-    public function testParallel()
-    {
-        $res = $this->taskParallelExec()
-            ->isPrinted(true)
-            ->process($this->taskCodecept('./codecept')->silent()->suite('cli')->xml('core1.xml'))
-            ->process($this->taskCodecept('./codecept')->silent()->suite('unit')->group('core')->xml('core2.xml'))
-            ->process($this->taskCodecept('./codecept')->silent()->suite('tests/unit/Codeception/Command')->xml('core3.xml'))
-            ->run();
-        
-        if (!$res()) {
-            $this->say("Tests failed :(" . $res->getMessage());
-            exit;
-        }
-        
-        $this->taskMergeXmlReports([
-                'tests/log/core1.xml',
-                'tests/log/core2.xml',
-                'tests/log/core3.xml'])
-            ->to('tests/log/core-all.xml')
-            ->run();
-
-
-    }
-
-    protected function server()
+    public function server()
     {
         $this->taskServer(8000)
             ->background()
@@ -66,10 +40,12 @@ class RoboFile extends \Robo\Tasks {
             ->run();
     }
 
-    public function testPhpbrowser()
+    public function testPhpbrowser($args = '')
     {
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','tests/unit/Codeception/Module/PhpBrowserTest.php')
+        $this->server();
+        $this->taskCodecept('./codecept')
+//            ->args($args)
+            ->test('tests/unit/Codeception/Module/PhpBrowserTest.php')
             ->run();
 
     }

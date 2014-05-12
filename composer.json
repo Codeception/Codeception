@@ -18,7 +18,7 @@
         "php": ">=5.4.0",
         "phpunit/phpunit": "~4.0",
         "facebook/webdriver": "~0.4",
-        "fabpot/goutte": "*",
+        "guzzlehttp/guzzle": "4.*",
         "symfony/finder": "~2.3",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
@@ -28,8 +28,7 @@
         "monolog/monolog": "*",
         "codeception/specify": "*",
         "facebook/php-sdk": "3.*",
-        "videlalvaro/php-amqplib": "*",
-        "codeception/robo-paracept": "@dev"
+        "videlalvaro/php-amqplib": "*"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",

@@ -21,7 +21,7 @@ class WebDriver extends Page {
         return false;
     }
 
-    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
     {
         if (!count($nodes)) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
 

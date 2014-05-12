@@ -11,20 +11,20 @@ class PhpBrowserTest extends TestsForBrowsers
      */
     protected $module;
 
-    // this is my local config
-    protected $is_local = false;
+    /**
+     * @var \GuzzleHttp\Subscriber\History
+     */
+    protected $history;
 
     protected function setUp() {
         $this->module = new \Codeception\Module\PhpBrowser();
-        $url = '';
-        if (version_compare(PHP_VERSION, '5.4', '>=')) $url = 'http://localhost:8000';
-        // my local config.
-        if ($this->is_local) $url = 'http://testapp.com';
-
+        $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
+        $this->history = new \GuzzleHttp\Subscriber\History();
+        $this->module->guzzle->getEmitter()->attach($this->history);
     }
     
     protected function tearDown() {
@@ -39,23 +39,6 @@ class PhpBrowserTest extends TestsForBrowsers
         return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
-    public function testCurlOptions()
-    {
-        $guzzle = $this->module->guzzle;
-        $opts = $guzzle->getConfig('curl.options');
-        $this->assertFalse($opts[CURLOPT_SSL_VERIFYPEER]);
-        $this->assertFalse($opts[CURLOPT_CERTINFO]);
-
-        $module = new \Codeception\Module\PhpBrowser();
-        //
-        $module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
-        $module->_initialize();
-        $guzzle = $module->guzzle;
-        $opts = $guzzle->getConfig('curl.options');
-        $this->assertTrue($opts[CURLOPT_NOBODY]);
-
-    }
-    
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
@@ -86,7 +69,8 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeLink('Ссылочка');
         $this->module->click('Ссылочка');
     }
-    
+
+
 	public function testSetMultipleCookies() {
         $cookie_name_1  = 'test_cookie';
         $cookie_value_1 = 'this is a test';
@@ -176,5 +160,47 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('jon', $form['name']);
         $this->module->seeCurrentUrlEquals('/form/example3?validate=yes');
     }
+
+    public function testChangeDomains()
+    {
+        $this->mockResponse();
+        $this->module->amOnSubdomain('user');
+        $this->module->amOnPage('/form1');
+        $this->assertEquals('http://user.localhost:8000/form1', $this->module->client->getHistory()->current()->getUri());
+    }
+
+    public function testHeadersByConfig()
+    {
+        $this->mockResponse();
+        $this->module->_setConfig(['headers' => ['xxx' => 'yyyy']]);
+        $this->module->_initialize();
+        $this->module->amOnPage('/form1');
+        $this->assertArrayHasKey('xxx', $this->module->guzzle->getDefaultOption('headers'));
+        $this->assertEquals('yyyy', $this->module->guzzle->getDefaultOption('headers/xxx'));
+    }
+
+    public function testHeadersBySetHeader()
+    {
+        $this->module->setHeader('xxx', 'yyyy');
+        $this->module->amOnPage('/');
+        $this->assertTrue($this->history->getLastRequest()->hasHeader('xxx'));
+    }
+
+    public function testCurlOptions()
+    {
+        $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
+        $this->module->_initialize();
+        $this->assertTrue($this->module->guzzle->getDefaultOption('config/curl/'.CURLOPT_NOBODY));
+
+    }
+
+    protected function mockResponse($body = "hello", $code = 200)
+    {
+        $mock = new \GuzzleHttp\Subscriber\Mock([
+            new \GuzzleHttp\Message\Response($code, [], \GuzzleHttp\Stream\Stream::factory($body))
+        ]);
+        $this->module->guzzle->getEmitter()->attach($mock);
+    }
+
 
 }

@@ -2,13 +2,13 @@
 
 namespace Codeception\Module;
 
-use Codeception\Lib\Connector\Goutte;
+use Codeception\Lib\Connector\Guzzle;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
-use Guzzle\Http\Client;
 use Codeception\Exception\TestRuntime;
 use Codeception\TestCase;
+use GuzzleHttp\Client;
 use Symfony\Component\BrowserKit\Request;
 
 /**
@@ -45,8 +45,7 @@ use Symfony\Component\BrowserKit\Request;
  *
  * ## Public Properties
  *
- * * session - contains Mink Session
- * * guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\Guzzle\Http\Client`
+ * * guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\GuzzleHttp\Client`
  *
  * All SSL certification checks are disabled by default.
  * To configure CURL options use `curl` config parameter.
@@ -56,39 +55,28 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 {
 
     protected $requiredFields = array('url');
-    protected $config = array('curl' => array());
-
-    protected $curl_defaults = array(
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_CERTINFO => false,
-    );
+    protected $config = array('verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => []);
+    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key','proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout', ''];
 
     /**
-     * @var \Codeception\Lib\Connector\Goutte
+     * @var \Codeception\Lib\Connector\Guzzle
      */
     public $client;
 
     /**
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     public $guzzle;
 
     public function _initialize()
     {
-        // build up a Guzzle friendly list of configuration options
-        // passed in both from our defaults and the respective
-        // yaml configuration file (if applicable)
-        $curl_config['curl.options'] = $this->curl_defaults;
-        foreach ($this->config['curl'] as $key => $val) {
-            if (defined($key)) $curl_config['curl.options'][constant($key)] = $val;
-        }
+        $defaults = array_intersect_key($this->config, array_flip($this->guzzleConfigFields));
+        $defaults['config']['curl'] = $this->config['curl'];
 
-        // Guzzle client requires that we set the ssl.certificate_authority config
-        // directive if we wish to disable SSL verification
-        if ($curl_config['curl.options'][CURLOPT_SSL_VERIFYPEER] !== true) {
-            $curl_config['ssl.certificate_authority'] = false;
+        foreach ($this->config['curl'] as $key => $val) {
+            if (defined($key)) $defaults['config']['curl'][constant($key)] = $val;
         }
-        $this->guzzle = new Client('', $curl_config);
+        $this->guzzle = new Client(['defaults' => $defaults]);
     }
 
     public function _before(\Codeception\TestCase $test) {
@@ -111,6 +99,11 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
         $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
         $this->_reconfigure(array('url' => $url));
+    }
+
+    protected function onReconfigure()
+    {
+        $this->_initializeSession();
     }
 
     /**
@@ -152,7 +145,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function _initializeSession()
     {
-        $this->client = new Goutte();
+        $this->client = new Guzzle();
         $this->client->setClient($this->guzzle);
         $this->client->setBaseUri($this->config['url']);
     }

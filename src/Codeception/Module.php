@@ -62,7 +62,13 @@ abstract class Module
     public function _reconfigure($config)
     {
         $this->config =  array_merge($this->backupConfig, $config);
+        $this->onReconfigure();
         $this->validateConfig();
+    }
+
+    protected function onReconfigure()
+    {
+        // update client on reconfigurations
     }
 
     public function _resetConfig()

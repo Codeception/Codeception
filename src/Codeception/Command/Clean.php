@@ -39,6 +39,8 @@ class Clean extends Command
         $output->writeln("<info>Cleaning up ".Configuration::logDir()."...</info>");
         if (!file_exists(Configuration::logDir())) {
             mkdir(Configuration::logDir(), 0777, true);
+        } else {
+            chmod(Configuration::logDir(), 0777);
         }
         FileSystem::doEmptyDir(Configuration::logDir());
         $output->writeln("Done");

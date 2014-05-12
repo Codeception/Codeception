@@ -369,15 +369,15 @@ class Configuration
      */
     public static function logDir()
     {
+
+        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
         if (!self::$logDir) {
             throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
         }
 
-        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
-
         if (!is_writable($dir)) {
             @mkdir($dir);
-            @chmod($dir, 777);
+            @chmod($dir, 0777);
         }
 
         if (!is_writable($dir)) {
