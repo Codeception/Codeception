@@ -67,9 +67,9 @@ class PHPUnit_Util_Filter
             return true;
         }
 
-//        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
-//            return true;
-//        }
+        if (strpos($step['file'], 'src' . DIRECTORY_SEPARATOR . 'Codeception' . DIRECTORY_SEPARATOR) !== false) {
+            return true;
+        }
 
         return false;
     }

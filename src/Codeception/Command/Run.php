@@ -104,9 +104,11 @@ class Run extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
-
         $options = $input->getOptions();
+        if (!$options['silent']) {
+            $output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
+        }
+
         $options = array_merge($options, $this->booleanOptions($input, ['xml','html','coverage','coverage-xml','coverage-html']));
         if ($options['debug']) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
