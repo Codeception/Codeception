@@ -12,7 +12,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\BrowserKit\Request;
 
 /**
- * Uses [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
+ * Uses [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
  * Module works over CURL and requires **PHP CURL extension** to be enabled.
  *
  * Use to perform web acceptance tests with non-javascript browser.
@@ -24,7 +24,7 @@ use Symfony\Component\BrowserKit\Request;
  * * Maintainer: **davert**
  * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
- * * relies on [Goutte](https://github.com/fabpot/Goutte) and [Guzzle](http://guzzlephp.org/)
+ * * Works with [Guzzle](http://guzzlephp.org/)
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  *
@@ -32,6 +32,12 @@ use Symfony\Component\BrowserKit\Request;
  *
  * * url *required* - start url of your app
  * * curl - curl options
+ * * headers - ...
+ * * cookies - ...
+ * * auth - ...
+ * * verify - ...
+ * * .. those and other [Guzzle Request options](http://docs.guzzlephp.org/en/latest/clients.html#request-options)
+ *
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -40,15 +46,17 @@ use Symfony\Component\BrowserKit\Request;
  *        config:
  *           PhpBrowser:
  *              url: 'http://localhost'
+ *              auth: ['admin', '123345]
  *              curl:
  *                  CURLOPT_RETURNTRANSFER: true
  *
  * ## Public Properties
  *
  * * guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\GuzzleHttp\Client`
+ * * client - Symfony BrowserKit instance.
  *
  * All SSL certification checks are disabled by default.
- * To configure CURL options use `curl` config parameter.
+ * Use Guzzle request options to configure certifications and others.
  *
  */
 class PhpBrowser extends InnerBrowser implements Remote, MultiSession

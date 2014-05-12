@@ -24,16 +24,18 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  * ## Configuration
  *
  * * url *optional* - the url of api
- * * timeout *optional* - the maximum number of seconds to allow cURL functions to execute
+ *
+ * This module requires PHPBrowser or any of Framework modules enabled.
  *
  * ### Example
  *
  *     modules:
- *        enabled: [REST]
+ *        enabled: [PhpBrowser, REST]
  *        config:
+ *           PHPBrowser:
+                url: http://serviceapp/
  *           REST:
  *              url: 'http://serviceapp/api/v1/'
- *              timeout: 90
  *
  * ## Public Properties
  *
@@ -47,12 +49,11 @@ class REST extends \Codeception\Module
 {
     protected $config = array(
         'url'                 => '',
-        'timeout'             => 30,
         'xdebug_remote'       => false
     );
 
     /**
-     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client|\Behat\Mink\Driver\Goutte\Client
+     * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client
      */
     public $client = null;
     public $isFunctional = false;
@@ -389,10 +390,10 @@ class REST extends \Codeception\Module
         $this->debugSection("Response", $this->response);
 
         if (count($this->client->getInternalRequest()->getCookies())) {
-            $this->debugSection('Cookies', json_encode($this->client->getInternalRequest()->getCookies()));
+            $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
         }
-        $this->debugSection("Headers", json_encode($this->client->getInternalResponse()->getHeaders()));
-        $this->debugSection("Status", json_encode($this->client->getInternalResponse()->getStatus()));
+        $this->debugSection("Headers", $this->client->getInternalResponse()->getHeaders());
+        $this->debugSection("Status", $this->client->getInternalResponse()->getStatus());
     }
 
     protected function encodeApplicationJson($method, $parameters)
