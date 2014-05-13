@@ -1008,7 +1008,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     /**
      * Explicit wait.
      *
-     * @param $timeout secs
+     * @param int $timeout secs
+     * @throws \Codeception\Exception\TestRuntime
      */
     public function wait($timeout)
     {
@@ -1118,8 +1119,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ?>
      * ```
      *
-     * @param $script
-     * @param $timeout int seconds
+     * @param string $script
+     * @param int $timeout seconds
      */
     public function waitForJS($script, $timeout = 5)
     {
