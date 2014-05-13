@@ -122,17 +122,6 @@ class PhpBrowserTest extends TestsForMink
         $this->module->dontSeeCookie($cookie_name_2);
     }
 
-    public function testMultipleCookies() {
-        $this->module->amOnPage('/');
-        $this->module->sendAjaxPostRequest('/cookies');
-        $this->module->seeCookie('foo', 'bar1');
-        $this->module->seeCookie('baz', 'bar2');
-        $this->module->setCookie('foo', 'bar1');
-        $this->module->setCookie('baz', 'bar2');
-        $this->module->amOnPage('/cookies');
-        $this->module->seeInCurrentUrl('info');
-    }      
-    
     public function testSubmitFormGet()
     {
         $I = $this->module;
