@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 
-class Universal extends Guzzle
+class Universal extends Client
 {
     protected $mockedResponse;
 
