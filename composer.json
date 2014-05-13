@@ -29,7 +29,6 @@
     },
     "require-dev": {
         "monolog/monolog": "*",
-        "codeception/specify": "*",
         "facebook/php-sdk": "3.*",
         "videlalvaro/php-amqplib": "*"
     },

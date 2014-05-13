@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "438a1010d55f3bf2e67d279d4b040e4e",
+    "hash": "19eb8febcf9c2b22cf6e6b44898ddaec",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -1182,44 +1182,6 @@
     ],
     "packages-dev": [
         {
-            "name": "codeception/specify",
-            "version": "0.3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Codeception/Specify.git",
-                "reference": "0cabe95241bec511917e9804b211a3a91645d026"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/Specify/zipball/0cabe95241bec511917e9804b211a3a91645d026",
-                "reference": "0cabe95241bec511917e9804b211a3a91645d026",
-                "shasum": ""
-            },
-            "require": {
-                "myclabs/deep-copy": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Codeception\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "Michael Bodnarchuk",
-                    "email": "davert.php@mailican.com",
-                    "homepage": "http://codeception.com"
-                }
-            ],
-            "description": "BDD code blocks for PHPUnit and Codeception",
-            "time": "2014-03-22 00:46:25"
-        },
-        {
             "name": "facebook/php-sdk",
             "version": "v3.2.3",
             "source": {
@@ -1332,48 +1294,6 @@
                 "psr-3"
             ],
             "time": "2014-04-24 13:29:03"
-        },
-        {
-            "name": "myclabs/deep-copy",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "804c17d20d938a1d3c425307189e65f49b53231e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/804c17d20d938a1d3c425307189e65f49b53231e",
-                "reference": "804c17d20d938a1d3c425307189e65f49b53231e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "doctrine/collections": "1.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "DeepCopy": "src/",
-                    "DeepCopyTest": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Create deep copies (clones) of your objects",
-            "homepage": "https://github.com/myclabs/DeepCopy",
-            "keywords": [
-                "clone",
-                "copy",
-                "duplicate",
-                "object",
-                "object graph"
-            ],
-            "time": "2014-03-21 12:53:08"
         },
         {
             "name": "psr/log",
