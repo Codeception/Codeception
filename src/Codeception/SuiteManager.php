@@ -5,11 +5,7 @@ namespace Codeception;
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\GroupManager;
-use Codeception\Lib\Parser;
-use Codeception\TestLoader;
-use Codeception\Util\Annotation;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Finder\Finder;
 
 class SuiteManager
 {

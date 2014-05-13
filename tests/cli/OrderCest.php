@@ -26,7 +26,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BI({{B[ST][STF][ST])}}");
+        $I->seeFileContentsEqual("BI({{{B[ST][STF][ST])}}}");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -58,5 +58,13 @@ class OrderCest
             afterClass,
             @afterClass');
         $I->seeFileContentsEqual("BI({{B[<C]>)}}");
+    }
+
+    public function checkAfterBeforeClassInTests(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order BeforeAfterClassTest.php');
+        $I->seeFileFound('order.txt', 'tests/_log');
+        $I->seeInThisFile('BI({B[1][2])}');
     }
 }

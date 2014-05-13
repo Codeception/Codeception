@@ -96,6 +96,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
 
         $suite->injectFilter($filterFactory);
+
         $suite->run($result);
         unset($suite);
 
@@ -145,4 +146,5 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
         return $this->logDir . $path;
     }
+
 }
