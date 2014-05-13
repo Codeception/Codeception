@@ -46,6 +46,10 @@ class ZF1 extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setMethod($request->getMethod());
         $zendRequest->setCookies($request->getCookies());
         $zendRequest->setParams($request->getParameters());
+        // Sf2's BrowserKit does not distinguish between GET, POST, PUT etc.,
+        // so we set all parameters in ZF's request here to not break apps
+        // relying on $request->getPost()
+        $zendRequest->setPost($request->getParameters());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         $_FILES = $request->getFiles();

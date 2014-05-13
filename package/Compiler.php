@@ -88,18 +88,6 @@ class Compiler
         $this->setStub($phar);
         $phar->stopBuffering();
 
-        if(in_array('GZ', \Phar::getSupportedCompression())) {
-            //do not use compressFiles as it has issue with temporary file when adding large amount of files
-//            $phar->compressFiles(\Phar::GZ);
-            $phar = $phar->compressFiles(\Phar::GZ);
-            echo "Compressed\r\n";
-
-        } else {
-            $phar = $phar->compress(\Phar::NONE);
-        }
-
-
-
         unset($phar);
     }
 
@@ -121,11 +109,13 @@ class Compiler
         }
 
         $phar->addFromString($path, $content);
+        $phar[$path]->compress(\Phar::BZ2);
     }
 
     public function setMainExecutable($phar)
     {
         $phar->addFromString('codecept', file_get_contents($this->compileDir.'/package/bin'));
+        $phar['codecept']->compress(\Phar::BZ2);
     }
 
     public function setStub($phar)
