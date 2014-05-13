@@ -22,7 +22,10 @@
         "symfony/finder": "~2.3",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
-        "symfony/yaml": "~2.3"
+        "symfony/yaml": "~2.3",
+        "symfony/browser-kit": "~2.3",
+        "symfony/css-selector": "~2.3",
+        "symfony/dom-crawler": "~2.3"
     },
     "require-dev": {
         "monolog/monolog": "*",
@@ -32,7 +35,9 @@
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
-        "codeception/verify": "BDD-style assertions"
+        "codeception/specify": "BDD-style code blocks",
+        "codeception/verify": "BDD-style assertions",
+        "monolog/monolog": "Log test steps"
     },
 
     "autoload":{
