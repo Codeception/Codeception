@@ -167,8 +167,8 @@ class Codecept
 
     public function runSuite($settings, $suite, $test = null) {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
-        $suiteManager->loadTests($test);
         $suiteManager->initialize();
+        $suiteManager->loadTests($test);
         $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
