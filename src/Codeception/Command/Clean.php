@@ -35,13 +35,7 @@ class Clean extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getGlobalConfig($input->getOption('config'));
-
         $output->writeln("<info>Cleaning up ".Configuration::logDir()."...</info>");
-        if (!file_exists(Configuration::logDir())) {
-            mkdir(Configuration::logDir(), 0777, true);
-        } else {
-            chmod(Configuration::logDir(), 0777);
-        }
         FileSystem::doEmptyDir(Configuration::logDir());
         $output->writeln("Done");
     }

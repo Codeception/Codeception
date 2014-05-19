@@ -226,6 +226,8 @@ class Configuration
 
         $environments = array();
 
+
+
         foreach ($settings['env'] as $env => $envConfig) {
             $environments[$env] = $envConfig ? self::mergeConfigs($settings, $envConfig) : $settings;
             $environments[$env]['current_environment'] = $env;
@@ -369,11 +371,10 @@ class Configuration
      */
     public static function logDir()
     {
-
-        $dir = realpath(self::$dir . DIRECTORY_SEPARATOR . self::$logDir) . DIRECTORY_SEPARATOR;
         if (!self::$logDir) {
             throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
         }
+        $dir = self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR;
 
         if (!is_writable($dir)) {
             @mkdir($dir);
@@ -384,7 +385,7 @@ class Configuration
             throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
         }
 
-        return $dir;
+        return realpath($dir);
     }
 
     /**

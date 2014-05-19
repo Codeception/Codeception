@@ -99,7 +99,7 @@ class Parser {
 
     public static function getClassesFromFile($file)
     {
-        require_once $file;
+        include_once $file;
         $sourceCode = file_get_contents($file);
         $classes = array();
         $tokens = token_get_all($sourceCode);
