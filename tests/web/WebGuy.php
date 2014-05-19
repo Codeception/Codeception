@@ -1681,7 +1681,7 @@ class WebGuy extends \Codeception\Actor
      *
      * Explicit wait.
      *
-     * @param $timeout secs
+     * @param int $timeout secs
      * @throws \Codeception\Exception\TestRuntime
      * @see \Codeception\Module\WebDriver::wait()
      */
@@ -1797,8 +1797,8 @@ class WebGuy extends \Codeception\Actor
      * ?>
      * ```
      *
-     * @param $script
-     * @param $timeout int seconds
+     * @param string $script
+     * @param int $timeout seconds
      * @see \Codeception\Module\WebDriver::waitForJS()
      */
     public function waitForJS($script, $timeout = null) {
