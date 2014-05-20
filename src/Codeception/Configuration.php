@@ -383,7 +383,7 @@ class Configuration
             throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
         }
 
-        return realpath($dir);
+        return $dir;
     }
 
     /**
