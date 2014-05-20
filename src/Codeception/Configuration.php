@@ -196,7 +196,7 @@ class Configuration
 
         $globalConf = $config['settings'];
 
-        foreach (array('modules','coverage', 'namespace', 'groups') as $key) {
+        foreach (array('modules','coverage', 'namespace', 'groups', 'env') as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
@@ -225,8 +225,6 @@ class Configuration
         }
 
         $environments = array();
-
-
 
         foreach ($settings['env'] as $env => $envConfig) {
             $environments[$env] = $envConfig ? self::mergeConfigs($settings, $envConfig) : $settings;
