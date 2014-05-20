@@ -37,6 +37,11 @@ class Guzzle extends Client
         $this->requestOptions['headers'][$header] = $value;
     }
 
+    public function setAuth($username, $password)
+    {
+        $this->requestOptions['auth'] = [$username, $password];
+    }
+
     /**
      * Taken from Mink\BrowserKitDriver
      *
