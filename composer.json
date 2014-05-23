@@ -19,13 +19,13 @@
         "phpunit/phpunit": "~4.0",
         "facebook/webdriver": "~0.4",
         "guzzlehttp/guzzle": "4.*",
-        "symfony/finder": "~2.3",
-        "symfony/console": "~2.3",
-        "symfony/event-dispatcher": "~2.3",
-        "symfony/yaml": "~2.3",
-        "symfony/browser-kit": "~2.3",
-        "symfony/css-selector": "~2.3",
-        "symfony/dom-crawler": "~2.3"
+        "symfony/finder": "~2.4",
+        "symfony/console": "~2.4",
+        "symfony/event-dispatcher": "~2.4",
+        "symfony/yaml": "~2.4",
+        "symfony/browser-kit": "~2.4",
+        "symfony/css-selector": "~2.4",
+        "symfony/dom-crawler": "2.4.4" 
     },
     "require-dev": {
         "monolog/monolog": "*",
