@@ -176,8 +176,8 @@ class Yii2 extends Framework implements ActiveRecord
             throw new \RuntimeException("Model $model does not exist");
         }
         $record = new $model;
-        if (!$record instanceof \yii\db\ActiveRecord) {
-            throw new \RuntimeException("Model $model is not instance of \\yii\\db\\ActiveRecord");
+        if (!$record instanceof \yii\db\ActiveRecordInterface) {
+            throw new \RuntimeException("Model $model is not implement interface \\yii\\db\\ActiveRecordInterface");
         }
         return $record;
     }
