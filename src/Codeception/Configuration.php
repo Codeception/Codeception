@@ -287,10 +287,10 @@ class Configuration
         // try find module under users suite namespace setting
         $className = $namespace.'\\Codeception\\Module\\' . $class;
 
-        if (!class_exists($className)) {
+        if (!@class_exists($className)) {
             // fallback to default namespace
             $className = '\\Codeception\\Module\\' . $class;
-            if (!class_exists($className)) {
+            if (!@class_exists($className)) {
                 throw new ConfigurationException($class.' could not be found and loaded');
             }
         }

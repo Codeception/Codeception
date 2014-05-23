@@ -60,6 +60,7 @@ class SuiteManager
         $this->initializeModules();
         $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
         $this->initializeActors();
+        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     protected function initializeModules()
