@@ -40,7 +40,7 @@ class Universal extends Client
         $_REQUEST = $request->getParameters();
 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI']    = strtoupper($uri);
+        $_SERVER['REQUEST_URI']    = $uri;
 
         ob_start();
         include $this->index;
