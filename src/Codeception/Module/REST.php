@@ -71,6 +71,7 @@ class REST extends \Codeception\Module
                     if ($module instanceof \Codeception\Lib\Framework) {
                         $this->client = $module->client;
                         $this->isFunctional = true;
+                        $this->client->setServerParameters(array());
                         break;
                     }
                 }
@@ -89,7 +90,6 @@ class REST extends \Codeception\Module
         $this->params = array();
         $this->response = "";
 
-        $this->client->setServerParameters(array());
 
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
@@ -386,7 +386,7 @@ class REST extends \Codeception\Module
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
-        $this->response = $this->client->getInternalResponse()->getContent();
+        $this->response = (string)$this->client->getInternalResponse()->getContent();
         $this->debugSection("Response", $this->response);
 
         if (count($this->client->getInternalRequest()->getCookies())) {

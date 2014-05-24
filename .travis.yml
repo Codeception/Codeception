@@ -23,6 +23,7 @@ before_script:
   - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.35.0.jar
   - java -jar selenium-server-standalone-2.35.0.jar -port 4444 &
   - php -S localhost:8000 -t tests/data/app &
+  - php -S localhost:8010 -t tests/data &
   - curl -s http://getcomposer.org/installer | php
   - composer install -n --prefer-source
   - "mysql -e 'create database codeception_test;'"

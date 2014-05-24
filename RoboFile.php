@@ -47,7 +47,19 @@ class RoboFile extends \Robo\Tasks {
             ->args($args)
             ->test('tests/unit/Codeception/Module/PhpBrowserTest.php')
             ->run();
+    }
 
+    public function testRestBrowser($args = '')
+    {
+        $this->taskServer(8010)
+            ->background()
+            ->dir('tests/data')
+            ->run();
+
+        $this->taskCodecept('./codecept')
+            ->test('tests/unit/Codeception/Module/PhpBrowserRestTest.php')
+            ->args($args)
+            ->run();
     }
 
     public function testCoverage()
