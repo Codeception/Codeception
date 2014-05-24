@@ -24,7 +24,8 @@
         "symfony/finder": "~2.3",
         "symfony/console": "~2.3",
         "symfony/event-dispatcher": "~2.3",
-        "symfony/yaml": "~2.3"
+        "symfony/yaml": "~2.3",
+        "symfony/dom-crawler": "2.4.4"
     },
     "require-dev": {
         "behat/mink-selenium-driver": "1.1.*",
