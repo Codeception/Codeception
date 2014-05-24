@@ -77,7 +77,7 @@ class Guzzle extends Client
         }
 
 
-        return new BrowserKitResponse($response->getBody(true), $status, $headers);
+        return new BrowserKitResponse($response->getBody(), $status, $headers);
     }
 
     public function getAbsoluteUri($uri)

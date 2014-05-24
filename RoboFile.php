@@ -44,7 +44,7 @@ class RoboFile extends \Robo\Tasks {
     {
         $this->server();
         $this->taskCodecept('./codecept')
-//            ->args($args)
+            ->args($args)
             ->test('tests/unit/Codeception/Module/PhpBrowserTest.php')
             ->run();
 

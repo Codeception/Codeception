@@ -559,6 +559,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testAmpersand()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->see('Kill & Destroy');
+    }
+    
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
