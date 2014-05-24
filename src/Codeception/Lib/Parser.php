@@ -120,12 +120,17 @@ class Parser {
             }
 
             if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
-                    if ($tokens[$j] === '{' && isset($tokens[$i + 2][1])) {
-                        $classes[] = $namespace . $tokens[$i + 2][1];
-                        break;
-                    }
+                if (!isset($tokens[$i-2])) {
+                    $classes[] = $namespace . $tokens[$i + 2][1];
+                    continue;
                 }
+                if ($tokens[$i-1][0] === T_WHITESPACE and $tokens[$i-2][0] === T_DOUBLE_COLON) {
+                    continue;
+                }
+                if ($tokens[$i-1][0] === T_DOUBLE_COLON) {
+                    continue;
+                }
+                $classes[] = $namespace . $tokens[$i + 2][1];
             }
         }
 
