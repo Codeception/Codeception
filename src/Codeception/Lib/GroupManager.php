@@ -27,11 +27,13 @@ class GroupManager
     /**
      * proceeds group names with asterisk:
      *
-     * "tests/_log/group_*" => [
+     * ```
+     * "tests/_log/g_*" => [
      *      "tests/_log/group_1",
      *      "tests/_log/group_2",
      *      "tests/_log/group_3",
      * ]
+     * ```
      */
     protected function loadGroupsByPattern()
     {
@@ -42,11 +44,14 @@ class GroupManager
             $files = Finder::create()->files()
                 ->name(basename($pattern))
                 ->path(dirname($pattern))
+                ->sortByName()
                 ->in(Configuration::projectDir());
 
+            $i = 1;
             foreach ($files as $file) {
                 /** @var SplFileInfo $file  **/
-                $this->configuredGroups[$file->getBasename()] = $file->getRelativePathname();
+                $this->configuredGroups[str_replace('*', $i, $group)] = $file->getRelativePathname();
+                $i++;
             }
             unset($this->configuredGroups[$group]);
         }

@@ -41,8 +41,17 @@ class GroupManagerTest extends \Codeception\TestCase\Test
         $test2 = $this->makeTestCase('tests/PostTest.php');
         $this->assertContains('group_1', $this->manager->groupsForTest($test1));
         $this->assertContains('group_2', $this->manager->groupsForTest($test2));
-
     }
+
+    public function testGroupsByDifferentPattern()
+    {
+        $this->manager = new GroupManager(['g_*' => 'tests/data/group_*']);
+        $test1 = $this->makeTestCase('tests/UserTest.php');
+        $test2 = $this->makeTestCase('tests/PostTest.php');
+        $this->assertContains('g_1', $this->manager->groupsForTest($test1));
+        $this->assertContains('g_2', $this->manager->groupsForTest($test2));
+    }
+
 
     protected function makeTestCase($file, $name = '')
     {
