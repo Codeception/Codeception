@@ -6,4 +6,7 @@ class php55Test extends PHPUnit_Framework_TestCase
         $this->assertEquals('PHPUnit_Framework_TestCase', PHPUnit_Framework_TestCase::class);
     }
 
+    function justTest() {}
+
+
 }
