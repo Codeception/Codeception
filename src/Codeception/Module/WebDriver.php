@@ -1625,7 +1625,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageContains($needle, $message = '')
     {
         $this->assertThat(
-            $this->webDriver->getPageSource(),
+            htmlspecialchars_decode($this->webDriver->getPageSource()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
@@ -1634,7 +1634,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageNotContains($needle, $message = '')
     {
         $this->assertThatItsNot(
-            $this->webDriver->getPageSource(),
+            htmlspecialchars_decode($this->webDriver->getPageSource()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );

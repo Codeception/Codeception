@@ -563,6 +563,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/info');
         $this->module->see('Kill & Destroy');
+        $this->module->see('Kill & Destroy','div');
     }
     
     protected function shouldFail()

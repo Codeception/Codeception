@@ -16,7 +16,7 @@ class WebDriver extends Page {
         {
             /** @var $node \WebDriverElement  **/
             if (!$node->isDisplayed()) continue;
-            if (parent::matches($node->getText())) return true;
+            if (parent::matches(htmlspecialchars_decode($node->getText()))) return true;
         }
         return false;
     }
