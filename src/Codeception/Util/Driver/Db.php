@@ -38,6 +38,8 @@ class Db
                 return new MsSql($dsn, $user, $password);
             case 'oracle':
                 return new Oracle($dsn, $user, $password);
+            case 'oci':
+                return new Oci($dsn, $user, $password);
             default:
                 return new Db($dsn, $user, $password);
         }
