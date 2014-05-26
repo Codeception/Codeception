@@ -9,7 +9,8 @@ class Oci extends Oracle
         $params = array();
         foreach ($criteria as $k => $v) {
             if ($v === null) {
-                $params[] = "$k IS ? ";
+                $params[] = "$k IS NULL ";
+                unset($criteria[$k]);
             } else {
                 $params[] = "$k = ? ";
             }
