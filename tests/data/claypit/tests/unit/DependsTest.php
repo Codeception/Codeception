@@ -3,16 +3,19 @@ class DependsTest extends \Codeception\TestCase\Test {
 
     public function testOne()
     {
-        $this->assertTrue(FALSE);
+        $this->assertTrue(true);
+        return 'hey';
     }
 
 
     /**
      * @depends testOne
      */
-    public function testTwo()
+    public function testTwo($hey)
     {
+        $this->assertEquals('hey', $hey);
     }
+
 
 
 

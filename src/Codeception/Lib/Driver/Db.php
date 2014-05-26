@@ -42,6 +42,8 @@ class Db
                 return new Oracle($dsn, $user, $password);
             case 'sqlsrv':
                 return new SqlSrv($dsn, $user, $password);
+            case 'oci':
+                return new Oci($dsn, $user, $password);
             default:
                 return new Db($dsn, $user, $password);
         }
