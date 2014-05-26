@@ -45,7 +45,7 @@ Be sure you don't use the production server to connect.
 
 
 ### grabValueFromMemcached
-#### *public* grabValueFromMemcached($key)Grabs value from memcached by key
+#### *public* grabValueFromMemcached($key) Grabs value from memcached by key
 
 Example:
 
@@ -58,17 +58,18 @@ $users_count = $I->grabValueFromMemcached('users_count');
  * `param`  $key
  * `return`  array|string
 ### seeInMemcached
-#### *public* seeInMemcached($key, $value = null)Checks item in Memcached exists and the same as expected.
+#### *public* seeInMemcached($key, $value = null) Checks item in Memcached exists and the same as expected.
 
  * `param`  $key
  * `param`  $value
 ### dontSeeInMemcached
-#### *public* dontSeeInMemcached($key, $value = null)Checks item in Memcached doesn't exist or is the same as expected.
+#### *public* dontSeeInMemcached($key, $value = null) Checks item in Memcached doesn't exist or is the same as expected.
 
  * `param`  $key
  * `param`  bool $value
 ### clearMemcache
-#### *public* clearMemcache()Flushes all Memcached data.
+#### *public* clearMemcache() Flushes all Memcached data.
+
 
 
 

@@ -31,19 +31,20 @@ Wrapper for basic shell commands and shell output
 
 
 ### runShellCommand
-#### *public* runShellCommand($command)Executes a shell command
+#### *public* runShellCommand($command) Executes a shell command
 
  * `param`  $command
 ### seeInShellOutput
-#### *public* seeInShellOutput($text)Checks that output from last executed command contains text
+#### *public* seeInShellOutput($text) Checks that output from last executed command contains text
 
  * `param`  $text
 ### dontSeeInShellOutput
-#### *public* dontSeeInShellOutput($text)Checks that output from latest command doesn't contain text
+#### *public* dontSeeInShellOutput($text) Checks that output from latest command doesn't contain text
 
  * `param`  $text
 ### seeShellOutputMatches
-#### *public* seeShellOutputMatches($regex)
+#### *public* seeShellOutputMatches($regex) 
+
 
 
 

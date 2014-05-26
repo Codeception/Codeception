@@ -40,7 +40,7 @@ This module cleans all cached data after each test.
 
 
 ### seeInTable
-#### *public* seeInTable($model, $values = null)Checks table contains row with specified values
+#### *public* seeInTable($model, $values = null) Checks table contains row with specified values
 Provide Doctrine model name can be passed to addWhere DQL
 
 Example:
@@ -54,7 +54,7 @@ $I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert * `mail.com'
  * `param`  $model
  * `param`  array $values
 ### dontSeeInTable
-#### *public* dontSeeInTable($model, $values = null)Checks table doesn't contain row with specified values
+#### *public* dontSeeInTable($model, $values = null) Checks table doesn't contain row with specified values
 Provide Doctrine model name and criteria that can be passed to addWhere DQL
 
 Example:
@@ -68,7 +68,7 @@ $I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * `mail.
  * `param`  $model
  * `param`  array $values
 ### grabFromTable
-#### *public* grabFromTable($model, $column, $values = null)Fetches single value from a database.
+#### *public* grabFromTable($model, $column, $values = null) Fetches single value from a database.
 Provide Doctrine model name, desired field, and criteria that can be passed to addWhere DQL
 
 Example:
@@ -83,6 +83,7 @@ $mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
  * `param`  $column
  * `param`  array $values
  * `return`  mixed
+
 
 
 

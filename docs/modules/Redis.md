@@ -50,7 +50,8 @@ Report an issue if this module doesn't work for you.
 
 
 ### cleanupRedis
-#### *public* cleanupRedis()Cleans up Redis database.
+#### *public* cleanupRedis() Cleans up Redis database.
+
 
 
 

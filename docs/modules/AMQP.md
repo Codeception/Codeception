@@ -70,7 +70,7 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 
 
 ### pushToExchange
-#### *public* pushToExchange($exchange, $message)Sends message to exchange
+#### *public* pushToExchange($exchange, $message) Sends message to exchange
 
 ``` php
 <?php
@@ -82,7 +82,7 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
  * `param`  $exchange
  * `param`  $message string|AMQPMessage
 ### pushToQueue
-#### *public* pushToQueue($queue, $message)Sends message to queue
+#### *public* pushToQueue($queue, $message) Sends message to queue
 
 ``` php
 <?php
@@ -94,7 +94,7 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
  * `param`  $queue
  * `param`  $message string|AMQPMessage
 ### seeMessageInQueueContainsText
-#### *public* seeMessageInQueueContainsText($queue, $text)Checks if message containing text received.
+#### *public* seeMessageInQueueContainsText($queue, $text) Checks if message containing text received.
 
 **This method drops message from queue**
 **This method will wait for message. If none is sent the script will stuck**.
@@ -109,12 +109,13 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
  * `param`  $queue
  * `param`  $text
 ### grabMessageFromQueue
-#### *public* grabMessageFromQueue($queue)Takes last message from queue.
+#### *public* grabMessageFromQueue($queue) Takes last message from queue.
 
 $message = $I->grabMessageFromQueue('queue.emails');
 
  * `param`  $queue
  * `return`  AMQPMessage
+
 
 
 

@@ -63,22 +63,22 @@ Export:
 [Source code](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php)
 
 
-#### *public* __construct#### *public* __construct()
+#### *public* __construct#### *public* __construct() 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L77)
 
-#### *public* __get#### *public* __get($tag)Appends child node
+#### *public* __get#### *public* __get($tag) Appends child node
 
  * `param`  $tag
 
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L90)
 
-#### *public* val#### *public* val($val)* `param`  $val
+#### *public* val#### *public* val($val) * `param`  $val
 
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
 
-#### *public* attr#### *public* attr($attr, $val)Sets attribute for current node
+#### *public* attr#### *public* attr($attr, $val) Sets attribute for current node
 
  * `param`  $attr
  * `param`  $val
@@ -86,12 +86,12 @@ Export:
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L117)
 
-#### *public* parent#### *public* parent()Traverses to parent
+#### *public* parent#### *public* parent() Traverses to parent
 
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L128)
 
-#### *public* parents#### *public* parents($tag)Traverses to parent with $name
+#### *public* parents#### *public* parents($tag) Traverses to parent with $name
 
  * `param`  $tag
 
@@ -99,8 +99,8 @@ Export:
  * `throws`  \Exception
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L142)
 
-#### *public* __toString#### *public* __toString()
+#### *public* __toString#### *public* __toString() 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
 
-#### *public* getDom#### *public* getDom()* `return`  \DOMDocument
+#### *public* getDom#### *public* getDom() * `return`  \DOMDocument
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)

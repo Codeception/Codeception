@@ -61,18 +61,18 @@ Codeception creates internal form fields, so you get exception trying to save th
 
 
 ### seeInSession
-#### *public* seeInSession($key, $value = null)Assert that the session has a given list of values.
+#### *public* seeInSession($key, $value = null) Assert that the session has a given list of values.
 
  * `param`   string|array $key
  * `param`   mixed $value
  * `return`  void
 ### seeSessionHasValues
-#### *public* seeSessionHasValues(array $bindings)Assert that the session has a given list of values.
+#### *public* seeSessionHasValues(array $bindings) Assert that the session has a given list of values.
 
  * `param`   array $bindings
  * `return`  void
 ### seeSessionErrorMessage
-#### *public* seeSessionErrorMessage(array $bindings)Assert that Session has error messages
+#### *public* seeSessionErrorMessage(array $bindings) Assert that Session has error messages
 The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
 
 Useful for validation messages and generally messages array
@@ -88,17 +88,17 @@ $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
 ```
  * `param`  array $bindings
 ### seeSessionHasErrors
-#### *public* seeSessionHasErrors()Assert that the session has errors bound.
+#### *public* seeSessionHasErrors() Assert that the session has errors bound.
 
  * `return`  bool
 ### amLoggedAs
-#### *public* amLoggedAs($user, $driver = null)Set the currently logged in user for the application.
+#### *public* amLoggedAs($user, $driver = null) Set the currently logged in user for the application.
 
  * `param`   \Illuminate\Auth\UserInterface $user
  * `param`   string $driver
  * `return`  void
 ### grabService
-#### *public* grabService($class)Return an instance of a class from the IoC Container.
+#### *public* grabService($class) Return an instance of a class from the IoC Container.
 (http://laravel.com/docs/ioc)
 
 Example
@@ -120,7 +120,7 @@ $service = $I->grabService('foo');
  * `param`   string $class
  * `return`  mixed
 ### haveRecord
-#### *public* haveRecord($model, $attributes = null)Inserts record into the database.
+#### *public* haveRecord($model, $attributes = null) Inserts record into the database.
 
 ``` php
 <?php
@@ -132,7 +132,7 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
  * `param`  array $attributes
  * `return`  mixed
 ### seeRecord
-#### *public* seeRecord($model, $attributes = null)Checks that record exists in database.
+#### *public* seeRecord($model, $attributes = null) Checks that record exists in database.
 
 ``` php
 $I->seeRecord('users', array('name' => 'davert'));
@@ -141,7 +141,7 @@ $I->seeRecord('users', array('name' => 'davert'));
  * `param`  $model
  * `param`  array $attributes
 ### dontSeeRecord
-#### *public* dontSeeRecord($model, $attributes = null)Checks that record does not exist in database.
+#### *public* dontSeeRecord($model, $attributes = null) Checks that record does not exist in database.
 
 ``` php
 $I->dontSeeRecord('users', array('name' => 'davert'));
@@ -150,7 +150,7 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
  * `param`  $model
  * `param`  array $attributes
 ### grabRecord
-#### *public* grabRecord($model, $attributes = null)Retrieves record from database
+#### *public* grabRecord($model, $attributes = null) Retrieves record from database
 
 ``` php
 $category = $I->grabRecord('users', array('name' => 'davert'));
@@ -162,12 +162,12 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 
 
 ### amHttpAuthenticated
-#### *public* amHttpAuthenticated($username, $password)Authenticates user for HTTP_AUTH
+#### *public* amHttpAuthenticated($username, $password) Authenticates user for HTTP_AUTH
 
  * `param`  $username
  * `param`  $password
 ### amOnPage
-#### *public* amOnPage($page)Opens the page.
+#### *public* amOnPage($page) Opens the page.
 Requires relative uri as parameter
 
 Example:
@@ -183,7 +183,7 @@ $I->amOnPage('/register');
 
  * `param`  $page
 ### click
-#### *public* click($link, $context = null)Perform a click on link or button.
+#### *public* click($link, $context = null) Perform a click on link or button.
 Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
 
@@ -215,7 +215,7 @@ $I->click('Logout', '#nav');
 
 
 ### see
-#### *public* see($text, $selector = null)Check if current page contains the text specified.
+#### *public* see($text, $selector = null) Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -231,7 +231,7 @@ $I->see('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 ### dontSee
-#### *public* dontSee($text, $selector = null)Check if current page doesn't contain the text specified.
+#### *public* dontSee($text, $selector = null) Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -247,7 +247,7 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 ### seeLink
-#### *public* seeLink($text, $url = null)Checks if there is a link with text specified.
+#### *public* seeLink($text, $url = null) Checks if there is a link with text specified.
 Specify url to match link with exact this url.
 
 Examples:
@@ -262,7 +262,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param`       $text
  * `param`  null $url
 ### dontSeeLink
-#### *public* dontSeeLink($text, $url = null)Checks if page doesn't contain the link with text specified.
+#### *public* dontSeeLink($text, $url = null) Checks if page doesn't contain the link with text specified.
 Specify url to narrow the results.
 
 Examples:
@@ -277,7 +277,7 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
  * `param`  null $url
 
 ### seeInCurrentUrl
-#### *public* seeInCurrentUrl($uri)Checks that current uri contains a value
+#### *public* seeInCurrentUrl($uri) Checks that current uri contains a value
 
 ``` php
 <?php
@@ -290,7 +290,7 @@ $I->seeInCurrentUrl('/users/');
 
  * `param`  $uri
 ### dontSeeInCurrentUrl
-#### *public* dontSeeInCurrentUrl($uri)Checks that current uri does not contain a value
+#### *public* dontSeeInCurrentUrl($uri) Checks that current uri does not contain a value
 
 ``` php
 <?php
@@ -300,7 +300,7 @@ $I->dontSeeInCurrentUrl('/users/');
 
  * `param`  $uri
 ### seeCurrentUrlEquals
-#### *public* seeCurrentUrlEquals($uri)Checks that current url is equal to value.
+#### *public* seeCurrentUrlEquals($uri) Checks that current url is equal to value.
 Unlike `seeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -312,7 +312,7 @@ $I->seeCurrentUrlEquals('/');
 
  * `param`  $uri
 ### dontSeeCurrentUrlEquals
-#### *public* dontSeeCurrentUrlEquals($uri)Checks that current url is not equal to value.
+#### *public* dontSeeCurrentUrlEquals($uri) Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -324,7 +324,7 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param`  $uri
 ### seeCurrentUrlMatches
-#### *public* seeCurrentUrlMatches($uri)Checks that current url is matches a RegEx value
+#### *public* seeCurrentUrlMatches($uri) Checks that current url is matches a RegEx value
 
 ``` php
 <?php
@@ -335,7 +335,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 ### dontSeeCurrentUrlMatches
-#### *public* dontSeeCurrentUrlMatches($uri)Checks that current url does not match a RegEx value
+#### *public* dontSeeCurrentUrlMatches($uri) Checks that current url does not match a RegEx value
 
 ``` php
 <?php
@@ -346,7 +346,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 ### grabFromCurrentUrl
-#### *public* grabFromCurrentUrl($uri = null)Takes a parameters from current URI by RegEx.
+#### *public* grabFromCurrentUrl($uri = null) Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
@@ -361,7 +361,7 @@ $uri = $I->grabFromCurrentUrl();
  * `internal`  param $url
  * `return`  mixed
 ### seeCheckboxIsChecked
-#### *public* seeCheckboxIsChecked($checkbox)Assert if the specified checkbox is checked.
+#### *public* seeCheckboxIsChecked($checkbox) Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
 Example:
@@ -376,7 +376,7 @@ $I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]')
 
  * `param`  $checkbox
 ### dontSeeCheckboxIsChecked
-#### *public* dontSeeCheckboxIsChecked($checkbox)Assert if the specified checkbox is unchecked.
+#### *public* dontSeeCheckboxIsChecked($checkbox) Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
 Example:
@@ -390,7 +390,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param`  $checkbox
 ### seeInField
-#### *public* seeInField($field, $value)Checks that an input field or textarea contains value.
+#### *public* seeInField($field, $value) Checks that an input field or textarea contains value.
 Field is matched either by label or CSS or Xpath
 
 Example:
@@ -408,7 +408,7 @@ $I->seeInField('//form/*[ * `name=search]','Search');`
  * `param`  $field
  * `param`  $value
 ### dontSeeInField
-#### *public* dontSeeInField($field, $value)Checks that an input field or textarea doesn't contain value.
+#### *public* dontSeeInField($field, $value) Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
 
@@ -426,7 +426,7 @@ $I->dontSeeInField('//form/*[ * `name=search]','Search');`
  * `param`  $value
 
 ### submitForm
-#### *public* submitForm($selector, $params)Submits a form located on page.
+#### *public* submitForm($selector, $params) Submits a form located on page.
 Specify the form by it's css or xpath selector.
 Fill the form fields values as array.
 
@@ -467,7 +467,7 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 ### fillField
-#### *public* fillField($field, $value)Fills a text field or textarea with value.
+#### *public* fillField($field, $value) Fills a text field or textarea with value.
 
 Example:
 
@@ -481,7 +481,7 @@ $I->fillField("//input[ * `type='text']",`  "Hello World!");
  * `param`  $value
 
 ### selectOption
-#### *public* selectOption($select, $option)Selects an option in select tag or in radio button group.
+#### *public* selectOption($select, $option) Selects an option in select tag or in radio button group.
 
 Example:
 
@@ -505,7 +505,7 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
  * `param`  $option
 
 ### checkOption
-#### *public* checkOption($option)Ticks a checkbox.
+#### *public* checkOption($option) Ticks a checkbox.
 For radio buttons use `selectOption` method.
 
 Example:
@@ -518,7 +518,7 @@ $I->checkOption('#agree');
 
  * `param`  $option
 ### uncheckOption
-#### *public* uncheckOption($option)Unticks a checkbox.
+#### *public* uncheckOption($option) Unticks a checkbox.
 
 Example:
 
@@ -530,7 +530,7 @@ $I->uncheckOption('#notify');
 
  * `param`  $option
 ### attachFile
-#### *public* attachFile($field, $filename)Attaches file from Codeception data directory to upload field.
+#### *public* attachFile($field, $filename) Attaches file from Codeception data directory to upload field.
 
 Example:
 
@@ -544,7 +544,7 @@ $I->attachFile('input[ * `type="file"]',`  'prices.xls');
  * `param`  $field
  * `param`  $filename
 ### sendAjaxGetRequest
-#### *public* sendAjaxGetRequest($uri, $params = null)If your page triggers an ajax request, you can perform it manually.
+#### *public* sendAjaxGetRequest($uri, $params = null) If your page triggers an ajax request, you can perform it manually.
 This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
@@ -552,7 +552,7 @@ See ->sendAjaxPostRequest for examples.
  * `param`  $uri
  * `param`  $params
 ### sendAjaxPostRequest
-#### *public* sendAjaxPostRequest($uri, $params = null)If your page triggers an ajax request, you can perform it manually.
+#### *public* sendAjaxPostRequest($uri, $params = null) If your page triggers an ajax request, you can perform it manually.
 This action sends a POST ajax request with specified params.
 Additional params can be passed as array.
 
@@ -571,7 +571,7 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
  * `param`  $uri
  * `param`  $params
 ### sendAjaxRequest
-#### *public* sendAjaxRequest($method, $uri, $params = null)If your page triggers an ajax request, you can perform it manually.
+#### *public* sendAjaxRequest($method, $uri, $params = null) If your page triggers an ajax request, you can perform it manually.
 This action sends an ajax request with specified method and params.
 
 Example:
@@ -593,7 +593,7 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
 
 
 ### grabTextFrom
-#### *public* grabTextFrom($cssOrXPathOrRegex)Finds and returns text contents of element.
+#### *public* grabTextFrom($cssOrXPathOrRegex) Finds and returns text contents of element.
 Element is searched by CSS selector, XPath or matcher by regex.
 
 Example:
@@ -610,7 +610,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
  * `return`  mixed
 ### grabAttributeFrom
-#### *public* grabAttributeFrom($cssOrXpath, $attribute)Grabs attribute value from an element.
+#### *public* grabAttributeFrom($cssOrXpath, $attribute) Grabs attribute value from an element.
 Fails if element is not found.
 
 ``` php
@@ -625,7 +625,7 @@ $I->grabAttributeFrom('#tooltip', 'title');
  * `internal`  param $element
  * `return`  mixed
 ### grabValueFrom
-#### *public* grabValueFrom($field)Finds and returns field and returns it's value.
+#### *public* grabValueFrom($field) Finds and returns field and returns it's value.
 Searches by field name, then by CSS, then by XPath
 
 Example:
@@ -642,38 +642,38 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name` 
 
  * `return`  mixed
 ### setCookie
-#### *public* setCookie($name, $val)Sets a cookie.
+#### *public* setCookie($name, $val) Sets a cookie.
 
  * `param`  $cookie
  * `param`  $value
 
  * `return`  mixed
 ### grabCookie
-#### *public* grabCookie($name)Grabs a cookie value.
+#### *public* grabCookie($name) Grabs a cookie value.
 
  * `param`  $cookie
 
  * `return`  mixed
 ### seeCookie
-#### *public* seeCookie($name)Checks that cookie is set.
+#### *public* seeCookie($name) Checks that cookie is set.
 
  * `param`  $cookie
 
  * `return`  mixed
 ### dontSeeCookie
-#### *public* dontSeeCookie($name)Checks that cookie doesn't exist
+#### *public* dontSeeCookie($name) Checks that cookie doesn't exist
 
  * `param`  $cookie
 
  * `return`  mixed
 ### resetCookie
-#### *public* resetCookie($name)Unsets cookie
+#### *public* resetCookie($name) Unsets cookie
 
  * `param`  $cookie
 
  * `return`  mixed
 ### seeElement
-#### *public* seeElement($selector, $attributes = null)Checks if element exists on a page, matching it by CSS or XPath.
+#### *public* seeElement($selector, $attributes = null) Checks if element exists on a page, matching it by CSS or XPath.
 You can also specify expected attributes of this element.
 
 ``` php
@@ -689,7 +689,7 @@ $I->seeElement('input', ['value' => '123456']);
  * `param`  array $attributes
  * `return`
 ### dontSeeElement
-#### *public* dontSeeElement($selector, $attributes = null)Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+#### *public* dontSeeElement($selector, $attributes = null) Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 You can also specify expected attributes of this element.
 
 Example:
@@ -705,7 +705,7 @@ $I->dontSeeElement('input', ['value' => '123456']);
 
  * `param`  $selector
 ### seeOptionIsSelected
-#### *public* seeOptionIsSelected($select, $optionText)Checks if option is selected in select field.
+#### *public* seeOptionIsSelected($select, $optionText) Checks if option is selected in select field.
 
 ``` php
 <?php
@@ -718,7 +718,7 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * `return`  mixed
 ### dontSeeOptionIsSelected
-#### *public* dontSeeOptionIsSelected($select, $optionText)Checks if option is not selected in select field.
+#### *public* dontSeeOptionIsSelected($select, $optionText) Checks if option is not selected in select field.
 
 ``` php
 <?php
@@ -732,15 +732,15 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `return`  mixed
 
 ### seePageNotFound
-#### *public* seePageNotFound()Asserts that current page has 404 response status code.
+#### *public* seePageNotFound() Asserts that current page has 404 response status code.
 ### seeResponseCodeIs
-#### *public* seeResponseCodeIs($code)Checks that response code is equal to value provided.
+#### *public* seeResponseCodeIs($code) Checks that response code is equal to value provided.
 
  * `param`  $code
 
  * `return`  mixed
 ### seeInTitle
-#### *public* seeInTitle($title)Checks that page title contains text.
+#### *public* seeInTitle($title) Checks that page title contains text.
 
 ``` php
 <?php
@@ -752,11 +752,12 @@ $I->seeInTitle('Blog - Post #1');
 
  * `return`  mixed
 ### dontSeeInTitle
-#### *public* dontSeeInTitle($title)Checks that page title does not contain text.
+#### *public* dontSeeInTitle($title) Checks that page title does not contain text.
 
  * `param`  $title
 
  * `return`  mixed
+
 
 
 

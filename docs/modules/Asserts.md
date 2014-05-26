@@ -63,12 +63,13 @@ Class Asserts
 
 
 
+
 ### fail
-#### *public* fail($message)Fails the test with message.
+#### *public* fail($message) Fails the test with message.
 
  * `param`  $message
 ### seeEquals
-#### *public* seeEquals($expected, $actual, $message = null)Checks that two variables are equal.
+#### *public* seeEquals($expected, $actual, $message = null) Checks that two variables are equal.
 
  * `param`         $expected
  * `param`         $actual
@@ -76,62 +77,62 @@ Class Asserts
 
  * `return`  mixed
 ### dontSeeEquals
-#### *public* dontSeeEquals($expected, $actual, $message = null)Checks that two variables are not equal
+#### *public* dontSeeEquals($expected, $actual, $message = null) Checks that two variables are not equal
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
 ### seeGreaterThen
-#### *public* seeGreaterThen($expected, $actual, $message = null)Checks that expected is greater then actual
+#### *public* seeGreaterThen($expected, $actual, $message = null) Checks that expected is greater then actual
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
 ### seeGreaterThenOrEqual
-#### *public* seeGreaterThenOrEqual($expected, $actual, $message = null)Checks that expected is greater or equal then actual
+#### *public* seeGreaterThenOrEqual($expected, $actual, $message = null) Checks that expected is greater or equal then actual
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
 ### seeContains
-#### *public* seeContains($needle, $haystack, $message = null)Checks that haystack contains needle
+#### *public* seeContains($needle, $haystack, $message = null) Checks that haystack contains needle
 
  * `param`         $needle
  * `param`         $haystack
  * `param`  string $message
 ### dontSeeContains
-#### *public* dontSeeContains($needle, $haystack, $message = null)Checks that haystack doesn't contain needle.
+#### *public* dontSeeContains($needle, $haystack, $message = null) Checks that haystack doesn't contain needle.
 
  * `param`         $needle
  * `param`         $haystack
  * `param`  string $message
 ### seeEmpty
-#### *public* seeEmpty($actual, $message = null)Checks that variable is empty.
+#### *public* seeEmpty($actual, $message = null) Checks that variable is empty.
 
  * `param`         $actual
  * `param`  string $message
 ### dontSeeEmpty
-#### *public* dontSeeEmpty($actual, $message = null)Checks that variable is not empty.
+#### *public* dontSeeEmpty($actual, $message = null) Checks that variable is not empty.
 
  * `param`         $actual
  * `param`  string $message
 ### seeNull
-#### *public* seeNull($actual, $message = null)Checks that variable is NULL
+#### *public* seeNull($actual, $message = null) Checks that variable is NULL
 
  * `param`         $actual
  * `param`  string $message
 ### dontSeeNull
-#### *public* dontSeeNull($actual, $message = null)Checks that variable is not NULL
+#### *public* dontSeeNull($actual, $message = null) Checks that variable is not NULL
 
  * `param`         $actual
  * `param`  string $message
 ### seeTrue
-#### *public* seeTrue($condition, $message = null)Checks that condition is positive.
+#### *public* seeTrue($condition, $message = null) Checks that condition is positive.
 
  * `param`         $condition
  * `param`  string $message
 ### seeFalse
-#### *public* seeFalse($condition, $message = null)Checks that condition is negative.
+#### *public* seeFalse($condition, $message = null) Checks that condition is negative.
 
  * `param`         $condition
  * `param`  string $message

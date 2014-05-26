@@ -83,7 +83,7 @@ Class WebDriver
 
 
 ### amOnSubdomain
-#### *public* amOnSubdomain($subdomain)Sets 'url' configuration parameter to hosts subdomain.
+#### *public* amOnSubdomain($subdomain) Sets 'url' configuration parameter to hosts subdomain.
 It does not open a page on subdomain. Use `amOnPage` for that
 
 ``` php
@@ -105,7 +105,7 @@ $I->amOnPage('/');
 
 
 ### makeScreenshot
-#### *public* makeScreenshot($name)Makes a screenshot of current window and saves it to `tests/_log/debug`.
+#### *public* makeScreenshot($name) Makes a screenshot of current window and saves it to `tests/_log/debug`.
 
 ``` php
 <?php
@@ -117,7 +117,7 @@ $I->makeScreenshot('edit_page');
 
  * `param`  $name
 ### resizeWindow
-#### *public* resizeWindow($width, $height)Resize current window
+#### *public* resizeWindow($width, $height) Resize current window
 
 Example:
 ``` php
@@ -129,38 +129,38 @@ $I->resizeWindow(800, 600);
  * `param`  int $width
  * `param`  int $height
 ### seeCookie
-#### *public* seeCookie($cookie)Checks that cookie is set.
+#### *public* seeCookie($cookie) Checks that cookie is set.
 
  * `param`  $cookie
 
  * `return`  mixed
 ### dontSeeCookie
-#### *public* dontSeeCookie($cookie)Checks that cookie doesn't exist
+#### *public* dontSeeCookie($cookie) Checks that cookie doesn't exist
 
  * `param`  $cookie
 
  * `return`  mixed
 ### setCookie
-#### *public* setCookie($cookie, $value)Sets a cookie.
+#### *public* setCookie($cookie, $value) Sets a cookie.
 
  * `param`  $cookie
  * `param`  $value
 
  * `return`  mixed
 ### resetCookie
-#### *public* resetCookie($cookie)Unsets cookie
+#### *public* resetCookie($cookie) Unsets cookie
 
  * `param`  $cookie
 
  * `return`  mixed
 ### grabCookie
-#### *public* grabCookie($cookie)Grabs a cookie value.
+#### *public* grabCookie($cookie) Grabs a cookie value.
 
  * `param`  $cookie
 
  * `return`  mixed
 ### amOnPage
-#### *public* amOnPage($page)Opens the page.
+#### *public* amOnPage($page) Opens the page.
 Requires relative uri as parameter
 
 Example:
@@ -176,7 +176,7 @@ $I->amOnPage('/register');
 
  * `param`  $page
 ### see
-#### *public* see($text, $selector = null)Check if current page contains the text specified.
+#### *public* see($text, $selector = null) Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -192,7 +192,7 @@ $I->see('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 ### dontSee
-#### *public* dontSee($text, $selector = null)Check if current page doesn't contain the text specified.
+#### *public* dontSee($text, $selector = null) Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -208,7 +208,7 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 ### click
-#### *public* click($link, $context = null)Perform a click on link or button.
+#### *public* click($link, $context = null) Perform a click on link or button.
 Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
 
@@ -240,7 +240,7 @@ $I->click('Logout', '#nav');
 
 
 ### seeLink
-#### *public* seeLink($text, $url = null)Checks if there is a link with text specified.
+#### *public* seeLink($text, $url = null) Checks if there is a link with text specified.
 Specify url to match link with exact this url.
 
 Examples:
@@ -255,7 +255,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param`       $text
  * `param`  null $url
 ### dontSeeLink
-#### *public* dontSeeLink($text, $url = null)Checks if page doesn't contain the link with text specified.
+#### *public* dontSeeLink($text, $url = null) Checks if page doesn't contain the link with text specified.
 Specify url to narrow the results.
 
 Examples:
@@ -269,7 +269,7 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
  * `param`       $text
  * `param`  null $url
 ### seeInCurrentUrl
-#### *public* seeInCurrentUrl($uri)Checks that current uri contains a value
+#### *public* seeInCurrentUrl($uri) Checks that current uri contains a value
 
 ``` php
 <?php
@@ -282,7 +282,7 @@ $I->seeInCurrentUrl('/users/');
 
  * `param`  $uri
 ### seeCurrentUrlEquals
-#### *public* seeCurrentUrlEquals($uri)Checks that current url is equal to value.
+#### *public* seeCurrentUrlEquals($uri) Checks that current url is equal to value.
 Unlike `seeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -294,7 +294,7 @@ $I->seeCurrentUrlEquals('/');
 
  * `param`  $uri
 ### seeCurrentUrlMatches
-#### *public* seeCurrentUrlMatches($uri)Checks that current url is matches a RegEx value
+#### *public* seeCurrentUrlMatches($uri) Checks that current url is matches a RegEx value
 
 ``` php
 <?php
@@ -305,7 +305,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 ### dontSeeInCurrentUrl
-#### *public* dontSeeInCurrentUrl($uri)Checks that current uri does not contain a value
+#### *public* dontSeeInCurrentUrl($uri) Checks that current uri does not contain a value
 
 ``` php
 <?php
@@ -315,7 +315,7 @@ $I->dontSeeInCurrentUrl('/users/');
 
  * `param`  $uri
 ### dontSeeCurrentUrlEquals
-#### *public* dontSeeCurrentUrlEquals($uri)Checks that current url is not equal to value.
+#### *public* dontSeeCurrentUrlEquals($uri) Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -327,7 +327,7 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param`  $uri
 ### dontSeeCurrentUrlMatches
-#### *public* dontSeeCurrentUrlMatches($uri)Checks that current url does not match a RegEx value
+#### *public* dontSeeCurrentUrlMatches($uri) Checks that current url does not match a RegEx value
 
 ``` php
 <?php
@@ -338,7 +338,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 ### grabFromCurrentUrl
-#### *public* grabFromCurrentUrl($uri = null)Takes a parameters from current URI by RegEx.
+#### *public* grabFromCurrentUrl($uri = null) Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
@@ -353,7 +353,7 @@ $uri = $I->grabFromCurrentUrl();
  * `internal`  param $url
  * `return`  mixed
 ### seeCheckboxIsChecked
-#### *public* seeCheckboxIsChecked($checkbox)Assert if the specified checkbox is checked.
+#### *public* seeCheckboxIsChecked($checkbox) Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
 Example:
@@ -368,7 +368,7 @@ $I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]')
 
  * `param`  $checkbox
 ### dontSeeCheckboxIsChecked
-#### *public* dontSeeCheckboxIsChecked($checkbox)Assert if the specified checkbox is unchecked.
+#### *public* dontSeeCheckboxIsChecked($checkbox) Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
 Example:
@@ -382,7 +382,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param`  $checkbox
 ### seeInField
-#### *public* seeInField($field, $value)Checks that an input field or textarea contains value.
+#### *public* seeInField($field, $value) Checks that an input field or textarea contains value.
 Field is matched either by label or CSS or Xpath
 
 Example:
@@ -400,7 +400,7 @@ $I->seeInField('//form/*[ * `name=search]','Search');`
  * `param`  $field
  * `param`  $value
 ### dontSeeInField
-#### *public* dontSeeInField($field, $value)Checks that an input field or textarea doesn't contain value.
+#### *public* dontSeeInField($field, $value) Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
 
@@ -417,7 +417,7 @@ $I->dontSeeInField('//form/*[ * `name=search]','Search');`
  * `param`  $field
  * `param`  $value
 ### selectOption
-#### *public* selectOption($select, $option)Selects an option in select tag or in radio button group.
+#### *public* selectOption($select, $option) Selects an option in select tag or in radio button group.
 
 Example:
 
@@ -444,11 +444,11 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
 
 ### unselectOption
-#### *public* unselectOption($select, $option)
+#### *public* unselectOption($select, $option) 
 
 
 ### checkOption
-#### *public* checkOption($option)Ticks a checkbox.
+#### *public* checkOption($option) Ticks a checkbox.
 For radio buttons use `selectOption` method.
 
 Example:
@@ -461,7 +461,7 @@ $I->checkOption('#agree');
 
  * `param`  $option
 ### uncheckOption
-#### *public* uncheckOption($option)Unticks a checkbox.
+#### *public* uncheckOption($option) Unticks a checkbox.
 
 Example:
 
@@ -473,7 +473,7 @@ $I->uncheckOption('#notify');
 
  * `param`  $option
 ### fillField
-#### *public* fillField($field, $value)Fills a text field or textarea with value.
+#### *public* fillField($field, $value) Fills a text field or textarea with value.
 
 Example:
 
@@ -486,7 +486,7 @@ $I->fillField("//input[ * `type='text']",`  "Hello World!");
  * `param`  $field
  * `param`  $value
 ### attachFile
-#### *public* attachFile($field, $filename)Attaches file from Codeception data directory to upload field.
+#### *public* attachFile($field, $filename) Attaches file from Codeception data directory to upload field.
 
 Example:
 
@@ -500,7 +500,7 @@ $I->attachFile('input[ * `type="file"]',`  'prices.xls');
  * `param`  $field
  * `param`  $filename
 ### grabTextFrom
-#### *public* grabTextFrom($cssOrXPathOrRegex)Finds and returns text contents of element.
+#### *public* grabTextFrom($cssOrXPathOrRegex) Finds and returns text contents of element.
 Element is searched by CSS selector, XPath or matcher by regex.
 
 Example:
@@ -517,7 +517,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
  * `return`  mixed
 ### grabAttributeFrom
-#### *public* grabAttributeFrom($cssOrXpath, $attribute)Grabs attribute value from an element.
+#### *public* grabAttributeFrom($cssOrXpath, $attribute) Grabs attribute value from an element.
 Fails if element is not found.
 
 ``` php
@@ -532,7 +532,7 @@ $I->grabAttributeFrom('#tooltip', 'title');
  * `internal`  param $element
  * `return`  mixed
 ### grabValueFrom
-#### *public* grabValueFrom($field)Finds and returns field and returns it's value.
+#### *public* grabValueFrom($field) Finds and returns field and returns it's value.
 Searches by field name, then by CSS, then by XPath
 
 Example:
@@ -550,7 +550,7 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name` 
  * `return`  mixed
 
 ### seeElement
-#### *public* seeElement($selector, $attributes = null)Checks for a visible element on a page, matching it by CSS or XPath
+#### *public* seeElement($selector, $attributes = null) Checks for a visible element on a page, matching it by CSS or XPath
 
 ``` php
 <?php
@@ -561,7 +561,7 @@ $I->seeElement('//form/input[1]');
  * `param`  $selector
  * `param`  array $attributes
 ### dontSeeElement
-#### *public* dontSeeElement($selector, $attributes = null)Checks that element is invisible or not present on page.
+#### *public* dontSeeElement($selector, $attributes = null) Checks that element is invisible or not present on page.
 
 ``` php
 <?php
@@ -573,7 +573,7 @@ $I->dontSeeElement('//form/input[1]');
  * `param`  $selector
  * `param`  array $attributes
 ### seeElementInDOM
-#### *public* seeElementInDOM($selector, $attributes = null)Checks if element exists on a page even it is invisible.
+#### *public* seeElementInDOM($selector, $attributes = null) Checks if element exists on a page even it is invisible.
 
 ``` php
 <?php
@@ -583,11 +583,11 @@ $I->seeElementInDOM('//form/input[type=hidden]');
 
  * `param`  $selector
 ### dontSeeElementInDOM
-#### *public* dontSeeElementInDOM($selector, $attributes = null)Opposite to `seeElementInDOM`.
+#### *public* dontSeeElementInDOM($selector, $attributes = null) Opposite to `seeElementInDOM`.
 
  * `param`  $selector
 ### seeOptionIsSelected
-#### *public* seeOptionIsSelected($selector, $optionText)Checks if option is selected in select field.
+#### *public* seeOptionIsSelected($selector, $optionText) Checks if option is selected in select field.
 
 ``` php
 <?php
@@ -600,7 +600,7 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * `return`  mixed
 ### dontSeeOptionIsSelected
-#### *public* dontSeeOptionIsSelected($selector, $optionText)Checks if option is not selected in select field.
+#### *public* dontSeeOptionIsSelected($selector, $optionText) Checks if option is not selected in select field.
 
 ``` php
 <?php
@@ -613,7 +613,7 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * `return`  mixed
 ### seeInTitle
-#### *public* seeInTitle($title)Checks that page title contains text.
+#### *public* seeInTitle($title) Checks that page title contains text.
 
 ``` php
 <?php
@@ -625,32 +625,32 @@ $I->seeInTitle('Blog - Post #1');
 
  * `return`  mixed
 ### dontSeeInTitle
-#### *public* dontSeeInTitle($title)Checks that page title does not contain text.
+#### *public* dontSeeInTitle($title) Checks that page title does not contain text.
 
  * `param`  $title
 
  * `return`  mixed
 ### acceptPopup
-#### *public* acceptPopup()Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
+#### *public* acceptPopup() Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
 Don't confuse it with modal windows, created by [various libraries](http://jster.net/category/windows-modals-popups).
 ### cancelPopup
-#### *public* cancelPopup()Dismisses active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt`.
+#### *public* cancelPopup() Dismisses active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt`.
 ### seeInPopup
-#### *public* seeInPopup($text)Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
+#### *public* seeInPopup($text) Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
 
  * `param`  $text
 ### typeInPopup
-#### *public* typeInPopup($keys)Enters text into native JavaScript prompt popup created by `window.prompt`.
+#### *public* typeInPopup($keys) Enters text into native JavaScript prompt popup created by `window.prompt`.
 
  * `param`  $keys
 ### reloadPage
-#### *public* reloadPage()Reloads current page
+#### *public* reloadPage() Reloads current page
 ### moveBack
-#### *public* moveBack()Moves back in history
+#### *public* moveBack() Moves back in history
 ### moveForward
-#### *public* moveForward()Moves forward in history
+#### *public* moveForward() Moves forward in history
 ### submitForm
-#### *public* submitForm($selector, $params)Submits a form located on page.
+#### *public* submitForm($selector, $params) Submits a form located on page.
 Specify the form by it's css or xpath selector.
 Fill the form fields values as array. Hidden fields can't be accessed.
 
@@ -687,7 +687,7 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
  * `param`  $params
  * `throws`  \Codeception\Exception\ElementNotFound
 ### waitForElementChange
-#### *public* waitForElementChange($element, $callback, $timeout = null)Waits for element to change or for $timeout seconds to pass. Element "change" is determined
+#### *public* waitForElementChange($element, $callback, $timeout = null) Waits for element to change or for $timeout seconds to pass. Element "change" is determined
 by a callback function which is called repeatedly until the return value evaluates to true.
 
 ``` php
@@ -703,7 +703,7 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
  * `param`  int $timeout seconds
  * `throws`  \Codeception\Exception\ElementNotFound
 ### waitForElement
-#### *public* waitForElement($element, $timeout = null)Waits for element to appear on page for $timeout seconds to pass.
+#### *public* waitForElement($element, $timeout = null) Waits for element to appear on page for $timeout seconds to pass.
 If element not appears, timeout exception is thrown.
 
 ``` php
@@ -717,7 +717,7 @@ $I->click('#agree_button');
  * `param`  int $timeout seconds
  * `throws`  \Exception
 ### waitForElementVisible
-#### *public* waitForElementVisible($element, $timeout = null)Waits for element to be visible on the page for $timeout seconds to pass.
+#### *public* waitForElementVisible($element, $timeout = null) Waits for element to be visible on the page for $timeout seconds to pass.
 If element doesn't appear, timeout exception is thrown.
 
 ``` php
@@ -731,7 +731,7 @@ $I->click('#agree_button');
  * `param`  int $timeout seconds
  * `throws`  \Exception
 ### waitForElementNotVisible
-#### *public* waitForElementNotVisible($element, $timeout = null)Waits for element to not be visible on the page for $timeout seconds to pass.
+#### *public* waitForElementNotVisible($element, $timeout = null) Waits for element to not be visible on the page for $timeout seconds to pass.
 If element stays visible, timeout exception is thrown.
 
 ``` php
@@ -744,7 +744,7 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
  * `param`  int $timeout seconds
  * `throws`  \Exception
 ### waitForText
-#### *public* waitForText($text, $timeout = null, $selector = null)Waits for text to appear on the page for a specific amount of time.
+#### *public* waitForText($text, $timeout = null, $selector = null) Waits for text to appear on the page for a specific amount of time.
 Can also be passed a selector to search in.
 If text does not appear, timeout exception is thrown.
 
@@ -761,12 +761,12 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `throws`  \Exception
  * `internal`  param string $element
 ### wait
-#### *public* wait($timeout)Explicit wait.
+#### *public* wait($timeout) Explicit wait.
 
- * `param`  $timeout secs
+ * `param`  int $timeout secs
  * `throws`  \Codeception\Exception\TestRuntime
 ### executeInSelenium
-#### *public* executeInSelenium($function)Low-level API method.
+#### *public* executeInSelenium($function) Low-level API method.
 If Codeception commands are not enough, use Selenium WebDriver methods directly
 
 ``` php
@@ -781,7 +781,7 @@ If Codeception lacks important Selenium methods implement then and submit patche
 
  * `param`  callable $function
 ### switchToWindow
-#### *public* switchToWindow($name = null)Switch to another window identified by its name.
+#### *public* switchToWindow($name = null) Switch to another window identified by its name.
 
 The window can only be identified by its name. If the $name parameter is blank it will switch to the parent window.
 
@@ -814,7 +814,7 @@ $I->executeInSelenium(function (\Webdriver $webdriver) {
 
  * `param`  string|null $name
 ### switchToIFrame
-#### *public* switchToIFrame($name = null)Switch to another frame
+#### *public* switchToIFrame($name = null) Switch to another frame
 
 Example:
 ``` html
@@ -833,7 +833,7 @@ $I->switchToIFrame();
 
  * `param`  string|null $name
 ### waitForJS
-#### *public* waitForJS($script, $timeout = null)Executes JavaScript and waits for it to return true or for the timeout.
+#### *public* waitForJS($script, $timeout = null) Executes JavaScript and waits for it to return true or for the timeout.
 
 In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
 
@@ -843,17 +843,17 @@ $I->waitForJS("return $.active == 0;", 60);
 ?>
 ```
 
- * `param`  $script
- * `param`  $timeout int seconds
+ * `param`  string $script
+ * `param`  int $timeout seconds
 ### executeJS
-#### *public* executeJS($script)Executes custom JavaScript
+#### *public* executeJS($script) Executes custom JavaScript
 
  * `param`  $script
  * `return`  mixed
 ### maximizeWindow
-#### *public* maximizeWindow()Maximizes current window
+#### *public* maximizeWindow() Maximizes current window
 ### dragAndDrop
-#### *public* dragAndDrop($source, $target)Performs a simple mouse drag and drop operation.
+#### *public* dragAndDrop($source, $target) Performs a simple mouse drag and drop operation.
 
 ``` php
 <?php
@@ -864,7 +864,7 @@ $I->dragAndDrop('#drag', '#drop');
  * `param`  string $source (CSS ID or XPath)
  * `param`  string $target (CSS ID or XPath)
 ### moveMouseOver
-#### *public* moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)Move mouse over the first element matched by css or xPath on page
+#### *public* moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null) Move mouse over the first element matched by css or xPath on page
 
 https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
 
@@ -875,17 +875,17 @@ https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/mov
  * `throws`  \Codeception\Exception\ElementNotFound
  * `return`  null
 ### clickWithRightButton
-#### *public* clickWithRightButton($cssOrXPath)Performs contextual click with right mouse button on element matched by CSS or XPath.
+#### *public* clickWithRightButton($cssOrXPath) Performs contextual click with right mouse button on element matched by CSS or XPath.
 
  * `param`  $cssOrXPath
  * `throws`  \Codeception\Exception\ElementNotFound
 ### pauseExecution
-#### *public* pauseExecution()Pauses test execution in debug mode.
+#### *public* pauseExecution() Pauses test execution in debug mode.
 To proceed test press "ENTER" in console.
 
 This method is recommended to use in test development, for additional page analysis, locator searing, etc.
 ### doubleClick
-#### *public* doubleClick($cssOrXPath)Performs a double click on element matched by CSS or XPath.
+#### *public* doubleClick($cssOrXPath) Performs a double click on element matched by CSS or XPath.
 
  * `param`  $cssOrXPath
  * `throws`  \Codeception\Exception\ElementNotFound
@@ -893,7 +893,7 @@ This method is recommended to use in test development, for additional page analy
 
 
 ### pressKey
-#### *public* pressKey($element, $char)Presses key on element found by css, xpath is focused
+#### *public* pressKey($element, $char) Presses key on element found by css, xpath is focused
 A char and modifier (ctrl, alt, shift, meta) can be provided.
 For special keys use key constants from \WebDriverKeys class.
 
@@ -919,7 +919,7 @@ $I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
 
 
 ### appendField
-#### *public* appendField($field, $value)Append text to an element
+#### *public* appendField($field, $value) Append text to an element
 Can add another selection to a select box
 
 ``` php
@@ -932,6 +932,7 @@ $I->appendField('#myTextField', 'appended');
  * `param`  string $field
  * `param`  string $value
  * `throws`  \Codeception\Exception\ElementNotFound
+
 
 
 

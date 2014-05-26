@@ -58,22 +58,23 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 
 ### haveHttpHeader
-#### *public* haveHttpHeader($name, $value)Sets HTTP header
+#### *public* haveHttpHeader($name, $value) Sets HTTP header
 
  * `param`  string $name
  * `param`  string $value
 ### seeResponseCodeIs
-#### *public* seeResponseCodeIs($num)Checks response code.
+#### *public* seeResponseCodeIs($num) Checks response code.
 
  * `param`  $num
 ### seeResponseIsXMLRPC
-#### *public* seeResponseIsXMLRPC()Checks weather last response was valid XMLRPC.
+#### *public* seeResponseIsXMLRPC() Checks weather last response was valid XMLRPC.
 This is done with xmlrpc_decode function.
 ### sendXMLRPCMethodCall
-#### *public* sendXMLRPCMethodCall($methodName, $parameters = null)Sends a XMLRPC method call to remote XMLRPC-server.
+#### *public* sendXMLRPCMethodCall($methodName, $parameters = null) Sends a XMLRPC method call to remote XMLRPC-server.
 
  * `param`  string $methodName
  * `param`  array $parameters
+
 
 
 

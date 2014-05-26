@@ -54,7 +54,7 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 ### haveSoapHeader
-#### *public* haveSoapHeader($header, $params = null)Prepare SOAP header.
+#### *public* haveSoapHeader($header, $params = null) Prepare SOAP header.
 Receives header name and parameters as array.
 
 Example:
@@ -79,7 +79,7 @@ Will produce header:
  * `param`  $header
  * `param`  array $params
 ### sendSoapRequest
-#### *public* sendSoapRequest($action, $body = null)Submits request to endpoint.
+#### *public* sendSoapRequest($action, $body = null) Submits request to endpoint.
 
 Requires of api function name and parameters.
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -98,7 +98,7 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
  * `param`  $request
  * `param`  $body
 ### seeSoapResponseEquals
-#### *public* seeSoapResponseEquals($xml)Checks XML response equals provided XML.
+#### *public* seeSoapResponseEquals($xml) Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
 
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -117,7 +117,7 @@ $I->seeSoapRequestIncludes($dom);
 
  * `param`  $xml
 ### seeSoapResponseIncludes
-#### *public* seeSoapResponseIncludes($xml)Checks XML response includes provided XML.
+#### *public* seeSoapResponseIncludes($xml) Checks XML response includes provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
@@ -136,20 +136,20 @@ $I->seeSoapRequestIncludes($dom);
 
  * `param`  $xml
 ### dontSeeSoapResponseEquals
-#### *public* dontSeeSoapResponseEquals($xml)Checks XML response equals provided XML.
+#### *public* dontSeeSoapResponseEquals($xml) Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
 
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * `param`  $xml
 ### dontSeeSoapResponseIncludes
-#### *public* dontSeeSoapResponseIncludes($xml)Checks XML response does not include provided XML.
+#### *public* dontSeeSoapResponseIncludes($xml) Checks XML response does not include provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * `param`  $xml
 ### seeSoapResponseContainsStructure
-#### *public* seeSoapResponseContainsStructure($xml)Checks XML response contains provided structure.
+#### *public* seeSoapResponseContainsStructure($xml) Checks XML response contains provided structure.
 Response elements will be compared with XML provided.
 Only nodeNames are checked to see elements match.
 
@@ -169,7 +169,7 @@ This method does not require path from root to match the structure.
 
  * `param`  $xml
 ### seeSoapResponseContainsXPath
-#### *public* seeSoapResponseContainsXPath($xpath)Checks XML response with XPath locator
+#### *public* seeSoapResponseContainsXPath($xpath) Checks XML response with XPath locator
 
 ``` php
 <?php
@@ -179,7 +179,7 @@ $I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');`
 
  * `param`  $xpath
 ### dontSeeSoapResponseContainsXPath
-#### *public* dontSeeSoapResponseContainsXPath($xpath)Checks XML response doesn't contain XPath locator
+#### *public* dontSeeSoapResponseContainsXPath($xpath) Checks XML response doesn't contain XPath locator
 
 ``` php
 <?php
@@ -189,24 +189,25 @@ $I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');`
 
  * `param`  $xpath
 ### seeResponseCodeIs
-#### *public* seeResponseCodeIs($code)Checks response code from server.
+#### *public* seeResponseCodeIs($code) Checks response code from server.
 
  * `param`  $code
 ### grabTextContentFrom
-#### *public* grabTextContentFrom($cssOrXPath)Finds and returns text contents of element.
+#### *public* grabTextContentFrom($cssOrXPath) Finds and returns text contents of element.
 Element is matched by either CSS or XPath
 
  * `version`  1.1
  * `param`  $cssOrXPath
  * `return`  string
 ### grabAttributeFrom
-#### *public* grabAttributeFrom($cssOrXPath, $attribute)Finds and returns attribute of element.
+#### *public* grabAttributeFrom($cssOrXPath, $attribute) Finds and returns attribute of element.
 Element is matched by either CSS or XPath
 
  * `version`  1.1
  * `param`  $cssOrXPath
  * `param`  $attribute
  * `return`  string
+
 
 
 

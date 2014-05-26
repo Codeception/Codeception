@@ -66,7 +66,7 @@ This module despite of it's stability may act unstable because of transactions i
 
 
 ### seeInDatabase
-#### *public* seeInDatabase($table, $criteria = null)Checks if a row with given column values exists.
+#### *public* seeInDatabase($table, $criteria = null) Checks if a row with given column values exists.
 Provide table name and column values.
 
 Example:
@@ -86,7 +86,7 @@ Fails if no such user found.
  * `param`        $table
  * `param`  array $criteria
 ### dontSeeInDatabase
-#### *public* dontSeeInDatabase($table, $criteria = null)Effect is opposite to ->seeInDatabase
+#### *public* dontSeeInDatabase($table, $criteria = null) Effect is opposite to ->seeInDatabase
 
 Checks if there is no record with such column values in database.
 Provide table name and column values.
@@ -109,7 +109,7 @@ Fails if such user was found.
  * `param`  array $criteria
 
 ### grabFromDatabase
-#### *public* grabFromDatabase($table, $column, $criteria = null)Fetches a single column value from a database.
+#### *public* grabFromDatabase($table, $column, $criteria = null) Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 Example:
@@ -127,6 +127,7 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * `param`  array $criteria
 
  * `return`  mixed
+
 
 
 
