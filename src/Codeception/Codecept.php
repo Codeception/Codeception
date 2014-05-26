@@ -46,12 +46,12 @@ class Codecept
         'coverage' => false,
         'coverage-xml' => false,
         'coverage-html' => false,
-	    'defer-flush' => false,
+        'coverage-text' => false,
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
         'env' => null,
-        'fail-fast' => false
+        'fail-fast' => false,
     );
 
     /**

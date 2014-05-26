@@ -85,6 +85,7 @@ class Run extends Command
                  new InputOption('coverage', '', InputOption::VALUE_OPTIONAL, 'Run with code coverage', 'coverage.serialized'),
                  new InputOption('coverage-html', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage HTML report in path', 'coverage'),
                  new InputOption('coverage-xml', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage XML report in file', 'coverage.xml'),
+                 new InputOption('coverage-text', '', InputOption::VALUE_OPTIONAL, 'Generate CodeCoverage text report in file', 'coverage.txt'),
                  new InputOption('no-exit', '', InputOption::VALUE_NONE, 'Don\'t finish with exit code'),
                  new InputOption('group', 'g', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Groups of tests to be executed'),
                  new InputOption('skip', 's', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected suites'),

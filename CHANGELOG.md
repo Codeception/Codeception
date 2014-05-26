@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.0 05/27/2014
+
+* added --coverage-text option
+
+
 #### 2.0.0-RC2 05/12/2014
 
 * removed fabpot/goutte, added Guzzle4 connector

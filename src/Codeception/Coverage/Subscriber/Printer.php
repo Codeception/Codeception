@@ -46,9 +46,8 @@ class Printer implements EventSubscriberInterface {
         if ($this->options['steps']) {
             return;
         }
-
         $printer = $e->getPrinter();
-        $this->printText($printer);
+        $this->printConsole($printer);
         $this->printPHP();
         $printer->write("\n");
         if ($this->options['coverage-html']) {
@@ -59,9 +58,14 @@ class Printer implements EventSubscriberInterface {
             $this->printXml();
             $printer->write("XML report generated in {$this->options['coverage-xml']}\n");
         }
+        if ($this->options['coverage-text']) {
+            $this->printText();
+            $printer->write("Text report generated in {$this->options['coverage-text']}\n");
+        }
+
     }
 
-    protected function printText(\PHPUnit_Util_Printer $printer)
+    protected function printConsole(\PHPUnit_Util_Printer $printer)
     {
         $writer = new \PHP_CodeCoverage_Report_Text(
             $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], false
@@ -95,4 +99,11 @@ class Printer implements EventSubscriberInterface {
         $writer->process(self::$coverage, $this->absolutePath($this->options['coverage']));
     }
 
+    protected function printText()
+    {
+        $writer = new \PHP_CodeCoverage_Report_Text(
+            $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], false
+        );
+        file_put_contents($this->absolutePath($this->options['coverage-text']), $writer->process(self::$coverage, false));
+    }
 }
