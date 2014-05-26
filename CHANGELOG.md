@@ -1,6 +1,6 @@
 # Changelog
 
-#### 2.0.0-RC 05/12/2014
+#### 2.0.0-RC2 05/12/2014
 
 * removed fabpot/goutte, added Guzzle4 connector
 
