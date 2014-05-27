@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Executes tests.
  *
+ * ```
  * Arguments:
  *  suite                 suite to be tested
  *  test                  test to be run

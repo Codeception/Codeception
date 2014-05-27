@@ -11,8 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Generates StepObject class. You will be asked for steps you want to implement.
  *
- * `codecept g:step acceptance AdminSteps`
- * `codecept g:step acceptance UserSteps --silent` - skip action questions
+ * * `codecept g:step acceptance AdminSteps`
+ * * `codecept g:step acceptance UserSteps --silent` - skip action questions
  *
  */
 class GenerateStepObject extends Command

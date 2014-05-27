@@ -6,8 +6,7 @@
 Set of useful functions for using CSS and XPath locators.
 Please check them before writing complex functional or acceptance tests.
 
-
-#### *public static* combine#### *public static* combine($selector1, $selector2) Applies OR operator to any number of CSS or XPath selectors.
+#### *public static* combine($selector1, $selector2) Applies OR operator to any number of CSS or XPath selectors.
 You can mix up CSS and XPath selectors here.
 
 ```php
@@ -36,8 +35,7 @@ As a result the Locator will produce a mixed XPath value that will be used in fi
  * `throws`  \Exception
  * `return`  string
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L46)
-
-#### *public static* href#### *public static* href($url) Matches the *a* element with given URL
+#### *public static* href($url) Matches the *a* element with given URL
 
 ```php
 <?php
@@ -51,8 +49,7 @@ $I->see('Log In', Locator::href('/login.php'));
  * `param`  $url
  * `return`  string
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L73)
-
-#### *public static* tabIndex#### *public static* tabIndex($index) Matches the element with given tab index
+#### *public static* tabIndex($index) Matches the element with given tab index
 
 Do you often use the `TAB` key to navigate through the web page? How do your site respond to this navigation?
 You could try to match elements by their tab position using `tabIndex` method of `Locator` class.
@@ -70,16 +67,14 @@ $I->click('Login');
  * `param`  $index
  * `return`  string
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L97)
-
-#### *public static* option#### *public static* option($value) Matches option by text
+#### *public static* option($value) Matches option by text
 
  * `param`  $value
 
  * `return`  string
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L109)
 
-
-#### *public static* find#### *public static* find($element, array $attributes) Finds element by it's attribute(s)
+#### *public static* find($element, array $attributes) Finds element by it's attribute(s)
 
  * `static` 
 
@@ -88,16 +83,13 @@ $I->click('Login');
 
  * `return`  string
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L137)
-
-#### *public static* isCSS#### *public static* isCSS($selector) * `param`  $selector
+#### *public static* isCSS($selector) * `param`  $selector
  * `return`  bool
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L154)
-
-#### *public static* isXPath#### *public static* isXPath($locator) Checks that locator is an XPath
+#### *public static* isXPath($locator) Checks that locator is an XPath
 
  * `param`  $locator
  * `return`  bool
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L170)
-
-#### *public static* isID#### *public static* isID($id) Checks that string and CSS selector for element by ID
+#### *public static* isID($id) Checks that string and CSS selector for element by ID
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L181)

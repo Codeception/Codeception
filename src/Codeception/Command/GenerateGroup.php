@@ -11,7 +11,7 @@ use Codeception\Lib\Generator\Group as GroupGenerator;
 /**
  * Creates empty Group file - extension which handles all group events.
  *
- * `codecept g:group Admin`
+ * * `codecept g:group Admin`
  */
 class GenerateGroup extends Command
 {

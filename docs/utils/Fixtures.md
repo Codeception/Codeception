@@ -13,12 +13,9 @@ Fixtures::get('user1');
 ?>
 ```
 
-
-#### *public static* add#### *public static* add($name, $data) 
+#### *public static* add($name, $data) 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L21)
-
-#### *public static* get#### *public static* get($name) 
+#### *public static* get($name) 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L26)
-
-#### *public static* cleanup#### *public static* cleanup() 
+#### *public static* cleanup() 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php#L35)

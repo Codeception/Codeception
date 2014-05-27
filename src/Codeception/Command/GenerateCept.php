@@ -11,9 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Generates Cept (scenario-driven test) file:
  *
- * `codecept generate:cept suite Login`
- * `codecept g:cept suite subdir/subdir/testnameCept.php`
- * `codecept g:cept suite LoginCept -c path/to/project`
+ * * `codecept generate:cept suite Login`
+ * * `codecept g:cept suite subdir/subdir/testnameCept.php`
+ * * `codecept g:cept suite LoginCept -c path/to/project`
  *
  */
 class GenerateCept extends Command

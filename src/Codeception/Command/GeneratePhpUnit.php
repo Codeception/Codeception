@@ -13,9 +13,9 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Generates skeleton for unit test as in classical PHPUnit.
  *
- * `codecept g:phpunit unit UserTest`
- * `codecept g:phpunit unit User`
- * `codecept g:phpunit unit "App\User"`
+ * * `codecept g:phpunit unit UserTest`
+ * * `codecept g:phpunit unit User`
+ * * `codecept g:phpunit unit "App\User`
  *
  */
 class GeneratePhpUnit extends Command

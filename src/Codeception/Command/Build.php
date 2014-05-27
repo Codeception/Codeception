@@ -11,8 +11,8 @@ use Symfony\Component\Console\Command\Command;
  * Generates Actor classes (initially Guy classes) from suite configs.
  * Starting from Codeception 2.0 actor classes are auto-generated. Use this command to generate them manually.
  *
- * `codecept build`
- * `codecept build path/to/project`
+ * * `codecept build`
+ * * `codecept build path/to/project`
  *
  */
 class Build extends Command

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
  *
- * `php codecept.phar self-update`
+ * * `php codecept.phar self-update`
  *
  * @author Franck Cassedanne <franck@cassedanne.com>
  */

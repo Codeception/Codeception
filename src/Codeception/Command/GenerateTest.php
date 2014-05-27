@@ -11,8 +11,8 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
  *
- * `codecept g:test unit User`
- * `codecept g:test unit "App\User"`
+ * * `codecept g:test unit User`
+ * * `codecept g:test unit "App\User"`
  */
 class GenerateTest extends Command
 {

@@ -225,12 +225,9 @@ class RoboFile extends \Robo\Tasks {
                 ->docClass($className)
                 ->processMethod(function(ReflectionMethod $r, $text) use ($utilName) {
                     $line = $r->getStartLine();
-                    $modifiers = implode(' ', \Reflection::getModifierNames($r->getModifiers()));
-                    $title = "\n#### *$modifiers* {$r->name}";
-
                     $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
                     $text .= "\n[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/$utilName.php#L$line)";
-                    return $title.$text;
+                    return $text;
                 })
                 ->reorderMethods('ksort')
                 ->run();

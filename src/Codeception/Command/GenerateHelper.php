@@ -11,7 +11,7 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Creates empty Helper class.
  *
- * `codecept g:helper MyHelper`
+ * * `codecept g:helper MyHelper`
  *
  */
 class GenerateHelper extends Command

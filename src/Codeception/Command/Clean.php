@@ -12,8 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Cleans `log` directory
- * `codecept clean`
- * `codecept clean -c path/to/project`
+ *
+ * * `codecept clean`
+ * * `codecept clean -c path/to/project`
  *
  */
 class Clean extends Command

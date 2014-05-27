@@ -7,8 +7,8 @@
 
 Create new test suite. Requires suite name and actor name
 
-`codecept g:suite api Api` -> api + ApiGuy
-`codecept g:suite frontend Front` -> frontend + FrontGuy
+* `codecept g:suite api Api` -> api + ApiGuy
+* `codecept g:suite frontend Front` -> frontend + FrontGuy
 
 
 
@@ -59,7 +59,7 @@ Create new test suite. Requires suite name and actor name
 
 Try to execute test commands in run-time. You may try commands before writing the test.
 
-`codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
+* `codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
 
 
 
@@ -105,7 +105,7 @@ Try to execute test commands in run-time. You may try commands before writing th
 
 Creates empty Group file - extension which handles all group events.
 
-`codecept g:group Admin`
+* `codecept g:group Admin`
 
 
 
@@ -156,9 +156,9 @@ Creates empty Group file - extension which handles all group events.
 
 Generates Cept (scenario-driven test) file:
 
-`codecept generate:cept suite Login`
-`codecept g:cept suite subdir/subdir/testnameCept.php`
-`codecept g:cept suite LoginCept -c path/to/project`
+* `codecept generate:cept suite Login`
+* `codecept g:cept suite subdir/subdir/testnameCept.php`
+* `codecept g:cept suite LoginCept -c path/to/project`
 
 
 
@@ -209,6 +209,7 @@ Generates Cept (scenario-driven test) file:
 
 Executes tests.
 
+```
 Arguments:
  suite                 suite to be tested
  test                  test to be run
@@ -289,7 +290,7 @@ Options:
 
 Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
 
-`php codecept.phar self-update`
+* `php codecept.phar self-update`
 
 @author Franck Cassedanne <franck@cassedanne.com>
 
@@ -337,8 +338,8 @@ Auto-updates phar archive from official site: 'http://codeception.com/codecept.p
 
 Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
 
-`codecept g:test unit User`
-`codecept g:test unit "App\User"`
+* `codecept g:test unit User`
+* `codecept g:test unit "App\User"`
 
 
 
@@ -390,8 +391,8 @@ Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
 Generates Actor classes (initially Guy classes) from suite configs.
 Starting from Codeception 2.0 actor classes are auto-generated. Use this command to generate them manually.
 
-`codecept build`
-`codecept build path/to/project`
+* `codecept build`
+* `codecept build path/to/project`
 
 
 
@@ -443,7 +444,7 @@ Starting from Codeception 2.0 actor classes are auto-generated. Use this command
 
 Creates empty Helper class.
 
-`codecept g:helper MyHelper`
+* `codecept g:helper MyHelper`
 
 
 
@@ -546,9 +547,9 @@ You will be asked to choose one of the actors that will be used in tests. To ski
 
 Generates skeleton for unit test as in classical PHPUnit.
 
-`codecept g:phpunit unit UserTest`
-`codecept g:phpunit unit User`
-`codecept g:phpunit unit "App\User"`
+* `codecept g:phpunit unit UserTest`
+* `codecept g:phpunit unit User`
+* `codecept g:phpunit unit "App\User`
 
 
 
@@ -600,10 +601,9 @@ Generates skeleton for unit test as in classical PHPUnit.
 
 Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
-`codecept g:scenarios acceptance` - for all acceptance tests
-`codecept g:scenarios acceptance --format html` - in html format
-`codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
-
+* `codecept g:scenarios acceptance` - for all acceptance tests
+* `codecept g:scenarios acceptance --format html` - in html format
+* `codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
 
 
 
@@ -658,8 +658,8 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
 Generates StepObject class. You will be asked for steps you want to implement.
 
-`codecept g:step acceptance AdminSteps`
-`codecept g:step acceptance UserSteps --silent` - skip action questions
+* `codecept g:step acceptance AdminSteps`
+* `codecept g:step acceptance UserSteps --silent` - skip action questions
 
 
 
@@ -710,8 +710,9 @@ Generates StepObject class. You will be asked for steps you want to implement.
 * *Uses* `Codeception\Command\Shared\Config`
 
 Cleans `log` directory
-`codecept clean`
-`codecept clean -c path/to/project`
+
+* `codecept clean`
+* `codecept clean -c path/to/project`
 
 
 
@@ -756,10 +757,10 @@ Cleans `log` directory
 
 Generates Cest (scenario-driven object-oriented test) file:
 
-`codecept generate:cest suite Login`
-`codecept g:cest suite subdir/subdir/testnameCest.php`
-`codecept g:cest suite LoginCest -c path/to/project`
-`codecept g:cest "App\Login"`
+* `codecept generate:cest suite Login`
+* `codecept g:cest suite subdir/subdir/testnameCest.php`
+* `codecept g:cest suite LoginCest -c path/to/project`
+* `codecept g:cest "App\Login"`
 
 
 
@@ -812,9 +813,9 @@ Generates Cest (scenario-driven object-oriented test) file:
 Generates PageObject. Can be generated either globally, or just for one suite.
 If PageObject is generated globally it will act as UIMap, without any logic in it.
 
-`codecept g:page Login`
-`codecept g:page Registration`
-`codecept g:page acceptance Login`
+* `codecept g:page Login`
+* `codecept g:page Registration`
+* `codecept g:page acceptance Login`
 
 
 

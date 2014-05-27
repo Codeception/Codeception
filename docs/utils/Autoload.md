@@ -6,8 +6,7 @@
 Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
 
 
-
-#### *public static* register#### *public static* register($namespace, $suffix, $path) A very basic yet useful autoloader, not compatible with PSR-0.
+#### *public static* register($namespace, $suffix, $path) A very basic yet useful autoloader, not compatible with PSR-0.
 It is used to autoload classes by namespaces with suffixes.
 
 Example:
@@ -26,18 +25,15 @@ Autoload::register('app\tests','Controller', __DIR__.'/controllers/');
  * `param`  $suffix
  * `param`  $path
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L34)
-
-#### *public static* registerSuffix#### *public static* registerSuffix($suffix, $path) Shortcut for { * `link`  self::register} for classes with empty namespaces.
+#### *public static* registerSuffix($suffix, $path) Shortcut for { * `link`  self::register} for classes with empty namespaces.
 
  * `param`  $suffix
  * `param`  $path
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L49)
-
-#### *public static* load#### *public static* load($class) * `param`  $class
+#### *public static* load($class) * `param`  $class
  * `return`  bool
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Autoload.php#L58)
-
-#### *public static* matches#### *public static* matches($class, $namespace, $suffix) *is public for testing purposes*
+#### *public static* matches($class, $namespace, $suffix) *is public for testing purposes*
 
  * `param`  $class
  * `param`  $namespace
