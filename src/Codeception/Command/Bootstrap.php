@@ -27,7 +27,7 @@ class Bootstrap extends Command
 {
     protected $namespace = '';
     protected $actor = 'Guy';
-    protected $availableActors = ['Guy', 'Girl', 'Person', 'Engineer', 'Ninja', 'Dev'];
+    protected $availableActors = ['Guy', 'Girl', 'Person', 'Engineer', 'Ninja', 'Dev', 'Wizard'];
 
     protected function configure()
     {

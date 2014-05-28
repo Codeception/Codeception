@@ -1,9 +1,6 @@
 # Console Commands
 
-## Codeception\Command\GenerateSuite
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateSuite
 
 Create new test suite. Requires suite name and actor name
 
@@ -53,9 +50,7 @@ Create new test suite. Requires suite name and actor name
 
 
 
-## Codeception\Command\Console
-
-* *Extends* `Symfony\Component\Console\Command\Command`
+## Console
 
 Try to execute test commands in run-time. You may try commands before writing the test.
 
@@ -98,10 +93,7 @@ Try to execute test commands in run-time. You may try commands before writing th
 
 
 
-## Codeception\Command\GenerateGroup
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateGroup
 
 Creates empty Group file - extension which handles all group events.
 
@@ -149,10 +141,7 @@ Creates empty Group file - extension which handles all group events.
 
 
 
-## Codeception\Command\GenerateCept
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateCept
 
 Generates Cept (scenario-driven test) file:
 
@@ -203,9 +192,7 @@ Generates Cept (scenario-driven test) file:
 
 
 
-## Codeception\Command\Run
-
-* *Extends* `Symfony\Component\Console\Command\Command`
+## Run
 
 Executes tests.
 
@@ -284,9 +271,7 @@ Options:
 
 
 
-## Codeception\Command\SelfUpdate
-
-* *Extends* `Symfony\Component\Console\Command\Command`
+## SelfUpdate
 
 Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
 
@@ -331,10 +316,7 @@ Auto-updates phar archive from official site: 'http://codeception.com/codecept.p
 
 
 
-## Codeception\Command\GenerateTest
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateTest
 
 Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
 
@@ -383,10 +365,7 @@ Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
 
 
 
-## Codeception\Command\Build
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\Config`, `Codeception\Command\Shared\FileSystem`
+## Build
 
 Generates Actor classes (initially Guy classes) from suite configs.
 Starting from Codeception 2.0 actor classes are auto-generated. Use this command to generate them manually.
@@ -437,10 +416,7 @@ Starting from Codeception 2.0 actor classes are auto-generated. Use this command
 
 
 
-## Codeception\Command\GenerateHelper
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateHelper
 
 Creates empty Helper class.
 
@@ -489,9 +465,7 @@ Creates empty Helper class.
 
 
 
-## Codeception\Command\Bootstrap
-
-* *Extends* `Symfony\Component\Console\Command\Command`
+## Bootstrap
 
 Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
 You will be asked to choose one of the actors that will be used in tests. To skip this question run bootstrap with `--silent` option.
@@ -540,10 +514,7 @@ You will be asked to choose one of the actors that will be used in tests. To ski
 
 
 
-## Codeception\Command\GeneratePhpUnit
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GeneratePhpUnit
 
 Generates skeleton for unit test as in classical PHPUnit.
 
@@ -594,10 +565,7 @@ Generates skeleton for unit test as in classical PHPUnit.
 
 
 
-## Codeception\Command\GenerateScenarios
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateScenarios
 
 Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
@@ -651,10 +619,7 @@ Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
 
 
 
-## Codeception\Command\GenerateStepObject
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateStepObject
 
 Generates StepObject class. You will be asked for steps you want to implement.
 
@@ -704,10 +669,7 @@ Generates StepObject class. You will be asked for steps you want to implement.
 
 
 
-## Codeception\Command\Clean
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\Config`
+## Clean
 
 Cleans `log` directory
 
@@ -750,10 +712,7 @@ Cleans `log` directory
 
 
 
-## Codeception\Command\GenerateCest
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GenerateCest
 
 Generates Cest (scenario-driven object-oriented test) file:
 
@@ -805,10 +764,7 @@ Generates Cest (scenario-driven object-oriented test) file:
 
 
 
-## Codeception\Command\GeneratePageObject
-
-* *Extends* `Symfony\Component\Console\Command\Command`
-* *Uses* `Codeception\Command\Shared\FileSystem`, `Codeception\Command\Shared\Config`
+## GeneratePageObject
 
 Generates PageObject. Can be generated either globally, or just for one suite.
 If PageObject is generated globally it will act as UIMap, without any logic in it.

@@ -248,7 +248,7 @@ class RoboFile extends \Robo\Tasks {
         }
         $commandGenerator
             ->prepend("# Console Commands\n")
-            ->processClass(function ($r, $text) { $name = $r->getShortName();return "## $name\n$text";  })
+            ->processClassSignature(function ($r, $text) { return "## ".$r->getShortName();  })
             ->filterMethods(function(ReflectionMethod $r) { return false; })
             ->run();
 
@@ -267,8 +267,10 @@ class RoboFile extends \Robo\Tasks {
             $this->taskExec('git add codecept.phar')->run();
         }
 
-        @mkdir("releases/$version");
-        copy('../codecept.phar',"releases/$version/codecept.phar");
+        $this->taskFileSystemStack()
+            ->mkdir("releases/$version")
+            ->copy('../codecept.phar',"releases/$version/codecept.phar")
+            ->run();
 
         $this->taskExec("git add releases/$version/codecept.phar")->run();
         $this->publishSite();
