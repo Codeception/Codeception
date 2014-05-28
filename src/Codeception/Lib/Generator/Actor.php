@@ -69,7 +69,8 @@ EOF;
             if (in_array($action, $methods)) {
                 continue;
             }
-            $method = new \ReflectionMethod($this->modules[$moduleName], $action);
+            $class = new \ReflectionClass($this->modules[$moduleName]);
+            $method = $class->getMethod($action);
             $code[] = $this->addMethod($method);
             $methods[] = $action;
             $this->numMethods++;
