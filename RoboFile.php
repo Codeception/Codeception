@@ -203,13 +203,12 @@ class RoboFile extends \Robo\Tasks {
                     return true;
                 })->processMethod(function(\ReflectionMethod $method, $text) {
                     $title = "\n### {$method->name}\n";
-                    if (!$text) return $title."__not documented__\n";
+                    if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
-                    $text = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $text);
+                    $text = str_replace(array("\n @", ' @'), array("\n * ", " * "), $text);
                     return $title . $text;
-                })->processMethodSignature(function () {
-                    return "";
-                })->reorderMethods('ksort')
+                })->processMethodSignature(false)
+                ->reorderMethods('ksort')
                 ->run();
         }
     }

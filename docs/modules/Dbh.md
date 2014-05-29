@@ -55,26 +55,36 @@ This module despite of it's stability may act unstable because of transactions i
 
 
 
-### seeInDatabase
- Checks if a row with given column values exists.
-Provide table name and column values.
 
-Example:
 
-``` php
-<?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
-```
-Will generate:
 
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
-```
-Fails if no such user found.
 
- * `param`        $table
- * `param`  array $criteria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### dontSeeInDatabase
  Effect is opposite to ->seeInDatabase
@@ -98,6 +108,8 @@ Fails if such user was found.
 
  * `param`        $table
  * `param`  array $criteria
+
+
 
 
 ### grabFromDatabase
@@ -124,36 +136,24 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 
 
+### seeInDatabase
+ Checks if a row with given column values exists.
+Provide table name and column values.
 
+Example:
 
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
+```
+Will generate:
 
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
+```
+Fails if no such user found.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ * `param`        $table
+ * `param`  array $criteria
 

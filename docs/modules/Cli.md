@@ -21,59 +21,60 @@ Wrapper for basic shell commands and shell output
 
 
 
-### runShellCommand
- Executes a shell command
 
- * `param`  $command
 
-### seeInShellOutput
- Checks that output from last executed command contains text
 
- * `param`  $text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### dontSeeInShellOutput
  Checks that output from latest command doesn't contain text
 
  * `param`  $text
 
+
+
+
+
+
+### runShellCommand
+ Executes a shell command
+
+ * `param`  $command
+
+
+### seeInShellOutput
+ Checks that output from last executed command contains text
+
+ * `param`  $text
+
 ### seeShellOutputMatches
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+__not documented__
 
 

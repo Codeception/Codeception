@@ -87,39 +87,33 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 
 
 
-### haveInDatabase
- Inserts SQL record into database. This record will be erased after the test.
 
-``` php
-<?php
-$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
-?>
-```
 
- * `param`  $table
- * `param`  array $data
- * `return`  integer $id
 
-### seeInDatabase
- Checks if a row with given column values exists.
-Provide table name and column values.
 
-Example:
 
-``` php
-<?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
-```
-Will generate:
 
-``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
-```
-Fails if no such user found.
 
- * `param`        $table
- * `param`  array $criteria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### dontSeeInDatabase
  Effect is opposite to ->seeInDatabase
@@ -145,6 +139,8 @@ Fails if such user was found.
  * `param`  array $criteria
 
 
+
+
 ### grabFromDatabase
  Fetches a single column value from a database.
 Provide table name, desired column and criteria.
@@ -166,38 +162,42 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * `return`  mixed
 
 
+### haveInDatabase
+ Inserts SQL record into database. This record will be erased after the test.
+
+``` php
+<?php
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
+?>
+```
+
+ * `param`  $table
+ * `param`  array $data
+ * `return`  integer $id
 
 
 
 
 
 
+### seeInDatabase
+ Checks if a row with given column values exists.
+Provide table name and column values.
 
+Example:
 
+``` php
+<?php
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
+```
+Will generate:
 
+``` sql
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
+```
+Fails if no such user found.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ * `param`        $table
+ * `param`  array $criteria
 

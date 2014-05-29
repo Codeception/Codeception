@@ -84,6 +84,61 @@ $I->see('Welcome, ' . $fbUserFirstName);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### grabFacebookTestUserAccessToken
+ Returns the test user access token.
+
+ * `return`  string
+
+### grabFacebookTestUserEmail
+ Returns the test user email.
+
+ * `return`  string
+
+### grabFacebookTestUserFirstName
+ Returns the test user first name.
+
+ * `return`  string
+
+### grabFacebookTestUserLoginUrl
+ Returns URL for test user auto-login.
+
+ * `return`  string
+
+
 ### haveFacebookTestUserAccount
  Get facebook test user be created.
 
@@ -96,65 +151,10 @@ $I->see('Welcome, ' . $fbUserFirstName);
 
  * `throws`  ModuleConfigException
 
-### grabFacebookTestUserAccessToken
- Returns the test user access token.
 
- * `return`  string
-
-### grabFacebookTestUserEmail
- Returns the test user email.
-
- * `return`  string
-
-### grabFacebookTestUserLoginUrl
- Returns URL for test user auto-login.
-
- * `return`  string
-
-### grabFacebookTestUserFirstName
- Returns the test user first name.
-
- * `return`  string
 
 ### seePostOnFacebookWithAttachedPlace
  Please, note that you must have publish_stream permission to be able to publish to user's feed.
 
  * `param`  string $placeId Place identifier to be verified against user published posts
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

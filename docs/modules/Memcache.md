@@ -35,6 +35,49 @@ Be sure you don't use the production server to connect.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### clearMemcache
+ Flushes all Memcached data.
+
+
+
+### dontSeeInMemcached
+ Checks item in Memcached doesn't exist or is the same as expected.
+
+ * `param`  $key
+ * `param`  bool $value
+
+
+
+
 ### grabValueFromMemcached
  Grabs value from memcached by key
 
@@ -49,55 +92,12 @@ $users_count = $I->grabValueFromMemcached('users_count');
  * `param`  $key
  * `return`  array|string
 
+
+
+
 ### seeInMemcached
  Checks item in Memcached exists and the same as expected.
 
  * `param`  $key
  * `param`  $value
-
-### dontSeeInMemcached
- Checks item in Memcached doesn't exist or is the same as expected.
-
- * `param`  $key
- * `param`  bool $value
-
-### clearMemcache
- Flushes all Memcached data.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

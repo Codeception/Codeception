@@ -64,63 +64,15 @@ Stability: **alfa**
 
 
 
-### haveInSession
- Sets value to session. Use for authorization.
 
- * `param`  $key
- * `param`  $val
 
-### seeInSession
- Checks that session contains value.
-If value is `null` checks that session has key.
 
- * `param`  $key
- * `param`  null $value
 
-### haveRecord
- Inserts record into the database.
 
-``` php
-<?php
-$user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
-$I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
-?>
-```
 
- * `param`  $model
- * `param`  array $attributes
- * `return`  mixed
 
-### seeRecord
- Checks that record exists in database.
 
-``` php
-$I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
-```
 
- * `param`  $model
- * `param`  array $attributes
-
-### dontSeeRecord
- Checks that record does not exist in database.
-
-``` php
-$I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
-```
-
- * `param`  $model
- * `param`  array $attributes
-
-### grabRecord
- Retrieves record from database
-
-``` php
-$category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
-```
-
- * `param`  $model
- * `param`  array $attributes
- * `return`  mixed
 
 
 
@@ -147,6 +99,55 @@ $I->amOnPage('/register');
 ```
 
  * `param`  $page
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### attachFile
+ Attaches file from Codeception data directory to upload field.
+
+Example:
+
+``` php
+<?php
+// file is stored in 'tests/_data/prices.xls'
+$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+?>
+```
+
+ * `param`  $field
+ * `param`  $filename
+
+### checkOption
+ Ticks a checkbox.
+For radio buttons use `selectOption` method.
+
+Example:
+
+``` php
+<?php
+$I->checkOption('#agree');
+?>
+```
+
+ * `param`  $option
 
 ### click
  Perform a click on link or button.
@@ -181,22 +182,7 @@ $I->click('Logout', '#nav');
 
 
 
-### see
- Check if current page contains the text specified.
-Specify the css selector to match only specific region.
 
-Examples:
-
-``` php
-<?php
-$I->see('Logout'); // I can suppose user is logged in
-$I->see('Sign Up','h1'); // I can suppose it's a signup page
-$I->see('Sign Up','//body/h1'); // with XPath
-?>
-```
-
- * `param`       $text
- * `param`  null $selector
 
 ### dontSee
  Check if current page doesn't contain the text specified.
@@ -215,75 +201,27 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 
-### seeLink
- Checks if there is a link with text specified.
-Specify url to match link with exact this url.
+### dontSeeCheckboxIsChecked
+ Assert if the specified checkbox is unchecked.
+Use css selector or xpath to match.
 
-Examples:
-
-``` php
-<?php
-$I->seeLink('Logout'); // matches <a href="#">Logout</a>
-$I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
-?>
-```
-
- * `param`       $text
- * `param`  null $url
-
-### dontSeeLink
- Checks if page doesn't contain the link with text specified.
-Specify url to narrow the results.
-
-Examples:
+Example:
 
 ``` php
 <?php
-$I->dontSeeLink('Logout'); // I suppose user is not logged in
+$I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
+$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`  $checkbox
 
+### dontSeeCookie
+ Checks that cookie doesn't exist
 
-### seeInCurrentUrl
- Checks that current uri contains a value
+ * `param`  $cookie
 
-``` php
-<?php
-// to match: /home/dashboard
-$I->seeInCurrentUrl('home');
-// to match: /users/1
-$I->seeInCurrentUrl('/users/');
-?>
-```
-
- * `param`  $uri
-
-### dontSeeInCurrentUrl
- Checks that current uri does not contain a value
-
-``` php
-<?php
-$I->dontSeeInCurrentUrl('/users/');
-?>
-```
-
- * `param`  $uri
-
-### seeCurrentUrlEquals
- Checks that current url is equal to value.
-Unlike `seeInCurrentUrl` performs a strict check.
-
-``` php
-<?php
-// to match root url
-$I->seeCurrentUrlEquals('/');
-?>
-```
-
- * `param`  $uri
+ * `return`  mixed
 
 ### dontSeeCurrentUrlEquals
  Checks that current url is not equal to value.
@@ -293,18 +231,6 @@ Unlike `dontSeeInCurrentUrl` performs a strict check.
 <?php
 // current url is not root
 $I->dontSeeCurrentUrlEquals('/');
-?>
-```
-
- * `param`  $uri
-
-### seeCurrentUrlMatches
- Checks that current url is matches a RegEx value
-
-``` php
-<?php
-// to match root url
-$I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
@@ -322,6 +248,145 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 
+### dontSeeElement
+ Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+You can also specify expected attributes of this element.
+
+Example:
+
+``` php
+<?php
+$I->dontSeeElement('.error');
+$I->dontSeeElement('//form/input[1]');
+$I->dontSeeElement('input', ['name' => 'login']);
+$I->dontSeeElement('input', ['value' => '123456']);
+?>
+```
+
+ * `param`  $selector
+
+### dontSeeInCurrentUrl
+ Checks that current uri does not contain a value
+
+``` php
+<?php
+$I->dontSeeInCurrentUrl('/users/');
+?>
+```
+
+ * `param`  $uri
+
+### dontSeeInField
+ Checks that an input field or textarea doesn't contain value.
+Field is matched either by label or CSS or Xpath
+Example:
+
+``` php
+<?php
+$I->dontSeeInField('Body','Type your comment here');
+$I->dontSeeInField('form textarea[name=body]','Type your comment here');
+$I->dontSeeInField('form input[type=hidden]','hidden_value');
+$I->dontSeeInField('#searchform input','Search');
+$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+?>
+```
+
+ * `param`  $field
+ * `param`  $value
+
+### dontSeeInTitle
+ Checks that page title does not contain text.
+
+ * `param`  $title
+
+ * `return`  mixed
+
+### dontSeeLink
+ Checks if page doesn't contain the link with text specified.
+Specify url to narrow the results.
+
+Examples:
+
+``` php
+<?php
+$I->dontSeeLink('Logout'); // I suppose user is not logged in
+?>
+```
+
+ * `param`       $text
+ * `param`  null $url
+
+### dontSeeOptionIsSelected
+ Checks if option is not selected in select field.
+
+``` php
+<?php
+$I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * `param`  $selector
+ * `param`  $optionText
+
+ * `return`  mixed
+
+### dontSeeRecord
+ Checks that record does not exist in database.
+
+``` php
+$I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * `param`  $model
+ * `param`  array $attributes
+
+
+### fillField
+ Fills a text field or textarea with value.
+
+Example:
+
+``` php
+<?php
+$I->fillField("//input[ * `type='text']",`  "Hello World!");
+?>
+```
+
+ * `param`  $field
+ * `param`  $value
+
+
+
+
+
+
+
+
+
+
+### grabAttributeFrom
+ Grabs attribute value from an element.
+Fails if element is not found.
+
+``` php
+<?php
+$I->grabAttributeFrom('#tooltip', 'title');
+?>
+```
+
+
+ * `param`  $cssOrXpath
+ * `param`  $attribute
+ * `internal`  param $element
+ * `return`  mixed
+
+### grabCookie
+ Grabs a cookie value.
+
+ * `param`  $cookie
+
+ * `return`  mixed
+
 ### grabFromCurrentUrl
  Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
@@ -337,6 +402,104 @@ $uri = $I->grabFromCurrentUrl();
 
  * `internal`  param $url
  * `return`  mixed
+
+### grabRecord
+ Retrieves record from database
+
+``` php
+$category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * `param`  $model
+ * `param`  array $attributes
+ * `return`  mixed
+
+### grabTextFrom
+ Finds and returns text contents of element.
+Element is searched by CSS selector, XPath or matcher by regex.
+
+Example:
+
+``` php
+<?php
+$heading = $I->grabTextFrom('h1');
+$heading = $I->grabTextFrom('descendant-or-self::h1');
+$value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
+?>
+```
+
+ * `param`  $cssOrXPathOrRegex
+
+ * `return`  mixed
+
+### grabValueFrom
+ Finds and returns field and returns it's value.
+Searches by field name, then by CSS, then by XPath
+
+Example:
+
+``` php
+<?php
+$name = $I->grabValueFrom('Name');
+$name = $I->grabValueFrom('input[name=username]');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
+?>
+```
+
+ * `param`  $field
+
+ * `return`  mixed
+
+
+### haveInSession
+ Sets value to session. Use for authorization.
+
+ * `param`  $key
+ * `param`  $val
+
+### haveRecord
+ Inserts record into the database.
+
+``` php
+<?php
+$user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
+$I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
+?>
+```
+
+ * `param`  $model
+ * `param`  array $attributes
+ * `return`  mixed
+
+
+
+
+
+
+### resetCookie
+ Unsets cookie
+
+ * `param`  $cookie
+
+ * `return`  mixed
+
+
+### see
+ Check if current page contains the text specified.
+Specify the css selector to match only specific region.
+
+Examples:
+
+``` php
+<?php
+$I->see('Logout'); // I can suppose user is logged in
+$I->see('Sign Up','h1'); // I can suppose it's a signup page
+$I->see('Sign Up','//body/h1'); // with XPath
+?>
+```
+
+ * `param`       $text
+ * `param`  null $selector
 
 ### seeCheckboxIsChecked
  Assert if the specified checkbox is checked.
@@ -354,20 +517,68 @@ $I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]')
 
  * `param`  $checkbox
 
-### dontSeeCheckboxIsChecked
- Assert if the specified checkbox is unchecked.
-Use css selector or xpath to match.
+### seeCookie
+ Checks that cookie is set.
 
-Example:
+ * `param`  $cookie
+
+ * `return`  mixed
+
+### seeCurrentUrlEquals
+ Checks that current url is equal to value.
+Unlike `seeInCurrentUrl` performs a strict check.
 
 ``` php
 <?php
-$I->dontSeeCheckboxIsChecked('#agree'); // I suppose user didn't agree to terms
-$I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user didn't check the first checkbox in form.
+// to match root url
+$I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $checkbox
+ * `param`  $uri
+
+### seeCurrentUrlMatches
+ Checks that current url is matches a RegEx value
+
+``` php
+<?php
+// to match root url
+$I->seeCurrentUrlMatches('~$/users/(\d+)~');
+?>
+```
+
+ * `param`  $uri
+
+### seeElement
+ Checks if element exists on a page, matching it by CSS or XPath.
+You can also specify expected attributes of this element.
+
+``` php
+<?php
+$I->seeElement('.error');
+$I->seeElement('//form/input[1]');
+$I->seeElement('input', ['name' => 'login']);
+$I->seeElement('input', ['value' => '123456']);
+?>
+```
+
+ * `param`  $selector
+ * `param`  array $attributes
+ * `return`
+
+### seeInCurrentUrl
+ Checks that current uri contains a value
+
+``` php
+<?php
+// to match: /home/dashboard
+$I->seeInCurrentUrl('home');
+// to match: /users/1
+$I->seeInCurrentUrl('/users/');
+?>
+```
+
+ * `param`  $uri
 
 ### seeInField
  Checks that an input field or textarea contains value.
@@ -388,81 +599,75 @@ $I->seeInField('//form/*[ * `name=search]','Search');`
  * `param`  $field
  * `param`  $value
 
-### dontSeeInField
- Checks that an input field or textarea doesn't contain value.
-Field is matched either by label or CSS or Xpath
-Example:
+### seeInSession
+ Checks that session contains value.
+If value is `null` checks that session has key.
+
+ * `param`  $key
+ * `param`  null $value
+
+### seeInTitle
+ Checks that page title contains text.
 
 ``` php
 <?php
-$I->dontSeeInField('Body','Type your comment here');
-$I->dontSeeInField('form textarea[name=body]','Type your comment here');
-$I->dontSeeInField('form input[type=hidden]','hidden_value');
-$I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInTitle('Blog - Post #1');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param`  $title
 
+ * `return`  mixed
 
-### submitForm
- Submits a form located on page.
-Specify the form by it's css or xpath selector.
-Fill the form fields values as array.
-
-Skipped fields will be filled by their values from page.
-You don't need to click the 'Submit' button afterwards.
-This command itself triggers the request to form's action.
+### seeLink
+ Checks if there is a link with text specified.
+Specify url to match link with exact this url.
 
 Examples:
 
 ``` php
 <?php
-$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
-
-```
-
-For sample Sign Up form:
-
-``` html
-<form action="/sign_up">
-    Login: <input type="text" name="user[login]" /><br/>
-    Password: <input type="password" name="user[password]" /><br/>
-    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
-    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
-    <input type="submit" value="Submit" />
-</form>
-```
-I can write this:
-
-``` php
-<?php
-$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-
-```
-Note, that pricing plan will be set to Paid, as it's selected on page.
-
- * `param`  $selector
- * `param`  $params
-
-
-
-### fillField
- Fills a text field or textarea with value.
-
-Example:
-
-``` php
-<?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
+$I->seeLink('Logout'); // matches <a href="#">Logout</a>
+$I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param`       $text
+ * `param`  null $url
 
+### seeOptionIsSelected
+ Checks if option is selected in select field.
+
+``` php
+<?php
+$I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
+?>
+```
+
+ * `param`  $selector
+ * `param`  $optionText
+
+ * `return`  mixed
+
+### seePageNotFound
+ Asserts that current page has 404 response status code.
+
+### seeRecord
+ Checks that record exists in database.
+
+``` php
+$I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+```
+
+ * `param`  $model
+ * `param`  array $attributes
+
+### seeResponseCodeIs
+ Checks that response code is equal to value provided.
+
+ * `param`  $code
+
+ * `return`  mixed
 
 ### selectOption
  Selects an option in select tag or in radio button group.
@@ -487,49 +692,6 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
  * `param`  $select
  * `param`  $option
-
-
-### checkOption
- Ticks a checkbox.
-For radio buttons use `selectOption` method.
-
-Example:
-
-``` php
-<?php
-$I->checkOption('#agree');
-?>
-```
-
- * `param`  $option
-
-### uncheckOption
- Unticks a checkbox.
-
-Example:
-
-``` php
-<?php
-$I->uncheckOption('#notify');
-?>
-```
-
- * `param`  $option
-
-### attachFile
- Attaches file from Codeception data directory to upload field.
-
-Example:
-
-``` php
-<?php
-// file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
-?>
-```
-
- * `param`  $field
- * `param`  $filename
 
 ### sendAjaxGetRequest
  If your page triggers an ajax request, you can perform it manually.
@@ -578,63 +740,6 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
  * `param`  $uri
  * `param`  $params
 
-
-
-
-
-
-### grabTextFrom
- Finds and returns text contents of element.
-Element is searched by CSS selector, XPath or matcher by regex.
-
-Example:
-
-``` php
-<?php
-$heading = $I->grabTextFrom('h1');
-$heading = $I->grabTextFrom('descendant-or-self::h1');
-$value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
-?>
-```
-
- * `param`  $cssOrXPathOrRegex
-
- * `return`  mixed
-
-### grabAttributeFrom
- Grabs attribute value from an element.
-Fails if element is not found.
-
-``` php
-<?php
-$I->grabAttributeFrom('#tooltip', 'title');
-?>
-```
-
-
- * `param`  $cssOrXpath
- * `param`  $attribute
- * `internal`  param $element
- * `return`  mixed
-
-### grabValueFrom
- Finds and returns field and returns it's value.
-Searches by field name, then by CSS, then by XPath
-
-Example:
-
-``` php
-<?php
-$name = $I->grabValueFrom('Name');
-$name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
-?>
-```
-
- * `param`  $field
-
- * `return`  mixed
-
 ### setCookie
  Sets a cookie.
 
@@ -643,163 +748,58 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name` 
 
  * `return`  mixed
 
-### grabCookie
- Grabs a cookie value.
 
- * `param`  $cookie
+### submitForm
+ Submits a form located on page.
+Specify the form by it's css or xpath selector.
+Fill the form fields values as array.
 
- * `return`  mixed
+Skipped fields will be filled by their values from page.
+You don't need to click the 'Submit' button afterwards.
+This command itself triggers the request to form's action.
 
-### seeCookie
- Checks that cookie is set.
-
- * `param`  $cookie
-
- * `return`  mixed
-
-### dontSeeCookie
- Checks that cookie doesn't exist
-
- * `param`  $cookie
-
- * `return`  mixed
-
-### resetCookie
- Unsets cookie
-
- * `param`  $cookie
-
- * `return`  mixed
-
-### seeElement
- Checks if element exists on a page, matching it by CSS or XPath.
-You can also specify expected attributes of this element.
+Examples:
 
 ``` php
 <?php
-$I->seeElement('.error');
-$I->seeElement('//form/input[1]');
-$I->seeElement('input', ['name' => 'login']);
-$I->seeElement('input', ['value' => '123456']);
-?>
+$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+
 ```
 
- * `param`  $selector
- * `param`  array $attributes
- * `return`
+For sample Sign Up form:
 
-### dontSeeElement
- Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
-You can also specify expected attributes of this element.
+``` html
+<form action="/sign_up">
+    Login: <input type="text" name="user[login]" /><br/>
+    Password: <input type="password" name="user[password]" /><br/>
+    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
+    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+    <input type="submit" value="Submit" />
+</form>
+```
+I can write this:
+
+``` php
+<?php
+$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+
+```
+Note, that pricing plan will be set to Paid, as it's selected on page.
+
+ * `param`  $selector
+ * `param`  $params
+
+
+### uncheckOption
+ Unticks a checkbox.
 
 Example:
 
 ``` php
 <?php
-$I->dontSeeElement('.error');
-$I->dontSeeElement('//form/input[1]');
-$I->dontSeeElement('input', ['name' => 'login']);
-$I->dontSeeElement('input', ['value' => '123456']);
+$I->uncheckOption('#notify');
 ?>
 ```
 
- * `param`  $selector
-
-### seeOptionIsSelected
- Checks if option is selected in select field.
-
-``` php
-<?php
-$I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
-?>
-```
-
- * `param`  $selector
- * `param`  $optionText
-
- * `return`  mixed
-
-### dontSeeOptionIsSelected
- Checks if option is not selected in select field.
-
-``` php
-<?php
-$I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
-?>
-```
-
- * `param`  $selector
- * `param`  $optionText
-
- * `return`  mixed
-
-
-### seePageNotFound
- Asserts that current page has 404 response status code.
-
-### seeResponseCodeIs
- Checks that response code is equal to value provided.
-
- * `param`  $code
-
- * `return`  mixed
-
-### seeInTitle
- Checks that page title contains text.
-
-``` php
-<?php
-$I->seeInTitle('Blog - Post #1');
-?>
-```
-
- * `param`  $title
-
- * `return`  mixed
-
-### dontSeeInTitle
- Checks that page title does not contain text.
-
- * `param`  $title
-
- * `return`  mixed
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ * `param`  $option
 

@@ -48,11 +48,48 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### haveHttpHeader
  Sets HTTP header
 
  * `param`  string $name
  * `param`  string $value
+
+
 
 ### seeResponseCodeIs
  Checks response code.
@@ -68,41 +105,4 @@ This is done with xmlrpc_decode function.
 
  * `param`  string $methodName
  * `param`  array $parameters
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

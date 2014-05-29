@@ -25,6 +25,21 @@ Module was developed to test Codeception itself.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### amInPath
  Enters a directory In local filesystem.
 Project root directory is used by default
@@ -32,37 +47,27 @@ Project root directory is used by default
  * `param`  $path
 
 
-### openFile
- Opens a file and stores it's content.
 
-Usage:
 
-``` php
-<?php
-$I->openFile('composer.json');
-$I->seeInThisFile('codeception/codeception');
-?>
-```
 
- * `param`  $filename
 
-### deleteFile
- Deletes a file
 
-``` php
-<?php
-$I->deleteFile('composer.lock');
-?>
-```
 
- * `param`  $filename
 
-### deleteDir
- Deletes directory with all subdirectories
+
+
+
+
+
+
+
+
+### cleanDir
+ Erases directory contents
 
 ``` php
 <?php
-$I->deleteDir('vendor');
+$I->cleanDir('logs');
 ?>
 ```
 
@@ -80,8 +85,58 @@ $I->copyDir('vendor','old_vendor');
  * `param`  $src
  * `param`  $dst
 
-### seeInThisFile
- Checks If opened file has `text` in it.
+
+
+### deleteDir
+ Deletes directory with all subdirectories
+
+``` php
+<?php
+$I->deleteDir('vendor');
+?>
+```
+
+ * `param`  $dirname
+
+### deleteFile
+ Deletes a file
+
+``` php
+<?php
+$I->deleteFile('composer.lock');
+?>
+```
+
+ * `param`  $filename
+
+### deleteThisFile
+ Deletes a file
+
+### dontSeeFileFound
+ Checks if file does not exists in path
+
+ * `param`  $filename
+ * `param`  string $path
+
+### dontSeeInThisFile
+ Checks If opened file doesn't contain `text` in it
+
+``` php
+<?php
+$I->openFile('composer.json');
+$I->dontSeeInThisFile('codeception/codeception');
+?>
+```
+
+ * `param`  $text
+
+
+
+
+
+
+### openFile
+ Opens a file and stores it's content.
 
 Usage:
 
@@ -92,7 +147,8 @@ $I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param`  $text
+ * `param`  $filename
+
 
 ### seeFileContentsEqual
  Checks the strict matching of file contents.
@@ -109,21 +165,6 @@ $I->seeFileContentsEqual('3192');
 
  * `param`  $text
 
-### dontSeeInThisFile
- Checks If opened file doesn't contain `text` in it
-
-``` php
-<?php
-$I->openFile('composer.json');
-$I->dontSeeInThisFile('codeception/codeception');
-?>
-```
-
- * `param`  $text
-
-### deleteThisFile
- Deletes a file
-
 ### seeFileFound
  Checks if file exists in path.
 Opens a file when it's exists
@@ -137,64 +178,23 @@ $I->seeFileFound('UserModel.php','app/models');
  * `param`  $filename
  * `param`  string $path
 
-### dontSeeFileFound
- Checks if file does not exists in path
+### seeInThisFile
+ Checks If opened file has `text` in it.
 
- * `param`  $filename
- * `param`  string $path
-
-### cleanDir
- Erases directory contents
+Usage:
 
 ``` php
 <?php
-$I->cleanDir('logs');
+$I->openFile('composer.json');
+$I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param`  $dirname
+ * `param`  $text
+
 
 ### writeToFile
  Saves contents to file
 
  * `param`  $filename
  * `param`  $contents
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

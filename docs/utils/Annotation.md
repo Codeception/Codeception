@@ -8,6 +8,14 @@ Simple annotation parser. Take only key-value annotations for methods or class.
 
 
 
+#### *public* __construct($class) 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L63)
+#### *public* fetch($annotation) * `param`  $annotation
+ * `return`  null
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L83)
+#### *public* fetchAll($annotation) * `param`  $annotation
+ * `return`  array
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L96)
 #### *public static* forClass($class) Grabs annotation values.
 
 Usage example:
@@ -30,15 +38,7 @@ Annotation::forClass('MyTestCase')->method('testData')->fetchAll('depends');
 
  * `return`  $this
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L58)
-#### *public* __construct($class) 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L63)
 #### *public* method($method) * `param`  $method
 
  * `return`  $this
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L73)
-#### *public* fetch($annotation) * `param`  $annotation
- * `return`  null
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L83)
-#### *public* fetchAll($annotation) * `param`  $annotation
- * `return`  array
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Annotation.php#L96)

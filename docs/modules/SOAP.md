@@ -44,6 +44,88 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### dontSeeSoapResponseContainsXPath
+ Checks XML response doesn't contain XPath locator
+
+``` php
+<?php
+$I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+?>
+```
+
+ * `param`  $xpath
+
+### dontSeeSoapResponseEquals
+ Checks XML response equals provided XML.
+Comparison is done by canonicalizing both xml`s.
+
+Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+
+ * `param`  $xml
+
+### dontSeeSoapResponseIncludes
+ Checks XML response does not include provided XML.
+Comparison is done by canonicalizing both xml`s.
+Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+
+ * `param`  $xml
+
+
+
+
+
+### grabAttributeFrom
+ Finds and returns attribute of element.
+Element is matched by either CSS or XPath
+
+ * `version`  1.1
+ * `param`  $cssOrXPath
+ * `param`  $attribute
+ * `return`  string
+
+### grabTextContentFrom
+ Finds and returns text contents of element.
+Element is matched by either CSS or XPath
+
+ * `version`  1.1
+ * `param`  $cssOrXPath
+ * `return`  string
+
+
 ### haveSoapHeader
  Prepare SOAP header.
 Receives header name and parameters as array.
@@ -70,25 +152,48 @@ Will produce header:
  * `param`  $header
  * `param`  array $params
 
-### sendSoapRequest
- Submits request to endpoint.
 
-Requires of api function name and parameters.
-Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
 
-You are allowed to execute as much requests as you need inside test.
+
+
+
+
+### seeResponseCodeIs
+ Checks response code from server.
+
+ * `param`  $code
+
+### seeSoapResponseContainsStructure
+ Checks XML response contains provided structure.
+Response elements will be compared with XML provided.
+Only nodeNames are checked to see elements match.
 
 Example:
 
 ``` php
-$I->sendRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
-$I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
-  ->id->val(1)->parent()
-  ->name->val('notdavert');
+<?php
+
+$I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
+$I->seeSoapResponseContainsStructure("<query><name></name></query>");
+?>
 ```
 
- * `param`  $request
- * `param`  $body
+Use this method to check XML of valid structure is returned.
+This method does not use schema for validation.
+This method does not require path from root to match the structure.
+
+ * `param`  $xml
+
+### seeSoapResponseContainsXPath
+ Checks XML response with XPath locator
+
+``` php
+<?php
+$I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+?>
+```
+
+ * `param`  $xpath
 
 ### seeSoapResponseEquals
  Checks XML response equals provided XML.
@@ -130,129 +235,24 @@ $I->seeSoapRequestIncludes($dom);
 
  * `param`  $xml
 
-### dontSeeSoapResponseEquals
- Checks XML response equals provided XML.
-Comparison is done by canonicalizing both xml`s.
+### sendSoapRequest
+ Submits request to endpoint.
 
-Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+Requires of api function name and parameters.
+Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
 
- * `param`  $xml
-
-### dontSeeSoapResponseIncludes
- Checks XML response does not include provided XML.
-Comparison is done by canonicalizing both xml`s.
-Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
-
- * `param`  $xml
-
-### seeSoapResponseContainsStructure
- Checks XML response contains provided structure.
-Response elements will be compared with XML provided.
-Only nodeNames are checked to see elements match.
+You are allowed to execute as much requests as you need inside test.
 
 Example:
 
 ``` php
-<?php
-
-$I->seeResponseContains("<user><query>CreateUser<name>Davert</davert></user>");
-$I->seeSoapResponseContainsStructure("<query><name></name></query>");
-?>
+$I->sendRequest('UpdateUser', '<user><id>1</id><name>notdavert</name></user>');
+$I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
+  ->id->val(1)->parent()
+  ->name->val('notdavert');
 ```
 
-Use this method to check XML of valid structure is returned.
-This method does not use schema for validation.
-This method does not require path from root to match the structure.
-
- * `param`  $xml
-
-### seeSoapResponseContainsXPath
- Checks XML response with XPath locator
-
-``` php
-<?php
-$I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
-?>
-```
-
- * `param`  $xpath
-
-### dontSeeSoapResponseContainsXPath
- Checks XML response doesn't contain XPath locator
-
-``` php
-<?php
-$I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
-?>
-```
-
- * `param`  $xpath
-
-### seeResponseCodeIs
- Checks response code from server.
-
- * `param`  $code
-
-### grabTextContentFrom
- Finds and returns text contents of element.
-Element is matched by either CSS or XPath
-
- * `version`  1.1
- * `param`  $cssOrXPath
- * `return`  string
-
-### grabAttributeFrom
- Finds and returns attribute of element.
-Element is matched by either CSS or XPath
-
- * `version`  1.1
- * `param`  $cssOrXPath
- * `param`  $attribute
- * `return`  string
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ * `param`  $request
+ * `param`  $body
 
 

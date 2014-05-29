@@ -70,10 +70,8 @@ Export:
 
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L90)
-#### *public* val($val) * `param`  $val
-
- * `return`  XmlBuilder
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
+#### *public* __toString() 
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
 #### *public* attr($attr, $val) Sets attribute for current node
 
  * `param`  $attr
@@ -81,6 +79,8 @@ Export:
 
  * `return`  XmlBuilder
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L117)
+#### *public* getDom() * `return`  \DOMDocument
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)
 #### *public* parent() Traverses to parent
 
  * `return`  XmlBuilder
@@ -92,7 +92,7 @@ Export:
  * `return`  XmlBuilder
  * `throws`  \Exception
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L142)
-#### *public* __toString() 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
-#### *public* getDom() * `return`  \DOMDocument
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)
+#### *public* val($val) * `param`  $val
+
+ * `return`  XmlBuilder
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)

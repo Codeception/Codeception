@@ -46,22 +46,69 @@ It can be done in bootstrap file, by setting static $em property:
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### dontSeeInRepository
+ Flushes changes to database and performs ->findOneBy() call for current repository.
+
+ * `param`  $entity
+ * `param`  array $params
+
+
 ### flushToDatabase
  Performs $em->flush();
 
-### persistEntity
- Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+
+
+### grabFromRepository
+ Selects field value from repository.
+It builds query based on array of parameters.
+You can use entity associations to build complex queries.
 
 Example:
 
 ``` php
 <?php
-$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
-$I->persistEntity($user, array('name' => 'Miles'));
+$email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+?>
 ```
 
- * `param`  $obj
- * `param`  array $values
+ * `version`  1.1
+ * `param`  $entity
+ * `param`  $field
+ * `param`  array $params
+ * `return`  array
+
 
 ### haveFakeRepository
  Mocks the repository.
@@ -86,6 +133,23 @@ This creates a stub class for Entity\User repository with redefined method findB
 ### haveInRepository
  Saves data in repository
 
+
+### persistEntity
+ Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+
+Example:
+
+``` php
+<?php
+$I->persistEntity(new \Entity\User, array('name' => 'Miles'));
+$I->persistEntity($user, array('name' => 'Miles'));
+```
+
+ * `param`  $obj
+ * `param`  array $values
+
+
+
 ### seeInRepository
  Flushes changes to database executes a query defined by array.
 It builds query based on array of parameters.
@@ -105,68 +169,4 @@ Fails if record for given criteria can\'t be found,
 
  * `param`  $entity
  * `param`  array $params
-
-### dontSeeInRepository
- Flushes changes to database and performs ->findOneBy() call for current repository.
-
- * `param`  $entity
- * `param`  array $params
-
-
-### grabFromRepository
- Selects field value from repository.
-It builds query based on array of parameters.
-You can use entity associations to build complex queries.
-
-Example:
-
-``` php
-<?php
-$email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
-?>
-```
-
- * `version`  1.1
- * `param`  $entity
- * `param`  $field
- * `param`  array $params
- * `return`  array
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

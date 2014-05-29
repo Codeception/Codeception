@@ -54,27 +54,34 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 
 
-### haveInCollection
- Inserts data into collection
 
-``` php
-$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
-$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
-```
 
- * `param`  $collection
- * `param`  array $data
 
-### seeInCollection
- Checks if collection contains an item.
 
-``` php
-<?php
-$I->seeInCollection('users', array('name' => 'miles'));
-```
 
- * `param`  $collection
- * `param`  array $criteria
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### dontSeeInCollection
  Checks if collection doesn't contain an item.
@@ -86,6 +93,9 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
 
  * `param`  $collection
  * `param`  array $criteria
+
+
+
 
 ### grabFromCollection
  Grabs a data from collection
@@ -100,38 +110,28 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
  * `return`  \MongoCursor
 
 
+### haveInCollection
+ Inserts data into collection
+
+``` php
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
+$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
+```
+
+ * `param`  $collection
+ * `param`  array $data
 
 
 
 
+### seeInCollection
+ Checks if collection contains an item.
 
+``` php
+<?php
+$I->seeInCollection('users', array('name' => 'miles'));
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ * `param`  $collection
+ * `param`  array $criteria
 
