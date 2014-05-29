@@ -27,6 +27,10 @@ use Illuminate\Support\MessageBag;
  * * Stability: **alpha**
  * * Contact: davert.codeception@mailican.com
  *
+ * ## Config
+ *
+ * * start: `bootstrap/start.php` - relative path to start.php config file
+ * * cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
  *
  * ## API
  *
@@ -41,9 +45,15 @@ use Illuminate\Support\MessageBag;
  */
 class Laravel4 extends Framework implements ActiveRecord
 {
-
+    /**
+     * @var \Illuminate\Foundation\Application
+     */
     public $kernel;
-    protected $config = array('cleanup' => true);
+
+    protected $config = array(
+        'cleanup' => true,
+        'start' => 'bootstrap/start.php'
+    );
 
     public function _initialize()
     {
@@ -57,7 +67,12 @@ class Laravel4 extends Framework implements ActiveRecord
         }
         $unitTesting = true;
         $testEnvironment = 'testing';
-        $app = require $projectDir . 'bootstrap/start.php';
+
+        $startFile = $projectDir . $this->config['start'];
+        if (!file_exists($startFile)) {
+            throw new ModuleConfig($this, "Laravel start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. ");
+        }
+        $app = require $startFile;
         $app->boot();
         $this->kernel = $app;
 
