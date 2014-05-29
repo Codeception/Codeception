@@ -1,9 +1,7 @@
 # MongoDb Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
-## Codeception\Module\MongoDb
 
-* *Extends* `Codeception\Module`
 
 Works with MongoDb database.
 
@@ -38,26 +36,18 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
 
-#### *public* dbh* `api` 
- * `var`
 
 
 
 
-#### *public* driver* `var`  \Codeception\Lib\Driver\MongoDb
 
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
+
 
 
 
@@ -65,7 +55,7 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 
 ### haveInCollection
-#### *public* haveInCollection($collection, array $data) Inserts data into collection
+ Inserts data into collection
 
 ``` php
 $I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
@@ -74,8 +64,9 @@ $user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'
 
  * `param`  $collection
  * `param`  array $data
+
 ### seeInCollection
-#### *public* seeInCollection($collection, $criteria = null) Checks if collection contains an item.
+ Checks if collection contains an item.
 
 ``` php
 <?php
@@ -84,8 +75,9 @@ $I->seeInCollection('users', array('name' => 'miles'));
 
  * `param`  $collection
  * `param`  array $criteria
+
 ### dontSeeInCollection
-#### *public* dontSeeInCollection($collection, $criteria = null) Checks if collection doesn't contain an item.
+ Checks if collection doesn't contain an item.
 
 ``` php
 <?php
@@ -94,8 +86,9 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
 
  * `param`  $collection
  * `param`  array $criteria
+
 ### grabFromCollection
-#### *public* grabFromCollection($collection, $criteria = null) Grabs a data from collection
+ Grabs a data from collection
 
 ``` php
 <?php

@@ -1,9 +1,7 @@
 # Symfony1 Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony1.php)**
-## Codeception\Module\Symfony1
 
-* *Extends* `Codeception\Module`
 
 Module that interacts with Symfony 1.4 applications.
 
@@ -27,22 +25,14 @@ Please note, this module doesn't implement standard frameworks interface.
 ## Public Properties
 * browser - current instance of sfBrowser class.
 
-#### *public* browser* `api` 
- * `var`  \sfBrowser
 
 
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
 
 
 
@@ -53,16 +43,18 @@ Please note, this module doesn't implement standard frameworks interface.
 
 
 ### amOnPage
-#### *public* amOnPage($page) Opens the page.
+ Opens the page.
 
  * `param`  $page
+
 ### click
-#### *public* click($link) Click on link or button and move to next page.
+ Click on link or button and move to next page.
 Either link text, css selector, or xpath can be passed
 
  * `param`  $link
+
 ### dontSee
-#### *public* dontSee($text, $selector = null) Check if current page doesn't contain the text specified.
+ Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -76,8 +68,9 @@ $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 
  * `param`  $text
  * `param`  null $selector
+
 ### see
-#### *public* see($text, $selector = null) Check if current page contains the text specified.
+ Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -92,8 +85,9 @@ $I->see('Sign Up','h1'); // I can suppose it's a signup page
  * `param`  $text
  * `param`  null $selector
 
+
 ### seeLink
-#### *public* seeLink($text, $url = null) Checks if there is a link with text specified.
+ Checks if there is a link with text specified.
 Specify url to match link with exact this url.
 
 Examples:
@@ -107,8 +101,9 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
  * `param`  $text
  * `param`  null $url
+
 ### dontSeeLink
-#### *public* dontSeeLink($text, $url = null) Checks if page doesn't contain the link with text specified.
+ Checks if page doesn't contain the link with text specified.
 Specify url to narrow the results.
 
 Examples:
@@ -121,8 +116,9 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
  * `param`  $text
  * `param`  null $url
+
 ### seeCheckboxIsChecked
-#### *public* seeCheckboxIsChecked($selector) Assert if the specified checkbox is checked.
+ Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
 Example:
@@ -135,8 +131,9 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ```
 
  * `param`  $selector
+
 ### dontSeeCheckboxIsChecked
-#### *public* dontSeeCheckboxIsChecked($selector) Assert if the specified checkbox is unchecked.
+ Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
 Example:
@@ -150,10 +147,12 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param`  $selector
 
+
 ### seeEmailReceived
-#### *public* seeEmailReceived() Checks if there were at least one email sent through Symfony test mailer.
+ Checks if there were at least one email sent through Symfony test mailer.
+
 ### submitForm
-#### *public* submitForm($selector, $params) Submits a form located on page.
+ Submits a form located on page.
 Specify the form by it's css or xpath selector.
 Fill the form fields values as array.
 
@@ -191,8 +190,9 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
  * `param`  $selector
  * `param`  $params
+
 ### sendAjaxPostRequest
-#### *public* sendAjaxPostRequest($uri, $params) If your page triggers an ajax request, you can perform it manually.
+ If your page triggers an ajax request, you can perform it manually.
 This action sends a POST ajax request with specified params.
 Additional params can be passed as array.
 
@@ -210,44 +210,52 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
 
  * `param`  $uri
  * `param`  $params
+
 ### sendAjaxGetRequest
-#### *public* sendAjaxGetRequest($uri, $params) If your page triggers an ajax request, you can perform it manually.
+ If your page triggers an ajax request, you can perform it manually.
 This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
 
  * `param`  $uri
  * `param`  $params
+
 ### clickSubmitButton
-#### *public* clickSubmitButton($selector) Emulates click on form's submit button.
+ Emulates click on form's submit button.
 You don't need that action if you fill form by ->submitForm action.
 
  * `param`  $selector
+
 ### seeFormIsValid
-#### *public* seeFormIsValid() Performs validation of Symfony1 form.
+ Performs validation of Symfony1 form.
 Matches the first sfForm instance from controller and returns isValid() value.
+
 ### seeErrorsInForm
-#### *public* seeErrorsInForm() Performs validation of Symfony1 form.
+ Performs validation of Symfony1 form.
 Matches the first sfForm instance from controller and returns getErrorSchema() values.
 Shows all errors in debug.
+
 ### seeErrorInField
-#### *public* seeErrorInField($field) Checks for invalid value in Symfony1 form.
+ Checks for invalid value in Symfony1 form.
 Matches the first sfForm instance from controller and returns getErrorSchema() values.
 Specify field which should contain error message.
 
  * `param`  $field
 
+
 ### signIn
-#### *public* signIn($username, $password) Sign's user in with sfGuardAuth.
+ Sign's user in with sfGuardAuth.
 Uses standard path: /sfGuardAuth/signin for authorization.
 Provide username and password.
 
  * `param`  $username
  * `param`  $password
+
 ### signOut
-#### *public* signOut() Sign out is performing by triggering '/logout' url.
+ Sign out is performing by triggering '/logout' url.
+
 ### amLoggedAs
-#### *public* amLoggedAs($name) Log in as sfDoctrineGuardUser.
+ Log in as sfDoctrineGuardUser.
 Only name of user should be provided.
 Fetches user by it's username from sfGuardUser table.
 

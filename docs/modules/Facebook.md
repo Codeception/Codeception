@@ -1,9 +1,7 @@
 # Facebook Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Facebook.php)**
-## Codeception\Module\Facebook
 
-* *Extends* `Codeception\Module`
 
 Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
@@ -76,51 +74,50 @@ $I->see('Welcome, ' . $fbUserFirstName);
 
 
 
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
 
 
 
 
 
 ### haveFacebookTestUserAccount
-#### *public* haveFacebookTestUserAccount($renew = null) Get facebook test user be created.
+ Get facebook test user be created.
 
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
  * `param`  bool $renew true if the test user should be recreated
+
 ### haveTestUserLoggedInOnFacebook
-#### *public* haveTestUserLoggedInOnFacebook() Get facebook test user be logged in on facebook.
+ Get facebook test user be logged in on facebook.
 
  * `throws`  ModuleConfigException
+
 ### grabFacebookTestUserAccessToken
-#### *public* grabFacebookTestUserAccessToken() Returns the test user access token.
+ Returns the test user access token.
 
  * `return`  string
+
 ### grabFacebookTestUserEmail
-#### *public* grabFacebookTestUserEmail() Returns the test user email.
+ Returns the test user email.
 
  * `return`  string
+
 ### grabFacebookTestUserLoginUrl
-#### *public* grabFacebookTestUserLoginUrl() Returns URL for test user auto-login.
+ Returns URL for test user auto-login.
 
  * `return`  string
+
 ### grabFacebookTestUserFirstName
-#### *public* grabFacebookTestUserFirstName() Returns the test user first name.
+ Returns the test user first name.
 
  * `return`  string
+
 ### seePostOnFacebookWithAttachedPlace
-#### *public* seePostOnFacebookWithAttachedPlace($placeId) Please, note that you must have publish_stream permission to be able to publish to user's feed.
+ Please, note that you must have publish_stream permission to be able to publish to user's feed.
 
  * `param`  string $placeId Place identifier to be verified against user published posts
 

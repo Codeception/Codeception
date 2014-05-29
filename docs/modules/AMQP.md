@@ -1,9 +1,7 @@
 # AMQP Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/AMQP.php)**
-## Codeception\Module\AMQP
 
-* *Extends* `Codeception\Module`
 
 This module interacts with message broker software that implements
 the Advanced Message Queuing Protocol (AMQP) standard. For example, RabbitMQ (tested).
@@ -51,26 +49,19 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 @author tiger.seo@gmail.com
 @author davert
 
-#### *public* connection* `var`  AMQPConnection
 
 
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
 
 
 
 ### pushToExchange
-#### *public* pushToExchange($exchange, $message) Sends message to exchange
+ Sends message to exchange
 
 ``` php
 <?php
@@ -81,8 +72,9 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
 
  * `param`  $exchange
  * `param`  $message string|AMQPMessage
+
 ### pushToQueue
-#### *public* pushToQueue($queue, $message) Sends message to queue
+ Sends message to queue
 
 ``` php
 <?php
@@ -93,8 +85,9 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 
  * `param`  $queue
  * `param`  $message string|AMQPMessage
+
 ### seeMessageInQueueContainsText
-#### *public* seeMessageInQueueContainsText($queue, $text) Checks if message containing text received.
+ Checks if message containing text received.
 
 **This method drops message from queue**
 **This method will wait for message. If none is sent the script will stuck**.
@@ -108,8 +101,9 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
 
  * `param`  $queue
  * `param`  $text
+
 ### grabMessageFromQueue
-#### *public* grabMessageFromQueue($queue) Takes last message from queue.
+ Takes last message from queue.
 
 $message = $I->grabMessageFromQueue('queue.emails');
 

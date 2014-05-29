@@ -194,19 +194,21 @@ class RoboFile extends \Robo\Tasks {
             $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
                 ->docClass($className)
                 ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**")
-                ->processClass(function($r, $text) {
-                    return $text . "\n## Actions\n\n";
-                })->filterMethods(function(\ReflectionMethod $method) {
+                ->processClassSignature(false)
+                ->processProperty(false)
+                ->filterMethods(function(\ReflectionMethod $method) {
                     if ($method->isConstructor() or $method->isDestructor()) return false;
                     if (!$method->isPublic()) return false;
                     if (strpos($method->name, '_') === 0) return false;
                     return true;
                 })->processMethod(function(\ReflectionMethod $method, $text) {
-                    $title = "### {$method->name}\n";
+                    $title = "\n### {$method->name}\n";
                     if (!$text) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
                     $text = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $text);
                     return $title . $text;
+                })->processMethodSignature(function () {
+                    return "";
                 })->reorderMethods('ksort')
                 ->run();
         }

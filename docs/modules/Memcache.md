@@ -1,9 +1,7 @@
 # Memcache Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
-## Codeception\Module\Memcache
 
-* *Extends* `Codeception\Module`
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
 
@@ -26,26 +24,19 @@ Be sure you don't use the production server to connect.
 
 * memcache - instance of Memcache object
 
-#### *public* memcache* `var`  \Memcache
 
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
 
 
 
 
 ### grabValueFromMemcached
-#### *public* grabValueFromMemcached($key) Grabs value from memcached by key
+ Grabs value from memcached by key
 
 Example:
 
@@ -57,18 +48,21 @@ $users_count = $I->grabValueFromMemcached('users_count');
 
  * `param`  $key
  * `return`  array|string
+
 ### seeInMemcached
-#### *public* seeInMemcached($key, $value = null) Checks item in Memcached exists and the same as expected.
+ Checks item in Memcached exists and the same as expected.
 
  * `param`  $key
  * `param`  $value
+
 ### dontSeeInMemcached
-#### *public* dontSeeInMemcached($key, $value = null) Checks item in Memcached doesn't exist or is the same as expected.
+ Checks item in Memcached doesn't exist or is the same as expected.
 
  * `param`  $key
  * `param`  bool $value
+
 ### clearMemcache
-#### *public* clearMemcache() Flushes all Memcached data.
+ Flushes all Memcached data.
 
 
 

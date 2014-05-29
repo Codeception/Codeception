@@ -1,9 +1,7 @@
 # SOAP Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
-## Codeception\Module\SOAP
 
-* *Extends* `Codeception\Module`
 
 Module for testing SOAP WSDL web services.
 Send requests and check if response matches the pattern.
@@ -35,26 +33,19 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 
-#### *public* client* `var`  \Symfony\Component\BrowserKit\Client
-#### *public* is_functional
-#### *public* xmlRequest* `var`  \DOMDocument
-#### *public* xmlResponse* `var`  \DOMDocument
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
+
+
+
 
 
 ### haveSoapHeader
-#### *public* haveSoapHeader($header, $params = null) Prepare SOAP header.
+ Prepare SOAP header.
 Receives header name and parameters as array.
 
 Example:
@@ -78,8 +69,9 @@ Will produce header:
 
  * `param`  $header
  * `param`  array $params
+
 ### sendSoapRequest
-#### *public* sendSoapRequest($action, $body = null) Submits request to endpoint.
+ Submits request to endpoint.
 
 Requires of api function name and parameters.
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -97,8 +89,9 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
 
  * `param`  $request
  * `param`  $body
+
 ### seeSoapResponseEquals
-#### *public* seeSoapResponseEquals($xml) Checks XML response equals provided XML.
+ Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
 
 Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
@@ -116,8 +109,9 @@ $I->seeSoapRequestIncludes($dom);
 ```
 
  * `param`  $xml
+
 ### seeSoapResponseIncludes
-#### *public* seeSoapResponseIncludes($xml) Checks XML response includes provided XML.
+ Checks XML response includes provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
@@ -135,21 +129,24 @@ $I->seeSoapRequestIncludes($dom);
 ```
 
  * `param`  $xml
+
 ### dontSeeSoapResponseEquals
-#### *public* dontSeeSoapResponseEquals($xml) Checks XML response equals provided XML.
+ Checks XML response equals provided XML.
 Comparison is done by canonicalizing both xml`s.
 
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * `param`  $xml
+
 ### dontSeeSoapResponseIncludes
-#### *public* dontSeeSoapResponseIncludes($xml) Checks XML response does not include provided XML.
+ Checks XML response does not include provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
  * `param`  $xml
+
 ### seeSoapResponseContainsStructure
-#### *public* seeSoapResponseContainsStructure($xml) Checks XML response contains provided structure.
+ Checks XML response contains provided structure.
 Response elements will be compared with XML provided.
 Only nodeNames are checked to see elements match.
 
@@ -168,8 +165,9 @@ This method does not use schema for validation.
 This method does not require path from root to match the structure.
 
  * `param`  $xml
+
 ### seeSoapResponseContainsXPath
-#### *public* seeSoapResponseContainsXPath($xpath) Checks XML response with XPath locator
+ Checks XML response with XPath locator
 
 ``` php
 <?php
@@ -178,8 +176,9 @@ $I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');`
 ```
 
  * `param`  $xpath
+
 ### dontSeeSoapResponseContainsXPath
-#### *public* dontSeeSoapResponseContainsXPath($xpath) Checks XML response doesn't contain XPath locator
+ Checks XML response doesn't contain XPath locator
 
 ``` php
 <?php
@@ -188,19 +187,22 @@ $I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');`
 ```
 
  * `param`  $xpath
+
 ### seeResponseCodeIs
-#### *public* seeResponseCodeIs($code) Checks response code from server.
+ Checks response code from server.
 
  * `param`  $code
+
 ### grabTextContentFrom
-#### *public* grabTextContentFrom($cssOrXPath) Finds and returns text contents of element.
+ Finds and returns text contents of element.
 Element is matched by either CSS or XPath
 
  * `version`  1.1
  * `param`  $cssOrXPath
  * `return`  string
+
 ### grabAttributeFrom
-#### *public* grabAttributeFrom($cssOrXPath, $attribute) Finds and returns attribute of element.
+ Finds and returns attribute of element.
 Element is matched by either CSS or XPath
 
  * `version`  1.1

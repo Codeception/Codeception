@@ -1,9 +1,7 @@
 # Doctrine2 Module
 
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
-## Codeception\Module\Doctrine2
 
-* *Extends* `Codeception\Module`
 
 Allows integration and testing for projects with Doctrine2 ORM.
 
@@ -37,28 +35,22 @@ It can be done in bootstrap file, by setting static $em property:
            Doctrine2:
               cleanup: false
 
-#### *public static* em* `var`  \Doctrine\ORM\EntityManager
-#### *public static* includeInheritedActionsBy setting it to false module wan't inherit methods of parent class.
 
- * `var`  bool
-#### *public static* onlyActionsAllows to explicitly set what methods have this class.
 
- * `var`  array
-#### *public static* excludeActionsAllows to explicitly exclude actions from module.
 
- * `var`  array
-#### *public static* aliasesAllows to rename actions
 
- * `var`  array
+
+
 
 
 
 
 
 ### flushToDatabase
-#### *public* flushToDatabase() Performs $em->flush();
+ Performs $em->flush();
+
 ### persistEntity
-#### *public* persistEntity($obj, $values = null) Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+ Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
 
 Example:
 
@@ -70,8 +62,9 @@ $I->persistEntity($user, array('name' => 'Miles'));
 
  * `param`  $obj
  * `param`  array $values
+
 ### haveFakeRepository
-#### *public* haveFakeRepository($classname, $methods = null) Mocks the repository.
+ Mocks the repository.
 
 With this action you can redefine any method of any repository.
 Please, note: this fake repositories will be accessible through entity manager till the end of test.
@@ -89,10 +82,12 @@ This creates a stub class for Entity\User repository with redefined method findB
 
  * `param`  $classname
  * `param`  array $methods
+
 ### haveInRepository
-#### *public* haveInRepository($repository, array $data) Saves data in repository
+ Saves data in repository
+
 ### seeInRepository
-#### *public* seeInRepository($entity, $params = null) Flushes changes to database executes a query defined by array.
+ Flushes changes to database executes a query defined by array.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
 
@@ -110,14 +105,16 @@ Fails if record for given criteria can\'t be found,
 
  * `param`  $entity
  * `param`  array $params
+
 ### dontSeeInRepository
-#### *public* dontSeeInRepository($entity, $params = null) Flushes changes to database and performs ->findOneBy() call for current repository.
+ Flushes changes to database and performs ->findOneBy() call for current repository.
 
  * `param`  $entity
  * `param`  array $params
 
+
 ### grabFromRepository
-#### *public* grabFromRepository($entity, $field, $params = null) Selects field value from repository.
+ Selects field value from repository.
 It builds query based on array of parameters.
 You can use entity associations to build complex queries.
 
