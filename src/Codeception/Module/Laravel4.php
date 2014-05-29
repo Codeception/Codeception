@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Codecept;
 use Codeception\Exception\ModuleConfig;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Http\Request;
@@ -46,6 +45,10 @@ use Illuminate\Support\MessageBag;
  */
 class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\ActiveRecordInterface
 {
+    /**
+     * @var \Illuminate\Foundation\Application
+     */
+    public $kernel;
 
     protected $config = array(
         'cleanup' => true,
