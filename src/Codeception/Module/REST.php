@@ -81,9 +81,6 @@ class REST extends \Codeception\Module
                 }
                 $this->client = $this->getModule('PhpBrowser')->client;
             }
-            if (!$this->client) {
-                throw new ModuleConfigException(__CLASS__, "Client for REST requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
-            }
         }
 
         $this->headers = array();
