@@ -26,8 +26,8 @@ use Symfony\Component\Yaml\Yaml;
 class Bootstrap extends Command
 {
     protected $namespace = '';
-    protected $actor = 'Guy';
-    protected $availableActors = ['Guy', 'Girl', 'Person', 'Engineer', 'Ninja', 'Dev', 'Wizard'];
+    protected $actor = 'Tester';
+
 
     protected function configure()
     {
@@ -52,11 +52,12 @@ class Bootstrap extends Command
 
         if ($input->getOption('actor')) {
             $this->actor = $input->getOption('actor');
-
         } elseif (!$input->getOption('silent')) {
             $output->writeln("Before proceed you can choose default actor:");
             $output->writeln("\n\$I = new {{ACTOR}}");
-            $index = $dialog->select($output, "<question>  Select an actor. Default: Guy  </question>", $this->availableActors, $this->actor);
+
+            $availableActors = array_map(function ($a) { return implode(', ', $a); }, $this->availableActors);
+            $index = $dialog->select($output, "<question>  Select an actor. Default: Guy  </question>", $availableActors, $this->actor);
             $this->actor = $this->availableActors[$index];
         }
 
@@ -233,5 +234,10 @@ class Bootstrap extends Command
             (new Helper('Code', $this->namespace))->produce()
         );
         file_put_contents('tests/unit.suite.yml', $str);
+    }
+
+    protected function setup()
+    {
+
     }
 }

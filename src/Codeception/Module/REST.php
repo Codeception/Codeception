@@ -79,7 +79,7 @@ class REST extends \Codeception\Module
                 if (!$this->hasModule('PhpBrowser')) {
                     throw new ModuleConfigException(__CLASS__, "For REST testing via HTTP please enable PhpBrowser module");
                 }
-                $this->client = $this->getModule('PhpBrowser')->client;
+                $this->client = &$this->getModule('PhpBrowser')->client;
             }
         }
 
@@ -90,7 +90,6 @@ class REST extends \Codeception\Module
 
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
-            && xdebug_is_enabled()
             && ini_get('xdebug.remote_enable')
             && !$this->isFunctional
         ) {
