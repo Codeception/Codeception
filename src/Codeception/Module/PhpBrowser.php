@@ -85,6 +85,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
             if (defined($key)) $defaults['config']['curl'][constant($key)] = $val;
         }
         $this->guzzle = new Client(['defaults' => $defaults]);
+        $this->_initializeSession();
     }
 
     public function _before(\Codeception\TestCase $test) {
