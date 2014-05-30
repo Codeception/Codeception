@@ -34,4 +34,16 @@ abstract class Actor
         $class = get_class($this);
         throw new \RuntimeException("Call to undefined method $class::$method");
     }
+
+    /**
+     * Lazy-execution given anonymous function
+     * @param $callable \Closure
+     * @return $this
+     */
+    public function execute($callable)
+    {
+        $this->scenario->addStep(new \Codeception\Step\Executor($callable, array()));
+        $callable();
+        return $this;
+    }
 }

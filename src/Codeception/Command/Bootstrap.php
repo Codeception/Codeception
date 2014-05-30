@@ -28,7 +28,6 @@ class Bootstrap extends Command
     protected $namespace = '';
     protected $actor = 'Tester';
 
-
     protected function configure()
     {
         $this->setDefinition([
@@ -47,18 +46,9 @@ class Bootstrap extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->namespace = rtrim($input->getOption('namespace'), '\\');
-        /** @var $dialog DialogHelper  **/
-        $dialog = $this->getHelper('dialog');
 
         if ($input->getOption('actor')) {
             $this->actor = $input->getOption('actor');
-        } elseif (!$input->getOption('silent')) {
-            $output->writeln("Before proceed you can choose default actor:");
-            $output->writeln("\n\$I = new {{ACTOR}}");
-
-            $availableActors = array_map(function ($a) { return implode(', ', $a); }, $this->availableActors);
-            $index = $dialog->select($output, "<question>  Select an actor. Default: Guy  </question>", $availableActors, $this->actor);
-            $this->actor = $this->availableActors[$index];
         }
 
         $path = $input->getArgument('path');
@@ -153,23 +143,22 @@ class Bootstrap extends Command
         file_put_contents('codeception.yml', $str);
     }
 
-    protected function createFunctionalSuite()
+    protected function createFunctionalSuite($actor = 'Functional')
     {
         $suiteConfig = array(
-            'class_name' => 'Test'.$this->actor,
-            'modules'    => array('enabled' => array('Filesystem', 'TestHelper')),
+            'class_name' => $actor.$this->actor,
+            'modules'    => array('enabled' => array('Filesystem', $actor.'Helper')),
         );
 
-        $str = "# Codeception Test Suite Configuration\n\n";
+        $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
-        $str .= "# (tip: better to use with frameworks).\n\n";
-        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
+        $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel4) to use it.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents(
-            'tests/_helpers/TestHelper.php',
-            (new Helper('Test', $this->namespace))->produce()
+            'tests/_helpers/'.$actor.'Helper.php',
+            (new Helper($actor, $this->namespace))->produce()
         );
 
         file_put_contents(
@@ -179,12 +168,12 @@ class Bootstrap extends Command
         file_put_contents('tests/functional.suite.yml', $str);
     }
 
-    protected function createAcceptanceSuite()
+    protected function createAcceptanceSuite($actor = 'Acceptance')
     {
         $suiteConfig = array(
-            'class_name' => 'Web'.$this->actor,
+            'class_name' => $actor.$this->actor,
             'modules'    => array(
-                'enabled' => array('PhpBrowser', 'WebHelper'),
+                'enabled' => array('PhpBrowser', $actor . 'Helper'),
                 'config'  => array(
                     'PhpBrowser' => array(
                         'url' => 'http://localhost/myapp/'
@@ -196,8 +185,7 @@ class Bootstrap extends Command
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for acceptance tests.\n";
         $str .= "# perform tests in browser using the WebDriver or PhpBrowser.\n";
-        $str .= "# (tip: that's what your customer will see).\n";
-        $str .= "# (tip: test your ajax and javascript only with WebDriver).\n\n";
+        $str .= "# If you need both WebDriver and PHPBrowser tests - create a separate suite.\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
 
@@ -206,23 +194,22 @@ class Bootstrap extends Command
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
         file_put_contents(
-            'tests/_helpers/WebHelper.php',
-            (new Helper('Web', $this->namespace))->produce()
+            'tests/_helpers/AcceptanceHelper.php',
+            (new Helper('Acceptance', $this->namespace))->produce()
         );
         file_put_contents('tests/acceptance.suite.yml', $str);
     }
 
-    protected function createUnitSuite()
+    protected function createUnitSuite($actor = 'Unit')
     {
         // CodeGuy
         $suiteConfig = array(
-            'class_name' => 'Code'.$this->actor,
-            'modules'    => array('enabled' => array('Asserts', 'CodeHelper')),
+            'class_name' => 'Unit'.$this->actor,
+            'modules'    => array('enabled' => array('Asserts', 'UnitHelper')),
         );
 
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
-        $str .= "# RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
 
         file_put_contents(
@@ -230,8 +217,8 @@ class Bootstrap extends Command
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
         file_put_contents(
-            'tests/_helpers/CodeHelper.php',
-            (new Helper('Code', $this->namespace))->produce()
+            'tests/_helpers/UnitHelper.php',
+            (new Helper('Unit', $this->namespace))->produce()
         );
         file_put_contents('tests/unit.suite.yml', $str);
     }
