@@ -20,11 +20,10 @@ class ExtensionsCest
         $I->seeInShellOutput('FAILURES');
         $I->seeFileFound('failed','tests/_log');
         $I->seeFileContentsEqual(<<<EOF
-tests/unit/DependsTest.php:testOne
 tests/unit/FailingTest.php:testMe
 EOF
 );
         $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
-        $I->seeInShellOutput('Tests: 2, Assertions: 2, Failures: 2');
+        $I->seeInShellOutput('Tests: 1, Assertions: 1, Failures: 1');
     }
 }

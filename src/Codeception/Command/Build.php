@@ -38,7 +38,7 @@ class Build extends Command
 	{
         $suites = $this->getSuites($input->getOption('config'));
 
-        $output->writeln("<info>Building Guy classes for suites: ".implode(', ', $suites).'</info>');
+        $output->writeln("<info>Building Actor classes for suites: ".implode(', ', $suites).'</info>');
 
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite, $input->getOption('config'));

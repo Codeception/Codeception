@@ -25,8 +25,12 @@ use Symfony\Component\Yaml\Yaml;
  */
 class Bootstrap extends Command
 {
+    // defaults
     protected $namespace = '';
-    protected $actor = 'Tester';
+    protected $actorSuffix = 'Tester';
+    protected $helperDir = 'tests/_support';
+    protected $logDir = 'tests/_output';
+    protected $dataDir = 'tests/_data';
 
     protected function configure()
     {
@@ -34,7 +38,8 @@ class Bootstrap extends Command
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
             new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers'),
             new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Guy'),
-            new InputOption('silent', null, InputOption::VALUE_NONE, 'Don\'t ask stupid questions')
+            new InputOption('compat', null, InputOption::VALUE_NONE, 'Codeception 1.x compatible setup'),
+            new InputOption('customize', null, InputOption::VALUE_NONE, 'Customize suite and actors creation')
         ]);
     }
 
@@ -48,7 +53,7 @@ class Bootstrap extends Command
         $this->namespace = rtrim($input->getOption('namespace'), '\\');
 
         if ($input->getOption('actor')) {
-            $this->actor = $input->getOption('actor');
+            $this->actorSuffix = $input->getOption('actor');
         }
 
         $path = $input->getArgument('path');
@@ -65,37 +70,22 @@ class Bootstrap extends Command
             return;
         }
 
-        $this->createGlobalConfig();
         $output->writeln(
-            "<fg=white;bg=magenta>\nInitializing Codeception in " . realpath($path) . "\n</fg=white;bg=magenta>"
+            "<fg=white;bg=magenta>Initializing Codeception in " . realpath($path) . "</fg=white;bg=magenta>\n"
         );
-        $output->writeln("File codeception.yml created <- global configuration");
-
-        @mkdir('tests');
-        @mkdir('tests/functional');
-        @mkdir('tests/unit');
-        @mkdir('tests/acceptance');
-        @mkdir('tests/_helpers');
-        @mkdir('tests/_log');
-        @mkdir('tests/_data');
-
-        $output->writeln("tests/unit created <- unit tests");
-        $output->writeln("tests/functional created <- functional tests");
-        $output->writeln("tests/acceptance created <- acceptance tests");
-
-        file_put_contents('tests/_data/dump.sql', '/* Replace this file with actual dump of your database */');
-
-        $this->createUnitSuite();
-        $output->writeln("tests/unit.suite.yml written <- unit tests suite configuration");
-        $this->createFunctionalSuite();
-        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
-        $this->createAcceptanceSuite();
-        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+        
+        if ($input->getOption('compat')) {
+            $this->compatibilitySetup($output);
+        } elseif ($input->getOption('customize')) {
+            $this->customize($output);
+        } else {
+            $this->setup($output);
+        }
 
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading \n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
 
-        $output->writeln("<info>Building initial {$this->actor} classes</info>");
+        $output->writeln("<info>Building initial {$this->actorSuffix} classes</info>");
         $this->getApplication()->find('build')->run(
             new ArrayInput(array('command' => 'build')),
             $output
@@ -112,12 +102,12 @@ class Bootstrap extends Command
     public function createGlobalConfig()
     {
         $basicConfig = array(
-            'actor' => $this->actor,
+            'actor' => $this->actorSuffix,
             'paths'    => array(
                 'tests'   => 'tests',
-                'log'     => 'tests/_log',
-                'data'    => 'tests/_data',
-                'helpers' => 'tests/_helpers'
+                'log'     => $this->logDir,
+                'data'    => $this->dataDir,
+                'helpers' => $this->helperDir
             ),
             'settings' => array(
                 'bootstrap'    => '_bootstrap.php',
@@ -146,7 +136,7 @@ class Bootstrap extends Command
     protected function createFunctionalSuite($actor = 'Functional')
     {
         $suiteConfig = array(
-            'class_name' => $actor.$this->actor,
+            'class_name' => $actor.$this->actorSuffix,
             'modules'    => array('enabled' => array('Filesystem', $actor.'Helper')),
         );
 
@@ -155,23 +145,13 @@ class Bootstrap extends Command
         $str .= "# emulate web requests and make application process them.\n";
         $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel4) to use it.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
-
-        file_put_contents(
-            'tests/_helpers/'.$actor.'Helper.php',
-            (new Helper($actor, $this->namespace))->produce()
-        );
-
-        file_put_contents(
-            'tests/functional/_bootstrap.php',
-            "<?php\n// Here you can initialize variables that will be available to your tests\n"
-        );
-        file_put_contents('tests/functional.suite.yml', $str);
+        $this->createSuite('functional', $actor, $str);
     }
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
     {
         $suiteConfig = array(
-            'class_name' => $actor.$this->actor,
+            'class_name' => $actor.$this->actorSuffix,
             'modules'    => array(
                 'enabled' => array('PhpBrowser', $actor . 'Helper'),
                 'config'  => array(
@@ -188,43 +168,131 @@ class Bootstrap extends Command
         $str .= "# If you need both WebDriver and PHPBrowser tests - create a separate suite.\n\n";
 
         $str .= Yaml::dump($suiteConfig, 5);
-
-        file_put_contents(
-            'tests/acceptance/_bootstrap.php',
-            "<?php\n// Here you can initialize variables that will be available to your tests\n"
-        );
-        file_put_contents(
-            'tests/_helpers/AcceptanceHelper.php',
-            (new Helper('Acceptance', $this->namespace))->produce()
-        );
-        file_put_contents('tests/acceptance.suite.yml', $str);
+        $this->createSuite('acceptance', $actor, $str);
     }
 
     protected function createUnitSuite($actor = 'Unit')
     {
-        // CodeGuy
         $suiteConfig = array(
-            'class_name' => 'Unit'.$this->actor,
-            'modules'    => array('enabled' => array('Asserts', 'UnitHelper')),
+            'class_name' => $actor.$this->actorSuffix,
+            'modules'    => array('enabled' => array('Asserts', $actor . 'Helper')),
         );
 
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
         $str .= Yaml::dump($suiteConfig, 2);
+        
+        $this->createSuite('unit', $actor, $str);
+    }
 
+
+    protected function createSuite($suite, $actor, $config)
+    {
+        @mkdir("tests/$suite");
         file_put_contents(
-            'tests/unit/_bootstrap.php',
+            "tests/$suite/_bootstrap.php",
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
         file_put_contents(
-            'tests/_helpers/UnitHelper.php',
-            (new Helper('Unit', $this->namespace))->produce()
+            $this->helperDir.DIRECTORY_SEPARATOR.$actor.'Helper.php',
+            (new Helper($actor, $this->namespace))->produce()
         );
-        file_put_contents('tests/unit.suite.yml', $str);
+        file_put_contents("tests/$suite.suite.yml", $config);
     }
 
-    protected function setup()
+    /**
+     * Performs Codeception 1.x compatible setup using with Guy classes
+     */
+    protected function compatibilitySetup(OutputInterface $output)
     {
+        $this->actorSuffix = 'Guy';
 
+        $this->logDir = 'tests/_log';
+        $this->helperDir = 'tests/_helpers';
+
+        $this->createGlobalConfig();
+        $output->writeln("File codeception.yml created <- global configuration");
+
+        $this->createDirs();
+
+        $this->createUnitSuite('Code');
+        $output->writeln("tests/unit created                 <- unit tests");
+        $output->writeln("tests/unit.suite.yml written       <- unit tests suite configuration");
+        $this->createFunctionalSuite('Test');
+        $output->writeln("tests/functional created           <- functional tests");
+        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+        $this->createAcceptanceSuite('Web');
+        $output->writeln("tests/acceptance created           <- acceptance tests");
+        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
     }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function setup(OutputInterface $output)
+    {
+        $this->createGlobalConfig();
+        $output->writeln("File codeception.yml created <- global configuration");
+
+        $this->createDirs();
+        $this->createUnitSuite();
+        $output->writeln("tests/unit created                 <- unit tests");
+        $output->writeln("tests/unit.suite.yml written       <- unit tests suite configuration");
+        $this->createFunctionalSuite();
+        $output->writeln("tests/functional created           <- functional tests");
+        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+        $this->createAcceptanceSuite();
+        $output->writeln("tests/acceptance created           <- acceptance tests");
+        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+    }
+
+    protected function customize(OutputInterface $output)
+    {
+        $output->writeln("Welcome to Customization Wizard");
+        $dialog = $this->getHelperSet()->get('dialog');
+        /** @var $dialog DialogHelper  **/
+        $output->writeln("<comment>================================</comment>");
+        $output->writeln("<comment> Configuring Actor </comment>\n");
+        $this->actorSuffix = $dialog->ask($output,
+            "<question> Enter default actor name </question> Proposed: <info>Tester</info>; Formerly: Guy\n",
+            'Tester'
+        );              
+
+        $output->writeln("Basic Actor set to: <info>{$this->actorSuffix}</info>");
+
+        $this->createGlobalConfig();
+        $output->writeln("File codeception.yml created <- global configuration");
+
+        $this->createDirs();
+
+        $output->writeln("\n<comment>================================</comment>");
+        $output->writeln("<comment> Creating Suites </comment>\n");
+
+        while ($suite = lcfirst($dialog->ask($output, "<question> Enter suite name (and its actor name if it differs from suite)</question> Enter to finish\n"))) {
+            $suiteInput = explode(' ', $suite);
+            if (isset($suiteInput[1])) {
+                $suite = $suiteInput[0];
+                $actor = ucfirst($suiteInput[1]);
+            } else {
+                $actor = ucfirst($suite);
+            }
+            $config = [
+                'class_name' => $actor . $this->actorSuffix,
+                'modules'    => ['enabled' => [$actor . 'Helper']]
+            ];
+            $this->createSuite($suite, $actor, Yaml::dump($config));
+            $output->writeln("Suite <info>$suite</info> with actor <info>$actor{$this->actorSuffix}</info> and helper <info>{$actor}Helper</info> created");
+            $output->writeln("\n<comment>================================</comment>");
+        }
+    }
+
+    protected function createDirs()
+    {
+        @mkdir('tests');
+        @mkdir($this->logDir);
+        @mkdir($this->dataDir);
+        @mkdir($this->helperDir);
+        file_put_contents($this->dataDir . '/dump.sql', '/* Replace this file with actual dump of your database */');
+    }
+
 }
