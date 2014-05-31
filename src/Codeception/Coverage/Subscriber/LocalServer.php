@@ -102,14 +102,14 @@ class LocalServer extends SuiteSubscriber
             return;
         }
 
-        if (!file_exists(Configuration::logDir() . 'c3tmp/codecoverage.serialized')) {
-            if (file_exists(Configuration::logDir() . 'c3tmp/error.txt')) {
-                throw new \RuntimeException(file_get_contents(Configuration::logDir() . 'c3tmp/error.txt'));
+        if (!file_exists(Configuration::outputDir() . 'c3tmp/codecoverage.serialized')) {
+            if (file_exists(Configuration::outputDir() . 'c3tmp/error.txt')) {
+                throw new \RuntimeException(file_get_contents(Configuration::outputDir() . 'c3tmp/error.txt'));
             }
             return;
         }
 
-        $contents = file_get_contents(Configuration::logDir() . 'c3tmp/codecoverage.serialized');
+        $contents = file_get_contents(Configuration::outputDir() . 'c3tmp/codecoverage.serialized');
         $coverage = @unserialize($contents);
         if ($coverage === false) {
             return;

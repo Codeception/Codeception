@@ -40,7 +40,7 @@ class RemoteServer extends LocalServer
         $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
         file_put_contents($tempFile, $this->c3Request('html'));
 
-        $destDir = Configuration::logDir() . $suite . '.remote.coverage';
+        $destDir = Configuration::outputDir() . $suite . '.remote.coverage';
         if (is_dir($destDir)) {
             FileSystem::doEmptyDir($destDir);
         } else {
@@ -55,7 +55,7 @@ class RemoteServer extends LocalServer
 
     protected function retrieveAndPrintXml($suite)
     {
-        $destFile = Configuration::logDir() . $suite . '.remote.coverage.xml';
+        $destFile = Configuration::outputDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->c3Request('clover'));
     }
 

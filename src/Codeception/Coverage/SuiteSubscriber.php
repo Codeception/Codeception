@@ -35,7 +35,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     function __construct($options = [])
     {
         $this->options = $options;
-        $this->logDir = Configuration::logDir();
+        $this->logDir = Configuration::outputDir();
     }
 
     protected function applySettings($settings)

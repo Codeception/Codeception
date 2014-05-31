@@ -35,7 +35,7 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $fileName = \Codeception\Configuration::logDir() . basename($test->getFileName()) . '.page.debug.html';
+        $fileName = \Codeception\Configuration::outputDir() . basename($test->getFileName()) . '.page.debug.html';
         file_put_contents($fileName, $this->client->getInternalResponse()->getContent());
     }
 

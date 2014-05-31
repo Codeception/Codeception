@@ -50,7 +50,7 @@ class OrderHelper extends Module
 
     public static function appendToFile($marker)
     {
-        $fh = fopen(Configuration::logDir().'order.txt', 'a');
+        $fh = fopen(Configuration::outputDir().'order.txt', 'a');
         fwrite($fh, $marker);
     }
 }

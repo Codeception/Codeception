@@ -28,7 +28,7 @@ class Printer implements EventSubscriberInterface {
     public function __construct($options)
     {
         $this->options = $options;
-        $this->logDir = Configuration::logDir();
+        $this->logDir = Configuration::outputDir();
         $this->settings = array_merge($this->settings, Configuration::config()['coverage']);
         self::$coverage = new \PHP_CodeCoverage();
     }

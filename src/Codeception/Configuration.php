@@ -80,6 +80,14 @@ class Configuration
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     );
 
+    /**
+     * Loads global config file which is `codeception.yml` by default.
+     * When config is already loaded - returns it.
+     *
+     * @param null $configFile
+     * @return array
+     * @throws Exception\Configuration
+     */
     public static function config($configFile = null)
     {
         if (!$configFile && self::$config) {
@@ -183,6 +191,14 @@ class Configuration
         }
     }
 
+    /**
+     * Returns suite configuration. Requires suite name and global config used (Configuration::config)
+     *
+     * @param $suite
+     * @param $config
+     * @return array
+     * @throws \Exception
+     */
     public static function suiteSettings($suite, $config)
     {
         // cut namespace name from suite name
@@ -216,6 +232,13 @@ class Configuration
         return $settings;
     }
 
+    /**
+     * Returns all possible suite configurations according environment rules.
+     * Suite configurations will contain `current_environment` key which specifies what environment used.
+     *
+     * @param $suite
+     * @return array
+     */
     public static function suiteEnvironments($suite)
     {
         $settings = self::suiteSettings($suite, self::config());
@@ -361,13 +384,13 @@ class Configuration
     }
 
     /**
-     * Returns actual path to current `_log` dir.
+     * Returns actual path to current `_output` dir.
      * Use it in Helpers or Groups to save result or temporary files.
      *
      * @return string
      * @throws Exception\Configuration
      */
-    public static function logDir()
+    public static function outputDir()
     {
         if (!self::$logDir) {
             throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
@@ -387,6 +410,15 @@ class Configuration
     }
 
     /**
+     * Compatibility alias to `Configuration::logDir()`
+     * @return string
+     */
+    public static function logDir()
+    {
+        return self::outputDir();
+    }
+
+    /**
      * Returns path to the root of your project.
      * Basically returns path to current `codeception.yml` loaded.
      * Use this method instead of `__DIR__`, `getcwd()` or anything else.
@@ -397,6 +429,11 @@ class Configuration
         return self::$dir . DIRECTORY_SEPARATOR;
     }
 
+    /**
+     * Returns path to tests directory
+     *
+     * @return string
+     */
     public static function testsDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR;

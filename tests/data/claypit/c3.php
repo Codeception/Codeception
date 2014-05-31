@@ -60,7 +60,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         ini_set('memory_limit', '384M');
     }
 
-    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
+    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::outputDir() . 'c3tmp');
     define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 

@@ -29,7 +29,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     public function __construct()
     {
         $this->config  = Configuration::config();
-        $this->logDir = Configuration::logDir(); // prepare log dir
+        $this->logDir = Configuration::outputDir(); // prepare log dir
         $this->phpUnitOverriders();
         parent::__construct();
     }

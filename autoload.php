@@ -21,7 +21,7 @@ function codecept_root_dir($appendPath = '')
 
 function codecept_log_dir($appendPath = '')
 {
-    return \Codeception\Configuration::logDir() . $appendPath;
+    return \Codeception\Configuration::outputDir() . $appendPath;
 }
 
 function codecept_data_dir($appendPath = '')

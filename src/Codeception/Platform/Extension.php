@@ -71,7 +71,7 @@ class Extension implements EventSubscriberInterface
 
     public function getLogDir()
     {
-        return Config::logDir();
+        return Config::outputDir();
     }
 
     public function getDataDir()
