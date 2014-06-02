@@ -39,6 +39,22 @@ class ParserTest extends \Codeception\TestCase\Test
 
     }
 
+    public function testCommentedScenarioOptions()
+    {
+        $code = "<?php\n// \$scenario->skip();";
+        $this->parser->parseScenarioOptions($code);
+        $this->assertFalse($this->scenario->isBlocked());
+    }
+
+    public function testCommentedInBlockScenarioOptions()
+    {
+        $code = "<?php\n/*
+         \$scenario->skip();
+         */";
+        $this->parser->parseScenarioOptions($code);
+        $this->assertFalse($this->scenario->isBlocked());
+    }
+
     public function testScenarioSkipOptionsHandled()
     {
         $this->setExpectedException('PHPUnit_Framework_SkippedTestError', 'pass along');
@@ -64,7 +80,6 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->parser->parseSteps($code);
         $text = $this->scenario->getText();
         $this->assertContains("I see in this file", $text);
-        $this->assertContains('I see in this file \'<testsuite name="unit" tests="5" assertions="5"', $text);
     }
 
     public function testStepsWithFriends()

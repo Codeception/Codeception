@@ -38,6 +38,8 @@ class Parser {
     public function parseScenarioOptions($code)
     {
         $matches = array();
+        $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
+        $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code); // remove block comment
         $res = preg_match_all("~\\\$scenario->.*?;~", $code, $matches);
         if (!$res) {
             return;
