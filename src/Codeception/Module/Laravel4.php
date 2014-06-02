@@ -52,13 +52,13 @@ class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\
 
     protected $config = array(
         'cleanup' => true,
-        'start' => 'bootstrap/start.php'
+        'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php'
     );
 
     public function _initialize()
     {
         $projectDir = \Codeception\Configuration::projectDir();
-        require $projectDir . '/vendor/autoload.php';
+        require $projectDir .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
 
