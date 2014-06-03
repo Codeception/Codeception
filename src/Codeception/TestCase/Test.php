@@ -2,6 +2,7 @@
 
 namespace Codeception\TestCase;
 
+use Codeception\Configuration;
 use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\TestRuntime;
@@ -17,10 +18,10 @@ class Test extends TestCase implements
 
     protected function setUp()
     {
-        $guy = $this->actor;
-        if ($guy) {
-            $property      = lcfirst($guy);
-            $this->$property = new $guy($this->scenario);
+        $actor = $this->actor;
+        if ($actor) {
+            $property = lcfirst(Configuration::config()['actor']);
+            $this->$property = new $actor($this->scenario);
         }
         $this->getScenario()->run();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));

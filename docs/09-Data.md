@@ -90,7 +90,7 @@ Fixture usage in a sample acceptance or functional test.
 
 ```php
 <?php
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->amLoggedAs($davert);
 $I->see('Welcome, Davert');
 ?>
@@ -106,7 +106,7 @@ If you want to create special database record for one test, you can use [`haveIn
 
 ```php
 <?php 
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->haveInDatabase('posts', array('title' => 'Top 10 Testing Frameworks', 'body' => '1. Codeception'));
 $I->amOnPage('/posts');
 $I->see('Top 10 Testing Frameworks');

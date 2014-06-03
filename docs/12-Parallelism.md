@@ -102,7 +102,13 @@ parallel
 
 ## Sample Project
 
-Let's say we have long running acceptance tests and we want them to be split into 5 processes. To make tests not be conflicted with each other they should use different hosts databases. Thus, before proceed we need to  configure 5 different hosts in Apache/Nginx. Based on host our application should use corresponding databases. And yes, we need to create 5 databases for them. We omit those configuration steps, as they depend on application itself.
+Let's say we have long running acceptance tests and we want them to be split into 5 processes. To make tests not be conflicted with each other they should use different hosts databases. Thus, before proceed we need to configure 5 different hosts in Apache/Nginx (or just run application on different ports in PHP Built In Server). Based on host our application should use corresponding databases.
+
+Alternatively you can prepare **isolated environments** using [Docker](https://www.docker.io/) or [LXC](https://linuxcontainers.org/) lightweight Linux containers. Each testing process can be executed in its own container. Spawn new containers and run more processes are much easier then manually creating additional databases and hosts. Also you are creating a more stable testing environments (no database, files, processes conflicts). But you to provision your containers as you regularly do when creating virtual machines. 
+
+You can also think on running your tests on remote hosts using SSH.
+
+In current example we assume that we prepared 5 databases and 5 independent hosts for our application.
 
 ### Step 1: Split Tests
 
@@ -190,7 +196,7 @@ As it was mentioned Robo has `ParallelExec` task to spawn background processes. 
 We missed something really important. We forgot to define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
 
 ```
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     enabled: [WebDriver, Db]
     config:

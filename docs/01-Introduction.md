@@ -14,17 +14,17 @@ Let's review the listed testing paradigms in reverse order.
 
 ### Acceptance Tests
 
-How does your client, manager, or tester, or any other non-technical person, know your site is working? She opens the browser, enters the site, clicks on links, fills the forms, and sees the proper pages as a result. She has no idea of the framework, database, web-server, or programming language you are using. If she sees improper behavior, she will create a bug report. Still this person has no idea why the application didn't work as expected.
+How does your client, manager, or tester, or any other non-technical person, know your site is working? By opening browser, accessing a site, clicking on links, filling the forms, and actually seeing the contant on a web page. That person has no idea of the framework, database, web-server, or programming language you use or why application did not behave as it was expected.
 
-Acceptance tests can cover standard but complex scenarios from a user perspective. With acceptance tests you can be confident that users, following all defined scenarios, won't get errors. 
+Acceptance tests can cover standard but complex scenarios from a user's perspective. With acceptance tests you can be confident that users, following all defined scenarios, won't get errors. 
 
-Please, note that **any site** can be covered with acceptance tests. Even if you use a very custom CMS or framework.
+Please, note that **any web site** can be covered with acceptance tests. Even if you use a very custom CMS or framework.
 
 #### Sample acceptance test
 
-``` php
+```php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->amOnPage('/');
 $I->click('Sign Up');
 $I->submitForm('#signup', array('username' => 'MilesDavis', 'email' => 'miles@davis.com'));
@@ -37,29 +37,28 @@ $I->see('Thank you for Signing Up!');
 * can be run on any website
 * can test javascript and ajax requests
 * can be shown to your clients and managers
-* the most stable: less affected by changes in source code or technologies.
+* most stable in support: less affected by changes in source code or technologies.
 
 #### Cons
-* fewer checks can lead to false-positive results
 * the slowest: requires running browser and database repopulation.
+* fewer checks can lead to false-positive results
 * yep, they are really slow.
+* not stable in execution: rendering and javascript issues, can lead to unpredicted results. 
 
 
 ### Functional Tests
 
-Let's say your application is tested by a technically advanced guy. He also opens the browser, enters the site, clicks links and submits forms, but when an error occurs he can report to you the exception that was thrown, or check the database for expected values. This guy already knows some aspects of your application, and by knowing that his tests can cover more technical details.
+What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's a are what functional tests are for.
 
-Functional tests are run without browser emulation. For functional tests you emulate a web request and submit it to your application. It should return to you a response. You can make assertions about the response, and also access the application's internal values.
+For functional tests you emulate a web request ($_GET, $_POST variables) and send it into your application which returns HTML response. Inside a test you can make assertions about the response, also you can check the data was succesfully stored into database.
 
-For functional tests your application should be prepared to be run in test mode. For frameworks like Symfony2, Symfony1, or Zend, it's easy to start an application in test mode. 
-
-Codeception provides connectors to several popular PHP frameworks, but you can write your own.
+For functional tests your application should be prepared to be run in test environment. Codeception provides connectors to several popular PHP frameworks, but you can write your own.
 
 #### Sample functional test
 
 ```php
 <?php
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->amOnPage('/');
 $I->click('Sign Up');
 $I->submitForm('#signup', array('username' => 'MilesDavis', 'email' => 'miles@davis.com'));
@@ -84,9 +83,7 @@ $I->seeInDatabase('users', array('email' => 'miles@davis.com'));
 
 ### Unit Tests
 
-Only the developer understands how and what is tested here. It can be either unit or integration tests, but they are limited to check one method per test.
-
-The only difference between unit tests and integration tests is that a unit test should be run in total isolation. All other classes or methods should be replaced with stubs. 
+Testing pieces of code before coupling them together is highly important as well. This way you can be sure that some deeply hidden feature still works, even it was not touched by functional or acceptance tests. This also proves you produced stable and testable code.
 
 Codeception is created on top of [PHPUnit](http://www.phpunit.de/). If you have experience writing unit tests with PHPUnit you can continue doing so. Codeception has no problem executing standard PHPUnit tests. 
 
@@ -103,14 +100,14 @@ function testSavingUser()
     $user->setSurname('Davis');
     $user->save();
     $this->assertEquals('Miles Davis', $user->getFullName());
-    $this->codeGuy->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+    $this->unitTester->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
 
 #### Pros
 
-* fast as hell (well, in the current example, you still need database repopulation).
+* fastest (well, in the current example, you still need database repopulation).
 * can cover rarely used features.
 * can test stability of application core.
 * you can only be considered a good developer if you write them :)
@@ -118,10 +115,10 @@ function testSavingUser()
 #### Cons
 
 * doesn't test connections between units.
-* most unstable: very sensitive to code changes.
+* unstable in support: very sensitive to code changes.
 
 ## Conclusion
 
-Despite the wide popularity of TDD, few PHP developers ever write automatic tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests in one style.
+Despite the wide popularity of TDD, not all PHP developers ever write automatic tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests in one style.
 
 It could be called a BDD framework. All Codeception tests are written in a descriptive manner. Just by looking in the test body you can get a clear understanding of what is being tested and how it is performed. Even complex tests with many assertions are written in a simple PHP DSL.

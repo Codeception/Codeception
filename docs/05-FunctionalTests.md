@@ -1,17 +1,16 @@
 # Functional Tests
 
-Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: Functional tests don't require a web server to run your scenarios. In other words, we will run your application inside the tests, emulating requests and response.
+Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: Functional tests don't require a web server to run tests.
 
-In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables, then we execute your script inside a test, we receive output, and then we test it. 
-Functional testing may often be better then acceptance testing because it doesn't require a web server and may provide you with more detailed debug output. For example, if your site throws an exception it will be shown in the console.
+In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables then we execute application from a test. This may be valueble as functional tests are faster and prvoide detailed stack traces on failures.
 
-Codeception can connect to different web frameworks which support functional testing. For example you can run a functional test for an application built on top of the Zend Framework, Symfony or Symfony2 with just the modules provided by Codeception! The list of supported frameworks will be extended in the future.
+Codeception can connect to different web frameworks which support functional testing: Symfony2, Laravel4, Yii2, Zend Framework and others. You just need to enable desired module in your functional suite config to start.
 
-Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them! This is a sample functional test.
+Modules for all of these frameworks share the same interface, and thus your tests are not bound to any one of them. This is a sample functional test.
 
 ```php
 <?php
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->amOnPage('/');
 $I->click('Login');
 $I->fillField('Username','Miles');
@@ -22,12 +21,11 @@ $I->see('Hello, Miles', 'h1');
 ?>
 ```
 
-That was just as acceptance test. As you see you can use same tests for functional and acceptance testing. 
-We recommend writing tests on unstable parts of your application as functional tests, and testing the stable parts with acceptance tests.
+As you see you can use same tests for functional and acceptance testing. 
 
 ## Pitfalls
 
-Acceptance tests are usually much slower than functional tests. But functional tests are less stable, as they run testing framework and application in one environment.
+Acceptance tests are usually much slower than functional tests. But functional tests are less stable as they run Codeception and application in one environment.
 
 #### Headers, Cookies, Sessions
 
@@ -42,60 +40,25 @@ So **if you see that your tests are mysteriously failing when they shouldn't - t
 This will check if tests were isolated during run. Because it's really easy to spoil environment as all tests are run in shared memory.
 Keep your memory clean, avoid memory leaks and clean global and static variables.
 
-## Starting Functional
+## Enabling Framework Modules
 
 You have a functional testing suite in `tests/functional` dir.
-To start you need to include one of the framework's module in suite config file: `tests/functional.suite.yml`.
-
-To generate a test you can use standard `generate:cept` command:
-
-```
-php codecept.phar generate:cept functional myFirstFunctional
-```
-
-And execute them with `run`:
-
-```
-php codecept.phar run functional
-```
-
-Use `--debug` option for more detailed output.
-
-## Error Reporting
-
-By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting value. 
-In functional tests you might want to change this values depending on framework's error policy.
-The error reporting value can be set at suite configuraion file:
-
-```yaml
-class_name: TestGuy
-modules:
-    enabled: [Yii1, TestHelper]
-error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
-```
-
-`error_level` can be set globally in `codeception.yml` file.
-
-## Frameworks
-
-Codeception have integrations for the most popular PHP frameworks.
-We aim to get modules for all of the most popular ones.
-Please help to develop them if you don't see your favorite framework in a list.
+To start you need to include one of the framework's module in suite config file: `tests/functional.suite.yml`. Below we provide simplified instructions for setting up functional tests with most popular PHP frameworks
 
 ### Symfony2
 
-To perform Symfony2 integrations you don't need to install any bundles or perform any configuration changes.
+To perform Symfony2 integrations you don't need to install any bundles or do any configuration changes.
 You just need to include the Symfony2 module into your test suite. If you also use Doctrine2, don't forget to include it either.
 
 Example for `functional.suite.yml`
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled: [Symfony2, Doctrine2, TestHelper] 
 ```
 
-By default this module wilyl search for Kernel in the `app` directory.
+By default this module will search for App Kernel in the `app` directory.
 
 The module uses the Symfony Profiler to provide additional information and assertions.
 
@@ -106,7 +69,7 @@ The module uses the Symfony Profiler to provide additional information and asser
 [Laravel](http://codeception.com/docs/modules/Laravel4) module is zero configuration and can be easily set up.
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled: [Laravel4, TestHelper]
 ```
@@ -123,7 +86,7 @@ So Codeception is the first and only functional testing framework for Yii.
 To use it with Yii include `Yii1` module into config.
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled: [Yii1, TestHelper]
 ```
@@ -136,7 +99,7 @@ Please set them up [following the installation steps in module reference](http:/
 Use [ZF2](http://codeception.com/docs/modules/ZF2) module to run functional tests inside Zend Framework 2.
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled: [ZF2, TestHelper]
 ```
@@ -149,102 +112,121 @@ It follows similar approaches for bootstrapping and cleaning up. To start using 
 Example for `functional.suite.yml`
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled: [ZF1, TestHelper] 
 ```
 
 [See the full reference](http://codeception.com/docs/modules/ZF1)
 
-### symfony
+#### Phalcon 1.x
 
-This module was the first one developed for Codeception. Because of this, its actions may differ from what are used in another frameworks.
-It provides various useful operations like logging in a user with sfGuardAuth or validating the form inside a test.
-
-Example for `functional.suite.yml`
+Phalcon1 module requires creating bootstrap file which returns instance of `\Phalcon\Mvc\Application`. To start functional tests with Phalcon you should enable Phalon1 module and provid path to this bootstrap file:
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
-    enabled: [Symfony1, TestHelper] 
+    enabled: [Phalcon1, FunctionalHelper]
+    config:
+        Phalcon1
+            bootstrap: 'app/config/bootstrap.php'
 ```
 
-[See the full reference](http://codeception.com/docs/modules/Symfony1)
+[See the full reference](http://codeception.com/docs/modules/Phalcon1)
 
-## Integrating Other Frameworks
+## Writing Functional Tests
 
-Codeception doesn't provide any generic functional testing module because there are a lot of details we can't implement in general.
-We already discussed the common pitfalls for functional testing. There is no single recipe to solve them for all PHP applications.
-So if you don't use any of the frameworks listed above, you might want to integrate your framework into Codeception. That task requires some knowledge of Codeception internals and some time. Probably, you are ok with just acceptance tests, but any help in extending Codeception functionality will be appreciated. We will review what should be done to have your framework integrated.
+Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/04-AcceptanceTests) with PhpBrowser module enabled. All framework modules and PHPBrowser module share the same methods and the same engine.
 
-#### With HttpKernel
-
-If you have a framework that uses Symfony's `HttpKernel`, using it with Codeception will be a piece of cake.
-You will need to create a module for it and test it on your application.
-We already have a [guide for such an integration](http://codeception.com/01-24-2013/connecting-php-frameworks-1.html).
-Develop a module, try it and share with community.
-
-#### Any Other
-
-Integration is a bit harder if your framework is not using HttpKernel component.
-The hardest part of it is resolving common pitfalls: memory management, and usage of `headers` function.
-Codeception uses [BrowserKit](https://github.com/symfony/BrowserKit) from the Symfony Components to interact with applications in functional tests. This component provides all of the common actions we see in modules: click, fillField, see, etc... So you don't need to write these methods in your module. For the integration you should provide a bridge from BrowserKit to your application.
-
-We will start with writing a helper class for framework integration.
+So we can open a web page with `amOnPage` command.
 
 ```php
 <?php
-namespace Codeception\Module;
-class SomeFrameworkHelper extends \Codeception\Util\Framework {
-     
+$I = new FunctionalTester;
+$I->amOnPage('/login');
+?>
+```
+
+We can click on links to open web pages of application.
+
+```php
+<?php
+$I->click('Logout');
+// click link inside .nav element
+$I->click('Logout', '.nav');
+// click by CSS
+$I->click('a.logout');
+?>
+```
+
+We can submit form as well
+
+```php
+<?php
+$I->submitForm('form#login', ['name' => 'jon', 'password' => '123456']);
+// alternatively
+$I->fillField('#login input[name=name]', 'jon');
+$I->fillField('#login input[name=password]', '123456');
+$I->click('Sibmut', '#login');
+?>
+```
+
+And do assertions:
+
+```php
+<?php
+$I->see('Welcome, jon');
+$I->see('Logged in successfulyy', '.notice');
+$I->seeCurrentUrlEquals('/profile/jon');
+?>
+```
+
+Framework modules also contain additional methods to access framework internals. For instance, Laravel4, Phalcon1, and Yii2 module have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
+Laravel4 module also contain methods to do additional session checks. You may find `seeSessionHasErrors` useful when you test form validations.
+
+Take a look on the complete reference on module you are using. Most of its methods are common for all modules but some of them are unique.
+
+Also you can access framework globals inside a test or access Depenency Injection containers inside `FunctionalHelper` class.
+
+```php
+<?php
+class FunctionalHelper extends \Codeception\Module
+{
+    function doSomethingWithMyService()
+    {
+        $service = $this->getModule('Symfony2') // lookup for Symfony 2 module
+            ->kernel // get Symfony Kernel from public properties
+            ->getContainer() // get container from kernel
+            ->get('my_service'); // access a service
+
+        $service->doSomthing();
+    }
 }
 ?>
 ```
 
-Let's investigate [Codeception source code](https://github.com/Codeception/Codeception).
-Look into the `src/Util/Framework.php` file that we extend. It implements all of the common actions for all frameworks.
+We accessed Symfony2 internal kernel and took a service out of container. We also created custom method in `FunctionalTester` class which can be used in test.
 
-You may see that all of the interactions are performed by a 'client' instance. We need to create a client that connects to a framework.
-Client should extend Symfony\BrowserKit\Client module, sample clients are in the `src/Util/Connector` path. 
-If the framework doesn't provide its own tools for functional testing you can try using the Universal connector. Otherwise, look at how the Zend connector is implemented, and implement your own connector.
+You can learn more about accessing framework you use by checking *Public Properties* section in respective module. 
 
-Whether you decide to use the Universal connector or write your own, you can include it into your module.
+## Error Reporting
 
-```php
-<?php
-namespace Codeception\Module;
-class SomeFrameworkHelper extends \Codeception\Util\Framework {
-     
-    public function _initialize() {
-        $this->client = new \Codeception\Util\Connector\Universal();
-        // or any other connector you implement
-        
-        // we need specify path to index file
-        $this->client->setIndex('public_html/index.php');
-    }     
-}
-?>
+By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting value. 
+In functional tests you might want to change this values depending on framework's error policy.
+The error reporting value can be set at suite configuraion file:
+
+```yaml
+class_name: FunctionalTester
+modules:
+    enabled: [Yii1, TestHelper]
+error_level: "E_ALL & ~E_STRICT & ~E_DEPRECATED"
 ```
 
-If you include this helper into your suite, it can already perform interactions with your applications.
-You can extend its abilities by connecting to the framework internals. 
-It's important to perform a proper clean up on each test run. 
-This can be done in the _before_ and _after_ methods of the helper module. Check that the framework doesn't cache any data or configuration between tests.
+`error_level` can be set globally in `codeception.yml` file.
 
-After you get your module stabilized, share it with the community. Fork a Codeception repository, add your module and make a Pull Request.
-
-There are some requirements for modules:
-
-* It should be easy to configure.
-* It should contain proper documentation.
-* It should extend basic operations by using framework internals.
-* It's preferred that it be able to print additional debug information.
-
-We don't require unit tests, because there is no good way for writing proper unit tests for framework integration.
-But you can demonstrate a sample application with your framework which uses Codeception tests and your module. 
 
 ## Conclusion
 
 Functional tests are great if you are using powerful frameworks. By using functional tests you can access and manipulate their internal state. 
-This makes your tests shorter and faster. In other cases, if you don't use frameworks, there is no practical reason to write functional tests.
+This makes your tests shorter and faster. In other cases, if you don't use frameworks there is no practical reason to write functional tests.
 If you are using a framework other than the ones listed here, create a module for it and share it with community.

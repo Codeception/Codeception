@@ -1,7 +1,7 @@
 # Acceptance Testing
 
-Acceptance testing is testing that can be performed by a non-technical person. That person can be your tester, manager or even client.
-If you are developing a web-application (and probably you are) the tester needs nothing more than a web browser to check that your site works correctly. In Codeception we call such testers a WebGuy. You can reproduce a WebGuy's actions in scenarios and run them automatically after each site change. Codeception keeps tests clean and simple, since they were recorded from the words of WebGuy. 
+Acceptance testing can be performed by a non-technical person. That person can be your tester, manager or even client.
+If you are developing a web-application (and probably you are) the tester needs nothing more than a web browser to check that your site works correctly. You can reproduce a AcceptanceTester's actions in scenarios and run them automatically after each site change. Codeception keeps tests clean and simple, like if they were recorded from the words of AcceptanceTester.
 
 It makes no difference what CMS or Framework is used on the site. You can even test sites created on different platforms, like Java, .NET, etc. It's always a good idea to add tests to your web site. At least you will be sure that site features work after the last changes were made. 
 
@@ -11,11 +11,11 @@ Probably the first test you would want to run would be signing in. In order to w
 
 ```php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->wantTo('sign in');
 $I->amOnPage('/login');
-$I->fillField('signin[username]', 'davert');
-$I->fillField('signin[password]','qwerty');
+$I->fillField('username', 'davert');
+$I->fillField('password','qwerty');
 $I->click('LOGIN');
 $I->see('Welcome, Davert!');
 ?>
@@ -26,8 +26,8 @@ This scenario can probably be read by non-technical people. Codeception can even
 ```
 I WANT TO SIGN IN
 I am on page '/login'
-I fill field ['signin[username]', 'davert']
-I fill field ['signin[password]', 'qwerty']
+I fill field 'username', 'davert'
+I fill field 'password', 'qwerty'
 I click 'LOGIN'
 I see 'Welcome, Davert!'
 ```
@@ -40,26 +40,26 @@ $ php codecept.phar generate:scenarios
 
 Generated scenarios will be stored in your ___data__ directory in text files.
 
-**This scenario can be performed either by a simple PHP browser or by a browser with Selenium WebDriver**. We will start writing our first acceptance tests with a PHP Browser. This is a good place to start if you don't have experience working with Selenium Server or Sahi. 
+**This scenario can be performed either by a simple PHP browser or by a browser with Selenium WebDriver**. We will start writing our first acceptance tests with a PHPBrowser. 
 
 ## PHP Browser
 
-This is the fastest way to run acceptance tests, since it doesn't require running an actual browser. We use a PHP web spider, which acts like a browser: it sends a request, then receives and parses the response. For such a browser Codeception uses [Goutte Web Scraper](https://github.com/fabpot/Goutte). Unlike common browsers Goutte has no rendering or javascript processing engine, so you can't test actual visibility of elements, or javascript interactions. The good thing about Goutte is that it can be run in any environment, with just PHP and CURL required.
+This is the fastest way to run acceptance tests, since it doesn't require running an actual browser. We use a PHP web scrapper, which acts like a browser: it sends a request, then receives and parses the response. Codeception uses [Guzzle](http://guzzlephp.org) and Symfony BrowserKit to interact with HTML web pages. Please note that you can't test actual visibility of elements, or javascript interactions. Good thing about PhpBrowser is that it can be run in any environment with just PHP and CURL required.
 
 Common PhpBrowser drawbacks:
 
 * you can click only on links with valid urls or form submit buttons
 * you can't fill fields that are not inside a form
-* you can't work with JavaScript interactions: modal windows, datepickers, etc. 
+* you can't work with JavaScript interactions: modal windows, datepickers, etc.
 
 Before we start we need a local copy of the site running on your host. We need to specify the url parameter in the acceptance suite config (tests/acceptance.suite.yml).
 
 ``` yaml
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser
-        - WebHelper
+        - AcceptanceHelper
         - Db
     config:
         PhpBrowser:
@@ -70,12 +70,12 @@ We should start by creating a 'Cept' file in the __tests/acceptance__ directory.
 
 ```php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->wantTo('sign in with valid account');
 ?>
 ```
 
-The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to make a Codeception scenario a BDD Story. If you have ever written a BDD scenario in Gherkin, you can translate a classic story into Codeception code.
+The `wantTo` section describes your scenario in brief. There are additional comment methods that are useful to make a Codeception scenario a BDD Story. If you have ever written a BDD scenario in Gherkin, you can write a classic feature story:
 
 ```bash
 As an Account Holder
@@ -83,11 +83,11 @@ I want to withdraw cash from an ATM
 So that I can get money when the bank is closed
 ```
 
-Becomes:
+in Codeception style:
 
 ```php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->am('Account Holder'); 
 $I->wantTo('withdraw cash from an ATM');
 $I->lookForwardTo('get money when the bank is closed');
@@ -96,7 +96,7 @@ $I->lookForwardTo('get money when the bank is closed');
 
 After we have described the story background, let's start writing a scenario. 
 
-The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PHPBrowser` and `Db` modules. We will briefly describe them here, but for the full reference look into the modules reference, here on [Codeception.com](http://codeception.com). 
+The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PHPBrowser` and `Db` modules. We will briefly describe them here: 
 
 ```php
 <?php
@@ -104,26 +104,41 @@ $I->amOnPage('/login');
 ?>
 ```
 
-We assume that all `am` commands should describe the starting environment. The `amOnPage` command sets the starting point of a test on the __/login__ page. By default the browser starts on the front page of your local site. 
+We assume that all `am` commands should describe the starting environment. The `amOnPage` command sets the starting point of a test on the __/login__ page.
 
 With the `PhpBrowser` you can click the links and fill the forms. That will probably be the majority of your actions.
 
 #### Click
 
 Emulates a click on valid anchors. The page from the "href" parameter will be opened.
-As a parameter you can specify the link name or a valid CSS selector. Before clicking the link you can perform a check if the link really exists on a page. This can be done by the `seeLink` action.
+As a parameter you can specify the link name or a valid CSS or XPath selector. 
 
 ```php
 <?php
 $I->click('Log in'); 
 // CSS selector applied
 $I->click('#login a');
+// XPath
+$I->click('//a[@id=login]');
+// By specifying locator type
+$I->click(['link' => 'Login']);
+// Using context as second argument
+$I->click('Login', '.nav');
+?>
+```
+
+Before clicking the link you can perform a check if the link really exists on 
+a page. This can be done by the `seeLink` action.
+
+```php
+<?php
 // checking that link actually exists
 $I->seeLink('Login');
 $I->seeLink('Login','/login');
 $I->seeLink('#login a','/login');
 ?>
 ```
+
 
 #### Forms
 
@@ -153,7 +168,7 @@ From a user's perspective, a form consists of fields which should be filled, and
 <?php
 // we are using label to match user_name field
 $I->fillField('Name', 'Miles');
-// we can use input name, or id
+// we can use input name or id
 $I->fillField('user[email]','miles@davis.com');
 $I->selectOption('Gender','Male');
 $I->click('Update');
@@ -176,12 +191,11 @@ $I->submitForm('#update_form', array('user' => array(
 ```
 
 The `submitForm` is not emulating a user's actions, but it's quite useful in situations when the form is not formatted properly.
-Whether labels aren't set, or fields have unclean names, or badly written ids, or the form is sent by a javascript call, `submitForm` is quite useful. 
-Consider using this action for testing pages with bad html-code.
+Whether labels aren't set or fields have unclean names or badly written ids, or the form is sent by a javascript call, `submitForm` is quite useful. 
 
 #### AJAX Emulation
 
-As we know, PHP browser can't process JavaScript. Still, all the ajax calls can be easily emulated, by sending the proper GET or POST request to the server.
+As we know, PHP browser can't process JavaScript. Still, all the ajax calls can be easily emulated by sending the proper requests to the server.
 
 Consider using these methods for ajax interactions.
 
@@ -195,6 +209,7 @@ $I->sendAjaxPostRequest('/update',array('name' => 'Miles', 'email' => 'Davis'));
 #### Assertions
 
 In the PHP browser you can test the page contents. In most cases you just need to check that the required text or element is on the page.
+
 The most useful command for this is `see`.
 
 ```php
@@ -208,6 +223,15 @@ $I->see('Thank you, Miles','.notice');
 $I->see('Thank you, Miles',"descendant-or-self::*[contains(concat(' ', normalize-space(@class), ' '), ' notice ')]");
 // We check this message is not on page.
 $I->dontSee('Form is filled incorrectly');
+?>
+```
+
+You can check that specific element exists (or not) on a page
+
+```php
+<?php
+$I->seeElement('.notice');
+$I->dontSeeElement('.error');
 ?>
 ```
 
@@ -234,11 +258,11 @@ $I->cantSeeInField('user[name]','Miles');
 ?>
 ```
 
-Each failed assertion will be shown in test results. Still, a failed assertion won't stop the test execution.
+Each failed assertion will be shown in test results. Still, a failed assertion won't stop the test.
 
 #### Grabbers
 
-These commands were introduced in Codeception 1.1. They are quite useful when you need to retrieve data from the test and use it in any of the following steps. Imagine, your site generates a password for every user and you want to check the user can log into the site using this password.
+These commands retrieves data that can be used in test. Imagine, your site generates a password for every user and you want to check the user can log into the site using this password.
 
 ```php
 <?php
@@ -265,7 +289,7 @@ $api_key = $I->grabValueFrom('input[name=api]');
 #### Comments
 
 Within a long scenario you should describe what actions you are going to perform and what results to achieve.
-Commands like amGoingTo, expect, expectTo helps you in making tests more descriptive.
+Commands like `amGoingTo`, `expect`, `expectTo` helps you in making tests more descriptive.
 
 ```php
 <?php
@@ -314,12 +338,12 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 A nice feature of Codeception is that most scenarios can be easily ported between the testing backends.
 Your PhpBrowser tests we wrote previously can be executed inside a real browser (or even PhantomJS) with Selenium WebDriver.
 
-The only thing we need to change is to reconfigure and rebuild the WebGuy class, to use **WebDriver** instead of PhpBrowser.
+The only thing we need to change is to reconfigure and rebuild the AcceptanceTester class, to use **WebDriver** instead of PhpBrowser.
 
 Modify your ```acceptance.suite.yml``` file...
 
 ```yaml
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver
@@ -330,19 +354,15 @@ modules:
             browser: firefox            
 ```
 
-After making changes to this file, you will often need to 'rebuild' the Codeception base classes.  You do this by running `codecept build` on the command line.
-
 In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/) and get it running (Alternatively you may use [PhantomJS](http://phantomjs.org/) headless browser in `ghostdriver` mode).
 
-If you run acceptance tests with Selenium, Firefox will be started and all actions will be performed step by step. Unlike PHPBrowser we are not emulating the user actions, but execute them inside a browser engine.
+If you run acceptance tests with Selenium, Firefox will be started and all actions will be performed step by step using browser engine. 
 
-For instance `see` command with element set, won't just check that the text exists inside the element, but it will also check that this element is actually visible to the user.
+In this case `seeElement` won't just check that the element exists on a page, but it will also check that element is actually visible to user.
 
 ```php
 <?php 
-// will check the element #modal 
-// is visible and contains 'Confirm' text.
-$I->see('Confirm','#modal'); 
+$I->seeElement('#modal'); 
 ?>
 ```
 
@@ -381,7 +401,7 @@ modules:
 
 ### Debugging
 
-The PhpBrowser module can output valuable information while running. Just execute tests with the `--debug` option to see running details. For any custom output use `codecept_debug` function (added in 2.0).
+Codeception modules can print valuable information while running. Just execute tests with the `--debug` option to see running details. For any custom output use `codecept_debug` function.
 
 ```php
 <?php
@@ -390,7 +410,7 @@ codecept_debug($I->grabTextFrom('#name'));
 ```
 
 
-On each fail, the snapshot of the last shown page will be stored in the __tests/_log__ directory. PHPBrowser will store html code and Selenium will save the screenshot of a page.
+On each fail, the snapshot of the last shown page will be stored in the __tests/_log__ directory. PHPBrowser will store html code and WebDriver will save the screenshot of a page.
 
 ## Conclusion
 

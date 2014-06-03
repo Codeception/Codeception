@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Configuration;
 use Codeception\Util\Template;
 
 class Test
@@ -16,9 +17,9 @@ use Codeception\Util\Stub;
 class {{name}}Test extends \Codeception\TestCase\Test
 {
    /**
-    * @var \{{guyClass}}
+    * @var \{{actorClass}}
     */
-    protected \${{guy}};
+    protected \${{actor}};
 
     protected function _before()
     {
@@ -48,9 +49,9 @@ EOF;
 
     public function produce()
     {
-        $guy = $this->settings['class_name'];
+        $actor = $this->settings['class_name'];
         if ($this->settings['namespace']) {
-            $guy = $this->settings['namespace'].'\\'.$guy;
+            $actor = $this->settings['namespace'].'\\'.$actor;
         }
 
         $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
@@ -58,8 +59,8 @@ EOF;
         return (new Template($this->template))
             ->place('namespace', $ns)
             ->place('name', $this->getShortClassName($this->name))
-            ->place('guyClass', $guy)
-            ->place('guy', lcfirst($guy))
+            ->place('actorClass', $actor)
+            ->place('actor', lcfirst(Configuration::config()['actor']))
             ->produce();
     }
 

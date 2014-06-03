@@ -1,9 +1,11 @@
+
 # Unit Tests
 
 Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test can be added to Codeception test suite and then executed.
-If you ever wrote a PHPUnit test, then do it as well as you did before. Codeception will add you some cool helpers to simplify common tasks.
-If you don't have experience in writing unit tests, please read the [PHPUnit manual](http://www.phpunit.de/manual/3.6/en/index.html) to start.
-The basics of unit tests are skipped here, but instead you will get a basic knowledge on what features Codeception adds to unit tests.
+If you ever wrote a PHPUnit test then do it just as you did before. 
+Codeception adds some nice helpers to simplify common tasks.
+
+The basics of unit tests are skipped here, instead you will get a basic knowledge on what features Codeception adds to unit tests.
 
 __To say it again: you don't need to install PHPUnit to run its tests. Codeception can run them too.__
 
@@ -35,9 +37,9 @@ use Codeception\Util\Stub;
 class ExampleTest extends \Codeception\TestCase\Test
 {
    /**
-    * @var CodeGuy
+    * @var UnitTester
     */
-    protected $codeGuy;
+    protected $UnitTester;
 
     // executed before each test
     protected function _before()
@@ -55,7 +57,7 @@ class ExampleTest extends \Codeception\TestCase\Test
 This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
 
 As you see unlike in PHPUnit setUp/tearDown methods are replaced with their aliases: `_before`, `_after`.
-The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and is used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
+The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and is used to include a bootstrap file (`_bootstrap.php` by default) and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
 So If you implement `setUp` and `tearDown` be sure, that you will call their parent method.
 
 
@@ -63,7 +65,7 @@ So If you implement `setUp` and `tearDown` be sure, that you will call their par
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: CodeGuy
+class_name: UnitTester
 modules:
     enabled: [CodeHelper]
 ```
@@ -145,12 +147,12 @@ As in scenario-driven functional or acceptance tests you can access actor class 
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: CodeGuy
+class_name: UnitTester
 modules:
     enabled: [Db, CodeHelper]
 ```
 
-To access CodeGuy methods you can use `codeGuy` property in a test.
+To access UnitTester methods you can use `UnitTester` property in a test.
 
 ### Testing Database
 
@@ -165,7 +167,7 @@ function testSavingUser()
     $user->setSurname('Davis');
 	$user->save();
     $this->assertEquals('Miles Davis', $user->getFullName());
-	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+	$this->UnitTester->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
@@ -175,7 +177,7 @@ If it's not your required behavior, please change the settings of `Db` module fo
 
 ### Accessing Module 
 
-Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the CodeGuy class for this purpose, using module directly grants you access to all public properties of that module.
+Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the UnitTester class for this purpose, using module directly grants you access to all public properties of that module.
 
 For example, if you use `Symfony2` module here is the way you can access Symfony container:
 
@@ -200,7 +202,7 @@ The example above can be rewritten in scenario-driven manner like this:
 <?php
 class UserCest
 {
-    function validateUser(CodeGuy $I)
+    function validateUser(UnitTester $I)
     {
         $user = $I->haveUser();
         $user->username = null;
@@ -224,7 +226,7 @@ For unit testing you may include `Asserts` module, that adds regular assertions 
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: CodeGuy
+class_name: UnitTester
 modules:
     enabled: [Asserts, Db, CodeHelper]
 ```

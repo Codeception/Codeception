@@ -9,7 +9,7 @@ Let's look at this test.
 
 ```php
 <?php
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->amOnPage('/');
 $I->see('Hello');
 $I->seeInDatabase('users', array('id' => 1));
@@ -17,73 +17,72 @@ $I->seeFileFound('running.lock');
 ?>
 ```
 
-It can operate with different entities: the web page can be loaded with the Symfony1 module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
+It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
 
-Modules are attached to Guy classes in the suite config.
+Modules are attached to Actor classes in the suite config.
 For example, in `tests/functional.suite.yml` we should see.
 
 ```yaml
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
-    enabled: [Symfony2, Db, Filesystem]
+    enabled: [PhpBrowser, Db, Filesystem]
 ```
 
-The TestGuy class has it's methods defined in modules. Actually, it doesn't contain any of them, but acts as a proxy for them. It knows which module executes this action and passes parameters into it. To make your IDE see all of the TestGuy methods, you use the `build` command. It generates the definition of the TestGuy class by copying the signatures from the configured modules.
+The FunctionalTester class has it's methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
 
 ## Standard Modules
 
 Codeception has many bundled modules which will help you run tests for different purposes and in different environments. The number of modules is not constant -- it's supposed to grow as more frameworks and ORMs are supported.
-See all of them listed in the main menu under Modules.
+See all of them listed in the main menu under Modules section.
 
 All of these modules are documented. You can review their detailed references on [GitHub](https://github.com/DavertMik/Codeception/tree/master/docs/modules).
 
 ## Helpers
 
-Codeception doesn't restrict you to only the modules from the main repository. No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command, Codeception generates three dummy modules for you, one for each of the newly created suites. These custom modules are called 'Helpers', and they can be found in the `tests/_helpers` path. 
+Codeception doesn't restrict you to only the modules from the main repository. No doubt your project might need your own actions added to the test suite. By running the `bootstrap` command, Codeception generates three dummy modules for you, one for each of the newly created suites. These custom modules are called 'Helpers', and they can be found in the `tests/_support` path. 
 
 It's a good idea to define missing actions or assertion commands in helpers. 
 
-Let's say we are going to extend the TestHelper class. By default it's linked with a TestGuy class and a functional test suite.
+Let's say we are going to extend the FunctionalHelper class. By default it's linked with a FunctionalTester class and functional test suite.
 
 ```php
 <?php
 namespace Codeception\Module;
-// here you can define custom functions for TestGuy
+// here you can define custom functions for FunctionalTester
 
-class TestHelper extends \Codeception\Module
+class FunctionalHelper extends \Codeception\Module
 {
 }
 ?>
 ```
 
-As for actions, everything is quite simple. Every action you define is a public function. Write any public method, run the `build` command, and you will see the new function added into the TestGuy class. Note: Public methods prefixed by `_` are treated as hidden and won't be added to your Guy class. 
+As for actions, everything is quite simple. Every action you define is a public function. Write any public method, run the `build` command, and you will see the new function added into the FunctionalTester class. Note: Public methods prefixed by `_` are treated as hidden and won't be added to your Actor class. 
 
-Assertions can be a bit tricky. First of all, it's recommended to prefix all your assert actions with `see` or `dontSee`. In Codeception philosophy, all tests are performed by humans, i.e. guys. The expected result they see (or don't see) is what we use for the assertion.
+Assertions can be a bit tricky. First of all, it's recommended to prefix all your assert actions with `see` or `dontSee`.
 
 Name your assertions like this:
 
 ```php
-seePageReloaded();
-seeClassIsLoaded($classname);
-dontSeeUserExist($user);
+<?php
+$I->seePageReloaded();
+$I->seeClassIsLoaded($classname);
+$I->dontSeeUserExist($user);
+?>
 ```
 And then use them in your tests:
 
 ```php
 <?php
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->seePageReloaded();
-$I->seeClassIsLoaded('TestGuy');
+$I->seeClassIsLoaded('FunctionalTester');
 $I->dontSeeUserExist($user);
 ?>
 ```
 
-Every `see` or `dontSee` function requires at least one assert. Codeception uses PHPUnit assertions.
+You can define asserts by using assertXXX methods in modules. Not all PHPUnit assrt methods are included in modules. But you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class to leverage all of them.
 
-You can define asserts by using assertXXX methods of the Codeception module.
-As Codeception uses PHPUnit asserts, if you miss some of the asserts, you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class for more.
-
-``` php
+```php
 <?php
 
 function seeClassExist($class)
@@ -97,7 +96,7 @@ function seeClassExist($class)
 
 In your helpers you can use these assertions:
 
-``` php
+```php
 <?php
 
 function seeCanCheckEverything($thing)
@@ -141,8 +140,8 @@ function reconnectToDatabase() {
 }
 ?>
 ```
-By using the `getModule` function you get access to all of the public methods and properties of the requested module.
-The dbh property was defined as public specifically to be available to other modules.
+
+By using the `getModule` function you get access to all of the public methods and properties of the requested module. The dbh property was defined as public specifically to be available to other modules.
 
 That technique may be also useful if you need to perform a sequence of actions taken from other modules.
 
@@ -160,26 +159,11 @@ function seeConfigFilesCreated()
 ?>
 ```
 
-### Undefined Actions in Helpers
-
-In case you have an action in test which is not defined yet, you can automatically create a stub method for it in the corresponding helper. To do so, you can use an `analyze` command which scans all tests and searches for actions that do not exist in any of the connected modules.
-
-So, you can assign writing tests to non-technical guys or QAs. In case they lack some actions they define them in test.
-
-```php
-<?php
-$I->doManyCoolThings();
-?>
-```
-
-By running the `analyze` command you will be asked if you want to add `doManyCoolThings` to the current Helper.
-
-
 ### Hooks
 
 Each module can handle events from the running test. A module can be executed before the test starts, or after the test is finished. This can be useful for bootstrap/cleanup actions.
 You can also define special behavior for when the test fails. This may help you in debugging the issue.
-For example, the PhpBrowser module saves the current webpage to the log directory if the test fails.
+For example, the PhpBrowser module saves the current webpage to the `tests/_output` directory when test fails.
 
 All hooks are defined in `\Codeception\Module` and are listed here. You are free to redefine them in your module.
 
@@ -224,14 +208,14 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
 ?>
 ```
 
-Please note that methods with a `_` prefix are not added to the Guy class. This allows them to be defined as public, but used only for internal purposes.
+Please note that methods with a `_` prefix are not added to the Actor class. This allows them to be defined as public but used only for internal purposes.
 
 ### Debug
 
 As we mentioned, the `_failed` hook can help in debugging a failed test. You have the opportunity to save the current test's state and show it to the user.
 
 But you are not limited to this. Each module can output internal values that may be useful during debug.
-For example, the PhpBrowser module prints the response code and current URL every time it moves to a new page.
+For example, PhpBrowser module prints the response code and current URL every time it moves to a new page.
 Thus, modules are not black boxes. They are trying to show you what is happening during the test. This makes debugging your tests less painful.
 
 To display additional information, use the `debug` and `debugSection` methods of the module.
@@ -266,9 +250,10 @@ class Db extends \Codeception\Module {
     protected $requiredFields = array('dsn', 'user', 'password');
 ?>
 ```
+
 The next time you start the suite without setting these values, an exception will be thrown. 
 
-For optional parameters, you should set default values. The `$config` property is used to define optional parameters as well as their values. In the Selenium module we use the default Selenium Server address and port. 
+For optional parameters, you should set default values. The `$config` property is used to define optional parameters as well as their values. In the WebDriver module we use default Selenium Server address and port. 
 
 ```php
 <?php
@@ -299,12 +284,10 @@ Optional and mandatory parameters can be accessed through the `$config` property
 
 ### Dynamic Configuration
 
-*new in 1.6.2*
-
 If you want to reconfigure module in run time, you can use the `_reconfigure` method of the module.
 You may call it from helper class and pass in all the fields you want to change.
 
-``` php
+```php
 <?php
 $this->getModule('WebDriver')->_reconfigure(array('browser' => 'chrome'));
 ?>
@@ -369,8 +352,8 @@ Still you can use inherited methods in your helper class.
 
 ## Conclusion
 
-Modules are the true power of Codeception. They are used to emulate multiple inheritance for Guy classes (CodeGuy, TestGuy, WebGuy, etc).
+Modules are the true power of Codeception. They are used to emulate multiple inheritance for Actor classes (UnitTester, FunctionalTester, AcceptanceTester, etc).
 Codeception provides modules to emulate web requests, access data, interact with popular PHP libraries, etc.
 For your application you might need custom actions. These can be defined in helper classes.
 If you have written a module that may be useful to others, share it.
-Fork the Codeception repository, put the module into the __src/Codeception/Module__ directory, and send a pull request. Many thanks if you do so.
+Fork the Codeception repository, put the module into the __src/Codeception/Module__ directory, and send a pull request

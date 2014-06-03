@@ -29,7 +29,7 @@ class BasicCest
     }
 
     // tests
-    public function tryToTest(\WebGuy $I) {
+    public function tryToTest(\AcceptanceTester $I) {
     
     }
 }
@@ -47,7 +47,7 @@ As you see we are passing Guy class into `tryToTest` stub. That allows us to wri
 class BasicCest
 {
     // test
-    public function checkLogin(\WebGuy $I) {
+    public function checkLogin(\AcceptanceTester $I) {
         $I->wantTo('log in to site');
         $I->amOnPage('/');
         $I->click('Login');
@@ -78,11 +78,11 @@ You can control Cest files with annotations. You can use `@guy` annotation to pa
 ```php
 <?php
 /**
- * @guy WebGuy\AdminSteps
+ * @guy AcceptanceTester\AdminSteps
  */
 class AdminCest {
 
-    function banUser(WebGuy\AdminSteps $I)
+    function banUser(AcceptanceTester\AdminSteps $I)
     {
         // ...
     }
@@ -94,11 +94,11 @@ The guy annotation can be added to method DocBlock as well.
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
 
-``` php
+```php
 <?php
 class ModeratorCest {
 
-    protected function login(WebGuy $I)
+    protected function login(AcceptanceTester $I)
     {
         $I->amOnPage('/login');
         $I->fillField('Username', 'miles');
@@ -109,7 +109,7 @@ class ModeratorCest {
     /**
      * @before login
      */
-    function banUser(WebGuy $I)
+    function banUser(AcceptanceTester $I)
     {
         $I->amOnPage('/users/charlie-parker');
         $I->see('Ban', '.button');
@@ -130,7 +130,7 @@ You should pass a method name of a test you are relying on.
 <?php
 class ModeratorCest {
 
-    public function login(WebGuy $I)
+    public function login(AcceptanceTester $I)
     {
         // logs moderator in
     }
@@ -138,7 +138,7 @@ class ModeratorCest {
     /**
      * @depends login
      */
-    function banUser(WebGuy $I)
+    function banUser(AcceptanceTester $I)
     {
         // bans user
     }
@@ -221,7 +221,7 @@ $scenario->group(array('admin', 'editor'))
 // or
 $scenario->groups(array('admin', 'editor'))
 
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->wantToTest('admin area');
 ?>
 ```
@@ -276,7 +276,7 @@ and used in your scenarios:
 
 ``` php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 TestCommons::logMeIn($I);
 ?>
 ``` 
@@ -316,7 +316,7 @@ And this is how this page object can be used in a test:
 
 ``` php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 $I->wantTo('login to site');
 $I->amOnPage(LoginPage::$URL);
 $I->fillField(LoginPage::$usernameField, 'bill evans');
@@ -336,7 +336,7 @@ php codecept.phar generate:pageobject acceptance UserLogin
 
 *we called this class UserLogin for not to get into conflict with Login class we created before*
 
-This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before, with one differences. A now stores an instance of Guy object passed. A webguy can be accessed via `webGuy` property of that class. Let's define a `login` method in this class.
+This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before, with one differences. A now stores an instance of Guy object passed. A AcceptanceTester can be accessed via `AcceptanceTester` property of that class. Let's define a `login` method in this class.
 
 ``` php
 <?php
@@ -347,23 +347,23 @@ class UserLoginPage
     static $URL = '/login';
 
     /**
-     * @var WebGuy;
+     * @var AcceptanceTester;
      */
-    protected $webGuy;
+    protected $AcceptanceTester;
 
-    public function __construct(WebGuy $I)
+    public function __construct(AcceptanceTester $I)
     {
-        $this->webGuy = $I;
+        $this->AcceptanceTester = $I;
     }
 
-    public static function of(WebGuy $I)
+    public static function of(AcceptanceTester $I)
     {
         return new static($I);
     }
 
     public function login($name, $password)
     {
-        $I = $this->webGuy;
+        $I = $this->AcceptanceTester;
 
         $I->amOnPage(self::$URL);
         $I->fillField(LoginPage::$usernameField, $name);
@@ -380,12 +380,12 @@ And here is an example of how this PageObject can be used in a test.
 
 ``` php
 <?php
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 UserLoginPage::of($I)->login('bill evans', 'debby');
 ?>
 ```
 
-Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a WebGuy. So it's up to you to use global page objects, or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
+Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a AcceptanceTester. So it's up to you to use global page objects, or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
 
 
 ## StepObjects
@@ -403,9 +403,9 @@ This will generate a similar class to `tests/acceptance/_steps/MemberSteps.php`.
 
 ``` php
 <?php
-namespace WebGuy;
+namespace AcceptanceTester;
 
-class MemberSteps extends \WebGuy
+class MemberSteps extends \AcceptanceTester
 {
     function login()
     {
@@ -416,14 +416,14 @@ class MemberSteps extends \WebGuy
 ?>
 ```
 
-As you see this class is very simple. But it inherits from `WebGuy` class, thus contains all its methods.
+As you see this class is very simple. But it inherits from `AcceptanceTester` class, thus contains all its methods.
 `login` method can be implemented like this:
 
 ``` php
 <?php
-namespace WebGuy;
+namespace AcceptanceTester;
 
-class MemberSteps extends \WebGuy
+class MemberSteps extends \AcceptanceTester
 {
     function login($name, $password)
     {
@@ -437,11 +437,11 @@ class MemberSteps extends \WebGuy
 ?>
 ```
 
-In tests you can use a StepObject by instantiating a MemberSteps class instead of WebGuy.
+In tests you can use a StepObject by instantiating a MemberSteps class instead of AcceptanceTester.
 
 ``` php
 <?php
-$I = new WebGuy\MemberSteps($scenario);
+$I = new AcceptanceTester\MemberSteps($scenario);
 $I->login('bill evans','debby');
 ?>
 ```
@@ -462,7 +462,7 @@ Let's demonstrate usage of environments for the browsers case.
 We add new lines into `acceptance.suite.yml`:
 
 ``` yaml
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver
@@ -520,7 +520,7 @@ Desired environment for test can be specified eaither with `@env` annotation for
  * @env chrome
  * @env phantom
  * /
-function webkitOnlyTest(WebGuy $I)
+function webkitOnlyTest(AcceptanceTester $I)
 {
   // I do something...
 }

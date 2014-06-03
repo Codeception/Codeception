@@ -40,8 +40,8 @@ Helpers will use `frontend\Codeception\Module` namespace and Guy classes will us
 Thus, newly generated tests will have this look:
 
 ``` php
-<?php use frontend\WebGuy;
-$I = new WebGuy($scenario);
+<?php use frontend\AcceptanceTester;
+$I = new AcceptanceTester($scenario);
 //...
 ?>
 ```
@@ -227,7 +227,7 @@ When a test is added to a group:
 ``` php
 <?php 
 $scenario->group('admin');
-$I = new WebGuy($scenario);
+$I = new AcceptanceTester($scenario);
 ?>
 ```
 
