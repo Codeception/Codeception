@@ -50,10 +50,20 @@ class Laravel4 extends \Codeception\Util\Framework implements \Codeception\Util\
      */
     public $kernel;
 
-    protected $config = array(
-        'cleanup' => true,
-        'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php'
-    );
+    protected $config = array();
+
+    public function __construct($config = null)
+    {
+        $this->config = array_merge(
+            array(
+                'cleanup' => true,
+                'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php'
+            ),
+            (array) $config
+        );
+
+        parent::__construct();
+    }
 
     public function _initialize()
     {
