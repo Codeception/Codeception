@@ -43,7 +43,7 @@ In __tests/functional.suite.yml__:
 
 ```yaml
 modules:
-	enabled: [Db, Doctrine1, TestHelper]
+	enabled: [Db, Doctrine2, FunctionalHelper]
 	config:
 		Db:
 			cleanup: false
@@ -60,7 +60,7 @@ To use the Db module for population and Dbh for cleanups, use this config:
 
 ```yaml
 modules:
-	enabled: [Db, Dbh, TestHelper]
+	enabled: [Db, Dbh, FunctionalHelper]
 	config:
 		Db:
 			cleanup: false
@@ -70,18 +70,17 @@ Please, note that Dbh module should go after the Db. That allows the Dbh module 
 
 ## Fixtures
 
-Fixtures are sample data that we can use in tests. This data can be either generated, or taken from a sample database. Fixtures should be set in the bootstrap file. Depending on the suite, fixture definitions may change. 
+Fixtures are sample data that we can use in tests. This data can be either generated, or taken from a sample database. Fixtures can be defined in separate PHP file and loaded in tests. 
 
 #### Fixtures for Acceptance and Functional Tests
 
-Fixtures for acceptance and functional tests fixtures can be simply defined and used.
+Let's create `fixtures.php` file in `tests/functional` and load data from database to be used in tests.
 
-Fixture definition in __bootstrap.php_
 ```php
 <?php
 // let's take user from sample database. 
 // we can populate it with Db module
-$davert = Doctrine::getTable('User')->findOneBy('name', 'davert');
+$jon = User::findOneBy('name', 'jon');
 
 ?>
 ```

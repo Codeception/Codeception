@@ -39,7 +39,7 @@ class ExampleTest extends \Codeception\TestCase\Test
    /**
     * @var UnitTester
     */
-    protected $UnitTester;
+    protected $tester;
 
     // executed before each test
     protected function _before()
@@ -56,9 +56,9 @@ class ExampleTest extends \Codeception\TestCase\Test
 
 This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
 
-As you see unlike in PHPUnit setUp/tearDown methods are replaced with their aliases: `_before`, `_after`.
-The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and is used to include a bootstrap file (`_bootstrap.php` by default) and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
-So If you implement `setUp` and `tearDown` be sure, that you will call their parent method.
+As you see unlike in PHPUnit, `setUp` and `tearDown` methods are replaced with their aliases: `_before`, `_after`.
+
+The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in acceptance and functional tests you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
 
 
 ```yaml
@@ -67,7 +67,7 @@ So If you implement `setUp` and `tearDown` be sure, that you will call their par
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [CodeHelper]
+    enabled: [UnitHelper]
 ```
 
 ### Classical Unit Testing
@@ -137,7 +137,13 @@ Using `specify` codeblocks you can describe any piece of test. This makes tests 
 
 Code inside `specify` block is isolated. In the example above any change to `$this->user` (as any other object property), will not be reflected in other code blocks.
 
-Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions.
+Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions. This tiny library adds more readable assertions. Quite nice if you are always confused of which argument in `assert` calls is expeted and which is actual.
+
+```php
+<?php
+verify($user->getName())->equals('jon');
+?>
+```
 
 ## Using Modules
 
@@ -149,7 +155,7 @@ As in scenario-driven functional or acceptance tests you can access actor class 
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Db, CodeHelper]
+    enabled: [Db, UnitHelper]
 ```
 
 To access UnitTester methods you can use `UnitTester` property in a test.
@@ -167,7 +173,7 @@ function testSavingUser()
     $user->setSurname('Davis');
 	$user->save();
     $this->assertEquals('Miles Davis', $user->getFullName());
-	$this->UnitTester->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+	$this->tester->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
@@ -202,25 +208,25 @@ The example above can be rewritten in scenario-driven manner like this:
 <?php
 class UserCest
 {
-    function validateUser(UnitTester $I)
+    function validateUser(UnitTester $t)
     {
-        $user = $I->haveUser();
+        $user = $t->haveUser();
         $user->username = null;
-        $I->canSeeFalse($user->validate(['username']); 
+        $t->assertFalse($user->validate(['username']); 
 
         $user->username = 'toolooooongnaaaaaaameeee',
-        $I->canSeeFalse($user->validate(['username']);         
+        $t->assertFalse($user->validate(['username']);         
 
         $user->username = 'davert',
-        $I->canSeeTrue($user->validate(['username']));
+        $t->assertTrue($user->validate(['username']));
 
-        $I->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
+        $t->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
     }
 }
 ?>
 ```
 
-For unit testing you may include `Asserts` module, that adds regular assertions to `$I`.
+For unit testing you may include `Asserts` module, that adds regular assertions to UnitTester which we acces from `$t` variable.
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -228,23 +234,27 @@ For unit testing you may include `Asserts` module, that adds regular assertions 
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Asserts, Db, CodeHelper]
+    enabled: [Asserts, Db, UnitHelper]
 ```
 
 [Learn more about Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes).
 
-### Bootstrap
-
-The bootstrap file is located in suite directory and is named `_bootstrap` and is **included before each test** (with `setUp` method in parent class). It's widely used in acceptance and functional tests to initialize the predefined variables. In unit tests it can be used for sharing the same data among the different tests. But the main purpose of is to set up an autoloader for your project inside this class. Otherwise Codeception will not find the testing classes and fail.
-
 ### Stubs
 
-The first line of generated class includes a Stub utility class into a test file. This means you can easily create dummy classes instead of real one. Don't waste your time on adding many parameters to constructor, just run the `Stub::make` to create a new class.
+Codeception provides a tiny wrapper over PHPUnit mocking framework to create stubs easily. Include `\Codeception\Util\Stub` to start creating dummy objects.
 
-Stubs are created with PHPUnit's mocking framework. Alternatively you can use [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)), [AspectMock](https://github.com/Codeception/AspectMock) or others. 
+In this example we instantiate object without calling a constructor and replace `getName` method to return *jon* value.
+
+```php
+<?php
+$user = Stub::make('User', ['getName' => 'jon']);
+$user->getName() // => 'jon'
+?>
+```
+
+Stubs are created with PHPUnit's mocking framework. Alternatively you can use [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)), [AspectMock](https://github.com/Codeception/AspectMock) or others.
 
 Full reference on stub util class can be [found here](/docs/reference/stubs).
-
 
 ## Conclusion
 

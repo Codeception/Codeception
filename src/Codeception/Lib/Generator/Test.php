@@ -12,7 +12,6 @@ class Test
     protected $template  = <<<EOF
 <?php
 {{namespace}}
-use Codeception\Util\Stub;
 
 class {{name}}Test extends \Codeception\TestCase\Test
 {

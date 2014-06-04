@@ -195,8 +195,7 @@ class FunctionalHelper extends \Codeception\Module
     function doSomethingWithMyService()
     {
         $service = $this->getModule('Symfony2') // lookup for Symfony 2 module
-            ->kernel // get Symfony Kernel from public properties
-            ->getContainer() // get container from kernel
+            ->getContainer() // get current DI container
             ->get('my_service'); // access a service
 
         $service->doSomthing();

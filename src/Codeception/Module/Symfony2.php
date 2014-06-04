@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * * kernel - HttpKernel instance
  * * client - current Crawler instance
+ * * container - dependency injection container instance
  *
  */
 

@@ -8,8 +8,6 @@ In case your project consist of several applications (frontend, admin, api) or y
 you may be interested in having all tests for all applications (bundles) to be executed in one runner.
 In this case you will get one report that covers the whole project.
 
-Starting from Codeception 1.6.3 it's now possible to create a meta-config that includes codeception configs from different places.
-
 Place `codeception.yml` file into root of your project and specify paths to other `codeception.yml` configs you want to include.
 
 ``` yaml
@@ -27,7 +25,7 @@ You should also specify path to `log` directory, where the reports and logs will
 
 ### Namespaces
 
-To avoid naming conflicts between Guy classes and Helpers classes, they should be added into namespace.
+To avoid naming conflicts between Actor classes and Helpers classes, they should be added into namespace.
 To create test suites with namespaces you can add `--namespace` option to bootstrap command.
 
 ``` bash
@@ -36,26 +34,17 @@ php codecept.phar bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with `namespace: frontend` parameter in `codeception.yml` file. 
-Helpers will use `frontend\Codeception\Module` namespace and Guy classes will use `frontend` namespace.
+Helpers will use `frontend\Codeception\Module` namespace and Actor classes will use `frontend` namespace.
 Thus, newly generated tests will have this look:
 
-``` php
+```php
 <?php use frontend\AcceptanceTester;
 $I = new AcceptanceTester($scenario);
 //...
 ?>
 ```
 
-Codeception have tools to upgrade tests of your current project to use namespaces. By running this command
-
-``` bash
-php codecept.phar refactor:add-namespace frontend
-
-```
-
-You will get your guy classes, helpers and cept tests upgraded to use namespaces. Please, note that Cest files should be upgraded manually. Also `namespace` option does not change the namespace of Test or Cest classes. It is used only for Guys and Helpers.
-
-Once each your application (bundle) has its own namespace and different helper or guy classes, you can execute all tests in one runner. Use meta-config we created above and run codeception tests as usual.
+Once each your application (bundle) has its own namespace and different helper or Actor classes, you can execute all tests in one runner. Use meta-config we created above and run codeception tests as usual.
 
 ```
 php codecept.phar run
@@ -64,13 +53,13 @@ php codecept.phar run
 
 This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on conitinous integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too. 
 
-If your application should use the same helpers follow the next section of this chapter.
+If your applications use same helpers follow the next section of this chapter.
 
 ## Autoload Helper classes
 
-In Codeception 1.6.3 a global `_bootstrap.php` file was introduced. By default you can place it into `tests` directory. If file is there it will be included at the very begining of execution routine. We recommend to use it to initialize autoloaders and constants. It is epecially useful if you want to include Modules or Helper classes that are not stored in `tests/_helpers` direactory.
+There is global `_bootstrap.php` file. This file is included the very begining of execution. We recommend to use it to initialize autoloaders and constants. It is epecially useful if you want to include Modules or Helper classes that are not stored in `tests/_helpers` directory.
 
-``` php
+```php
 <?php
 require_once __DIR__.'/../lib/tests/helpers/MyHelper.php'
 ?>
@@ -80,7 +69,7 @@ Alternatively you can use Composer's autoloader. Codeception has its autoloader 
 It's not PSR-0 compatible (yet), but is very useful when you need to declare alternative path for Helper classes:
 
 
-``` php
+```php
 <?php
 Codeception\Util\Autoload::registerSuffix('Helper', __DIR__.'/../lib/tests/helpers');
 ?>
@@ -88,7 +77,7 @@ Codeception\Util\Autoload::registerSuffix('Helper', __DIR__.'/../lib/tests/helpe
 
 Now all classes with suffix `Helper` will be additionally searched in `__DIR__.'/../lib/tests/helpers'. You can declare to load helpers of specific namespace. 
 
-``` php
+```php
 <?php
 Codeception\Util\Autoload::register('MyApp\\Test','Helper', __DIR__.'/../lib/tests/helpers');
 ?>
@@ -224,7 +213,7 @@ Check out a very basic extension [Notifier](https://github.com/Codeception/Notif
 Group Classes are extensions listening to events of a tests belonging to a specific group.
 When a test is added to a group:
 
-``` php
+```php
 <?php 
 $scenario->group('admin');
 $I = new AcceptanceTester($scenario);
@@ -242,7 +231,7 @@ This test will trigger events:
 
 A group class is built to listen to this events. It is pretty useful when you require additional setup for some of your tests. Let's say you want to load fixtures for tests belonging to `admin` group.
 
-``` php
+```php
 <?php
 class AdminGroup extends \Codeception\Platform\Group
 {

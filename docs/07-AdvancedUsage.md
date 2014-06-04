@@ -19,24 +19,23 @@ The generated file will look like:
 <?php
 class BasicCest
 {
-
-    public function _before()
+    public function _before(\AcceptanceTester $I)
     {
     }
 
-    public function _after()
+    public function _after(\AcceptanceTester $I)
     {
     }
 
     // tests
-    public function tryToTest(\AcceptanceTester $I) {
-    
+    public function tryToTest(\AcceptanceTester $I) 
+    {    
     }
 }
 ?>
 ```
 
-**Each public method of Cest (except, those starting from `_`) will be executed as a test** and will receive Guy class as the first parameter and `$scenario` variable as a second. 
+**Each public method of Cest (except, those starting from `_`) will be executed as a test** and will receive Actor class as the first parameter and `$scenario` variable as a second. 
 
 In `_before` and `_after` method you can use common setups, teardowns for the tests in the class. That actually makes Cest tests more flexible, then Cepts that rely only on similar methods in Helper classes.
 
@@ -47,7 +46,8 @@ As you see we are passing Guy class into `tryToTest` stub. That allows us to wri
 class BasicCest
 {
     // test
-    public function checkLogin(\AcceptanceTester $I) {
+    public function checkLogin(\AcceptanceTester $I) 
+    {
         $I->wantTo('log in to site');
         $I->amOnPage('/');
         $I->click('Login');
@@ -61,36 +61,11 @@ class BasicCest
 ?>
 ```
 
-But there is a limitation in Cest files. It can't work with `_bootstrap.php` the way we did in scenario tests.
-It was useful to store some variables in bootstraps that should be passed into scenario.
-In Cest files you should inject all external variables manually, using static or global variables.
-
-As a workaround you can choose [Fixtures](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Fixtures.php) class which is nothing more then global storage to your variables. You can pass variables from `_bootstrap.php` or any other place just with `Fixtures::add()` call. But probably you can use Cest classes `_before` and `_after` methods to load fixtures on the start of test, and deleting them afterwards. Pretty useful too.
-
-As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class any time you want by attaching any meta-testing class to it's parent. In meta class you can write common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
+As you see, Cest class have no parent like `\Codeception\TestCase\Test` or `PHPUnit_Framework_TestCase`. That was done intentionally. This allows you to extend class with common behaviors and workarounds that may be used in child class. But don't forget to make them `protected` so they won't be executed as a tests themselves.
 
 Also you can define `_failed` method in Cest class which will be called if test finished with `error` or fail.
 
 ### Before/After Annotations
-
-You can control Cest files with annotations. You can use `@guy` annotation to pass Guy class different then set via config. This is quite useful if you want to pass a StepObject there (see below).
-
-```php
-<?php
-/**
- * @guy AcceptanceTester\AdminSteps
- */
-class AdminCest {
-
-    function banUser(AcceptanceTester\AdminSteps $I)
-    {
-        // ...
-    }
-
-}
-?>
-```
-The guy annotation can be added to method DocBlock as well.
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
 
@@ -148,11 +123,9 @@ class ModeratorCest {
 
 Hint: `@depends` can be combined with `@before`.
 
-
 ## Interactive Console
 
 Interactive console was added to try Codeception commands before executing them inside a test. 
-This feature was introduced in 1.6.0 version. 
 
 ![console](http://img267.imageshack.us/img267/204/003nk.png)
 
@@ -162,9 +135,9 @@ You can execute console with
 php codecept.phar console suitename
 ```
 
-Now you can execute all commands of appropriate Guy class and see immidiate results. That is especially useful for when used with Selenium modules. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
+Now you can execute all commands of appropriate Actor class and see immidiate results. That is especially useful for when used with WebDriver module. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
 
-And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. With this you can convince him that it is easy to automate this steps and introduce acceptance testing to the project.
+And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. It will be easy to convince to automate this steps and introduce acceptance testing to the project.
 
 ## Running from different folders.
 
@@ -183,10 +156,7 @@ To create a project in directory other then current just provide it's path as a 
 
 
 ```
-
 php codecept.phar bootstrap ~/projects/drupal/
-
-
 ```
 
 Basically `-c` option allows you specify not only the path but a config file to be used. Thus, you can have several `codeception.yml` file for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
@@ -196,23 +166,18 @@ Basically `-c` option allows you specify not only the path but a config file to 
 There are several ways to execute bunch of tests. You can run tests from specific directory:
 
 ```
-
 php codecept.phar run tests/acceptance/admin
-
-
 ```
 
 Or execute one (or several) specific groups of tests:
 
 ```
-
 php codecept.phar run -g admin -g editor
-
 ```
 
-In this case all tests that belongs to groups admin or editor will be executed. Groups concept were taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
+In this case all tests that belongs to groups `admin` or `editor` will be executed. Groups concept were taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
 
-``` php
+```php
 <?php
 $scenario->group('admin');
 $scenario->group('editor');
@@ -225,9 +190,10 @@ $I = new AcceptanceTester($scenario);
 $I->wantToTest('admin area');
 ?>
 ```
+
 For Tests and Cests you can use annotation `@group` to add a test to the group.
 
-``` php
+```php
 <?php
 /**
  * @group admin
@@ -242,11 +208,11 @@ Same annotation can be used in Cest classes.
 
 ## Refactoring
 
-As test base growth they will require refactoring, sharing common variables and behaviors. The classical example for this is `login` action which will be called for maybe every test of your test suite. It's wise to make it written one time and use it in all tests. 
+As test base growths tests will require refactoring, sharing common variables and behaviors. The classical example for this is `login` action which will be called for maybe every test of your test suite. It's wise to make it written one time and use it in all tests. 
 
-It's pretty obvious that for such cases you can use your own PHP classes to define such methods. 
+It's pretty obvious that for such cases you can use your own PHP classes to define such methods.
 
-``` php
+```php
 <?php class TestCommons 
 {
     public static $username = 'jon';
@@ -265,7 +231,7 @@ It's pretty obvious that for such cases you can use your own PHP classes to defi
 
 This file can be required in `_bootstrap.php` file
 
-``` php
+```php
 <?php
 // bootstrap
 require_once '/path/to/test/commons/TestCommons.php';
@@ -274,20 +240,19 @@ require_once '/path/to/test/commons/TestCommons.php';
 
 and used in your scenarios:
 
-``` php
+```php
 <?php
 $I = new AcceptanceTester($scenario);
 TestCommons::logMeIn($I);
 ?>
-``` 
+```
 
-If you caught the idea, let's learn of built-in features for structuring your test code.
-We will discover PageObject and StepObject patterns implementation in Codeception.
+If you caught the idea, let's learn of built-in features for structuring your test code. We will discover PageObject and StepObject patterns implementation in Codeception.
 
 ## PageObjects
 
 [PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects) is widely used by test automation engineers. The Page Object pattern represents a web page as a class and the DOM elements on that page as properties, and some basic interactions as a methods.
-PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests, but rather move them into PageObject classes.
+PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests but rather move them into PageObject classes.
 
 Codeception can generate a pageobject class for you with command:
 
@@ -299,7 +264,7 @@ This will create a `LoginPage` class in `tests/_pages`. The basic pageobject is 
 It is expected you will get it populated with UI locators of a page its represent and then those locators will be used on a page.
 Locators are represented with public static properties:
 
-``` php
+```php
 <?php
 class LoginPage
 {
@@ -314,7 +279,7 @@ class LoginPage
 
 And this is how this page object can be used in a test:
 
-``` php
+```php
 <?php
 $I = new AcceptanceTester($scenario);
 $I->wantTo('login to site');
@@ -328,7 +293,7 @@ $I->see('Welcome, bill');
 As you see you can freely change markup of your login page and all the tests interacting with this page, will have their locators updated according to properties of LoginPage class. 
 
 But lets move further. A PageObject concept also defines that methods for the page interaction should also be stored in a PageObject class.
-This can't be done in `LoginPage` class we just generated. Because this class is accessible across all test suites, we do not know which guy class will be used for interaction. Thus, we will need to generate another page object. In this case we will explicitly define the suite to be used:
+This can't be done in `LoginPage` class we just generated. Because this class is accessible across all test suites, we do not know which Actor class will be used for interaction. Thus, we will need to generate another page object. In this case we will explicitly define the suite to be used:
 
 ```
 php codecept.phar generate:pageobject acceptance UserLogin
@@ -336,11 +301,10 @@ php codecept.phar generate:pageobject acceptance UserLogin
 
 *we called this class UserLogin for not to get into conflict with Login class we created before*
 
-This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before, with one differences. A now stores an instance of Guy object passed. A AcceptanceTester can be accessed via `AcceptanceTester` property of that class. Let's define a `login` method in this class.
+This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before with one differences. A now stores an instance of Guy object passed. A AcceptanceTester can be accessed via `AcceptanceTester` property of that class. Let's define a `login` method in this class.
 
-``` php
+```php
 <?php
-
 class UserLoginPage
 {
     // include url of current page
@@ -356,7 +320,7 @@ class UserLoginPage
         $this->AcceptanceTester = $I;
     }
 
-    public static function of(AcceptanceTester $I)
+    public static function create(AcceptanceTester $I)
     {
         return new static($I);
     }
@@ -378,15 +342,14 @@ class UserLoginPage
 
 And here is an example of how this PageObject can be used in a test.
 
-``` php
+```php
 <?php
 $I = new AcceptanceTester($scenario);
-UserLoginPage::of($I)->login('bill evans', 'debby');
+UserLoginPage::for($I)->login('bill evans', 'debby');
 ?>
 ```
 
-Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a AcceptanceTester. So it's up to you to use global page objects, or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
-
+Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But LoginPage can be used both in functional and acceptance tests, and UserLoginPage only in tests with a AcceptanceTester. So it's up to you to use global page objects or local per suite page objects. If you feel like your functional tests have much in common with acceptance, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
 
 ## StepObjects
 
@@ -401,7 +364,7 @@ php codecept.phar generate:stepobject acceptance Member
 
 This will generate a similar class to `tests/acceptance/_steps/MemberSteps.php`.
 
-``` php
+```php
 <?php
 namespace AcceptanceTester;
 
@@ -419,7 +382,7 @@ class MemberSteps extends \AcceptanceTester
 As you see this class is very simple. But it inherits from `AcceptanceTester` class, thus contains all its methods.
 `login` method can be implemented like this:
 
-``` php
+```php
 <?php
 namespace AcceptanceTester;
 
@@ -439,20 +402,18 @@ class MemberSteps extends \AcceptanceTester
 
 In tests you can use a StepObject by instantiating a MemberSteps class instead of AcceptanceTester.
 
-``` php
+```php
 <?php
 $I = new AcceptanceTester\MemberSteps($scenario);
 $I->login('bill evans','debby');
 ?>
 ```
 
-As you see, StepObject class looks much simpler and readable then classical PageObject.
-As an alternative to StepObject we could use methods of `WebHelper` class. In a helper we do not have an access to `$I` object itself,
+As you see, StepObject class looks much simpler and readable then classical PageObject. 
+As an alternative to StepObject we could use methods of `AcceptanceHelper` class. In a helper we do not have an access to `$I` object itself,
 thus it's better to use Helpers should be used to implement new actions, and StepObjects to combine common scenarios.
 
 ## Environments
-
-*added in 1.8*
 
 For cases where you need to run tests over different configurations you can define different config environments.
 The most typical use cases are: run acceptance tests in different browsers, or run database tests over different database engines.
@@ -466,7 +427,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver
-        - WebHelper
+        - AcceptanceHelper
     config:
         WebDriver:
             url: 'http://127.0.0.1:8000/'
@@ -510,26 +471,28 @@ and tests will be executed 3 times, each time in a different browser.
 Depending on environment you may choose which tests are to be executed.
 For example, you might need some tests that will be executed only in Firefox, and few tests only in Chrome.
 
-Desired environment for test can be specified eaither with `@env` annotation for Test and Cest formats
+Desired environment for test can be specified with `@env` annotation for Test and Cest formats
 
-``` php
+```php
 <?php
-/**
- * This test will be executed only in firefox and phantom environments
- *
- * @env chrome
- * @env phantom
- * /
-function webkitOnlyTest(AcceptanceTester $I)
-{
-  // I do something...
+class UserCest {
+    /**
+     * This test will be executed only in firefox and phantom environments
+     *
+     * @env chrome
+     * @env phantom
+     */
+    function webkitOnlyTest(AcceptanceTester $I)
+    {
+      // I do something
+    }
 }
 ?>
 ```
 
 For Cept you should use `$scenario->env()`:
 
-``` php
+```php
 <?php
 $scenario->env('firefox');
 $scenario->env('phantom');
