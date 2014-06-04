@@ -5,8 +5,6 @@
 
 Special module for using asserts in your tests.
 
-Class Asserts
-@package Codeception\Module
 
 
 
@@ -31,48 +29,90 @@ Class Asserts
 
 
 
+### assertContains
+ Checks that haystack contains needle
+
+ * `param`         $needle
+ * `param`         $haystack
+ * `param`  string $message
+
+### assertEmpty
+ Checks that variable is empty.
+
+ * `param`         $actual
+ * `param`  string $message
+
+### assertEquals
+ Checks that two variables are equal.
+
+ * `param`         $expected
+ * `param`         $actual
+ * `param`  string $message
+
+ * `return`  mixed
+
+### assertFalse
+ Checks that condition is negative.
+
+ * `param`         $condition
+ * `param`  string $message
+
+### assertGreaterThen
+ Checks that expected is greater then actual
+
+ * `param`         $expected
+ * `param`         $actual
+ * `param`  string $message
+
+### assertGreaterThenOrEqual
+ Checks that expected is greater or equal then actual
+
+ * `param`         $expected
+ * `param`         $actual
+ * `param`  string $message
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### dontSeeContains
+### assertNotContains
  Checks that haystack doesn't contain needle.
 
  * `param`         $needle
  * `param`         $haystack
  * `param`  string $message
 
-### dontSeeEmpty
+### assertNotEmpty
  Checks that variable is not empty.
 
  * `param`         $actual
  * `param`  string $message
 
-### dontSeeEquals
+### assertNotEquals
  Checks that two variables are not equal
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
 
-### dontSeeNull
+### assertNotNull
  Checks that variable is not NULL
 
  * `param`         $actual
  * `param`  string $message
+
+### assertNull
+ Checks that variable is NULL
+
+ * `param`         $actual
+ * `param`  string $message
+
+
+
+### assertTrue
+ Checks that condition is positive.
+
+ * `param`         $condition
+ * `param`  string $message
+
+
 
 ### fail
  Fails the test with message.
@@ -83,58 +123,4 @@ Class Asserts
 
 
 
-
-### seeContains
- Checks that haystack contains needle
-
- * `param`         $needle
- * `param`         $haystack
- * `param`  string $message
-
-### seeEmpty
- Checks that variable is empty.
-
- * `param`         $actual
- * `param`  string $message
-
-### seeEquals
- Checks that two variables are equal.
-
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
-
- * `return`  mixed
-
-### seeFalse
- Checks that condition is negative.
-
- * `param`         $condition
- * `param`  string $message
-
-### seeGreaterThen
- Checks that expected is greater then actual
-
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
-
-### seeGreaterThenOrEqual
- Checks that expected is greater or equal then actual
-
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
-
-### seeNull
- Checks that variable is NULL
-
- * `param`         $actual
- * `param`  string $message
-
-### seeTrue
- Checks that condition is positive.
-
- * `param`         $condition
- * `param`  string $message
 

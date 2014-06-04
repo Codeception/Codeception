@@ -31,6 +31,7 @@ It implements common Framework interface.
 
 * kernel - HttpKernel instance
 * client - current Crawler instance
+* container - dependency injection container instance
 
 
 

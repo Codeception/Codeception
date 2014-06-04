@@ -89,15 +89,15 @@ Fixture usage in a sample acceptance or functional test.
 
 ```php
 <?php
+require 'fixtures.php';
+
 $I = new FunctionalTester($scenario);
-$I->amLoggedAs($davert);
-$I->see('Welcome, Davert');
+$I->amLoggedAs($jon);
+$I->see('Welcome, Jon');
 ?>
 ```
 
-All variables from the bootstrap file are passed to the _Cept_ files of the testing suite. 
-
-You can use the [Faker](https://github.com/fzaninotto/Faker) library to create tested data within a bootstrap file.
+Also you can use the [Faker](https://github.com/fzaninotto/Faker) library to create test data within a bootstrap file.
 
 ### Per Test Fixtures
 
@@ -112,7 +112,7 @@ $I->see('Top 10 Testing Frameworks');
 ?>
 ```
 
-`haveInDatabase` method does nothing then inserts into database a row with provided values. A record that was added will be deleted in the end of a test. In `MongoDB` module we have similar [`haveInCollection`](http://codeception.com/docs/modules/MongoDb#haveInCollection) method.
+`haveInDatabase` inserts into database a row with provided values. A record that was added will be deleted in the end of a test. In `MongoDB` module we have similar [`haveInCollection`](http://codeception.com/docs/modules/MongoDb#haveInCollection) method.
 
 ## Conclusion
 

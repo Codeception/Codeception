@@ -4,7 +4,7 @@ Default your global configuration file will be this:
 
 ```yaml
 # can be changed while bootstrapping project
-actor: Guy 
+actor: Tester 
 
 paths:
     # where the modules stored
@@ -14,7 +14,7 @@ paths:
     data: tests/_data
 
     # directory for custom modules (helpers)
-    helpers: tests/_helpers
+    helpers: tests/_support
 
 settings:
 
@@ -49,12 +49,12 @@ modules:
 Suite configuration acceptance.yml
 
 ```yaml
-class_name: WebGuy
+class_name: AcceptanceTester
 modules:
     # enabled modules and helpers
     enabled:
         - PhpBrowser
-        - WebHelper
+        - AcceptanceHelper
         - Db
 
     # local module configuration. Overrides the global.        

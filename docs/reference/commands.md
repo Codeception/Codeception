@@ -4,8 +4,10 @@
 
 Create new test suite. Requires suite name and actor name
 
-* `codecept g:suite api Api` -> api + ApiGuy
-* `codecept g:suite frontend Front` -> frontend + FrontGuy
+* ``
+* `codecept g:suite api` -> api + ApiTester
+* `codecept g:suite integration Code` -> integration + CodeTester
+* `codecept g:suite frontend Front` -> frontend + FrontTester
 
 
 
@@ -474,6 +476,13 @@ You will be asked to choose one of the actors that will be used in tests. To ski
 `codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
 `codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
 `codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
+
+
+
+
+
+
+
 
 
 

@@ -13,8 +13,10 @@ use Symfony\Component\Console\Command\Command;
 /**
  * Create new test suite. Requires suite name and actor name
  *
- * * `codecept g:suite api Api` -> api + ApiGuy
- * * `codecept g:suite frontend Front` -> frontend + FrontGuy
+ * * ``
+ * * `codecept g:suite api` -> api + ApiTester
+ * * `codecept g:suite integration Code` -> integration + CodeTester
+ * * `codecept g:suite frontend Front` -> frontend + FrontTester
  *
  */
 class GenerateSuite extends Command

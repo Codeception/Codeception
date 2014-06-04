@@ -11,7 +11,7 @@ but in reality 80% are just enough. And even 100% code coverage rate doesn't sav
 ![Code Coverage Example](http://codeception.com/images/coverage.png)
 
 Coverage data can be collected manually for local tests and remote tests. Remote tests may be executed on different node,
-or locally, but behind the web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception
+or locally but running through web server. It may look hard to collect code coverage for Selenium tests or PhpBrowser tests. But Codeception
 supports remote codecoverage as well as local.
 
 ### Configuration
@@ -27,7 +27,6 @@ that's ok for now. But what files should be present in final coverage report? Yo
 
 ``` yaml
 coverage:
-    enabled: true
     whitelist:
         include:
             - app/*
@@ -68,13 +67,14 @@ All these settings can be redefined for each suite in their config files.
 The basic codecoverage can be collected for functional and unit tests.
 If you performed configurations steps from above you are ready to go.
 All you need is to execute codeception with `--coverage` option.
-To generate a clover xml report or a tasty html report append also `--xml` and `--html` options.
+
+To generate a clover xml report or a tasty html report append also `--coverage-xml` and `--coverage-html` options.
 
 ``` yaml
-codecept run --coverage --xml --html
+codecept run --coverage --coverage-xml --coverage-html
 ```
 
-XML and HTML reports are stored to the `_logs` directory. The best way to review report is to open `index.html` from `tests/_logs/coverage` in your browser.
+XML and HTML reports are stored to the `_output` directory. The best way to review report is to open `index.html` from `tests/_output/coverage` in your browser.
 XML clover reports are used by IDEs (like PHPStorm) or Continuous Integration servers (Like Jenkins).
 
 ## Remote CodeCoverage
