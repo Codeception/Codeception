@@ -119,7 +119,7 @@ The actions in Actor classes are taken from modules. Generated Actor classes emu
 
 ## Bootstrap
 
-Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before test suite.
+Each suite has its own bootstrap file. It's located in the suite directory and is named `_bootstrap.php`. It will be executed before test suite. There us also a global bootstrap file located in `tests` directory. It can be used to include additional files.
 
 ## Test Formats
 

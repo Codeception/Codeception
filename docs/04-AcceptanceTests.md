@@ -110,8 +110,7 @@ With the `PhpBrowser` you can click the links and fill the forms. That will prob
 
 #### Click
 
-Emulates a click on valid anchors. The page from the "href" parameter will be opened.
-As a parameter you can specify the link name or a valid CSS or XPath selector. 
+Emulates a click on valid anchors. The page from the "href" parameter will be opened. As a parameter you can specify the link name or a valid CSS or XPath selector. 
 
 ```php
 <?php
@@ -120,10 +119,25 @@ $I->click('Log in');
 $I->click('#login a');
 // XPath
 $I->click('//a[@id=login]');
-// By specifying locator type
-$I->click(['link' => 'Login']);
 // Using context as second argument
 $I->click('Login', '.nav');
+?>
+```
+
+Codeception tries to locate element either by its text, name, CSS or XPath. You can specify locator type manually by passing array as a parameter. We call this a **strict locator**. Available strict locator types are: 
+
+* id
+* name
+* css
+* xpath
+* link
+* class
+
+```php
+<?php
+// By specifying locator type
+$I->click(['link' => 'Login']);
+$I->click(['class' => 'btn']);
 ?>
 ```
 
@@ -347,7 +361,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver
-        - WebHelper
+        - AcceptanceHelper
     config:
         WebDriver:
             url: 'http://localhost/myapp/'

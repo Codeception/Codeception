@@ -210,7 +210,7 @@ class UserCest
 {
     function validateUser(UnitTester $t)
     {
-        $user = $t->haveUser();
+        $user = $t->createUser();
         $user->username = null;
         $t->assertFalse($user->validate(['username']); 
 

@@ -104,7 +104,6 @@ For example, let's turn on remote coverage for acceptance suite in `acceptance.s
 
 ``` yaml
 coverage:
-    enabled: true
     remote: true
 ```
 
