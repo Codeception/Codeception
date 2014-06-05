@@ -21,7 +21,8 @@ class MySql extends Db
 
     public function select($column, $table, array &$criteria) {
         $where = $criteria ? "where %s" : '';
-        $query = "select %s from `%s` $where";
+        $table = $this->getQuotedName($table);
+        $query = "select %s from %s $where";
         $params = array();
         foreach ($criteria as $k => $v) {
             $k = $this->getQuotedName($k);
