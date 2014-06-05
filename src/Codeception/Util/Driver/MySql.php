@@ -38,6 +38,6 @@ class MySql extends Db
 
     public function getQuotedName($name)
     {
-        return '`' . $name . '`';
+        return '`' . str_replace('.', '`.`', $name) . '`';
     }
 }
