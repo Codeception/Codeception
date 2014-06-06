@@ -290,8 +290,16 @@ class RoboFile extends \Robo\Tasks {
         }
         $this->say('building site...');
 
-        $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
         $this->cloneSite();
+        $this->taskCleanDir('docs')
+            ->run();
+        $this->taskFileSystemStack()
+            ->mkdir('docs/reference')
+            ->mkdir('docs/modules')
+            ->run();
+
+        chdir('../..');
+        $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
 
         $modules = array();
         $api = array();
@@ -312,7 +320,7 @@ class RoboFile extends \Robo\Tasks {
                 $api[substr($name,3)] = '/docs/'.$doc->getBasename();
             }
 
-            copy($doc->getPathname(), $newfile);
+            copy($doc->getPathname(), 'package/site/' . $newfile);
 
             $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
             $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
@@ -325,12 +333,13 @@ class RoboFile extends \Robo\Tasks {
               $title = $matches[1];
             }
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
-            file_put_contents($newfile, $contents);
+            file_put_contents('package/site/' .$newfile, $contents);
         }
+        chdir('package/site');
         $guides = array_keys($api);
         foreach ($api as $name => $url) {
             $filename = substr($url, 6);
-            $doc = file_get_contents('docs/'.$filename.'.md')."\n\n\n";
+            $doc = file_get_contents('docs/'.$filename)."\n\n\n";
             $i = array_search($name, $guides);
             if (isset($guides[$i+1])) {
                 $next_title = $guides[$i+1];
@@ -432,8 +441,11 @@ class RoboFile extends \Robo\Tasks {
 
     protected function publishSite()
     {
-        $this->taskExec('git commit')->args('-m "auto updated documentation"')->run();
-        $this->taskExec('git push')->run();
+        $this->taskGitStack()
+            ->add('docs/*')
+            ->commit('auto updated documentation')
+            ->push()
+            ->run();
 
         chdir('..');
         sleep(2);
