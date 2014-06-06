@@ -4,10 +4,10 @@ When test execution time is then a coffee break it is a good time to think about
 
 ## Where to Start
 
-Codeception does not provide a command like `run-parallel`. There is no common solution that can play well for everyone.
+Codeception does not provide a command like `run-parallel`. There is no common solution that can play well for everyone. Here are the questions you will need to answer:
 
 * how parallel processes will be executed?
-* how my parallel processes won't affect each other?
+* how parallel processes won't affect each other?
 * will they use different databases?
 * will they use different hosts?
 * how should I split my tests across parallel processes?

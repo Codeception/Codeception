@@ -205,7 +205,7 @@ class RoboFile extends \Robo\Tasks {
                     $title = "\n### {$method->name}\n";
                     if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
-                    $text = str_replace(array("\n @", ' @'), array("\n * ", " * "), $text);
+                    $text = str_replace(array("\n @"), array("\n * "), $text);
                     return $title . $text;
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')
