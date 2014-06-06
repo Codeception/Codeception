@@ -27,7 +27,7 @@ We propose to perform those steps using a task runner. In this guide we will use
 To conclude, we need:
 
 * [Robo](http://robo.li), a task runner.
-* [robo-paracept](https://github.com/Codeception/robo-paracept) - 
+* [robo-paracept](https://github.com/Codeception/robo-paracept) - Codeception tasks for parallel execution.
 
 ## Preparing Robo 
 
@@ -46,7 +46,7 @@ Confirm to create `RoboFile.php`.
 
 ```php
 <?php
-class Robofile extends \Robo\Tasks
+class RoboFile extends \Robo\Tasks
 {
     // define public methods as commands
 }
@@ -88,7 +88,7 @@ If you run `robo` you can see the respective commands:
 
 ```
 ➜  ~  robo
-Robo version 0.4.3
+Robo version 0.4.4
 ---
 Available commands:
   help                     Displays help for a command
@@ -104,11 +104,11 @@ parallel
 
 Let's say we have long running acceptance tests and we want them to be split into 5 processes. To make tests not be conflicted with each other they should use different hosts databases. Thus, before proceed we need to configure 5 different hosts in Apache/Nginx (or just run application on different ports in PHP Built In Server). Based on host our application should use corresponding databases.
 
-Alternatively you can prepare **isolated environments** using [Docker](https://www.docker.io/) or [LXC](https://linuxcontainers.org/) lightweight Linux containers. Each testing process can be executed in its own container. Spawn new containers and run more processes are much easier then manually creating additional databases and hosts. Also you are creating a more stable testing environments (no database, files, processes conflicts). But you to provision your containers as you regularly do when creating virtual machines. 
+Alternatively you can prepare **isolated environments** using [Docker](https://www.docker.io/) or [LXC](https://linuxcontainers.org/) you can make each testing process to be executed in its own container. Spawn new containers and run more processes are much easier then manually creating additional databases and hosts. Also you are creating a more stable testing environments (no database, files, process conflicts). But you to provision your containers as you regularly do when creating virtual machines. 
 
-You can also think on running your tests on remote hosts using SSH.
+You can also think on running your tests on remote hosts using SSH. Robo has built-in tasks for running SSH commands as well.
 
-In current example we assume that we prepared 5 databases and 5 independent hosts for our application.
+But In current example we assume that we prepared 5 databases and 5 independent hosts for our application.
 
 ### Step 1: Split Tests
 

@@ -216,13 +216,12 @@ class RoboFile extends \Robo\Tasks {
     public function buildDocsUtils()
     {
         $this->say("Util Classes");
-        $utils = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Util');
+        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder'];
 
-        foreach ($utils as $util) {
-            $utilName = basename(substr($util, 0, -4));
+        foreach ($utils as $utilName) {
             $className = '\Codeception\Util\\' . $utilName;
 
-            $this->taskGenDoc('docs/utils/' . $utilName . '.md')
+            $this->taskGenDoc('docs/reference/' . $utilName . '.md')
                 ->docClass($className)
                 ->processClassDocBlock(function(ReflectionClass $r, $text) {
                     return $text . "\n";

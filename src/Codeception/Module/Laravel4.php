@@ -50,15 +50,25 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public $kernel;
 
-    protected $config = array(
-        'cleanup' => true,
-        'start' => 'bootstrap/start.php'
-    );
+    protected $config = [];
+
+    public function __construct($config = null)
+    {
+        $this->config = array_merge(
+            array(
+                'cleanup' => true,
+                'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php'
+            ),
+            (array) $config
+        );
+
+        parent::__construct();
+    }
 
     public function _initialize()
     {
         $projectDir = \Codeception\Configuration::projectDir();
-        require $projectDir . '/vendor/autoload.php';
+        require $projectDir .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
 
