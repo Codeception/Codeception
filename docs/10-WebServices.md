@@ -2,7 +2,7 @@
 
 The same way we tested a web site Codeception allows you to test web services. They are very hard to test manually, so it's really good idea to automate web service testing. As a standards we have SOAP and REST which are represented in corresponding modules. We will cover them in this chapter.
 
-You should start with creating a new test suite, which was not provided by the `bootstrap` command. We recommend to call it **api** and use the ApiGuy class for it.
+You should start with creating a new test suite, which was not provided by the `bootstrap` command. We recommend to call it **api** and use the ApiTester class for it.
 
 ```
 $ php codecept.phar generate:suite api
@@ -39,7 +39,7 @@ It will be called `CreateUserCept.php`. We can use it to test creation of user v
 
 ```php
 <?php
-$I = new ApiGuy($scenario);
+$I = new ApiTester($scenario);
 $I->wantTo('create a user via API');
 $I->amHttpAuthenticated('service_user','123456');
 $I->haveHttpHeader('Content-Type','application/x-www-form-urlencoded');
@@ -141,7 +141,7 @@ In next example we will use `XmlBuilder` (created from SoapUtils factory) instea
 <?php
 use \Codeception\Utils\Soap;
 
-$I = new ApiGuy($scenario);
+$I = new ApiTester($scenario);
 $I->wantTo('create user');
 $I->haveSoapHeader('Session', array('token' => '123456'));
 $I->sendSoapRequest('CreateUser', Soap::request()
