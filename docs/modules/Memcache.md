@@ -65,12 +65,15 @@ Be sure you don't use the production server to connect.
 
 
 ### clearMemcache
- Flushes all Memcached data.
+ 
+Flushes all Memcached data.
+
 
 
 
 ### dontSeeInMemcached
- Checks item in Memcached doesn't exist or is the same as expected.
+ 
+Checks item in Memcached doesn't exist or is the same as expected.
 
  * `param`  $key
  * `param`  bool $value
@@ -78,8 +81,10 @@ Be sure you don't use the production server to connect.
 
 
 
+
 ### grabValueFromMemcached
- Grabs value from memcached by key
+ 
+Grabs value from memcached by key
 
 Example:
 
@@ -95,9 +100,12 @@ $users_count = $I->grabValueFromMemcached('users_count');
 
 
 
+
 ### seeInMemcached
- Checks item in Memcached exists and the same as expected.
+ 
+Checks item in Memcached exists and the same as expected.
 
  * `param`  $key
  * `param`  $value
+
 

@@ -156,6 +156,8 @@ $I->click('Logout');
 $I->click('Logout', '.nav');
 // click by CSS
 $I->click('a.logout');
+// click with strict locator
+$I->click(['class' => 'logout']);
 ?>
 ```
 

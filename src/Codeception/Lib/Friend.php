@@ -8,14 +8,14 @@ use Codeception\Lib\Interfaces\MultiSession;
 class Friend {
 
     protected $name;
-    protected $guy;
+    protected $actor;
     protected $data = [];
     protected $multiSessionModules = [];
 
     public function __construct($name, Actor $guy)
     {
         $this->name = $name;
-        $this->guy = $guy;
+        $this->actor = $guy;
         $this->multiSessionModules = array_filter(SuiteManager::$modules, function($m) {
            return $m instanceof Interfaces\MultiSession;
         });
@@ -39,9 +39,9 @@ class Friend {
             $module->_loadSessionData($this->data[$name]);
         };
 
-        $this->guy->comment(strtoupper("<info>{$this->name} does</info>:"));
-        $ret = $closure($this->guy);
-        $this->guy->comment(strtoupper("<info>{$this->name} finished</info>"));
+        $this->actor->comment(strtoupper("<info>{$this->name} does</info>:"));
+        $ret = $closure($this->actor);
+        $this->actor->comment(strtoupper("<info>{$this->name} finished</info>"));
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();
@@ -53,17 +53,17 @@ class Friend {
 
     public function isGoingTo($argumentation)
     {
-        $this->guy->amGoingTo($argumentation);
+        $this->actor->amGoingTo($argumentation);
     }
 
     public function expects($prediction)
     {
-        $this->guy->expect($prediction);
+        $this->actor->expect($prediction);
     }
 
     public function expectsTo($prediction)
     {
-        $this->guy->expectTo($prediction);
+        $this->actor->expectTo($prediction);
     }
 
     public function __destruct()

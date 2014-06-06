@@ -3,7 +3,8 @@
 namespace Codeception\Util;
 
 /**
- * Set of functions to work with filesystem
+ * Set of functions to work with Filesystem
+ *
  */
 class FileSystem
 {

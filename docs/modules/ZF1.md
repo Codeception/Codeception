@@ -89,13 +89,16 @@ This will make your functional tests run super-fast.
 
 
 ### amHttpAuthenticated
- Authenticates user for HTTP_AUTH
+ 
+Authenticates user for HTTP_AUTH
 
  * `param`  $username
  * `param`  $password
 
+
 ### amOnPage
- Opens the page.
+ 
+Opens the page.
 Requires relative uri as parameter
 
 Example:
@@ -131,8 +134,10 @@ $I->amOnPage('/register');
 
 
 
+
 ### attachFile
- Attaches file from Codeception data directory to upload field.
+ 
+Attaches file from Codeception data directory to upload field.
 
 Example:
 
@@ -146,8 +151,10 @@ $I->attachFile('input[ * `type="file"]',`  'prices.xls');
  * `param`  $field
  * `param`  $filename
 
+
 ### checkOption
- Ticks a checkbox.
+ 
+Ticks a checkbox.
 For radio buttons use `selectOption` method.
 
 Example:
@@ -160,8 +167,10 @@ $I->checkOption('#agree');
 
  * `param`  $option
 
+
 ### click
- Perform a click on link or button.
+ 
+Perform a click on link or button.
 Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
 
@@ -182,9 +191,11 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]')` 
+$I->click('//form/*[ * `type=submit]');` 
 // link in context
 $I->click('Logout', '#nav');
+// using strict locator
+$I->click(['link' => 'Login'])'
 ?>
 ```
 
@@ -195,8 +206,10 @@ $I->click('Logout', '#nav');
 
 
 
+
 ### dontSee
- Check if current page doesn't contain the text specified.
+ 
+Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -212,8 +225,10 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 
+
 ### dontSeeCheckboxIsChecked
- Assert if the specified checkbox is unchecked.
+ 
+Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
 Example:
@@ -227,15 +242,19 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
  * `param`  $checkbox
 
+
 ### dontSeeCookie
- Checks that cookie doesn't exist
+ 
+Checks that cookie doesn't exist
 
  * `param`  $cookie
 
  * `return`  mixed
 
+
 ### dontSeeCurrentUrlEquals
- Checks that current url is not equal to value.
+ 
+Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -247,8 +266,10 @@ $I->dontSeeCurrentUrlEquals('/');
 
  * `param`  $uri
 
+
 ### dontSeeCurrentUrlMatches
- Checks that current url does not match a RegEx value
+ 
+Checks that current url does not match a RegEx value
 
 ``` php
 <?php
@@ -259,8 +280,10 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 
+
 ### dontSeeElement
- Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
+ 
+Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 You can also specify expected attributes of this element.
 
 Example:
@@ -276,8 +299,10 @@ $I->dontSeeElement('input', ['value' => '123456']);
 
  * `param`  $selector
 
+
 ### dontSeeInCurrentUrl
- Checks that current uri does not contain a value
+ 
+Checks that current uri does not contain a value
 
 ``` php
 <?php
@@ -287,8 +312,10 @@ $I->dontSeeInCurrentUrl('/users/');
 
  * `param`  $uri
 
+
 ### dontSeeInField
- Checks that an input field or textarea doesn't contain value.
+ 
+Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
 
@@ -299,21 +326,26 @@ $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
 $I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
  * `param`  $field
  * `param`  $value
 
+
 ### dontSeeInTitle
- Checks that page title does not contain text.
+ 
+Checks that page title does not contain text.
 
  * `param`  $title
 
  * `return`  mixed
 
+
 ### dontSeeLink
- Checks if page doesn't contain the link with text specified.
+ 
+Checks if page doesn't contain the link with text specified.
 Specify url to narrow the results.
 
 Examples:
@@ -327,8 +359,10 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
  * `param`       $text
  * `param`  null $url
 
+
 ### dontSeeOptionIsSelected
- Checks if option is not selected in select field.
+ 
+Checks if option is not selected in select field.
 
 ``` php
 <?php
@@ -342,14 +376,17 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `return`  mixed
 
 
+
 ### fillField
- Fills a text field or textarea with value.
+ 
+Fills a text field or textarea with value.
 
 Example:
 
 ``` php
 <?php
 $I->fillField("//input[ * `type='text']",`  "Hello World!");
+$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
 ?>
 ```
 
@@ -363,8 +400,10 @@ $I->fillField("//input[ * `type='text']",`  "Hello World!");
 
 
 
+
 ### grabAttributeFrom
- Grabs attribute value from an element.
+ 
+Grabs attribute value from an element.
 Fails if element is not found.
 
 ``` php
@@ -379,15 +418,19 @@ $I->grabAttributeFrom('#tooltip', 'title');
  * `internal`  param $element
  * `return`  mixed
 
+
 ### grabCookie
- Grabs a cookie value.
+ 
+Grabs a cookie value.
 
  * `param`  $cookie
 
  * `return`  mixed
 
+
 ### grabFromCurrentUrl
- Takes a parameters from current URI by RegEx.
+ 
+Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
 ``` php
@@ -402,8 +445,10 @@ $uri = $I->grabFromCurrentUrl();
  * `internal`  param $url
  * `return`  mixed
 
+
 ### grabTextFrom
- Finds and returns text contents of element.
+ 
+Finds and returns text contents of element.
 Element is searched by CSS selector, XPath or matcher by regex.
 
 Example:
@@ -420,8 +465,10 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
  * `return`  mixed
 
+
 ### grabValueFrom
- Finds and returns field and returns it's value.
+ 
+Finds and returns field and returns it's value.
 Searches by field name, then by CSS, then by XPath
 
 Example:
@@ -431,6 +478,7 @@ Example:
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
 $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
+$name = $I->grabValueFrom(['name' => 'username']);
 ?>
 ```
 
@@ -444,16 +492,20 @@ $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name` 
 
 
 
+
 ### resetCookie
- Unsets cookie
+ 
+Unsets cookie
 
  * `param`  $cookie
 
  * `return`  mixed
 
 
+
 ### see
- Check if current page contains the text specified.
+ 
+Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
 Examples:
@@ -469,8 +521,10 @@ $I->see('Sign Up','//body/h1'); // with XPath
  * `param`       $text
  * `param`  null $selector
 
+
 ### seeCheckboxIsChecked
- Assert if the specified checkbox is checked.
+ 
+Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
 Example:
@@ -485,15 +539,19 @@ $I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]')
 
  * `param`  $checkbox
 
+
 ### seeCookie
- Checks that cookie is set.
+ 
+Checks that cookie is set.
 
  * `param`  $cookie
 
  * `return`  mixed
 
+
 ### seeCurrentUrlEquals
- Checks that current url is equal to value.
+ 
+Checks that current url is equal to value.
 Unlike `seeInCurrentUrl` performs a strict check.
 
 ``` php
@@ -505,8 +563,10 @@ $I->seeCurrentUrlEquals('/');
 
  * `param`  $uri
 
+
 ### seeCurrentUrlMatches
- Checks that current url is matches a RegEx value
+ 
+Checks that current url is matches a RegEx value
 
 ``` php
 <?php
@@ -517,8 +577,10 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 
  * `param`  $uri
 
+
 ### seeElement
- Checks if element exists on a page, matching it by CSS or XPath.
+ 
+Checks if element exists on a page, matching it by CSS or XPath.
 You can also specify expected attributes of this element.
 
 ``` php
@@ -527,15 +589,20 @@ $I->seeElement('.error');
 $I->seeElement('//form/input[1]');
 $I->seeElement('input', ['name' => 'login']);
 $I->seeElement('input', ['value' => '123456']);
+
+// strict locator in first arg, attributes in second
+$I->seeElement(['css' => 'form input'], ['name' => 'login']);
 ?>
 ```
 
  * `param`  $selector
  * `param`  array $attributes
- * `return`
+ * `return` 
+
 
 ### seeInCurrentUrl
- Checks that current uri contains a value
+ 
+Checks that current uri contains a value
 
 ``` php
 <?php
@@ -548,8 +615,10 @@ $I->seeInCurrentUrl('/users/');
 
  * `param`  $uri
 
+
 ### seeInField
- Checks that an input field or textarea contains value.
+ 
+Checks that an input field or textarea contains value.
 Field is matched either by label or CSS or Xpath
 
 Example:
@@ -561,14 +630,17 @@ $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
 $I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
  * `param`  $field
  * `param`  $value
 
+
 ### seeInTitle
- Checks that page title contains text.
+ 
+Checks that page title contains text.
 
 ``` php
 <?php
@@ -580,8 +652,10 @@ $I->seeInTitle('Blog - Post #1');
 
  * `return`  mixed
 
+
 ### seeLink
- Checks if there is a link with text specified.
+ 
+Checks if there is a link with text specified.
 Specify url to match link with exact this url.
 
 Examples:
@@ -596,8 +670,10 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
  * `param`       $text
  * `param`  null $url
 
+
 ### seeOptionIsSelected
- Checks if option is selected in select field.
+ 
+Checks if option is selected in select field.
 
 ``` php
 <?php
@@ -610,18 +686,24 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
  * `return`  mixed
 
+
 ### seePageNotFound
- Asserts that current page has 404 response status code.
+ 
+Asserts that current page has 404 response status code.
+
 
 ### seeResponseCodeIs
- Checks that response code is equal to value provided.
+ 
+Checks that response code is equal to value provided.
 
  * `param`  $code
 
  * `return`  mixed
 
+
 ### selectOption
- Selects an option in select tag or in radio button group.
+ 
+Selects an option in select tag or in radio button group.
 
 Example:
 
@@ -644,8 +726,10 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
  * `param`  $select
  * `param`  $option
 
+
 ### sendAjaxGetRequest
- If your page triggers an ajax request, you can perform it manually.
+ 
+If your page triggers an ajax request, you can perform it manually.
 This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
@@ -653,8 +737,10 @@ See ->sendAjaxPostRequest for examples.
  * `param`  $uri
  * `param`  $params
 
+
 ### sendAjaxPostRequest
- If your page triggers an ajax request, you can perform it manually.
+ 
+If your page triggers an ajax request, you can perform it manually.
 This action sends a POST ajax request with specified params.
 Additional params can be passed as array.
 
@@ -673,8 +759,10 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
  * `param`  $uri
  * `param`  $params
 
+
 ### sendAjaxRequest
- If your page triggers an ajax request, you can perform it manually.
+ 
+If your page triggers an ajax request, you can perform it manually.
 This action sends an ajax request with specified method and params.
 
 Example:
@@ -691,8 +779,10 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
  * `param`  $uri
  * `param`  $params
 
+
 ### setCookie
- Sets a cookie.
+ 
+Sets a cookie.
 
  * `param`  $cookie
  * `param`  $value
@@ -700,8 +790,10 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
  * `return`  mixed
 
 
+
 ### submitForm
- Submits a form located on page.
+ 
+Submits a form located on page.
 Specify the form by it's css or xpath selector.
 Fill the form fields values as array.
 
@@ -741,8 +833,10 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
  * `param`  $params
 
 
+
 ### uncheckOption
- Unticks a checkbox.
+ 
+Unticks a checkbox.
 
 Example:
 
@@ -753,4 +847,5 @@ $I->uncheckOption('#notify');
 ```
 
  * `param`  $option
+
 

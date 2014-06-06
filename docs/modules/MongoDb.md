@@ -84,7 +84,8 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 
 ### dontSeeInCollection
- Checks if collection doesn't contain an item.
+ 
+Checks if collection doesn't contain an item.
 
 ``` php
 <?php
@@ -97,8 +98,10 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
 
 
 
+
 ### grabFromCollection
- Grabs a data from collection
+ 
+Grabs a data from collection
 
 ``` php
 <?php
@@ -110,8 +113,10 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
  * `return`  \MongoCursor
 
 
+
 ### haveInCollection
- Inserts data into collection
+ 
+Inserts data into collection
 
 ``` php
 $I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
@@ -124,8 +129,10 @@ $user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'
 
 
 
+
 ### seeInCollection
- Checks if collection contains an item.
+ 
+Checks if collection contains an item.
 
 ``` php
 <?php
@@ -134,4 +141,5 @@ $I->seeInCollection('users', array('name' => 'miles'));
 
  * `param`  $collection
  * `param`  array $criteria
+
 

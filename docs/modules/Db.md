@@ -116,7 +116,8 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 
 
 ### dontSeeInDatabase
- Effect is opposite to ->seeInDatabase
+ 
+Effect is opposite to ->seeInDatabase
 
 Checks if there is no record with such column values in database.
 Provide table name and column values.
@@ -141,8 +142,10 @@ Fails if such user was found.
 
 
 
+
 ### grabFromDatabase
- Fetches a single column value from a database.
+ 
+Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 Example:
@@ -162,8 +165,10 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * `return`  mixed
 
 
+
 ### haveInDatabase
- Inserts SQL record into database. This record will be erased after the test.
+ 
+Inserts SQL record into database. This record will be erased after the test.
 
 ``` php
 <?php
@@ -180,8 +185,10 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.
 
 
 
+
 ### seeInDatabase
- Checks if a row with given column values exists.
+ 
+Checks if a row with given column values exists.
 Provide table name and column values.
 
 Example:
@@ -200,4 +207,5 @@ Fails if no such user found.
 
  * `param`        $table
  * `param`  array $criteria
+
 

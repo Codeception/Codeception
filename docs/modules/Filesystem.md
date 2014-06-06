@@ -41,7 +41,8 @@ Module was developed to test Codeception itself.
 
 
 ### amInPath
- Enters a directory In local filesystem.
+ 
+Enters a directory In local filesystem.
 Project root directory is used by default
 
  * `param`  $path
@@ -62,8 +63,10 @@ Project root directory is used by default
 
 
 
+
 ### cleanDir
- Erases directory contents
+ 
+Erases directory contents
 
 ``` php
 <?php
@@ -73,8 +76,10 @@ $I->cleanDir('logs');
 
  * `param`  $dirname
 
+
 ### copyDir
- Copies directory with all contents
+ 
+Copies directory with all contents
 
 ``` php
 <?php
@@ -87,8 +92,10 @@ $I->copyDir('vendor','old_vendor');
 
 
 
+
 ### deleteDir
- Deletes directory with all subdirectories
+ 
+Deletes directory with all subdirectories
 
 ``` php
 <?php
@@ -98,8 +105,10 @@ $I->deleteDir('vendor');
 
  * `param`  $dirname
 
+
 ### deleteFile
- Deletes a file
+ 
+Deletes a file
 
 ``` php
 <?php
@@ -109,17 +118,23 @@ $I->deleteFile('composer.lock');
 
  * `param`  $filename
 
+
 ### deleteThisFile
- Deletes a file
+ 
+Deletes a file
+
 
 ### dontSeeFileFound
- Checks if file does not exists in path
+ 
+Checks if file does not exists in path
 
  * `param`  $filename
  * `param`  string $path
 
+
 ### dontSeeInThisFile
- Checks If opened file doesn't contain `text` in it
+ 
+Checks If opened file doesn't contain `text` in it
 
 ``` php
 <?php
@@ -135,8 +150,10 @@ $I->dontSeeInThisFile('codeception/codeception');
 
 
 
+
 ### openFile
- Opens a file and stores it's content.
+ 
+Opens a file and stores it's content.
 
 Usage:
 
@@ -150,8 +167,10 @@ $I->seeInThisFile('codeception/codeception');
  * `param`  $filename
 
 
+
 ### seeFileContentsEqual
- Checks the strict matching of file contents.
+ 
+Checks the strict matching of file contents.
 Unlike `seeInThisFile` will fail if file has something more then expected lines.
 Better to use with HEREDOC strings.
 Matching is done after removing "\r" chars from file content.
@@ -165,8 +184,10 @@ $I->seeFileContentsEqual('3192');
 
  * `param`  $text
 
+
 ### seeFileFound
- Checks if file exists in path.
+ 
+Checks if file exists in path.
 Opens a file when it's exists
 
 ``` php
@@ -178,8 +199,10 @@ $I->seeFileFound('UserModel.php','app/models');
  * `param`  $filename
  * `param`  string $path
 
+
 ### seeInThisFile
- Checks If opened file has `text` in it.
+ 
+Checks If opened file has `text` in it.
 
 Usage:
 
@@ -193,8 +216,11 @@ $I->seeInThisFile('codeception/codeception');
  * `param`  $text
 
 
+
 ### writeToFile
- Saves contents to file
+ 
+Saves contents to file
 
  * `param`  $filename
  * `param`  $contents
+

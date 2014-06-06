@@ -3,12 +3,26 @@
 
 
 
-Set of functions to work with filesystem
-#### *public static* copyDir($src, $dst) * `param`  $src
+Set of functions to work with Filesystem
+
+
+#### *public static* copyDir($src, $dst) 
+
+ * `param`  $src
  * `param`  $dst
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L69)
-#### *public static* deleteDir($dir) * `param`  $dir
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L70)
+
+#### *public static* deleteDir($dir) 
+
+ * `param`  $dir
  * `return`  bool
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L39)
-#### *public static* doEmptyDir($path) * `param`  $path
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L13)
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L40)
+
+#### *public static* doEmptyDir($path) 
+
+ * `param`  $path
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/FileSystem.php#L14)
+

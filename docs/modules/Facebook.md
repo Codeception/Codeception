@@ -119,42 +119,57 @@ $I->see('Welcome, ' . $fbUserFirstName);
 
 
 ### grabFacebookTestUserAccessToken
- Returns the test user access token.
+ 
+Returns the test user access token.
 
  * `return`  string
+
 
 ### grabFacebookTestUserEmail
- Returns the test user email.
+ 
+Returns the test user email.
 
  * `return`  string
+
 
 ### grabFacebookTestUserFirstName
- Returns the test user first name.
+ 
+Returns the test user first name.
 
  * `return`  string
+
 
 ### grabFacebookTestUserLoginUrl
- Returns URL for test user auto-login.
+ 
+Returns URL for test user auto-login.
 
  * `return`  string
+
 
 
 ### haveFacebookTestUserAccount
- Get facebook test user be created.
+ 
+Get facebook test user be created.
 
 *Please, note that the test user is created only at first invoke, unless $renew arguments is true.*
 
  * `param`  bool $renew true if the test user should be recreated
 
+
 ### haveTestUserLoggedInOnFacebook
- Get facebook test user be logged in on facebook.
+ 
+Get facebook test user be logged in on facebook.
 
  * `throws`  ModuleConfigException
 
 
 
+
 ### seePostOnFacebookWithAttachedPlace
- Please, note that you must have publish_stream permission to be able to publish to user's feed.
+ 
+
+Please, note that you must have publish_stream permission to be able to publish to user's feed.
 
  * `param`  string $placeId Place identifier to be verified against user published posts
+
 

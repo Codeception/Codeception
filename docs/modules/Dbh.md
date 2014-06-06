@@ -87,7 +87,8 @@ This module despite of it's stability may act unstable because of transactions i
 
 
 ### dontSeeInDatabase
- Effect is opposite to ->seeInDatabase
+ 
+Effect is opposite to ->seeInDatabase
 
 Checks if there is no record with such column values in database.
 Provide table name and column values.
@@ -112,8 +113,10 @@ Fails if such user was found.
 
 
 
+
 ### grabFromDatabase
- Fetches a single column value from a database.
+ 
+Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
 Example:
@@ -136,8 +139,10 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 
 
+
 ### seeInDatabase
- Checks if a row with given column values exists.
+ 
+Checks if a row with given column values exists.
 Provide table name and column values.
 
 Example:
@@ -156,4 +161,5 @@ Fails if no such user found.
 
  * `param`        $table
  * `param`  array $criteria
+
 

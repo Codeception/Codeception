@@ -64,7 +64,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     protected $requiredFields = array('url');
     protected $config = array('verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => []);
-    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key','proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout', ''];
+    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key','proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
 
     /**
      * @var \Codeception\Lib\Connector\Guzzle

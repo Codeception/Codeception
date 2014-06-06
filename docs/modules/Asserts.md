@@ -30,20 +30,25 @@ Special module for using asserts in your tests.
 
 
 ### assertContains
- Checks that haystack contains needle
+ 
+Checks that haystack contains needle
 
  * `param`         $needle
  * `param`         $haystack
  * `param`  string $message
 
+
 ### assertEmpty
- Checks that variable is empty.
+ 
+Checks that variable is empty.
 
  * `param`         $actual
  * `param`  string $message
 
+
 ### assertEquals
- Checks that two variables are equal.
+ 
+Checks that two variables are equal.
 
  * `param`         $expected
  * `param`         $actual
@@ -51,73 +56,94 @@ Special module for using asserts in your tests.
 
  * `return`  mixed
 
+
 ### assertFalse
- Checks that condition is negative.
+ 
+Checks that condition is negative.
 
  * `param`         $condition
  * `param`  string $message
 
+
 ### assertGreaterThen
- Checks that expected is greater then actual
+ 
+Checks that expected is greater then actual
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
+
 
 ### assertGreaterThenOrEqual
- Checks that expected is greater or equal then actual
+ 
+Checks that expected is greater or equal then actual
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
+
 
 
 ### assertNotContains
- Checks that haystack doesn't contain needle.
+ 
+Checks that haystack doesn't contain needle.
 
  * `param`         $needle
  * `param`         $haystack
  * `param`  string $message
 
+
 ### assertNotEmpty
- Checks that variable is not empty.
+ 
+Checks that variable is not empty.
 
  * `param`         $actual
  * `param`  string $message
 
+
 ### assertNotEquals
- Checks that two variables are not equal
+ 
+Checks that two variables are not equal
 
  * `param`         $expected
  * `param`         $actual
  * `param`  string $message
 
+
 ### assertNotNull
- Checks that variable is not NULL
+ 
+Checks that variable is not NULL
 
  * `param`         $actual
  * `param`  string $message
+
 
 ### assertNull
- Checks that variable is NULL
+ 
+Checks that variable is NULL
 
  * `param`         $actual
  * `param`  string $message
+
 
 
 
 ### assertTrue
- Checks that condition is positive.
+ 
+Checks that condition is positive.
 
  * `param`         $condition
  * `param`  string $message
 
 
 
+
 ### fail
- Fails the test with message.
+ 
+Fails the test with message.
 
  * `param`  $message
+
 
 
 

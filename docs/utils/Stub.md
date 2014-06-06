@@ -2,7 +2,10 @@
 ## Codeception\Util\Stub
 
 
-#### *public static* magicMethods#### *public static* atLeastOnce($params = null) Checks if a method has been invoked at least one
+
+#### *public static* magicMethods#### *public static* atLeastOnce($params = null) 
+
+Checks if a method has been invoked at least one
 time.
 
 If the number of invocations is 0 it will throw an exception in verify.
@@ -18,10 +21,14 @@ $user->getName();
  * `param`  mixed $params
 
  * `return`  StubMarshaler
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L613)
 
 
-#### *public static* construct($class, $constructorParams = null, $params = null, $testCase = null) Instantiates a class instance by running constructor.
+
+#### *public static* construct($class, $constructorParams = null, $params = null, $testCase = null) 
+
+Instantiates a class instance by running constructor.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
 Even protected and private properties can be set.
@@ -56,8 +63,12 @@ Stub::construct('User', array(), array('save' => true }));
  * `param`  bool|\PHPUnit_Framework_TestCase $testCase
 
  * `return`  object
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L266)
-#### *public static* constructEmpty($class, $constructorParams = null, $params = null, $testCase = null) Instantiates a class instance by running constructor with all methods replaced with dummies.
+
+#### *public static* constructEmpty($class, $constructorParams = null, $params = null, $testCase = null) 
+
+Instantiates a class instance by running constructor with all methods replaced with dummies.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
 Even protected and private properties can be set.
@@ -92,8 +103,12 @@ Stub::constructEmpty('User', array(), array('save' => true }));
  * `param`  bool|\PHPUnit_Framework_TestCase $testCase
 
  * `return`  object
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L316)
-#### *public static* constructEmptyExcept($class, $method, $constructorParams = null, $params = null, $testCase = null) Instantiates a class instance by running constructor with all methods replaced with dummies, except one.
+
+#### *public static* constructEmptyExcept($class, $method, $constructorParams = null, $params = null, $testCase = null) 
+
+Instantiates a class instance by running constructor with all methods replaced with dummies, except one.
 Parameters for constructor passed as second argument
 Properties and methods can be set in third argument.
 Even protected and private properties can be set.
@@ -129,16 +144,24 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
  * `param`  bool|PHPUnit_Framework_TestCase $testCase
 
  * `return`  object
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L371)
-#### *public static* copy($obj, $params = null) Clones an object and redefines it's properties (even protected and private)
+
+#### *public static* copy($obj, $params = null) 
+
+Clones an object and redefines it's properties (even protected and private)
 
  * `param`        $obj
  * `param`  array $params
 
  * `return`  mixed
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L221)
 
-#### *public static* exactly($count, $params = null) Checks if a method has been invoked a certain amount
+
+#### *public static* exactly($count, $params = null) 
+
+Checks if a method has been invoked a certain amount
 of times.
 If the number of invocations exceeds the value it will immediately throw an
 exception,
@@ -158,21 +181,29 @@ $user->getName();
  * `param`  mixed $params
 
  * `return`  StubMarshaler
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L643)
 
-#### *public static* factory($class, $num = null, $params = null) Creates $num instances of class through `Stub::make`.
+
+#### *public static* factory($class, $num = null, $params = null) 
+
+Creates $num instances of class through `Stub::make`.
 
  * `param`        $class
  * `param`  int   $num
  * `param`  array $params
 
  * `return`  array
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L77)
 
 
 
 
-#### *public static* make($class, $params = null, $testCase = null) Instantiates a class without executing a constructor.
+
+#### *public static* make($class, $params = null, $testCase = null) 
+
+Instantiates a class without executing a constructor.
 Properties and methods can be set as a second parameter.
 Even protected and private properties can be set.
 
@@ -206,8 +237,12 @@ Stub::make('User', array('save' => true }));
 
  * `return`  object - mock
  * `throws`  \RuntimeException when class not exists
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L45)
-#### *public static* makeEmpty($class, $params = null, $testCase = null) Instantiates class having all methods replaced with dummies.
+
+#### *public static* makeEmpty($class, $params = null, $testCase = null) 
+
+Instantiates class having all methods replaced with dummies.
 Constructor is not triggered.
 Properties and methods can be set as a second parameter.
 Even protected and private properties can be set.
@@ -241,8 +276,12 @@ Stub::makeEmpty('User', array('save' => true }));
  * `param`  bool|\PHPUnit_Framework_TestCase $testCase
 
  * `return`  object
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L196)
-#### *public static* makeEmptyExcept($class, $method, $params = null, $testCase = null) Instantiates class having all methods replaced with dummies except one.
+
+#### *public static* makeEmptyExcept($class, $method, $params = null, $testCase = null) 
+
+Instantiates class having all methods replaced with dummies except one.
 Constructor is not triggered.
 Properties and methods can be replaced.
 Even protected and private properties can be set.
@@ -277,8 +316,12 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
  * `param`  bool|\PHPUnit_Framework_TestCase $testCase
 
  * `return`  object
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L124)
-#### *public static* never($params = null) Checks if a method never has been invoked
+
+#### *public static* never($params = null) 
+
+Checks if a method never has been invoked
 
 If method invoked, it will immediately throw an
 exception.
@@ -293,8 +336,12 @@ $user->someMethod();
  * `param`  mixed $params
 
  * `return`  StubMarshaler
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L560)
-#### *public static* once($params = null) Checks if a method has been invoked exactly one
+
+#### *public static* once($params = null) 
+
+Checks if a method has been invoked exactly one
 time.
 
 If the number is less or greater it will later be checked in verify() and also throw an
@@ -311,12 +358,18 @@ $this->assertEquals('Davert', $userName);
  * `param`  mixed $params
 
  * `return`  StubMarshaler
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L587)
-#### *public static* update($mock, array $params) Replaces properties and methods of current stub
+
+#### *public static* update($mock, array $params) 
+
+Replaces properties and methods of current stub
 
  * `param`  \PHPUnit_Framework_MockObject_MockObject $mock
  * `param`  array                                    $params
 
  * `return`  mixed
  * `throws`  \LogicException
+
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Stub.php#L464)
+

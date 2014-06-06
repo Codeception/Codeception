@@ -3,9 +3,32 @@
 
 
 
+Basic template engine used for generating initial Cept/Cest/Test files.
+
+
 #### *public* __construct($template) 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L9)
+
+Takes a template string
+
+ * `param`  $template
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L17)
+
 #### *public* place($var, $val) 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L14)
+
+Replaces {{var}} string with provided value
+
+ * `param`  $var
+ * `param`  $val
+ * `return`  $this
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L29)
+
 #### *public* produce() 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L20)
+
+Fills up template string with placed variables.
+
+ * `return`  mixed
+
+[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Template.php#L40)
+

@@ -96,7 +96,8 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 
 
 ### grabMessageFromQueue
- Takes last message from queue.
+ 
+Takes last message from queue.
 
 $message = $I->grabMessageFromQueue('queue.emails');
 
@@ -105,8 +106,10 @@ $message = $I->grabMessageFromQueue('queue.emails');
 
 
 
+
 ### pushToExchange
- Sends message to exchange
+ 
+Sends message to exchange
 
 ``` php
 <?php
@@ -118,8 +121,10 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
  * `param`  $exchange
  * `param`  $message string|AMQPMessage
 
+
 ### pushToQueue
- Sends message to queue
+ 
+Sends message to queue
 
 ``` php
 <?php
@@ -132,8 +137,10 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
  * `param`  $message string|AMQPMessage
 
 
+
 ### seeMessageInQueueContainsText
- Checks if message containing text received.
+ 
+Checks if message containing text received.
 
 **This method drops message from queue**
 **This method will wait for message. If none is sent the script will stuck**.
@@ -147,4 +154,5 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
 
  * `param`  $queue
  * `param`  $text
+
 

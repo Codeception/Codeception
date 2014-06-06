@@ -224,11 +224,13 @@ class RoboFile extends \Robo\Tasks {
 
             $this->taskGenDoc('docs/utils/' . $utilName . '.md')
                 ->docClass($className)
-                ->processMethod(function(ReflectionMethod $r, $text) use ($utilName) {
+                ->processClassDocBlock(function(ReflectionClass $r, $text) {
+                    return $text . "\n";
+                })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName) {
                     $line = $r->getStartLine();
                     $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
                     $text .= "\n[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/$utilName.php#L$line)";
-                    return $text;
+                    return "\n" . $text."\n";
                 })
                 ->reorderMethods('ksort')
                 ->run();

@@ -70,7 +70,9 @@ Report an issue if this module doesn't work for you.
 
 
 ### cleanupRedis
- Cleans up Redis database.
+ 
+Cleans up Redis database.
+
 
 
 
