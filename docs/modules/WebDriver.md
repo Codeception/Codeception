@@ -8,7 +8,7 @@ New generation Selenium2 module.
 
 ## Installation
 
-Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+Download [Selenium2 WebDriver](http://docs.seleniumhq.org/download/)
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
 ## Migration Guide (Selenium2 -> WebDriver)
