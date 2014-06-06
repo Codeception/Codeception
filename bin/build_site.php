@@ -23,14 +23,14 @@ foreach ($docs as $doc) {
     $name = str_replace('.markdown','', $newfile);
     $contents = file_get_contents($doc->getPathname());
     if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
-        $newfile = 'docs/modules/'.$newfile;
+        $newfile = 'docs1/modules/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $modules[$name] = '/docs/modules/'.$url;
 
         $contents = str_replace('## ','### ', $contents);
 
     } else {
-        $newfile = 'docs/'.$newfile;
+        $newfile = 'docs1/'.$newfile;
         $url = str_replace('.md','', $doc->getFilename());
         $api[substr($name,3)] = '/docs/'.$url;
     }
@@ -73,7 +73,7 @@ foreach ($api as $name => $url) {
     }
 
 
-    file_put_contents('docs/'.$filename.'.markdown', $doc);
+    file_put_contents('docs1/'.$filename.'.markdown', $doc);
 }
 
 

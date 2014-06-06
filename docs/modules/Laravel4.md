@@ -20,6 +20,8 @@ Uses 'bootstrap/start.php' to launch.
 * Contact: davert.codeception@mailican.com
 
 ## Config
+
+* start: `bootstrap/start.php` - relative path to start.php config file
 * cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
 
 
