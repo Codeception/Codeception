@@ -362,6 +362,15 @@ Lets create a "Member" Steps class, a generator will prompt you for methods to i
 php codecept.phar generate:stepobject acceptance Member
 ```
 
+You will be asked to enter action names, but it's optional. Enter once a time, and press Enter. Press empty in a leave empty line to go on to StepObject creation.
+
+```
+codecept.phar generate:stepobject acceptance Member
+Add action to StepObject class (ENTER to exit): login
+Add action to StepObject class (ENTER to exit):
+StepObject was created in <you path>\tests\acceptance\/_steps\MemberSteps.php
+```
+
 This will generate a similar class to `tests/acceptance/_steps/MemberSteps.php`.
 
 ```php
