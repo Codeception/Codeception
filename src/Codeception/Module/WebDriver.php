@@ -742,6 +742,18 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el->sendKeys($filePath);
     }
 
+    /**
+     * @return string
+     */
+    public function getVisibleText() {
+        $els = $this->webDriver->findElements(\WebDriverBy::cssSelector('body'));
+        if (count($els)) {
+            return $els[0]->getText();
+        }
+
+        return "";
+    }
+
     public function grabTextFrom($cssOrXPathOrRegex)
     {
         $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
@@ -1625,7 +1637,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageContains($needle, $message = '')
     {
         $this->assertThat(
-            htmlspecialchars_decode($this->webDriver->getPageSource()),
+            htmlspecialchars_decode($this->getVisibleText()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
@@ -1634,7 +1646,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageNotContains($needle, $message = '')
     {
         $this->assertThatItsNot(
-            htmlspecialchars_decode($this->webDriver->getPageSource()),
+            htmlspecialchars_decode($this->getVisibleText()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
