@@ -6,7 +6,7 @@ use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
-    const STABLE_BRANCH = '1.8';
+    const STABLE_BRANCH = '2.0';
 
     public function release()
     {
@@ -279,7 +279,8 @@ class RoboFile extends \Robo\Tasks {
     }
 
     /**
-     * @desc updates docs on codeception.com
+     * Updates docs on codeception.com
+     *
      */
     public function publishDocs()
     {
@@ -294,14 +295,18 @@ class RoboFile extends \Robo\Tasks {
 
         $modules = array();
         $api = array();
+        $reference = array();
         foreach ($docs as $doc) {
             $newfile = $doc->getFilename();
             $name = $doc->getBasename();
             $contents = $doc->getContents();
             if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
-                $newfile = 'docs/modules/'.$newfile;
-                $modules[$name] = '/docs/modules/'.$doc->getBasename();
-                $contents = str_replace('## ','### ', $contents);
+                $newfile = 'docs/modules/' . $newfile;
+                $modules[$name] = '/docs/modules/' . $doc->getBasename();
+                $contents = str_replace('## ', '### ', $contents);
+            } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference')) {
+                $newfile = 'docs/reference/' . $newfile;
+                $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;
                 $api[substr($name,3)] = '/docs/'.$doc->getBasename();
@@ -358,6 +363,14 @@ class RoboFile extends \Robo\Tasks {
         }
 
         file_put_contents('_includes/modules.html', $modules_list);
+
+        $reference_list = '';
+        foreach ($reference as $name => $url) {
+            $reference_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+        }
+        file_put_contents('_includes/reference.html', $reference_list);
+
+
         $this->publishSite();
         $this->taskExec('git add')->args('.')->run();
     }
