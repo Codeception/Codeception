@@ -300,11 +300,11 @@ class RoboFile extends \Robo\Tasks {
             $newfile = $doc->getFilename();
             $name = $doc->getBasename();
             $contents = $doc->getContents();
-            if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
+            if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules') !== false) {
                 $newfile = 'docs/modules/' . $newfile;
                 $modules[$name] = '/docs/modules/' . $doc->getBasename();
                 $contents = str_replace('## ', '### ', $contents);
-            } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference')) {
+            } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
@@ -327,7 +327,6 @@ class RoboFile extends \Robo\Tasks {
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
             file_put_contents($newfile, $contents);
         }
-
         $guides = array_keys($api);
         foreach ($api as $name => $url) {
             $filename = substr($url, 6);
