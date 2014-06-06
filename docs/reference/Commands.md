@@ -470,12 +470,17 @@ Creates empty Helper class.
 ## Bootstrap
 
 Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
-You will be asked to choose one of the actors that will be used in tests. To skip this question run bootstrap with `--silent` option.
 
-`codecept bootstrap` creates `tests` dir and `codeception.yml` in current dir.
-`codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
-`codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
-`codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
+By default it will create 3 suites **acceptance**, **functional**, and **unit**. To customize run this command with `--customize` option.
+
+For Codeception 1.x compatible setup run bootstrap in `--compat` option.
+
+* `codecept bootstrap` - creates `tests` dir and `codeception.yml` in current dir.
+* `codecept bootstrap --customize` - set manually actors and suite names during setup
+* `codecept bootstrap --compat` - prepare Codeception 1.x setup with Guy classes.
+* `codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
+* `codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
+* `codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
 
 
 

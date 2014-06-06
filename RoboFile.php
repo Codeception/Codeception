@@ -242,7 +242,7 @@ class RoboFile extends \Robo\Tasks {
 
         $commands = Finder::create()->files()->name('*.php')->depth(0)->in(__DIR__ . '/src/Codeception/Command');
 
-        $commandGenerator = $this->taskGenDoc('docs/reference/commands.md');
+        $commandGenerator = $this->taskGenDoc('docs/reference/Commands.md');
         foreach ($commands as $command) {
             $commandName = basename(substr($command, 0, -4));
             $className = '\Codeception\Command\\' . $commandName;
