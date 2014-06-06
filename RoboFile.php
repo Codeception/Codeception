@@ -306,7 +306,7 @@ class RoboFile extends \Robo\Tasks {
         $reference = array();
         foreach ($docs as $doc) {
             $newfile = $doc->getFilename();
-            $name = $doc->getBasename();
+            $name = substr($doc->getBasename(),0,-3);
             $contents = $doc->getContents();
             if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules') !== false) {
                 $newfile = 'docs/modules/' . $newfile;
@@ -344,20 +344,23 @@ class RoboFile extends \Robo\Tasks {
             if (isset($guides[$i+1])) {
                 $next_title = $guides[$i+1];
                 $next_url = $api[$guides[$i+1]];
+                $next_url = substr($next_url, 0, -3);
                 $doc .= "\n* **Next Chapter: [$next_title >]($next_url)**";
             }
 
             if (isset($guides[$i-1])) {
                 $prev_title = $guides[$i-1];
                 $prev_url = $api[$guides[$i-1]];
+                $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-            file_put_contents('docs/'.$filename.'.md', $doc);
+            file_put_contents('docs/'.$filename, $doc);
         }
 
 
         $guides_list = '';
         foreach ($api as $name => $url) {
+            $url = substr($url, 0, -3);
             $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
             $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
             $guides_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
@@ -367,6 +370,7 @@ class RoboFile extends \Robo\Tasks {
 
         $modules_list = '';
         foreach ($modules as $name => $url) {
+            $url = substr($url, 0, -3);
             $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
 
@@ -374,6 +378,7 @@ class RoboFile extends \Robo\Tasks {
 
         $reference_list = '';
         foreach ($reference as $name => $url) {
+            $url = substr($url, 0, -3);
             $reference_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/reference.html', $reference_list);
@@ -442,7 +447,7 @@ class RoboFile extends \Robo\Tasks {
     protected function publishSite()
     {
         $this->taskGitStack()
-            ->add('docs/*')
+            ->add('-A')
             ->commit('auto updated documentation')
             ->push()
             ->run();
