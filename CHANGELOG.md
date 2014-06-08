@@ -1,5 +1,13 @@
 # Changelog
 
+
+#### 2.0.0 06/05/2014
+
+* renamed `_logs` dir to `_output` by default
+* renamed `_helpers` dir to `_support` by default
+* Guy renamed to Tester
+* Bootstrap command got 3 installation modes: default, compat, setup
+
 #### 2.0.0 05/27/2014
 
 * added --coverage-text option
