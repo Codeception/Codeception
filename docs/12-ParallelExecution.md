@@ -174,7 +174,7 @@ codecept run functional -g p2
 
 ### Step 2: Running Tests
 
-As it was mentioned Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH (Robo does not provide SSH task yet). Or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
+As it was mentioned Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH. Or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
 
 ```php
 <?php
