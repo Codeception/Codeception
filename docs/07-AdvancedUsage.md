@@ -345,7 +345,7 @@ And here is an example of how this PageObject can be used in a test.
 ```php
 <?php
 $I = new AcceptanceTester($scenario);
-UserLoginPage::for($I)->login('bill evans', 'debby');
+UserLoginPage::create($I)->login('bill evans', 'debby');
 ?>
 ```
 
