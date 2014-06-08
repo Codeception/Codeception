@@ -17,7 +17,7 @@
         "php": ">=5.3.19",
         "behat/mink": "1.5.*",
         "phpunit/phpunit": "3.7.*",
-        "facebook/webdriver": "0.3",
+        "facebook/webdriver": "0.4",
         "behat/mink-goutte-driver": "1.0.*",
         "behat/mink-selenium2-driver": "1.1.*",
         "monolog/monolog": "*",
