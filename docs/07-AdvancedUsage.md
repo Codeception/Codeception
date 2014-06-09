@@ -320,7 +320,7 @@ class UserLoginPage
         $this->AcceptanceTester = $I;
     }
 
-    public static function create(AcceptanceTester $I)
+    public static function of(AcceptanceTester $I)
     {
         return new static($I);
     }
@@ -345,7 +345,7 @@ And here is an example of how this PageObject can be used in a test.
 ```php
 <?php
 $I = new AcceptanceTester($scenario);
-UserLoginPage::for($I)->login('bill evans', 'debby');
+UserLoginPage::of($I)->login('bill evans', 'debby');
 ?>
 ```
 
