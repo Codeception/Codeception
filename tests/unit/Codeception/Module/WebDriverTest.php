@@ -26,11 +26,6 @@ class WebDriverTest extends TestsForBrowsers
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $url = 'http://localhost:8000';
         }
-        // my local config.
-        if ($this->is_local) {
-            $url = 'http://testapp.com';
-        }
-
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0));
         $this->module->_initialize();
 
@@ -400,4 +395,34 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('0','#notice');
     }
 
+    public function testCreateCeptScreenshotFail()
+    {
+        $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
+        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
+            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('loginCept.fail.png'), $actual);
+        })]);
+        $wd->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testCreateCestScreenshotOnFail()
+    {
+        $cest = (new \Codeception\TestCase\Cest())
+            ->config('testClassInstance', new stdClass())
+            ->config('testMethod','login');
+
+        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
+            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $actual);
+        })]);
+        $wd->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testCreateTestScreenshotOnFail()
+    {
+        $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
+        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) use ($test) {
+            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
+        })]);
+        $wd->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+
+    }
 }

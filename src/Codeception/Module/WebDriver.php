@@ -131,8 +131,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $this->_saveScreenshot(codecept_log_dir(basename(\Codeception\TestCase::getTestFileName($test) . '.fail.png')));
-        $this->debug("Screenshot was saved into 'log' dir");
+        $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.png';
+        $this->_saveScreenshot(codecept_output_dir($filename));
+        $this->debug("Screenshot was saved into '_output' dir");
     }
 
     public function _afterSuite()

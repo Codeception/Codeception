@@ -77,22 +77,22 @@ class RunCest
     {
         $I->wantTo('try the reporting mode');
         $I->executeCommand('run dummy --report');
-        $I->seeInShellOutput('FileExistsCept.php');
+        $I->seeInShellOutput('FileExistsCept');
         $I->seeInShellOutput('........Ok');
     }
 
     public function runOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped -g notorun');
-        $I->seeInShellOutput("IncompleteMeCept.php");
-        $I->dontSeeInShellOutput("SkipMeCept.php");
+        $I->seeInShellOutput("IncompleteMeCept");
+        $I->dontSeeInShellOutput("SkipMeCept");
     }
 
     public function skipRunOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped --skip-group notorun');
-        $I->seeInShellOutput("SkipMeCept.php");
-        $I->dontSeeInShellOutput("IncompleteMeCept.php");
+        $I->seeInShellOutput("SkipMeCept");
+        $I->dontSeeInShellOutput("IncompleteMeCept");
     }
 
     public function runTwoSuites(\CliGuy $I)

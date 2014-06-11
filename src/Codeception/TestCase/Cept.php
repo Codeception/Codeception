@@ -24,7 +24,7 @@ class Cept extends TestCase implements
 
     public function getSignature()
     {
-        return $this->name;
+        return substr($this->name, 0,-4); // cut .php
     }
 
     public function getName($withDataSet = true)

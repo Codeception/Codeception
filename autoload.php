@@ -19,6 +19,11 @@ function codecept_root_dir($appendPath = '')
     return \Codeception\Configuration::projectDir() . $appendPath;
 }
 
+function codecept_output_dir($appendPath = '')
+{
+    return \Codeception\Configuration::outputDir() . $appendPath;
+}
+
 function codecept_log_dir($appendPath = '')
 {
     return \Codeception\Configuration::outputDir() . $appendPath;

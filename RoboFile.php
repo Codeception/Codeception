@@ -40,13 +40,6 @@ class RoboFile extends \Robo\Tasks {
             ->run();
     }
 
-    public function serverStart()
-    {
-        $this->taskServer(8000)
-            ->dir('tests/data/app')
-            ->run();
-    }
-
     public function testPhpbrowser($args = '')
     {
         $this->server();
@@ -87,7 +80,7 @@ class RoboFile extends \Robo\Tasks {
 
     }
 
-    public function testWebdriver($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    public function testWebdriver($args = '')
     {
         $this->taskServer(8000)
             ->background()
@@ -98,9 +91,22 @@ class RoboFile extends \Robo\Tasks {
             ->background()
             ->run();
 
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','tests/unit/Codeception/Module/WebDriverTest.php')
+        $this->taskCodecept('./codecept')
+            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
+            ->args($args)
             ->run();
+    }
+
+    public function testServer($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    {
+        $this->taskExec('java -jar '.$pathToSelenium)
+            ->background()
+            ->run();
+
+        $this->taskServer(8000)
+            ->dir('tests/data/app')
+            ->run();
+
     }
 
     public function testCli()

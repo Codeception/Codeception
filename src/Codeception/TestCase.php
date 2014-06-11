@@ -35,6 +35,9 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
 
     public static function getTestFullName(\PHPUnit_Framework_TestCase $testCase)
     {
+        if ($testCase instanceof TestCase\Interfaces\Plain) {
+            return self::getTestFileName($testCase);
+        }
         return self::getTestFileName($testCase).':'.$testCase->getName(false);
     }
 }

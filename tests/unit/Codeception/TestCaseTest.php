@@ -62,4 +62,5 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($step, $this->testcase->getTrace());
     }
 
+
 }

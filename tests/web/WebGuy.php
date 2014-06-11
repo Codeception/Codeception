@@ -345,9 +345,11 @@ class WebGuy extends \Codeception\Actor
      * // CSS button
      * $I->click('#form input[type=submit]');
      * // XPath
-     * $I->click('//form/*[@type=submit]')
+     * $I->click('//form/*[@type=submit]');
      * // link in context
      * $I->click('Logout', '#nav');
+     * // using strict locator
+     * $I->click(['link' => 'Login'])'
      * ?>
      * ```
      *
@@ -823,6 +825,7 @@ class WebGuy extends \Codeception\Actor
      * $I->seeInField('form input[type=hidden]','hidden_value');
      * $I->seeInField('#searchform input','Search');
      * $I->seeInField('//form/*[@name=search]','Search');
+     * $I->seeInField(['name' => 'search'], 'Search');
      * ?>
      * ```
      *
@@ -849,6 +852,7 @@ class WebGuy extends \Codeception\Actor
      * $I->seeInField('form input[type=hidden]','hidden_value');
      * $I->seeInField('#searchform input','Search');
      * $I->seeInField('//form/*[@name=search]','Search');
+     * $I->seeInField(['name' => 'search'], 'Search');
      * ?>
      * ```
      *
@@ -875,6 +879,7 @@ class WebGuy extends \Codeception\Actor
      * $I->dontSeeInField('form input[type=hidden]','hidden_value');
      * $I->dontSeeInField('#searchform input','Search');
      * $I->dontSeeInField('//form/*[@name=search]','Search');
+     * $I->seeInField(['name' => 'search'], 'Search');
      * ?>
      * ```
      *
@@ -900,6 +905,7 @@ class WebGuy extends \Codeception\Actor
      * $I->dontSeeInField('form input[type=hidden]','hidden_value');
      * $I->dontSeeInField('#searchform input','Search');
      * $I->dontSeeInField('//form/*[@name=search]','Search');
+     * $I->seeInField(['name' => 'search'], 'Search');
      * ?>
      * ```
      *
@@ -1008,6 +1014,7 @@ class WebGuy extends \Codeception\Actor
      * ``` php
      * <?php
      * $I->fillField("//input[@type='text']", "Hello World!");
+     * $I->fillField(['name' => 'email'], 'jon@mail.com');
      * ?>
      * ```
      *
@@ -1106,6 +1113,7 @@ class WebGuy extends \Codeception\Actor
      * $name = $I->grabValueFrom('Name');
      * $name = $I->grabValueFrom('input[name=username]');
      * $name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
+     * $name = $I->grabValueFrom(['name' => 'username']);
      * ?>
      * ```
      *
