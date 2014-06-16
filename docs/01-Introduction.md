@@ -14,7 +14,7 @@ Let's review the listed testing paradigms in reverse order.
 
 ### Acceptance Tests
 
-How does your client, manager, or tester, or any other non-technical person, know your site is working? By opening browser, accessing a site, clicking on links, filling the forms, and actually seeing the contant on a web page. That person has no idea of the framework, database, web-server, or programming language you use or why application did not behave as it was expected.
+How does your client, manager, or tester, or any other non-technical person, know your site is working? By opening the browser, accessing a site, clicking on links, filling the forms, and actually seeing the content on a web page. That person has no idea of the framework, database, web-server, or programming language you use or why the application did not behave as it was expected.
 
 Acceptance tests can cover standard but complex scenarios from a user's perspective. With acceptance tests you can be confident that users, following all defined scenarios, won't get errors. 
 
@@ -50,9 +50,9 @@ $I->see('Thank you for Signing Up!');
 
 What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's a are what functional tests are for.
 
-For functional tests you emulate a web request ($_GET, $_POST variables) and send it into your application which returns HTML response. Inside a test you can make assertions about the response, also you can check the data was succesfully stored into database.
+For functional tests you emulate a web request (`$_GET` and `$_POST` variables) and send it into your application which returns HTML response. Inside a test you can make assertions about the response, also you can check if the data was succesfully stored into database.
 
-For functional tests your application should be prepared to be run in test environment. Codeception provides connectors to several popular PHP frameworks, but you can write your own.
+For functional tests your application should be prepared to be run in a test environment. Codeception provides connectors to several popular PHP frameworks, but you can write your own.
 
 #### Sample functional test
 
@@ -119,6 +119,6 @@ function testSavingUser()
 
 ## Conclusion
 
-Despite the wide popularity of TDD, not all PHP developers ever write automatic tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests in one style.
+Despite the wide popularity of TDD, not all PHP developers ever write automatic tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests, in one style.
 
 It could be called a BDD framework. All Codeception tests are written in a descriptive manner. Just by looking in the test body you can get a clear understanding of what is being tested and how it is performed. Even complex tests with many assertions are written in a simple PHP DSL.
