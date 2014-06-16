@@ -20,7 +20,7 @@ class CeptTest extends Codeception\TestCase\Test
             \Codeception\TestCase::getTestFullName($cept)
         );
         $this->assertEquals(
-            'LoginCept.php',
+            'LoginCept',
             \Codeception\TestCase::getTestSignature($cept)
         );
     }
