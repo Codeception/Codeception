@@ -80,7 +80,7 @@ $I->dontSeeUserExist($user);
 ?>
 ```
 
-You can define asserts by using assertXXX methods in modules. Not all PHPUnit assrt methods are included in modules. But you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class to leverage all of them.
+You can define asserts by using assertXXX methods in modules. Not all PHPUnit assert methods are included in modules. But you can use PHPUnit static methods from the `PHPUnit_Framework_Assert` class to leverage all of them.
 
 ```php
 <?php
