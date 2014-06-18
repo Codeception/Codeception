@@ -2,7 +2,7 @@
 
 Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: Functional tests don't require a web server to run tests.
 
-In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables then we execute application from a test. This may be valueble as functional tests are faster and prvoide detailed stack traces on failures.
+In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables then we execute application from a test. This may be valuable as functional tests are faster and provide detailed stack traces on failures.
 
 Codeception can connect to different web frameworks which support functional testing: Symfony2, Laravel4, Yii2, Zend Framework and others. You just need to enable desired module in your functional suite config to start.
 
@@ -200,7 +200,7 @@ class FunctionalHelper extends \Codeception\Module
             ->container // get current DI container
             ->get('my_service'); // access a service
 
-        $service->doSomthing();
+        $service->doSomething();
     }
 }
 ?>
