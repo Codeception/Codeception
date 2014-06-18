@@ -1,5 +1,17 @@
 # Changelog
 
+#### 2.0.1 06/19/2014
+
+* Second parameter of Cest method is treated as scenario variable on parse. Fix #1058
+
+
+#### 2.0.1 06/18/2014
+
+* prints raw stack trace including codeception classes in -vvv mode
+* screenshots on fail are saved to properly named files #1075
+* [Symfony2] added debug config option to switch debug mode by @pmcjury
+
+
 
 #### 2.0.0 06/05/2014
 

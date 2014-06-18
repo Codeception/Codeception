@@ -55,6 +55,25 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->assertFalse($this->scenario->isBlocked());
     }
 
+    public function testScenarioOptionsWithParam()
+    {
+        $code = "<?php\n
+         \$alalala->skip();
+         ";
+        $this->parser->parseScenarioOptions($code, 'alalala');
+        $this->assertTrue($this->scenario->isBlocked());
+    }
+
+    public function testScenarioOptionsIgnoredWhenNull()
+    {
+        $code = "<?php\n
+         \$scenario->skip();
+         ";
+        $this->parser->parseScenarioOptions($code, null);
+        $this->assertFalse($this->scenario->isBlocked());
+    }
+
+
     public function testScenarioSkipOptionsHandled()
     {
         $this->setExpectedException('PHPUnit_Framework_SkippedTestError', 'pass along');

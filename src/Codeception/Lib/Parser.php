@@ -35,16 +35,16 @@ class Parser {
         }
     }
 
-    public function parseScenarioOptions($code)
+    public function parseScenarioOptions($code, $var = 'scenario')
     {
         $matches = array();
         $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
         $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code); // remove block comment
-        $res = preg_match_all("~\\\$scenario->.*?;~", $code, $matches);
-        if (!$res) {
+        $res = preg_match_all("~\\\$$var->.*?;~", $code, $matches);
+        if (!$res or !$var) {
             return;
         }
-        $scenario = $this->scenario;
+        $$var = $this->scenario;
         foreach ($matches[0] as $line) {
             eval($line);
         }

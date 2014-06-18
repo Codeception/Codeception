@@ -21,11 +21,6 @@ class Codecept
     protected $result;
 
     /**
-     * @var \Codeception\CodeCoverage
-     */
-    protected $coverage;
-
-    /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher;

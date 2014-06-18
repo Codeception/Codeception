@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
+ * * debug: true - switch debug mode
 * 
  * ### Example (`functional.suite.yml`)
  *

@@ -86,7 +86,8 @@ class InnerBrowser extends Module implements Web
             return;
         }
 
-        $button = $this->crawler->selectButton($link);
+        $buttonText = str_replace('"',"'", $link);
+        $button = $this->crawler->selectButton($buttonText);
         if (count($button)) {
             $this->submitFormWithButton($button);
             $this->debugResponse();

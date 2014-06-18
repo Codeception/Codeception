@@ -43,6 +43,7 @@ class Console implements EventSubscriberInterface
     protected $silent = false;
     protected $lastTestFailed = false;
     protected $printedTest = null;
+    protected $rawStackTrace = false;
 
     protected $traceLength = 5;
 
@@ -52,6 +53,7 @@ class Console implements EventSubscriberInterface
     {
         $this->debug  = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps  = $this->debug || $options['steps'];
+        $this->rawStackTrace = ($options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
         $this->output = new Output($options);
         if ($this->debug) {
             Debug::setOutput($this->output);
@@ -265,6 +267,7 @@ class Console implements EventSubscriberInterface
 
     public function printException(\Exception $e)
     {
+
         static $limit = 10;
         $this->message("[%s] %s")->with(get_class($e), $e->getMessage())->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
@@ -272,7 +275,13 @@ class Console implements EventSubscriberInterface
                 : OutputInterface::VERBOSITY_VERBOSE
         );
 
+        if ($this->rawStackTrace) {
+            $this->message($e->getTraceAsString())->writeln();
+            return;
+        }
+        
         $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
+
         $i = 0;
         foreach ($trace as $step) {
             $i++;

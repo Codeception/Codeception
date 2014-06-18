@@ -565,6 +565,19 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->see('Kill & Destroy');
         $this->module->see('Kill & Destroy','div');
     }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1091
+     */
+    public function testExample4()
+    {
+        $this->module->amOnPage('/form/example4');
+        $this->module->click(['css' => '#register button[type="submit"]']);
+
+        $this->module->amOnPage('/form/example4');
+        $this->module->click('#register button[type="submit"]');
+
+    }
     
     protected function shouldFail()
     {
