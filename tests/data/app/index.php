@@ -22,6 +22,7 @@ $urls = array(
     '/redirect' => 'redirect',
     '/redirect2' => 'redirect2',
     '/redirect3' => 'redirect3',
+    '/redirect4' => 'redirect4',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
     '/articles\??.*' => 'articles'

@@ -119,6 +119,14 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testRedirectWithGetParams()
+    {
+        $this->module->amOnPage('/redirect4');
+        $this->module->seeInCurrentUrl('/search?ln=test@gmail.com&sn=testnumber');
+        $params = data::get('params');
+        $this->assertContains('test@gmail.com', $params);
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');

@@ -24,6 +24,12 @@ class redirect {
     }
 }
 
+class redirect4 {
+    function GET() {
+        header('Location: /search?ln=test@gmail.com&sn=testnumber');
+    }
+}
+
 class redirect2 {
     function GET() {
         include __DIR__.'/view/redirect2.php';
@@ -114,6 +120,7 @@ class search {
         if (isset($_GET['searchQuery']) && $_GET['searchQuery'] == 'test') {
             $result = 'Success';
         }
+        data::set('params', $_GET);
         include __DIR__.'/view/search.php';
     }
 }
