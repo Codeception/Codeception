@@ -29,7 +29,7 @@ Run tests and see what actions were taken and what results were seen.
 ``` php
 <?php
 
-$I = new TestGuy($scenario);
+$I = new FunctionalTester($scenario);
 $I->wantTo('create wiki page');
 $I->amOnPage('/');
 $I->click('Pages');
@@ -83,16 +83,10 @@ codecept bootstrap
 
 this will create a default directory structure and default test suites
 
-```
-codecept build
-```
-
-This will generate Guy-classes, in order to make autocomplete work.
-
 See Documentation for more information.
 
 ### License
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011-2013
+2011-2014
