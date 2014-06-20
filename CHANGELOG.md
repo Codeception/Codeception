@@ -4,7 +4,7 @@
 
 * [WebDriver] added seeInPageSource and dontSeeInPageSource methods
 * [WebDriver] see method now checks only for visible BODY element by @artyfarty
-* [REST] added Bearer authenticatiogcn
+* [REST] added Bearer authentication by @dizews
 * removed auto added submit buttons in forms previously used as hook for DomCrawler
 
 

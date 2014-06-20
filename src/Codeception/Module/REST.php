@@ -207,6 +207,16 @@ class REST extends \Codeception\Module
 	}
 
     /**
+     * Adds Bearer authentication via access token.
+     *
+     * @param $accessToken
+     */
+    public function amBearerAuthenticated($accessToken)
+    {
+        $this->haveHttpHeader('Authorization', 'Bearer '.$accessToken);
+    }
+
+    /**
      * Sends a POST request to given uri.
      *
      * Parameters and files (as array of filenames) can be provided.
