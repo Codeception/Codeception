@@ -378,6 +378,21 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/hidden');
     }
 
+    public function testSeeVisible()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('Invisible text');
+        $this->module->dontSee('Invisible', '.hidden');
+        $this->module->seeInHtml('Invisible text');
+    }
+
+    public function testSeeInvisible()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->see('Invisible text');
+    }
+
     public function testFailWebDriverByLocator()
     {
         $this->shouldFail();

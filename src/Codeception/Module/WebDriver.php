@@ -288,7 +288,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$selector) {
             return $this->assertPageContains($text);
         }
-        $nodes = $this->match($this->webDriver, $selector);
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
@@ -297,8 +297,36 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$selector) {
             return $this->assertPageNotContains($text);
         }
-        $nodes = $this->match($this->webDriver, $selector);
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesNotContain($text, $nodes, $selector);
+    }
+
+    /**
+     * Checks that page source contains text.
+     *
+     * ```php
+     * <?php
+     * $I->seeInPageSource('<link rel="apple-touch-icon"');
+     * ```
+     *
+     * @param $text
+     */
+    public function seeInPageSource($text)
+    {
+        $this->assertThat(htmlspecialchars_decode($this->webDriver->getPageSource()),
+            new PageConstraint($text, $this->_getCurrentUri()), ''
+        );
+    }
+
+    /**
+     * Checks that page source does not contain text.
+     *
+     * @param $text
+     */    public function dontSeeInPageSource($text)
+    {
+        $this->assertThatItsNot(htmlspecialchars_decode($this->webDriver->getPageSource()),
+            new PageConstraint($text, $this->_getCurrentUri()), ''
+        );
     }
 
     public function click($link, $context = null)
@@ -813,11 +841,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function seeElement($selector, $attributes = array())
     {
-        $els = array_filter($this->match($this->webDriver, $selector),
-            function (\WebDriverElement $el) use ($attributes) {
-                return $el->isDisplayed();
-            }
-        );
+        $els = $this->matchVisible($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -837,12 +861,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function dontSeeElement($selector, $attributes = array())
     {
-        $els = array_filter(
-            $this->match($this->webDriver, $selector),
-            function (\WebDriverElement $el) {
-                return $el->isDisplayed();
-            }
-        );
+        $els = $this->matchVisible($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
@@ -1726,5 +1745,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
+    }
+
+    /**
+     * @param $selector
+     * @return array
+     */
+    protected function matchVisible($selector)
+    {
+        $nodes = array_filter($this->match($this->webDriver, $selector),
+            function (\WebDriverElement $el) {
+                return $el->isDisplayed();
+            }
+        );
+        return $nodes;
     }
 }

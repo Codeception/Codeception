@@ -82,15 +82,8 @@ class RoboFile extends \Robo\Tasks {
 
     public function testWebdriver($args = '')
     {
-        $this->taskServer(8000)
-            ->background()
-            ->dir('tests/data/app')
-            ->run();
-
-        $this->taskExec('java -jar '.$pathToSelenium)
-            ->background()
-            ->run();
-
+        $this->testServer();
+        
         $this->taskCodecept('./codecept')
             ->test('tests/unit/Codeception/Module/WebDriverTest.php')
             ->args($args)

@@ -1,5 +1,13 @@
 # Changelog
 
+#### 2.0.1 06/21/2014
+
+* [WebDriver] added seeInPageSource and dontSeeInPageSource methods
+* [WebDriver] see method now checks only for visible BODY element by @artyfarty
+* [REST] added Bearer authentication
+* removed auto added submit buttons in forms previously used as hook for DomCrawler
+
+
 #### 2.0.1 06/20/2014
 
 * BUGFIX: PHP 5.4.x compatibility fixed. Sample error output: 'Method WelcomeCept.php does not exist' #1084 #1069 #1109
