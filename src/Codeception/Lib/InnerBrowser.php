@@ -127,13 +127,12 @@ class InnerBrowser extends Module implements Web
 
     protected function submitFormWithButton($button)
     {
-        $domForm = $button->form();
         $form    = $this->getFormFor($button);
 
-        $this->debugSection('Uri', $domForm->getUri());
-        $this->debugSection($domForm->getMethod(), $form->getValues());
+        $this->debugSection('Uri', $form->getUri());
+        $this->debugSection($form->getMethod(), $form->getValues());
 
-        $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
         $this->forms = [];
     }
 

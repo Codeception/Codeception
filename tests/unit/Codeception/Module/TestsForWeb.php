@@ -576,7 +576,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
         $this->module->amOnPage('/form/example4');
         $this->module->click('#register button[type="submit"]');
+    }
 
+    /**
+     * https://github.com/Codeception/Codeception/issues/1098
+     */
+    public function testExample5()
+    {
+        $this->module->amOnPage('/form/example5');
+        $this->module->fillField('username', 'John');
+        $this->module->fillField('password', '1234');
+        $this->module->click('Login');
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
     }
 
     public function testSubmitForm() {
