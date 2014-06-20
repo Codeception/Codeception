@@ -313,7 +313,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function seeInPageSource($text)
     {
-        $this->assertThat(htmlspecialchars_decode($this->webDriver->getPageSource()),
+        $this->assertThat($this->webDriver->getPageSource(),
             new PageConstraint($text, $this->_getCurrentUri()), ''
         );
     }
@@ -324,7 +324,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param $text
      */    public function dontSeeInPageSource($text)
     {
-        $this->assertThatItsNot(htmlspecialchars_decode($this->webDriver->getPageSource()),
+        $this->assertThatItsNot($this->webDriver->getPageSource(),
             new PageConstraint($text, $this->_getCurrentUri()), ''
         );
     }
