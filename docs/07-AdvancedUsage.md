@@ -206,6 +206,41 @@ public function testAdminUser()
 ```
 Same annotation can be used in Cest classes.
 
+### Group Files
+
+Groups can be defined in global or suite confuguration file.
+Tests for groups can be specified as array or as path to file containing list of groups.
+
+```yaml
+groups:
+  # add 2 tests to db group
+  db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
+
+  # add list of tests to slow group
+  slow: tests/_data/slow  
+```
+
+For instance, you can create a file with the list of the most slow tests, and run them inside their own group.
+Group file is a plain text file with test names listed by line
+
+```
+tests/unit/DbTest.php
+tests/unit/UserTest.php:create
+tests/unit/UserTest.php:update
+```
+
+You can create group files manually or generate them from 3rd party applications. 
+Let's say you may write a script that updates the slow group by taking the slowest tests from xml report.
+
+You can even specify pattern for loading multiple group files from one definitions:
+
+```yaml
+groups:
+  p*: tests/_data/p*
+```
+
+This will load all found `p*` files in `tests/_data` as groups 
+
 ## Refactoring
 
 As test base growths tests will require refactoring, sharing common variables and behaviors. The classical example for this is `login` action which will be called for maybe every test of your test suite. It's wise to make it written one time and use it in all tests. 
@@ -320,7 +355,7 @@ class UserLoginPage
         $this->AcceptanceTester = $I;
     }
 
-    public static function create(AcceptanceTester $I)
+    public static function of(AcceptanceTester $I)
     {
         return new static($I);
     }
@@ -345,7 +380,7 @@ And here is an example of how this PageObject can be used in a test.
 ```php
 <?php
 $I = new AcceptanceTester($scenario);
-UserLoginPage::for($I)->login('bill evans', 'debby');
+UserLoginPage::of($I)->login('bill evans', 'debby');
 ?>
 ```
 
@@ -360,6 +395,15 @@ Lets create a "Member" Steps class, a generator will prompt you for methods to i
 
 ```
 php codecept.phar generate:stepobject acceptance Member
+```
+
+You will be asked to enter action names, but it's optional. Enter once a time, and press Enter. Press empty in a leave empty line to go on to StepObject creation.
+
+```
+codecept.phar generate:stepobject acceptance Member
+Add action to StepObject class (ENTER to exit): login
+Add action to StepObject class (ENTER to exit):
+StepObject was created in <you path>\tests\acceptance\/_steps\MemberSteps.php
 ```
 
 This will generate a similar class to `tests/acceptance/_steps/MemberSteps.php`.

@@ -22,6 +22,10 @@ class Test extends TestCase implements
         if ($actor) {
             $property = lcfirst(Configuration::config()['actor']);
             $this->$property = new $actor($this->scenario);
+
+            // BC compatibility hook
+            $actorProperty = lcfirst($actor);
+            $this->$actorProperty = $this->$property;
         }
         $this->getScenario()->run();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));

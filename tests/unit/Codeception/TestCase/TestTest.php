@@ -13,4 +13,5 @@ class TestTest extends \Codeception\TestCase\Test
     {
         $this->assertEquals('hey', $hey);
     }
-} 
+
+}

@@ -19,7 +19,7 @@ trait Actor
      */
     protected $dispatcher;
     protected $actor;
-    protected $name;
+    protected $testName;
     protected $testFile;
     protected $env;
 
@@ -110,7 +110,7 @@ trait Actor
 
     public function configName($name)
     {
-        $this->name = $name;
+        $this->testName = $name;
         return $this;
     }
 

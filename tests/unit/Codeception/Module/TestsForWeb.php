@@ -565,6 +565,61 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->see('Kill & Destroy');
         $this->module->see('Kill & Destroy','div');
     }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1091
+     */
+    public function testExample4()
+    {
+        $this->module->amOnPage('/form/example4');
+        $this->module->click(['css' => '#register button[type="submit"]']);
+
+        $this->module->amOnPage('/form/example4');
+        $this->module->click('#register button[type="submit"]');
+    }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1098
+     */
+    public function testExample5()
+    {
+        $this->module->amOnPage('/form/example5');
+        $this->module->fillField('username', 'John');
+        $this->module->fillField('password', '1234');
+        $this->module->click('Login');
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+
+    public function testExample5WithSubmitForm()
+    {
+        $this->module->amOnPage('/form/example5');
+        $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+
+
+    public function testSubmitForm() {
+        $this->module->amOnPage('/form/complex');
+        $this->module->submitForm('form', array(
+                'name' => 'Davert',
+                'description' => 'Is Codeception maintainer'
+        ));
+        $form = data::get('form');
+        $this->assertEquals('Davert', $form['name']);
+        $this->assertEquals('Is Codeception maintainer', $form['description']);
+//        $this->assertFalse(isset($form['disabled_fieldset']));
+//        $this->assertFalse(isset($form['disabled_field']));
+        $this->assertEquals('kill_all', $form['action']);
+    }
+
+    public function testSubmitFormWithoutButton() {
+        $this->module->amOnPage('/form/empty');
+        $this->module->submitForm('form', array(
+                'text' => 'Hello!'
+        ));
+        $form = data::get('form');
+        $this->assertEquals('Hello!', $form['text']);
+    }
     
     protected function shouldFail()
     {

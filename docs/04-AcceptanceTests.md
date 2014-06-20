@@ -398,6 +398,29 @@ In this case we are waiting for agree button to appear and then clicking it. If 
 
 See Codeception's [WebDriver module documentation](http://codeception.com/docs/modules/WebDriver) for the full reference.
 
+### Multi Session Testing 
+
+Codeception allows you to execute actions in concurrent session. The most obvious case for it - testing realtime messaging between users on site. In order to do it you will need to launch 2 browser windows in a same time for the same test. Codeception has very smart concept for doing this. It is called **Friends**.
+
+```php
+<?php
+$I = new AcceptanceTester($scenario);
+$I->wantTo('try multi session');
+$I->amOnPage('/messages');
+$nick = $I->haveFriend('nick');
+$nick->does(function(WebGuy $I) {
+    $I->amOnPage('/messages/new');
+    $I->fillFiled('body', 'Hello all!')
+    $I->click('Send');
+    $I->see('Hello all!','.message');
+});
+$I->wait(3);
+$I->see('Hello all!','.message');
+?>
+```
+
+In this case we did some actions in second window with `does` command on a friend object.
+
 ### Cleaning Things Up
 
 While testing, your actions may change the data on the site. Tests will fail if trying to create or update the same data twice. To avoid this problem, your database should be repopulated for each test. Codeception provides a `Db` module for that purpose. It will load a database dump after each passed test. To make repopulation work, create an sql dump of your database and put it into the __/tests/_data__ directory. Set the database connection and path to the dump in the global Codeception config.

@@ -39,8 +39,8 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $fileName = \Codeception\Configuration::outputDir() . basename($test->getFileName()) . '.page.debug.html';
-        file_put_contents($fileName, $this->client->getInternalResponse()->getContent());
+        $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.html';
+        file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
     }
 
     public function _after(TestCase $test)
@@ -90,7 +90,8 @@ class InnerBrowser extends Module implements Web
             return;
         }
 
-        $button = $this->crawler->selectButton($link);
+        $buttonText = str_replace('"',"'", $link);
+        $button = $this->crawler->selectButton($buttonText);
         if (count($button)) {
             $this->submitFormWithButton($button);
             $this->debugResponse();
@@ -130,18 +131,12 @@ class InnerBrowser extends Module implements Web
 
     protected function submitFormWithButton($button)
     {
-        foreach ($button as $node) {
-            if (!$node->getAttribute('name')) {
-                $node->setAttribute('name', 'codeception_generated_button_name');
-            }
-        }
-        $domForm = $button->form();
         $form    = $this->getFormFor($button);
 
-        $this->debugSection('Uri', $domForm->getUri());
-        $this->debugSection($domForm->getMethod(), $form->getValues());
+        $this->debugSection('Uri', $form->getUri());
+        $this->debugSection($form->getMethod(), $form->getValues());
 
-        $this->crawler = $this->client->request($domForm->getMethod(), $domForm->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
         $this->forms = [];
     }
 
@@ -354,11 +349,7 @@ class InnerBrowser extends Module implements Web
             $submit->setAttribute('name', 'codeception_added_auto_submit');
 
             // Symfony2.1 DOM component requires name for each field.
-            if (!$form->filter('*[type=submit]')->attr('name')) {
-                $form = $form->filter('*[type=submit][name=codeception_added_auto_submit]')->form();
-            } else {
-                $form = $form->filter('*[type=submit]')->form();
-            }
+            $form = $form->filter('*[type=submit]')->form();
             $this->forms[$action] = $form;
         }
         return $this->forms[$action];

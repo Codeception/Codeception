@@ -39,20 +39,6 @@ class PhpBrowserTest extends TestsForBrowsers
         return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
     }
 
-    public function testSubmitForm() {
-        $this->module->amOnPage('/form/complex');
-        $this->module->submitForm('form', array(
-                'name' => 'Davert',
-                'description' => 'Is Codeception maintainer'
-        ));
-        $form = data::get('form');
-        $this->assertEquals('Davert', $form['name']);
-        $this->assertEquals('Is Codeception maintainer', $form['description']);
-//        $this->assertFalse(isset($form['disabled_fieldset']));
-//        $this->assertFalse(isset($form['disabled_field']));
-        $this->assertEquals('kill_all', $form['action']);
-    }
-
     public function testAjax() {
         $this->module->amOnPage('/');
         $this->module->sendAjaxGetRequest('/info');
@@ -117,6 +103,14 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/redirect3');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testRedirectWithGetParams()
+    {
+        $this->module->amOnPage('/redirect4');
+        $this->module->seeInCurrentUrl('/search?ln=test@gmail.com&sn=testnumber');
+        $params = data::get('params');
+        $this->assertContains('test@gmail.com', $params);
     }
 
     public function testSetCookieByHeader()

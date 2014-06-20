@@ -48,7 +48,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->testLoader = new \Codeception\TestLoader(codecept_data_dir().'claypit/tests');
         $this->testLoader->loadTests();
-        $this->assertContainsTestName('/order/AnotherCept.php', $this->testLoader->getTests());
+        $this->assertContainsTestName('order/AnotherCept', $this->testLoader->getTests());
         $this->assertContainsTestName('MageGuildCest::darkPower', $this->testLoader->getTests());
         $this->assertContainsTestName('FailingTest::testMe', $this->testLoader->getTests());
     }
@@ -59,6 +59,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
             if ($test instanceof \PHPUnit_Framework_TestCase) {
                 $testName = \Codeception\TestCase::getTestSignature($test);
                 if ($testName == $name) return;
+                codecept_debug($testName);
             }
         }
         $this->fail("$name not found in tests");

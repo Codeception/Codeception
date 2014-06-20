@@ -131,8 +131,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $this->_saveScreenshot(codecept_log_dir(basename(\Codeception\TestCase::getTestFileName($test) . '.fail.png')));
-        $this->debug("Screenshot was saved into 'log' dir");
+        $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.png';
+        $this->_saveScreenshot(codecept_output_dir($filename));
+        $this->debug("Screenshot was saved into '_output' dir");
     }
 
     public function _afterSuite()
@@ -287,7 +288,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$selector) {
             return $this->assertPageContains($text);
         }
-        $nodes = $this->match($this->webDriver, $selector);
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
@@ -296,8 +297,36 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$selector) {
             return $this->assertPageNotContains($text);
         }
-        $nodes = $this->match($this->webDriver, $selector);
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesNotContain($text, $nodes, $selector);
+    }
+
+    /**
+     * Checks that page source contains text.
+     *
+     * ```php
+     * <?php
+     * $I->seeInPageSource('<link rel="apple-touch-icon"');
+     * ```
+     *
+     * @param $text
+     */
+    public function seeInPageSource($text)
+    {
+        $this->assertThat($this->webDriver->getPageSource(),
+            new PageConstraint($text, $this->_getCurrentUri()), ''
+        );
+    }
+
+    /**
+     * Checks that page source does not contain text.
+     *
+     * @param $text
+     */    public function dontSeeInPageSource($text)
+    {
+        $this->assertThatItsNot($this->webDriver->getPageSource(),
+            new PageConstraint($text, $this->_getCurrentUri()), ''
+        );
     }
 
     public function click($link, $context = null)
@@ -742,6 +771,18 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el->sendKeys($filePath);
     }
 
+    /**
+     * @return string
+     */
+    public function getVisibleText() {
+        $els = $this->webDriver->findElements(\WebDriverBy::cssSelector('body'));
+        if (count($els)) {
+            return $els[0]->getText();
+        }
+
+        return "";
+    }
+
     public function grabTextFrom($cssOrXPathOrRegex)
     {
         $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
@@ -800,11 +841,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function seeElement($selector, $attributes = array())
     {
-        $els = array_filter($this->match($this->webDriver, $selector),
-            function (\WebDriverElement $el) use ($attributes) {
-                return $el->isDisplayed();
-            }
-        );
+        $els = $this->matchVisible($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -824,12 +861,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function dontSeeElement($selector, $attributes = array())
     {
-        $els = array_filter(
-            $this->match($this->webDriver, $selector),
-            function (\WebDriverElement $el) {
-                return $el->isDisplayed();
-            }
-        );
+        $els = $this->matchVisible($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
@@ -1625,7 +1657,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageContains($needle, $message = '')
     {
         $this->assertThat(
-            htmlspecialchars_decode($this->webDriver->getPageSource()),
+            htmlspecialchars_decode($this->getVisibleText()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
@@ -1634,7 +1666,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function assertPageNotContains($needle, $message = '')
     {
         $this->assertThatItsNot(
-            htmlspecialchars_decode($this->webDriver->getPageSource()),
+            htmlspecialchars_decode($this->getVisibleText()),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
@@ -1713,5 +1745,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
+    }
+
+    /**
+     * @param $selector
+     * @return array
+     */
+    protected function matchVisible($selector)
+    {
+        $nodes = array_filter($this->match($this->webDriver, $selector),
+            function (\WebDriverElement $el) {
+                return $el->isDisplayed();
+            }
+        );
+        return $nodes;
     }
 }

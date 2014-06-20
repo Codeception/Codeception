@@ -131,9 +131,14 @@ class Db
         $query = "select %s from `%s` $where";
         $params = array();
         foreach ($criteria as $k => $v) {
-            $params[] = "$k = ? ";
+            $k = $this->getQuotedName($k);
+            if ($v === null) {
+                $params[] = "$k IS ?";
+            } else {
+                $params[] = "$k = ?";
+            }
         }
-        $params = implode('AND ', $params);
+        $params = implode(' AND ', $params);
 
         return sprintf($query, $column, $table, $params);
     }

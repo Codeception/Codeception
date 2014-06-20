@@ -32,7 +32,11 @@ class Cest extends \Codeception\TestCase implements
     public function preload()
     {
         $this->scenario->setFeature($this->getSpecFromMethod());
-        $this->parser->prepareToRun($this->getRawBody());
+        $code = $this->getRawBody();
+        $params = (new \ReflectionMethod($this->testClassInstance, $this->testMethod))->getParameters();
+        $scenarioVar = isset($params[1]) ? $params[1]->getName() : null;
+        $this->parser->parseFeature($code);
+        $this->parser->parseScenarioOptions($code, $scenarioVar);
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
 

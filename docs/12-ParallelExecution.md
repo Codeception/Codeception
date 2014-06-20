@@ -4,10 +4,10 @@ When test execution time is then a coffee break it is a good time to think about
 
 ## Where to Start
 
-Codeception does not provide a command like `run-parallel`. There is no common solution that can play well for everyone.
+Codeception does not provide a command like `run-parallel`. There is no common solution that can play well for everyone. Here are the questions you will need to answer:
 
 * how parallel processes will be executed?
-* how my parallel processes won't affect each other?
+* how parallel processes won't affect each other?
 * will they use different databases?
 * will they use different hosts?
 * how should I split my tests across parallel processes?
@@ -174,7 +174,7 @@ codecept run functional -g p2
 
 ### Step 2: Running Tests
 
-As it was mentioned Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH (Robo does not provide SSH task yet). Or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
+As it was mentioned Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH. Or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
 
 ```php
 <?php

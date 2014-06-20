@@ -6,7 +6,7 @@ use \Robo\Task\GenMarkdownDocTask as Doc;
 
 class RoboFile extends \Robo\Tasks {
 
-    const STABLE_BRANCH = '1.8';
+    const STABLE_BRANCH = '2.0';
 
     public function release()
     {
@@ -36,13 +36,6 @@ class RoboFile extends \Robo\Tasks {
     {
         $this->taskServer(8000)
             ->background()
-            ->dir('tests/data/app')
-            ->run();
-    }
-
-    public function serverStart()
-    {
-        $this->taskServer(8000)
             ->dir('tests/data/app')
             ->run();
     }
@@ -87,20 +80,26 @@ class RoboFile extends \Robo\Tasks {
 
     }
 
-    public function testWebdriver($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    public function testWebdriver($args = '')
     {
-        $this->taskServer(8000)
-            ->background()
-            ->dir('tests/data/app')
+        $this->testServer();
+        
+        $this->taskCodecept('./codecept')
+            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
+            ->args($args)
             ->run();
+    }
 
+    public function testServer($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    {
         $this->taskExec('java -jar '.$pathToSelenium)
             ->background()
             ->run();
 
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','tests/unit/Codeception/Module/WebDriverTest.php')
+        $this->taskServer(8000)
+            ->dir('tests/data/app')
             ->run();
+
     }
 
     public function testCli()
@@ -205,7 +204,7 @@ class RoboFile extends \Robo\Tasks {
                     $title = "\n### {$method->name}\n";
                     if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
-                    $text = str_replace(array("\n @", ' @'), array("\n * ", " * "), $text);
+                    $text = str_replace(array("\n @"), array("\n * "), $text);
                     return $title . $text;
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')
@@ -279,7 +278,8 @@ class RoboFile extends \Robo\Tasks {
     }
 
     /**
-     * @desc updates docs on codeception.com
+     * Updates docs on codeception.com
+     *
      */
     public function publishDocs()
     {
@@ -289,25 +289,37 @@ class RoboFile extends \Robo\Tasks {
         }
         $this->say('building site...');
 
-        $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
         $this->cloneSite();
+        $this->taskCleanDir('docs')
+            ->run();
+        $this->taskFileSystemStack()
+            ->mkdir('docs/reference')
+            ->mkdir('docs/modules')
+            ->run();
+
+        chdir('../..');
+        $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
 
         $modules = array();
         $api = array();
+        $reference = array();
         foreach ($docs as $doc) {
             $newfile = $doc->getFilename();
-            $name = $doc->getBasename();
+            $name = substr($doc->getBasename(),0,-3);
             $contents = $doc->getContents();
-            if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules')) {
-                $newfile = 'docs/modules/'.$newfile;
-                $modules[$name] = '/docs/modules/'.$doc->getBasename();
-                $contents = str_replace('## ','### ', $contents);
+            if (strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'modules') !== false) {
+                $newfile = 'docs/modules/' . $newfile;
+                $modules[$name] = '/docs/modules/' . $doc->getBasename();
+                $contents = str_replace('## ', '### ', $contents);
+            } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
+                $newfile = 'docs/reference/' . $newfile;
+                $reference[$name] = '/docs/reference/' . $doc->getBasename();
             } else {
                 $newfile = 'docs/'.$newfile;
                 $api[substr($name,3)] = '/docs/'.$doc->getBasename();
             }
 
-            copy($doc->getPathname(), $newfile);
+            copy($doc->getPathname(), 'package/site/' . $newfile);
 
             $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
             $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
@@ -320,31 +332,34 @@ class RoboFile extends \Robo\Tasks {
               $title = $matches[1];
             }
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
-            file_put_contents($newfile, $contents);
+            file_put_contents('package/site/' .$newfile, $contents);
         }
-
+        chdir('package/site');
         $guides = array_keys($api);
         foreach ($api as $name => $url) {
             $filename = substr($url, 6);
-            $doc = file_get_contents('docs/'.$filename.'.md')."\n\n\n";
+            $doc = file_get_contents('docs/'.$filename)."\n\n\n";
             $i = array_search($name, $guides);
             if (isset($guides[$i+1])) {
                 $next_title = $guides[$i+1];
                 $next_url = $api[$guides[$i+1]];
+                $next_url = substr($next_url, 0, -3);
                 $doc .= "\n* **Next Chapter: [$next_title >]($next_url)**";
             }
 
             if (isset($guides[$i-1])) {
                 $prev_title = $guides[$i-1];
                 $prev_url = $api[$guides[$i-1]];
+                $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-            file_put_contents('docs/'.$filename.'.md', $doc);
+            file_put_contents('docs/'.$filename, $doc);
         }
 
 
         $guides_list = '';
         foreach ($api as $name => $url) {
+            $url = substr($url, 0, -3);
             $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
             $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
             $guides_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
@@ -354,10 +369,20 @@ class RoboFile extends \Robo\Tasks {
 
         $modules_list = '';
         foreach ($modules as $name => $url) {
+            $url = substr($url, 0, -3);
             $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
 
         file_put_contents('_includes/modules.html', $modules_list);
+
+        $reference_list = '';
+        foreach ($reference as $name => $url) {
+            $url = substr($url, 0, -3);
+            $reference_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+        }
+        file_put_contents('_includes/reference.html', $reference_list);
+
+
         $this->publishSite();
         $this->taskExec('git add')->args('.')->run();
     }
@@ -420,8 +445,11 @@ class RoboFile extends \Robo\Tasks {
 
     protected function publishSite()
     {
-        $this->taskExec('git commit')->args('-m "auto updated documentation"')->run();
-        $this->taskExec('git push')->run();
+        $this->taskGitStack()
+            ->add('-A')
+            ->commit('auto updated documentation')
+            ->push()
+            ->run();
 
         chdir('..');
         sleep(2);

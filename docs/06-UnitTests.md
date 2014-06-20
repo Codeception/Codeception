@@ -67,7 +67,7 @@ The actual setUp and tearDown was implemented by parent class `\Codeception\Test
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [UnitHelper]
+    enabled: [UnitHelper, Asserts]
 ```
 
 ### Classical Unit Testing

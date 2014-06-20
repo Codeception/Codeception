@@ -31,5 +31,9 @@
 
 <div>Kill & Destroy</div>
 
+<div style="display: none" class="hidden">
+    Invisible text
+</div>
+
 </body>
 </html>

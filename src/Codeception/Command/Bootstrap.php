@@ -95,11 +95,6 @@ class Bootstrap extends Command
             new ArrayInput(array('command' => 'build')),
             $output
         );
-        if (file_exists('.gitignore')) {
-            file_put_contents('tests/_log/.gitignore', '');
-            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_log/*");
-            $output->writeln("tests/_log was added to .gitignore");
-        }
 
         $output->writeln("<info>\nBootstrap is done. Check out " . realpath($path) . "/tests directory</info>");
     }
@@ -216,7 +211,7 @@ class Bootstrap extends Command
         $this->helperDir = 'tests/_helpers';
 
         $this->createGlobalConfig();
-        $output->writeln("File codeception.yml created <- global configuration");
+        $output->writeln("File codeception.yml created       <- global configuration");
 
         $this->createDirs();
 
@@ -229,6 +224,13 @@ class Bootstrap extends Command
         $this->createAcceptanceSuite('Web');
         $output->writeln("tests/acceptance created           <- acceptance tests");
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+
+        if (file_exists('.gitignore')) {
+            file_put_contents('tests/_log/.gitignore', '');
+            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_log/*");
+            $output->writeln("tests/_log was added to .gitignore");
+        }
+
     }
 
     /**
@@ -237,7 +239,7 @@ class Bootstrap extends Command
     protected function setup(OutputInterface $output)
     {
         $this->createGlobalConfig();
-        $output->writeln("File codeception.yml created <- global configuration");
+        $output->writeln("File codeception.yml created       <- global configuration");
 
         $this->createDirs();
         $this->createUnitSuite();
@@ -249,6 +251,12 @@ class Bootstrap extends Command
         $this->createAcceptanceSuite();
         $output->writeln("tests/acceptance created           <- acceptance tests");
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
+
+        if (file_exists('.gitignore')) {
+            file_put_contents('tests/_output/.gitignore', '');
+            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_output/*");
+            $output->writeln("tests/_output was added to .gitignore");
+        }
     }
 
     protected function customize(OutputInterface $output)
