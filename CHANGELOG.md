@@ -2,6 +2,7 @@
 
 #### 2.0.1 06/21/2014
 
+* [Phalcon1] Fixed connector
 * [WebDriver] added seeInPageSource and dontSeeInPageSource methods
 * [WebDriver] see method now checks only for visible BODY element by @artyfarty
 * [REST] added Bearer authentication by @dizews
