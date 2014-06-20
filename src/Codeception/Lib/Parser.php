@@ -23,6 +23,7 @@ class Parser {
     public function parseFeature($code)
     {
         $matches = array();
+        $code = $this->stripComments($code);
         $res = preg_match("~\\\$I->wantTo\\(['\"](.*?)['\"]\\);~", $code, $matches);
         if ($res) {
             $this->scenario->setFeature($matches[1]);
@@ -38,8 +39,7 @@ class Parser {
     public function parseScenarioOptions($code, $var = 'scenario')
     {
         $matches = array();
-        $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
-        $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code); // remove block comment
+        $code = $this->stripComments($code);
         $res = preg_match_all("~\\\$$var->.*?;~", $code, $matches);
         if (!$res or !$var) {
             return;
@@ -137,6 +137,17 @@ class Parser {
         }
 
         return $classes;
+    }
+
+    /**
+     * @param $code
+     * @return mixed
+     */
+    protected function stripComments($code)
+    {
+        $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
+        $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
+        return $code; // remove block comment
     }
 
 }
