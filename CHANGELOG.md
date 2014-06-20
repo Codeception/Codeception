@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.1.0 06/20/2014
+
+* Conflicts API added to modules
+
+
 #### 2.0.0 05/27/2014
 
 * added --coverage-text option

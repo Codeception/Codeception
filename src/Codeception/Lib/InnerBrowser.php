@@ -28,6 +28,10 @@ class InnerBrowser extends Module implements Web
      */
     public $client;
 
+    protected $conflicts = ['Codeception\Lib\Interfaces\Web' =>
+        "You shouldn't use PhpBrowser and one of the framework modules (Symfony2, Laravel4, etc) inside one suite.\nThey have the same API but execute test in a different way.\nPlease disable one of conflicted modules"
+    ];
+
     protected $forms = array();
 
     public function _failed(TestCase $test, $fail)

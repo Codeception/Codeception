@@ -45,6 +45,8 @@ abstract class Module
 
     protected $requiredFields = array();
 
+    protected $conflicts = array();
+
     public function __construct($config = null)
     {
         $this->backupConfig = $this->config;
@@ -57,6 +59,7 @@ abstract class Module
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
+        $this->validateConflicts();
     }
 
     public function _reconfigure($config)
@@ -85,6 +88,19 @@ abstract class Module
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
                 Please, update the configuration and set all the required fields\n\n"
             );
+        }
+    }
+
+    protected function validateConflicts()
+    {
+        foreach ($this->getModules() as $module) {
+            $nameAndInterfaces = array_merge([get_class($module), $module->_getName()], class_implements($module));
+
+            foreach ($this->conflicts as $conflictedModuleOrInterface => $message) {
+                if (in_array($conflictedModuleOrInterface, $nameAndInterfaces)) {
+                    throw new \Codeception\Exception\ModuleConflict(get_class($this), $conflictedModuleOrInterface, $message);
+                }
+            }
         }
     }
 
