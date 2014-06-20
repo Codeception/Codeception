@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.1 06/20/2014
+
+* BUGFIX: PHP 5.4.x compatibility fixed. Sample error output: 'Method WelcomeCept.php does not exist' #1084 #1069 #1109
+
+
 #### 2.0.1 06/19/2014
 
 * Second parameter of Cest method is treated as scenario variable on parse. Fix #1058

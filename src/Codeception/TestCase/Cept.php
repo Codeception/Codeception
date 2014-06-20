@@ -24,12 +24,12 @@ class Cept extends TestCase implements
 
     public function getSignature()
     {
-        return ltrim(substr($this->name, 0,-4),'\\/'); // cut ".php" in end; cut "/" in start
+        return ltrim(substr($this->testName, 0,-4),'\\/'); // cut ".php" in end; cut "/" in start
     }
 
     public function getName($withDataSet = true)
     {
-        return $this->getFeature() ? $this->getFeature() : $this->name;
+        return $this->getFeature() ? $this->getFeature() : $this->testName;
     }
 
     public function getFileName()
