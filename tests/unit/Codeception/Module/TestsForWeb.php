@@ -590,6 +590,14 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
     }
 
+    public function testExample5WithSubmitForm()
+    {
+        $this->module->amOnPage('/form/example5');
+        $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+
+
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
