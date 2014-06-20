@@ -9,8 +9,8 @@ Powered by PHPUnit 3.7.
 
 | release |  branch  |  status  |
 | ------- | -------- | -------- |
-| **Stable** | **1.7** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.7)](http://travis-ci.org/Codeception/Codeception)
-| **Current** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
+| **Stable** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
+| **Current** | **2.0** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.0)](http://travis-ci.org/Codeception/Codeception)
 | **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
 
 #### Contributions
