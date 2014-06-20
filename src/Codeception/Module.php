@@ -59,7 +59,7 @@ abstract class Module
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
-        $this->validateConflicts();
+//        $this->validateConflicts();
     }
 
     public function _reconfigure($config)
