@@ -299,10 +299,10 @@ class RoboFile extends \Robo\Tasks {
 
         chdir('../..');
 
-        $this->taskWriteToFile('package/site/releases.markdown')
+        $this->taskWriteToFile('package/site/changelog.markdown')
             ->line('---')
             ->line('layout: page')
-            ->line('title: Codeception Releases')
+            ->line('title: Codeception Changelog')
             ->line('---')
             ->line('')
             ->textFromFile('CHANGELOG.md')
