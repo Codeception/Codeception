@@ -73,7 +73,7 @@ class Phalcon1 extends Client
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), array('getRawBody' => $request->getContent()));
+        $di['request'] = Stub::construct($di->get('request'), [], array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();
 

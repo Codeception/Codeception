@@ -383,7 +383,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/info');
         $this->module->dontSee('Invisible text');
         $this->module->dontSee('Invisible', '.hidden');
-        $this->module->seeInHtml('Invisible text');
+        $this->module->seeInPageSource('Invisible text');
     }
 
     public function testSeeInvisible()
