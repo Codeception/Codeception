@@ -298,6 +298,16 @@ class RoboFile extends \Robo\Tasks {
             ->run();
 
         chdir('../..');
+
+        $this->taskWriteToFile('package/site/releases.markdown')
+            ->line('---')
+            ->line('layout: page')
+            ->line('title: Codeception Releases')
+            ->line('---')
+            ->line('')
+            ->textFromFile('CHANGELOG.md')
+            ->run();
+
         $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
 
         $modules = array();
@@ -381,7 +391,6 @@ class RoboFile extends \Robo\Tasks {
             $reference_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/reference.html', $reference_list);
-
 
         $this->publishSite();
         $this->taskExec('git add')->args('.')->run();

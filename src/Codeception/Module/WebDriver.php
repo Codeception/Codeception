@@ -841,7 +841,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function seeElement($selector, $attributes = array())
     {
-        $els = $this->matchVisible($this->webDriver, $selector);
+        $els = $this->matchVisible($selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
@@ -861,7 +861,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function dontSeeElement($selector, $attributes = array())
     {
-        $els = $this->matchVisible($this->webDriver, $selector);
+        $els = $this->matchVisible($selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
