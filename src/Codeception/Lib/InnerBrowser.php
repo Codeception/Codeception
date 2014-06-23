@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
@@ -28,6 +29,9 @@ class InnerBrowser extends Module implements Web
      */
     public $client;
 
+    /**
+     * @var array|\Symfony\Component\DomCrawler\Form[]
+     */
     protected $forms = array();
 
     public function _failed(TestCase $test, $fail)
@@ -35,7 +39,7 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.html';
+        $filename = str_replace(['::','\\','/'], ['.','',''], TestCase::getTestSignature($test)).'.fail.html';
         file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
     }
 
@@ -281,6 +285,7 @@ class InnerBrowser extends Module implements Web
         }
 
         $url    = '';
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('input');
         foreach ($fields as $field) {
             if ($field->getAttribute('type') == 'checkbox') {
@@ -292,13 +297,15 @@ class InnerBrowser extends Module implements Web
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
         }
 
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('textarea');
         foreach ($fields as $field) {
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
         }
-
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('select');
         foreach ($fields as $field) {
+            /** @var  \DOMElement $option */
             foreach ($field->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected') {
                     $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
@@ -321,6 +328,11 @@ class InnerBrowser extends Module implements Web
         $this->debugResponse();
     }
 
+    /**
+     * @param \Symfony\Component\DomCrawler\Crawler $form
+     *
+     * @return string
+     */
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
@@ -330,6 +342,11 @@ class InnerBrowser extends Module implements Web
         return $action;
     }
 
+    /**
+     * @param \Symfony\Component\DomCrawler\Crawler $node
+     *
+     * @return \Symfony\Component\DomCrawler\Form|\Symfony\Component\DomCrawler\Field\ChoiceFormField[]|\Symfony\Component\DomCrawler\Field\FileFormField[]
+     */
     protected function getFormFor($node)
     {
         $form = $node->parents()->filter('form')->first();
@@ -339,6 +356,7 @@ class InnerBrowser extends Module implements Web
         $action = $this->getFormUrl($form);
 
         if (!isset($this->forms[$action])) {
+            /** @var \DOMElement $submit */
             $submit = new \DOMElement('input');
             $submit = $form->current()->appendChild($submit);
             $submit->setAttribute('type', 'submit'); // for forms with no submits
@@ -438,7 +456,7 @@ class InnerBrowser extends Module implements Web
     public function attachFile($field, $filename)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
-        $path = \Codeception\Configuration::dataDir() . $filename;
+        $path = Configuration::dataDir() . $filename;
         if (!is_readable($path)) {
             $this->fail(
                  "file $filename not found in Codeception data path. Only files stored in data path accepted"
@@ -532,6 +550,8 @@ class InnerBrowser extends Module implements Web
     }
 
     /**
+     * @param $selector
+     *
      * @return Crawler
      */
     protected function match($selector)
@@ -550,6 +570,11 @@ class InnerBrowser extends Module implements Web
         return @$this->crawler->filterXPath($selector);
     }
 
+    /**
+     * @param array $by
+     * @throws TestRuntime
+     * @return Crawler
+     */
     protected function strictMatch(array $by)
     {
         $type = key($by);
@@ -604,6 +629,11 @@ class InnerBrowser extends Module implements Web
         return $nodes->first()->attr($attribute);
     }
 
+    /**
+     * @param $field
+     *
+     * @return array|mixed|null|string
+     */
     public function grabValueFrom($field)
     {
         $nodes = $this->match($field);
@@ -619,10 +649,12 @@ class InnerBrowser extends Module implements Web
         }
 
         if ($nodes->filter('select')->count()) {
+            /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $select */
             $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
             $results     = array();
             foreach ($select->childNodes as $option) {
+                /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
                     $val = $option->attr('value');
                     if (!$is_multiple) {
