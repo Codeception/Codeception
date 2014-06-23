@@ -6,10 +6,8 @@ use Codeception\Lib\Connector\Guzzle;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
-use Codeception\Exception\TestRuntime;
 use Codeception\TestCase;
 use GuzzleHttp\Client;
-use Symfony\Component\BrowserKit\Request;
 
 /**
  * Uses [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
@@ -88,7 +86,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->_initializeSession();
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(TestCase $test) {
         $this->_initializeSession();
     }
 
