@@ -3,7 +3,7 @@
 Codeception uses modularity to create a comfortable testing environment for every test suite you write. 
 Modules allow you to choose the actions and assertions that can be performed in tests.
 
-All actions and assertions that can be performed by the Guy object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
+All actions and assertions that can be performed by the Tester object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
 
 Let's look at this test.
 
