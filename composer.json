@@ -37,7 +37,8 @@
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
-        "monolog/monolog": "Log test steps"
+        "monolog/monolog": "Log test steps",
+        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
     },
 
     "autoload":{
