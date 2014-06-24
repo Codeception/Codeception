@@ -59,7 +59,7 @@ config:
         url: 'http://myappurl.local'
 ```
 
-After we configured utl we can run this test with `run` command:
+After we configured URL we can run this test with `run` command:
 
 ``` bash
 $ php codecept.phar run
