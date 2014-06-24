@@ -28,7 +28,7 @@ modules:
     enabled: [PhpBrowser, Db, Filesystem]
 ```
 
-The FunctionalTester class has it's methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
+The FunctionalTester class has its methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
 
 ## Standard Modules
 
