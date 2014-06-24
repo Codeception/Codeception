@@ -2,16 +2,85 @@
 namespace Codeception\Module;
 
 /**
- * Module for testing remote ftp systems.
+ *
+ * Works with SFTP/FTP servers.
+ *
+ * In order to test the contents of a specific file stored on any remote FTP/SFTP system
+ * this module downloads a temporary file to the local system. The temporary directory is
+ * defined by default as ```tests/_data``` to specify a different directory set the tmp config
+ * option to your chosen path.
+ *
+ * Don't forget to create the folder and ensure its writable.
+ *
+ * Supported and tested FTP types are:
+ * * FTP
+ * * SFTP
+ *
+ * Connection uses php build in FTP client for FTP, connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
+ *
+ * For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
+ * ```json
+ * "require": {
+ *  "phpseclib/phpseclib": "0.3.6"
+ * }
+ * ```
  *
  * ## Status
  *
- * Maintainer: **nathanmac**
- * Stability: **stable**
- * Contact: nathan.macnamara@outlook.com
+ * * Maintainer: **nathanmac**
+ * * Stability:
+ *     - FTP: **stable**
+ *     - SFTP: **stable**
+ * * Contact: nathan.macnamara@outlook.com
  *
- * @package Codeception\Module
+ * ## Config
+ *
+ * * type: ftp - type of connection ftp/sftp (defaults to ftp).
+ * * host *required* - hostname/ip address of the ftp server.
+ * * port: 21 - port number for the ftp server
+ * * timeout: 90 - timeout settings for connecting the ftp server.
+ * * user: anonymous - user to access ftp server, defaults to anonymous authentication.
+ * * password - password, defaults to empty for anonymous.
+ * * tmp - path to local directory for storing tmp files.
+ * * passive: true - Turns on or off passive mode (FTP only)
+ * * cleanup: true - remove tmp files from local directory on completion.
+ *
+ * ### Example
+ * #### Example (FTP)
+ *
+ *     modules:
+ *        enabled: [FTP]
+ *        config:
+ *           Db:
+ *              type: ftp
+ *              host: '127.0.0.1'
+ *              port: 21
+ *              timeout: 120
+ *              user: 'root'
+ *              password: 'root'
+ *              tmp: 'tests/_data/ftp'
+ *              passive: true
+ *              cleanup: false
+ *
+ * #### Example (SFTP)
+ *
+ *     modules:
+ *        enabled: [FTP]
+ *        config:
+ *           Db:
+ *              type: sftp
+ *              host: '127.0.0.1'
+ *              port: 22
+ *              timeout: 120
+ *              user: 'root'
+ *              password: 'root'
+ *              tmp: 'tests/_data/ftp'
+ *              cleanup: false
+ *
+ *
+ * This module extends the Filesystem module, file contents methods are inherited from this module.
  */
+
 class FTP extends \Codeception\Module\Filesystem
 {
     /**
@@ -72,7 +141,18 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Login as a different user
+     * Change the logged in user mid-way through your test, this closes the
+     * current connection to the server and initialises and new connection.
+     *
+     * On initiation of this modules you are automatically logged into
+     * the server using the specified config options or defaulted
+     * to anonymous user if not provided.
+     *
+     * ``` php
+     * <?php
+     * $I->loginAs('user','password');
+     * ?>
+     * ```
      *
      * @param String $user
      * @param String $password
@@ -108,14 +188,15 @@ class FTP extends \Codeception\Module\Filesystem
     // ----------- SEARCH METHODS BELOW HERE ------------------------//
 
     /**
-     * Checks if file exists in path.
+     * Checks if file exists in path on the remote FTP/SFTP system.
+     * DOES NOT OPEN the file when it's exists
      *
      * ``` php
      * <?php
      * $I->seeFileFound('UserModel.php','app/models');
      * ?>
      * ```
-     *
+     *git
      * @param $filename
      * @param string $path
      */
@@ -127,7 +208,8 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Check if file exists matching regular expression.
+     * Checks if file exists in path on the remote FTP/SFTP system, using regular expression as filename.
+     * DOES NOT OPEN the file when it's exists
      *
      *  ``` php
      * <?php
@@ -151,7 +233,7 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Checks if file does not exists in path
+     * Checks if file does not exists in path on the remote FTP/SFTP system
      *
      * @param $filename
      * @param string $path
@@ -164,7 +246,8 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Check if file does not exist matching regular expression
+     * Checks if file does not exists in path on the remote FTP/SFTP system, using regular expression as filename.
+     * DOES NOT OPEN the file when it's exists
      *
      * @param $regex
      * @param string $path
@@ -185,7 +268,7 @@ class FTP extends \Codeception\Module\Filesystem
     // ----------- UTILITY METHODS BELOW HERE -------------------------//
 
     /**
-     * Download a file to local tmp directory, open and store it's content.
+     * Opens a file (downloads from the remote FTP/SFTP system to a tmp directory for processing) and stores it's content.
      *
      * Usage:
      *
@@ -204,7 +287,14 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Saves contents to file
+     * Saves contents to tmp file and uploads the FTP/SFTP system.
+     * Overwrites current file on server if exists.
+     *
+     * ``` php
+     * <?php
+     * $I->writeToFile('composer.json', 'some data here');
+     * ?>
+     * ```
      *
      * @param $filename
      * @param $contents
@@ -231,7 +321,7 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * No supported in module, overwrite inherited method
+     * Currently not supported in this module, overwrite inherited method
      *
      * @param $src
      * @param $dst
@@ -241,7 +331,13 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Rename/Move file on the server
+     * Rename/Move file on the FTP/SFTP server
+     *
+     * ``` php
+     * <?php
+     * $I->renameFile('composer.lock', 'composer_old.lock');
+     * ?>
+     * ```
      *
      * @param $filename
      * @param $rename
@@ -252,7 +348,13 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Rename/Move directory on the server
+     * Rename/Move directory on the FTP/SFTP server
+     *
+     * ``` php
+     * <?php
+     * $I->renameDir('vendor', 'vendor_old');
+     * ?>
+     * ```
      *
      * @param $dirname
      * @param $rename
@@ -263,7 +365,7 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Deletes a file from the server
+     * Deletes a file on the remote FTP/SFTP system
      *
      * ``` php
      * <?php
@@ -279,7 +381,7 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Deletes directory with all subdirectories on the server
+     * Deletes directory with all subdirectories on the remote FTP/SFTP server
      *
      * ``` php
      * <?php
@@ -295,7 +397,7 @@ class FTP extends \Codeception\Module\Filesystem
     }
 
     /**
-     * Erases directory contents on the server
+     * Erases directory contents on the FTP/SFTP server
      *
      * ``` php
      * <?php
@@ -314,7 +416,14 @@ class FTP extends \Codeception\Module\Filesystem
 
 
     /**
-     * Grabber method for returning file/folders listing
+     * Grabber method for returning file/folders listing in an array
+     *
+     * ```php
+     * <?php
+     * $files = $I->grabFileList();
+     * $count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
+     * ?>
+     * ```
      *
      * @param string $path
      * @param bool $ignore - suppress '.', '..' and '.thumbs.db'
@@ -347,7 +456,15 @@ class FTP extends \Codeception\Module\Filesystem
     /**
      * Grabber method for returning file/folders count in directory
      *
+     * ```php
+     * <?php
+     * $count = $I->grabFileCount();
+     * $count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
+     * ?>
+     * ```
+     *
      * @param string $path
+     * @param bool $ignore - suppress '.', '..' and '.thumbs.db'
      * @return int
      */
     public function grabFileCount($path = '', $ignore = true)
@@ -359,6 +476,12 @@ class FTP extends \Codeception\Module\Filesystem
 
     /**
      * Grabber method to return file size
+     *
+     * ```php
+     * <?php
+     * $size = $I->grabFileSize('test.txt');
+     * ?>
+     * ```
      *
      * @param $filename
      * @return bool
@@ -372,6 +495,13 @@ class FTP extends \Codeception\Module\Filesystem
 
     /**
      * Grabber method to return last modified timestamp
+     *
+     * ```php
+     * <?php
+     * $time = $I->grabFileModified('test.txt');
+     * ?>
+     * ```
+     *
      * @param $filename
      * @return bool
      */
@@ -384,6 +514,12 @@ class FTP extends \Codeception\Module\Filesystem
 
     /**
      * Grabber method to return current working directory
+     *
+     * ```php
+     * <?php
+     * $pwd = $I->grabDirectory();
+     * ?>
+     * ```
      *
      * @return string
      */
