@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Subscriber\ErrorHandler;
