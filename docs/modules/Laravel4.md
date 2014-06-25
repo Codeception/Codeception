@@ -128,7 +128,7 @@ Example:
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[ * `type="file"]',  'prices.xls');
 ?>
 ```
 
