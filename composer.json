@@ -30,13 +30,15 @@
     "require-dev": {
         "monolog/monolog": "*",
         "facebook/php-sdk": "3.*",
-        "videlalvaro/php-amqplib": "*"
+        "videlalvaro/php-amqplib": "*",
+        "phpseclib/phpseclib": "0.3.6"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
         "codeception/specify": "BDD-style code blocks",
         "codeception/verify": "BDD-style assertions",
-        "monolog/monolog": "Log test steps"
+        "monolog/monolog": "Log test steps",
+        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
     },
 
     "autoload":{

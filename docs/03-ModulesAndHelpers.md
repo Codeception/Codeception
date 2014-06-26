@@ -3,7 +3,7 @@
 Codeception uses modularity to create a comfortable testing environment for every test suite you write. 
 Modules allow you to choose the actions and assertions that can be performed in tests.
 
-All actions and assertions that can be performed by the Guy object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
+All actions and assertions that can be performed by the Tester object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
 
 Let's look at this test.
 
@@ -28,7 +28,7 @@ modules:
     enabled: [PhpBrowser, Db, Filesystem]
 ```
 
-The FunctionalTester class has it's methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
+The FunctionalTester class has its methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
 
 ## Standard Modules
 
