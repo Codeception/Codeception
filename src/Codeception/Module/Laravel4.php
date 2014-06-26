@@ -285,7 +285,9 @@ class Laravel4 extends Framework implements ActiveRecord
      * Checks that record does not exist in database.
      *
      * ``` php
+     * <?php
      * $I->dontSeeRecord('users', array('name' => 'davert'));
+     * ?>
      * ```
      *
      * @param $model
@@ -304,7 +306,9 @@ class Laravel4 extends Framework implements ActiveRecord
      * Retrieves record from database
      *
      * ``` php
+     * <?php
      * $category = $I->grabRecord('users', array('name' => 'davert'));
+     * ?>
      * ```
      *
      * @param $model

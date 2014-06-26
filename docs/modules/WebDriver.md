@@ -238,7 +238,7 @@ $I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
-$I->click(['link' => 'Login'])'
+$I->click(['link' => 'Login']);
 ?>
 ```
 

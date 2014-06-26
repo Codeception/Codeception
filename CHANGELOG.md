@@ -1,10 +1,10 @@
 # Changelog
 
-#### 2.0.2 06/27/2014
+#### 2.0.2
 
-* [Yii1] disabled logging for better functional test performance
+* [Yii2][Yii1] disabled logging for better functional test performance
 
-#### 2.0.1 06/21/2014
+#### 2.0.1
 
 * [Phalcon1] Fixed connector
 * [WebDriver] added seeInPageSource and dontSeeInPageSource methods
@@ -17,7 +17,7 @@
 * screenshots on fail are saved to properly named files #1075
 * [Symfony2] added debug config option to switch debug mode by @pmcjury
 
-#### 2.0.0 06/05/2014
+#### 2.0.0
 
 * renamed `_logs` dir to `_output` by default
 * renamed `_helpers` dir to `_support` by default
@@ -26,20 +26,20 @@
 * added --coverage-text option
 
 
-#### 2.0.0-RC2 05/12/2014
+#### 2.0.0-RC2
 
 * removed fabpot/goutte, added Guzzle4 connector
 * group configuration can accept groups by patterns
 
 
-#### 2.0.0-RC 04/02/2014
+#### 2.0.0-RC
 
 * [WebDriver] makeScreenshot does not use filename of a test
 * added `grabAttributeFrom`
 * seeElement to accept attributes in second parameter: seeElement('input',['name'=>'login'])
 
 
-#### 2.0.0-beta 03/19/2014
+#### 2.0.0-beta
 
 * executeInGuzzle is back in PhpBrowser
 * environment can be accessed via ->env in test

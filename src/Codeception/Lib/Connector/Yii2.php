@@ -69,6 +69,11 @@ class Yii2 extends Client
 
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, array($this, 'processResponse'));
 
+        // disabling logging. Logs slow down test execution
+        foreach ($app->log->routes as $route) {
+            $route->enabled = false;
+        }
+
         $this->headers    = array();
         $this->statusCode = null;
 

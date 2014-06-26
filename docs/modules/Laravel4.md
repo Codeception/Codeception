@@ -179,7 +179,7 @@ $I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
-$I->click(['link' => 'Login'])'
+$I->click(['link' => 'Login']);
 ?>
 ```
 
@@ -365,7 +365,9 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Checks that record does not exist in database.
 
 ``` php
+<?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param` $model
@@ -449,7 +451,9 @@ $uri = $I->grabFromCurrentUrl();
 Retrieves record from database
 
 ``` php
+<?php
 $category = $I->grabRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param` $model
@@ -504,23 +508,9 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
 ### grabValueFrom
  
-Finds and returns field and returns it's value.
-Searches by field name, then by CSS, then by XPath
-
-Example:
-
-``` php
-<?php
-$name = $I->grabValueFrom('Name');
-$name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
-$name = $I->grabValueFrom(['name' => 'username']);
-?>
-```
-
  * `param` $field
 
-@return mixed
+@return array|mixed|null|string
 
 
 
