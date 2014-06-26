@@ -95,6 +95,15 @@ class RunCest
         $I->dontSeeInShellOutput("IncompleteMeCept");
     }
 
+    public function skipGroupOfCest(\CliGuy $I)
+    {
+        $I->executeCommand('run dummy');
+        $I->seeInShellOutput('optimistic');
+        $I->executeCommand('run dummy --skip-group ok');
+        $I->seeInShellOutput('pessimistic');
+        $I->dontSeeInShellOutput('optimistic');
+    }
+
     public function runTwoSuites(\CliGuy $I)
     {
         $I->executeCommand('run skipped,dummy --no-exit');
