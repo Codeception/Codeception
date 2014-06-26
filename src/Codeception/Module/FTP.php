@@ -13,13 +13,14 @@ namespace Codeception\Module;
  * Don't forget to create the folder and ensure its writable.
  *
  * Supported and tested FTP types are:
+ *
  * * FTP
  * * SFTP
  *
  * Connection uses php build in FTP client for FTP, connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
  *
  * For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
- * ```json
+ * ```
  * "require": {
  *  "phpseclib/phpseclib": "0.3.6"
  * }
@@ -51,7 +52,7 @@ namespace Codeception\Module;
  *     modules:
  *        enabled: [FTP]
  *        config:
- *           Db:
+ *           FTP:
  *              type: ftp
  *              host: '127.0.0.1'
  *              port: 21
@@ -67,7 +68,7 @@ namespace Codeception\Module;
  *     modules:
  *        enabled: [FTP]
  *        config:
- *           Db:
+ *           FTP:
  *              type: sftp
  *              host: '127.0.0.1'
  *              port: 22
@@ -196,7 +197,7 @@ class FTP extends \Codeception\Module\Filesystem
      * $I->seeFileFound('UserModel.php','app/models');
      * ?>
      * ```
-     *git
+     *
      * @param $filename
      * @param string $path
      */
