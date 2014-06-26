@@ -592,13 +592,13 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
 ### makeScreenshot
  
-Makes a screenshot of current window and saves it to `tests/_log/debug`.
+Makes a screenshot of current window and saves it to `tests/_output/debug`.
 
 ``` php
 <?php
 $I->amOnPage('/user/edit');
 $I->makeScreenshot('edit_page');
-// saved to: tests/_log/debug/edit_page.png
+// saved to: tests/_output/debug/edit_page.png
 ?>
 ```
 
