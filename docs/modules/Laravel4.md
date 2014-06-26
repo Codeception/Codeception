@@ -365,7 +365,9 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Checks that record does not exist in database.
 
 ``` php
+<?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param`  $model
@@ -449,7 +451,9 @@ $uri = $I->grabFromCurrentUrl();
 Retrieves record from database
 
 ``` php
+<?php
 $category = $I->grabRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param`  $model
@@ -513,7 +517,7 @@ Example:
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = \'username\']');
 $name = $I->grabValueFrom(['name' => 'username']);
 ?>
 ```
