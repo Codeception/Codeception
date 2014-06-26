@@ -100,8 +100,8 @@ class Codecept
             if ($extension instanceof EventSubscriberInterface) {
                 throw new ConfigurationException("Class $extension is not a EventListener. Please create it as Extension or Group class.");
             }
-            $extensionConfig =  isset($this->config['extensions']['config'][$extension])
-                ? $this->config['extensions']['config'][$extension]
+            $extensionConfig =  isset($config['extensions']['config'][$extension])
+                ? $config['extensions']['config'][$extension]
                 : [];
 
             $this->extensions[] = new $extension($extensionConfig, $options);
