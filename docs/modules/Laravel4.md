@@ -128,7 +128,7 @@ Example:
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[ * `type="file"]',  'prices.xls');
 ?>
 ```
 
@@ -175,11 +175,11 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[ * `type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
-$I->click(['link' => 'Login'])'
+$I->click(['link' => 'Login']);
 ?>
 ```
 
@@ -309,7 +309,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[ * `name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -681,7 +681,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[ * `name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -780,8 +780,7 @@ Assert that Session has error messages
 The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
 
 Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
+ e.g: `return Redirect::to('register')->withErrors($validator);`
 
 Example of Usage
 
