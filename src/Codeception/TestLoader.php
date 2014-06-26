@@ -135,7 +135,7 @@ class TestLoader {
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
-            if ($reflected->isAbstract()) {
+            if (!$reflected->isInstantiable()) {
                 continue;
             }
 
