@@ -71,7 +71,7 @@ Export:
 
 Appends child node
 
- * `param`  $tag
+ * `param` $tag
 
  * `return`  XmlBuilder
 
@@ -85,8 +85,8 @@ Appends child node
 
 Sets attribute for current node
 
- * `param`  $attr
- * `param`  $val
+ * `param` $attr
+ * `param` $val
 
  * `return`  XmlBuilder
 
@@ -110,7 +110,7 @@ Traverses to parent
 
 Traverses to parent with $name
 
- * `param`  $tag
+ * `param` $tag
 
  * `return`  XmlBuilder
  * `throws`  \Exception
@@ -119,7 +119,7 @@ Traverses to parent with $name
 
 #### *public* val($val) 
 
- * `param`  $val
+ * `param` $val
 
  * `return`  XmlBuilder
 

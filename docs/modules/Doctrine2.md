@@ -82,8 +82,8 @@ It can be done in bootstrap file, by setting static $em property:
  
 Flushes changes to database and performs ->findOneBy() call for current repository.
 
- * `param`  $entity
- * `param`  array $params
+ * `param` $entity
+ * `param array` $params
 
 
 
@@ -108,11 +108,11 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
 ?>
 ```
 
- * `version`  1.1
- * `param`  $entity
- * `param`  $field
- * `param`  array $params
- * `return`  array
+@version 1.1
+ * `param` $entity
+ * `param` $field
+ * `param array` $params
+@return array
 
 
 
@@ -134,8 +134,8 @@ $I->haveFakeRepository('Entity\User', array('findByUsername' => function($userna
 
 This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
 
- * `param`  $classname
- * `param`  array $methods
+ * `param` $classname
+ * `param array` $methods
 
 
 ### haveInRepository
@@ -156,8 +156,8 @@ $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
 $I->persistEntity($user, array('name' => 'Miles'));
 ```
 
- * `param`  $obj
- * `param`  array $values
+ * `param` $obj
+ * `param array` $values
 
 
 
@@ -180,7 +180,7 @@ $I->seeInRepository('Client', array('User' => array('Company' => array('name' =>
 
 Fails if record for given criteria can\'t be found,
 
- * `param`  $entity
- * `param`  array $params
+ * `param` $entity
+ * `param array` $params
 
 

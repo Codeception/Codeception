@@ -87,8 +87,8 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
  
 Sets HTTP header
 
- * `param`  string $name
- * `param`  string $value
+ * `param string` $name
+ * `param string` $value
 
 
 
@@ -97,7 +97,7 @@ Sets HTTP header
  
 Checks response code.
 
- * `param`  $num
+ * `param` $num
 
 
 ### seeResponseIsXMLRPC
@@ -111,7 +111,7 @@ This is done with xmlrpc_decode function.
  
 Sends a XMLRPC method call to remote XMLRPC-server.
 
- * `param`  string $methodName
- * `param`  array $parameters
+ * `param string` $methodName
+ * `param array` $parameters
 
 

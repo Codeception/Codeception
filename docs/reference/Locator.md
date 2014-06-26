@@ -33,8 +33,8 @@ $I->fillField(Locator::combine('form input[type=text]','//form/textarea[2]'), 'q
 As a result the Locator will produce a mixed XPath value that will be used in fillField action.
 
  * `static` 
- * `param`  $selector1
- * `param`  $selector2
+ * `param` $selector1
+ * `param` $selector2
  * `throws`  \Exception
  * `return`  string
 
@@ -46,8 +46,8 @@ Finds element by it's attribute(s)
 
  * `static` 
 
- * `param`  $element
- * `param`  $attributes
+ * `param` $element
+ * `param` $attributes
 
  * `return`  string
 
@@ -66,14 +66,14 @@ $I->see('Log In', Locator::href('/login.php'));
 ```
 
  * `static` 
- * `param`  $url
+ * `param` $url
  * `return`  string
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L73)
 
 #### *public static* isCSS($selector) 
 
- * `param`  $selector
+ * `param` $selector
  * `return`  bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L154)
@@ -89,7 +89,7 @@ Checks that string and CSS selector for element by ID
 
 Checks that locator is an XPath
 
- * `param`  $locator
+ * `param` $locator
  * `return`  bool
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L170)
@@ -98,7 +98,7 @@ Checks that locator is an XPath
 
 Matches option by text
 
- * `param`  $value
+ * `param` $value
 
  * `return`  string
 
@@ -121,7 +121,7 @@ $I->click('Login');
 ```
 
  * `static` 
- * `param`  $index
+ * `param` $index
  * `return`  string
 
 [See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/Locator.php#L97)

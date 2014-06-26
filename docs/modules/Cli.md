@@ -57,7 +57,7 @@ Wrapper for basic shell commands and shell output
  
 Checks that output from latest command doesn't contain text
 
- * `param`  $text
+ * `param` $text
 
 
 
@@ -70,7 +70,7 @@ Checks that output from latest command doesn't contain text
  
 Executes a shell command
 
- * `param`  $command
+ * `param` $command
 
 
 
@@ -78,7 +78,7 @@ Executes a shell command
  
 Checks that output from last executed command contains text
 
- * `param`  $text
+ * `param` $text
 
 
 ### seeShellOutputMatches

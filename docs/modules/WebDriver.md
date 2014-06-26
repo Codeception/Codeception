@@ -111,7 +111,7 @@ $I->amOnPage('/register');
 ?>
 ```
 
- * `param`  $page
+ * `param` $page
 
 
 ### amOnSubdomain
@@ -131,9 +131,9 @@ $I->amOnPage('/');
 ?>
 ```
 
- * `param`  $subdomain
+ * `param` $subdomain
 
- * `return`  mixed
+@return mixed
 
 
 ### appendField
@@ -148,9 +148,9 @@ $I->appendField('#myTextField', 'appended');
 ?>
 ```
 
- * `param`  string $field
- * `param`  string $value
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param string` $field
+ * `param string` $value
+@throws \Codeception\Exception\ElementNotFound
 
 
 
@@ -182,12 +182,12 @@ Example:
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
- * `param`  $field
- * `param`  $filename
+ * `param` $field
+ * `param` $filename
 
 
 ### cancelPopup
@@ -208,7 +208,7 @@ $I->checkOption('#agree');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
 
 ### click
@@ -234,7 +234,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -242,16 +242,16 @@ $I->click(['link' => 'Login'])'
 ?>
 ```
 
- * `param`  $link
- * `param`  $context
+ * `param` $link
+ * `param` $context
 
 
 ### clickWithRightButton
  
 Performs contextual click with right mouse button on element matched by CSS or XPath.
 
- * `param`  $cssOrXPath
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param` $cssOrXPath
+@throws \Codeception\Exception\ElementNotFound
 
 
 
@@ -272,8 +272,8 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### dontSeeCheckboxIsChecked
@@ -290,16 +290,16 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### dontSeeCookie
  
 Checks that cookie doesn't exist
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
+@return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -314,7 +314,7 @@ $I->dontSeeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeCurrentUrlMatches
@@ -328,7 +328,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeElement
@@ -342,15 +342,15 @@ $I->dontSeeElement('//form/input[1]');
 ?>
 ```
 
- * `param`  $selector
- * `param`  array $attributes
+ * `param` $selector
+ * `param array` $attributes
 
 
 ### dontSeeElementInDOM
  
 Opposite to `seeElementInDOM`.
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### dontSeeInCurrentUrl
@@ -363,7 +363,7 @@ $I->dontSeeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeInField
@@ -378,22 +378,29 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
+
+
+### dontSeeInPageSource
+ 
+Checks that page source does not contain text.
+
+ * `param` $text
 
 
 ### dontSeeInTitle
  
 Checks that page title does not contain text.
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
+@return mixed
 
 
 ### dontSeeLink
@@ -409,8 +416,8 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### dontSeeOptionIsSelected
@@ -423,18 +430,18 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
+@return mixed
 
 
 ### doubleClick
  
 Performs a double click on element matched by CSS or XPath.
 
- * `param`  $cssOrXPath
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param` $cssOrXPath
+@throws \Codeception\Exception\ElementNotFound
 
 
 ### dragAndDrop
@@ -447,8 +454,8 @@ $I->dragAndDrop('#drag', '#drop');
 ?>
 ```
 
- * `param`  string $source (CSS ID or XPath)
- * `param`  string $target (CSS ID or XPath)
+ * `param string` $source (CSS ID or XPath)
+ * `param string` $target (CSS ID or XPath)
 
 
 ### executeInSelenium
@@ -466,15 +473,15 @@ Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
 Not recommended this command too be used on regular basis.
 If Codeception lacks important Selenium methods implement then and submit patches.
 
- * `param`  callable $function
+ * `param callable` $function
 
 
 ### executeJS
  
 Executes custom JavaScript
 
- * `param`  $script
- * `return`  mixed
+ * `param` $script
+@return mixed
 
 
 
@@ -486,19 +493,24 @@ Example:
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
 
 
 
 
 
 
+
+
+### getVisibleText
+ 
+@return string
 
 
 
@@ -514,19 +526,19 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ```
 
 
- * `param`  $cssOrXpath
- * `param`  $attribute
- * `internal`  param $element
- * `return`  mixed
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `internal param` $element
+@return mixed
 
 
 ### grabCookie
  
 Grabs a cookie value.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
+@return mixed
 
 
 ### grabFromCurrentUrl
@@ -541,10 +553,10 @@ $uri = $I->grabFromCurrentUrl();
 ?>
 ```
 
- * `param`  null $uri
+ * `param null` $uri
 
- * `internal`  param $url
- * `return`  mixed
+ * `internal param` $url
+@return mixed
 
 
 ### grabTextFrom
@@ -562,9 +574,9 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ?>
 ```
 
- * `param`  $cssOrXPathOrRegex
+ * `param` $cssOrXPathOrRegex
 
- * `return`  mixed
+@return mixed
 
 
 ### grabValueFrom
@@ -578,14 +590,14 @@ Example:
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
 $name = $I->grabValueFrom(['name' => 'username']);
 ?>
 ```
 
- * `param`  $field
+ * `param` $field
 
- * `return`  mixed
+@return mixed
 
 
 
@@ -602,7 +614,8 @@ $I->makeScreenshot('edit_page');
 ?>
 ```
 
- * `param`  $name
+ * `param` $name
+
 
 
 
@@ -629,12 +642,12 @@ Move mouse over the first element matched by css or xPath on page
 
 https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
 
- * `param`  string $cssOrXPath css or xpath of the web element
- * `param`  int $offsetX
- * `param`  int $offsetY
+ * `param string` $cssOrXPath css or xpath of the web element
+ * `param int` $offsetX
+ * `param int` $offsetY
 
- * `throws`  \Codeception\Exception\ElementNotFound
- * `return`  null
+@throws \Codeception\Exception\ElementNotFound
+@return null
 
 
 
@@ -660,14 +673,14 @@ Example:
 $I->pressKey('#page','a'); // => olda
 $I->pressKey('#page',array('ctrl','a'),'new'); //=> new
 $I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
-$I->pressKey('descendant-or-self::*[ * `id='page']','u');`  //=> oldu
+$I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
 $I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
 ?>
 ```
 
- * `param`  $element
- * `param`  $char can be char or array with modifier. You can provide several chars.
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param` $element
+ * `param` $char can be char or array with modifier. You can provide several chars.
+@throws \Codeception\Exception\ElementNotFound
 
 
 ### reloadPage
@@ -679,9 +692,9 @@ Reloads current page
  
 Unsets cookie
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
+@return mixed
 
 
 ### resizeWindow
@@ -695,8 +708,8 @@ $I->resizeWindow(800, 600);
 
 ```
 
- * `param`  int $width
- * `param`  int $height
+ * `param int` $width
+ * `param int` $height
 
 
 
@@ -715,8 +728,8 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### seeCheckboxIsChecked
@@ -730,20 +743,20 @@ Example:
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### seeCookie
  
 Checks that cookie is set.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
+@return mixed
 
 
 ### seeCurrentUrlEquals
@@ -758,7 +771,7 @@ $I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeCurrentUrlMatches
@@ -772,7 +785,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeElement
@@ -785,8 +798,8 @@ $I->seeElement('.error');
 $I->seeElement('//form/input[1]');
 ?>
 ```
- * `param`  $selector
- * `param`  array $attributes
+ * `param` $selector
+ * `param array` $attributes
 
 
 ### seeElementInDOM
@@ -799,7 +812,7 @@ $I->seeElementInDOM('//form/input[type=hidden]');
 ?>
 ```
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### seeInCurrentUrl
@@ -815,7 +828,7 @@ $I->seeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeInField
@@ -831,20 +844,32 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
+
+
+### seeInPageSource
+ 
+Checks that page source contains text.
+
+```php
+<?php
+$I->seeInPageSource('<link rel="apple-touch-icon"');
+```
+
+ * `param` $text
 
 
 ### seeInPopup
  
 Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
 
- * `param`  $text
+ * `param` $text
 
 
 ### seeInTitle
@@ -857,9 +882,9 @@ $I->seeInTitle('Blog - Post #1');
 ?>
 ```
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
+@return mixed
 
 
 ### seeLink
@@ -876,8 +901,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### seeOptionIsSelected
@@ -890,10 +915,10 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
+@return mixed
 
 
 ### selectOption
@@ -906,7 +931,7 @@ Example:
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -918,18 +943,18 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ?>
 ```
 
- * `param`  $select
- * `param`  $option
+ * `param` $select
+ * `param` $option
 
 
 ### setCookie
  
 Sets a cookie.
 
- * `param`  $cookie
- * `param`  $value
+ * `param` $cookie
+ * `param` $value
 
- * `return`  mixed
+@return mixed
 
 
 ### submitForm
@@ -967,9 +992,9 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
 
 ```
 
- * `param`  $selector
- * `param`  $params
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param` $selector
+ * `param` $params
+@throws \Codeception\Exception\ElementNotFound
 
 
 ### switchToIFrame
@@ -991,7 +1016,7 @@ $I->switchToIFrame();
 
 ```
 
- * `param`  string|null $name
+ * `param string|null` $name
 
 
 ### switchToWindow
@@ -1027,14 +1052,14 @@ $I->executeInSelenium(function (\Webdriver $webdriver) {
 ?>
 ```
 
- * `param`  string|null $name
+ * `param string|null` $name
 
 
 ### typeInPopup
  
 Enters text into native JavaScript prompt popup created by `window.prompt`.
 
- * `param`  $keys
+ * `param` $keys
 
 
 ### uncheckOption
@@ -1049,7 +1074,7 @@ $I->uncheckOption('#notify');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
 
 ### unselectOption
@@ -1061,8 +1086,8 @@ __not documented__
  
 Explicit wait.
 
- * `param`  int $timeout secs
- * `throws`  \Codeception\Exception\TestRuntime
+ * `param int` $timeout secs
+@throws \Codeception\Exception\TestRuntime
 
 
 ### waitForElement
@@ -1077,9 +1102,9 @@ $I->click('#agree_button');
 ?>
 ```
 
- * `param`  $element
- * `param`  int $timeout seconds
- * `throws`  \Exception
+ * `param` $element
+ * `param int` $timeout seconds
+@throws \Exception
 
 
 ### waitForElementChange
@@ -1095,10 +1120,10 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
 ?>
 ```
 
- * `param`  $element
- * `param`  \Closure $callback
- * `param`  int $timeout seconds
- * `throws`  \Codeception\Exception\ElementNotFound
+ * `param` $element
+ * `param \Closure` $callback
+ * `param int` $timeout seconds
+@throws \Codeception\Exception\ElementNotFound
 
 
 ### waitForElementNotVisible
@@ -1112,9 +1137,9 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
 ?>
 ```
 
- * `param`  $element
- * `param`  int $timeout seconds
- * `throws`  \Exception
+ * `param` $element
+ * `param int` $timeout seconds
+@throws \Exception
 
 
 ### waitForElementVisible
@@ -1129,9 +1154,9 @@ $I->click('#agree_button');
 ?>
 ```
 
- * `param`  $element
- * `param`  int $timeout seconds
- * `throws`  \Exception
+ * `param` $element
+ * `param int` $timeout seconds
+@throws \Exception
 
 
 ### waitForJS
@@ -1146,8 +1171,8 @@ $I->waitForJS("return $.active == 0;", 60);
 ?>
 ```
 
- * `param`  string $script
- * `param`  int $timeout seconds
+ * `param string` $script
+ * `param int` $timeout seconds
 
 
 ### waitForText
@@ -1163,9 +1188,9 @@ $I->waitForText('foo', 30, '.title'); // secs
 ?>
 ```
 
- * `param`  string $text
- * `param`  int $timeout seconds
- * `param`  null $selector
- * `throws`  \Exception
- * `internal`  param string $element
+ * `param string` $text
+ * `param int` $timeout seconds
+ * `param null` $selector
+@throws \Exception
+ * `internal param string` $element
 

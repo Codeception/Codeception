@@ -33,54 +33,54 @@ Special module for using asserts in your tests.
  
 Checks that haystack contains needle
 
- * `param`         $needle
- * `param`         $haystack
- * `param`  string $message
+ * `param`        $needle
+ * `param`        $haystack
+ * `param string` $message
 
 
 ### assertEmpty
  
 Checks that variable is empty.
 
- * `param`         $actual
- * `param`  string $message
+ * `param`        $actual
+ * `param string` $message
 
 
 ### assertEquals
  
 Checks that two variables are equal.
 
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
 
- * `return`  mixed
+@return mixed
 
 
 ### assertFalse
  
 Checks that condition is negative.
 
- * `param`         $condition
- * `param`  string $message
+ * `param`        $condition
+ * `param string` $message
 
 
 ### assertGreaterThen
  
 Checks that expected is greater then actual
 
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
 
 
 ### assertGreaterThenOrEqual
  
 Checks that expected is greater or equal then actual
 
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
 
 
 
@@ -88,42 +88,42 @@ Checks that expected is greater or equal then actual
  
 Checks that haystack doesn't contain needle.
 
- * `param`         $needle
- * `param`         $haystack
- * `param`  string $message
+ * `param`        $needle
+ * `param`        $haystack
+ * `param string` $message
 
 
 ### assertNotEmpty
  
 Checks that variable is not empty.
 
- * `param`         $actual
- * `param`  string $message
+ * `param`        $actual
+ * `param string` $message
 
 
 ### assertNotEquals
  
 Checks that two variables are not equal
 
- * `param`         $expected
- * `param`         $actual
- * `param`  string $message
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
 
 
 ### assertNotNull
  
 Checks that variable is not NULL
 
- * `param`         $actual
- * `param`  string $message
+ * `param`        $actual
+ * `param string` $message
 
 
 ### assertNull
  
 Checks that variable is NULL
 
- * `param`         $actual
- * `param`  string $message
+ * `param`        $actual
+ * `param string` $message
 
 
 
@@ -132,8 +132,8 @@ Checks that variable is NULL
  
 Checks that condition is positive.
 
- * `param`         $condition
- * `param`  string $message
+ * `param`        $condition
+ * `param string` $message
 
 
 
@@ -142,7 +142,7 @@ Checks that condition is positive.
  
 Fails the test with message.
 
- * `param`  $message
+ * `param` $message
 
 
 

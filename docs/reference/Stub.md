@@ -18,7 +18,7 @@ $user->getName();
 ?>
 ```
 
- * `param`  mixed $params
+ * `param mixed` $params
 
  * `return`  StubMarshaler
 
@@ -57,10 +57,10 @@ Stub::construct('User', array(), array('save' => true }));
 ?>
 ```
 
- * `param`                                   $class
- * `param`  array                            $constructorParams
- * `param`  array                            $params
- * `param`  bool|\PHPUnit_Framework_TestCase $testCase
+ * `param`                                  $class
+ * `param array`                            $constructorParams
+ * `param array`                            $params
+ * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object
 
@@ -97,10 +97,10 @@ Stub::constructEmpty('User', array(), array('save' => true }));
 ?>
 ```
 
- * `param`                                   $class
- * `param`  array                            $constructorParams
- * `param`  array                            $params
- * `param`  bool|\PHPUnit_Framework_TestCase $testCase
+ * `param`                                  $class
+ * `param array`                            $constructorParams
+ * `param array`                            $params
+ * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object
 
@@ -137,11 +137,11 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
 ?>
 ```
 
- * `param`                                  $class
- * `param`                                  $method
- * `param`  array                           $constructorParams
- * `param`  array                           $params
- * `param`  bool|PHPUnit_Framework_TestCase $testCase
+ * `param`                                 $class
+ * `param`                                 $method
+ * `param array`                           $constructorParams
+ * `param array`                           $params
+ * `param bool|PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object
 
@@ -151,8 +151,8 @@ Stub::constructEmptyExcept('User', 'save', array(), array('save' => true }));
 
 Clones an object and redefines it's properties (even protected and private)
 
- * `param`        $obj
- * `param`  array $params
+ * `param`       $obj
+ * `param array` $params
 
  * `return`  mixed
 
@@ -177,8 +177,8 @@ $user->getName();
 ?>
 ```
 
- * `param`  int   $count
- * `param`  mixed $params
+ * `param int`   $count
+ * `param mixed` $params
 
  * `return`  StubMarshaler
 
@@ -189,9 +189,9 @@ $user->getName();
 
 Creates $num instances of class through `Stub::make`.
 
- * `param`        $class
- * `param`  int   $num
- * `param`  array $params
+ * `param`       $class
+ * `param int`   $num
+ * `param array` $params
 
  * `return`  array
 
@@ -231,9 +231,9 @@ Stub::make('User', array('save' => true }));
 ?>
 ```
 
- * `param`                                   $class - A class to be mocked
- * `param`  array                            $params - properties and methods to set
- * `param`  bool|\PHPUnit_Framework_TestCase $testCase
+ * `param`                                  $class - A class to be mocked
+ * `param array`                            $params - properties and methods to set
+ * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object - mock
  * `throws`  \RuntimeException when class not exists
@@ -271,9 +271,9 @@ Stub::makeEmpty('User', array('save' => true }));
 ?>
 ```
 
- * `param`                                  $class
- * `param`  array                           $params
- * `param`  bool|\PHPUnit_Framework_TestCase $testCase
+ * `param`                                 $class
+ * `param array`                           $params
+ * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object
 
@@ -310,10 +310,10 @@ Stub::makeEmptyExcept('User', 'save', array('isValid' => true }));
 ?>
 ```
 
- * `param`                                   $class
- * `param`                                   $method
- * `param`  array                            $params
- * `param`  bool|\PHPUnit_Framework_TestCase $testCase
+ * `param`                                  $class
+ * `param`                                  $method
+ * `param array`                            $params
+ * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object
 
@@ -333,7 +333,7 @@ $user->someMethod();
 ?>
 ```
 
- * `param`  mixed $params
+ * `param mixed` $params
 
  * `return`  StubMarshaler
 
@@ -355,7 +355,7 @@ $this->assertEquals('Davert', $userName);
 ?>
 ```
 
- * `param`  mixed $params
+ * `param mixed` $params
 
  * `return`  StubMarshaler
 
@@ -365,8 +365,8 @@ $this->assertEquals('Davert', $userName);
 
 Replaces properties and methods of current stub
 
- * `param`  \PHPUnit_Framework_MockObject_MockObject $mock
- * `param`  array                                    $params
+ * `param \PHPUnit_Framework_MockObject_MockObject` $mock
+ * `param array`                                    $params
 
  * `return`  mixed
  * `throws`  \LogicException
