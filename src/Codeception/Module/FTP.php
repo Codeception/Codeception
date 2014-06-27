@@ -215,6 +215,7 @@ class FTP extends \Codeception\Module\Filesystem
      * <?php
      * $I->seeFileFoundMatches('/^UserModel_([0-9]{6}).php$/','app/models');
      * ?>
+     * ```
      *
      * @param $regex
      * @param string $path
@@ -421,7 +422,7 @@ class FTP extends \Codeception\Module\Filesystem
      * ```php
      * <?php
      * $files = $I->grabFileList();
-     * $count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
+     * $count = $I->grabFileList('TEST', false); // Include . .. .thumbs.db
      * ?>
      * ```
      *
