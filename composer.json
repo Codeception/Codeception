@@ -16,6 +16,8 @@
 
     "require": {
         "php": ">=5.4.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
         "phpunit/phpunit": "~4.0",
         "facebook/webdriver": "~0.4",
         "guzzlehttp/guzzle": "4.*",
