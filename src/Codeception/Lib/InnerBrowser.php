@@ -15,6 +15,7 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 class InnerBrowser extends Module implements Web
 {
@@ -444,13 +445,37 @@ class InnerBrowser extends Module implements Web
     public function checkOption($option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
-        $form[$field->attr('name')]->tick();
+        $name = $field->attr('name');
+        if (strpos($name, '[]') == (strlen($name) - 2)) {
+            $name = rtrim($name, '[]');
+            $checkbox = new ChoiceFormField($field->getNode(0));
+            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
+            foreach ($form[$name] as $item) {
+                if ($item == $checkbox) {
+                    $item->tick();
+                }
+            }
+        } else {
+            $form[$name]->tick();
+        }
     }
 
     public function uncheckOption($option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
-        $form[$field->attr('name')]->untick();
+        $name = $field->attr('name');
+        if (strpos($name, '[]') == (strlen($name) - 2)) {
+            $name = rtrim($name, '[]');
+            $checkbox = new ChoiceFormField($field->getNode(0));
+            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
+            foreach ($form[$name] as $item) {
+                if ($item == $checkbox) {
+                    $item->untick();
+                }
+            }
+        } else {
+            $form[$name]->untick();
+        }
     }
 
     public function attachFile($field, $filename)
