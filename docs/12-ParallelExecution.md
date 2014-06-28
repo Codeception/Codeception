@@ -1,18 +1,18 @@
 # Parallel Execution
 
-When test execution time is then a coffee break it is a good time to think about making tests faster. If you tried to run them on SSD drive, use PhantomJS instead of Selenium, and the execution time still upsets you it's a good time to think about running tests in parallel.
+When test execution time is longer then a coffee break, it is a good time to think about making tests faster. If you tried to run them on SSD drive, use PhantomJS instead of Selenium, and the execution time still upsets you, it's a good time to think about running tests in parallel.
 
-## Where to Start
+## Where to start
 
 Codeception does not provide a command like `run-parallel`. There is no common solution that can play well for everyone. Here are the questions you will need to answer:
 
-* how parallel processes will be executed?
-* how parallel processes won't affect each other?
-* will they use different databases?
-* will they use different hosts?
-* how should I split my tests across parallel processes?
+* How parallel processes will be executed?
+* How parallel processes won't affect each other?
+* Will they use different databases?
+* Will they use different hosts?
+* How should I split my tests across parallel processes?
 
-And we don't have a single answer for you for those questions. Instead, we provide you with a customizable solution which can be easily configured to match your needs. Also we will share some ideas that you might find helpful.  
+And we don't have a single answer for you to any of those questions. Instead, we provide you with a customizable solution which can be easily configured to match your needs. Also we will share some ideas that you might find helpful.
 
 ## What to do
 
@@ -22,24 +22,23 @@ Parallel Test Execution consists of 3 steps:
 * running tests in parallel
 * merging results
 
-We propose to perform those steps using a task runner. In this guide we will use [**Robo**](http://robo.li) task runner. It is a modern PHP task runner that is very easy in use. It uses [Symfony Process](http://symfony.com/doc/current/components/process.html) to spawn background and parallel processes. Just what we need for the step 2! What about steps 1 and 3? We have created robo [tasks](https://github.com/Codeception/robo-paracept) for splitting tests into groups and merging resulting JUnit XML reports.
+We propose to perform those steps using a task runner. In this guide we will use [**Robo**](http://robo.li) task runner. It is a modern PHP task runner that is very easy to use. It uses [Symfony Process](http://symfony.com/doc/current/components/process.html) to spawn background and parallel processes. Just what we need for the step 2! What about steps 1 and 3? We have created robo [tasks](https://github.com/Codeception/robo-paracept) for splitting tests into groups and merging resulting JUnit XML reports.
 
 To conclude, we need:
 
 * [Robo](http://robo.li), a task runner.
 * [robo-paracept](https://github.com/Codeception/robo-paracept) - Codeception tasks for parallel execution.
 
-## Preparing Robo 
+## Preparing Robo
 
-Robo is recommended to be installed globally. You can either do a global install with composer or download `robo.phar` and put it into global executable path.
+`Robo` is recommended to be installed globally. You can either do a global install with Composer or download `robo.phar` and put it into global executable path.
 
-Execute robo in the root of your project
+Execute `robo` in the root of your project
 
 ```
-➜  ~/projects/my-project  robo
-  RoboFile.php not found in this dir 
-  Should I create RoboFile here? (y/n)  
-
+~/projects/my-project $ robo
+  RoboFile.php not found in this dir
+  Should I create RoboFile here? (y/n)
 ```
 
 Confirm to create `RoboFile.php`.
@@ -53,7 +52,7 @@ class RoboFile extends \Robo\Tasks
 ?>
 ```
 
-Install `codeception/robo-paracept` via composer and include it into your RoboFile. We need to include 
+Install `codeception/robo-paracept` via Composer and include it into your RoboFile.
 
 Each public method in robofile can be executed as a command from console. Lets define commands for 3 steps.
 
@@ -66,17 +65,17 @@ class Robofile extends \Robo\Tasks
     use \Codeception\Task\MergeReports;
     use \Codeception\Task\SplitTestsByGroups;
 
-    function parallelSplitTests()
+    public function parallelSplitTests()
     {
 
     }
 
-    function parallelRun()
+    public function parallelRun()
     {
 
     }
 
-    function parallelMergeResults()
+    public function parallelMergeResults()
     {
 
     }
@@ -84,10 +83,10 @@ class Robofile extends \Robo\Tasks
 ?>
 ```
 
-If you run `robo` you can see the respective commands:
+If you run `robo`, you can see the respective commands:
 
 ```
-➜  ~  robo
+~ $ robo
 Robo version 0.4.4
 ---
 Available commands:
@@ -102,17 +101,17 @@ parallel
 
 ## Sample Project
 
-Let's say we have long running acceptance tests and we want them to be split into 5 processes. To make tests not be conflicted with each other they should use different hosts databases. Thus, before proceed we need to configure 5 different hosts in Apache/Nginx (or just run application on different ports in PHP Built In Server). Based on host our application should use corresponding databases.
+Let's say we have long running acceptance tests and we want to split them into 5 processes. To make tests not be conflicting with each other they should use different hosts and databases. Thus, before proceeding we need to configure 5 different hosts in Apache/Nginx (or just run application on different ports in PHP Built-in web server). Based on host our application should use corresponding databases.
 
-Alternatively you can prepare **isolated environments** using [Docker](https://www.docker.io/) or [LXC](https://linuxcontainers.org/) you can make each testing process to be executed in its own container. Spawn new containers and run more processes are much easier then manually creating additional databases and hosts. Also you are creating a more stable testing environments (no database, files, process conflicts). But you to provision your containers as you regularly do when creating virtual machines. 
+Alternatively you can prepare **isolated environments** using [Docker](https://www.docker.io/) or [LXC](https://linuxcontainers.org/) and make each testing process to be executed in its own container. Spawn new containers and run more processes are much easier then manually creating additional databases and hosts. Also you are creating a more stable testing environments (no database, files, process conflicts). But you will have to provision your containers as you regularly do when creating virtual machines.
 
-You can also think on running your tests on remote hosts using SSH. Robo has built-in tasks for running SSH commands as well.
+You can also think about running your tests on remote hosts using SSH. `Robo` has built-in tasks for running SSH commands as well.
 
-But In current example we assume that we prepared 5 databases and 5 independent hosts for our application.
+In current example we assume that we have prepared 5 databases and 5 independent hosts for our application.
 
 ### Step 1: Split Tests
 
-Codeception can organize tests into [groups](http://codeception.com/docs/07-AdvancedUsage#Groups). Starting from 2.0 it can load information about a group from a files. Sample text file with a list of file names can be trated as a dynamically configured group. Take a look into sample group file:
+Codeception can organize tests into [groups](http://codeception.com/docs/07-AdvancedUsage#Groups). Starting from 2.0 it can load information about a group from a files. Sample text file with a list of file names can be treated as a dynamically configured group. Take a look into sample group file:
 
 ```
 tests/functional/LoginCept.php
@@ -121,7 +120,6 @@ tests/functional/AdminCest.php:deleteUser
 ```
 
 Tasks from `\Codeception\Task\SplitTestsByGroups` will generate non-intersecting group files.  You can either split your tests by files or by single tests:
-
 
 ```php
 <?php
@@ -148,7 +146,7 @@ In second case `Codeception\TestLoader` class will be used and test classes will
 Let's prepare group files:
 
 ```
-➜ robo parallel:split-groups
+$ robo parallel:split-groups
 
  [Codeception\Task\SplitTestFilesByGroupsTask] Processing 33 files
  [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p1
@@ -157,7 +155,6 @@ Let's prepare group files:
  [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p4
  [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p5
 ```
-
 
 Now we have group files. We should update `codeception.yml` to load generated group files. In our case we have groups: *p1*, *p2*, *p3*, *p4*, *p5*.
 
@@ -174,7 +171,7 @@ codecept run functional -g p2
 
 ### Step 2: Running Tests
 
-As it was mentioned Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH. Or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
+As it was mentioned, Robo has `ParallelExec` task to spawn background processes. But you should not think of it as the only option. For instance, you can execute tests remotely via SSH, or spawn processes with Gearman, RabbitMQ, etc. But in our example we will use 5 background processes:
 
 ```php
 <?php
@@ -266,7 +263,7 @@ Now we should update our `parallelRun` method to use corresponding environment:
 ?>    
 ```
 
-Now we can execute tests with 
+Now we can execute tests with
 
 ```
 robo parallel:run
@@ -310,4 +307,4 @@ To create one command to rule them all we can define new public method `parallel
 
 ## Conclusion
 
-Codeception does not provide tools for parallel test execution. This is a complex task that can vary depending on a project. We use [Robo](http://robo.li) task runner as an external tool to perform all required steps. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.
+Codeception does not provide tools for parallel test execution. This is a complex task and solutions may vary depending on a project. We use [Robo](http://robo.li) task runner as an external tool to perform all required steps. To prepare our tests to be executed in parallel we use Codeception features of dynamic groups and environments. To do even more we can create Extensions and Group classes to perform dynamic configuration depending on a test process.
