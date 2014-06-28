@@ -25,7 +25,7 @@ use \Codeception\Event\TestEvent;
 
 class {{class}}Group extends \Codeception\Platform\Group
 {
-    static \$group = '{{name}}';
+    public static \$group = '{{name}}';
 
     public function _before(TestEvent \$e)
     {
@@ -56,4 +56,4 @@ EOF;
             ->produce();
     }
 
-} 
+}
