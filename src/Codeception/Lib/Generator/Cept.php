@@ -5,9 +5,9 @@ use Codeception\Util\Template;
 
 class Cept {
 
-    protected $template  = <<<EOF
+    protected $template = <<<EOF
 <?php {{use}}
-\$I = new {{guy}}(\$scenario);
+\$I = new {{actor}}(\$scenario);
 \$I->wantTo('perform actions and see result');
 
 EOF;
@@ -21,15 +21,15 @@ EOF;
 
     public function produce()
     {
-        $guy = $this->settings['class_name'];
+        $actor = $this->settings['class_name'];
         $use = $this->settings['namespace']
-            ? "use {$this->settings['namespace']}\\$guy;"
+            ? "use {$this->settings['namespace']}\\$actor;"
             : '';
 
         return (new Template($this->template))
-            ->place('guy', $guy)
+            ->place('actor', $actor)
             ->place('use', $use)
             ->produce();
     }
     
-} 
+}

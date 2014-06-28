@@ -14,7 +14,7 @@ class PageObject
 class {{class}}Page
 {
     // include url of current page
-    static \$URL = '';
+    public static \$URL = '';
 
     /**
      * Declare UI map for this page here. CSS or XPath allowed.
@@ -38,19 +38,19 @@ EOF;
 
     protected $actionsTemplate  = <<<EOF
     /**
-     * @var {{guyClass}};
+     * @var {{actorClass}};
      */
-    protected \${{guy}};
+    protected \${{actor}};
 
-    public function __construct({{guyClass}} \$I)
+    public function __construct({{actorClass}} \$I)
     {
-        \$this->{{guy}} = \$I;
+        \$this->{{actor}} = \$I;
     }
 
     /**
      * @return {{pageObject}}Page
      */
-    public static function of({{guyClass}} \$I)
+    public static function of({{actorClass}} \$I)
     {
         return new static(\$I);
     }
@@ -80,18 +80,17 @@ EOF;
     protected function produceActions()
     {
         if (!isset($this->settings['class_name'])) {
-            return ""; // global pageobject
+            return ''; // global pageobject
         }
 
-        $guyClass = $this->settings['class_name'];
-        $guy = lcfirst($this->settings['class_name']);
+        $actorClass = $this->settings['class_name'];
+        $actor = lcfirst($this->settings['class_name']);
 
         return (new Template($this->actionsTemplate))
-            ->place('guyClass', $guyClass)
-            ->place('guy', $guy)
+            ->place('actorClass', $actorClass)
+            ->place('actor', $actor)
             ->place('pageObject', $this->name)
             ->produce();
     }
 
-
-} 
+}
