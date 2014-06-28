@@ -23,7 +23,7 @@ $I->see('Welcome, Davert!');
 
 This scenario can probably be read by non-technical people. Codeception can even 'naturalize' this scenario, converting it into plain English:
 
-```
+```bash
 I WANT TO SIGN IN
 I am on page '/login'
 I fill field 'username', 'davert'
@@ -354,7 +354,7 @@ Your PhpBrowser tests we wrote previously can be executed inside a real browser 
 
 The only thing we need to change is to reconfigure and rebuild the AcceptanceTester class, to use **WebDriver** instead of PhpBrowser.
 
-Modify your ```acceptance.suite.yml``` file...
+Modify your `acceptance.suite.yml` file:
 
 ```yaml
 class_name: AcceptanceTester
