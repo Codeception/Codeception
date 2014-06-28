@@ -4,7 +4,7 @@ The same way we tested a web site, Codeception allows you to test web services. 
 
 You should start with creating a new test suite, which was not provided by the `bootstrap` command. We recommend to call it **api** and use the `ApiTester` class for it.
 
-```
+```bash
 $ php codecept.phar generate:suite api
 ```
 
@@ -31,8 +31,8 @@ The REST module will automatically connect to `PhpBrowser`. In case you provide 
 
 Let's create the first sample test:
 
-```
-php codecept.phar generate:cept api CreateUser
+```bash
+$ php codecept.phar generate:cept api CreateUser
 ```
 
 It will be called `CreateUserCept.php`. We can use it to test creation of user via web service.
