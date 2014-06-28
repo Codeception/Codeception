@@ -12,7 +12,7 @@ Actor classes are not written but generated from suite configuration. When you c
 
 If Actor classes are not created or updated as you expect, try to generate them manually with `build` command:
 
-```
+```bash
 $ php codecept.phar build
 ```
 
@@ -25,7 +25,7 @@ Let's say, we created a file `tests/acceptance/SigninCept.php`
 
 We can do that by running command:
 
-```
+```bash
 $ php codecept.phar generate:cept acceptance Signin
 ```
 
@@ -195,7 +195,7 @@ There are plenty of useful Codeception commands.
 * `generate:cest` *suite* *filename* - Generates a sample Cest test.
 * `generate:test` *suite* *filename* - Generates a sample PHPUnit Test with Codeception hooks.
 * `generate:phpunit` *suite* *filename* - Generates a classic PHPUnit Test.
-* `generate:suite` *suite* *guy* - Generates a new suite with the given Guy class name.
+* `generate:suite` *suite* *actor* - Generates a new suite with the given Actor class name.
 * `generate:scenarios` *suite* - Generates text files containing scenarios from tests.
 
 
