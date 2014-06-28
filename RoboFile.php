@@ -331,12 +331,14 @@ class RoboFile extends \Robo\Tasks {
 
             copy($doc->getPathname(), 'package/site/' . $newfile);
 
-            $contents = preg_replace('~```\s?php(.*?)```~ms',"{% highlight php %}\n$1\n{% endhighlight %}", $contents);
-            $contents = preg_replace('~```\s?html(.*?)```~ms',"{% highlight html %}\n$1\n{% endhighlight %}", $contents);
-            $contents = preg_replace('~```(.*?)```~ms',"{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
+            $highlight_languages = implode('|', array('php', 'html', 'bash', 'yaml', 'json', 'xml'));
+            $default_language = 'yaml';
+            $contents = preg_replace("~```\s?($highlight_languages)?\b(.*?)```~ms", "{% highlight $1 %}\n$2\n{% endhighlight %}", $contents);
+            // set default language in order not to leave unparsed code inside '```'
+            $contents = preg_replace("~```(.*?)```~ms", "{% highlight $default_language %}\n$1\n{% endhighlight %}", $contents);
+            
             $matches = array();
             $title = "";
-
             // Extracting page h1 to re-use in <title>
             if (preg_match('/^# (.*)$/m', $contents, $matches)) {
               $title = $matches[1];
