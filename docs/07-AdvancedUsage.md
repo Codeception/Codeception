@@ -94,7 +94,7 @@ class ModeratorCest {
 ?>
 ```
 
-You can also use `@before` and `@after` for included functions. But you can't have multiple annotations for single method.
+You can also use `@before` and `@after` for included functions. But you can't have multiple annotations of the same kind for single method - one method can have only one `@before` and only one `@after` annotation.
 
 ### Depends Annotation
 
