@@ -9,8 +9,8 @@ It is very simple and is fully compatible with Cept scenarios. It means that if 
 
 You can create Cest file by running the command:
 
-```
-php codecept.phar generate:cest suitename CestName
+```bash
+$ php codecept.phar generate:cest suitename CestName
 ```
 
 The generated file will look like this:
@@ -132,7 +132,7 @@ Interactive console was added to try Codeception commands before executing them 
 You can run the console with the following command:
 
 ``` bash
-php codecept.phar console suitename
+$ php codecept.phar console suitename
 ```
 
 Now you can execute all commands of appropriate Actor class and see results immediately. This is especially useful when used with `WebDriver` module. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
@@ -144,16 +144,16 @@ And a special hint: show your boss how you can nicely manipulate web pages with 
 If you have several projects with Codeception tests, you can use single `codecept.phar` file to run all of your tests.
 You can pass `-c` option to any Codeception command, excluding `bootstrap`, to execute Codeception in another directory.
 
-```
-php codecept.phar run -c ~/projects/ecommerce/
-php codecept.phar run -c ~/projects/drupal/
-php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
+```bash
+$ php codecept.phar run -c ~/projects/ecommerce/
+$ php codecept.phar run -c ~/projects/drupal/
+$ php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
 ```
 
 To create a project in directory different from the current one, just provide its path as a parameter.
 
-```
-php codecept.phar bootstrap ~/projects/drupal/
+```bash
+$ php codecept.phar bootstrap ~/projects/drupal/
 ```
 
 Basically `-c` option allows you to specify not only the path, but a config file to be used. Thus, you can have several `codeception.yml` files for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
@@ -162,14 +162,14 @@ Basically `-c` option allows you to specify not only the path, but a config file
 
 There are several ways to execute bunch of tests. You can run tests from specific directory:
 
-```
-php codecept.phar run tests/acceptance/admin
+```bash
+$ php codecept.phar run tests/acceptance/admin
 ```
 
 Or execute one (or several) specific groups of tests:
 
-```
-php codecept.phar run -g admin -g editor
+```bash
+$ php codecept.phar run -g admin -g editor
 ```
 
 In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
@@ -220,7 +220,7 @@ groups:
 For instance, you can create a file with the list of the most slow tests, and run them inside their own group.
 Group file is a plain text file with test names on separate lines:
 
-```
+```bash
 tests/unit/DbTest.php
 tests/unit/UserTest.php:create
 tests/unit/UserTest.php:update
@@ -289,8 +289,8 @@ PageObjects are very important when you are developing a flexible architecture o
 
 Codeception can generate a PageObject class for you with command:
 
-```
-php codecept.phar generate:pageobject Login
+```bash
+$ php codecept.phar generate:pageobject Login
 ```
 
 This will create a `LoginPage` class in `tests/_pages`. The basic PageObject is nothing more then empty class with a few stubs.
@@ -328,8 +328,8 @@ As you see, you can freely change markup of your login page, and all the tests i
 But let's move further. A PageObject concept also defines that methods for the page interaction should also be stored in a PageObject class.
 This can't be done in `LoginPage` class we just generated. Because this class is accessible across all test suites, we do not know which Actor class will be used for interaction. Thus, we will need to generate another page object. In this case we will explicitly define the suite to be used:
 
-```
-php codecept.phar generate:pageobject acceptance UserLogin
+```bash
+$ php codecept.phar generate:pageobject acceptance UserLogin
 ```
 
 *We called this class UserLogin for not to get into conflict with Login class we created before.*
@@ -391,14 +391,14 @@ The `login` method we used above can be a good example of such method. Similarly
 
 Lets create `Member` Steps class, generator will prompt you for methods to include, so let's add `login` to it.
 
-```
-php codecept.phar generate:stepobject acceptance Member
+```bash
+$ php codecept.phar generate:stepobject acceptance Member
 ```
 
 You will be asked to enter action names, but it's optional. Enter one at a time, and press Enter. After specifying all needed actions, leave empty line to go on to StepObject creation.
 
-```
-codecept.phar generate:stepobject acceptance Member
+```bash
+$ php codecept.phar generate:stepobject acceptance Member
 Add action to StepObject class (ENTER to exit): login
 Add action to StepObject class (ENTER to exit):
 StepObject was created in <you path>/tests/acceptance/_steps/MemberSteps.php
@@ -498,15 +498,15 @@ and then redefine any configuration parameters that were set before.
 
 You can easily switch between those configs by running tests with `--env` option. To run tests only for PhantomJS you need to pass `--env phantom` option:
 
- ``` bash
- php codecept.phar run acceptance --env phantom
- ```
+```bash
+$ php codecept.phar run acceptance --env phantom
+```
 
- To run tests in all 3 browsers, just list all the environments:
+To run tests in all 3 browsers, just list all the environments:
 
- ```
- php codecept.phar run acceptance --env phantom --env chrome --env firefox
- ```
+```bash
+$ php codecept.phar run acceptance --env phantom --env chrome --env firefox
+```
 
 and tests will be executed 3 times, each time in a different browser.
 
