@@ -1,6 +1,6 @@
 # Functional Tests
 
-Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: Functional tests don't require a web browser to run tests.
+Now that we've written some acceptance tests, functional tests are almost the same, with just one major difference: functional tests don't require a web server to run tests.
 
 In simple terms we set `$_REQUEST`, `$_GET` and `$_POST` variables and then we execute application from a test. This may be valuable as functional tests are faster and provide detailed stack traces on failures.
 
