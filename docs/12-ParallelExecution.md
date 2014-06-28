@@ -35,8 +35,8 @@ To conclude, we need:
 
 Execute `robo` in the root of your project
 
-```
-~/projects/my-project $ robo
+```bash
+$ robo
   RoboFile.php not found in this dir
   Should I create RoboFile here? (y/n)
 ```
@@ -85,8 +85,8 @@ class Robofile extends \Robo\Tasks
 
 If you run `robo`, you can see the respective commands:
 
-```
-~ $ robo
+```bash
+$ robo
 Robo version 0.4.4
 ---
 Available commands:
@@ -113,7 +113,7 @@ In current example we assume that we have prepared 5 databases and 5 independent
 
 Codeception can organize tests into [groups](http://codeception.com/docs/07-AdvancedUsage#Groups). Starting from 2.0 it can load information about a group from a files. Sample text file with a list of file names can be treated as a dynamically configured group. Take a look into sample group file:
 
-```
+```bash
 tests/functional/LoginCept.php
 tests/functional/AdminCest.php:createUser
 tests/functional/AdminCest.php:deleteUser
@@ -145,7 +145,7 @@ In second case `Codeception\TestLoader` class will be used and test classes will
 
 Let's prepare group files:
 
-```
+```bash
 $ robo parallel:split-groups
 
  [Codeception\Task\SplitTestFilesByGroupsTask] Processing 33 files
@@ -158,15 +158,15 @@ $ robo parallel:split-groups
 
 Now we have group files. We should update `codeception.yml` to load generated group files. In our case we have groups: *p1*, *p2*, *p3*, *p4*, *p5*.
 
-```
+```yaml
 groups:
     p*: tests/_log/p*
 ```
 
 Let's try to execute tests from the second group:
 
-```
-codecept run functional -g p2
+```bash
+$ php codecept.phar run functional -g p2
 ```
 
 ### Step 2: Running Tests
@@ -192,7 +192,7 @@ As it was mentioned, Robo has `ParallelExec` task to spawn background processes.
 
 We missed something really important. We forgot to define different databases for different processes. This can be done using [Environments](http://codeception.com/docs/07-AdvancedUsage#Environments). Let's define 5 new environments in `acceptance.suite.yml`:
 
-```
+```yaml
 class_name: AcceptanceTester
 modules:
     enabled: [WebDriver, Db]
@@ -265,8 +265,8 @@ Now we should update our `parallelRun` method to use corresponding environment:
 
 Now we can execute tests with
 
-```
-robo parallel:run
+```bash
+$ robo parallel:run
 ```
 
 ### Step 3: Merge Results
