@@ -1,6 +1,6 @@
 # Parallel Execution
 
-When test execution time is longer then a coffee break, it is a good time to think about making tests faster. If you tried to run them on SSD drive, use PhantomJS instead of Selenium, and the execution time still upsets you, it's a good time to think about running tests in parallel.
+When execution time of your tests is longer then a coffee break, it is a good reason to think about making your tests faster. If you have already tried to run them on SSD drive, or to use PhantomJS instead of Selenium, and the execution time still upsets you, it might be a good idea to run your tests in parallel.
 
 ## Where to start
 
@@ -31,7 +31,7 @@ To conclude, we need:
 
 ## Preparing Robo
 
-`Robo` is recommended to be installed globally. You can either do a global install with Composer or download `robo.phar` and put it into global executable path.
+`Robo` is recommended to be installed globally. You can either do [a global install with Composer](https://getcomposer.org/doc/03-cli.md#global) or download `robo.phar` and put it somewhere in PATH.
 
 Execute `robo` in the root of your project
 
