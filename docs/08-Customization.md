@@ -28,8 +28,7 @@ To avoid naming conflicts between Actor classes and Helper classes, they should 
 To create test suites with namespaces you can add `--namespace` option to bootstrap command.
 
 ``` bash
-php codecept.phar bootstrap --namespace frontend
-
+$ php codecept.phar bootstrap --namespace frontend
 ```
 
 This will bootstrap a new project with `namespace: frontend` parameter in `codeception.yml` file. 
@@ -45,9 +44,8 @@ $I = new AcceptanceTester($scenario);
 
 Once each of your applications (bundles) has its own namespace and different Helper or Actor classes, you can execute all tests in one runner. Run codeception tests as usual, using meta-config we created earlier:
 
-```
-php codecept.phar run
-
+```bash
+$ php codecept.phar run
 ```
 
 This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on Conitinous Integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too.
@@ -179,7 +177,7 @@ include_once '/path/to/my/MyCustomExtension.php';
 
 Then you can enable it in `codeception.yml`:
 
-```
+```yaml
 extensions:
     enabled: [MyCustomExtension]
 
@@ -191,7 +189,7 @@ In extension you can access currently passed options via `options` property.
 You also can access global config via `\Codeception\Configuration::config()` method. 
 But if you want to have custom options for your extension, you can pass them in `codeception.yml` file:
 
-```
+```yaml
 extensions:
     enabled: [MyCustomExtension]
     config:
