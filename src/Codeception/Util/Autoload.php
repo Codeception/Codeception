@@ -20,10 +20,10 @@ class Autoload
      * ``` php
      * <?php
      * // loads UserHelper in 'helpers/UserHelper.php'
-     * Autoload::register('app\Codeception\Helper','Helper', __DIR__.'/helpers/');
-     * // loads UserHelper in 'helpers/UserHelper.php'
-     * Autoload::register('app\tests','Page', __DIR__.'/pageobjects/');
-     * Autoload::register('app\tests','Controller', __DIR__.'/controllers/');
+     * Autoload::register('app\Codeception\Helper', 'Helper', __DIR__.'/helpers/');
+     * // loads LoginPage in 'pageobjects/LoginPage.php'
+     * Autoload::register('app\tests', 'Page', __DIR__.'/pageobjects/');
+     * Autoload::register('app\tests', 'Controller', __DIR__.'/controllers/');
      * ?>
      * ```
      *
