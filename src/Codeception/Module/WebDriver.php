@@ -41,7 +41,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * browser *required* - browser that would be launched
  * * host  - Selenium server host (127.0.0.1 by default)
  * * port - Selenium server port (4444 by default)
- * * restart - set to false (defualt) to share browser sesssion between tests, or set to true to create a session per test
+ * * restart - set to false (default) to share browser sesssion between tests, or set to true to create a session per test
  * * window_size - initial window size. Values `maximize` or dimensions in format `640x480` are accepted.
  * * clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
  * * wait - set the implicit wait (0 secs) by default.
