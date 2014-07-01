@@ -63,7 +63,7 @@ class GenerateSuite extends Command
 
         // generate bootstrap
         $this->save($dir . $suite . DIRECTORY_SEPARATOR . '_bootstrap.php',
-            "<?php\n// Here you can initialize variables that will for your tests\n",
+            "<?php\n// Here you can initialize variables that will be available to your tests\n",
             true
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
