@@ -65,6 +65,51 @@ As you see, Cest class have no parents like `\Codeception\TestCase\Test` or `PHP
 
 Also you can define `_failed` method in Cest class which will be called if test finishes with `error` or fails.
 
+#### Dependency Injection
+
+Codeception supports simple dependency injection for Cest classes. It means that you can specify which classes you need as constructor parameters, and Codeception will automatically create respective objects and pass them into `__construct()` method. This can be useful when working with Helpers, for example:
+
+```php
+use \AcceptanceTester;
+
+class SignUpCest
+{
+    /**
+     * @var SignUpHelper
+     */
+    protected $signUp;
+
+    /**
+     * @var NavBarHelper
+     */
+    protected $navBar;
+ 
+    public function __construct(SignUpHelper $signUp, NavBarHelper $navBar)
+    {
+        $this->signUp = $signUp;
+        $this->navBar = $navBar;
+    }
+    
+    public function signUp(AcceptanceTester $I)
+    {
+        $I->wantTo('sign up');
+ 
+        $this->navBar->click('Sign up');
+        $this->signUp->register([
+            'first_name'            => 'Joe',
+            'last_name'             => 'Jones',
+            'email'                 => 'joe@jones.com',
+            'password'              => '1234',
+            'password_confirmation' => '1234'
+        ]);
+    }
+}
+```
+
+Just make sure that all Helpers can be autoloaded.
+
+Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.) and handle parameters of primitive types with default values (like `$param = 'default'`). Of course, you are not allowed to have *cyclic dependencies*.
+
 ### Before/After Annotations
 
 You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
