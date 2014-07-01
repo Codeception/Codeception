@@ -46,6 +46,8 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoadAllTests()
     {
+        Codeception\Util\Autoload::register('Math', 'Helper', codecept_data_dir().'claypit/tests/_helpers'); // to autoload dependencies
+
         $this->testLoader = new \Codeception\TestLoader(codecept_data_dir().'claypit/tests');
         $this->testLoader->loadTests();
 
@@ -54,6 +56,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsTestName('order/AnotherCept', $testNames);
         $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
         $this->assertContainsTestName('FailingTest::testMe', $testNames);
+        $this->assertContainsTestName('MathCest::testAddition', $testNames);
     }
 
     protected  function getTestNames($tests)
