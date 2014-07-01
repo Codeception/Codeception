@@ -30,7 +30,7 @@ Acceptance tests are usually much slower than functional tests. But functional t
 #### Headers, Cookies, Sessions
 
 One of the common issues with functional tests is usage of PHP functions that deal with `headers`, `sessions`, `cookies`.
-As you know, `header` function triggers an error if it is executed more then once. In functional tests we run application multiple times, thus, we will get lots of trash errors in the result.
+As you know, `header` function triggers an error if it is executed more than once for the same header. In functional tests we run application multiple times, thus, we will get lots of trash errors in the result.
 
 #### Shared Memory
 
