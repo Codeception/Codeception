@@ -70,6 +70,7 @@ Also you can define `_failed` method in Cest class which will be called if test 
 Codeception supports simple dependency injection for Cest classes. It means that you can specify which classes you need as constructor parameters, and Codeception will automatically create respective objects and pass them into `__construct()` method. This can be useful when working with Helpers, for example:
 
 ```php
+<?php
 use \AcceptanceTester;
 
 class SignUpCest
@@ -104,6 +105,7 @@ class SignUpCest
         ]);
     }
 }
+?>
 ```
 
 Just make sure that all Helpers can be autoloaded.
