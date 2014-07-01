@@ -48,22 +48,28 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $this->testLoader = new \Codeception\TestLoader(codecept_data_dir().'claypit/tests');
         $this->testLoader->loadTests();
-        $this->assertContainsTestName('order/AnotherCept', $this->testLoader->getTests());
-        $this->assertContainsTestName('MageGuildCest::darkPower', $this->testLoader->getTests());
-        $this->assertContainsTestName('FailingTest::testMe', $this->testLoader->getTests());
+
+        $testNames = $this->getTestNames($this->testLoader->getTests());
+
+        $this->assertContainsTestName('order/AnotherCept', $testNames);
+        $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
+        $this->assertContainsTestName('FailingTest::testMe', $testNames);
     }
 
-    protected function assertContainsTestName($name, $tests)
+    protected  function getTestNames($tests)
     {
+        $testNames = [];
         foreach ($tests as $test) {
             if ($test instanceof \PHPUnit_Framework_TestCase) {
-                $testName = \Codeception\TestCase::getTestSignature($test);
-                if ($testName == $name) return;
-                codecept_debug($testName);
+                $testNames[] = \Codeception\TestCase::getTestSignature($test);
             }
         }
-        $this->fail("$name not found in tests");
+        return $testNames;
+    }
 
+    protected function assertContainsTestName($name, $testNames)
+    {
+        $this->assertNotSame(false, array_search($name, $testNames), "$name not found in tests");
     }
 
     public function testDependencyResolution()
