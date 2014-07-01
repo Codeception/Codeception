@@ -72,4 +72,36 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, count($this->testLoader->getTests()));
     }
 
+    protected function shouldFail($msg = '')
+    {
+        $this->setExpectedException('Exception', $msg);
+    }
+
+    public function testFailDependenciesCyclic()
+    {
+        $this->shouldFail('Failed to resolve cyclic dependencies for class \'FailDependenciesCyclic\IncorrectDependenciesClass\'');
+        $this->testLoader->loadTest('FailDependenciesCyclicCest.php');
+    }
+
+    public function testFailDependenciesInChain()
+    {
+        $this->shouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\' '
+            .'for class \'FailDependenciesInChain\IncorrectDependenciesClass\'');
+        $this->testLoader->loadTest('FailDependenciesInChainCest.php');
+    }
+
+    public function testFailDependenciesNonExistent()
+    {
+        $this->shouldFail('Failed to resolve dependencies for class \'FailDependenciesNonExistent\IncorrectDependenciesClass\'. '
+            .'Class FailDependenciesNonExistent\NonExistentClass does not exist');
+        $this->testLoader->loadTest('FailDependenciesNonExistentCest.php');
+    }
+
+    public function testFailDependenciesPrimitiveParam()
+    {
+        $this->shouldFail('Failed to resolve dependencies for class \'FailDependenciesPrimitiveParam\AnotherClass\'. '
+            .'Parameter \'required\' must have default value');
+        $this->testLoader->loadTest('FailDependenciesPrimitiveParamCest.php');
+    }
+
 }
