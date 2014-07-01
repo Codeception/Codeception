@@ -66,4 +66,10 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testDependencyResolution()
+    {
+        $this->testLoader->loadTest('SimpleWithDependencyInjectionCest.php');
+        $this->assertEquals(3, count($this->testLoader->getTests()));
+    }
+
 }
