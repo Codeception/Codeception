@@ -115,7 +115,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-          'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers'
+          'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
@@ -168,6 +168,16 @@ class RunCest
         $I->seeFileFound('myownhtmlreport.html', 'tests/_log');
         $I->dontSeeFileFound('report.xml','tests/_log');
         $I->dontSeeFileFound('report.html','tests/_log');
+    }
 
+    public function runTestWithDependencyInjection(\CliGuy $I)
+    {
+        $I->executeCommand('run math');
+        $I->seeInShellOutput('Trying to test addition');
+        $I->seeInShellOutput('Trying to test subtraction');
+        $I->seeInShellOutput('Trying to test square');
+        $I->seeInShellOutput('OK (');
+        $I->dontSeeInShellOutput('fail');
+        $I->dontSeeInShellOutput('error');
     }
 }
