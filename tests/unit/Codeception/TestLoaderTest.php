@@ -59,7 +59,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsTestName('MathCest::testAddition', $testNames);
     }
 
-    protected  function getTestNames($tests)
+    protected function getTestNames($tests)
     {
         $testNames = [];
         foreach ($tests as $test) {
