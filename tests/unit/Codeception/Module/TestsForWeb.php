@@ -128,6 +128,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('agree', $form['terms']);
     }
 
+    /**
+     * @group testCheckboxArray
+     */
+    public function testCheckboxArray()
+    {
+        $this->module->amOnPage('/form/checkbox_array');
+        $this->module->checkOption('#id2');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('second', $form['field'][1]);
+    }
+
     public function testSelectByCss()
     {
         $this->module->amOnPage('/form/select');

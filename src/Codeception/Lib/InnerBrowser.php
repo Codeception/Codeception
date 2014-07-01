@@ -446,7 +446,8 @@ class InnerBrowser extends Module implements Web
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $name = $field->attr('name');
-        if (strpos($name, '[]') == (strlen($name) - 2)) {
+        // If the name is an array than we compare objects to find right checkbox
+        if ((substr($name, -2) == '[]')) {
             $name = rtrim($name, '[]');
             $checkbox = new ChoiceFormField($field->getNode(0));
             /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
@@ -464,7 +465,8 @@ class InnerBrowser extends Module implements Web
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $name = $field->attr('name');
-        if (strpos($name, '[]') == (strlen($name) - 2)) {
+        // If the name is an array than we compare objects to find right checkbox
+        if ((substr($name, -2) == '[]')) {
             $name = rtrim($name, '[]');
             $checkbox = new ChoiceFormField($field->getNode(0));
             /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
