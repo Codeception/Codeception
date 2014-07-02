@@ -218,7 +218,7 @@ You can check that you didn't accidentally sent the same header twice.
 ``` php
 <?php
 $I->seeHttpHeaderOnce('Cache-Control');
-?>>
+?>
 ```
 
  * `param`  $name
