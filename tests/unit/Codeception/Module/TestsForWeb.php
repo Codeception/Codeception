@@ -164,12 +164,19 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('adult', $form['age']);
     }
-    
+
     public function testSeeSelectedOption()
     {
         $this->module->amOnPage('/form/select');
         $this->module->seeOptionIsSelected('#age', '60-100');
         $this->module->dontSeeOptionIsSelected('#age', '100-210');
+    }
+
+    public function testSeeSelectedOptionForRadioButton()
+    {
+        $this->module->amOnPage('/form/example6');
+        $this->module->seeOptionIsSelected('input[name=frequency]', 'hour');
+        $this->module->dontSeeOptionIsSelected('input[name=frequency]', 'week');
     }
 
     public function testSelectMultipleOptionsByText()
