@@ -205,6 +205,7 @@ class TestLoader {
         }
         $test->initConfig();
         $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
+        $this->di->injectDependencies($test);
     }
 
     protected function createTestFromCestMethod($cestInstance, $methodName, $file)
