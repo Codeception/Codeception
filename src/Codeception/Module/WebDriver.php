@@ -768,6 +768,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->findField($field);
         // in order to be compatible on different OS
         $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        // in order for remote upload to be enabled
+        $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);
     }
 
