@@ -640,6 +640,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('Hello!', $form['text']);
     }
+
+    /**
+     * @issue #1180
+     */
+    public function testClickLinkWithInnerSpan()
+    {
+        $this->module->amOnPage('/form/example7');
+        $this->module->click("Buy Chocolate Bar");
+        $this->module->seeCurrentUrlEquals('/');
+    }
     
     protected function shouldFail()
     {
