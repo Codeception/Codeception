@@ -376,14 +376,19 @@ class InnerBrowser extends Module implements Web
         $form[$input->attr('name')] = $value;
     }
 
-    protected function getFieldByLabelOrCss($field)
+    /**
+     * @param $field
+     *
+     * @return \Symfony\Component\DomCrawler\Crawler
+     */
+    protected function getFieldsByLabelOrCss($field)
     {
         if (is_array($field)) {
             $input = $this->strictMatch($field);
             if (!count($input)) {
                 throw new ElementNotFound($field);
             }
-            return $input->first();
+            return $input;
         }
 
         // by label
@@ -408,6 +413,13 @@ class InnerBrowser extends Module implements Web
         if (!count($input)) {
             throw new ElementNotFound($field, 'Form field by Label or CSS');
         }
+
+        return $input;
+    }
+
+    protected function getFieldByLabelOrCss($field)
+    {
+        $input = $this->getFieldsByLabelOrCss($field);
         return $input->first();
     }
 
@@ -730,7 +742,9 @@ class InnerBrowser extends Module implements Web
     {
         $selected = $this->matchSelectedOption($select);
         $this->assertDomContains($selected, 'selected option');
-        $this->assertEquals($optionText, $selected->text());
+        //If element is radio then we need to check value
+        $value = $selected->getNode(0)->tagName == 'option' ? $selected->text() : $selected->getNode(0)->getAttribute('value');
+        $this->assertEquals($optionText, $value);
     }
 
     public function dontSeeOptionIsSelected($select, $optionText)
@@ -740,13 +754,15 @@ class InnerBrowser extends Module implements Web
             $this->assertEquals(0, $selected->count());
             return;
         }
-        $this->assertNotEquals($optionText, $selected->text());
+         //If element is radio then we need to check value
+        $value = $selected->getNode(0)->tagName == 'option' ? $selected->text() : $selected->getNode(0)->getAttribute('value');
+        $this->assertNotEquals($optionText, $value);
     }
 
     protected function matchSelectedOption($select)
     {
-        $nodes = $this->getFieldByLabelOrCss($select);
-        return $nodes->first()->filter('option[selected]');
+        $nodes = $this->getFieldsByLabelOrCss($select);
+        return $nodes->filter('option[selected],input:checked');
     }
 
     /**
