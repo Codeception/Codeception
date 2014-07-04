@@ -2,6 +2,7 @@
 
 #### 2.0.2
 
+* [InnerBrowser] FIX: selectOption and dontSelectOption now works with radio buttons by @TrustNik *2014-07-05*
 * [FTP] MODULE ADDED by @nathanmac *2014-07-05*
 * [WebDriver] Enabled remote upload of local files to remote selenium server by @motin *2014-07-05*
 * [Yii2][Yii1] disabled logging for better functional test performance
