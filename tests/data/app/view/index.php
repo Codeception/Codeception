@@ -20,5 +20,7 @@
 
 A wise man said: "debug!"
 
+<?php print_r($_POST); ?>
+
 </body>
 </html>

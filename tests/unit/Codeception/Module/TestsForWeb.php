@@ -130,6 +130,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     /**
      * @group testCheckboxArray
+     * @Issue https://github.com/Codeception/Codeception/pull/1145
      */
     public function testCheckboxArray()
     {
@@ -137,7 +138,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->checkOption('#id2');
         $this->module->click('Submit');
         $form = data::get('form');
-        $this->assertEquals('second', $form['field'][1]);
+        $this->assertEquals('second', reset($form['field']));
     }
 
     public function testSelectByCss()
