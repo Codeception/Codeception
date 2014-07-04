@@ -374,23 +374,35 @@ class RoboFile extends \Robo\Tasks {
             $url = substr($url, 0, -3);
             $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
             $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
-            $guides_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+            $guides_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
-
         file_put_contents('_includes/guides.html', $guides_list);
 
+        /**
+         * Align modules in two columns like this:
+         * A D
+         * B E
+         * C
+         */
+        $modules_cols = 2;
+        $modules_rows = ceil(count($modules) / $modules_cols);
+        $module_names_chunked = array_chunk(array_keys($modules), $modules_rows);
         $modules_list = '';
-        foreach ($modules as $name => $url) {
-            $url = substr($url, 0, -3);
-            $modules_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+        for ($i = 0; $i < $modules_rows; $i++) {
+            for ($j = 0; $j < $modules_cols; $j++) {
+                if (isset($module_names_chunked[$j][$i])) {
+                    $name = $module_names_chunked[$j][$i];
+                    $url = substr($modules[$name], 0, -3);
+                    $modules_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
+                }
+            }
         }
-
         file_put_contents('_includes/modules.html', $modules_list);
 
         $reference_list = '';
         foreach ($reference as $name => $url) {
             $url = substr($url, 0, -3);
-            $reference_list.= '<li><a href="'.$url.'">'.$name.'</a></li>';
+            $reference_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/reference.html', $reference_list);
 
