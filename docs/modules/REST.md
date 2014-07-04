@@ -29,7 +29,7 @@ This module requires PHPBrowser or any of Framework modules enabled.
     modules:
        enabled: [PhpBrowser, REST]
        config:
-          PHPBrowser:
+          PhpBrowser:
              url: http://serviceapp/
           REST:
              url: 'http://serviceapp/api/v1/'
