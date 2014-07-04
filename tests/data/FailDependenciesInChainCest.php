@@ -3,7 +3,7 @@ namespace FailDependenciesInChain;
 
 class IncorrectDependenciesClass
 {
-    public function __construct(AnotherClass $a) {}
+    public function _inject(AnotherClass $a) {}
 }
 
 class AnotherClass

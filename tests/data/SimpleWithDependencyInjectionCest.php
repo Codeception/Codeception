@@ -5,7 +5,8 @@ namespace simpleDI {
 
     class LoadedTestWithDependencyInjection
     {
-        public function __construct(Needed $a) {}
+        public function __construct($optional = 'abc') {}
+        public function _inject(Needed $a) {}
         public function testOne() {}
         public function testTwo() {}
     }
@@ -25,7 +26,7 @@ namespace simpleDI {
 namespace simpleDIHelpers {
     class NeededHelper
     {
-        public function __construct(AnotherHelper $a, YetAnotherHelper $b, $optionalParam = 123) {}
+        public function _inject(AnotherHelper $a, YetAnotherHelper $b, $optionalParam = 123) {}
         public function testSome() {}
     }
 

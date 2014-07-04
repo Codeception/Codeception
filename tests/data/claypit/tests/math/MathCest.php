@@ -10,7 +10,7 @@ class MathCest
      */
     protected $calc;
 
-    public function __construct(Calc $calc)
+    protected function _inject(Calc $calc)
     {
         $this->calc = $calc;
     }

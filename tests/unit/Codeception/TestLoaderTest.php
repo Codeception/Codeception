@@ -63,6 +63,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
         $this->assertContainsTestName('FailingTest::testMe', $testNames);
         $this->assertContainsTestName('MathCest::testAddition', $testNames);
+        $this->assertContainsTestName('MathTest::testAll', $testNames);
     }
 
     protected function getTestNames($tests)
@@ -100,22 +101,19 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
 
     public function testFailDependenciesInChain()
     {
-        $this->shouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\' '
-            .'for class \'FailDependenciesInChain\IncorrectDependenciesClass\'');
+        $this->shouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
         $this->testLoader->loadTest('FailDependenciesInChainCest.php');
     }
 
     public function testFailDependenciesNonExistent()
     {
-        $this->shouldFail('Failed to resolve dependencies for class \'FailDependenciesNonExistent\IncorrectDependenciesClass\'. '
-            .'Class FailDependenciesNonExistent\NonExistentClass does not exist');
+        $this->shouldFail('Class FailDependenciesNonExistent\NonExistentClass does not exist');
         $this->testLoader->loadTest('FailDependenciesNonExistentCest.php');
     }
 
     public function testFailDependenciesPrimitiveParam()
     {
-        $this->shouldFail('Failed to resolve dependencies for class \'FailDependenciesPrimitiveParam\AnotherClass\'. '
-            .'Parameter \'required\' must have default value');
+        $this->shouldFail('Parameter \'required\' must have default value');
         $this->testLoader->loadTest('FailDependenciesPrimitiveParamCest.php');
     }
 

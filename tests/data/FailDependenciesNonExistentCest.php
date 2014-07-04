@@ -3,5 +3,5 @@ namespace FailDependenciesNonExistent;
 
 class IncorrectDependenciesClass
 {
-    public function __construct(NonExistentClass $a) {}
+    public function _inject(NonExistentClass $a) {}
 }

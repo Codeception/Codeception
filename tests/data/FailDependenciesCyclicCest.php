@@ -3,10 +3,10 @@ namespace FailDependenciesCyclic;
 
 class IncorrectDependenciesClass
 {
-    public function __construct(AnotherClass $a) {}
+    public function _inject(AnotherClass $a) {}
 }
 
 class AnotherClass
 {
-    public function __construct(IncorrectDependenciesClass $a) {}
+    public function _inject(IncorrectDependenciesClass $a) {}
 }
