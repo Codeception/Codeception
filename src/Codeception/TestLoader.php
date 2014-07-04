@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Lib\Parser;
+use Codeception\Lib\Di;
 use Codeception\TestCase\Cept;
 use Codeception\TestCase\Cest;
 use Codeception\Util\Annotation;
@@ -43,11 +44,11 @@ class TestLoader {
     protected static $formats = array('Cest', 'Cept', 'Test');
     protected $tests = [];
     protected $path;
-    protected $container = [];
 
     public function __construct($path)
     {
         $this->path = $path;
+        $this->di = new Di;
     }
 
     public function getTests()
@@ -158,7 +159,7 @@ class TestLoader {
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-            $unit = $this->instantiate($testClass);
+            $unit = $this->di->instantiate($testClass);
             if (!$unit) {
                 continue;
             }
@@ -225,53 +226,4 @@ class TestLoader {
         return $cest;
     }
 
-    protected function instantiate($className)
-    {
-        if (isset($this->container[$className])) {
-            if ($this->container[$className] instanceof $className) {
-                return $this->container[$className];
-            } else {
-                throw new \Exception("Failed to resolve cyclic dependencies for class '$className'");
-            }
-        }
-        $this->container[$className] = false;
-
-        $reflected = new \ReflectionClass($className);
-        if (!$reflected->isInstantiable()) {
-            return null;
-        }
-
-        $constructor = $reflected->getConstructor();
-        if (is_null($constructor)) {
-            $unit = new $className;
-        } else {
-            $args = [];
-            try {
-                $parameters = $constructor->getParameters();
-                foreach ($parameters as $parameter) {
-                    $dependency = $parameter->getClass();
-                    if (is_null($dependency)) {
-                        if (!$parameter->isOptional()) {
-                            throw new \Exception("Failed to resolve dependencies for class '$className'. Parameter '$parameter->name' must have default value");
-                        }
-                        $args[] = $parameter->getDefaultValue();
-                    } else {
-                        $arg = $this->instantiate($dependency->name);
-                        if (is_null($arg)) {
-                            throw new \Exception("Failed to resolve dependency '{$dependency->name}' for class '$className'");
-                        }
-                        $args[] = $arg;
-                    }
-                }
-            } catch (\ReflectionException $e) {
-                throw new \Exception("Failed to resolve dependencies for class '$className'. ".$e->getMessage());
-            }
-            $unit = $reflected->newInstanceArgs($args);
-        }
-
-        $this->container[$className] = $unit;
-        return $unit;
-    }
-
-
-} 
+}
