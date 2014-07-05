@@ -82,6 +82,9 @@ class REST extends \Codeception\Module
                 $this->client = &$this->getModule('PhpBrowser')->client;
             }
         }
+        if($this->isFunctional) {
+            $this->client->setServerParameters(array());
+        }
 
         $this->headers = array();
         $this->params = array();
