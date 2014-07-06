@@ -2,6 +2,7 @@
 
 #### 2.0.2
 
+* [REST] fixed connection with framework modules *2014-07-06*
 * [InnerBrowser] FIX: selectOption and dontSelectOption now works with radio buttons by @TrustNik *2014-07-05*
 * [FTP] MODULE ADDED by @nathanmac *2014-07-05*
 * [WebDriver] Enabled remote upload of local files to remote selenium server by @motin *2014-07-05*
