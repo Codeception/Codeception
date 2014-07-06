@@ -96,6 +96,10 @@ class RoboFile extends \Robo\Tasks {
             ->background()
             ->run();
 
+        $this->taskServer(8010)
+            ->background()
+            ->dir('tests/data/rest')
+            ->run();
         $this->taskServer(8000)
             ->dir('tests/data/app')
             ->run();

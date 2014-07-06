@@ -19,12 +19,11 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $url = 'http://localhost:8010';
         $this->phpBrowser->_setConfig(array('url' => $url));
         $this->phpBrowser->_initialize();
-        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
 
-        $this->module = new \Codeception\Module\REST();
+        $this->module = Stub::make('\Codeception\Module\REST', ['getModules' => [$this->phpBrowser]]);
         $this->module->_initialize();
-        $this->module->client = $this->phpBrowser->client;
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
 
     }
 
