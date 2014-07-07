@@ -62,6 +62,8 @@ class REST extends \Codeception\Module
     public $params = array();
     public $response = "";
 
+    protected $simpleXmlResponse;
+
     public function _before(\Codeception\TestCase $test)
     {
         if (!$this->client) {
@@ -436,18 +438,24 @@ class REST extends \Codeception\Module
     public function seeResponseIsXml()
     {
         libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($this->response);
-        $num="";
-        $title="";
-        if ($doc===false) {
+
+        $doc   = $this->getSimpleXmlResponse();
+        $num   = "";
+        $title = "";
+
+        if ($doc === false) {
             $error = libxml_get_last_error();
-            $num=$error->code;
-            $title=trim($error->message);
+            $num   = $error->code;
+            $title = trim($error->message);
+
             libxml_clear_errors();
         }
+
         libxml_use_internal_errors(false);
-        \PHPUnit_Framework_Assert::assertNotSame(false,
-            $doc ,
+
+        \PHPUnit_Framework_Assert::assertNotSame(
+            false,
+            $doc,
             "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
         );
     }
@@ -501,9 +509,56 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON contains provided\n"
-            ."- ".print_r($json, true)
-            ."+ ".print_r($resp_json, true)
+            ."- " . print_r($json, true)
+            ."+ " . print_r($resp_json, true)
         );
+    }
+
+    /**
+     * Checks whether the last XML response contains provided xpath.
+     *
+     * Examples:
+     *
+     * XML:
+     * <?xml version="1.0"?>
+     * <api_data>
+     *     <message>OK</message>
+     *     <status>200</status>
+     *     <data>
+     *         <name>John</name>
+     *         <email>john@gmail.com</email>
+     *     </data>
+     * </api_data>
+     *
+     * ``` php
+     * <?php
+     * $I->seeResponseContainsXml('/api_data[message="OK"]'');
+     *
+     * $I->seeResponseContainsXml(array('/api_data/data[name="john"]', '/api_data/data[email="john@gmail.com"]'));
+     * ?>
+     * ```
+     *
+     * This method recursively checks if one array can be found inside of another.
+     *
+     * @param array $xpathRules
+     */
+    public function seeResponseContainsXml($xpathRules)
+    {
+        if (!is_array($xpathRules)) {
+            $xpathRules = array($xpathRules);
+        }
+
+        $simpleXml = $this->getSimpleXmlResponse();
+
+        foreach ($xpathRules as $xpathRule) {
+            $xpath = $simpleXml->xpath($xpathRule);
+
+            \PHPUnit_Framework_Assert::assertNotEmpty($xpath,
+                "Response XML contains provided\n"
+                . "- " . print_r($xpathRule, true) . "\n"
+                . "+ " . print_r($this->response, true)
+            );
+        }
     }
 
     /**
@@ -660,4 +715,12 @@ class REST extends \Codeception\Module
         $this->assertNotEquals($code, $this->client->getInternalResponse()->getStatus());
     }
 
+    protected function getSimpleXmlResponse()
+    {
+        if (empty($this->simpleXmlResponse)) {
+            $this->simpleXmlResponse = simplexml_load_string($this->response);
+        }
+
+        return $this->simpleXmlResponse;
+    }
 }
