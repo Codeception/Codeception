@@ -334,9 +334,12 @@ class Console implements EventSubscriberInterface
     {
         if (strpos($action, "don't") === 0) {
             $action = substr($action, 6);
-            $this->output->writeln("Sorry, I unexpectedly managed to $action:\n$failToString");
+            $this->output->writeln("Unexpectedly managed to $action:\n$failToString");
+        } elseif (strpos($action, 'am ') === 0) {
+            $action = substr($action, 3);
+            $this->output->writeln("Can't be $action:\n$failToString");
         } else {
-            $this->output->writeln("Sorry, I couldn't $action:\n$failToString");
+            $this->output->writeln("Couldn't $action:\n$failToString");
         }
     }
 
