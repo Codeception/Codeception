@@ -364,7 +364,19 @@ class InnerBrowser extends Module implements Web
             $submit->setAttribute('name', 'codeception_added_auto_submit');
 
             // Symfony2.1 DOM component requires name for each field.
-            $form = $form->filter('*[type=submit]')->form();
+            $formSubmits = $form->filter('*[type=submit]');
+            $values = null;
+            // If there are more than one submit (+1 auto_added) in one form we should add value of actually clicked one
+            if ($formSubmits->count() > 2) {
+                $nodeItem = $node->getNode(0);
+                foreach ($formSubmits as $formSubmit) {
+                    if ($formSubmit == $nodeItem) {
+                        $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
+                        break;
+                    }
+                }
+            }
+            $form = $formSubmits->form($values);
             $this->forms[$action] = $form;
         }
         return $this->forms[$action];
