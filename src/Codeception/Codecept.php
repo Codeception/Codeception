@@ -96,9 +96,9 @@ class Codecept
 
     protected function loadExtensions($options)
     {
-        $config = Configuration::config();
+        $this->config = Configuration::config();
         // custom event listeners
-        foreach ($config['extensions']['enabled'] as $extension) {
+        foreach ($this->config['extensions']['enabled'] as $extension) {
             if (!class_exists($extension)) {
                 throw new ConfigurationException("Class $extension not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
             }
