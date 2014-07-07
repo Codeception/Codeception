@@ -192,6 +192,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeOptionIsSelected('input[name=frequency]', 'week');
     }
 
+    /**
+     * @group testSubmitSeveralSubmitsForm
+     * @Issue https://github.com/Codeception/Codeception/issues/1183
+     */
+    public function testSubmitSeveralSubmitsForm()
+    {
+        $this->module->amOnPage('/form/example8');
+        $this->module->click('form button[value="second"]');
+        $form = data::get('form');
+        $this->assertEquals('second', $form['submit']);
+    }
+
     public function testSelectMultipleOptionsByText()
     {
         $this->module->amOnPage('/form/select_multiple');
