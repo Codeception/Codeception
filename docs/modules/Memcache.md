@@ -1,6 +1,6 @@
 # Memcache Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php)**
 
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
@@ -108,4 +108,4 @@ Checks item in Memcached exists and the same as expected.
  * `param` $key
  * `param` $value
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php">Help us improve documentation. Edit module reference</a>

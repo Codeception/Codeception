@@ -1,6 +1,6 @@
 # Symfony1 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony1.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony1.php)**
 
 
 Module that interacts with Symfony 1.4 applications.
@@ -57,7 +57,7 @@ Only name of user should be provided.
 Fetches user by it's username from sfGuardUser table.
 
  * `param` $name
-@throws \Exception
+ \Exception
 
 
 ### amOnPage
@@ -334,4 +334,4 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
  * `param` $selector
  * `param` $params
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony1.php">Help us improve documentation. Edit module reference</a>

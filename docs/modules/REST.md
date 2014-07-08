@@ -1,6 +1,6 @@
 # REST Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/REST.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/REST.php)**
 
 
 Module for testing REST WebService.
@@ -39,6 +39,7 @@ This module requires PHPBrowser or any of Framework modules enabled.
 * headers - array of headers going to be sent.
 * params - array of sent data
 * response - last response (string)
+
 
 
 
@@ -203,6 +204,7 @@ Sets HTTP header
 
  * `param` $name
  * `param` $value
+
 
 
 
@@ -375,4 +377,4 @@ Sends UNLINK request to given uri.
 @author samva.ua@gmail.com
 
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/REST.php">Help us improve documentation. Edit module reference</a>

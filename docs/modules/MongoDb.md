@@ -1,6 +1,6 @@
 # MongoDb Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php)**
 
 
 Works with MongoDb database.
@@ -142,4 +142,4 @@ $I->seeInCollection('users', array('name' => 'miles'));
  * `param` $collection
  * `param array` $criteria
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us improve documentation. Edit module reference</a>

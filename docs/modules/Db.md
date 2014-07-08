@@ -1,6 +1,6 @@
 # Db Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php)**
 
 
 Works with SQL database.
@@ -162,7 +162,6 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
  * `param`       $column
  * `param array` $criteria
 
-@return mixed
 
 
 
@@ -208,4 +207,4 @@ Fails if no such user found.
  * `param`       $table
  * `param array` $criteria
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php">Help us improve documentation. Edit module reference</a>

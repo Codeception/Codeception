@@ -1,6 +1,6 @@
 # WebDriver Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/WebDriver.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/WebDriver.php)**
 
 
 New generation Selenium2 module.
@@ -28,12 +28,12 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
 * url *required* - start url for your app
 * browser *required* - browser that would be launched
-* host  - Selenium server host (localhost by default)
+* host  - Selenium server host (127.0.0.1 by default)
 * port - Selenium server port (4444 by default)
-* restart - set to false to share browser sesssion between tests, or set to true (by default) to create a session per test
+* restart - set to false (default) to share browser sesssion between tests, or set to true to create a session per test
 * window_size - initial window size. Values `maximize` or dimensions in format `640x480` are accepted.
-* clear_cookies - set to false to keep cookies (not default), or set to true to delete all cookies between cases.
-* wait - set the implicit wait (5 secs) by default.
+* clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
+* wait - set the implicit wait (0 secs) by default.
 * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
 
 ### Example (`acceptance.suite.yml`)
@@ -133,7 +133,6 @@ $I->amOnPage('/');
 
  * `param` $subdomain
 
-@return mixed
 
 
 ### appendField
@@ -150,7 +149,7 @@ $I->appendField('#myTextField', 'appended');
 
  * `param string` $field
  * `param string` $value
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 
@@ -251,7 +250,7 @@ $I->click(['link' => 'Login']);
 Performs contextual click with right mouse button on element matched by CSS or XPath.
 
  * `param` $cssOrXPath
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 
@@ -299,7 +298,6 @@ Checks that cookie doesn't exist
 
  * `param` $cookie
 
-@return mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -400,7 +398,6 @@ Checks that page title does not contain text.
 
  * `param` $title
 
-@return mixed
 
 
 ### dontSeeLink
@@ -433,7 +430,6 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-@return mixed
 
 
 ### doubleClick
@@ -441,7 +437,7 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Performs a double click on element matched by CSS or XPath.
 
  * `param` $cssOrXPath
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 ### dragAndDrop
@@ -481,7 +477,6 @@ If Codeception lacks important Selenium methods implement then and submit patche
 Executes custom JavaScript
 
  * `param` $script
-@return mixed
 
 
 
@@ -529,7 +524,6 @@ $I->grabAttributeFrom('#tooltip', 'title');
  * `param` $cssOrXpath
  * `param` $attribute
  * `internal param` $element
-@return mixed
 
 
 ### grabCookie
@@ -538,7 +532,6 @@ Grabs a cookie value.
 
  * `param` $cookie
 
-@return mixed
 
 
 ### grabFromCurrentUrl
@@ -556,7 +549,6 @@ $uri = $I->grabFromCurrentUrl();
  * `param null` $uri
 
  * `internal param` $url
-@return mixed
 
 
 ### grabTextFrom
@@ -576,7 +568,6 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
  * `param` $cssOrXPathOrRegex
 
-@return mixed
 
 
 ### grabValueFrom
@@ -597,20 +588,19 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
  * `param` $field
 
-@return mixed
 
 
 
 
 ### makeScreenshot
  
-Makes a screenshot of current window and saves it to `tests/_log/debug`.
+Makes a screenshot of current window and saves it to `tests/_output/debug`.
 
 ``` php
 <?php
 $I->amOnPage('/user/edit');
 $I->makeScreenshot('edit_page');
-// saved to: tests/_log/debug/edit_page.png
+// saved to: tests/_output/debug/edit_page.png
 ?>
 ```
 
@@ -646,7 +636,7 @@ https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/mov
  * `param int` $offsetX
  * `param int` $offsetY
 
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 @return null
 
 
@@ -680,7 +670,7 @@ $I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
 
  * `param` $element
  * `param` $char can be char or array with modifier. You can provide several chars.
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 ### reloadPage
@@ -694,7 +684,6 @@ Unsets cookie
 
  * `param` $cookie
 
-@return mixed
 
 
 ### resizeWindow
@@ -756,7 +745,6 @@ Checks that cookie is set.
 
  * `param` $cookie
 
-@return mixed
 
 
 ### seeCurrentUrlEquals
@@ -884,7 +872,6 @@ $I->seeInTitle('Blog - Post #1');
 
  * `param` $title
 
-@return mixed
 
 
 ### seeLink
@@ -918,7 +905,6 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
-@return mixed
 
 
 ### selectOption
@@ -954,7 +940,6 @@ Sets a cookie.
  * `param` $cookie
  * `param` $value
 
-@return mixed
 
 
 ### submitForm
@@ -994,7 +979,7 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
 
  * `param` $selector
  * `param` $params
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 ### switchToIFrame
@@ -1087,7 +1072,7 @@ __not documented__
 Explicit wait.
 
  * `param int` $timeout secs
-@throws \Codeception\Exception\TestRuntime
+ \Codeception\Exception\TestRuntime
 
 
 ### waitForElement
@@ -1104,7 +1089,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
-@throws \Exception
+ \Exception
 
 
 ### waitForElementChange
@@ -1123,7 +1108,7 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
  * `param` $element
  * `param \Closure` $callback
  * `param int` $timeout seconds
-@throws \Codeception\Exception\ElementNotFound
+ \Codeception\Exception\ElementNotFound
 
 
 ### waitForElementNotVisible
@@ -1139,7 +1124,7 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
 
  * `param` $element
  * `param int` $timeout seconds
-@throws \Exception
+ \Exception
 
 
 ### waitForElementVisible
@@ -1156,7 +1141,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
-@throws \Exception
+ \Exception
 
 
 ### waitForJS
@@ -1191,6 +1176,6 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param string` $text
  * `param int` $timeout seconds
  * `param null` $selector
-@throws \Exception
+ \Exception
  * `internal param string` $element
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/WebDriver.php">Help us improve documentation. Edit module reference</a>

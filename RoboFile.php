@@ -193,10 +193,12 @@ class RoboFile extends \Robo\Tasks {
         foreach ($modules as $module) {
             $moduleName = basename(substr($module, 0, -4));
             $className = '\Codeception\Module\\' . $moduleName;
+            $source = "https://github.com/Codeception/Codeception/tree/".self::STABLE_BRANCH."/src/Codeception/Module/$moduleName.php";
 
             $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
                 ->docClass($className)
-                ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/$moduleName.php)**")
+                ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source]($source)**")
+                ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a>')
                 ->processClassSignature(false)
                 ->processProperty(false)
                 ->filterMethods(function(\ReflectionMethod $method) {
@@ -208,6 +210,8 @@ class RoboFile extends \Robo\Tasks {
                     $title = "\n### {$method->name}\n";
                     if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
+                    $text = preg_replace('~@throws(.*?)~', '', $text);
+                    $text = str_replace("@return mixed\n", '', $text);
                     $text = str_replace(array("\n @"), array("\n * "), $text);
                     return $title . $text;
                 })->processMethodSignature(false)
@@ -223,15 +227,17 @@ class RoboFile extends \Robo\Tasks {
 
         foreach ($utils as $utilName) {
             $className = '\Codeception\Util\\' . $utilName;
+            $source = "https://github.com/Codeception/Codeception/blob/".self::STABLE_BRANCH."/src/Codeception/Util/$utilName.php";
 
             $this->taskGenDoc('docs/reference/' . $utilName . '.md')
                 ->docClass($className)
+                ->append('<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a>')
                 ->processClassDocBlock(function(ReflectionClass $r, $text) {
                     return $text . "\n";
                 })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName) {
                     $line = $r->getStartLine();
                     $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
-                    $text .= "\n[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/$utilName.php#L$line)";
+                    $text .= "\n[See source]($source#L$line)";
                     return "\n" . $text."\n";
                 })
                 ->reorderMethods('ksort')
@@ -369,6 +375,8 @@ class RoboFile extends \Robo\Tasks {
                 $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
+            $doc .= '<p>&nbsp;</p><div class="alert alert-warning">Docs are incomplete? Outdated? Or you just found a typo? <a href="https://github.com/Codeception/Codeception/tree/'.self::STABLE_BRANCH.'/docs">Help us to improve documentation. Edit it on GitHub</a>';
+
             file_put_contents('docs/'.$filename, $doc);
         }
 

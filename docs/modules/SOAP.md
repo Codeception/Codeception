@@ -1,6 +1,6 @@
 # SOAP Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/SOAP.php)**
 
 
 Module for testing SOAP WSDL web services.
@@ -279,4 +279,4 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
  * `param` $body
 
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/SOAP.php">Help us improve documentation. Edit module reference</a>

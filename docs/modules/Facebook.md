@@ -1,6 +1,6 @@
 # Facebook Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Facebook.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Facebook.php)**
 
 
 Provides testing for projects integrated with Facebook API.
@@ -160,7 +160,7 @@ Get facebook test user be created.
  
 Get facebook test user be logged in on facebook.
 
-@throws ModuleConfigException
+ ModuleConfigException
 
 
 
@@ -172,4 +172,4 @@ Please, note that you must have publish_stream permission to be able to publish 
 
  * `param string` $placeId Place identifier to be verified against user published posts
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Facebook.php">Help us improve documentation. Edit module reference</a>

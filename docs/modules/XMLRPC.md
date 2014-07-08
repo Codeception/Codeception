@@ -1,6 +1,6 @@
 # XMLRPC Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/XMLRPC.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/XMLRPC.php)**
 
 
 Module for testing XMLRPC WebService.
@@ -114,4 +114,4 @@ Sends a XMLRPC method call to remote XMLRPC-server.
  * `param string` $methodName
  * `param array` $parameters
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/XMLRPC.php">Help us improve documentation. Edit module reference</a>

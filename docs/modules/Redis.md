@@ -1,6 +1,6 @@
 # Redis Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Redis.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Redis.php)**
 
 
 Works with Redis database.
@@ -81,4 +81,4 @@ Cleans up Redis database.
 
 
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Redis.php">Help us improve documentation. Edit module reference</a>

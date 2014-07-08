@@ -1,6 +1,6 @@
 # FTP Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/FTP.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/FTP.php)**
 
 
 
@@ -14,13 +14,14 @@ option to your chosen path.
 Don't forget to create the folder and ensure its writable.
 
 Supported and tested FTP types are:
+
 * FTP
 * SFTP
 
 Connection uses php build in FTP client for FTP, connection to SFTP uses [phpseclib](http://phpseclib.sourceforge.net/) pulled in using composer.
 
 For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
-```json
+```
 "require": {
  "phpseclib/phpseclib": "0.3.6"
 }
@@ -52,7 +53,7 @@ For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
     modules:
        enabled: [FTP]
        config:
-          Db:
+          FTP:
              type: ftp
              host: '127.0.0.1'
              port: 21
@@ -68,7 +69,7 @@ For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
     modules:
        enabled: [FTP]
        config:
-          Db:
+          FTP:
              type: sftp
              host: '127.0.0.1'
              port: 22
@@ -270,7 +271,7 @@ Grabber method for returning file/folders listing in an array
 ```php
 <?php
 $files = $I->grabFileList();
-$count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
+$count = $I->grabFileList('TEST', false); // Include . .. .thumbs.db
 ?>
 ```
 
@@ -413,7 +414,7 @@ DOES NOT OPEN the file when it's exists
 $I->seeFileFound('UserModel.php','app/models');
 ?>
 ```
-it
+
  * `param` $filename
  * `param string` $path
 
@@ -427,6 +428,7 @@ DOES NOT OPEN the file when it's exists
 <?php
 $I->seeFileFoundMatches('/^UserModel_([0-9]{6}).php$/','app/models');
 ?>
+```
 
  * `param` $regex
  * `param string` $path
@@ -462,4 +464,4 @@ $I->writeToFile('composer.json', 'some data here');
 
  * `param` $filename
  * `param` $contents
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/FTP.php">Help us improve documentation. Edit module reference</a>

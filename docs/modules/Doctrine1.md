@@ -1,6 +1,6 @@
 # Doctrine1 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine1.php)**
 
 
 Performs DB operations with Doctrine ORM 1.x
@@ -95,7 +95,6 @@ $mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
  * `param` $model
  * `param` $column
  * `param array` $values
-@return mixed
 
 
 
@@ -118,4 +117,4 @@ $I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
  * `param` $model
  * `param array` $values
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine1.php">Help us improve documentation. Edit module reference</a>

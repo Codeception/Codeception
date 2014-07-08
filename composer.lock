@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "7003ba7ce50930a952f6b99ddeb4880a",
+    "hash": "29f4a38e088bf6a6b810494d5f061025",
     "packages": [
         {
             "name": "facebook/webdriver",
@@ -165,16 +165,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "2.0.8",
+            "version": "2.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca"
+                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/58401826c8cfc8fd689b60026e91c337df374bca",
-                "reference": "58401826c8cfc8fd689b60026e91c337df374bca",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/ed8ac99ce38c3fd134128c898f7ca74665abef7f",
+                "reference": "ed8ac99ce38c3fd134128c898f7ca74665abef7f",
                 "shasum": ""
             },
             "require": {
@@ -226,7 +226,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2014-05-26 14:55:24"
+            "time": "2014-06-29 08:14:40"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -487,16 +487,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "1a894a16b6c15fcdc5ef2b110f0e6233952c9b0f"
+                "reference": "7878b9c41edb3afab92b85edf5f0981014a2713a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/1a894a16b6c15fcdc5ef2b110f0e6233952c9b0f",
-                "reference": "1a894a16b6c15fcdc5ef2b110f0e6233952c9b0f",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/7878b9c41edb3afab92b85edf5f0981014a2713a",
+                "reference": "7878b9c41edb3afab92b85edf5f0981014a2713a",
                 "shasum": ""
             },
             "require": {
@@ -540,7 +540,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2014-06-07 16:22:57"
+            "time": "2014-06-12 07:22:15"
         },
         {
             "name": "sebastian/comparator",
@@ -1306,6 +1306,101 @@
             "time": "2014-06-04 16:30:04"
         },
         {
+            "name": "phpseclib/phpseclib",
+            "version": "0.3.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpseclib/phpseclib.git",
+                "reference": "0ea31d9b65d49a8661e93bec19f44e989bd34c69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/0ea31d9b65d49a8661e93bec19f44e989bd34c69",
+                "reference": "0ea31d9b65d49a8661e93bec19f44e989bd34c69",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.0.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "suggest": {
+                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
+                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
+                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 4.3.3."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Crypt": "phpseclib/",
+                    "File": "phpseclib/",
+                    "Math": "phpseclib/",
+                    "Net": "phpseclib/",
+                    "System": "phpseclib/"
+                },
+                "files": [
+                    "phpseclib/Crypt/Random.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "phpseclib/"
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jim Wigginton",
+                    "email": "terrafrost@php.net",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Patrick Monnerat",
+                    "email": "pm@datasphere.ch",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Andreas Fischer",
+                    "email": "bantu@phpbb.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Hans-Jürgen Petrich",
+                    "email": "petrich@tronic-media.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
+            "homepage": "http://phpseclib.sourceforge.net",
+            "keywords": [
+                "BigInteger",
+                "aes",
+                "asn.1",
+                "asn1",
+                "blowfish",
+                "crypto",
+                "cryptography",
+                "encryption",
+                "rsa",
+                "security",
+                "sftp",
+                "signature",
+                "signing",
+                "ssh",
+                "twofish",
+                "x.509",
+                "x509"
+            ],
+            "time": "2014-02-28 16:05:05"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1345,16 +1440,16 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "696b982e55eff8b375ae636742eab42994885874"
+                "reference": "d8294736e47340e8d96f37d788b15f578bfc084f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/696b982e55eff8b375ae636742eab42994885874",
-                "reference": "696b982e55eff8b375ae636742eab42994885874",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/d8294736e47340e8d96f37d788b15f578bfc084f",
+                "reference": "d8294736e47340e8d96f37d788b15f578bfc084f",
                 "shasum": ""
             },
             "require": {
@@ -1389,7 +1484,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2014-05-06 09:35:44"
+            "time": "2014-06-21 09:27:57"
         }
     ],
     "aliases": [
@@ -1400,7 +1495,9 @@
 
     ],
     "platform": {
-        "php": ">=5.4.0"
+        "php": ">=5.4.0",
+        "ext-json": "*",
+        "ext-mbstring": "*"
     },
     "platform-dev": [
 

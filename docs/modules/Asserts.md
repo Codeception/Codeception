@@ -1,6 +1,6 @@
 # Asserts Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Asserts.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Asserts.php)**
 
 
 Special module for using asserts in your tests.
@@ -54,7 +54,6 @@ Checks that two variables are equal.
  * `param`        $actual
  * `param string` $message
 
-@return mixed
 
 
 ### assertFalse
@@ -149,4 +148,4 @@ Fails the test with message.
 
 
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Asserts.php">Help us improve documentation. Edit module reference</a>
