@@ -38,11 +38,11 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *
  * * url *required* - start url for your app
  * * browser *required* - browser that would be launched
- * * host  - Selenium server host (localhost by default)
+ * * host  - Selenium server host (127.0.0.1 by default)
  * * port - Selenium server port (4444 by default)
- * * restart - set to false to share selenium sesssion between tests (by default), or set to true to create a new selenium session per test
- * * clear_cookies - set to false to keep cookies (not default), or set to true to delete all cookies between cases.
- * * wait - set the implicit wait (5 secs) by default.
+ * * restart - set to false (default) to share selenium sesssion between tests, or set to true to create a new selenium session per test
+ * * clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
+ * * wait - set the implicit wait (0 secs) by default.
  * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
  * ### Example (`acceptance.suite.yml`)
@@ -607,6 +607,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->findField($field);
         // in order to be compatible on different OS
         $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        // in order for remote upload to be enabled
+        $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);
     }
 
