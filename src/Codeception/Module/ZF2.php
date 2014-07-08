@@ -73,6 +73,7 @@ class ZF2 extends \Codeception\Lib\Framework
         $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
 
         $this->client->setApplication($this->application);
+        $_SERVER['REQUEST_URI'] = '';
     }
 
     public function _after(\Codeception\TestCase $test) {
