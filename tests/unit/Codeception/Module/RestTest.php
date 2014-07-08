@@ -10,11 +10,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
     protected $module;
 
     public function setUp() {
-        $this->module = new \Codeception\Module\REST();
+
         $connector = new \Codeception\Lib\Connector\Universal();
         $connector->setIndex(\Codeception\Configuration::dataDir().'/rest/index.php');
-        $this->module->client = $connector;
+
+        $this->module = Stub::make('\Codeception\Module\REST', ['getModules' => [new \Codeception\Module\PhpBrowser()]]);
+        $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->client = $connector;
         $this->module->client->setServerParameters(array(
             'SCRIPT_FILENAME' => 'index.php',
             'SCRIPT_NAME' => 'index',
