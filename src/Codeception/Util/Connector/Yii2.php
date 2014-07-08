@@ -102,7 +102,7 @@ class Yii2 extends Client
             /** @var \yii\web\Cookie $cookie */
             $value = $cookie->value;
             if ($cookie->expire != 1 && isset($validationKey)) {
-                $value = Security::hashData(serialize($value), $validationKey);
+                $value = Yii::$app->security->hashData(serialize($value), $validationKey);
             }
             $c = new Cookie($cookie->name, $value, $cookie->expire, $cookie->path, $cookie->domain, $cookie->secure, $cookie->httpOnly);
             $this->getCookieJar()->set($c);
