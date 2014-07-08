@@ -356,29 +356,33 @@ class InnerBrowser extends Module implements Web
         }
         $action = $this->getFormUrl($form);
 
-        if (!isset($this->forms[$action])) {
-            /** @var \DOMElement $submit */
-            $submit = new \DOMElement('input');
-            $submit = $form->current()->appendChild($submit);
-            $submit->setAttribute('type', 'submit'); // for forms with no submits
-            $submit->setAttribute('name', 'codeception_added_auto_submit');
+        if (isset($this->forms[$action])) {
+            return $this->forms[$action];
+        }
 
-            // Symfony2.1 DOM component requires name for each field.
-            $formSubmits = $form->filter('*[type=submit]');
-            $values = null;
-            // If there are more than one submit (+1 auto_added) in one form we should add value of actually clicked one
-            if ($formSubmits->count() > 2) {
-                $nodeItem = $node->getNode(0);
-                foreach ($formSubmits as $formSubmit) {
-                    if ($formSubmit == $nodeItem) {
-                        $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
-                        break;
-                    }
+        /** @var \DOMElement $autoSubmit */
+        $autoSubmit = new \DOMElement('input');
+        $autoSubmit = $form->current()->appendChild($autoSubmit);
+        $autoSubmit->setAttribute('type', 'submit'); // for forms with no submits
+        $autoSubmit->setAttribute('name', 'codeception_added_auto_submit');
+
+        // Symfony2.1 DOM component requires name for each field.
+        $formSubmits = $form->filter('*[type=submit]');
+        $values = null;
+
+        // If there are more than one submit (+1 auto_added) in one form we should add value of actually clicked one
+        if ($formSubmits->count() > 2) {
+            $nodeItem = $node->getNode(0);
+            foreach ($formSubmits as $formSubmit) {
+                if ($formSubmit == $nodeItem) {
+                    $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
+                    break;
                 }
             }
-            $form = $formSubmits->form($values);
-            $this->forms[$action] = $form;
         }
+        $form = $formSubmits->form($values);
+        $this->forms[$action] = $form;
+
         return $this->forms[$action];
     }
 
