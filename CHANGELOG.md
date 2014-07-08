@@ -2,6 +2,7 @@
 
 #### 2.0.2
 
+* [PhpBrowser][Frameworks] correctly send values when there are several submit buttons in a form by @TrustNik *2014-07-08*
 * [REST] fixed connection with framework modules *2014-07-06*
 * [InnerBrowser] FIX: selectOption and dontSelectOption now works with radio buttons by @TrustNik *2014-07-05*
 * [FTP] MODULE ADDED by @nathanmac *2014-07-05*
