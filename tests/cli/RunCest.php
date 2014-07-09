@@ -14,6 +14,13 @@ class RunCest
         $I->seeInShellOutput("OK (");
     }
 
+    public function runOneFileOnWindows(\CliGuy $I)
+    {
+        $I->wantTo('execute one test');
+        $I->executeCommand('run tests\\dummy\\FileExistsCept.php');
+        $I->seeInShellOutput("OK (");
+    }
+
     /**
      * @group reports
      * @group core
