@@ -113,6 +113,12 @@ class Run extends Command
             $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
         $options['verbosity'] = $output->getVerbosity();
+        if ($options['no-colors']) $options['colors'] = false;
+        if ($options['report']) $options['silent'] = true;
+        if ($options['group']) $options['groups'] = $options['group'];
+        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
+
 
         $this->ensureCurlIsAvailable();
 

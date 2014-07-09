@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.3
+
+* FIX: Interactive console works again *2014-07-09*
+
+
 #### 2.0.2
 
 * [PhpBrowser][Frameworks] correctly send values when there are several submit buttons in a form by @TrustNik *2014-07-08*

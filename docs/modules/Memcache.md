@@ -108,4 +108,4 @@ Checks item in Memcached exists and the same as expected.
  * `param` $key
  * `param` $value
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php">Help us improve documentation. Edit module reference</a>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>

@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "2.0.2";
+    const VERSION = "2.0.3";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -47,6 +47,7 @@ class Codecept
         'filter' => null,
         'env' => null,
         'fail-fast' => false,
+        'verbosity' => 1
     );
 
     /**
@@ -73,19 +74,13 @@ class Codecept
     private function mergeOptions($options) {
 
         foreach ($this->options as $option => $default) {
-            $value = isset($options[$option]) ? $options[$option] : $default;
-            if (!$value) {
-                $options[$option] = isset($this->config['settings'][$option])
-                    ? $this->config['settings'][$option]
-                    : $this->options[$option];
+            if (!isset($options[$option])) {
+                $options[$option] = $default;
+            }
+            if (isset($this->config['settings'][$option])) {
+                $options[$option] = $this->config['settings'][$option];
             }
         }
-        if ($options['no-colors']) $options['colors'] = false;
-        if ($options['report']) $options['silent'] = true;
-        if ($options['group']) $options['groups'] = $options['group'];
-        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
-        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
-
         return $options;
     }
 

@@ -198,7 +198,7 @@ class RoboFile extends \Robo\Tasks {
             $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
                 ->docClass($className)
                 ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source]($source)**")
-                ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a>')
+                ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
                 ->processProperty(false)
                 ->filterMethods(function(\ReflectionMethod $method) {
@@ -231,10 +231,10 @@ class RoboFile extends \Robo\Tasks {
 
             $this->taskGenDoc('docs/reference/' . $utilName . '.md')
                 ->docClass($className)
-                ->append('<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a>')
+                ->append('<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassDocBlock(function(ReflectionClass $r, $text) {
                     return $text . "\n";
-                })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName) {
+                })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
                     $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
@@ -283,7 +283,35 @@ class RoboFile extends \Robo\Tasks {
             ->copy('../codecept.phar',"releases/$version/codecept.phar")
             ->run();
 
-        $this->taskExec("git add releases/$version/codecept.phar")->run();
+        $this->taskGitStack()->add('-A')->run();
+
+        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sortByName()->in('releases')));
+        $branch = null;
+        $releaseFile = $this->taskWriteToFile('builds.markdown')
+            ->line('---')
+            ->line('layout: page')
+            ->line('title: Codeception Builds')
+            ->line('---')
+            ->line('');
+
+
+        foreach ($releases as $release) {
+            $releaseName = $release->getBasename();
+            list($major, $minor) = explode('.', $releaseName);
+            if ("$major.$minor" != $branch) {
+                $branch = "$major.$minor";
+                $releaseFile->line("\n## $branch");
+                if ($major < 2) {
+                    $releaseFile->line("*Requires: PHP 5.3 and higher + CURL*\n");
+                } else {
+                    $releaseFile->line("*Requires: PHP 5.4 and higher + CURL*\n");
+                }
+                $releaseFile->line("* **[Download Latest $branch Release](http://codeception.com/releases/$releaseName/codecept.phar)**");
+            }
+            $releaseFile->line("* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)");
+        }
+        $releaseFile->run();
+
         $this->publishSite();
     }
 
@@ -315,6 +343,8 @@ class RoboFile extends \Robo\Tasks {
             ->line('title: Codeception Changelog')
             ->line('---')
             ->line('')
+            ->line('<div class="alert alert-warning">Download specific version at <a href="/builds">builds page</a></div>')
+            ->line('')
             ->textFromFile('CHANGELOG.md')
             ->run();
 
@@ -341,12 +371,12 @@ class RoboFile extends \Robo\Tasks {
 
             copy($doc->getPathname(), 'package/site/' . $newfile);
 
-            $highlight_languages = implode('|', array('php', 'html', 'bash', 'yaml', 'json', 'xml'));
-            $default_language = 'yaml';
-            $contents = preg_replace("~```\s?($highlight_languages)?\b(.*?)```~ms", "{% highlight $1 %}\n$2\n{% endhighlight %}", $contents);
+            $highlight_languages = implode('|', array('php', 'html', 'bash', 'yaml', 'json', 'xml', 'sql'));
+            $contents = preg_replace("~```\s?($highlight_languages)\b(.*?)```~ms", "{% highlight $1 %}\n$2\n{% endhighlight %}", $contents);
+            $contents = str_replace('{% highlight  %}','{% highlight yaml %}', $contents);
+            $contents = preg_replace("~```\s?(.*?)```~ms", "{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
             // set default language in order not to leave unparsed code inside '```'
-            $contents = preg_replace("~```(.*?)```~ms", "{% highlight $default_language %}\n$1\n{% endhighlight %}", $contents);
-            
+
             $matches = array();
             $title = "";
             // Extracting page h1 to re-use in <title>
@@ -375,7 +405,7 @@ class RoboFile extends \Robo\Tasks {
                 $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-            $doc .= '<p>&nbsp;</p><div class="alert alert-warning">Docs are incomplete? Outdated? Or you just found a typo? <a href="https://github.com/Codeception/Codeception/tree/'.self::STABLE_BRANCH.'/docs">Help us to improve documentation. Edit it on GitHub</a>';
+            $doc .= '<p>&nbsp;</p><div class="alert alert-warning">Docs are incomplete? Outdated? Or you just found a typo? <a href="https://github.com/Codeception/Codeception/tree/'.self::STABLE_BRANCH.'/docs">Help us to improve documentation. Edit it on GitHub</a></div>';
 
             file_put_contents('docs/'.$filename, $doc);
         }

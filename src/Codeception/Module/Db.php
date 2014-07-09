@@ -10,7 +10,7 @@ namespace Codeception\Module;
  * Also provides actions to perform checks in database.
  *
  * In order to have your database populated with data you need a raw SQL dump.
- * Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
+ * Just put it in `tests/_data` dir (by default) and specify path to it in config.
  * Next time after database is cleared all your data will be restored from dump.
  * Don't forget to include CREATE TABLE statements into it.
  *

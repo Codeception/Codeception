@@ -61,13 +61,20 @@ class Console extends Command
 
         $this->codecept = new Codecept($options);
         $dispatcher     = $this->codecept->getDispatcher();
+
+        $this->test     = (new Cept())
+            ->configDispatcher($dispatcher)
+            ->configName('interactive')
+            ->config('file','interactive')
+            ->initConfig();
+
         $suiteManager   = new SuiteManager($dispatcher, $suiteName, $settings);
+        $suiteManager->initialize();
         $this->suite    = $suiteManager->getSuite();
-        $this->test     = new Cept($dispatcher, array('name' => 'interactive', 'file' => 'interactive'));
 
         $scenario = new Scenario($this->test);
-        $guy      = $settings['class_name'];
-        $I        = new $guy($scenario);
+        $actor      = $settings['class_name'];
+        $I        = new $actor($scenario);
 
         $this->listenToSignals();
 
