@@ -111,10 +111,10 @@ class Codecept
     public function registerSubscribers() {
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
-        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
 
         // optional
         if (!$this->options['silent'])    $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
