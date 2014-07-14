@@ -1890,6 +1890,14 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Executes custom JavaScript
+     * 
+     * In this example we will use jQuery to get a value and assign this value to a variable.
+     *
+     * ```php
+     * <?php
+     * $myVar = $I->executeJS('return $("#myField").val()');
+     * ?>
+     * ```
      *
      * @param $script
      * @return mixed

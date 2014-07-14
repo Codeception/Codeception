@@ -3,6 +3,7 @@
 #### 2.0.3
 
 * FIX: Interactive console works again *2014-07-09*
+* `_bootstrap.php` is now loaded before `beforeSuite` module hooks.
 * FIX: Suite `_bootstrap.php` was loaded after test run by @samdark *2014-07-11*
 
 #### 2.0.2
