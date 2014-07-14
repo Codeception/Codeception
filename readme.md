@@ -15,8 +15,14 @@ Powered by PHPUnit 3.7.
 
 #### Contributions
 
+##### Code
+
 **Bugfixes should be sent to to current stable branch, which is the same as major version number.**
 Breaking features and major improvements should be sent into `master`. When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
+
+##### Documentation
+
+The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Module/Codeception/*.php).
 
 ### At a Glance
 
