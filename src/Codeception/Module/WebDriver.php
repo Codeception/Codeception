@@ -1427,6 +1427,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     /**
      * Executes custom JavaScript
+     * 
+     * In this example we will use jQuery to get a value and assign this value to a variable.
+     *
+     * ```php
+     * <?php
+     * $myVar = $I->executeJS('return $("#myField").val()');
+     * ?>
+     * ```
      *
      * @param $script
      * @return mixed
