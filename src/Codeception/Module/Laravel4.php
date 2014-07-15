@@ -68,7 +68,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     public function _initialize()
     {
-        $projectDir = \Codeception\Configuration::projectDir();
+        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
         require $projectDir .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
