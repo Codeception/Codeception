@@ -52,6 +52,7 @@ class Laravel4 extends Framework implements ActiveRecord
     public $kernel;
 
     protected $config = [];
+    protected $startFile;
 
     public function __construct($config = null)
     {
@@ -76,17 +77,10 @@ class Laravel4 extends Framework implements ActiveRecord
         if (is_dir($workbench = $projectDir . 'workbench')) {
             \Illuminate\Workbench\Starter::start($workbench);
         }
-        $unitTesting = true;
-        $testEnvironment = 'testing';
-
-        $startFile = $projectDir . $this->config['start'];
-        if (!file_exists($startFile)) {
+        $this->startFile = $projectDir . $this->config['start'];
+        if (!file_exists($this->startFile)) {
             throw new ModuleConfig($this, "Laravel start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. ");
         }
-        $app = require $startFile;
-        $app->boot();
-        $this->kernel = $app;
-
         $this->revertErrorHandler();
     }
 
@@ -98,6 +92,13 @@ class Laravel4 extends Framework implements ActiveRecord
 
     public function _before(\Codeception\TestCase $test)
     {
+        $unitTesting = true;
+        $testEnvironment = 'testing';
+        
+        $app = require $this->startFile;
+        $app->boot();
+        $this->kernel = $app;
+
         $this->client = new Client($this->kernel);
         $this->client->followRedirects(true);
         if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
