@@ -54,7 +54,7 @@ If your applications uses same helpers, follow the next section of this chapter.
 
 ## Autoload Helper classes
 
-There is global `_bootstrap.php` file. This file is included at the very beginning of execution. We recommend to use it to initialize autoloaders and constants. It is especially useful if you want to include Modules or Helper classes that are not stored in `tests/_helpers` directory.
+There is global `_bootstrap.php` file. This file is included at the very beginning of execution. We recommend to use it to initialize autoloaders and constants. It is especially useful if you want to include `Module` or `Helper` classes that are not stored in `tests/_helpers` directory, or those which are organized in namespaces.
 
 ```php
 <?php
@@ -62,34 +62,33 @@ require_once __DIR__.'/../lib/tests/helpers/MyHelper.php';
 ?>
 ```
 
-Alternatively you can use Composer's autoloader. Codeception has its autoloader too.
-It's not PSR-0 compatible (yet), but it is still very useful when you need to declare alternative path for Helper classes:
+Alternatively you can use Composer's autoloader. Codeception has its autoloader too, and it's [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) compatible:
 
 ```php
 <?php
-Codeception\Util\Autoload::registerSuffix('Helper', __DIR__.'/../lib/tests/helpers');
+Codeception\Util\Autoload::addNamespace('', __DIR__.'/../lib/tests/helpers');
 ?>
 ```
 
-Now all classes with suffix `Helper` will be additionally searched in `__DIR__.'/../lib/tests/helpers'. You can declare to load helpers of specific namespace. 
+Now all classes in global namespace will be additionally searched in `__DIR__.'/../lib/tests/helpers'`. You can declare to load helpers from namespaces with specified prefixes too:
 
 ```php
 <?php
-Codeception\Util\Autoload::register('MyApp\\Test', 'Helper', __DIR__.'/../lib/tests/helpers');
+Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
 ?>
 ```
 
-That will point autoloader to look for classes like `MyApp\Test\MyHelper` in path `__DIR__.'/../lib/tests/helpers'`.
+That will point autoloader to load class named `MyApp\Test\MyHelper` from `__DIR__.'/../lib/tests/helpers/MyHelper.php'`, and `MyApp\Test\User\MyHelper` will be loaded from `__DIR__.'/../lib/tests/helpers/User/MyHelper.php'`.
 
-Alternatively you can use autoloader to specify path for **PageObject and Controller** classes, if they have appropriate suffixes in their names.
+Autoloader can also be used to specify base directories for your `PageObject` and `Controller` classes.
 
 Example of `tests/_bootstrap.php` file:
 
 ``` php
 <?php
-Codeception\Util\Autoload::register('MyApp\\Test', 'Helper', __DIR__.'/../lib/tests/helpers');
-Codeception\Util\Autoload::register('MyApp\\Test', 'Page', __DIR__.'/pageobjects');
-Codeception\Util\Autoload::register('MyApp\\Test', 'Controller', __DIR__.'/controller');
+Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
+Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/pageobjects');
+Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/controller');
 ?>
 ```
 
@@ -264,4 +263,4 @@ Now Admin group class will listen to all events of tests that belong to the `adm
 
 ## Conclusion
 
-Each feature mentioned above may dramatically help when using Codeception to automate testing of large projects, although some features may require advanced knowledge of PHP. There is no "best practice" or "use cases" when we talk about groups, extensions, or other powerful features of Codeception. If you see you have a problem that can be solved using these extensions, then give them a try. 
+Each feature mentioned above may dramatically help when using Codeception to automate testing of large projects, although some features may require advanced knowledge of PHP. There is no "best practice" or "use cases" when we talk about groups, extensions, or other powerful features of Codeception. If you see you have a problem that can be solved using these extensions, then give them a try.
