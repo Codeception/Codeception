@@ -10,11 +10,11 @@ class GeneratorSteps extends \CliGuy
         $I->seeInThisFile('class '.$class);
     }
 
-    public function seeAutoloaderWasAdded($suffix, $path)
+    public function seeAutoloaderWasAdded($prefix, $path)
     {
         $I = $this;
-        $I->seeFileFound('_bootstrap.php',$path);
-        $I->seeInThisFile("\\Codeception\\Util\\Autoload::registerSuffix('$suffix', __DIR__.DIRECTORY_SEPARATOR.");
+        $I->seeFileFound('_bootstrap.php', $path);
+        $I->seeInThisFile("\\Codeception\\Util\\Autoload::addNamespace('$prefix', __DIR__.DIRECTORY_SEPARATOR.");
     }
 
 }

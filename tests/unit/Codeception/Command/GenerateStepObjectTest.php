@@ -23,7 +23,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->assertIsValidPhp($generated['content']);
 
         $bootstrap = $this->content;
-        $this->assertContains("\\Codeception\\Util\\Autoload::registerSuffix('Steps', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
+        $this->assertContains("\\Codeception\\Util\\Autoload::addNamespace('HobbitGuy', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
         $this->assertIsValidPhp($bootstrap);
 
     }
@@ -37,9 +37,9 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->assertContains('namespace MiddleEarth\HobbitGuy;', $generated['content']);
         $this->assertContains('class LoginSteps extends \MiddleEarth\HobbitGuy', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
-        
+
         $bootstrap = $this->content;
-        $this->assertContains("\\Codeception\\Util\\Autoload::registerSuffix('Steps', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
+        $this->assertContains("\\Codeception\\Util\\Autoload::addNamespace('MiddleEarth\HobbitGuy', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
         $this->assertIsValidPhp($bootstrap);
     }
 
