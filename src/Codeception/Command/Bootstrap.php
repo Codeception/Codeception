@@ -79,7 +79,7 @@ class Bootstrap extends Command
         $output->writeln(
             "<fg=white;bg=magenta>Initializing Codeception in " . $realpath . "</fg=white;bg=magenta>\n"
         );
-        
+
         if ($input->getOption('compat')) {
             $this->compatibilitySetup($output);
         } elseif ($input->getOption('customize')) {
@@ -129,7 +129,7 @@ class Bootstrap extends Command
 
         $str = Yaml::dump($basicConfig, 4);
         if ($this->namespace) {
-            $str = "namespace: {$this->namespace} \n" . $str;
+            $str = "namespace: {$this->namespace}\n" . $str;
         }
         file_put_contents('codeception.yml', $str);
     }
@@ -182,7 +182,7 @@ class Bootstrap extends Command
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
         $str .= Yaml::dump($suiteConfig, 2);
-        
+
         $this->createSuite('unit', $actor, $str);
     }
 
@@ -268,7 +268,7 @@ class Bootstrap extends Command
         $this->actorSuffix = $dialog->ask($output,
             "<question> Enter default actor name </question> Proposed: <info>Tester</info>; Formerly: Guy\n",
             'Tester'
-        );              
+        );
 
         $output->writeln("Basic Actor is set to: <info>{$this->actorSuffix}</info>");
 

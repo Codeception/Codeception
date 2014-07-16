@@ -18,7 +18,7 @@ class Configuration
 
     /**
      * @var string Directory containing main configuration file.
-     * @see self::projectDir() 
+     * @see self::projectDir()
      */
     protected static $dir = null;
 
@@ -178,7 +178,9 @@ class Configuration
 
     protected static function autoloadHelpers()
     {
-        Autoload::registerSuffix('Helper', self::helpersDir());
+        $namespace = self::$config['namespace'];
+        Autoload::addNamespace($namespace, self::helpersDir());
+        Autoload::addNamespace($namespace.'\Codeception\Module', self::helpersDir());
     }
 
     protected static function loadSuites()
@@ -266,7 +268,7 @@ class Configuration
     /**
      * Return instances of enabled modules according suite config.
      * Requires Guy class if it exists.
-     * 
+     *
      * @param array $settings suite settings
      * @return array|\Codeception\Module[]
      */

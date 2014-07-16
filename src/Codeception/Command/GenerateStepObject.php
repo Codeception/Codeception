@@ -38,18 +38,18 @@ class GenerateStepObject extends Command
     {
         $suite = $input->getArgument('suite');
         $step = $input->getArgument('step');
-        $conf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $class = $this->getClassName($step);
         $class = $this->removeSuffix($class, 'Steps');
 
-        $path = $this->buildPath($conf['path'].'/_steps/', $class);
+        $path = $this->buildPath($config['path'].'/_steps/', $class);
         $filename = $this->completeSuffix($class, 'Steps');
         $filename = $path.$filename;
 
         $dialog = $this->getHelperSet()->get('dialog');
 
-        $gen = new StepObjectGenerator($conf, $class);
+        $gen = new StepObjectGenerator($config, $class);
 
         if (!$input->getOption('silent')) {
             do {
@@ -61,8 +61,8 @@ class GenerateStepObject extends Command
         }
 
         $res = $this->save($filename, $gen->produce());
-        
-        $this->introduceAutoloader($conf['path'].'/'.$conf['bootstrap'], 'Steps', '_steps');
+
+        $this->introduceAutoloader($config['path'].'/'.$config['bootstrap'], trim($config['namespace'].'\\'.$config['class_name'], '\\'), '_steps');
 
         if (!$res) {
             $output->writeln("<error>StepObject $filename already exists</error>");
