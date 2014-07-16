@@ -21,7 +21,7 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
         $message->style('info');
         $message->prepend($this->uriMessage());
         if (strlen($other) > 300) {
-            $debugMessage = new Message("[Content too long to display. See complete response in '_log' directory]");
+            $debugMessage = new Message("[Content too long to display. See complete response in '_output' directory]");
             $debugMessage->style('debug')->prepend("\n");
             $message->append($debugMessage);
         }
