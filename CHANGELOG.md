@@ -2,6 +2,7 @@
 
 #### 2.0.3
 
+* When Cest fails @after method wont be executed *2014-07-17*
 * [Laravel4] App is rebooted before each test. Fixes #1205 *2014-07-15*
 * FIX: `codeception/specify` is now available in phar *2014-07-14*
 * FIX: Interactive console works again *2014-07-09*
