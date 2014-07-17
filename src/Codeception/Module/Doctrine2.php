@@ -182,11 +182,28 @@ class Doctrine2 extends \Codeception\Module
     }
 
     /**
-     * Saves data in repository
+     * Persists record into repository.
+     * This method crates an entity, and sets its properties directly (via reflection).
+     * Setters of entity won't be executed, but you can create almost any entity and save it to database.
+     *
+     * ```php
+     * $I->haveInRepository('Entity\User', array('name' => 'davert'));
+     * ```
      */
-    public function haveInRepository($repository, array $data)
+    public function haveInRepository($entity, array $data)
     {
-
+        $reflectedEntity = new \ReflectionClass($entity);
+        $entity = $reflectedEntity->newInstance();
+        foreach ($reflectedEntity->getProperties() as $property) {
+            /** @var $property \ReflectionProperty  */
+            if (!isset($data[$property->name])) {
+                continue;
+            }
+            $property->setAccessible(true);
+            $property->setValue($entity, $data[$property->name]);
+        }
+        self::$em->persist($entity);
+        self::$em->flush();
     }
 
     /**
