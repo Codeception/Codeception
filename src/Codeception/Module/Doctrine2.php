@@ -50,10 +50,14 @@ class Doctrine2 extends \Codeception\Module
         // trying to connect to Symfony2 and get event manager
         if ($this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
-                $kernel = $this->getModule('Symfony2')->kernel;
+                $symfonyModule = $this->getModule('Symfony2');
+                $kernel = $symfonyModule->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
                     self::$em = $kernel->getContainer()->get('doctrine.orm.entity_manager');
+                    $symfonyModule->client->persistentServices[] = 'doctrine.orm.entity_manager';
+                    $symfonyModule->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
                 }
+
             }
        }
 
@@ -185,6 +189,7 @@ class Doctrine2 extends \Codeception\Module
      * Persists record into repository.
      * This method crates an entity, and sets its properties directly (via reflection).
      * Setters of entity won't be executed, but you can create almost any entity and save it to database.
+     * Returns id using `getId` of newly created entity.
      *
      * ```php
      * $I->haveInRepository('Entity\User', array('name' => 'davert'));
@@ -193,17 +198,23 @@ class Doctrine2 extends \Codeception\Module
     public function haveInRepository($entity, array $data)
     {
         $reflectedEntity = new \ReflectionClass($entity);
-        $entity = $reflectedEntity->newInstance();
+        $entityObject = $reflectedEntity->newInstance();
         foreach ($reflectedEntity->getProperties() as $property) {
             /** @var $property \ReflectionProperty  */
             if (!isset($data[$property->name])) {
                 continue;
             }
             $property->setAccessible(true);
-            $property->setValue($entity, $data[$property->name]);
+            $property->setValue($entityObject, $data[$property->name]);
         }
-        self::$em->persist($entity);
+        self::$em->persist($entityObject);
         self::$em->flush();
+
+        if (method_exists($entityObject, 'getId')) {
+            $id = $entityObject->getId();
+            $this->debug("$entity entity created with id:$id");
+            return $id;
+        }
     }
 
     /**

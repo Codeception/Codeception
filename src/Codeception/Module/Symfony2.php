@@ -6,6 +6,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
@@ -53,39 +54,34 @@ class Symfony2 extends \Codeception\Lib\Framework
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     public $container;
-
     public $config = array('app_path' => 'app', 'environment' => 'test', 'debug' => true);
-    
-    /**
-     * @var
-     */
     protected $kernelClass;
 
-    protected $clientClass = '\Symfony\Component\HttpKernel\Client';
+    public $permanentServices = [];
 
 
     public function _initialize() {
-        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
-        require_once $cache;
+        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'] . DIRECTORY_SEPARATOR;
+        $autoload = $path . 'autoload.php';
+        if (file_exists($autoload)) {
+            require_once $autoload;
+        } else {
+            $cache = $path . 'bootstrap.php.cache';
+            if (!file_exists($cache)) {
+                throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+            }
+            require_once $cache;
+        }
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
+        ini_set('xdebug.max_nesting_level', 200);
     }
-    
+
     public function _before(\Codeception\TestCase $test) {
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
-        if ($this->container->has('test.client')) { // it is Symfony2.2
-            $this->client = $this->container->get('test.client');
-        } else {
-            $this->client = new $this->clientClass($this->kernel);
-        }
+        $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
-    }
-
-    public function _after(\Codeception\TestCase $test) {
-        $this->kernel->shutdown();
-        parent::_after($test);
     }
 
     /**
@@ -169,7 +165,6 @@ class Symfony2 extends \Codeception\Lib\Framework
                 if ($messages) $this->debugSection('Emails', $messages . ' sent');
             }
             if ($profile->hasCollector('timer'))    $this->debugSection('Time', $profile->getCollector('timer')->getTime());
-            if ($profile->hasCollector('db'))       $this->debugSection('Db', $profile->getCollector('db')->getQueryCount() . ' queries');
         }
     }
 }

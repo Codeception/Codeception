@@ -2,6 +2,8 @@
 
 #### 2.0.3
 
+* [Doctrine2] FIXED: persisting transaction between Symfony requests *2014-07-19*
+* [Symfony2] created Symfony2 connector with persistent services *2014-07-19*
 * [Doctrine2] implemented haveInRepository method (previously empty) *2014-07-17*
 * When Cest fails @after method wont be executed *2014-07-17*
 * [Laravel4] App is rebooted before each test. Fixes #1205 *2014-07-15*
