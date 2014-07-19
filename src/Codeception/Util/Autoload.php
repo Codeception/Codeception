@@ -110,6 +110,16 @@ class Autoload
             return self::load('\\'.$class);
         }
 
+        // backwards compatibility with old autoloader
+        // :TODO: it should be removed
+        if (strpos($class, '\\') !== false) {
+            $relative_class = substr(strrchr($class, '\\'), 1); // Foo\Bar\ClassName -> ClassName
+            $mapped_file = self::loadMappedFile('\\', $relative_class);
+            if ($mapped_file) {
+                return $mapped_file;
+            }
+        }
+
         return false;
     }
 
