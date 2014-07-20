@@ -122,15 +122,19 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
 
         if ($arguments['html']) {
+            codecept_debug('Printing HTML report into '.$arguments['html']);
             self::$persistentListeners[] = new HTML($this->absolutePath($arguments['html']));
         }
         if ($arguments['xml']) {
+            codecept_debug('Printing JUNIT report into '.$arguments['xml']);
             self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), true);
         }
         if ($arguments['tap']) {
+            codecept_debug('Printing TAP report into '.$arguments['tap']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP($this->absolutePath($arguments['tap']));
         }
         if ($arguments['json']) {
+            codecept_debug('Printing JSON report into '.$arguments['json']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->absolutePath($arguments['json']));
         }
 

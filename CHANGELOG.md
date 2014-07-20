@@ -2,6 +2,7 @@
 
 #### 2.0.3
 
+* FIX: TAP and JSON logging should not be started when no option --json or --tap provided *2014-07-21*
 * [Doctrine2] FIXED: persisting transaction between Symfony requests *2014-07-19*
 * [Symfony2] created Symfony2 connector with persistent services *2014-07-19*
 * [Doctrine2] implemented haveInRepository method (previously empty) *2014-07-17*

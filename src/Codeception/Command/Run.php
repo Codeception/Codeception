@@ -108,7 +108,7 @@ class Run extends Command
             $output->setDecorated($options['colors']);
         }
 
-        $options = array_merge($options, $this->booleanOptions($input, ['xml','html','coverage','coverage-xml','coverage-html']));
+        $options = array_merge($options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
         if ($options['debug']) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
