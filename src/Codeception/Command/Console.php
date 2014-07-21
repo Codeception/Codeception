@@ -120,7 +120,10 @@ class Console extends Command
                 continue;
             }
             try {
-                eval("\$I->$command;");
+                $value = eval("return \$I->$command;");
+                if ($value and !is_object($value)) {
+                    codecept_debug($value);
+                }
             } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
             } catch (\Exception $e) {
