@@ -12,7 +12,9 @@ class Asserts extends Module
     use \Codeception\Util\Shared\Asserts {
         assertEquals as public;
         assertNotEquals as public;
+        assertGreaterThan as public;
         assertGreaterThen as public;
+        assertGreaterThanOrEqual as public;
         assertGreaterThenOrEqual as public;
         assertContains as public;
         assertNotContains as public;
@@ -24,4 +26,4 @@ class Asserts extends Module
         assertFalse as public;
         fail as public;
     }
-} 
+}
