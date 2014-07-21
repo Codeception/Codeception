@@ -9,9 +9,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 
 /**
- * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+ * This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
  *
- * It implements common Framework interface.
+ * ## Demo Project
+ *
+ * <https://github.com/DavertMik/SymfonyCodeceptionApp>
  *
  * ## Status
  *

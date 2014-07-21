@@ -3,24 +3,25 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/WebDriver.php)**
 
 
-New generation Selenium2 module.
-*Included in Codeception 1.7.0*
+New generation Selenium WebDriver module.
 
-## Installation
+## Selenium Installation
 
-Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+Download [Selenium Server](http://docs.seleniumhq.org/download/)
 Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
 
-## Migration Guide (Selenium2 -> WebDriver)
+## PhantomJS Installation
 
-* `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+PhantomJS is headless alternative to Selenium Server.
 
+* Download [PhantomJS](http://phantomjs.org/download.html)
+* Run PhantomJS in webdriver mode `phantomjs --webdriver=4444`
 
 
 ## Status
 
 * Maintainer: **davert**
-* Stability: **beta**
+* Stability: **stable**
 * Contact: davert.codecept@mailican.com
 * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
 
@@ -49,9 +50,10 @@ Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
 
+## Migration Guide (Selenium2 -> WebDriver)
 
-Class WebDriver
-@package Codeception\Module
+* `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+
 
 
 
@@ -475,6 +477,14 @@ If Codeception lacks important Selenium methods implement then and submit patche
 ### executeJS
  
 Executes custom JavaScript
+
+In this example we will use jQuery to get a value and assign this value to a variable.
+
+```php
+<?php
+$myVar = $I->executeJS('return $("#myField").val()');
+?>
+```
 
  * `param` $script
 

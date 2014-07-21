@@ -345,7 +345,7 @@ class RoboFile extends \Robo\Tasks {
             ->line('')
             ->line('<div class="alert alert-warning">Download specific version at <a href="/builds">builds page</a></div>')
             ->line('')
-            ->textFromFile('CHANGELOG.md')
+            ->line($this->processChangelog())
             ->run();
 
         $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
@@ -466,6 +466,15 @@ class RoboFile extends \Robo\Tasks {
         }
         $this->taskExec("git tag $version")->run();
         $this->taskExec("git push origin $branch --tags")->run();
+    }
+
+    protected function processChangelog()
+    {
+        $changelog = file_get_contents('CHANGELOG.md');
+        $changelog = preg_replace('~@(\w+)~', '<strong><a href="https://github.com/$1">@$1</a></strong>', $changelog); //user
+        $changelog = preg_replace('~#(\d+)~', '<a href="https://github.com/Codeception/Codeception/issues/$1">#$1</a>', $changelog); //issue
+        $changelog = preg_replace('~\[(\w+)\]~', '<strong>[$1]</strong>', $changelog); //module
+        return $changelog;
     }
 
     /**

@@ -3,9 +3,11 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony2.php)**
 
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
 
-It implements common Framework interface.
+## Demo Project
+
+<https://github.com/DavertMik/SymfonyCodeceptionApp>
 
 ## Status
 
@@ -15,11 +17,14 @@ It implements common Framework interface.
 
 ## Config
 
+### Symfony 2.x
+
 * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
 * environment: 'local' - environment used for load kernel
-* debug: true - switch debug mode
+* debug: true - turn on/off debug mode
 
-### Example (`functional.suite.yml`)
+
+### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
     modules: 
        enabled: [Symfony2]
@@ -27,7 +32,24 @@ It implements common Framework interface.
           Symfony2:
              app_path: 'app/front'
              environment: 'local_test'
-             debug: true
+
+### Symfony 3.x Directory Structure
+
+* app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+* var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+* environment: 'local' - environment used for load kernel
+* debug: true - turn on/off debug mode
+
+### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+
+    modules:
+       enabled: [Symfony2]
+       config:
+          Symfony2:
+             app_path: 'app/front'
+             var_path: 'var'
+             environment: 'local_test'
+
 
 ## Public Properties
 

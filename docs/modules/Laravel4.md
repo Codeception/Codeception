@@ -63,6 +63,7 @@ Codeception creates internal form fields, so you get exception trying to save th
 
 
 
+
 ### amHttpAuthenticated
  
 Authenticates user for HTTP_AUTH

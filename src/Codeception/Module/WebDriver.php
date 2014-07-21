@@ -18,7 +18,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *
  * ## Selenium Installation
  *
- * Download [Selenium Server]((http://docs.seleniumhq.org/download/)
+ * Download [Selenium Server](http://docs.seleniumhq.org/download/)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
  * ## PhantomJS Installation
