@@ -14,24 +14,25 @@ use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
 /**
- * New generation Selenium2 module.
- * *Included in Codeception 1.7.0*
+ * New generation Selenium WebDriver module.
  *
- * ## Installation
+ * ## Selenium Installation
  *
  * Download [Selenium Server]((http://docs.seleniumhq.org/download/)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
- * ## Migration Guide (Selenium2 -> WebDriver)
+ * ## PhantomJS Installation
  *
- * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ * PhantomJS is headless alternative to Selenium Server.
  *
+ * * Download [PhantomJS](http://phantomjs.org/download.html)
+ * * Run PhantomJS in webdriver mode `phantomjs --webdriver=4444`
  *
  *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **beta**
+ * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
  * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
@@ -60,9 +61,10 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
  *
+ * ## Migration Guide (Selenium2 -> WebDriver)
  *
- * Class WebDriver
- * @package Codeception\Module
+ * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ *
  */
 class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface {
 
