@@ -160,6 +160,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
                 $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
             }
         }
+        $this->insertedIds = array();
     }
 
     protected function cleanup()
