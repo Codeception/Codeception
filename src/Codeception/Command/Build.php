@@ -46,6 +46,7 @@ class Build extends Command
             $output->writeln('<info>'.$gen->getGuy() . "</info> includes modules: ".implode(', ',$gen->getModules()));
             $contents = $gen->produce();
 
+            @mkdir($settings['path'],0755, true);
             $file = $settings['path'].$this->getClassName($settings['class_name']).'.php';
             $this->save($file, $contents, true);
             $output->writeln("{$settings['class_name']}.php generated successfully. ".$gen->getNumMethods()." methods added");
