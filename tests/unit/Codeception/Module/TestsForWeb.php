@@ -629,6 +629,25 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1212
+     */
+    public function testExample9()
+    {
+        $this->module->amOnPage('/form/example9');
+        $this->module->attachFile('form[name=package_csv_form] input[name=xls_file]', 'app/avatar.jpg');
+        $this->module->click('Upload packages', 'form[name=package_csv_form]');
+        $this->assertNotEmpty(data::get('files'));
+        $files = data::get('files');
+        $this->assertArrayHasKey('xls_file', $files);
+        $form = data::get('form');
+        codecept_debug($form);
+        $this->assertArrayHasKey('submit', $form);
+        $this->assertArrayHasKey('MAX_FILE_SIZE', $form);
+        $this->assertArrayHasKey('form_name', $form);
+
+    }
+
 
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
