@@ -100,7 +100,7 @@ class Yii2 extends Client
         $cookies          = $response->getCookies();
 
         if ($request->enableCookieValidation) {
-            $validationKey = $request->getCookieValidationKey();
+            $validationKey = $request->cookieValidationKey;
         }
 
         foreach ($cookies as $cookie) {
