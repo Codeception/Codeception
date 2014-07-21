@@ -52,9 +52,6 @@ class GenerateSuite extends Command
         $config['class_name'] = $actor;
 
         $dir = \Codeception\Configuration::testsDir();
-        if (file_exists($dir . $suite)) {
-            throw new \Exception("Directory $suite already exists.");
-        }
         if (file_exists($dir . $suite . '.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
