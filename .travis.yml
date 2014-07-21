@@ -51,9 +51,9 @@ before_script:
 
   # Symfony
   - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
+  - composer install -d frameworks-symfony --no-dev
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create
-  - composer install -d frameworks-symfony
   - php codecept build -c frameworks-symfony
 
 script:
