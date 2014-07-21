@@ -22,8 +22,10 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  * ## Config
  *
  * ### Symfony 2.x
+ *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
+ * * debug: true - turn on/off debug mode
  * 
  *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
@@ -36,9 +38,11 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  *              environment: 'local_test'
  *
  * ### Symfony 3.x Directory Structure
+ *
  * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
  * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
  * * environment: 'local' - environment used for load kernel
+ * * debug: true - turn on/off debug mode
  *
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
  *
@@ -71,7 +75,7 @@ class Symfony2 extends \Codeception\Lib\Framework
      */
     public $container;
 
-    public $config = array('app_path' => 'app', 'var_path' => 'app', 'environment' => 'test');
+    public $config = array('app_path' => 'app', 'var_path' => 'app', 'environment' => 'test', 'debug' => true);
     
     /**
      * @var
@@ -83,7 +87,9 @@ class Symfony2 extends \Codeception\Lib\Framework
 
     public function _initialize() {
         $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+        if (!file_exists($cache)) {
+            throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+        }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
