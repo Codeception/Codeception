@@ -21,11 +21,12 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  *
  * ## Config
  *
+ * ### Symfony 2.x
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
- * * debug: true - switch debug mode
-* 
- * ### Example (`functional.suite.yml`)
+ * 
+ *
+ * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
  *     modules: 
  *        enabled: [Symfony2]
@@ -33,7 +34,22 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  *           Symfony2:
  *              app_path: 'app/front'
  *              environment: 'local_test'
- *              debug: true
+ *
+ * ### Symfony 3.x Directory Structure
+ * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+ * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+ * * environment: 'local' - environment used for load kernel
+ *
+ * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+ *
+ *     modules:
+ *        enabled: [Symfony2]
+ *        config:
+ *           Symfony2:
+ *              app_path: 'app/front'
+ *              var_path: 'var'
+ *              environment: 'local_test'
+ *
  *
  * ## Public Properties
  *
@@ -54,24 +70,21 @@ class Symfony2 extends \Codeception\Lib\Framework
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     public $container;
-    public $config = array('app_path' => 'app', 'environment' => 'test', 'debug' => true);
+
+    public $config = array('app_path' => 'app', 'var_path' => 'app', 'environment' => 'test');
+    
+    /**
+     * @var
+     */
     protected $kernelClass;
 
     public $permanentServices = [];
 
 
     public function _initialize() {
-        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'] . DIRECTORY_SEPARATOR;
-        $autoload = $path . 'autoload.php';
-        if (file_exists($autoload)) {
-            require_once $autoload;
-        } else {
-            $cache = $path . 'bootstrap.php.cache';
-            if (!file_exists($cache)) {
-                throw new ModuleRequire(__CLASS__, 'Symfony2 autoload or bootstrap file not found in '.$cache);
-            }
-            require_once $cache;
-        }
+        $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+        require_once $cache;
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
@@ -97,7 +110,7 @@ class Symfony2 extends \Codeception\Lib\Framework
         $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_dir" parameter.');
+            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_path" parameter.');
         }
 
         $file = current($results);

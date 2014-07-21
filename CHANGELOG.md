@@ -2,6 +2,7 @@
 
 #### 2.0.3
 
+* [Symfony2] Symfony3 directory structure implemented by @a6software *2014-07-21*
 * Console: printing returned values *2014-07-21*
 * FIX: TAP and JSON logging should not be started when no option --json or --tap provided *2014-07-21*
 * [Doctrine2] FIXED: persisting transaction between Symfony requests *2014-07-19*
