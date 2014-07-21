@@ -68,13 +68,13 @@ class Symfony2 extends \Codeception\Lib\Framework
         } else {
             $cache = $path . 'bootstrap.php.cache';
             if (!file_exists($cache)) {
-                throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+                throw new ModuleRequire(__CLASS__, 'Symfony2 autoload or bootstrap file not found in '.$cache);
             }
             require_once $cache;
         }
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
-        ini_set('xdebug.max_nesting_level', 200);
+        ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
     }
 
     public function _before(\Codeception\TestCase $test) {
