@@ -68,12 +68,9 @@ class REST extends \Codeception\Module
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->headers = array();
-        $this->params = array();
-        $this->response = "";
-
         $this->prepareConnection();
         $this->client = &$this->connectionModule->client;
+        $this->resetVariables();
 
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
@@ -82,6 +79,16 @@ class REST extends \Codeception\Module
         ) {
             $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
             $this->client->getCookieJar()->set($cookie);
+        }
+    }
+
+    protected function resetVariables()
+    {
+        $this->headers = array();
+        $this->params = array();
+        $this->response = "";
+        if ($this->client) {
+            $this->client->setServerParameters(array());
         }
     }
 
