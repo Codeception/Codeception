@@ -140,7 +140,7 @@ class Filesystem extends \Codeception\Module
 
     /**
      * Checks the strict matching of file contents.
-     * Unlike `seeInThisFile` will fail if file has something more then expected lines.
+     * Unlike `seeInThisFile` will fail if file has something more than expected lines.
      * Better to use with HEREDOC strings.
      * Matching is done after removing "\r" chars from file content.
      *
@@ -234,8 +234,8 @@ class Filesystem extends \Codeception\Module
     {
         \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
     }
-    
-    
+
+
 
     /**
      * Erases directory contents
