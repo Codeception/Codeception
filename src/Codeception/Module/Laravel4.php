@@ -31,6 +31,7 @@ use Illuminate\Support\MessageBag;
  * ## Config
  *
  * * start: `bootstrap/start.php` - relative path to start.php config file
+ * * root: `` - relative path to project root directory
  * * cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
  *
  * ## API
@@ -59,7 +60,8 @@ class Laravel4 extends Framework implements ActiveRecord
         $this->config = array_merge(
             array(
                 'cleanup' => true,
-                'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php'
+                'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php',
+                'root' => '',
             ),
             (array) $config
         );
@@ -70,6 +72,7 @@ class Laravel4 extends Framework implements ActiveRecord
     public function _initialize()
     {
         $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
+        $projectDir .= $this->config['root'];
         require $projectDir .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
         \Illuminate\Support\ClassLoader::register();
