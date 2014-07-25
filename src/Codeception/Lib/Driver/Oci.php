@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Util\Driver;
+namespace Codeception\Lib\Driver;
 
 class Oci extends Oracle
 {
