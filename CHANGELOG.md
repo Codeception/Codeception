@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.0.4
+
+* [Laravel4] project root relative config parameter added by @kernio *2014-07-26*
+
 #### 2.0.3
 
 * [Symfony2] Symfony3 directory structure implemented by @a6software *2014-07-21*
