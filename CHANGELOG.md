@@ -2,6 +2,7 @@
 
 #### 2.0.4
 
+* FIX #948 code coverage HTML: uncovered files missing by @RLasinski *2014-07-26*
 * [Laravel4] project root relative config parameter added by @kernio *2014-07-26*
 
 #### 2.0.3
