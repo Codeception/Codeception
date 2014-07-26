@@ -1,6 +1,6 @@
 # MongoDb Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php)**
 
 
 Works with MongoDb database.
@@ -92,8 +92,8 @@ Checks if collection doesn't contain an item.
 $I->dontSeeInCollection('users', array('name' => 'miles'));
 ```
 
- * `param`  $collection
- * `param`  array $criteria
+ * `param` $collection
+ * `param array` $criteria
 
 
 
@@ -108,9 +108,9 @@ Grabs a data from collection
 $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
 ```
 
- * `param`  $collection
- * `param`  array $criteria
- * `return`  \MongoCursor
+ * `param` $collection
+ * `param array` $criteria
+@return \MongoCursor
 
 
 
@@ -119,12 +119,12 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
 Inserts data into collection
 
 ``` php
-$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
-$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+$user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
 ```
 
- * `param`  $collection
- * `param`  array $data
+ * `param` $collection
+ * `param array` $data
 
 
 
@@ -139,7 +139,7 @@ Checks if collection contains an item.
 $I->seeInCollection('users', array('name' => 'miles'));
 ```
 
- * `param`  $collection
- * `param`  array $criteria
+ * `param` $collection
+ * `param array` $criteria
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

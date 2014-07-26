@@ -10,14 +10,14 @@ class StepObject {
     protected $template = <<<EOF
 <?php
 {{namespace}}
-class {{name}}Steps extends {{guyClass}}
+class {{name}}Steps extends {{actorClass}}
 {
 {{actions}}
 }
 EOF;
 
     protected $actionTemplate = <<<EOF
-    function {{action}}()
+    public function {{action}}()
     {
         \$I = \$this;
     }
@@ -25,7 +25,7 @@ EOF;
 
     protected $settings;
     protected $name;
-    protected $actions = "";
+    protected $actions = '';
 
     public function __construct($settings, $name)
     {
@@ -35,16 +35,16 @@ EOF;
 
     public function produce()
     {
-        $guy = $this->settings['class_name'];        
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$guy . '\\' .$this->name);
+        $actor = $this->settings['class_name'];        
+        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$actor.'\\'.$this->name);
         $ns = ltrim($ns, '\\');
 
-        $extended = '\\'.ltrim('\\'.$this->settings['namespace'].'\\'.$guy, '\\');
+        $extended = '\\'.ltrim('\\'.$this->settings['namespace'].'\\'.$actor, '\\');
 
         return (new Template($this->template))
             ->place('namespace', $ns)
             ->place('name', $this->name)
-            ->place('guyClass', $extended)
+            ->place('actorClass', $extended)
             ->place('actions', $this->actions)
             ->produce();
     }
@@ -56,4 +56,4 @@ EOF;
             ->produce();
     }
 
-} 
+}

@@ -65,38 +65,38 @@ Export:
 
 #### *public* __construct() 
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L77)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L77)
 
 #### *public* __get($tag) 
 
 Appends child node
 
- * `param`  $tag
+ * `param` $tag
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L90)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L90)
 
 #### *public* __toString() 
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L162)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L162)
 
 #### *public* attr($attr, $val) 
 
 Sets attribute for current node
 
- * `param`  $attr
- * `param`  $val
+ * `param` $attr
+ * `param` $val
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L117)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L117)
 
 #### *public* getDom() 
 
  * `return`  \DOMDocument
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L170)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L170)
 
 #### *public* parent() 
 
@@ -104,24 +104,24 @@ Traverses to parent
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L128)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L128)
 
 #### *public* parents($tag) 
 
 Traverses to parent with $name
 
- * `param`  $tag
+ * `param` $tag
 
  * `return`  XmlBuilder
  * `throws`  \Exception
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L142)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L142)
 
 #### *public* val($val) 
 
- * `param`  $val
+ * `param` $val
 
  * `return`  XmlBuilder
 
-[See source](https://github.com/Codeception/Codeception/blob/master/src/Codeception/Util/XmlBuilder.php#L103)
-
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php#L103)
+<p>&nbsp;</p><div class="alert alert-warning">Reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/XmlBuilder.php">Help us to improve documentation. Edit module reference</a></div>

@@ -6,11 +6,14 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
+use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 
 /**
- * This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+ * This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
  *
- * It implements common Framework interface.
+ * ## Demo Project
+ *
+ * <https://github.com/DavertMik/SymfonyCodeceptionApp>
  *
  * ## Status
  *
@@ -20,11 +23,14 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * ## Config
  *
+ * ### Symfony 2.x
+ *
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
- * * debug: true - switch debug mode
-* 
- * ### Example (`functional.suite.yml`)
+ * * debug: true - turn on/off debug mode
+ * 
+ *
+ * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
  *     modules: 
  *        enabled: [Symfony2]
@@ -32,7 +38,24 @@ use Symfony\Component\HttpFoundation\Response;
  *           Symfony2:
  *              app_path: 'app/front'
  *              environment: 'local_test'
- *              debug: true
+ *
+ * ### Symfony 3.x Directory Structure
+ *
+ * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+ * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+ * * environment: 'local' - environment used for load kernel
+ * * debug: true - turn on/off debug mode
+ *
+ * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+ *
+ *     modules:
+ *        enabled: [Symfony2]
+ *        config:
+ *           Symfony2:
+ *              app_path: 'app/front'
+ *              var_path: 'var'
+ *              environment: 'local_test'
+ *
  *
  * ## Public Properties
  *
@@ -54,38 +77,32 @@ class Symfony2 extends \Codeception\Lib\Framework
      */
     public $container;
 
-    public $config = array('app_path' => 'app', 'environment' => 'test', 'debug' => true);
+    public $config = array('app_path' => 'app', 'var_path' => 'app', 'environment' => 'test', 'debug' => true);
     
     /**
      * @var
      */
     protected $kernelClass;
 
-    protected $clientClass = '\Symfony\Component\HttpKernel\Client';
+    public $permanentServices = [];
 
 
     public function _initialize() {
-        $cache = \Codeception\Configuration::projectDir() . $this->config['app_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
-        if (!file_exists($cache)) throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+        $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        if (!file_exists($cache)) {
+            throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+        }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
+        ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
     }
-    
+
     public function _before(\Codeception\TestCase $test) {
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
-        if ($this->container->has('test.client')) { // it is Symfony2.2
-            $this->client = $this->container->get('test.client');
-        } else {
-            $this->client = new $this->clientClass($this->kernel);
-        }
+        $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
-    }
-
-    public function _after(\Codeception\TestCase $test) {
-        $this->kernel->shutdown();
-        parent::_after($test);
     }
 
     /**
@@ -101,7 +118,7 @@ class Symfony2 extends \Codeception\Lib\Framework
         $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_dir" parameter.');
+            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_path" parameter.');
         }
 
         $file = current($results);
@@ -169,7 +186,6 @@ class Symfony2 extends \Codeception\Lib\Framework
                 if ($messages) $this->debugSection('Emails', $messages . ' sent');
             }
             if ($profile->hasCollector('timer'))    $this->debugSection('Time', $profile->getCollector('timer')->getTime());
-            if ($profile->hasCollector('db'))       $this->debugSection('Db', $profile->getCollector('db')->getQueryCount() . ' queries');
         }
     }
 }

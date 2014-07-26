@@ -49,8 +49,16 @@ before_script:
   - php frameworks-laravel/artisan migrate --seed
   - php codecept build -c frameworks-laravel
 
+  # Symfony
+  - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
+  - composer install -d frameworks-symfony --no-dev
+  - frameworks-symfony/app/console doctrine:database:create
+  - frameworks-symfony/app/console doctrine:schema:create
+  - php codecept build -c frameworks-symfony
+
 script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic # Yii2 tests
   - php codecept run functional -c frameworks-laravel # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
+  - php codecept run functional -c frameworks-symfony # Symfony Tests

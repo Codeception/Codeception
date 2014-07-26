@@ -52,6 +52,7 @@ class Codecept
         'filter' => null,
         'env' => null,
         'fail-fast' => false,
+        'verbosity' => 1
     );
 
     /**
@@ -78,19 +79,13 @@ class Codecept
     private function mergeOptions($options) {
 
         foreach ($this->options as $option => $default) {
-            $value = isset($options[$option]) ? $options[$option] : $default;
-            if (!$value) {
-                $options[$option] = isset($this->config['settings'][$option])
-                    ? $this->config['settings'][$option]
-                    : $this->options[$option];
+            if (!isset($options[$option])) {
+                $options[$option] = $default;
+            }
+            if (isset($this->config['settings'][$option])) {
+                $options[$option] = $this->config['settings'][$option];
             }
         }
-        if ($options['no-colors']) $options['colors'] = false;
-        if ($options['report']) $options['silent'] = true;
-        if ($options['group']) $options['groups'] = $options['group'];
-        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
-        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
-
         return $options;
     }
 
@@ -105,8 +100,8 @@ class Codecept
             if ($extension instanceof EventSubscriberInterface) {
                 throw new ConfigurationException("Class $extension is not a EventListener. Please create it as Extension or Group class.");
             }
-            $extensionConfig =  isset($this->config['extensions']['config'][$extension])
-                ? $this->config['extensions']['config'][$extension]
+            $extensionConfig =  isset($config['extensions']['config'][$extension])
+                ? $config['extensions']['config'][$extension]
                 : [];
 
             $this->extensions[] = new $extension($extensionConfig, $options);
@@ -121,10 +116,10 @@ class Codecept
     public function registerSubscribers() {
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
-        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
 
         // optional
         if (!$this->options['silent'])    $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));

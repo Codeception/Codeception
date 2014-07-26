@@ -8,7 +8,7 @@ class OrderCest
         $I->executeCommand('run order LoadingOrderCept.php');
         $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap(B), test(T), after, afterSuite');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BI(B[ST])");
+        $I->seeFileContentsEqual("BIB([ST])");
     }
 
     public function checkForFails(CliGuy $I)
@@ -17,7 +17,7 @@ class OrderCest
         $I->executeCommand('run order FailedCept.php --no-exit');
         $I->seeFileFound('order.txt','tests/_log');
         $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap, test, fail, after, afterSuite');
-        $I->seeFileContentsEqual("BI(B[STF])");
+        $I->seeFileContentsEqual("BIB([STF])");
     }
 
 
@@ -26,7 +26,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BI({{{B[ST][STF][ST])}}}");
+        $I->seeFileContentsEqual("BIB({{{[ST][STF][ST])}}}");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -34,7 +34,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/order/ReorderCest.php --no-exit');
         $I->seeFileFound('order.txt','tests/_log');
-        $I->seeFileContentsEqual("BI(B[0123456])");
+        $I->seeFileContentsEqual("BIB([0123456])");
     }
 
     public function checkCodeceptionTest(CliGuy $I)
@@ -57,7 +57,7 @@ class OrderCest
             afterSuite,
             afterClass,
             @afterClass');
-        $I->seeFileContentsEqual("BI({{B[<C]>)}}");
+        $I->seeFileContentsEqual("BIB({{[<C]>)}}");
     }
 
     public function checkAfterBeforeClassInTests(CliGuy $I)
@@ -65,6 +65,6 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order BeforeAfterClassTest.php');
         $I->seeFileFound('order.txt', 'tests/_log');
-        $I->seeInThisFile('BI({B[1][2])}');
+        $I->seeInThisFile('BIB({[1][2])}');
     }
 }

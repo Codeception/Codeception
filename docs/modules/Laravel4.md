@@ -1,6 +1,6 @@
 # Laravel4 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Laravel4.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Laravel4.php)**
 
 
 
@@ -63,21 +63,22 @@ Codeception creates internal form fields, so you get exception trying to save th
 
 
 
+
 ### amHttpAuthenticated
  
 Authenticates user for HTTP_AUTH
 
- * `param`  $username
- * `param`  $password
+ * `param` $username
+ * `param` $password
 
 
 ### amLoggedAs
  
 Set the currently logged in user for the application.
 
- * `param`   \Illuminate\Auth\UserInterface $user
- * `param`   string $driver
- * `return`  void
+ * `param`  \Illuminate\Auth\UserInterface $user
+ * `param`  string $driver
+@return void
 
 
 ### amOnPage
@@ -96,7 +97,7 @@ $I->amOnPage('/register');
 ?>
 ```
 
- * `param`  $page
+ * `param` $page
 
 
 
@@ -128,12 +129,12 @@ Example:
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
- * `param`  $field
- * `param`  $filename
+ * `param` $field
+ * `param` $filename
 
 
 ### checkOption
@@ -149,7 +150,7 @@ $I->checkOption('#agree');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
 
 ### click
@@ -175,16 +176,16 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
-$I->click(['link' => 'Login'])'
+$I->click(['link' => 'Login']);
 ?>
 ```
 
- * `param`  $link
- * `param`  $context
+ * `param` $link
+ * `param` $context
 
 
 
@@ -206,8 +207,8 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### dontSeeCheckboxIsChecked
@@ -224,16 +225,15 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### dontSeeCookie
  
 Checks that cookie doesn't exist
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -248,7 +248,7 @@ $I->dontSeeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeCurrentUrlMatches
@@ -262,7 +262,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeElement
@@ -281,7 +281,7 @@ $I->dontSeeElement('input', ['value' => '123456']);
 ?>
 ```
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### dontSeeInCurrentUrl
@@ -294,7 +294,7 @@ $I->dontSeeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeInField
@@ -309,22 +309,21 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
 
 
 ### dontSeeInTitle
  
 Checks that page title does not contain text.
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
 
 
 ### dontSeeLink
@@ -340,8 +339,8 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### dontSeeOptionIsSelected
@@ -354,10 +353,9 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
 
 
 ### dontSeeRecord
@@ -365,11 +363,13 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Checks that record does not exist in database.
 
 ``` php
+<?php
 $I->dontSeeRecord('users', array('name' => 'davert'));
+?>
 ```
 
- * `param`  $model
- * `param`  array $attributes
+ * `param` $model
+ * `param array` $attributes
 
 
 
@@ -382,13 +382,14 @@ Example:
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
+
 
 
 
@@ -411,19 +412,17 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ```
 
 
- * `param`  $cssOrXpath
- * `param`  $attribute
- * `internal`  param $element
- * `return`  mixed
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `internal param` $element
 
 
 ### grabCookie
  
 Grabs a cookie value.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### grabFromCurrentUrl
@@ -438,10 +437,9 @@ $uri = $I->grabFromCurrentUrl();
 ?>
 ```
 
- * `param`  null $uri
+ * `param null` $uri
 
- * `internal`  param $url
- * `return`  mixed
+ * `internal param` $url
 
 
 ### grabRecord
@@ -449,12 +447,13 @@ $uri = $I->grabFromCurrentUrl();
 Retrieves record from database
 
 ``` php
+<?php
 $category = $I->grabRecord('users', array('name' => 'davert'));
+?>
 ```
 
- * `param`  $model
- * `param`  array $attributes
- * `return`  mixed
+ * `param` $model
+ * `param array` $attributes
 
 
 ### grabService
@@ -478,8 +477,7 @@ $service = $I->grabService('foo');
 ?>
 ```
 
- * `param`   string $class
- * `return`  mixed
+ * `param`  string $class
 
 
 ### grabTextFrom
@@ -497,30 +495,15 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ?>
 ```
 
- * `param`  $cssOrXPathOrRegex
+ * `param` $cssOrXPathOrRegex
 
- * `return`  mixed
 
 
 ### grabValueFrom
  
-Finds and returns field and returns it's value.
-Searches by field name, then by CSS, then by XPath
+ * `param` $field
 
-Example:
-
-``` php
-<?php
-$name = $I->grabValueFrom('Name');
-$name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
-$name = $I->grabValueFrom(['name' => 'username']);
-?>
-```
-
- * `param`  $field
-
- * `return`  mixed
+@return array|mixed|null|string
 
 
 
@@ -534,9 +517,8 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 ?>
 ```
 
- * `param`  $model
- * `param`  array $attributes
- * `return`  mixed
+ * `param` $model
+ * `param array` $attributes
 
 
 
@@ -548,9 +530,8 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
  
 Unsets cookie
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 
@@ -570,8 +551,8 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### seeCheckboxIsChecked
@@ -585,20 +566,19 @@ Example:
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### seeCookie
  
 Checks that cookie is set.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### seeCurrentUrlEquals
@@ -613,7 +593,7 @@ $I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeCurrentUrlMatches
@@ -627,7 +607,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeElement
@@ -647,9 +627,9 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 ?>
 ```
 
- * `param`  $selector
- * `param`  array $attributes
- * `return` 
+ * `param` $selector
+ * `param array` $attributes
+@return
 
 
 ### seeInCurrentUrl
@@ -665,7 +645,7 @@ $I->seeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeInField
@@ -681,22 +661,22 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
 
 
 ### seeInSession
  
 Assert that the session has a given list of values.
 
- * `param`   string|array $key
- * `param`   mixed $value
- * `return`  void
+ * `param`  string|array $key
+ * `param`  mixed $value
+@return void
 
 
 ### seeInTitle
@@ -709,9 +689,8 @@ $I->seeInTitle('Blog - Post #1');
 ?>
 ```
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
 
 
 ### seeLink
@@ -728,8 +707,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### seeOptionIsSelected
@@ -742,10 +721,9 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
 
 
 ### seePageNotFound
@@ -761,17 +739,16 @@ Checks that record exists in database.
 $I->seeRecord('users', array('name' => 'davert'));
 ```
 
- * `param`  $model
- * `param`  array $attributes
+ * `param` $model
+ * `param array` $attributes
 
 
 ### seeResponseCodeIs
  
 Checks that response code is equal to value provided.
 
- * `param`  $code
+ * `param` $code
 
- * `return`  mixed
 
 
 ### seeSessionErrorMessage
@@ -790,22 +767,22 @@ Example of Usage
 $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
 ?>
 ```
- * `param`  array $bindings
+ * `param array` $bindings
 
 
 ### seeSessionHasErrors
  
 Assert that the session has errors bound.
 
- * `return`  bool
+@return bool
 
 
 ### seeSessionHasValues
  
 Assert that the session has a given list of values.
 
- * `param`   array $bindings
- * `return`  void
+ * `param`  array $bindings
+@return void
 
 
 ### selectOption
@@ -818,7 +795,7 @@ Example:
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -830,8 +807,8 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ?>
 ```
 
- * `param`  $select
- * `param`  $option
+ * `param` $select
+ * `param` $option
 
 
 ### sendAjaxGetRequest
@@ -841,8 +818,8 @@ This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### sendAjaxPostRequest
@@ -863,8 +840,8 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
 
 ```
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### sendAjaxRequest
@@ -882,19 +859,18 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
 
 ```
 
- * `param`  $method
- * `param`  $uri
- * `param`  $params
+ * `param` $method
+ * `param` $uri
+ * `param` $params
 
 
 ### setCookie
  
 Sets a cookie.
 
- * `param`  $cookie
- * `param`  $value
+ * `param` $cookie
+ * `param` $value
 
- * `return`  mixed
 
 
 
@@ -936,8 +912,8 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
 ```
 Note, that pricing plan will be set to Paid, as it's selected on page.
 
- * `param`  $selector
- * `param`  $params
+ * `param` $selector
+ * `param` $params
 
 
 
@@ -953,6 +929,6 @@ $I->uncheckOption('#notify');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Laravel4.php">Help us to improve documentation. Edit module reference</a></div>

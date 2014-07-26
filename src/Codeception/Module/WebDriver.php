@@ -14,24 +14,25 @@ use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
 /**
- * New generation Selenium2 module.
- * *Included in Codeception 1.7.0*
+ * New generation Selenium WebDriver module.
  *
- * ## Installation
+ * ## Selenium Installation
  *
- * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
+ * Download [Selenium Server](http://docs.seleniumhq.org/download/)
  * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
- * ## Migration Guide (Selenium2 -> WebDriver)
+ * ## PhantomJS Installation
  *
- * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ * PhantomJS is headless alternative to Selenium Server.
  *
+ * * Download [PhantomJS](http://phantomjs.org/download.html)
+ * * Run PhantomJS in webdriver mode `phantomjs --webdriver=4444`
  *
  *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **beta**
+ * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
  * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
@@ -60,9 +61,10 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
  *
+ * ## Migration Guide (Selenium2 -> WebDriver)
  *
- * Class WebDriver
- * @package Codeception\Module
+ * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ *
  */
 class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface {
 
@@ -196,13 +198,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Makes a screenshot of current window and saves it to `tests/_log/debug`.
+     * Makes a screenshot of current window and saves it to `tests/_output/debug`.
      *
      * ``` php
      * <?php
      * $I->amOnPage('/user/edit');
      * $I->makeScreenshot('edit_page');
-     * // saved to: tests/_log/debug/edit_page.png
+     * // saved to: tests/_output/debug/edit_page.png
      * ?>
      * ```
      *
@@ -768,6 +770,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->findField($field);
         // in order to be compatible on different OS
         $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        // in order for remote upload to be enabled
+        $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);
     }
 
@@ -1425,6 +1429,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     /**
      * Executes custom JavaScript
+     * 
+     * In this example we will use jQuery to get a value and assign this value to a variable.
+     *
+     * ```php
+     * <?php
+     * $myVar = $I->executeJS('return $("#myField").val()');
+     * ?>
+     * ```
      *
      * @param $script
      * @return mixed

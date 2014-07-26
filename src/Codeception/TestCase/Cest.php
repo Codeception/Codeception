@@ -59,12 +59,11 @@ class Cest extends \Codeception\TestCase implements
         try {
             $this->executeBefore($this->testMethod, $I);
             $this->executeTestMethod($I);
-        } catch (\Exception $e) {
             $this->executeAfter($this->testMethod, $I);
+        } catch (\Exception $e) {
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
-        $this->executeAfter($this->testMethod, $I);
 
         $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }

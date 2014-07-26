@@ -1,6 +1,6 @@
 # Filesystem Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Filesystem.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Filesystem.php)**
 
 
 Module for testing local filesystem.
@@ -45,7 +45,7 @@ Module was developed to test Codeception itself.
 Enters a directory In local filesystem.
 Project root directory is used by default
 
- * `param`  $path
+ * `param` $path
 
 
 
@@ -74,7 +74,7 @@ $I->cleanDir('logs');
 ?>
 ```
 
- * `param`  $dirname
+ * `param` $dirname
 
 
 ### copyDir
@@ -87,8 +87,8 @@ $I->copyDir('vendor','old_vendor');
 ?>
 ```
 
- * `param`  $src
- * `param`  $dst
+ * `param` $src
+ * `param` $dst
 
 
 
@@ -103,7 +103,7 @@ $I->deleteDir('vendor');
 ?>
 ```
 
- * `param`  $dirname
+ * `param` $dirname
 
 
 ### deleteFile
@@ -116,7 +116,7 @@ $I->deleteFile('composer.lock');
 ?>
 ```
 
- * `param`  $filename
+ * `param` $filename
 
 
 ### deleteThisFile
@@ -128,8 +128,8 @@ Deletes a file
  
 Checks if file does not exists in path
 
- * `param`  $filename
- * `param`  string $path
+ * `param` $filename
+ * `param string` $path
 
 
 ### dontSeeInThisFile
@@ -143,7 +143,7 @@ $I->dontSeeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param`  $text
+ * `param` $text
 
 
 
@@ -164,7 +164,7 @@ $I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param`  $filename
+ * `param` $filename
 
 
 
@@ -182,7 +182,7 @@ $I->seeFileContentsEqual('3192');
 ?>
 ```
 
- * `param`  $text
+ * `param` $text
 
 
 ### seeFileFound
@@ -196,8 +196,8 @@ $I->seeFileFound('UserModel.php','app/models');
 ?>
 ```
 
- * `param`  $filename
- * `param`  string $path
+ * `param` $filename
+ * `param string` $path
 
 
 ### seeInThisFile
@@ -213,7 +213,7 @@ $I->seeInThisFile('codeception/codeception');
 ?>
 ```
 
- * `param`  $text
+ * `param` $text
 
 
 
@@ -221,6 +221,6 @@ $I->seeInThisFile('codeception/codeception');
  
 Saves contents to file
 
- * `param`  $filename
- * `param`  $contents
-
+ * `param` $filename
+ * `param` $contents
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Filesystem.php">Help us to improve documentation. Edit module reference</a></div>

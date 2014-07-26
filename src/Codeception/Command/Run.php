@@ -108,11 +108,17 @@ class Run extends Command
             $output->setDecorated($options['colors']);
         }
 
-        $options = array_merge($options, $this->booleanOptions($input, ['xml','html','coverage','coverage-xml','coverage-html']));
+        $options = array_merge($options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
         if ($options['debug']) {
             $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
         $options['verbosity'] = $output->getVerbosity();
+        if ($options['no-colors']) $options['colors'] = false;
+        if ($options['report']) $options['silent'] = true;
+        if ($options['group']) $options['groups'] = $options['group'];
+        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
+
 
         $this->ensureCurlIsAvailable();
 
@@ -204,7 +210,7 @@ class Run extends Command
 
     protected function matchTestFromFilename($filename, $tests_path)
     {
-        $filename = str_replace('\/', '/', $filename);
+        $filename = str_replace(array('//', '\/', '\\'), '/', $filename);
         $res      = preg_match("~^$tests_path/(.*?)/(.*)$~", $filename, $matches);
         if (! $res) {
             throw new \InvalidArgumentException("Test file can't be matched");

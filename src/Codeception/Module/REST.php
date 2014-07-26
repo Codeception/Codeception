@@ -2,8 +2,10 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\Module;
+use Codeception\Lib\Framework;
+use Codeception\Lib\InnerBrowser;
 use Symfony\Component\BrowserKit\Cookie;
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
 
 /**
  * Module for testing REST WebService.
@@ -57,36 +59,21 @@ class REST extends \Codeception\Module
      */
     public $client = null;
     public $isFunctional = false;
+    protected $connectionModule;
 
     public $headers = array();
     public $params = array();
     public $response = "";
 
+
     public function _before(\Codeception\TestCase $test)
     {
-        if (!$this->client) {
-            if (!strpos($this->config['url'], '://')) {
-                // not valid url
-                foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Lib\Framework) {
-                        $this->client = $module->client;
-                        $this->isFunctional = true;
-                        $this->client->setServerParameters(array());
-                        break;
-                    }
-                }
-            } else {
-                if (!$this->hasModule('PhpBrowser')) {
-                    throw new ModuleConfigException(__CLASS__, "For REST testing via HTTP please enable PhpBrowser module");
-                }
-                $this->client = &$this->getModule('PhpBrowser')->client;
-            }
-        }
-
         $this->headers = array();
         $this->params = array();
         $this->response = "";
 
+        $this->prepareConnection();
+        $this->client = &$this->connectionModule->client;
 
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
@@ -659,5 +646,27 @@ class REST extends \Codeception\Module
     {
         $this->assertNotEquals($code, $this->client->getInternalResponse()->getStatus());
     }
+
+    protected function prepareConnection()
+    {
+        if ($this->connectionModule) {
+            return;
+        }
+        foreach ($this->getModules() as $module) {
+            if ($module instanceof InnerBrowser) {
+                $this->connectionModule = $module;
+                break;
+            }
+        }
+
+        if (!$this->connectionModule) {
+            throw new Module(__CLASS__, "Provide either PHPBrowser or one of Framework modules to be able to send REST requests");
+        }
+
+        if ($this->connectionModule instanceof Framework) {
+            $this->isFunctional = true;
+        }
+    }
+
 
 }

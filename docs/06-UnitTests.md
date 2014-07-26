@@ -5,7 +5,7 @@ Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test 
 If you ever wrote a PHPUnit test then do it just as you did before. 
 Codeception adds some nice helpers to simplify common tasks.
 
-The basics of unit tests are skipped here, instead you will get a basic knowledge on what features Codeception adds to unit tests.
+The basics of unit tests are skipped here, instead you will get a basic knowledge of what features Codeception adds to unit tests.
 
 __To say it again: you don't need to install PHPUnit to run its tests. Codeception can run them too.__
 
@@ -19,7 +19,7 @@ This can be done by this command:
 $ php codecept.phar generate:phpunit unit Example
 ```
 
-Codeception has it's addons to standard unit tests. So let's try them.
+Codeception has its addons to standard unit tests, so let's try them.
 We need another command to create Codeception-powered unit tests.
 
 ```bash
@@ -56,9 +56,9 @@ class ExampleTest extends \Codeception\TestCase\Test
 
 This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
 
-As you see unlike in PHPUnit, `setUp` and `tearDown` methods are replaced with their aliases: `_before`, `_after`.
+As you see, unlike in PHPUnit, `setUp` and `tearDown` methods are replaced with their aliases: `_before`, `_after`.
 
-The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in acceptance and functional tests you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
+The actual `setUp` and `tearDown` were implemented by parent class `\Codeception\TestCase\Test` and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in acceptance and functional tests you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
 
 
 ```yaml
@@ -72,7 +72,7 @@ modules:
 
 ### Classical Unit Testing
 
-Unit tests in Codeception written in absolutely the same way as you do it in PHPUnit:
+Unit tests in Codeception are written in absolutely the same way as it is done in PHPUnit:
 
 ```php
 <?php
@@ -85,10 +85,10 @@ class UserTest extends \Codeception\TestCase\Test
         $this->user->username = null;
         $this->assertFalse($user->validate(['username']); 
 
-        $user->username = 'toolooooongnaaaaaaameeee',
+        $user->username = 'toolooooongnaaaaaaameeee';
         $this->assertFalse($user->validate(['username']);         
 
-        $user->username = 'davert',
+        $user->username = 'davert';
         $this->assertTrue($user->validate(['username']));           
     }
 }
@@ -97,12 +97,11 @@ class UserTest extends \Codeception\TestCase\Test
 
 ### BDD Specification Testing
 
-When writing a test you should prepare it to constant changes in your application. Tests should be easy to read and maintain. If a specification to your application is changed, your test should be updated as well. If inside a team you didn't have a convention on documenting tests, you will have issues figuring out what tests was affected by a new feature introduction. 
+When writing tests you should prepare them to constant changes in your application. Tests should be easy to read and maintain. If a specification to your application is changed, your tests should be updated as well. If you don't have a convention inside your team on documenting tests, you will have issues figuring out what tests were affected by introduction of a new feature.
 
-That's why its pretty important not just to cover your application with unit tests, but make unit tests self-explainable. We do this for scenario-driven acceptance and functional tests, and we should do this for unit and integration tests as well. 
+That's why it's pretty important not just to cover your application with unit tests, but make unit tests self-explanatory. We do this for scenario-driven acceptance and functional tests, and we should do this for unit and integration tests as well.
 
-For this case we have a stand-alone project [Specify](https://github.com/Codeception/Specify)(included in phar package) for writing specifications inside a unit test. 
-
+For this case we have a stand-alone project [Specify](https://github.com/Codeception/Specify) (which is included in phar package) for writing specifications inside unit tests.
 
 ```php
 <?php
@@ -120,12 +119,12 @@ class UserTest extends \Codeception\TestCase\Test
         });
 
         $this->specify("username is too long", function() {
-            $user->username = 'toolooooongnaaaaaaameeee',
+            $user->username = 'toolooooongnaaaaaaameeee';
             $this->assertFalse($user->validate(['username']);         
         });
 
         $this->specify("username is ok", function() {
-            $user->username = 'davert',
+            $user->username = 'davert';
             $this->assertTrue($user->validate(['username']));           
         });     
     }
@@ -133,21 +132,21 @@ class UserTest extends \Codeception\TestCase\Test
 ?>        
 ```
 
-Using `specify` codeblocks you can describe any piece of test. This makes tests much more clean and understandable for everyone in a team.
+Using `specify` codeblocks you can describe any piece of test. This makes tests much cleaner and understandable for everyone in your team.
 
-Code inside `specify` block is isolated. In the example above any change to `$this->user` (as any other object property), will not be reflected in other code blocks.
+Code inside `specify` blocks is isolated. In the example above any change to `$this->user` (as any other object property), will not be reflected in other code blocks.
 
-Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions. This tiny library adds more readable assertions. Quite nice if you are always confused of which argument in `assert` calls is expeted and which is actual.
+Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions. This tiny library adds more readable assertions, which is quite nice, if you are always confused of which argument in `assert` calls is expected and which one is actual.
 
 ```php
 <?php
-verify($user->getName())->equals('jon');
+verify($user->getName())->equals('john');
 ?>
 ```
 
 ## Using Modules
 
-As in scenario-driven functional or acceptance tests you can access actor class methods. If you write integration tests, it may be useful to include Db module for database testing. 
+As in scenario-driven functional or acceptance tests you can access Actor class methods. If you write integration tests, it may be useful to include `Db` module for database testing. 
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -168,24 +167,24 @@ Let's see how you can do some database testing:
 <?php
 function testSavingUser()
 {
-	$user = new User();
-	$user->setName('Miles');
+    $user = new User();
+    $user->setName('Miles');
     $user->setSurname('Davis');
-	$user->save();
+    $user->save();
     $this->assertEquals('Miles Davis', $user->getFullName());
-	$this->tester->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+    $this->tester->seeInDatabase('users', array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
 
 Database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
-If it's not your required behavior, please change the settings of `Db` module for current suite.
+If it's not your required behavior, please change the settings of `Db` module for the current suite.
 
-### Accessing Module 
+### Accessing Module
 
 Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the UnitTester class for this purpose, using module directly grants you access to all public properties of that module.
 
-For example, if you use `Symfony2` module here is the way you can access Symfony container:
+For example, if you use `Symfony2` module, here is the way you can access Symfony container:
 
 ```php
 <?php
@@ -200,7 +199,7 @@ All public variables are listed in references for corresponding modules.
 
 ### Cest
 
-Alternatively to testcases extended from `PHPUnit_Framework_TestCase` you may use Codeception-specific Cest format. It does not require to be extended from any other class. All public methods of this class is a test. 
+Alternatively to testcases extended from `PHPUnit_Framework_TestCase` you may use Codeception-specific Cest format. It does not require to be extended from any other class. All public methods of this class are tests.
 
 The example above can be rewritten in scenario-driven manner like this:
 
@@ -208,16 +207,16 @@ The example above can be rewritten in scenario-driven manner like this:
 <?php
 class UserCest
 {
-    function validateUser(UnitTester $t)
+    public function validateUser(UnitTester $t)
     {
         $user = $t->createUser();
         $user->username = null;
         $t->assertFalse($user->validate(['username']); 
 
-        $user->username = 'toolooooongnaaaaaaameeee',
+        $user->username = 'toolooooongnaaaaaaameeee';
         $t->assertFalse($user->validate(['username']);         
 
-        $user->username = 'davert',
+        $user->username = 'davert';
         $t->assertTrue($user->validate(['username']));
 
         $t->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
@@ -226,7 +225,7 @@ class UserCest
 ?>
 ```
 
-For unit testing you may include `Asserts` module, that adds regular assertions to UnitTester which we acces from `$t` variable.
+For unit testing you may include `Asserts` module, that adds regular assertions to UnitTester which you may access from `$t` variable.
 
 ```yaml
 # Codeception Test Suite Configuration
@@ -243,19 +242,19 @@ modules:
 
 Codeception provides a tiny wrapper over PHPUnit mocking framework to create stubs easily. Include `\Codeception\Util\Stub` to start creating dummy objects.
 
-In this example we instantiate object without calling a constructor and replace `getName` method to return *jon* value.
+In this example we instantiate object without calling a constructor and replace `getName` method to return value *john*.
 
 ```php
 <?php
-$user = Stub::make('User', ['getName' => 'jon']);
-$user->getName() // => 'jon'
+$user = Stub::make('User', ['getName' => 'john']);
+$name = $user->getName(); // 'john'
 ?>
 ```
 
 Stubs are created with PHPUnit's mocking framework. Alternatively you can use [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)), [AspectMock](https://github.com/Codeception/AspectMock) or others.
 
-Full reference on stub util class can be [found here](/docs/reference/stubs).
+Full reference on Stub util class can be found [here](/docs/reference/Stub).
 
 ## Conclusion
 
-PHPUnit tests is a first-class citizen in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit manually, but use a Codeception to execute them. Some nice features are added to common unit tests by integrating Codeception modules. For most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain.
+PHPUnit tests are first-class citizens in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit, but use a Codeception to execute them. Some nice features can be added to common unit tests by integrating Codeception modules. For the most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain.

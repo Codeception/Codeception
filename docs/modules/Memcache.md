@@ -1,6 +1,6 @@
 # Memcache Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Memcache.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php)**
 
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
@@ -75,8 +75,8 @@ Flushes all Memcached data.
  
 Checks item in Memcached doesn't exist or is the same as expected.
 
- * `param`  $key
- * `param`  bool $value
+ * `param` $key
+ * `param bool` $value
 
 
 
@@ -94,8 +94,8 @@ $users_count = $I->grabValueFromMemcached('users_count');
 ?>
 ```
 
- * `param`  $key
- * `return`  array|string
+ * `param` $key
+@return array|string
 
 
 
@@ -105,7 +105,7 @@ $users_count = $I->grabValueFromMemcached('users_count');
  
 Checks item in Memcached exists and the same as expected.
 
- * `param`  $key
- * `param`  $value
+ * `param` $key
+ * `param` $value
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Memcache.php">Help us to improve documentation. Edit module reference</a></div>

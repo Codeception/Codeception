@@ -1,6 +1,6 @@
 # AMQP Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/AMQP.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/AMQP.php)**
 
 
 This module interacts with message broker software that implements
@@ -101,8 +101,8 @@ Takes last message from queue.
 
 $message = $I->grabMessageFromQueue('queue.emails');
 
- * `param`  $queue
- * `return`  AMQPMessage
+ * `param` $queue
+@return AMQPMessage
 
 
 
@@ -118,8 +118,8 @@ $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
 ?>
 ```
 
- * `param`  $exchange
- * `param`  $message string|AMQPMessage
+ * `param` $exchange
+ * `param` $message string|AMQPMessage
 
 
 ### pushToQueue
@@ -133,8 +133,8 @@ $I->pushToQueue('queue.jobs', new AMQPMessage('create'));
 ?>
 ```
 
- * `param`  $queue
- * `param`  $message string|AMQPMessage
+ * `param` $queue
+ * `param` $message string|AMQPMessage
 
 
 
@@ -152,7 +152,7 @@ $I->seeMessageInQueueContainsText('queue.emails','davert');
 ?>
 ```
 
- * `param`  $queue
- * `param`  $text
+ * `param` $queue
+ * `param` $text
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/AMQP.php">Help us to improve documentation. Edit module reference</a></div>

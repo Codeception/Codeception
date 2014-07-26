@@ -1,6 +1,6 @@
 # Doctrine2 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine2.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine2.php)**
 
 
 Allows integration and testing for projects with Doctrine2 ORM.
@@ -82,8 +82,8 @@ It can be done in bootstrap file, by setting static $em property:
  
 Flushes changes to database and performs ->findOneBy() call for current repository.
 
- * `param`  $entity
- * `param`  array $params
+ * `param` $entity
+ * `param array` $params
 
 
 
@@ -108,11 +108,11 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
 ?>
 ```
 
- * `version`  1.1
- * `param`  $entity
- * `param`  $field
- * `param`  array $params
- * `return`  array
+@version 1.1
+ * `param` $entity
+ * `param` $field
+ * `param array` $params
+@return array
 
 
 
@@ -134,13 +134,20 @@ $I->haveFakeRepository('Entity\User', array('findByUsername' => function($userna
 
 This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
 
- * `param`  $classname
- * `param`  array $methods
+ * `param` $classname
+ * `param array` $methods
 
 
 ### haveInRepository
  
-Saves data in repository
+Persists record into repository.
+This method crates an entity, and sets its properties directly (via reflection).
+Setters of entity won't be executed, but you can create almost any entity and save it to database.
+Returns id using `getId` of newly created entity.
+
+```php
+$I->haveInRepository('Entity\User', array('name' => 'davert'));
+```
 
 
 
@@ -156,8 +163,8 @@ $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
 $I->persistEntity($user, array('name' => 'Miles'));
 ```
 
- * `param`  $obj
- * `param`  array $values
+ * `param` $obj
+ * `param array` $values
 
 
 
@@ -180,7 +187,7 @@ $I->seeInRepository('Client', array('User' => array('Company' => array('name' =>
 
 Fails if record for given criteria can\'t be found,
 
- * `param`  $entity
- * `param`  array $params
+ * `param` $entity
+ * `param array` $params
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine2.php">Help us to improve documentation. Edit module reference</a></div>

@@ -86,7 +86,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->_initializeSession();
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(TestCase $test) {
         $this->_initializeSession();
     }
 

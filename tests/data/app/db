@@ -1,1 +1,1 @@
-a:3:{s:6:"params";a:0:{}s:4:"form";a:5:{s:33:"codeception_generated_button_name";s:0:"";s:6:"_token";s:40:"VsSbDK5vI0LE5rVULAX8Xd3AJ3iOPfKAksmLNxpW";s:5:"email";s:0:"";s:8:"password";s:0:"";s:21:"password_confirmation";s:0:"";}s:5:"files";a:0:{}}
+a:2:{s:4:"form";a:2:{s:6:"field1";s:6:"value1";s:6:"field2";s:20:"value2&field3=value3";}s:5:"files";a:1:{s:4:"file";a:5:{s:4:"name";s:10:"avatar.jpg";s:4:"type";s:10:"image/jpeg";s:8:"tmp_name";s:14:"/tmp/phpK23izD";s:5:"error";i:0;s:4:"size";i:5621;}}}

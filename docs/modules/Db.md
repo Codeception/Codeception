@@ -1,6 +1,6 @@
 # Db Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Db.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php)**
 
 
 Works with SQL database.
@@ -11,7 +11,7 @@ To have your database properly cleaned you should configure it to access the dat
 Also provides actions to perform checks in database.
 
 In order to have your database populated with data you need a raw SQL dump.
-Just put it in ``` tests/_data ``` dir (by default) and specify path to it in config.
+Just put it in `tests/_data` dir (by default) and specify path to it in config.
 Next time after database is cleared all your data will be restored from dump.
 Don't forget to include CREATE TABLE statements into it.
 
@@ -126,18 +126,18 @@ Example:
 
 ``` php
 <?php
-$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
 ```
 Fails if such user was found.
 
- * `param`        $table
- * `param`  array $criteria
+ * `param`       $table
+ * `param array` $criteria
 
 
 
@@ -156,13 +156,12 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 ```
 
- * `version`  1.1
+@version 1.1
 
- * `param`        $table
- * `param`        $column
- * `param`  array $criteria
+ * `param`       $table
+ * `param`       $column
+ * `param array` $criteria
 
- * `return`  mixed
 
 
 
@@ -172,13 +171,13 @@ Inserts SQL record into database. This record will be erased after the test.
 
 ``` php
 <?php
-$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
 ?>
 ```
 
- * `param`  $table
- * `param`  array $data
- * `return`  integer $id
+ * `param` $table
+ * `param array` $data
+ * `return integer` $id
 
 
 
@@ -195,17 +194,17 @@ Example:
 
 ``` php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
 ```
 Fails if no such user found.
 
- * `param`        $table
- * `param`  array $criteria
+ * `param`       $table
+ * `param array` $criteria
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>

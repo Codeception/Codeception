@@ -61,13 +61,20 @@ class Console extends Command
 
         $this->codecept = new Codecept($options);
         $dispatcher     = $this->codecept->getDispatcher();
+
+        $this->test     = (new Cept())
+            ->configDispatcher($dispatcher)
+            ->configName('interactive')
+            ->config('file','interactive')
+            ->initConfig();
+
         $suiteManager   = new SuiteManager($dispatcher, $suiteName, $settings);
+        $suiteManager->initialize();
         $this->suite    = $suiteManager->getSuite();
-        $this->test     = new Cept($dispatcher, array('name' => 'interactive', 'file' => 'interactive'));
 
         $scenario = new Scenario($this->test);
-        $guy      = $settings['class_name'];
-        $I        = new $guy($scenario);
+        $actor      = $settings['class_name'];
+        $I        = new $actor($scenario);
 
         $this->listenToSignals();
 
@@ -113,7 +120,10 @@ class Console extends Command
                 continue;
             }
             try {
-                eval("\$I->$command;");
+                $value = eval("return \$I->$command;");
+                if ($value and !is_object($value)) {
+                    codecept_debug($value);
+                }
             } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
                 $output->writeln("<error>fail</error> " . $fail->getMessage());
             } catch (\Exception $e) {

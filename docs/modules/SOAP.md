@@ -1,6 +1,6 @@
 # SOAP Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/SOAP.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/SOAP.php)**
 
 
 Module for testing SOAP WSDL web services.
@@ -84,11 +84,11 @@ Checks XML response doesn't contain XPath locator
 
 ``` php
 <?php
-$I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+$I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
 ?>
 ```
 
- * `param`  $xpath
+ * `param` $xpath
 
 
 ### dontSeeSoapResponseEquals
@@ -98,7 +98,7 @@ Comparison is done by canonicalizing both xml`s.
 
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
- * `param`  $xml
+ * `param` $xml
 
 
 ### dontSeeSoapResponseIncludes
@@ -107,7 +107,7 @@ Checks XML response does not include provided XML.
 Comparison is done by canonicalizing both xml`s.
 Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
 
- * `param`  $xml
+ * `param` $xml
 
 
 
@@ -119,10 +119,10 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
 Finds and returns attribute of element.
 Element is matched by either CSS or XPath
 
- * `version`  1.1
- * `param`  $cssOrXPath
- * `param`  $attribute
- * `return`  string
+@version 1.1
+ * `param` $cssOrXPath
+ * `param` $attribute
+@return string
 
 
 ### grabTextContentFrom
@@ -130,9 +130,9 @@ Element is matched by either CSS or XPath
 Finds and returns text contents of element.
 Element is matched by either CSS or XPath
 
- * `version`  1.1
- * `param`  $cssOrXPath
- * `return`  string
+@version 1.1
+ * `param` $cssOrXPath
+@return string
 
 
 
@@ -160,8 +160,8 @@ Will produce header:
   </soapenv:Header>
 ```
 
- * `param`  $header
- * `param`  array $params
+ * `param` $header
+ * `param array` $params
 
 
 
@@ -174,7 +174,7 @@ Will produce header:
  
 Checks response code from server.
 
- * `param`  $code
+ * `param` $code
 
 
 ### seeSoapResponseContainsStructure
@@ -197,7 +197,7 @@ Use this method to check XML of valid structure is returned.
 This method does not use schema for validation.
 This method does not require path from root to match the structure.
 
- * `param`  $xml
+ * `param` $xml
 
 
 ### seeSoapResponseContainsXPath
@@ -206,11 +206,11 @@ Checks XML response with XPath locator
 
 ``` php
 <?php
-$I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+$I->seeSoapResponseContainsXPath('//root/user[@id=1]');
 ?>
 ```
 
- * `param`  $xpath
+ * `param` $xpath
 
 
 ### seeSoapResponseEquals
@@ -232,7 +232,7 @@ $I->seeSoapRequestIncludes($dom);
 
 ```
 
- * `param`  $xml
+ * `param` $xml
 
 
 ### seeSoapResponseIncludes
@@ -254,7 +254,7 @@ $I->seeSoapRequestIncludes($dom);
 ?>
 ```
 
- * `param`  $xml
+ * `param` $xml
 
 
 ### sendSoapRequest
@@ -275,8 +275,8 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
   ->name->val('notdavert');
 ```
 
- * `param`  $request
- * `param`  $body
+ * `param` $request
+ * `param` $body
 
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>

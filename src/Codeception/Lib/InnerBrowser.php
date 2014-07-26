@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\TestRuntime;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
@@ -14,6 +15,7 @@ use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 class InnerBrowser extends Module implements Web
 {
@@ -32,6 +34,9 @@ class InnerBrowser extends Module implements Web
         "You shouldn't use PhpBrowser and one of the framework modules (Symfony2, Laravel4, etc) inside one suite.\nThey have the same API but execute test in a different way.\nPlease disable one of conflicted modules"
     ];
 
+    /**
+     * @var array|\Symfony\Component\DomCrawler\Form[]
+     */
     protected $forms = array();
 
     public function _failed(TestCase $test, $fail)
@@ -39,7 +44,7 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.html';
+        $filename = str_replace(['::','\\','/'], ['.','',''], TestCase::getTestSignature($test)).'.fail.html';
         file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
     }
 
@@ -285,6 +290,7 @@ class InnerBrowser extends Module implements Web
         }
 
         $url    = '';
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('input');
         foreach ($fields as $field) {
             if ($field->getAttribute('type') == 'checkbox') {
@@ -296,13 +302,15 @@ class InnerBrowser extends Module implements Web
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
         }
 
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('textarea');
         foreach ($fields as $field) {
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
         }
-
+        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('select');
         foreach ($fields as $field) {
+            /** @var  \DOMElement $option */
             foreach ($field->childNodes as $option) {
                 if ($option->getAttribute('selected') == 'selected') {
                     $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
@@ -325,6 +333,11 @@ class InnerBrowser extends Module implements Web
         $this->debugResponse();
     }
 
+    /**
+     * @param \Symfony\Component\DomCrawler\Crawler $form
+     *
+     * @return string
+     */
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
@@ -334,6 +347,11 @@ class InnerBrowser extends Module implements Web
         return $action;
     }
 
+    /**
+     * @param \Symfony\Component\DomCrawler\Crawler $node
+     *
+     * @return \Symfony\Component\DomCrawler\Form|\Symfony\Component\DomCrawler\Field\ChoiceFormField[]|\Symfony\Component\DomCrawler\Field\FileFormField[]
+     */
     protected function getFormFor($node)
     {
         $form = $node->parents()->filter('form')->first();
@@ -342,16 +360,33 @@ class InnerBrowser extends Module implements Web
         }
         $action = $this->getFormUrl($form);
 
-        if (!isset($this->forms[$action])) {
-            $submit = new \DOMElement('input');
-            $submit = $form->current()->appendChild($submit);
-            $submit->setAttribute('type', 'submit'); // for forms with no submits
-            $submit->setAttribute('name', 'codeception_added_auto_submit');
-
-            // Symfony2.1 DOM component requires name for each field.
-            $form = $form->filter('*[type=submit]')->form();
-            $this->forms[$action] = $form;
+        if (isset($this->forms[$action])) {
+            return $this->forms[$action];
         }
+
+        /** @var \DOMElement $autoSubmit */
+        $autoSubmit = new \DOMElement('input');
+        $autoSubmit = $form->current()->appendChild($autoSubmit);
+        $autoSubmit->setAttribute('type', 'submit'); // for forms with no submits
+        $autoSubmit->setAttribute('name', 'codeception_added_auto_submit');
+
+        // Symfony2.1 DOM component requires name for each field.
+        $formSubmits = $form->filter('*[type=submit]');
+        $values = null;
+
+        // If there are more than one submit (+1 auto_added) in one form we should add value of actually clicked one
+        if ($formSubmits->count() > 2) {
+            $nodeItem = $node->getNode(0);
+            foreach ($formSubmits as $formSubmit) {
+                if ($formSubmit == $nodeItem) {
+                    $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
+                    break;
+                }
+            }
+        }
+        $form = $formSubmits->form($values);
+        $this->forms[$action] = $form;
+
         return $this->forms[$action];
     }
 
@@ -362,14 +397,19 @@ class InnerBrowser extends Module implements Web
         $form[$input->attr('name')] = $value;
     }
 
-    protected function getFieldByLabelOrCss($field)
+    /**
+     * @param $field
+     *
+     * @return \Symfony\Component\DomCrawler\Crawler
+     */
+    protected function getFieldsByLabelOrCss($field)
     {
         if (is_array($field)) {
             $input = $this->strictMatch($field);
             if (!count($input)) {
                 throw new ElementNotFound($field);
             }
-            return $input->first();
+            return $input;
         }
 
         // by label
@@ -394,6 +434,13 @@ class InnerBrowser extends Module implements Web
         if (!count($input)) {
             throw new ElementNotFound($field, 'Form field by Label or CSS');
         }
+
+        return $input;
+    }
+
+    protected function getFieldByLabelOrCss($field)
+    {
+        $input = $this->getFieldsByLabelOrCss($field);
         return $input->first();
     }
 
@@ -430,19 +477,45 @@ class InnerBrowser extends Module implements Web
     public function checkOption($option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
-        $form[$field->attr('name')]->tick();
+        $name = $field->attr('name');
+        // If the name is an array than we compare objects to find right checkbox
+        if ((substr($name, -2) == '[]')) {
+            $name = rtrim($name, '[]');
+            $checkbox = new ChoiceFormField($field->getNode(0));
+            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
+            foreach ($form[$name] as $item) {
+                if ($item == $checkbox) {
+                    $item->tick();
+                }
+            }
+        } else {
+            $form[$name]->tick();
+        }
     }
 
     public function uncheckOption($option)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
-        $form[$field->attr('name')]->untick();
+        $name = $field->attr('name');
+        // If the name is an array than we compare objects to find right checkbox
+        if ((substr($name, -2) == '[]')) {
+            $name = rtrim($name, '[]');
+            $checkbox = new ChoiceFormField($field->getNode(0));
+            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
+            foreach ($form[$name] as $item) {
+                if ($item == $checkbox) {
+                    $item->untick();
+                }
+            }
+        } else {
+            $form[$name]->untick();
+        }
     }
 
     public function attachFile($field, $filename)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
-        $path = \Codeception\Configuration::dataDir() . $filename;
+        $path = Configuration::dataDir() . $filename;
         if (!is_readable($path)) {
             $this->fail(
                  "file $filename not found in Codeception data path. Only files stored in data path accepted"
@@ -536,6 +609,8 @@ class InnerBrowser extends Module implements Web
     }
 
     /**
+     * @param $selector
+     *
      * @return Crawler
      */
     protected function match($selector)
@@ -554,6 +629,11 @@ class InnerBrowser extends Module implements Web
         return @$this->crawler->filterXPath($selector);
     }
 
+    /**
+     * @param array $by
+     * @throws TestRuntime
+     * @return Crawler
+     */
     protected function strictMatch(array $by)
     {
         $type = key($by);
@@ -608,6 +688,11 @@ class InnerBrowser extends Module implements Web
         return $nodes->first()->attr($attribute);
     }
 
+    /**
+     * @param $field
+     *
+     * @return array|mixed|null|string
+     */
     public function grabValueFrom($field)
     {
         $nodes = $this->match($field);
@@ -623,10 +708,12 @@ class InnerBrowser extends Module implements Web
         }
 
         if ($nodes->filter('select')->count()) {
+            /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $select */
             $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
             $results     = array();
             foreach ($select->childNodes as $option) {
+                /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
                     $val = $option->attr('value');
                     if (!$is_multiple) {
@@ -702,7 +789,9 @@ class InnerBrowser extends Module implements Web
     {
         $selected = $this->matchSelectedOption($select);
         $this->assertDomContains($selected, 'selected option');
-        $this->assertEquals($optionText, $selected->text());
+        //If element is radio then we need to check value
+        $value = $selected->getNode(0)->tagName == 'option' ? $selected->text() : $selected->getNode(0)->getAttribute('value');
+        $this->assertEquals($optionText, $value);
     }
 
     public function dontSeeOptionIsSelected($select, $optionText)
@@ -712,13 +801,15 @@ class InnerBrowser extends Module implements Web
             $this->assertEquals(0, $selected->count());
             return;
         }
-        $this->assertNotEquals($optionText, $selected->text());
+         //If element is radio then we need to check value
+        $value = $selected->getNode(0)->tagName == 'option' ? $selected->text() : $selected->getNode(0)->getAttribute('value');
+        $this->assertNotEquals($optionText, $value);
     }
 
     protected function matchSelectedOption($select)
     {
-        $nodes = $this->getFieldByLabelOrCss($select);
-        return $nodes->first()->filter('option[selected]');
+        $nodes = $this->getFieldsByLabelOrCss($select);
+        return $nodes->filter('option[selected],input:checked');
     }
 
     /**

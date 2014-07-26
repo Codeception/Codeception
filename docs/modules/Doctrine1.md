@@ -1,6 +1,6 @@
 # Doctrine1 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Doctrine1.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine1.php)**
 
 
 Performs DB operations with Doctrine ORM 1.x
@@ -68,12 +68,12 @@ Example:
 
 ``` php
 <?php
-$I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->dontSeeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 
- * `param`  $model
- * `param`  array $values
+ * `param` $model
+ * `param array` $values
 
 
 
@@ -92,10 +92,9 @@ $mail = $I->grabFromTable('User', 'email', array('name' => 'Davert'));
 
 ```
 
- * `param`  $model
- * `param`  $column
- * `param`  array $values
- * `return`  mixed
+ * `param` $model
+ * `param` $column
+ * `param array` $values
 
 
 
@@ -111,11 +110,11 @@ Example:
 
 ``` php
 <?php
-$I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
+$I->seeInTable('User', array('name' => 'Davert', 'email' => 'davert@mail.com'));
 
 ```
 
- * `param`  $model
- * `param`  array $values
+ * `param` $model
+ * `param array` $values
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Doctrine1.php">Help us to improve documentation. Edit module reference</a></div>

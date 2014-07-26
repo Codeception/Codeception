@@ -52,9 +52,6 @@ class GenerateSuite extends Command
         $config['class_name'] = $actor;
 
         $dir = \Codeception\Configuration::testsDir();
-        if (file_exists($dir . $suite)) {
-            throw new \Exception("Directory $suite already exists.");
-        }
         if (file_exists($dir . $suite . '.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
@@ -63,7 +60,7 @@ class GenerateSuite extends Command
 
         // generate bootstrap
         $this->save($dir . $suite . DIRECTORY_SEPARATOR . '_bootstrap.php',
-            "<?php\n// Here you can initialize variables that will for your tests\n",
+            "<?php\n// Here you can initialize variables that will be available to your tests\n",
             true
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);

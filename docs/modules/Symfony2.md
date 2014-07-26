@@ -1,11 +1,13 @@
 # Symfony2 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony2.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony2.php)**
 
 
-This module uses Symfony2 Crawler and HttpKernel to emulate requests and get response.
+This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
 
-It implements common Framework interface.
+## Demo Project
+
+<https://github.com/DavertMik/SymfonyCodeceptionApp>
 
 ## Status
 
@@ -15,10 +17,14 @@ It implements common Framework interface.
 
 ## Config
 
+### Symfony 2.x
+
 * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
 * environment: 'local' - environment used for load kernel
+* debug: true - turn on/off debug mode
 
-### Example (`functional.suite.yml`)
+
+### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
     modules: 
        enabled: [Symfony2]
@@ -26,6 +32,24 @@ It implements common Framework interface.
           Symfony2:
              app_path: 'app/front'
              environment: 'local_test'
+
+### Symfony 3.x Directory Structure
+
+* app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+* var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
+* environment: 'local' - environment used for load kernel
+* debug: true - turn on/off debug mode
+
+### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
+
+    modules:
+       enabled: [Symfony2]
+       config:
+          Symfony2:
+             app_path: 'app/front'
+             var_path: 'var'
+             environment: 'local_test'
+
 
 ## Public Properties
 
@@ -68,8 +92,8 @@ It implements common Framework interface.
  
 Authenticates user for HTTP_AUTH
 
- * `param`  $username
- * `param`  $password
+ * `param` $username
+ * `param` $password
 
 
 ### amOnPage
@@ -88,7 +112,7 @@ $I->amOnPage('/register');
 ?>
 ```
 
- * `param`  $page
+ * `param` $page
 
 
 
@@ -120,12 +144,12 @@ Example:
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
- * `param`  $field
- * `param`  $filename
+ * `param` $field
+ * `param` $filename
 
 
 ### checkOption
@@ -141,7 +165,7 @@ $I->checkOption('#agree');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
 
 ### click
@@ -167,16 +191,16 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
-$I->click(['link' => 'Login'])'
+$I->click(['link' => 'Login']);
 ?>
 ```
 
- * `param`  $link
- * `param`  $context
+ * `param` $link
+ * `param` $context
 
 
 
@@ -198,8 +222,8 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### dontSeeCheckboxIsChecked
@@ -216,16 +240,15 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### dontSeeCookie
  
 Checks that cookie doesn't exist
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### dontSeeCurrentUrlEquals
@@ -240,7 +263,7 @@ $I->dontSeeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeCurrentUrlMatches
@@ -254,7 +277,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeElement
@@ -273,7 +296,7 @@ $I->dontSeeElement('input', ['value' => '123456']);
 ?>
 ```
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### dontSeeInCurrentUrl
@@ -286,7 +309,7 @@ $I->dontSeeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### dontSeeInField
@@ -301,22 +324,21 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
 
 
 ### dontSeeInTitle
  
 Checks that page title does not contain text.
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
 
 
 ### dontSeeLink
@@ -332,8 +354,8 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### dontSeeOptionIsSelected
@@ -346,10 +368,9 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
 
 
 
@@ -361,13 +382,14 @@ Example:
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
+
 
 
 
@@ -391,19 +413,17 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ```
 
 
- * `param`  $cssOrXpath
- * `param`  $attribute
- * `internal`  param $element
- * `return`  mixed
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `internal param` $element
 
 
 ### grabCookie
  
 Grabs a cookie value.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### grabFromCurrentUrl
@@ -418,10 +438,9 @@ $uri = $I->grabFromCurrentUrl();
 ?>
 ```
 
- * `param`  null $uri
+ * `param null` $uri
 
- * `internal`  param $url
- * `return`  mixed
+ * `internal param` $url
 
 
 ### grabServiceFromContainer
@@ -435,8 +454,7 @@ $em = $I->grabServiceFromContainer('doctrine');
 ?>
 ```
 
- * `param`  $service
- * `return`  mixed
+ * `param` $service
 
 
 ### grabTextFrom
@@ -454,30 +472,15 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 ?>
 ```
 
- * `param`  $cssOrXPathOrRegex
+ * `param` $cssOrXPathOrRegex
 
- * `return`  mixed
 
 
 ### grabValueFrom
  
-Finds and returns field and returns it's value.
-Searches by field name, then by CSS, then by XPath
+ * `param` $field
 
-Example:
-
-``` php
-<?php
-$name = $I->grabValueFrom('Name');
-$name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
-$name = $I->grabValueFrom(['name' => 'username']);
-?>
-```
-
- * `param`  $field
-
- * `return`  mixed
+@return array|mixed|null|string
 
 
 
@@ -490,9 +493,8 @@ $name = $I->grabValueFrom(['name' => 'username']);
  
 Unsets cookie
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 
@@ -511,8 +513,8 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ?>
 ```
 
- * `param`       $text
- * `param`  null $selector
+ * `param`      $text
+ * `param null` $selector
 
 
 ### seeCheckboxIsChecked
@@ -526,20 +528,19 @@ Example:
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
- * `param`  $checkbox
+ * `param` $checkbox
 
 
 ### seeCookie
  
 Checks that cookie is set.
 
- * `param`  $cookie
+ * `param` $cookie
 
- * `return`  mixed
 
 
 ### seeCurrentUrlEquals
@@ -554,7 +555,7 @@ $I->seeCurrentUrlEquals('/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeCurrentUrlMatches
@@ -568,7 +569,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeElement
@@ -588,16 +589,16 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 ?>
 ```
 
- * `param`  $selector
- * `param`  array $attributes
- * `return` 
+ * `param` $selector
+ * `param array` $attributes
+@return
 
 
 ### seeEmailIsSent
  
 Checks if any email were sent by last request
 
- * `throws`  \LogicException
+ \LogicException
 
 
 ### seeInCurrentUrl
@@ -613,7 +614,7 @@ $I->seeInCurrentUrl('/users/');
 ?>
 ```
 
- * `param`  $uri
+ * `param` $uri
 
 
 ### seeInField
@@ -629,13 +630,13 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
- * `param`  $field
- * `param`  $value
+ * `param` $field
+ * `param` $value
 
 
 ### seeInTitle
@@ -648,9 +649,8 @@ $I->seeInTitle('Blog - Post #1');
 ?>
 ```
 
- * `param`  $title
+ * `param` $title
 
- * `return`  mixed
 
 
 ### seeLink
@@ -667,8 +667,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 ?>
 ```
 
- * `param`       $text
- * `param`  null $url
+ * `param`      $text
+ * `param null` $url
 
 
 ### seeOptionIsSelected
@@ -681,10 +681,9 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 ?>
 ```
 
- * `param`  $selector
- * `param`  $optionText
+ * `param` $selector
+ * `param` $optionText
 
- * `return`  mixed
 
 
 ### seePageNotFound
@@ -696,9 +695,8 @@ Asserts that current page has 404 response status code.
  
 Checks that response code is equal to value provided.
 
- * `param`  $code
+ * `param` $code
 
- * `return`  mixed
 
 
 ### selectOption
@@ -711,7 +709,7 @@ Example:
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -723,8 +721,8 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ?>
 ```
 
- * `param`  $select
- * `param`  $option
+ * `param` $select
+ * `param` $option
 
 
 ### sendAjaxGetRequest
@@ -734,8 +732,8 @@ This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### sendAjaxPostRequest
@@ -756,8 +754,8 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
 
 ```
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### sendAjaxRequest
@@ -775,19 +773,18 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
 
 ```
 
- * `param`  $method
- * `param`  $uri
- * `param`  $params
+ * `param` $method
+ * `param` $uri
+ * `param` $params
 
 
 ### setCookie
  
 Sets a cookie.
 
- * `param`  $cookie
- * `param`  $value
+ * `param` $cookie
+ * `param` $value
 
- * `return`  mixed
 
 
 
@@ -829,8 +826,8 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
 ```
 Note, that pricing plan will be set to Paid, as it's selected on page.
 
- * `param`  $selector
- * `param`  $params
+ * `param` $selector
+ * `param` $params
 
 
 
@@ -846,6 +843,6 @@ $I->uncheckOption('#notify');
 ?>
 ```
 
- * `param`  $option
+ * `param` $option
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony2.php">Help us to improve documentation. Edit module reference</a></div>

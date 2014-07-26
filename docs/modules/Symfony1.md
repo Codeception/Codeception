@@ -1,6 +1,6 @@
 # Symfony1 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Symfony1.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony1.php)**
 
 
 Module that interacts with Symfony 1.4 applications.
@@ -56,15 +56,15 @@ Log in as sfDoctrineGuardUser.
 Only name of user should be provided.
 Fetches user by it's username from sfGuardUser table.
 
- * `param`  $name
- * `throws`  \Exception
+ * `param` $name
+ \Exception
 
 
 ### amOnPage
  
 Opens the page.
 
- * `param`  $page
+ * `param` $page
 
 
 
@@ -89,7 +89,7 @@ Opens the page.
 Click on link or button and move to next page.
 Either link text, css selector, or xpath can be passed
 
- * `param`  $link
+ * `param` $link
 
 
 ### clickSubmitButton
@@ -97,7 +97,7 @@ Either link text, css selector, or xpath can be passed
 Emulates click on form's submit button.
 You don't need that action if you fill form by ->submitForm action.
 
- * `param`  $selector
+ * `param` $selector
 
 
 
@@ -116,8 +116,8 @@ $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
 
 ```
 
- * `param`  $text
- * `param`  null $selector
+ * `param` $text
+ * `param null` $selector
 
 
 ### dontSeeCheckboxIsChecked
@@ -134,7 +134,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ```
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### dontSeeLink
@@ -150,8 +150,8 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
 ```
 
- * `param`  $text
- * `param`  null $url
+ * `param` $text
+ * `param null` $url
 
 
 
@@ -178,8 +178,8 @@ $I->see('Sign Up','h1'); // I can suppose it's a signup page
 
 ```
 
- * `param`  $text
- * `param`  null $selector
+ * `param` $text
+ * `param null` $selector
 
 
 ### seeCheckboxIsChecked
@@ -196,7 +196,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 ```
 
- * `param`  $selector
+ * `param` $selector
 
 
 ### seeEmailReceived
@@ -210,7 +210,7 @@ Checks for invalid value in Symfony1 form.
 Matches the first sfForm instance from controller and returns getErrorSchema() values.
 Specify field which should contain error message.
 
- * `param`  $field
+ * `param` $field
 
 
 ### seeErrorsInForm
@@ -240,8 +240,8 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
 ```
 
- * `param`  $text
- * `param`  null $url
+ * `param` $text
+ * `param null` $url
 
 
 ### sendAjaxGetRequest
@@ -251,8 +251,8 @@ This action sends a GET ajax request with specified params.
 
 See ->sendAjaxPostRequest for examples.
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### sendAjaxPostRequest
@@ -273,8 +273,8 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true); // GET
 
 ```
 
- * `param`  $uri
- * `param`  $params
+ * `param` $uri
+ * `param` $params
 
 
 ### signIn
@@ -283,8 +283,8 @@ Sign's user in with sfGuardAuth.
 Uses standard path: /sfGuardAuth/signin for authorization.
 Provide username and password.
 
- * `param`  $username
- * `param`  $password
+ * `param` $username
+ * `param` $password
 
 
 ### signOut
@@ -331,7 +331,7 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
 ```
 Note, that pricing plan will be set to Paid, as it's selected on page.
 
- * `param`  $selector
- * `param`  $params
+ * `param` $selector
+ * `param` $params
 
-
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Symfony1.php">Help us to improve documentation. Edit module reference</a></div>

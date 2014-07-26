@@ -306,7 +306,7 @@ class SOAP extends \Codeception\Module
         $path = new \DOMXPath($this->xmlResponse);
         $res = $path->query($xpath);
         if ($res === false) $this->fail("XPath selector is malformed");
-        $this->assertGreaterThen(0, $res->length);
+        $this->assertGreaterThan(0, $res->length);
     }
 
     /**

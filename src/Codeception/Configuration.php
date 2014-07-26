@@ -111,7 +111,7 @@ class Configuration
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
         if (! (file_exists($configDistFile) || file_exists($configFile))) {
-            throw new ConfigurationException("Configuration file could not be found");
+            throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.");
         }
 
         $config = self::loadConfigFile($configDistFile, self::$defaultConfig);

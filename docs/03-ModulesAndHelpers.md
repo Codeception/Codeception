@@ -3,7 +3,7 @@
 Codeception uses modularity to create a comfortable testing environment for every test suite you write. 
 Modules allow you to choose the actions and assertions that can be performed in tests.
 
-All actions and assertions that can be performed by the Guy object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
+All actions and assertions that can be performed by the Tester object in a class are defined in modules. It might look like Codeception limits you in testing, but it's not true. You can extend the testing suite with your own actions and assertions, writing them into a custom module.
 
 Let's look at this test.
 
@@ -28,14 +28,14 @@ modules:
     enabled: [PhpBrowser, Db, Filesystem]
 ```
 
-The FunctionalTester class has it's methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
+The FunctionalTester class has its methods defined in modules. Actually, it doesn't contain any of them rather acts as a proxy. It knows which module executes this action and passes parameters into it. To make your IDE see all of the FunctionalTester methods, you use the `build` command. It generates the definition of the FunctionalTester class by copying the signatures from the corresponding modules.
 
 ## Standard Modules
 
 Codeception has many bundled modules which will help you run tests for different purposes and in different environments. The number of modules is not constant -- it's supposed to grow as more frameworks and ORMs are supported.
 See all of them listed in the main menu under Modules section.
 
-All of these modules are documented. You can review their detailed references on [GitHub](https://github.com/DavertMik/Codeception/tree/master/docs/modules).
+All of these modules are documented. You can review their detailed references on [GitHub](https://github.com/Codeception/Codeception/tree/master/docs/modules).
 
 ## Helpers
 
@@ -119,7 +119,7 @@ Just type `$this->assert` to see all of them.
 
 What happens if you have two modules which contain the same named actions?
 Codeception allows you to override actions by changing the module order.
-The action from the second module will be loaded and the action from the first will be ignored.
+The action from the second module will be loaded and the action from the first one will be ignored.
 The order of the modules can be defined in the suite config.
 
 ### Connecting Modules
@@ -174,7 +174,7 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
     public function _initialize() {
     }
 
-    // HOOK: on every Guy class initialization
+    // HOOK: on every Actor class initialization
     public function _cleanup() {
     }
 
@@ -190,7 +190,7 @@ All hooks are defined in `\Codeception\Module` and are listed here. You are free
     public function _beforeStep(\Codeception\Step $step) {
     }
 
-    // HOOK: after each  step
+    // HOOK: after each step
     public function _afterStep(\Codeception\Step $step) {
     }
 
@@ -280,7 +280,7 @@ modules:
             repopulate: false
 ```
 
-Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get it's value. 
+Optional and mandatory parameters can be accessed through the `$config` property. Use `$this->config['parameter']` to get its value. 
 
 ### Dynamic Configuration
 
@@ -347,7 +347,7 @@ class SecondDbHelper extends Db {
 ?>
 ```
 
-`$includeInheritedActions` set to false won't include the methods from parent classes into the generated Guy.
+`$includeInheritedActions` set to false won't include the methods from parent classes into the generated Actor.
 Still you can use inherited methods in your helper class.
 
 ## Conclusion
@@ -356,4 +356,4 @@ Modules are the true power of Codeception. They are used to emulate multiple inh
 Codeception provides modules to emulate web requests, access data, interact with popular PHP libraries, etc.
 For your application you might need custom actions. These can be defined in helper classes.
 If you have written a module that may be useful to others, share it.
-Fork the Codeception repository, put the module into the __src/Codeception/Module__ directory, and send a pull request
+Fork the Codeception repository, put the module into the __src/Codeception/Module__ directory, and send a pull request.
