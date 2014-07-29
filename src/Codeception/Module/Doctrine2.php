@@ -57,7 +57,14 @@ class Doctrine2 extends \Codeception\Module
                     $symfonyModule->client->persistentServices[] = 'doctrine.orm.entity_manager';
                     $symfonyModule->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
                 }
-
+            }
+            if ($this->hasModule('ZF2')) {
+                $zf2Module = $this->getModule('ZF2');
+                $application = $zf2Module->application;
+                $serviceLocator = $application->getServiceManager();
+                if ($entityManager = $serviceLocator->get('Doctrine\ORM\EntityManager')) {
+                    self::$em = $entityManager;
+                }
             }
        }
 
