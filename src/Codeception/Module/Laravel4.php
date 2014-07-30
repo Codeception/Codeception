@@ -60,6 +60,8 @@ class Laravel4 extends Framework implements ActiveRecord
         $this->config = array_merge(
             array(
                 'cleanup' => true,
+                'unit' => true,
+                'environment' => 'testing',
                 'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php',
                 'root' => '',
             ),
@@ -95,9 +97,9 @@ class Laravel4 extends Framework implements ActiveRecord
 
     public function _before(\Codeception\TestCase $test)
     {
-        $unitTesting = true;
-        $testEnvironment = 'testing';
-        
+        $unitTesting = $this->config['unit'];
+        $testEnvironment = $this->config['environment'];
+
         $app = require $this->startFile;
         $app->boot();
         $this->kernel = $app;
