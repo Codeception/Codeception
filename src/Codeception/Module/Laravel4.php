@@ -30,9 +30,11 @@ use Illuminate\Support\MessageBag;
  *
  * ## Config
  *
- * * start: `bootstrap/start.php` - relative path to start.php config file
- * * root: `` - relative path to project root directory
- * * cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
+ * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
+ * * unit: `boolean`, default `true` - Laravel will run in unit testing mode.
+ * * environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
+ * * start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
+ * * root: `string`, default ` ` - Root path of our application.
  *
  * ## API
  *
