@@ -2,6 +2,11 @@
 
 #### 2.0.4
 
+* [REST] print_r replaced with var_export for better output on json comparison #1210 *2014-08-02*
+* [REST] Reset request variables in the before hook by @brutuscat #1232 *2014-08-01*
+* [Db] Oci driver for oracle database by @Sikolasol #1234 #1243 *2014-08-01*
+* [Laravel4] Unit testing and test environment are now configurable #1255 by @ipalaus *2014-08-01*
+* [Laravel4] Fixed Cest testing when using Laravel's Auth #1258 by @ipalaus *2014-08-01*
 * FIX #948 code coverage HTML: uncovered files missing by @RLasinski *2014-07-26*
 * [Laravel4] project root relative config parameter added by @kernio *2014-07-26*
 
