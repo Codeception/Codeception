@@ -13,11 +13,11 @@ class Cest {
 
 class {{name}}Cest
 {
-    public function _before()
+    public function _before({{actor}} \$I)
     {
     }
 
-    public function _after()
+    public function _after({{actor}} \$I)
     {
     }
 
