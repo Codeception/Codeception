@@ -4,9 +4,7 @@
 
 
 
-This module allows you to run functional tests for Laravel 4.
-Module is very fresh and should be improved with Laravel testing capabilities.
-Please try it and leave your feedbacks. If you want to maintain it - connect Codeception team.
+This module allows you to run **functional** tests for Laravel 4. This module is **not compatible** with acceptances tests, for acceptance testing with Laravel you should use the PhpBrowser module. This module is very fresh and should be improved with further Laravel testing capabilities. Please try it and leave your feedbacks. If you want to maintain it - connect Codeception team.
 
 Uses 'bootstrap/start.php' to launch.
 
