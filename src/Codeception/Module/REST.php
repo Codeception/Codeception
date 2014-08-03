@@ -495,8 +495,8 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON contains provided\n"
-            ."- ".var_export($json, true)
-            ."+ ".var_export($resp_json, true)
+            ."-".var_export($json, true)
+            ."\n+".var_export($resp_json, true)
         );
     }
 
@@ -540,7 +540,7 @@ class REST extends \Codeception\Module
      *
      * @author tiger.seo@gmail.com
      */
-    public function grabDataFromJsonResponse($path)
+    public function grabDataFromJsonResponse($path = '')
     {
         $data = $response = json_decode($this->response, true);
 
