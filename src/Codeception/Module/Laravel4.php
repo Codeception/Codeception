@@ -96,7 +96,7 @@ class Laravel4 extends Framework implements ActiveRecord
         if ($this->transactionCleanup()) {
             $this->kernel['db']->beginTransaction();
         }
-        $this->kernel['router']->enableFilters();
+//        $this->kernel['router']->enableFilters();
     }
 
     public function _after(\Codeception\TestCase $test)
