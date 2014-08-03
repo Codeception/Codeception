@@ -2,11 +2,12 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Subscriber\ErrorHandler;
+use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Testing\Client;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Support\MessageBag;
 
@@ -63,10 +64,10 @@ class Laravel4 extends Framework implements ActiveRecord
                 'cleanup' => true,
                 'unit' => true,
                 'environment' => 'testing',
-                'start' => 'bootstrap'  . DIRECTORY_SEPARATOR .  'start.php',
+                'start' => 'bootstrap' . DIRECTORY_SEPARATOR . 'start.php',
                 'root' => '',
             ),
-            (array) $config
+            (array)$config
         );
 
         parent::__construct();
@@ -74,29 +75,9 @@ class Laravel4 extends Framework implements ActiveRecord
 
     public function _initialize()
     {
-        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
-        $projectDir .= $this->config['root'];
-        require $projectDir .  'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        \Illuminate\Support\ClassLoader::register();
-
-        if (is_dir($workbench = $projectDir . 'workbench')) {
-            \Illuminate\Workbench\Starter::start($workbench);
-        }
-
-        $startFile = $projectDir . $this->config['start'];
-
-        if (!file_exists($startFile)) {
-            throw new ModuleConfig($this, "Laravel start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. ");
-        }
-
-        $unitTesting = $this->config['unit'];
-        $testEnvironment = $this->config['environment'];
-
-        $app = require $startFile;
-        $app->boot();
+        $app = $this->getApplication();
         $this->kernel = $app;
-
+        $this->client = new LaravelConnector($app);
         $this->revertErrorHandler();
     }
 
@@ -108,17 +89,19 @@ class Laravel4 extends Framework implements ActiveRecord
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new Client($this->kernel);
+        $this->kernel = $this->getApplication();
+        $this->client = new LaravelConnector($this->kernel);
         $this->client->followRedirects(true);
 
-        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+        if ($this->transactionCleanup()) {
             $this->kernel['db']->beginTransaction();
         }
+        $this->kernel['router']->enableFilters();
     }
 
     public function _after(\Codeception\TestCase $test)
     {
-        if ($this->config['cleanup'] and $this->expectedLaravelVersion(4.1)) {
+        if ($this->transactionCleanup()) {
             $this->kernel['db']->rollback();
         }
 
@@ -135,19 +118,14 @@ class Laravel4 extends Framework implements ActiveRecord
         }
     }
 
+    protected function transactionCleanup()
+    {
+        return $this->config['cleanup'] and $this->kernel['db'] and $this->expectedLaravelVersion(4.1);
+    }
+
     protected function expectedLaravelVersion($ver)
     {
         return floatval(\Illuminate\Foundation\Application::VERSION) >= floatval($ver);
-    }
-
-    public function _beforeStep(\Codeception\Step $step)
-    {
-        // saving referer for redirecting back
-        $headers = $this->kernel->request->headers;
-
-        if (!$this->client->getHistory()->isEmpty()) {
-            $headers->set('referer', $this->client->getHistory()->current()->getUri());
-        }
     }
 
     /**
@@ -209,10 +187,11 @@ class Laravel4 extends Framework implements ActiveRecord
     {
         $this->seeSessionHasErrors(); //check if  has errors at all
         $errorMessageBag = $this->kernel['session']->get('errors');
-        foreach($bindings as $key => $value){
+        foreach ($bindings as $key => $value) {
             $this->assertEquals($value, $errorMessageBag->first($key));
         }
     }
+
     /**
      * Assert that the session has errors bound.
      *
@@ -299,7 +278,7 @@ class Laravel4 extends Framework implements ActiveRecord
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with ".json_encode($attributes));
+            $this->fail("Couldn't find $model with " . json_encode($attributes));
         }
         $this->debugSection($model, json_encode($record));
     }
@@ -321,7 +300,7 @@ class Laravel4 extends Framework implements ActiveRecord
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
         }
     }
 
@@ -350,6 +329,37 @@ class Laravel4 extends Framework implements ActiveRecord
             $query->where($key, $value);
         }
         return $query->first();
+    }
+
+    /**
+     * @return \Illuminate\Foundation\Application
+     * @throws \Codeception\Exception\ModuleConfig
+     */
+    protected function getApplication()
+    {
+        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
+        $projectDir .= $this->config['root'];
+        require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+        \Illuminate\Support\ClassLoader::register();
+
+        if (is_dir($workbench = $projectDir . 'workbench')) {
+            \Illuminate\Workbench\Starter::start($workbench);
+        }
+
+        $startFile = $projectDir . $this->config['start'];
+
+        if (!file_exists($startFile)) {
+            throw new ModuleConfig(
+                $this, "Laravel start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
+            );
+        }
+
+        $unitTesting = $this->config['unit'];
+        $testEnvironment = $this->config['environment'];
+
+        $app = require $startFile;
+        return $app;
     }
 
 
