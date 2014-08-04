@@ -10,7 +10,7 @@ class Laravel4 extends Client
     {
         $this->rebootKernel();
         $this->kernel->setRequestForConsoleEnvironment();
-        
+
         $headers = $request->headers;
 
         $response = parent::doRequest($request);

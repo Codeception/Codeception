@@ -46,7 +46,7 @@ before_script:
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - "mysql -e 'create database `l4-module`;'"
   - composer install -d frameworks-laravel
-  - php frameworks-laravel/artisan migrate --seed
+  - php frameworks-laravel/artisan migrate --seed -n
   - php codecept build -c frameworks-laravel
 
   # Symfony
