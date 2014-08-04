@@ -9,7 +9,8 @@ class Laravel4 extends Client
     protected function doRequest($request)
     {
         $this->rebootKernel();
-
+        $this->kernel->setRequestForConsoleEnvironment();
+        
         $headers = $request->headers;
 
         $response = parent::doRequest($request);
