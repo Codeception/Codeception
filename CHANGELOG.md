@@ -2,6 +2,13 @@
 
 #### 2.0.4
 
+* [Laravel4] Uses `app.url` config value for creating requests. Fixes #1095 *2014-08-04*
+* [Laravel4] `seeAuthenticated` / `dontSeeAuthenticated` assertions added to check that current user is authenticated *2014-08-04*
+* [Laravel4] `logout` action added *2014-08-04*
+* [Laravel4] `amLoggedAs` can login user by credentials *2014-08-04*
+* [Laravel4] Added `amOnRoute`, `amOnAction`, `seeCurrentRouteIs`, `seeCurrentActionIs` actions *2014-08-04*
+* [Laravel4] Added `haveEnabledFilters` and `haveDisabledFilters` actions to toggle filters in runtime *2014-08-04*
+* [Laravel4] Added `filters` option to enable filters on testing *2014-08-04*
 * [REST] seeResponseContainsJson should not take arrays order into account. See #1268 *2014-08-04*
 * [REST] grabDataFromJsonResponse accepts empty path to return entire json response *2014-08-04*
 * [REST] print_r replaced with var_export for better output on json comparison #1210 *2014-08-02*
