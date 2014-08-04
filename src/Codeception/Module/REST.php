@@ -575,37 +575,23 @@ class REST extends \Codeception\Module
      *
      * @return array|bool
      */
-    private function arrayIntersectAssocRecursive($arr1, $arr2)
+    private function arrayIntersectRecursive($arr1, $arr2)
     {
         if (!is_array($arr1) || !is_array($arr2)) {
             return null;
         }
 
-        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
-        $ret = array();
-        foreach ($commonkeys as $key) {
-            $_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
-            if ($_return) {
-                $ret[$key] = $_return;
-                continue;
-            }
-            if ($arr1[$key] === $arr2[$key]) {
-                $ret[$key] = $arr1[$key];
-            }
-        }
-        if (empty($commonkeys)) {
-            foreach ($arr2 as $arr) {
-                $_return = $this->arrayIntersectAssocRecursive($arr1, $arr);
-                if ($_return && $_return == $arr1) return $_return;
-            }
+        // if it is not an associative array we do not compare keys
+        if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
+            return $this->sequentialArrayIntersect($arr1, $arr2);
         }
 
-        return $ret;
+        return $this->associativeArrayIntersect($arr1, $arr2);
     }
 
     protected function arrayHasArray(array $needle, array $haystack)
     {
-        return $needle == $this->arrayIntersectAssocRecursive($needle, $haystack);
+        return $needle == $this->arrayIntersectRecursive($needle, $haystack);
     }
 
     /**
@@ -631,7 +617,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
+        $this->assertEquals($response, $this->response);
     }
 
     /**
@@ -673,6 +659,75 @@ class REST extends \Codeception\Module
         if ($this->connectionModule instanceof Framework) {
             $this->isFunctional = true;
         }
+    }
+
+    /**
+     * @param $arr1
+     * @return bool
+     */
+    private function arrayIsSequential($arr1)
+    {
+        return array_keys($arr1) == range(0, count($arr1) - 1);
+    }
+
+    /**
+     * @param $arr1
+     * @param $arr2
+     * @return array
+     */
+    private function sequentialArrayIntersect($arr1, $arr2)
+    {
+        $ret = array();
+        foreach ($arr1 as $key1 => $value1) {
+            foreach ($arr2 as $key2 => $value2) {
+                $_return = $this->arrayIntersectRecursive($value1, $value2);
+                if ($_return) {
+                    $ret[$key1] = $_return;
+                    continue;
+                }
+                if ($value1 === $value2) {
+                    $ret[$key1] = $value1;
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param $arr1
+     * @param $arr2
+     * @return array|bool|null
+     */
+    private function associativeArrayIntersect($arr1, $arr2)
+    {
+        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
+
+        $ret = array();
+        foreach ($commonkeys as $key) {
+            $_return = $this->arrayIntersectRecursive($arr1[$key], $arr2[$key]);
+            if ($_return) {
+                $ret[$key] = $_return;
+                continue;
+            }
+            if ($arr1[$key] === $arr2[$key]) {
+                $ret[$key] = $arr1[$key];
+            }
+        }
+
+        if (empty($commonkeys)) {
+            foreach ($arr2 as $arr) {
+                $_return = $this->arrayIntersectRecursive($arr1, $arr);
+                if ($_return && $_return == $arr1) {
+                    return $_return;
+                }
+            }
+        }
+
+        if (count($ret) < min(count($arr1), count($arr2))) {
+            return null;
+        }
+
+        return $ret;
     }
 
 

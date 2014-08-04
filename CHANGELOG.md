@@ -2,6 +2,7 @@
 
 #### 2.0.4
 
+* [REST] seeResponseContainsJson should not take arrays order into account. See #1268 *2014-08-04*
 * [REST] grabDataFromJsonResponse accepts empty path to return entire json response *2014-08-04*
 * [REST] print_r replaced with var_export for better output on json comparison #1210 *2014-08-02*
 * [REST] Reset request variables in the before hook by @brutuscat #1232 *2014-08-01*

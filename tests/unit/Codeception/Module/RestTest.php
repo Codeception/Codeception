@@ -132,8 +132,9 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
+        $this->module->seeResponseContainsJson([['user' => 'John Doe', 'age' => 27]]);
+        $this->module->seeResponseContainsJson([['user' => 'Blacknoir', 'age' => 27], ['user' => 'John Doe', 'age' => 27]]);
     }
-
 
     public function testArrayJson()
     {
