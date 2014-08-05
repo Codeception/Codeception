@@ -495,8 +495,8 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON contains provided\n"
-            ."-".var_export($json, true)
-            ."\n+".var_export($resp_json, true)
+            ."- <info>".var_export($json, true)."</info>\n"
+            ."+ ".var_export($resp_json, true)
         );
     }
 
@@ -565,34 +565,6 @@ class REST extends \Codeception\Module
         return $data;
     }
 
-    /**
-     * @author nleippe@integr8ted.com
-     * @author tiger.seo@gmail.com
-     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
-     *
-     * @param mixed $arr1
-     * @param mixed $arr2
-     *
-     * @return array|bool
-     */
-    private function arrayIntersectRecursive($arr1, $arr2)
-    {
-        if (!is_array($arr1) || !is_array($arr2)) {
-            return null;
-        }
-
-        // if it is not an associative array we do not compare keys
-        if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
-            return $this->sequentialArrayIntersect($arr1, $arr2);
-        }
-
-        return $this->associativeArrayIntersect($arr1, $arr2);
-    }
-
-    protected function arrayHasArray(array $needle, array $haystack)
-    {
-        return $needle == $this->arrayIntersectRecursive($needle, $haystack);
-    }
 
     /**
      * Opposite to seeResponseContainsJson
@@ -605,8 +577,8 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertFalse(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON does not contain JSON provided\n"
-            ."- ".print_r($json, true)
-            ."+ ".print_r($resp_json, true)
+            ."- <info>".var_export($json, true)."</info>\n"
+            ."+ ".var_export($resp_json, true)
         );
     }
 
@@ -662,12 +634,42 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * @author nleippe@integr8ted.com
+     * @author tiger.seo@gmail.com
+     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
+     *
+     * @param mixed $arr1
+     * @param mixed $arr2
+     *
+     * @return array|bool
+     */
+    private function arrayIntersectRecursive($arr1, $arr2)
+    {
+        if (!is_array($arr1) || !is_array($arr2)) {
+            return null;
+        }
+        // if it is not an associative array we do not compare keys
+        if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
+            codecept_debug('seq');
+            return $this->sequentialArrayIntersect($arr1, $arr2);
+        }
+
+        return $this->associativeArrayIntersect($arr1, $arr2);
+    }
+
+    protected function arrayHasArray(array $needle, array $haystack)
+    {
+        return $needle == $this->arrayIntersectRecursive($needle, $haystack);
+    }
+
+
+    /**
      * @param $arr1
      * @return bool
      */
     private function arrayIsSequential($arr1)
     {
-        return array_keys($arr1) == range(0, count($arr1) - 1);
+        return array_keys($arr1) === range(0, count($arr1) - 1);
     }
 
     /**

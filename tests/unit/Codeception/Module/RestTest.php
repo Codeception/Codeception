@@ -115,7 +115,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsXml();
     }
 
-    public function testSeeInJson()
+    public function testSeeInJsonResponse()
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
