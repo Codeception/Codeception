@@ -2,6 +2,7 @@
 
 #### 2.0.4
 
+* Fix: GroupManager uses DIRECTORY_SEPARATOR for loaded tests *2014-08-05*
 * [Laravel4] Uses `app.url` config value for creating requests. Fixes #1095 *2014-08-04*
 * [Laravel4] `seeAuthenticated` / `dontSeeAuthenticated` assertions added to check that current user is authenticated *2014-08-04*
 * [Laravel4] `logout` action added *2014-08-04*

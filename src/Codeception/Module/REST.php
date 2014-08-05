@@ -650,7 +650,6 @@ class REST extends \Codeception\Module
         }
         // if it is not an associative array we do not compare keys
         if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
-            codecept_debug('seq');
             return $this->sequentialArrayIntersect($arr1, $arr2);
         }
 

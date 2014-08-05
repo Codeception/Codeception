@@ -34,6 +34,20 @@ class GroupManagerTest extends \Codeception\TestCase\Test
         $this->assertNotContains('important', $this->manager->groupsForTest($test3));
     }
 
+    public function testGroupsFromFileOnWindows()
+    {
+        $this->manager = new GroupManager(['important' => 'tests/data/group_3']);
+        $test = $this->makeTestCase('tests/WinTest.php');
+        $this->assertContains('important', $this->manager->groupsForTest($test));
+    }
+
+    public function testGroupsFromArrayOnWindows()
+    {
+        $this->manager = new GroupManager(['important' => ['tests\WinTest.php']]);
+        $test = $this->makeTestCase('tests/WinTest.php');
+        $this->assertContains('important', $this->manager->groupsForTest($test));
+    }
+
     public function testGroupsByPattern()
     {
         $this->manager = new GroupManager(['group_*' => 'tests/data/group_*']);
