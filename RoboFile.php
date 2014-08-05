@@ -18,6 +18,20 @@ class RoboFile extends \Robo\Tasks {
         $this->publishGit();
     }
 
+    public function versionBump($version = '')
+    {
+        if (!$version) {
+            $versionParts = explode('.', \Robo\Runner::VERSION);
+            $versionParts[count($versionParts)-1]++;
+            $version = implode('.', $versionParts);
+        }
+        $this->say("Bumping version to $version");
+        $this->taskReplaceInFile('src/Codeception/Codecept.php')
+            ->from(\Codeception\Codecept::VERSION)
+            ->to($version)
+            ->run();
+    }
+
     public function update()
     {
         $this->clean();

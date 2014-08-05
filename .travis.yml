@@ -59,6 +59,6 @@ before_script:
 script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic # Yii2 tests
-  - php codecept run functional -c frameworks-laravel # Laravel4 Tests
+  - php codecept run -c frameworks-laravel # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
