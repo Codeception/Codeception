@@ -9,7 +9,7 @@ use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "2.0.4";
+    const VERSION = "2.0.5";
 
     /**
      * @var \Codeception\PHPUnit\Runner

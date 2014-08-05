@@ -16,12 +16,13 @@ class RoboFile extends \Robo\Tasks {
         $this->buildPhar();
         $this->publishPhar();
         $this->publishGit();
+        $this->versionBump();
     }
 
     public function versionBump($version = '')
     {
         if (!$version) {
-            $versionParts = explode('.', \Robo\Runner::VERSION);
+            $versionParts = explode('.', \Codeception\Codecept::VERSION);
             $versionParts[count($versionParts)-1]++;
             $version = implode('.', $versionParts);
         }
