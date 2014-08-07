@@ -91,6 +91,31 @@ trait Asserts
     }
 
     /**
+     * Checks that expected is less than actual
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     */
+    protected function assertLessThan($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertLessThan($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that expected is less or equal than actual
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     */
+    protected function assertLessThanOrEqual($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertLessThanOrEqual($expected, $actual, $message);
+    }
+
+
+    /**
      * Checks that haystack contains needle
      *
      * @param        $needle
