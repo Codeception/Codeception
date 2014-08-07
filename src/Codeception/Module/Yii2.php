@@ -182,5 +182,16 @@ class Yii2 extends Framework implements ActiveRecord
         return $record;
     }
 
+    public function amOnPage($page) {
+                
+        if(is_string($page) && !preg_match('~^(http|index)~',$page)  ){
+            $page = [$page];
+        }
+        if(is_array($page)){
+            $page = \Yii::$app->getUrlManager()->createUrl($page);
+        }
+
+        parent::amOnPage($page);
+    }
 
 }
