@@ -182,6 +182,10 @@ class Yii2 extends Framework implements ActiveRecord
         return $record;
     }
 
+
+    /**
+     *  Converting $page to valid Yii2 url
+     */
     public function amOnPage($page) {
                 
         if(is_string($page) && !preg_match('~^(http|index)~',$page)  ){
