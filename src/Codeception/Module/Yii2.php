@@ -185,6 +185,11 @@ class Yii2 extends Framework implements ActiveRecord
 
     /**
      *  Converting $page to valid Yii2 url
+     *  Allows input like:
+     *  $I->amOnPage('site/view');
+     *  $I->amOnPage(['site/view','page'=>'about']);
+     *  $I->amOnPage('index-test.php?site/index');
+     *  $I->amOnPage('http://localhost/index-test.php?site/index');
      */
     public function amOnPage($page) {
                 
