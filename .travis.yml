@@ -57,7 +57,7 @@ before_script:
   - php codecept build -c frameworks-symfony
 
   # Queue (Beanstalkd)
-  - composer install --prefer-source --no-interaction --dev
+  - composer update --dev
   - sudo apt-get update -qq
   - sudo apt-get install -qq beanstalkd
   - sudo beanstalkd -d -l 127.0.0.1 -p 11300
