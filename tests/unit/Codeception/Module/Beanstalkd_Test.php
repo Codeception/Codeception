@@ -35,9 +35,9 @@ class Beanstalkd_Test extends \PHPUnit_Framework_TestCase
         $this->module->addMessageToQueue('hello world - ' . date('d-m-y'), 'default');
         $this->module->dontSeeEmptyQueue('default');
 
-        $this->module->seeQueueHasTotalCount('default', $this->module->grabQueueTotalCount('default'));
+        $this->module->seeQueueHasTotalCount('default', 1);
 
-        $this->module->seeQueueHasCurrentCount('default', $this->module->grabQueueCurrentCount('default'));
+        $this->module->seeQueueHasCurrentCount('default', 1);
         $this->module->dontSeeQueueHasCurrentCount('default', 9999);
 
         $this->module->grabQueues();
