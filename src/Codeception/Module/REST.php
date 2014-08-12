@@ -34,7 +34,7 @@ use Symfony\Component\BrowserKit\Cookie;
  *     modules:
  *        enabled: [PhpBrowser, REST]
  *        config:
- *           PHPBrowser:
+ *           PhpBrowser:
                 url: http://serviceapp/
  *           REST:
  *              url: 'http://serviceapp/api/v1/'
