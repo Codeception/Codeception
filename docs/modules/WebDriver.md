@@ -379,7 +379,7 @@ $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
 $I->dontSeeInField('//form/*[@name=search]','Search');
-$I->seeInField(['name' => 'search'], 'Search');
+$I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
 
