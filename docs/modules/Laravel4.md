@@ -22,11 +22,12 @@ Uses 'bootstrap/start.php' to launch.
 
 ## Config
 
-* cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
+* cleanup: `boolean`, default `true` - All db queries will be run in a transaction, which will be rolled back at the end of the test.
 * unit: `boolean`, default `true` - Laravel will run in unit testing mode.
 * environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
 * start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
 * root: `string`, default ` ` - Root path of our application.
+* filters: `boolean`, default: `false` - Enable or disable filters for testing.
 
 ## API
 
