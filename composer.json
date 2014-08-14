@@ -35,9 +35,7 @@
         "videlalvaro/php-amqplib": "*",
         "phpseclib/phpseclib": "0.3.6",
         "codeception/specify": "*",
-        "pda/pheanstalk": "~2.0",
-        "iron-io/iron_mq": "1.5.*",
-        "aws/aws-sdk-php": "2.6.*"
+        "pda/pheanstalk": "~2.0"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
