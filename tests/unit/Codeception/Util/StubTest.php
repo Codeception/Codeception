@@ -152,84 +152,85 @@ class StubTest extends \PHPUnit_Framework_TestCase
 
     public static function matcherAndFailMessageProvider()
     {
-      return array(
-        array(Stub::never(),
-          "DummyClass::targetMethod() was not expected to be called."
-        ),
-        array(Stub::atLeastOnce(),
-          "Expectation failed for method name is equal to <string:targetMethod> when invoked at least once.\n"
-          . 'Expected invocation at least once but it never occured.'
-        ),
-        array(Stub::once(),
-          "Expectation failed for method name is equal to <string:targetMethod> when invoked 1 time(s).\n"
-          . 'Method was expected to be called 1 times, actually called 0 times.'
-        ),
-        array(Stub::exactly(1),
-          "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
-          . 'Method was expected to be called 3 times, actually called 0 times.'
-        ),
-        array(Stub::exactly(3),
-          "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
-          . 'Method was expected to be called 3 times, actually called 0 times.'
-        ),
-      );
+        return array(
+            array(Stub::never(),
+                "DummyClass::targetMethod() was not expected to be called."
+            ),
+            array(Stub::atLeastOnce(),
+                "Expectation failed for method name is equal to <string:targetMethod> when invoked at least once.\n"
+                . 'Expected invocation at least once but it never occured.'
+            ),
+            array(Stub::once(),
+                "Expectation failed for method name is equal to <string:targetMethod> when invoked 1 time(s).\n"
+                . 'Method was expected to be called 1 times, actually called 0 times.'
+            ),
+            array(Stub::exactly(1),
+                "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
+                . 'Method was expected to be called 3 times, actually called 0 times.'
+            ),
+            array(Stub::exactly(3),
+                "Expectation failed for method name is equal to <string:targetMethod> when invoked 3 time(s).\n"
+                . 'Method was expected to be called 3 times, actually called 0 times.'
+            ),
+        );
     }
 
     /**
      * @dataProvider matcherAndFailMessageProvider
      */
     public function testMockedMethodIsCalledFail($stubMarshaler, $failMessage) {
-      $mock = Stub::makeEmptyExcept('DummyClass', 'call', array('targetMethod' => $stubMarshaler), $this);
-      $mock->goodByeWorld();
+        $mock = Stub::makeEmptyExcept('DummyClass', 'call', array('targetMethod' => $stubMarshaler), $this);
+        $mock->goodByeWorld();
 
-      try {
-        if ($this->thereAreNeverMatcher($stubMarshaler))
-          $this->thenWeMustCallMethodForException($mock);
-        else
-          $this->thenWeDontCallAnyMethodForExceptionJustVerify($mock);
-      } catch (PHPUnit_Framework_ExpectationFailedException $e) {
-        $this->assertSame( $failMessage, $e->getMessage() );
-      }
+        try {
+            if ($this->thereAreNeverMatcher($stubMarshaler))
+                $this->thenWeMustCallMethodForException($mock);
+            else
+                $this->thenWeDontCallAnyMethodForExceptionJustVerify($mock);
+        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+            $this->assertSame( $failMessage, $e->getMessage() );
+        }
 
-      $this->resetMockObjects();
+        $this->resetMockObjects();
     }
 
     private function thenWeMustCallMethodForException($mock) {
-      $mock->call();
+        $mock->call();
     }
 
     private function thenWeDontCallAnyMethodForExceptionJustVerify($mock) {
-      $mock->__phpunit_verify();
-      $this->fail('Expected exception');
+        $mock->__phpunit_verify();
+        $this->fail('Expected exception');
     }
 
     private function thereAreNeverMatcher($stubMarshaler) {
-      $matcher = $stubMarshaler->getMatcher();
+        $matcher = $stubMarshaler->getMatcher();
 
-      return 0 == $matcher->getInvocationCount();
+        return 0 == $matcher->getInvocationCount();
     }
 
     private function resetMockObjects()
     {
-      $refl = new ReflectionObject($this);
-      $refl = $refl->getParentClass();
-      $prop = $refl->getProperty('mockObjects');
-      $prop->setAccessible(true);
-      $prop->setValue($this, array());
+        $refl = new ReflectionObject($this);
+        $refl = $refl->getParentClass();
+        $prop = $refl->getProperty('mockObjects');
+        $prop->setAccessible(true);
+        $prop->setValue($this, array());
     }
 
     public static function matcherProvider()
     {
-      return array(
-        array(0, Stub::never()),
-        array(1, Stub::once()),
-        array(2, Stub::atLeastOnce()),
-        array(3, Stub::exactly(3)),
-        array(1, Stub::once(function() {return true;}), true),
-        array(2, Stub::atLeastOnce(function() {return array();}), array()),
-        array(1, Stub::exactly(1, function() {return null;}), null),
-        array(1, Stub::exactly(1, function() {return 'hello world!';}), 'hello world!'),
-      );
+        return array(
+            array(0, Stub::never()),
+            array(1, Stub::once()),
+            array(3, Stub::consecutive(array(1,2,3))),
+            array(2, Stub::atLeastOnce()),
+            array(3, Stub::exactly(3)),
+            array(1, Stub::once(function() {return true;}), true),
+            array(2, Stub::atLeastOnce(function() {return array();}), array()),
+            array(1, Stub::exactly(1, function() {return null;}), null),
+            array(1, Stub::exactly(1, function() {return 'hello world!';}), 'hello world!'),
+        );
 
     }
 
@@ -299,5 +300,18 @@ class StubTest extends \PHPUnit_Framework_TestCase
             $actual = call_user_func($callable);
             if ($expected) $this->assertEquals($expected, $actual);
         }
+    }
+
+    public function testConsecutive()
+    {
+        $dummy = Stub::make('DummyClass', array('helloWorld' => Stub::consecutive('david', 'emma', 'sam', 'amy')));
+
+        $this->assertEquals('david', $dummy->helloWorld());
+        $this->assertEquals('emma', $dummy->helloWorld());
+        $this->assertEquals('sam', $dummy->helloWorld());
+        $this->assertEquals('amy', $dummy->helloWorld());
+
+        // Expected null value when no more values
+        $this->assertNull($dummy->helloWorld());
     }
 }
