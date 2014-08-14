@@ -900,6 +900,30 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
+    
+    
+   /**
+     * Tests number of $elements on page
+     *
+     * @param $selector
+     * @param mixed $expected:
+     * - string: strict number
+     * - array: range of numbers [0,10]  
+     */
+    public function seeNumberOfElements($selector, $expected)
+    {
+        $counted = count($this->match($this->webDriver,$selector));
+        if(is_array($expected)){
+            list($floor,$ceil) = $expected;
+            $this->assertTrue($floor<=$counted &&  $ceil>=$counted,
+                    'Number of elements counted differs from expected range' );
+        }else{
+            $this->assertEquals($expected, $counted,
+                    'Number of elements counted differs from expected number' );
+        }
+    }    
+    
+    
 
     public function seeOptionIsSelected($selector, $optionText)
     {
