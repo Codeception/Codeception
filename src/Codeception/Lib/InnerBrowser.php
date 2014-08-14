@@ -781,14 +781,6 @@ class InnerBrowser extends Module implements Web
         $this->assertDomNotContains($nodes, $selector);
     }
     
-   /**
-     * Tests number of $elements on page
-     *
-     * @param $selector
-     * @param mixed $expected:
-     * - string: strict number
-     * - array: range of numbers [0,10]  
-     */
     public function seeNumberOfElements($selector, $expected)
     {
         $counted = count($this->match($selector));
@@ -800,8 +792,7 @@ class InnerBrowser extends Module implements Web
             $this->assertEquals($expected, $counted,
                     'Number of elements counted differs from expected number' );
         }
-    }    
-    
+    }        
 
     public function seeOptionIsSelected($select, $optionText)
     {

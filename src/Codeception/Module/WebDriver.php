@@ -902,14 +902,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
     
     
-   /**
-     * Tests number of $elements on page
-     *
-     * @param $selector
-     * @param mixed $expected:
-     * - string: strict number
-     * - array: range of numbers [0,10]  
-     */
     public function seeNumberOfElements($selector, $expected)
     {
         $counted = count($this->match($this->webDriver,$selector));
