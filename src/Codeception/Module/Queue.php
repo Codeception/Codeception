@@ -35,7 +35,7 @@ namespace Codeception\Module;
  * here. Refer to the configuration examples below to identify the configuration options required for your chosen
  * service.
  *
- * * type: beanstalkd - type of queueing server (defaults to beanstalkd).
+ * * type - type of queueing server (defaults to beanstalkd).
  * * host - hostname/ip address of the queue server or the host for the iron.io when using iron.io service.
  * * port: 11300 - port number for the queue server.
  * * timeout: 90 - timeout settings for connecting the queue server.
@@ -88,16 +88,6 @@ class Queue extends \Codeception\Module
      */
     protected $queue;
 
-    /**
-     * Configuration options and default settings
-     *
-     * @var array
-     */
-    protected $config = array(
-        'type' => 'beanstalkd',
-        'port' => 11300,
-        'timeout' => 90);
-
     // ----------- SETUP METHODS BELOW HERE -------------------------//
 
     /**
@@ -129,6 +119,7 @@ class Queue extends \Codeception\Module
                 break;
             default:
                 $this->requiredFields = array('host');
+                $this->config = array('port' => 11300, 'timeout' => 90);
         }
         parent::validateConfig();
     }
