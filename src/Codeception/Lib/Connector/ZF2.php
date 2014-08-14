@@ -44,8 +44,6 @@ class ZF2 extends Client
         $queryString = $uri->getQuery();
         $method      = strtoupper($request->getMethod());
 
-        $zendRequest->setCookies(new Parameters($request->getCookies()));
-
         if ($queryString) {
             parse_str($queryString, $query);
             $zendRequest->setQuery(new Parameters($query));

@@ -90,6 +90,10 @@ abstract class Step
         return $this->humanize($this->getAction()) . ' <span style="color: #732E81;">' . $args . '</span>';
     }
 
+    public function getTextAction(){
+        return $this->clean($this->getArguments(true));
+    }
+
     public function getHumanizedActionWithoutArguments()
     {
         return $this->humanize($this->getAction());

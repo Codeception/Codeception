@@ -6,6 +6,7 @@ use Codeception\Configuration;
 use Codeception\PHPUnit\Log\JUnit;
 use Codeception\PHPUnit\ResultPrinter\HTML;
 use Codeception\PHPUnit\ResultPrinter\Report;
+use Codeception\PHPUnit\ResultPrinter\TC;
 
 class Runner extends \PHPUnit_TextUI_TestRunner
 {
@@ -136,6 +137,11 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         if ($arguments['json']) {
             codecept_debug('Printing JSON report into '.$arguments['json']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->absolutePath($arguments['json']));
+        }
+
+        if ($arguments['tc']) {
+            codecept_debug('Printing test case into '.$arguments['tc']);
+            self::$persistentListeners[] = new TC($this->absolutePath($arguments['tc']));
         }
 
         foreach (self::$persistentListeners as $listener) {

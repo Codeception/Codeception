@@ -141,8 +141,13 @@ class Scenario {
 
     }
 
-	public function comment($comment) {
-		$this->runStep(new \Codeception\Step\Comment($comment,array()));
+	public function comment($comment, $arguments=null) {
+        if ($arguments === null) {
+            $this->runStep(new \Codeception\Step\Comment($comment, array()));
+        } else {
+            $this->runStep(new \Codeception\Step\Comment($comment, array($arguments)));
+        }
+
 	}
 
     public function run() {
