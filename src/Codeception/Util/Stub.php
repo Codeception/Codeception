@@ -593,7 +593,6 @@ class Stub
     public static function once($params = null)
     {
         return new StubMarshaler(
-
             new \PHPUnit_Framework_MockObject_Matcher_InvokedCount(1),
             self::closureIfNull($params)
         );
