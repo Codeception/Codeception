@@ -22,7 +22,7 @@ modules:
 
 After you enable this module in your test suite, it will automatically populate the database from a dump and repopulate it on each test run. These settings can be changed through the `populate` and `cleanup` options, which may be set to `false`.
 
-The `Db` module is a rough tool. It works for any type of database supported by PDO. It could be used for all of the tests if it wasn't so slow. Loading a dump can take a lot of time that can be saved by using other techniques. When your test and application share the same database connection, as may be the case in functional and unit tests, the best way to speed up everything is to put all of the code in transaction, rolled back when test ends. In acceptance tests, differnet database connections are used, you can speed up tests by using SQLite file database. Alternatively, you can avoid recreating database on every test, but cleaning up all updates after the test.
+The `Db` module is a rough tool. It works for any type of database supported by PDO. It could be used for all of the tests if it wasn't so slow. Loading a dump can take a lot of time that can be saved by using other techniques. When your test and application share the same database connection, as may be the case in functional and unit tests, the best way to speed up everything is either to put all of the code in transactions or use SQLite Memory. When database interactions are performed through different connections, as we do in acceptance tests, the best solution we can propose is to use an SQLite file database, replacing it instead of rebuilding it after each test.
 
 ## Separate connections
 

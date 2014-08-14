@@ -2,7 +2,6 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
-use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\TestCase\Interfaces\Descriptive;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
@@ -64,21 +63,16 @@ class GroupManager
             $this->testsInGroups[$group] = [];
             if (is_array($tests)) {
                 foreach ($tests as $test) {
-                    $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $test);
-                    $this->testsInGroups[$group][] = Configuration::projectDir().$file;
+                    $this->testsInGroups[$group][] = Configuration::projectDir().$test;
                 }
             } elseif (is_file(Configuration::projectDir().$tests)) {
                 $handle = @fopen(Configuration::projectDir().$tests, "r");
                 if ($handle) {
                     while (($test = fgets($handle, 4096)) !== false) {
-                        $file = trim(Configuration::projectDir().$test);
-                        $file = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $file);
-                        $this->testsInGroups[$group][] = $file;
+                        $this->testsInGroups[$group][] = trim(Configuration::projectDir().$test);
                     }
                     fclose($handle);
                 }
-            } else {
-                codecept_debug("Group '$group' is empty, no tests are loaded");
             }
         }
     }

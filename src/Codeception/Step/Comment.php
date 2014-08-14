@@ -11,6 +11,10 @@ class Comment extends \Codeception\Step {
         return '<strong>' . $this->getAction(). '</strong>';
     }
 
+    public function getTextAction() {
+        return $this->getAction() ;
+    }
+
     public function run()
     {
         // don't do anything, let's rest

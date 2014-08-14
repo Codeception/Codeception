@@ -205,7 +205,7 @@ Same annotation can be used in Cest classes.
 
 ### Group Files
 
-Groups can be defined in global or suite configuration file.
+Groups can be defined in global or suite confuguration file.
 Tests for groups can be specified as array or as path to file containing list of groups.
 
 ```yaml

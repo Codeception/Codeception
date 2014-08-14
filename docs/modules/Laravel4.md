@@ -22,12 +22,8 @@ Uses 'bootstrap/start.php' to launch.
 
 ## Config
 
-* cleanup: `boolean`, default `true` - All db queries will be run in a transaction, which will be rolled back at the end of the test.
-* unit: `boolean`, default `true` - Laravel will run in unit testing mode.
-* environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
-* start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
-* root: `string`, default ` ` - Root path of our application.
-* filters: `boolean`, default: `false` - Enable or disable filters for testing.
+* start: `bootstrap/start.php` - relative path to start.php config file
+* cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
 
 ## API
 
@@ -69,7 +65,7 @@ Codeception creates internal form fields, so you get exception trying to save th
 
 
 ### amHttpAuthenticated
-
+ 
 Authenticates user for HTTP_AUTH
 
  * `param` $username
@@ -77,7 +73,7 @@ Authenticates user for HTTP_AUTH
 
 
 ### amLoggedAs
-
+ 
 Set the currently logged in user for the application.
 
  * `param`  \Illuminate\Auth\UserInterface $user
@@ -86,7 +82,7 @@ Set the currently logged in user for the application.
 
 
 ### amOnPage
-
+ 
 Opens the page.
 Requires relative uri as parameter
 
@@ -125,7 +121,7 @@ $I->amOnPage('/register');
 
 
 ### attachFile
-
+ 
 Attaches file from Codeception data directory to upload field.
 
 Example:
@@ -142,7 +138,7 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
 
 
 ### checkOption
-
+ 
 Ticks a checkbox.
 For radio buttons use `selectOption` method.
 
@@ -158,7 +154,7 @@ $I->checkOption('#agree');
 
 
 ### click
-
+ 
 Perform a click on link or button.
 Link or button are found by their names or CSS selector.
 Submits a form if button is a submit type.
@@ -197,7 +193,7 @@ $I->click(['link' => 'Login']);
 
 
 ### dontSee
-
+ 
 Check if current page doesn't contain the text specified.
 Specify the css selector to match only specific region.
 
@@ -216,7 +212,7 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 
 
 ### dontSeeCheckboxIsChecked
-
+ 
 Assert if the specified checkbox is unchecked.
 Use css selector or xpath to match.
 
@@ -233,7 +229,7 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 
 
 ### dontSeeCookie
-
+ 
 Checks that cookie doesn't exist
 
  * `param` $cookie
@@ -241,7 +237,7 @@ Checks that cookie doesn't exist
 
 
 ### dontSeeCurrentUrlEquals
-
+ 
 Checks that current url is not equal to value.
 Unlike `dontSeeInCurrentUrl` performs a strict check.
 
@@ -256,7 +252,7 @@ $I->dontSeeCurrentUrlEquals('/');
 
 
 ### dontSeeCurrentUrlMatches
-
+ 
 Checks that current url does not match a RegEx value
 
 ``` php
@@ -270,7 +266,7 @@ $I->dontSeeCurrentUrlMatches('~$/users/(\d+)~');
 
 
 ### dontSeeElement
-
+ 
 Checks if element does not exist (or is visible) on a page, matching it by CSS or XPath
 You can also specify expected attributes of this element.
 
@@ -289,7 +285,7 @@ $I->dontSeeElement('input', ['value' => '123456']);
 
 
 ### dontSeeInCurrentUrl
-
+ 
 Checks that current uri does not contain a value
 
 ``` php
@@ -302,7 +298,7 @@ $I->dontSeeInCurrentUrl('/users/');
 
 
 ### dontSeeInField
-
+ 
 Checks that an input field or textarea doesn't contain value.
 Field is matched either by label or CSS or Xpath
 Example:
@@ -323,7 +319,7 @@ $I->seeInField(['name' => 'search'], 'Search');
 
 
 ### dontSeeInTitle
-
+ 
 Checks that page title does not contain text.
 
  * `param` $title
@@ -331,7 +327,7 @@ Checks that page title does not contain text.
 
 
 ### dontSeeLink
-
+ 
 Checks if page doesn't contain the link with text specified.
 Specify url to narrow the results.
 
@@ -348,7 +344,7 @@ $I->dontSeeLink('Logout'); // I suppose user is not logged in
 
 
 ### dontSeeOptionIsSelected
-
+ 
 Checks if option is not selected in select field.
 
 ``` php
@@ -363,7 +359,7 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 ### dontSeeRecord
-
+ 
 Checks that record does not exist in database.
 
 ``` php
@@ -379,7 +375,7 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
 
 
 ### fillField
-
+ 
 Fills a text field or textarea with value.
 
 Example:
@@ -405,7 +401,7 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
 
 
 ### grabAttributeFrom
-
+ 
 Grabs attribute value from an element.
 Fails if element is not found.
 
@@ -422,7 +418,7 @@ $I->grabAttributeFrom('#tooltip', 'title');
 
 
 ### grabCookie
-
+ 
 Grabs a cookie value.
 
  * `param` $cookie
@@ -430,7 +426,7 @@ Grabs a cookie value.
 
 
 ### grabFromCurrentUrl
-
+ 
 Takes a parameters from current URI by RegEx.
 If no url provided returns full URI.
 
@@ -447,7 +443,7 @@ $uri = $I->grabFromCurrentUrl();
 
 
 ### grabRecord
-
+ 
 Retrieves record from database
 
 ``` php
@@ -461,7 +457,7 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 
 
 ### grabService
-
+ 
 Return an instance of a class from the IoC Container.
 (http://laravel.com/docs/ioc)
 
@@ -485,7 +481,7 @@ $service = $I->grabService('foo');
 
 
 ### grabTextFrom
-
+ 
 Finds and returns text contents of element.
 Element is searched by CSS selector, XPath or matcher by regex.
 
@@ -504,7 +500,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
 
 ### grabValueFrom
-
+ 
  * `param` $field
 
 @return array|mixed|null|string
@@ -512,7 +508,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
 
 ### haveRecord
-
+ 
 Inserts record into the database.
 
 ``` php
@@ -531,7 +527,7 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 
 
 ### resetCookie
-
+ 
 Unsets cookie
 
  * `param` $cookie
@@ -541,7 +537,7 @@ Unsets cookie
 
 
 ### see
-
+ 
 Check if current page contains the text specified.
 Specify the css selector to match only specific region.
 
@@ -560,7 +556,7 @@ $I->see('Sign Up','//body/h1'); // with XPath
 
 
 ### seeCheckboxIsChecked
-
+ 
 Assert if the specified checkbox is checked.
 Use css selector or xpath to match.
 
@@ -578,7 +574,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 
 
 ### seeCookie
-
+ 
 Checks that cookie is set.
 
  * `param` $cookie
@@ -586,7 +582,7 @@ Checks that cookie is set.
 
 
 ### seeCurrentUrlEquals
-
+ 
 Checks that current url is equal to value.
 Unlike `seeInCurrentUrl` performs a strict check.
 
@@ -601,7 +597,7 @@ $I->seeCurrentUrlEquals('/');
 
 
 ### seeCurrentUrlMatches
-
+ 
 Checks that current url is matches a RegEx value
 
 ``` php
@@ -615,7 +611,7 @@ $I->seeCurrentUrlMatches('~$/users/(\d+)~');
 
 
 ### seeElement
-
+ 
 Checks if element exists on a page, matching it by CSS or XPath.
 You can also specify expected attributes of this element.
 
@@ -637,7 +633,7 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
 
 ### seeInCurrentUrl
-
+ 
 Checks that current uri contains a value
 
 ``` php
@@ -653,7 +649,7 @@ $I->seeInCurrentUrl('/users/');
 
 
 ### seeInField
-
+ 
 Checks that an input field or textarea contains value.
 Field is matched either by label or CSS or Xpath
 
@@ -675,7 +671,7 @@ $I->seeInField(['name' => 'search'], 'Search');
 
 
 ### seeInSession
-
+ 
 Assert that the session has a given list of values.
 
  * `param`  string|array $key
@@ -684,7 +680,7 @@ Assert that the session has a given list of values.
 
 
 ### seeInTitle
-
+ 
 Checks that page title contains text.
 
 ``` php
@@ -698,7 +694,7 @@ $I->seeInTitle('Blog - Post #1');
 
 
 ### seeLink
-
+ 
 Checks if there is a link with text specified.
 Specify url to match link with exact this url.
 
@@ -716,7 +712,7 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
 
 ### seeOptionIsSelected
-
+ 
 Checks if option is selected in select field.
 
 ``` php
@@ -731,12 +727,12 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 ### seePageNotFound
-
+ 
 Asserts that current page has 404 response status code.
 
 
 ### seeRecord
-
+ 
 Checks that record exists in database.
 
 ``` php
@@ -748,7 +744,7 @@ $I->seeRecord('users', array('name' => 'davert'));
 
 
 ### seeResponseCodeIs
-
+ 
 Checks that response code is equal to value provided.
 
  * `param` $code
@@ -756,7 +752,7 @@ Checks that response code is equal to value provided.
 
 
 ### seeSessionErrorMessage
-
+ 
 Assert that Session has error messages
 The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
 
@@ -775,14 +771,14 @@ $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
 
 
 ### seeSessionHasErrors
-
+ 
 Assert that the session has errors bound.
 
 @return bool
 
 
 ### seeSessionHasValues
-
+ 
 Assert that the session has a given list of values.
 
  * `param`  array $bindings
@@ -790,7 +786,7 @@ Assert that the session has a given list of values.
 
 
 ### selectOption
-
+ 
 Selects an option in select tag or in radio button group.
 
 Example:
@@ -816,7 +812,7 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 
 
 ### sendAjaxGetRequest
-
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends a GET ajax request with specified params.
 
@@ -827,7 +823,7 @@ See ->sendAjaxPostRequest for examples.
 
 
 ### sendAjaxPostRequest
-
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends a POST ajax request with specified params.
 Additional params can be passed as array.
@@ -849,7 +845,7 @@ $I->sendAjaxGetRequest('/updateSettings', array('notifications' => true)); // GE
 
 
 ### sendAjaxRequest
-
+ 
 If your page triggers an ajax request, you can perform it manually.
 This action sends an ajax request with specified method and params.
 
@@ -869,7 +865,7 @@ $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
 
 
 ### setCookie
-
+ 
 Sets a cookie.
 
  * `param` $cookie
@@ -879,7 +875,7 @@ Sets a cookie.
 
 
 ### submitForm
-
+ 
 Submits a form located on page.
 Specify the form by it's css or xpath selector.
 Fill the form fields values as array.
@@ -922,7 +918,7 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
 
 ### uncheckOption
-
+ 
 Unticks a checkbox.
 
 Example:

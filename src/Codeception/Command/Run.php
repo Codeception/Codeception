@@ -69,6 +69,7 @@ class Run extends Command
                  new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
                  new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'report.tap.log'),
                  new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'report.json'),
+                 new InputOption('tc', '', InputOption::VALUE_OPTIONAL, 'Generate test case(s)', 'report.tc'),
                  new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
                  new InputOption('no-colors', '', InputOption::VALUE_NONE, 'Force no colors in output (useful to override config file)'),
                  new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
