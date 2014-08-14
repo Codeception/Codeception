@@ -300,4 +300,17 @@ class StubTest extends \PHPUnit_Framework_TestCase
             if ($expected) $this->assertEquals($expected, $actual);
         }
     }
+
+    public function testConsecutive()
+    {
+        $dummy = Stub::make('DummyClass', array('helloWorld' => Stub::consecutive('david', 'emma', 'sam', 'amy')));
+
+        $this->assertEquals('david', $dummy->helloWorld());
+        $this->assertEquals('emma', $dummy->helloWorld());
+        $this->assertEquals('sam', $dummy->helloWorld());
+        $this->assertEquals('amy', $dummy->helloWorld());
+
+        // Expected null value when no more values
+        $this->assertNull($dummy->helloWorld());
+    }
 }
