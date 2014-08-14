@@ -150,23 +150,19 @@ class Run extends Command
         }
 
         if (! $test) {
-            $suites      = $suite ? explode(',', $suite) : Configuration::suites();
+            
+            $suites      = $suite ? explode(',', $suite) : Configuration::suites();        
+            $executed    = $this->runSuites($suites, $options['skip']);            
             $current_dir = Configuration::projectDir();
-            $executed    = $this->runSuites($suites, $options['skip']);
-            foreach ($config['include'] as $included_config_file) {
-                Configuration::config($full_path = $current_dir . $included_config_file);
-                $namespace = $this->currentNamespace();
-                $output->writeln(
-                       "\n<fg=white;bg=magenta>\n[$namespace]: tests from $full_path\n</fg=white;bg=magenta>"
-                );
-                $suites = $suite ? explode(',', $suite) : Configuration::suites();
-                $executed += $this->runSuites($suites, $options['skip']);
+            if(isset($config['include'])){            
+                $this->loopIncludedSuites($config['include'],$current_dir,$options,$suite,$output,$executed);            
             }
+
             if (! $executed) {
                 throw new \RuntimeException(
                     sprintf("Suite '%s' could not be found", implode(', ', $suites))
                 );
-            }
+            }                
         }
 
         $this->codecept->printResult();
@@ -177,6 +173,37 @@ class Run extends Command
             }
         }
     }
+    
+    /**
+     * Loops included suites recursively
+     * 
+     * @param type $includedSuites
+     * @param type $parent_dir
+     * @param type $options
+     * @param type $suite
+     * @param type $output
+     * @param type $executed
+     */
+    protected function loopIncludedSuites($includedSuites,$parent_dir,$options,$suite,$output,&$executed){
+        foreach ($includedSuites as $included_config_file) {
+            
+            $current_dir = $parent_dir . DIRECTORY_SEPARATOR .$included_config_file;
+
+            $config = Configuration::config($current_dir);
+            $namespace = $this->currentNamespace();
+            $output->writeln(
+                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
+            );
+            $suites = $suite ? explode(',', $suite) : Configuration::suites();
+            $executed += $this->runSuites($suites, $options['skip']);
+
+            if(isset($config['include'])){
+                $this->loopIncludedSuites($config['include'],$current_dir,$options,$suite,$output,$executed);
+            }            
+        }
+    }    
+    
+    
 
     protected function currentNamespace()
     {
