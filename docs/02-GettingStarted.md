@@ -159,7 +159,7 @@ $ php codecept.phar run tests/acceptance/SigninCept.php
 You can execute one test from a test class (for Cest or Test formats)
 
 ```bash
-$ php codecept.phar run tests/acceptance/SignInCest:anonymousLogin
+$ php codecept.phar run tests/acceptance/SignInCest.php:anonymousLogin
 ```
 
 You can provide a directory path as well:
