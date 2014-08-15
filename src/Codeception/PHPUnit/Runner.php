@@ -127,7 +127,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
         if ($arguments['xml']) {
             codecept_debug('Printing JUNIT report into '.$arguments['xml']);
-            self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), true);
+            self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), false);
         }
         if ($arguments['tap']) {
             codecept_debug('Printing TAP report into '.$arguments['tap']);
