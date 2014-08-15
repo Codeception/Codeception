@@ -208,7 +208,7 @@ class Run extends Command
     /**
      * Runs included suites recursively
      * 
-     * @param type $includedSuites
+     * @param type $suites
      * @param type $parent_dir
      */
     protected function runIncludedSuites($suites,$parent_dir){
