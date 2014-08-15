@@ -687,16 +687,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSelectTwoSubmitsByText()
 	{
-		$this->module->amOnPage('/form/select_multiple_submits');
+		$this->module->amOnPage('/form/select_two_submits');
 		$this->module->selectOption('What kind of sandwich would you like?',2);
 		$this->module->click('Save');
 		$form = data::get('form');
 		$this->assertEquals(2, $form['sandwich_select']);
 	}
 
-	public function testSelectTWoSubmitsByCSS()
+	public function testSelectTwoSubmitsByCSS()
 	{
-		$this->module->amOnPage('/form/select_multiple_submits');
+		$this->module->amOnPage('/form/select_two_submits');
 		$this->module->selectOption("form select[name='sandwich_select']", '2');
 		$this->module->click('Save');
 		$form = data::get('form');
