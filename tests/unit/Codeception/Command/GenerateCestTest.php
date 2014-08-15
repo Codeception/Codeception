@@ -23,8 +23,8 @@ class GenerateCestTest extends BaseCommandRunner {
 
         $this->assertContains('use ', $this->content);
         $this->assertContains('class HallUnderTheHillCest', $this->content);
-        $this->assertContains('public function _before()', $this->content);
-        $this->assertContains('public function _after()', $this->content);
+        $this->assertContains('public function _before(HobbitGuy $I)', $this->content);
+        $this->assertContains('public function _after(HobbitGuy $I)', $this->content);
         $this->assertContains('public function tryToTest(HobbitGuy $I)', $this->content);
         $this->assertContains('Test was created in tests/shire/HallUnderTheHillCest.php', $this->output);        
     }
