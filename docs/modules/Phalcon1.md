@@ -35,7 +35,7 @@ class_name: TestGuy
 modules:
     enabled: [FileSystem, TestHelper, Phalcon1]
     config:
-        Phalcon1
+        Phalcon1:
             bootstrap: 'app/config/bootstrap.php'
             cleanup: true
             savepoints: true
