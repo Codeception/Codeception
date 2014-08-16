@@ -548,6 +548,22 @@ interface Web
      */
     public function dontSeeElement($selector);
 
+   /**
+     * Tests number of $elements on page
+     * 
+     * ``` php
+     * <?php
+     * $I->seeNumberOfElements('tr', 10);
+     * $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
+     * ?>
+     * ```
+     * @param $selector
+     * @param mixed $expected:
+     * - string: strict number
+     * - array: range of numbers [0,10]  
+     */
+    public function seeNumberOfElements($selector, $expected);    
+    
     /**
      * Checks if option is selected in select field.
      *
