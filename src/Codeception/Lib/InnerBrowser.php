@@ -374,7 +374,7 @@ class InnerBrowser extends Module implements Web
         if ($formSubmits->count() > 2) {
             $nodeItem = $node->getNode(0);
             foreach ($formSubmits as $formSubmit) {
-                if ($formSubmit == $nodeItem) {
+                if ($formSubmit === $nodeItem) {
                     $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
                     break;
                 }

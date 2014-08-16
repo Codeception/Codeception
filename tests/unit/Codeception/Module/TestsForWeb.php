@@ -681,7 +681,28 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->click("Buy Chocolate Bar");
         $this->module->seeCurrentUrlEquals('/');
     }
-    
+
+	/*
+	 * @issue #1304
+	 */
+	public function testSelectTwoSubmitsByText()
+	{
+		$this->module->amOnPage('/form/select_two_submits');
+		$this->module->selectOption('What kind of sandwich would you like?',2);
+		$this->module->click('Save');
+		$form = data::get('form');
+		$this->assertEquals(2, $form['sandwich_select']);
+	}
+
+	public function testSelectTwoSubmitsByCSS()
+	{
+		$this->module->amOnPage('/form/select_two_submits');
+		$this->module->selectOption("form select[name='sandwich_select']", '2');
+		$this->module->click('Save');
+		$form = data::get('form');
+		$this->assertEquals(2, $form['sandwich_select']);
+	}
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
