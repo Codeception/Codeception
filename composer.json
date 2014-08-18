@@ -12,15 +12,13 @@
             "homepage":"http://codegyre.com"
         }
     ],
-    "minimum-stability": "stable",
-
     "require": {
         "php": ">=5.4.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "phpunit/phpunit": "~4.0",
         "facebook/webdriver": "~0.4",
-        "guzzlehttp/guzzle": "4.*",
+        "guzzlehttp/guzzle": "~4.0",
         "symfony/finder": "~2.4",
         "symfony/console": "~2.4",
         "symfony/event-dispatcher": "~2.4",
@@ -30,11 +28,11 @@
         "symfony/dom-crawler": "~2.4,!=2.4.5"
     },
     "require-dev": {
-        "monolog/monolog": "*",
-        "facebook/php-sdk": "3.*",
-        "videlalvaro/php-amqplib": "*",
-        "phpseclib/phpseclib": "0.3.6",
-        "codeception/specify": "*"
+        "monolog/monolog": "~1.8",
+        "facebook/php-sdk": "~3.2",
+        "videlalvaro/php-amqplib": "~2.4",
+        "phpseclib/phpseclib": "~0.3.6",
+        "codeception/specify": "0.3.*"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
@@ -43,7 +41,6 @@
         "monolog/monolog": "Log test steps",
         "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
     },
-
     "autoload":{
         "psr-0":{
             "Codeception":"src"
