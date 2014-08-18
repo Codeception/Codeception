@@ -77,7 +77,12 @@ class Yii2 extends Client
         $this->statusCode = null;
 
         ob_start();
-        $app->handleRequest($app->getRequest())->send();
+        try {
+            $app->handleRequest($app->getRequest())->send();
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
         $content = ob_get_clean();
 
         // catch "location" header and display it in debug, otherwise it would be handled
