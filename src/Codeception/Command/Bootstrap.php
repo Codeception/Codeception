@@ -64,14 +64,14 @@ class Bootstrap extends Command
         $path = $input->getArgument('path');
 
         if (!is_dir($path)) {
-            $output->writeln("<error>\nDirectory '$path' does not exists\n</error>");
+            $output->writeln("<error>\nDirectory '$path' does not exist\n</error>");
             return;
         }
 
         chdir($path);
 
         if (file_exists('codeception.yml')) {
-            $output->writeln("<error>\nProject already initialized at '$path'\n</error>");
+            $output->writeln("<error>\nProject is already initialized in '$path'\n</error>");
             return;
         }
 
@@ -87,7 +87,7 @@ class Bootstrap extends Command
             $this->setup($output);
         }
 
-        file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading \n");
+        file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading\n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
 
         $output->writeln("<info>Building initial {$this->actorSuffix} classes</info>");
@@ -271,7 +271,7 @@ class Bootstrap extends Command
             'Tester'
         );              
 
-        $output->writeln("Basic Actor set to: <info>{$this->actorSuffix}</info>");
+        $output->writeln("Basic Actor is set to: <info>{$this->actorSuffix}</info>");
 
         $this->createGlobalConfig();
         $output->writeln("File codeception.yml created <- global configuration");
