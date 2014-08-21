@@ -1,5 +1,17 @@
 # Changelog
 
+#### 2.0.5
+
+* [Asserts] Added assertLessThan and assertLessThanOrEqual by @Great-Antique *2014-08-21*
+* [ZF2] fixed #1283 by @dkiselew *2014-08-21*
+* Added functionality to Stub to allow ConsecutiveCallStub. See #1300 by @nathanmac *2014-08-21*
+* Cest generator inserts  object into _before and _after methods by @TroyRudolph *2014-08-21*
+* [PhpBrowser][Frameworks] Fixed #1304 - ->selectOption() fails if two submit buttons present by @fdjohnston *2014-08-21*
+* [WebDriver][PhpBrowser][Frameworks] seeNumberOfElements method added by @dynasource *2014-08-21*
+* recursive runner for included suites by @dynasource *2014-08-21*
+* Disabled skipped/incomplete tests logging in jUnit logger for smooth Bamboo integration by @ayastreb *2014-08-21*
+
+
 #### 2.0.4
 
 * [Laravel4] More functional, cli, and api tests added to demo application <https://github.com/Codeception/sample-l4-app> *2014-08-05*

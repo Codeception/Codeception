@@ -1,6 +1,12 @@
 paths:
     tests: tests
     log: tests/log
+    show_uncovered: true
+    include:
+        - src/*
+        - tests/data/claypit/c3.php
+    exclude:
+        - vendor/*
     data: tests/data
     helpers: tests/helpers
 settings:
@@ -24,12 +30,6 @@ extensions:
 
 coverage:
     enabled: true
-    show_uncovered: true
-    include:
-        - src/*
-        - tests/data/claypit/c3.php
-    exclude:
-        - vendor/*
         - src/Codeception/Command/*
         - src/Codeception/Module/Symfony1.php
         - src/Codeception/Module/Symfony2.php
