@@ -30,6 +30,7 @@ extensions:
 
 coverage:
     enabled: true
+    include:
         - src/Codeception/Command/*
         - src/Codeception/Module/Symfony1.php
         - src/Codeception/Module/Symfony2.php
