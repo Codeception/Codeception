@@ -34,7 +34,8 @@
         "facebook/php-sdk": "3.*",
         "videlalvaro/php-amqplib": "*",
         "phpseclib/phpseclib": "0.3.6",
-        "codeception/specify": "*"
+        "codeception/specify": "*",
+        "pda/pheanstalk": "~2.0"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
