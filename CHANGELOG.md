@@ -2,6 +2,7 @@
 
 #### 2.0.5
 
+* [Queue] module added with AWS, Iron.io, and Beanstalkd support. Thanks to @nathanmac *2014-08-21*
 * [WebDriver] fixed attachFile error message when file does not exists #1333 by @TroyRudolph *2014-08-21*
 * [Asserts] Added assertLessThan and assertLessThanOrEqual by @Great-Antique *2014-08-21*
 * [ZF2] fixed #1283 by @dkiselew *2014-08-21*
