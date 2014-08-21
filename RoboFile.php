@@ -167,6 +167,8 @@ class RoboFile extends \Robo\Tasks {
             ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
+            ->exclude('ocramius')
+            ->exclude('videlalvaro')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')
