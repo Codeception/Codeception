@@ -119,7 +119,7 @@ class Queue extends \Codeception\Module
                 break;
             default:
                 $this->requiredFields = array('host');
-                $this->config = array('port' => 11300, 'timeout' => 90);
+                $this->config = array_merge(array('port' => 11300, 'timeout' => 90), $this->config);
         }
         parent::validateConfig();
     }
