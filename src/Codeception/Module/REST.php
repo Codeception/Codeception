@@ -501,6 +501,36 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Checks whether the last JSON response contains the provided property.
+     * The response is converted to array with json_decode($response, true) and filtered through array_keys()
+     * This method matches that the given property exists within the keys of the response json.
+     *
+     * Examples:
+     *
+     * ``` php
+     * <?php
+     * // response: {name: john, email: john@gmail.com}
+     * $I->seeResponseContainsJsonProperty('name');
+     * $I->seeResponseContainsJsonProperty('email');
+     *
+     * ?>
+     * ```
+     *
+     * @param string $property
+     */
+    public function seeResponseContainsJsonProperty($property)
+    {
+        $resp_keys = array_keys(json_decode($this->response, true));
+
+        \PHPUnit_Framework_Assert::assertTrue(
+            $this->arrayHasArray(array($property), $resp_keys),
+            "Response JSON contains provided properties\n"
+            ."- <info>".var_export($property, true)."</info>\n"
+            ."+ ".var_export($resp_keys, true)
+        );
+    }
+
+    /**
      * Returns current response so that it can be used in next scenario steps.
      *
      * Example:
