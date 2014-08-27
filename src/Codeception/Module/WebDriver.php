@@ -134,6 +134,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function _failed(\Codeception\TestCase $test, $fail)
     {
         $filename = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)).'.fail.png';
+        $logname = str_replace(['::','\\','/'], ['.','',''], \Codeception\TestCase::getTestSignature($test)) . '.fail.log';
+        $this->_saveLog(codecept_output_dir($logname));
         $this->_saveScreenshot(codecept_output_dir($filename));
         $this->debug("Screenshot was saved into '_output' dir");
     }
@@ -195,6 +197,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function _saveScreenshot($filename)
     {
         $this->webDriver->takeScreenshot($filename);
+    }
+
+    public function _saveLog($filename)
+    {
+        $handle = fopen($filename, "w");
+        fputs($handle, $this->webDriver->getPageSource());
+        fclose($handle);
     }
 
     /**
@@ -325,11 +334,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param $text
      */    public function dontSeeInPageSource($text)
-    {
-        $this->assertThatItsNot($this->webDriver->getPageSource(),
-            new PageConstraint($text, $this->_getCurrentUri()), ''
-        );
-    }
+{
+    $this->assertThatItsNot($this->webDriver->getPageSource(),
+        new PageConstraint($text, $this->_getCurrentUri()), ''
+    );
+}
 
     public function click($link, $context = null)
     {
@@ -1168,7 +1177,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         $this->webDriver->wait($timeout)->until($condition);
     }
-    
+
     /**
      * Waits for element to be visible on the page for $timeout seconds to pass.
      * If element doesn't appear, timeout exception is thrown.
@@ -1429,7 +1438,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     /**
      * Executes custom JavaScript
-     * 
+     *
      * In this example we will use jQuery to get a value and assign this value to a variable.
      *
      * ```php
@@ -1542,7 +1551,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if ($selector instanceof \WebDriverBy) {
             return $page->findElements($selector);
         }
-        
+
         if (Locator::isID($selector)) {
             $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
         }
