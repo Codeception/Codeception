@@ -70,6 +70,25 @@ class RunCest
 
     /**
      * @group reports
+     * @group core
+     *
+     * @param CliGuy $I
+     */
+    public function runCustomPrinter(\CliGuy $I)
+    {
+        $I->wantTo('check CustomPrinter output');
+        $I->executeCommand('run dummy --custom');
+        $I->seeFileFound(
+            'report.html',
+            'tests/_log/' . date(
+                'Y-m-d',
+                time()
+            )
+        );
+    }
+
+    /**
+     * @group reports
      *
      * @param CliGuy $I
      */
@@ -115,7 +134,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-          'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers'
+            'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
@@ -141,7 +160,7 @@ class RunCest
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput(
-          'Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
+            'Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
         );
         $I->seeInShellOutput('Trying to test is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput('Trying to test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
@@ -166,8 +185,8 @@ class RunCest
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
         $I->seeFileFound('myownhtmlreport.html', 'tests/_log');
-        $I->dontSeeFileFound('report.xml','tests/_log');
-        $I->dontSeeFileFound('report.html','tests/_log');
+        $I->dontSeeFileFound('report.xml', 'tests/_log');
+        $I->dontSeeFileFound('report.html', 'tests/_log');
 
     }
 }

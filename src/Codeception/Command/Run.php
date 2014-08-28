@@ -25,6 +25,7 @@ use Symfony\Component\Console\Command\Command;
  *  --xml                 Generate JUnit XML Log (default: "report.xml")
  *  --tap                 Generate Tap Log (default: "report.tap.log")
  *  --json                Generate Json Log (default: "report.json")
+ *  --custom              Generate Custom Log (default: "report")
  *  --colors              Use colors in output
  *  --no-colors           Force no colors in output (useful to override config file)
  *  --silent              Only outputs suite names and final results
@@ -88,6 +89,7 @@ class Run extends Command
                  new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
                  new InputOption('tap', '', InputOption::VALUE_OPTIONAL, 'Generate Tap Log', 'report.tap.log'),
                  new InputOption('json', '', InputOption::VALUE_OPTIONAL, 'Generate Json Log', 'report.json'),
+                 new InputOption('custom', '', InputOption::VALUE_OPTIONAL, 'Generate Custom Log', true),
                  new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
                  new InputOption('no-colors', '', InputOption::VALUE_NONE, 'Force no colors in output (useful to override config file)'),
                  new InputOption('silent', '', InputOption::VALUE_NONE, 'Only outputs suite names and final results'),
@@ -136,7 +138,7 @@ class Run extends Command
             $this->output->setDecorated($this->options['colors']);
         }
 
-        $this->options = array_merge($this->options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
+        $this->options = array_merge($this->options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'custom', 'coverage','coverage-xml','coverage-html']));
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }

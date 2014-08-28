@@ -18,3 +18,4 @@ modules:
             user: ''
             password: ''
             dump: tests/_data/dump.sql
+custom_printer_class: \Codeception\PHPUnit\ResultPrinter\CustomPrinter
