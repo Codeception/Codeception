@@ -278,6 +278,10 @@ Options:
 
 
 
+
+
+
+
 ## SelfUpdate
 
 Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .

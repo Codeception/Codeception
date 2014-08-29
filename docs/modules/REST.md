@@ -29,7 +29,7 @@ This module requires PHPBrowser or any of Framework modules enabled.
     modules:
        enabled: [PhpBrowser, REST]
        config:
-          PHPBrowser:
+          PhpBrowser:
              url: http://serviceapp/
           REST:
              url: 'http://serviceapp/api/v1/'
@@ -91,6 +91,12 @@ Adds HTTP authentication via username/password.
 
  * `param` $username
  * `param` $password
+
+
+
+
+
+
 
 
 
@@ -204,6 +210,7 @@ Sets HTTP header
 
  * `param` $name
  * `param` $value
+
 
 
 
@@ -375,6 +382,7 @@ Sends UNLINK request to given uri.
  * `param array` $linkEntries (entry is array with keys "uri" and "link-param")
 @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 @author samva.ua@gmail.com
+
 
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>

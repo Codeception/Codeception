@@ -64,18 +64,46 @@ Checks that condition is negative.
  * `param string` $message
 
 
-### assertGreaterThen
+### assertGreaterThan
  
-Checks that expected is greater then actual
+Checks that expected is greater than actual
 
  * `param`        $expected
  * `param`        $actual
  * `param string` $message
 
 
+### assertGreaterThanOrEqual
+ 
+Checks that expected is greater or equal than actual
+
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
+
+
+### assertGreaterThen
+ 
+@deprecated
+
+
 ### assertGreaterThenOrEqual
  
-Checks that expected is greater or equal then actual
+@deprecated
+
+
+### assertLessThan
+ 
+Checks that expected is less than actual
+
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
+
+
+### assertLessThanOrEqual
+ 
+Checks that expected is less or equal than actual
 
  * `param`        $expected
  * `param`        $actual

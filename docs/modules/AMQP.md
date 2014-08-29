@@ -95,6 +95,10 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 
 
 
+
+
+
+
 ### grabMessageFromQueue
  
 Takes last message from queue.

@@ -84,6 +84,10 @@ Opens the page.
 
 
 
+
+
+
+
 ### click
  
 Click on link or button and move to next page.
