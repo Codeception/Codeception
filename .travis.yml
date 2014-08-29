@@ -20,7 +20,7 @@ services:
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - wget http://selenium.googlecode.com/files/selenium-server-standalone-2.42.2.jar
+  - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
   - php -S localhost:8000 -t tests/data/app &
   - php -S localhost:8010 -t tests/data &
