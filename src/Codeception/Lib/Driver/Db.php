@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Lib\Driver;
 
-use Codeception\Exception\Module as ModuleException;
-
 class Db
 {
     protected $dbh;
