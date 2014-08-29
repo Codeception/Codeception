@@ -48,7 +48,7 @@ Once each of your applications (bundles) has its own namespace and different Hel
 $ php codecept.phar run
 ```
 
-This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on Conitinous Integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too.
+This will launch test suites for all 3 applications and merge the reports from all of them. Basically that would be very useful when you run your tests on Continuous Integration server and you want to get one report in JUnit and HTML format. Codecoverage report will be merged too.
 
 If your applications uses same helpers, follow the next section of this chapter.
 

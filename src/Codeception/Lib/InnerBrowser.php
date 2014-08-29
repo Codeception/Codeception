@@ -569,7 +569,7 @@ class InnerBrowser extends Module implements Web
      *
      * ``` php
      * <?php
-     * $I->sendAjaxRequest('PUT', /posts/7', array('title' => 'new title');
+     * $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
      *
      * ```
      *
