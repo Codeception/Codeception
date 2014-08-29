@@ -83,6 +83,10 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 
 
+
+
+
+
 ### haveHttpHeader
  
 Sets HTTP header

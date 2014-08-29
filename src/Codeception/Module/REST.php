@@ -34,7 +34,7 @@ use Symfony\Component\BrowserKit\Cookie;
  *     modules:
  *        enabled: [PhpBrowser, REST]
  *        config:
- *           PHPBrowser:
+ *           PhpBrowser:
                 url: http://serviceapp/
  *           REST:
  *              url: 'http://serviceapp/api/v1/'
@@ -68,12 +68,9 @@ class REST extends \Codeception\Module
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->headers = array();
-        $this->params = array();
-        $this->response = "";
-
         $this->prepareConnection();
         $this->client = &$this->connectionModule->client;
+        $this->resetVariables();
 
         if ($this->config['xdebug_remote']
             && function_exists('xdebug_is_enabled')
@@ -82,6 +79,16 @@ class REST extends \Codeception\Module
         ) {
             $cookie = new Cookie('XDEBUG_SESSION', $this->config['xdebug_remote'], null, '/');
             $this->client->getCookieJar()->set($cookie);
+        }
+    }
+
+    protected function resetVariables()
+    {
+        $this->headers = array();
+        $this->params = array();
+        $this->response = "";
+        if ($this->client) {
+            $this->client->setServerParameters(array());
         }
     }
 
@@ -488,8 +495,8 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertTrue(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON contains provided\n"
-            ."- ".print_r($json, true)
-            ."+ ".print_r($resp_json, true)
+            ."- <info>".var_export($json, true)."</info>\n"
+            ."+ ".var_export($resp_json, true)
         );
     }
 
@@ -533,7 +540,7 @@ class REST extends \Codeception\Module
      *
      * @author tiger.seo@gmail.com
      */
-    public function grabDataFromJsonResponse($path)
+    public function grabDataFromJsonResponse($path = '')
     {
         $data = $response = json_decode($this->response, true);
 
@@ -558,48 +565,6 @@ class REST extends \Codeception\Module
         return $data;
     }
 
-    /**
-     * @author nleippe@integr8ted.com
-     * @author tiger.seo@gmail.com
-     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
-     *
-     * @param mixed $arr1
-     * @param mixed $arr2
-     *
-     * @return array|bool
-     */
-    private function arrayIntersectAssocRecursive($arr1, $arr2)
-    {
-        if (!is_array($arr1) || !is_array($arr2)) {
-            return null;
-        }
-
-        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
-        $ret = array();
-        foreach ($commonkeys as $key) {
-            $_return = $this->arrayIntersectAssocRecursive($arr1[$key], $arr2[$key]);
-            if ($_return) {
-                $ret[$key] = $_return;
-                continue;
-            }
-            if ($arr1[$key] === $arr2[$key]) {
-                $ret[$key] = $arr1[$key];
-            }
-        }
-        if (empty($commonkeys)) {
-            foreach ($arr2 as $arr) {
-                $_return = $this->arrayIntersectAssocRecursive($arr1, $arr);
-                if ($_return && $_return == $arr1) return $_return;
-            }
-        }
-
-        return $ret;
-    }
-
-    protected function arrayHasArray(array $needle, array $haystack)
-    {
-        return $needle == $this->arrayIntersectAssocRecursive($needle, $haystack);
-    }
 
     /**
      * Opposite to seeResponseContainsJson
@@ -612,8 +577,8 @@ class REST extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertFalse(
             $this->arrayHasArray($json, $resp_json),
             "Response JSON does not contain JSON provided\n"
-            ."- ".print_r($json, true)
-            ."+ ".print_r($resp_json, true)
+            ."- <info>".var_export($json, true)."</info>\n"
+            ."+ ".var_export($resp_json, true)
         );
     }
 
@@ -624,7 +589,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseEquals($response)
     {
-        \PHPUnit_Framework_Assert::assertEquals($response, $this->response);
+        $this->assertEquals($response, $this->response);
     }
 
     /**
@@ -666,6 +631,104 @@ class REST extends \Codeception\Module
         if ($this->connectionModule instanceof Framework) {
             $this->isFunctional = true;
         }
+    }
+
+    /**
+     * @author nleippe@integr8ted.com
+     * @author tiger.seo@gmail.com
+     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
+     *
+     * @param mixed $arr1
+     * @param mixed $arr2
+     *
+     * @return array|bool
+     */
+    private function arrayIntersectRecursive($arr1, $arr2)
+    {
+        if (!is_array($arr1) || !is_array($arr2)) {
+            return null;
+        }
+        // if it is not an associative array we do not compare keys
+        if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
+            return $this->sequentialArrayIntersect($arr1, $arr2);
+        }
+
+        return $this->associativeArrayIntersect($arr1, $arr2);
+    }
+
+    protected function arrayHasArray(array $needle, array $haystack)
+    {
+        return $needle == $this->arrayIntersectRecursive($needle, $haystack);
+    }
+
+
+    /**
+     * @param $arr1
+     * @return bool
+     */
+    private function arrayIsSequential($arr1)
+    {
+        return array_keys($arr1) === range(0, count($arr1) - 1);
+    }
+
+    /**
+     * @param $arr1
+     * @param $arr2
+     * @return array
+     */
+    private function sequentialArrayIntersect($arr1, $arr2)
+    {
+        $ret = array();
+        foreach ($arr1 as $key1 => $value1) {
+            foreach ($arr2 as $key2 => $value2) {
+                $_return = $this->arrayIntersectRecursive($value1, $value2);
+                if ($_return) {
+                    $ret[$key1] = $_return;
+                    continue;
+                }
+                if ($value1 === $value2) {
+                    $ret[$key1] = $value1;
+                }
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @param $arr1
+     * @param $arr2
+     * @return array|bool|null
+     */
+    private function associativeArrayIntersect($arr1, $arr2)
+    {
+        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
+
+        $ret = array();
+        foreach ($commonkeys as $key) {
+            $_return = $this->arrayIntersectRecursive($arr1[$key], $arr2[$key]);
+            if ($_return) {
+                $ret[$key] = $_return;
+                continue;
+            }
+            if ($arr1[$key] === $arr2[$key]) {
+                $ret[$key] = $arr1[$key];
+            }
+        }
+
+        if (empty($commonkeys)) {
+            foreach ($arr2 as $arr) {
+                $_return = $this->arrayIntersectRecursive($arr1, $arr);
+                if ($_return && $_return == $arr1) {
+                    return $_return;
+                }
+            }
+        }
+
+        if (count($ret) < min(count($arr1), count($arr2))) {
+            return null;
+        }
+
+        return $ret;
     }
 
 

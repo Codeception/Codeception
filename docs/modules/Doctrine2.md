@@ -78,6 +78,10 @@ It can be done in bootstrap file, by setting static $em property:
 
 
 
+
+
+
+
 ### dontSeeInRepository
  
 Flushes changes to database and performs ->findOneBy() call for current repository.

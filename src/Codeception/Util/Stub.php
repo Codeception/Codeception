@@ -494,6 +494,12 @@ class Stub
                         expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
                         method($param)->
                         will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($value));
+                } elseif ($value instanceof ConsecutiveMap) {
+                    $consecutiveMap = $value;
+                    $mock->
+                        expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
+                        method($param)->
+                        will(new \PHPUnit_Framework_MockObject_Stub_ConsecutiveCalls($consecutiveMap->getMap()));
                 } else {
                     $mock->
                         expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)->
@@ -657,6 +663,25 @@ class Stub
             return $params;
         }
     }
+
+    /**
+     * Stubbing a method call to return a list of values in the specified order.
+     *
+     * ``` php
+     * <?php
+     * $user = Stub::make('User', array('getName' => Stub::consecutive('david', 'emma', 'sam', 'amy')));
+     * $user->getName(); //david
+     * $user->getName(); //emma
+     * $user->getName(); //sam
+     * $user->getName(); //amy
+     * ?>
+     * ```
+     *
+     * @return ConsecutiveMap
+     */
+    public static function consecutive(){
+        return new ConsecutiveMap(func_get_args());
+    }
 }
 
 /**
@@ -682,5 +707,23 @@ class StubMarshaler
     public function getValue()
     {
         return $this->methodValue;
+    }
+}
+
+/**
+ * Holds the Consecutive Map for matching
+ */
+class ConsecutiveMap
+{
+    private $consecutiveMap = array();
+
+    public function __construct(array $consecutiveMap)
+    {
+        $this->consecutiveMap = $consecutiveMap;
+    }
+
+    public function getMap()
+    {
+        return $this->consecutiveMap;
     }
 }

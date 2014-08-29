@@ -9,12 +9,18 @@ class RestTest extends \PHPUnit_Framework_TestCase
      */
     protected $module;
 
-    public function setUp() {
+    public function setUp()
+    {
 
         $connector = new \Codeception\Lib\Connector\Universal();
         $connector->setIndex(\Codeception\Configuration::dataDir().'/rest/index.php');
 
-        $this->module = Stub::make('\Codeception\Module\REST', ['getModules' => [new \Codeception\Module\PhpBrowser()]]);
+        $this->module = Stub::make(
+            '\Codeception\Module\REST',
+            [
+                'getModules' => [new \Codeception\Module\PhpBrowser()]
+            ]
+        );
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
         $this->module->client = $connector;
@@ -26,7 +32,21 @@ class RestTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testGet() {
+    public function testBeforeHookResetsVariables()
+    {
+        $this->module->haveHttpHeader('Origin','http://www.example.com');
+        $this->module->sendGET('/rest/user/');
+        $this->assertEquals(
+            'http://www.example.com',
+            $this->module->client->getServerParameter('HTTP_ORIGIN')
+        );
+
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->assertNull($this->module->client->getServerParameter('HTTP_ORIGIN', null));
+    }
+
+    public function testGet()
+    {
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
@@ -35,20 +55,23 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseCodeIs(404);
     }
 
-    public function testPost() {
+    public function testPost()
+    {
         $this->module->sendPOST('/rest/user/', array('name' => 'john'));
         $this->module->seeResponseContains('john');
         $this->module->seeResponseContainsJson(array('name' => 'john'));
     }
 
-    public function testPut() {
+    public function testPut()
+    {
         $this->module->sendPUT('/rest/user/', array('name' => 'laura'));
         $this->module->seeResponseContains('davert@mail.ua');
         $this->module->seeResponseContainsJson(array('name' => 'laura'));
         $this->module->dontSeeResponseContainsJson(array('name' => 'john'));
     }
 
-    public function testGrabDataFromJsonResponse() {
+    public function testGrabDataFromJsonResponse()
+    {
         $this->module->sendGET('/rest/user/');
         // simple assoc array
         $this->assertEquals('davert@mail.ua', $this->module->grabDataFromJsonResponse('email'));
@@ -92,7 +115,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsXml();
     }
 
-    public function testSeeInJson()
+    public function testSeeInJsonResponse()
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
@@ -109,8 +132,9 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
+        $this->module->seeResponseContainsJson([['user' => 'John Doe', 'age' => 27]]);
+        $this->module->seeResponseContainsJson([['user' => 'Blacknoir', 'age' => 27], ['user' => 'John Doe', 'age' => 27]]);
     }
-
 
     public function testArrayJson()
     {
@@ -178,7 +202,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('no-cache', 'no-store'), $this->module->grabHttpHeader('Cache-Control', false));
 
     }
-    
+
     public function testSeeHeadersOnce()
     {
         $this->shouldFail();

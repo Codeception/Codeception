@@ -16,25 +16,23 @@ Uses 'bootstrap/start.php' to launch.
 
 ## Status
 
-* Maintainer: **Jon Phipps, Davert**
-* Stability: **alpha**
+* Maintainer: **Davert**
+* Stability: **stable**
 * Contact: davert.codeception@mailican.com
 
 ## Config
 
-* start: `bootstrap/start.php` - relative path to start.php config file
-* cleanup: true - all db queries will be run in transaction, which will be rolled back at the end of test.
+* cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
+* unit: `boolean`, default `true` - Laravel will run in unit testing mode.
+* environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
+* start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
+* root: `string`, default ` ` - Root path of our application.
+* filters: `boolean`, default: `false` - enable or disable filters for testing.
 
 ## API
 
 * kernel - `Illuminate\Foundation\Application` instance
 * client - `BrowserKit` client
-
-## Known Issues
-
-When submitting form do not use `Input::all` to pass to store (hope you won't do this anyway).
-Codeception creates internal form fields, so you get exception trying to save them.
-
 
 
 
@@ -75,10 +73,25 @@ Authenticates user for HTTP_AUTH
 ### amLoggedAs
  
 Set the currently logged in user for the application.
+Takes either `UserInterface` instance or array of credentials.
 
- * `param`  \Illuminate\Auth\UserInterface $user
+ * `param`  \Illuminate\Auth\UserInterface|array $user
  * `param`  string $driver
 @return void
+
+
+### amOnAction
+ 
+Opens web page by action name
+
+```php
+<?php
+$I->amOnAction('PostsController@index');
+?>
+```
+
+ * `param` $action
+ * `param array` $params
 
 
 ### amOnPage
@@ -98,6 +111,24 @@ $I->amOnPage('/register');
 ```
 
  * `param` $page
+
+
+### amOnRoute
+ 
+Opens web page using route name and parameters.
+
+```php
+<?php
+$I->amOnRoute('posts.create');
+?>
+```
+
+ * `param` $route
+ * `param array` $params
+
+
+
+
 
 
 
@@ -209,6 +240,11 @@ $I->dontSee('Sign Up','//body/h1'); // with XPath
 
  * `param`      $text
  * `param null` $selector
+
+
+### dontSeeAuthentication
+ 
+Check that user is not authenticated
 
 
 ### dontSeeCheckboxIsChecked
@@ -400,6 +436,7 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
 
 
 
+
 ### grabAttributeFrom
  
 Grabs attribute value from an element.
@@ -507,6 +544,16 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi');
 
 
 
+### haveDisabledFilters
+ 
+Disable Laravel filters for next requests.
+
+
+### haveEnabledFilters
+ 
+Enable Laravel filters for next requests.
+
+
 ### haveRecord
  
 Inserts record into the database.
@@ -519,6 +566,11 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 
  * `param` $model
  * `param array` $attributes
+
+
+### logout
+ 
+Logs user out
 
 
 
@@ -555,6 +607,11 @@ $I->see('Sign Up','//body/h1'); // with XPath
  * `param null` $selector
 
 
+### seeAuthentication
+ 
+Checks that user is authenticated
+
+
 ### seeCheckboxIsChecked
  
 Assert if the specified checkbox is checked.
@@ -579,6 +636,33 @@ Checks that cookie is set.
 
  * `param` $cookie
 
+
+
+### seeCurrentActionIs
+ 
+Checks that current url matches action
+
+```php
+<?php
+$I->seeCurrentActionIs('PostsController@index');
+?>
+```
+
+ * `param` $action
+ * `param array` $params
+
+
+### seeCurrentRouteIs
+ 
+Checks that current url matches route
+
+```php
+<?php
+$I->seeCurrentRouteIs('posts.index');
+?>
+```
+ * `param` $route
+ * `param array` $params
 
 
 ### seeCurrentUrlEquals
@@ -709,6 +793,22 @@ $I->seeLink('Logout','/logout'); // matches <a href="/logout">Logout</a>
 
  * `param`      $text
  * `param null` $url
+
+
+### seeNumberOfElements
+ 
+Tests number of $elements on page
+
+``` php
+<?php
+$I->seeNumberOfElements('tr', 10);
+$I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
+?>
+```
+ * `param` $selector
+ * `param mixed` $expected:
+- string: strict number
+- array: range of numbers [0,10]  
 
 
 ### seeOptionIsSelected
@@ -914,6 +1014,7 @@ Note, that pricing plan will be set to Paid, as it's selected on page.
 
  * `param` $selector
  * `param` $params
+
 
 
 

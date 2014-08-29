@@ -770,6 +770,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->findField($field);
         // in order to be compatible on different OS
         $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        if (!is_readable($filePath)) {
+        	throw new \InvalidArgumentException("file not found or not readable: $filePath");
+        }
         // in order for remote upload to be enabled
         $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);
@@ -900,6 +903,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
+    
+    public function seeNumberOfElements($selector, $expected)
+    {
+        $counted = count($this->match($this->webDriver,$selector));
+        if(is_array($expected)){
+            list($floor,$ceil) = $expected;
+            $this->assertTrue($floor<=$counted &&  $ceil>=$counted,
+                    'Number of elements counted differs from expected range' );
+        }else{
+            $this->assertEquals($expected, $counted,
+                    'Number of elements counted differs from expected number' );
+        }
+    }    
 
     public function seeOptionIsSelected($selector, $optionText)
     {

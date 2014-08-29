@@ -32,7 +32,7 @@ before_script:
 
   # Yii2
   - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
-  - php codecept build -c frameworks-yii-basic
+  - php codecept build -c frameworks-yii-basic/tests
 
   # Phalcon
   - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
@@ -46,7 +46,7 @@ before_script:
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - "mysql -e 'create database `l4-module`;'"
   - composer install -d frameworks-laravel
-  - php frameworks-laravel/artisan migrate --seed --force
+  - php frameworks-laravel/artisan migrate --seed -n
   - php codecept build -c frameworks-laravel
 
   # Symfony
@@ -56,9 +56,15 @@ before_script:
   - frameworks-symfony/app/console doctrine:schema:create
   - php codecept build -c frameworks-symfony
 
+  # Queue (Beanstalkd)
+  - composer update --dev
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq beanstalkd
+  - sudo beanstalkd -d -l 127.0.0.1 -p 11300
+
 script:
   - php codecept run  # self tests
-  - php codecept run functional -c frameworks-yii-basic # Yii2 tests
-  - php codecept run functional -c frameworks-laravel # Laravel4 Tests
+  - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
+  - php codecept run -c frameworks-laravel # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests

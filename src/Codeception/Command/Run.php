@@ -57,6 +57,25 @@ class Run extends Command
      */
     protected $codecept;
 
+    /**
+     * @var integer of executed suites
+     */
+    protected $executed=0;
+    
+    /**
+     * @var array of options (command run)
+     */
+    protected $options=[];
+    
+    /**
+     * @var OutputInterface
+     */
+    protected $output;       
+    
+    
+    /**
+     * Sets Run arguments 
+     */
     protected function configure()
     {
         $this->setDefinition(
@@ -95,34 +114,43 @@ class Run extends Command
         return 'Runs the test suites';
     }
 
+    /**
+     * Executes Run
+     * 
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @throws \RuntimeException
+     */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = $input->getOptions();
-        if (!$options['silent']) {
-            $output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
+        $this->options = $input->getOptions();
+        $this->output = $output;
+        
+        if (!$this->options['silent']) {
+            $this->output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         }
-        if ($options['no-colors']) {
-            $output->setDecorated(!$options['no-colors']);
+        if ($this->options['no-colors']) {
+            $this->output->setDecorated(!$this->options['no-colors']);
         }
-        if ($options['colors']) {
-            $output->setDecorated($options['colors']);
+        if ($this->options['colors']) {
+            $this->output->setDecorated($this->options['colors']);
         }
 
-        $options = array_merge($options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
-        if ($options['debug']) {
-            $output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->options = array_merge($this->options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
+        if ($this->options['debug']) {
+            $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
-        $options['verbosity'] = $output->getVerbosity();
-        if ($options['no-colors']) $options['colors'] = false;
-        if ($options['report']) $options['silent'] = true;
-        if ($options['group']) $options['groups'] = $options['group'];
-        if ($options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
-        if ($options['coverage-xml'] or $options['coverage-html']) $options['coverage'] = true;
+        $this->options['verbosity'] = $this->output->getVerbosity();
+        if ($this->options['no-colors']) $this->options['colors'] = false;
+        if ($this->options['report']) $this->options['silent'] = true;
+        if ($this->options['group']) $this->options['groups'] = $this->options['group'];
+        if ($this->options['skip-group']) $this->options['excludeGroups'] = $this->options['skip-group'];
+        if ($this->options['coverage-xml'] or $this->options['coverage-html']) $this->options['coverage'] = true;
 
 
         $this->ensureCurlIsAvailable();
 
-        $config = Configuration::config($options['config']);
+        $config = Configuration::config($this->options['config']);
 
         $suite = $input->getArgument('suite');
         $test  = $input->getArgument('test');
@@ -131,42 +159,40 @@ class Run extends Command
             list($matches, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
 
-        if ($options['group']) {
-            $output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $options['group'])));
+        if ($this->options['group']) {
+            $this->output->writeln(sprintf("[Groups] <info>%s</info> ", implode(', ', $this->options['group'])));
         }
         if ($input->getArgument('test')) {
-            $options['steps'] = true;
+            $this->options['steps'] = true;
         }
 
         if ($test) {
             $filter            = $this->matchFilteredTestName($test);
-            $options['filter'] = $filter;
+            $this->options['filter'] = $filter;
         }
 
-        $this->codecept = new Codecept((array)$options);
+        $this->codecept = new Codecept((array)$this->options);
 
         if ($suite and $test) {
             $this->codecept->run($suite, $test);
         }
 
         if (! $test) {
-            $suites      = $suite ? explode(',', $suite) : Configuration::suites();
-            $current_dir = Configuration::projectDir();
-            $executed    = $this->runSuites($suites, $options['skip']);
-            foreach ($config['include'] as $included_config_file) {
-                Configuration::config($full_path = $current_dir . $included_config_file);
-                $namespace = $this->currentNamespace();
-                $output->writeln(
-                       "\n<fg=white;bg=magenta>\n[$namespace]: tests from $full_path\n</fg=white;bg=magenta>"
-                );
-                $suites = $suite ? explode(',', $suite) : Configuration::suites();
-                $executed += $this->runSuites($suites, $options['skip']);
+            
+            $suites      = $suite ? explode(',', $suite) : Configuration::suites();        
+            $this->executed    = $this->runSuites($suites, $this->options['skip']);            
+            
+            if(isset($config['include'])){            
+                $current_dir = Configuration::projectDir();
+                $suites = $config['include'];
+                $this->runIncludedSuites($suites,$current_dir);            
             }
-            if (! $executed) {
+
+            if ( $this->executed ===0 ) {
                 throw new \RuntimeException(
                     sprintf("Suite '%s' could not be found", implode(', ', $suites))
                 );
-            }
+            }                
         }
 
         $this->codecept->printResult();
@@ -177,6 +203,31 @@ class Run extends Command
             }
         }
     }
+    
+    
+    /**
+     * Runs included suites recursively
+     * 
+     * @param array $suites
+     * @param string $parent_dir
+     */
+    protected function runIncludedSuites($suites,$parent_dir){
+        foreach ($suites as $relativePath) {            
+            $current_dir = $parent_dir . DIRECTORY_SEPARATOR .$relativePath;
+            $config = Configuration::config($current_dir);   
+            $suites = Configuration::suites();
+            $this->executed += $this->runSuites($suites, $this->options['skip']);
+            
+            $namespace = $this->currentNamespace();            
+            $this->output->writeln(
+                "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
+            );
+            if(isset($config['include'])){
+                $this->runIncludedSuites($config['include'],$current_dir);
+            }            
+        }
+    }    
+       
 
     protected function currentNamespace()
     {

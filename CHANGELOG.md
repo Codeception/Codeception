@@ -1,7 +1,37 @@
 # Changelog
 
+#### 2.0.5
+
+* [Queue] module added with AWS, Iron.io, and Beanstalkd support. Thanks to @nathanmac *2014-08-21*
+* [WebDriver] fixed attachFile error message when file does not exists #1333 by @TroyRudolph *2014-08-21*
+* [Asserts] Added assertLessThan and assertLessThanOrEqual by @Great-Antique *2014-08-21*
+* [ZF2] fixed #1283 by @dkiselew *2014-08-21*
+* Added functionality to Stub to allow ConsecutiveCallStub. See #1300 by @nathanmac *2014-08-21*
+* Cest generator inserts  object into _before and _after methods by @TroyRudolph *2014-08-21*
+* [PhpBrowser][Frameworks] Fixed #1304 - ->selectOption() fails if two submit buttons present by @fdjohnston *2014-08-21*
+* [WebDriver][PhpBrowser][Frameworks] seeNumberOfElements method added by @dynasource *2014-08-21*
+* recursive runner for included suites by @dynasource *2014-08-21*
+* Disabled skipped/incomplete tests logging in jUnit logger for smooth Bamboo integration by @ayastreb *2014-08-21*
+
+
 #### 2.0.4
 
+* [Laravel4] More functional, cli, and api tests added to demo application <https://github.com/Codeception/sample-l4-app> *2014-08-05*
+* Fix: GroupManager uses DIRECTORY_SEPARATOR for loaded tests *2014-08-05*
+* [Laravel4] Uses `app.url` config value for creating requests. Fixes #1095 *2014-08-04*
+* [Laravel4] `seeAuthenticated` / `dontSeeAuthenticated` assertions added to check that current user is authenticated *2014-08-04*
+* [Laravel4] `logout` action added *2014-08-04*
+* [Laravel4] `amLoggedAs` can login user by credentials *2014-08-04*
+* [Laravel4] Added `amOnRoute`, `amOnAction`, `seeCurrentRouteIs`, `seeCurrentActionIs` actions *2014-08-04*
+* [Laravel4] Added `haveEnabledFilters` and `haveDisabledFilters` actions to toggle filters in runtime *2014-08-04*
+* [Laravel4] Added `filters` option to enable filters on testing *2014-08-04*
+* [REST] seeResponseContainsJson should not take arrays order into account. See #1268 *2014-08-04*
+* [REST] grabDataFromJsonResponse accepts empty path to return entire json response *2014-08-04*
+* [REST] print_r replaced with var_export for better output on json comparison #1210 *2014-08-02*
+* [REST] Reset request variables in the before hook by @brutuscat #1232 *2014-08-01*
+* [Db] Oci driver for oracle database by @Sikolasol #1234 #1243 *2014-08-01*
+* [Laravel4] Unit testing and test environment are now configurable #1255 by @ipalaus *2014-08-01*
+* [Laravel4] Fixed Cest testing when using Laravel's Auth #1258 by @ipalaus *2014-08-01*
 * FIX #948 code coverage HTML: uncovered files missing by @RLasinski *2014-07-26*
 * [Laravel4] project root relative config parameter added by @kernio *2014-07-26*
 

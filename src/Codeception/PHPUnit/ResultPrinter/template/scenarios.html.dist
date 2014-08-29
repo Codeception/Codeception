@@ -10,14 +10,14 @@
 		 width: 960px;
 
 		 }
-		 body { font-family: arial, serif; margin: 0; padding 0; background: #333;}
-		 h1,h2,h3 { arial, serif; color: white; }
+		 body { font-family: arial, serif; margin: 0; padding: 0; background: #333; }
+		 h1,h2,h3 { font-family: arial, serif; color: white; }
 		 h1 { font-size: 2.5em; }
 		 h2 { font-size: 1.3em; }
-         h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0;}
+         h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0; }
 
-		 table {border: none; margin: 0; padding 0;}
-		 .scenarioStepsTable .stepName { padding: 5px }
+		 table { border: none; margin: 0; padding: 0; }
+		 .scenarioStepsTable .stepName { padding: 5px; }
 
 		 .scenarioStepsTable td {
 		 font-size: 80%;
