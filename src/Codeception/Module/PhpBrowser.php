@@ -99,6 +99,11 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     {
         $this->client->setHeader($header, $value);
     }
+    
+    public function amHttpAuthenticated($username, $password)
+    {
+        $this->client->setAuth($username, $password);
+    }    
 
     public function amOnSubdomain($subdomain)
     {

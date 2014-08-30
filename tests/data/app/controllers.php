@@ -124,3 +124,19 @@ class search {
         include __DIR__.'/view/search.php';
     }
 }
+
+class httpAuth {
+    function GET() {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="test"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Unauthorized';
+            return;
+        }
+        if ($_SERVER['PHP_AUTH_PW'] == 'password') {
+            echo "Welcome, " . $_SERVER['PHP_AUTH_USER'];
+            return;
+        }
+        echo "Forbidden";
+    }
+}

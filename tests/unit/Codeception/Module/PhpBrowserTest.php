@@ -177,6 +177,20 @@ class PhpBrowserTest extends TestsForBrowsers
 
     }
 
+    public function testHttpAuth()
+    {
+        $this->module->amOnPage('/auth');
+        $this->module->seeResponseCodeIs(401);
+        $this->module->see('Unauthorized');
+        $this->module->amHttpAuthenticated('davert', 'password');
+        $this->module->amOnPage('/auth');
+        $this->module->dontSee('Unauthorized');
+        $this->module->see("Welcome, davert");
+        $this->module->amHttpAuthenticated('davert', '123456');
+        $this->module->amOnPage('/auth');
+        $this->module->see('Forbidden');
+    }
+
     protected function mockResponse($body = "hello", $code = 200)
     {
         $mock = new \GuzzleHttp\Subscriber\Mock([
