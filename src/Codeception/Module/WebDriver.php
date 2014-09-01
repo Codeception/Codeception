@@ -1173,7 +1173,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         ) {
             $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::cssSelector($element));
         }
-        if (Locator::isXPath($element)) {
+        if (!$condition and Locator::isXPath($element)) {
             $condition = \WebDriverExpectedCondition::presenceOfElementLocated(
                 \WebDriverBy::xpath($element)
             );
@@ -1214,7 +1214,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         ) {
             $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::cssSelector($element));
         }
-        if (Locator::isXPath($element)) {
+        if (!$condition and Locator::isXPath($element)) {
             $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(
                 \WebDriverBy::xpath($element)
             );
@@ -1254,7 +1254,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         ) {
             $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::cssSelector($element));
         }
-        if (Locator::isXPath($element)) {
+        if (!$condition and Locator::isXPath($element)) {
             $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(
                 \WebDriverBy::xpath($element)
             );
@@ -1302,7 +1302,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                     $text
                 );
             }
-            if (Locator::isXPath($selector)) {
+            if (!$condition and Locator::isXPath($selector)) {
                 $condition = \WebDriverExpectedCondition::textToBePresentInElement(
                     \WebDriverBy::xpath($selector),
                     $text
