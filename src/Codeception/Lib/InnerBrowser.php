@@ -11,7 +11,6 @@ use Codeception\Module;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
 use Codeception\Lib\Interfaces\Web;
-use Instantiator\Exception\InvalidArgumentException;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
