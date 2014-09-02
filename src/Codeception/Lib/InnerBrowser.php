@@ -11,6 +11,7 @@ use Codeception\Module;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
 use Codeception\Lib\Interfaces\Web;
+use Instantiator\Exception\InvalidArgumentException;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
@@ -368,19 +369,25 @@ class InnerBrowser extends Module implements Web
 
         // Symfony2.1 DOM component requires name for each field.
         $formSubmits = $form->filter('*[type=submit]');
-        $values = null;
+        $matched = false;
 
         // If there are more than one submit (+1 auto_added) in one form we should add value of actually clicked one
+        $pos = 0;
         if ($formSubmits->count() > 2) {
             $nodeItem = $node->getNode(0);
             foreach ($formSubmits as $formSubmit) {
                 if ($formSubmit === $nodeItem) {
-                    $values = array($nodeItem->getAttribute('name') => $nodeItem->getAttribute('value'));
+                    $matched = true;
                     break;
                 }
+                $pos++;
             }
         }
-        $form = $formSubmits->form($values);
+        if ($matched == true) {
+            $form = $formSubmits->eq($pos)->form();
+        } else {
+            $form = $formSubmits->form();
+        }
         $this->forms[$action] = $form;
 
         return $this->forms[$action];
