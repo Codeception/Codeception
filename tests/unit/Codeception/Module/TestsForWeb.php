@@ -708,4 +708,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    /**
+     * https://github.com/Codeception/Codeception/issues/1051
+     */
+    public function testSubmitFormWithTwoSubmitButtonsSubmitsCorrectValue()
+    {
+        $this->module->amOnPage('/form/example10');
+        $this->module->seeElement("#button2");
+        $this->module->click("#button2");
+        $form = data::get('form');
+        $this->assertNotNull($form['button2']);
+        $this->assertEquals('value2', $form['button2']);
+    }
 }
