@@ -736,4 +736,19 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value2', $form['button2']);
         $this->assertEquals('fred', $form['username']);
     }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1051
+     */
+    public function testSubmitFormWithTwoSubmitButtonsSubmitsCorrectValueAfterFillField()
+    {
+        $this->module->amOnPage('/form/example10');
+        $this->module->fillField("username", "bob");
+        $this->module->click("#button2");
+        $form = data::get('form');
+        $this->assertTrue(isset($form['button2']));
+        $this->assertTrue(isset($form['username']));
+        $this->assertEquals('value2', $form['button2']);
+        $this->assertEquals('bob', $form['username']);
+    }
 }
