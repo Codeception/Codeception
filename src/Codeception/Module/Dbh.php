@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 /**
  * This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
- * Be default it will cover all database queries into transaction and rollback it afterwards.
+ * By default it will cover all database queries into transaction and rollback it afterwards.
  * The database should support nested transactions, in order to make cleanup work as expected.
  *
  * Pass PDO instance to this module from within your bootstrap file.
