@@ -329,7 +329,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     public function testSeeWithNonLatinAndSelectors() {
         $this->module->amOnPage('/info');
-        $this->module->see('?????', 'p');
+        $this->module->see('Текст', 'p');
     }
 
     public function testSeeInFieldOnInput()
