@@ -687,6 +687,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * https://github.com/Codeception/Codeception/issues/1274
+     */
+    public function testSubmitFormWithDocRelativePathForAction()
+    {
+        $this->module->amOnPage('/form/example12');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $this->module->seeCurrentUrlEquals('/form/example12');
+    }
+
+    /**
      * @issue #1180
      */
     public function testClickLinkWithInnerSpan()
