@@ -685,6 +685,15 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('Hello!', $form['text']);
     }
+    
+    /**
+     * https://github.com/Codeception/Codeception/issues/1381
+     */
+    public function testFillingFormFieldWithoutSubmitButton()
+    {
+        $this->module->amOnPage('/form/emptyFill');
+        $this->module->fillField('test', 'value');
+    }
 
     /**
      * @issue #1180
