@@ -336,7 +336,6 @@ class InnerBrowser extends Module implements Web
         if ($formSubmits->count() == 0) {
             $autoSubmit = new \DOMElement('input');
             $form->add($autoSubmit);
-            //$autoSubmit = $form->current()->appendChild($autoSubmit);
             $autoSubmit->setAttribute('type', 'submit'); // for forms with no submits
             $autoSubmit->setAttribute('name', 'codeception_added_auto_submit');
         }
