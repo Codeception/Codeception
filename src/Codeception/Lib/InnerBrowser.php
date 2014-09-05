@@ -289,54 +289,14 @@ class InnerBrowser extends Module implements Web
 
     public function submitForm($selector, $params)
     {
-        $form = $this->match($selector)->first();
+        $form = $this->getFormFor($this->match($selector)->first());
+        $form->setValues($params);
+        
+        $this->debugSection('Uri', $form->getUri());
+        $this->debugSection($form->getMethod(), $form->getValues());
 
-        if (!count($form)) {
-            throw new ElementNotFound($selector, 'Form');
-        }
-
-        $url    = '';
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input');
-        foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') {
-                continue;
-            }
-            if ($field->getAttribute('type') == 'radio') {
-                continue;
-            }
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
-        }
-
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('textarea');
-        foreach ($fields as $field) {
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
-        }
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('select');
-        foreach ($fields as $field) {
-            /** @var  \DOMElement $option */
-            foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected') {
-                    $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
-                }
-            }
-        }
-
-        $url .= http_build_query($params);
-        parse_str($url, $params);
-        $method = $form->attr('method') ? $form->attr('method') : 'GET';
-        $query  = '';
-        if (strtoupper($method) == 'GET') {
-            $query = '?' . http_build_query($params);
-        }
-        $this->debugSection('Uri', $this->getFormUrl($form));
-        $this->debugSection('Method', $method);
-        $this->debugSection('Parameters', $params);
-
-        $this->crawler = $this->client->request($method, $this->getFormUrl($form) . $query, $params);
-        $this->debugResponse();
+        $this->crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->forms = [];
     }
 
     /**
@@ -375,7 +335,8 @@ class InnerBrowser extends Module implements Web
         // Inject a submit button if there isn't one.
         if ($formSubmits->count() == 0) {
             $autoSubmit = new \DOMElement('input');
-            $autoSubmit = $form->current()->appendChild($autoSubmit);
+            $form->add($autoSubmit);
+            //$autoSubmit = $form->current()->appendChild($autoSubmit);
             $autoSubmit->setAttribute('type', 'submit'); // for forms with no submits
             $autoSubmit->setAttribute('name', 'codeception_added_auto_submit');
         }

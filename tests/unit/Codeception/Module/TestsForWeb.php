@@ -329,7 +329,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     public function testSeeWithNonLatinAndSelectors() {
         $this->module->amOnPage('/info');
-        $this->module->see('Текст', 'p');
+        $this->module->see('Тек�?т', 'p');
     }
 
     public function testSeeInFieldOnInput()
@@ -684,6 +684,17 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         ));
         $form = data::get('form');
         $this->assertEquals('Hello!', $form['text']);
+    }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1274
+     */
+    public function testSubmitFormWithDocRelativePathForAction()
+    {
+        $this->module->amOnPage('/form/example12');
+        $this->module->see('testSubmitFormWithDocRelativePathForAction');
+        $this->module->submitForm('form', array('user' => 'bob'));
+        $this->module->seeCurrentUrlEquals('/form/example12');
     }
 
     /**
