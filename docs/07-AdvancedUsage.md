@@ -240,7 +240,7 @@ This will load all found `p*` files in `tests/_data` as groups.
 
 ## Refactoring
 
-As test base growths tests will require refactoring, sharing common variables and behaviors. The classical example is `login` action which may be called for every test of your test suite. It would be wise to write it once and use it in all tests.
+As the test base grows, tests will require refactoring to share common variables and behaviors. The classical example is a `login` action which may be called for every test of your test suite. It would be wise to write it once and use it in all tests.
 
 It's pretty obvious that for such cases you can use your own PHP classes to define such methods.
 
