@@ -48,7 +48,7 @@ $I->see('Thank you for Signing Up!');
 
 ### Functional Tests
 
-What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's a are what functional tests are for.
+What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's what functional tests are for.
 
 For functional tests you emulate a web request (`$_GET` and `$_POST` variables) and send it into your application which returns HTML response. Inside a test you can make assertions about the response, also you can check if the data was succesfully stored into database.
 
