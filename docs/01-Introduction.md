@@ -48,7 +48,7 @@ $I->see('Thank you for Signing Up!');
 
 ### Functional Tests
 
-What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's a are what functional tests are for.
+What if we could check our application without running it on a server? In this way we could see detailed exceptions on errors, have tests running faster, and check database for values we expect. That's what functional tests are for.
 
 For functional tests you emulate a web request (`$_GET` and `$_POST` variables) and send it into your application which returns HTML response. Inside a test you can make assertions about the response, also you can check if the data was succesfully stored into database.
 
@@ -83,7 +83,7 @@ $I->seeInDatabase('users', array('email' => 'miles@davis.com'));
 
 ### Unit Tests
 
-Testing pieces of code before coupling them together is highly important as well. This way you can be sure that some deeply hidden feature still works, even it was not touched by functional or acceptance tests. This also proves you produced stable and testable code.
+Testing pieces of code before coupling them together is highly important as well. This way you can be sure that some deeply hidden feature still works, even if it was not covered by functional or acceptance tests. This also proves you produced stable and testable code.
 
 Codeception is created on top of [PHPUnit](http://www.phpunit.de/). If you have experience writing unit tests with PHPUnit you can continue doing so. Codeception has no problem executing standard PHPUnit tests. 
 
@@ -119,6 +119,6 @@ function testSavingUser()
 
 ## Conclusion
 
-Despite the wide popularity of TDD, not all PHP developers ever write automatic tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests, in one style.
+Despite the wide popularity of TDD, not all PHP developers ever write automated tests for their applications. The Codeception framework was developed to make the testing actually fun. It allows writing unit, functional, integration, and acceptance tests, in one style.
 
 It could be called a BDD framework. All Codeception tests are written in a descriptive manner. Just by looking in the test body you can get a clear understanding of what is being tested and how it is performed. Even complex tests with many assertions are written in a simple PHP DSL.
