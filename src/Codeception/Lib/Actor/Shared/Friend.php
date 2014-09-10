@@ -6,6 +6,7 @@ trait Friend
     protected $friends = [];
     /**
      * @param $name
+     * @param $actorClass
      * @return Friend
      */
     public function haveFriend($name, $actorClass = null)
