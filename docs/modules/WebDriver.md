@@ -116,6 +116,26 @@ $I->amOnPage('/register');
  * `param` $page
 
 
+### amOnDomain
+
+Sets 'url' configuration parameter to new domain.
+It does not open a new page. Use `amOnPage` for that
+
+``` php
+<?php
+// If config is: 'http://mysite.com'
+// or config is: 'http://www.mysite.com'
+// or config is: 'http://company.mysite.com'
+
+$I->amOnDomain('www.google.com');
+$I->amOnPage('/');
+// moves to http://google.com/
+?>
+```
+
+ * `param` $domain
+
+
 ### amOnSubdomain
  
 Sets 'url' configuration parameter to hosts subdomain.
