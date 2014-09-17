@@ -60,6 +60,8 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
+ *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+ * 
  *
  * ## Migration Guide (Selenium2 -> WebDriver)
  *
@@ -93,6 +95,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        if (!is_null($this->config['capabilities']['firefox_profile'])) {
+            $this->capabilities['firefox_profile'] = file_get_contents($this->config['capabilities']['firefox_profile']);
+        }
         $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $this->initialWindowSize();
