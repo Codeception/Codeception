@@ -230,8 +230,14 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
         }
 
-        $lastInsertId = (int) $this->driver->lastInsertId($table);
-        $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
+        try {
+            $lastInsertId = (int) $this->driver->lastInsertId($table);
+            $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
+        } catch (\Exception $e) {
+            // ignore errors due to uncommon DB structure,
+            // such as tables without _id_seq in PGSQL
+            $lastInsertId = 0;
+        }
 
         return $lastInsertId;
     }
