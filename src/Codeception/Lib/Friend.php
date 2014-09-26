@@ -31,7 +31,7 @@ class Friend {
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();
             $currentUserData[$name] = $module->_backupSessionData();
-            if (empty($this->data)) {
+            if (empty($this->data[$name])) {
                 $module->_initializeSession();
                 $this->data[$name] = $module->_backupSessionData();
                 continue;
