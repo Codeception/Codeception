@@ -302,8 +302,18 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function amOnPage($page)
     {
-        $host = rtrim($this->config['url'], '/');
+        // use absolute url
+        if ((strpos($page, 'http://') === 0) or (strpos($page, 'https://') === 0)) {
+            $url = parse_url($page);
+            if (isset($url['host']) and isset($url['scheme'])) {
+                $host = $url['scheme'].'://'.$url['host'];
+                $this->_reconfigure(['url' => $host]);
+                $page = substr($page, strlen($host));
+                $this->debugSection('Host', $host);
+            }
+        }
         $page = ltrim($page, '/');
+        $host = rtrim($this->config['url'], '/');
         $this->webDriver->get($host . '/' . $page);
     }
 

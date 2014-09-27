@@ -19,6 +19,14 @@ interface Web
      * ?>
      * ```
      *
+     * Unless you are using one of framework modules, absolute URL can be specified as well:
+     *
+     * ``` php
+     * <?php
+     * $I->amOnPage('http://codeception.com');
+     * ?>
+     * ```
+     *
      * @param $page
      */
     public function amOnPage($page);

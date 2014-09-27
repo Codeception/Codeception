@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [PhpBrowser][WebDriver] amOnPage now accepts absolute urls *2014-09-27*
 * [Db] ignore errors from lastInsertId by @tomykaira *2014-09-27*
 * [WebDriver] saves HTML snapshot on fail *2014-09-27*
 * [WebDriver] fixed #1392: findField should select by id, css, then fall back on xpath *2014-09-27*

@@ -19,7 +19,7 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
         $page = substr($other,0,300);
         $message = new Message($page);
         $message->style('info');
-        $message->prepend("\n-->");
+        $message->prepend("\n--> ");
         $message->prepend($this->uriMessage());
         if (strlen($other) > 300) {
             $debugMessage = new Message("[Content too long to display. See complete response in '_output' directory]");
