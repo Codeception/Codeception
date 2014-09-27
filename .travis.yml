@@ -21,8 +21,8 @@ services:
 install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   # Queue (Beanstalkd)
-  - apt-get update -qq
-  - apt-get install -qq beanstalkd
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq beanstalkd
   # Yii2
   - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
   - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
