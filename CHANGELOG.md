@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [WebDriver] saves HTML snapshot on fail *2014-09-27*
 * [WebDriver] fixed #1392: findField should select by id, css, then fall back on xpath *2014-09-27*
 * [WebDriver] Don't check for xpath if css selector is set by @Danielss89 #1367 *2014-09-27*
 * Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
