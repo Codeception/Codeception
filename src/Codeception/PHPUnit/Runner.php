@@ -3,6 +3,7 @@
 namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
+use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\PHPUnit\Log\JUnit;
 use Codeception\PHPUnit\ResultPrinter\HTML;
 use Codeception\PHPUnit\ResultPrinter\Report;
@@ -12,10 +13,11 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     public static $persistentListeners = array();
 
     protected $defaultListeners = array(
-        'xml'  => false,
+        'xml' => false,
         'html' => false,
-        'tap'  => false,
-        'json' => false
+        'tap' => false,
+        'json' => false,
+        'custom' => false
     );
 
     protected $config = array();
@@ -28,7 +30,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
     public function __construct()
     {
-        $this->config  = Configuration::config();
+        $this->config = Configuration::config();
         $this->logDir = Configuration::outputDir(); // prepare log dir
         $this->phpUnitOverriders();
         parent::__construct();
@@ -109,33 +111,43 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
     /**
      * @param \PHPUnit_Framework_TestResult $result
-     * @param array                         $arguments
+     * @param array $arguments
      *
      * @return array
      */
     protected function applyReporters(\PHPUnit_Framework_TestResult $result, array $arguments)
     {
         foreach ($this->defaultListeners as $listener => $value) {
-            if (! isset($arguments[$listener])) {
+            if (!isset($arguments[$listener])) {
                 $arguments[$listener] = $value;
             }
         }
 
         if ($arguments['html']) {
-            codecept_debug('Printing HTML report into '.$arguments['html']);
+            codecept_debug('Printing HTML report into ' . $arguments['html']);
             self::$persistentListeners[] = new HTML($this->absolutePath($arguments['html']));
         }
         if ($arguments['xml']) {
-            codecept_debug('Printing JUNIT report into '.$arguments['xml']);
+            codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
             self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), false);
         }
         if ($arguments['tap']) {
-            codecept_debug('Printing TAP report into '.$arguments['tap']);
+            codecept_debug('Printing TAP report into ' . $arguments['tap']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP($this->absolutePath($arguments['tap']));
         }
         if ($arguments['json']) {
-            codecept_debug('Printing JSON report into '.$arguments['json']);
+            codecept_debug('Printing JSON report into ' . $arguments['json']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->absolutePath($arguments['json']));
+        }
+        if ($arguments['custom']) {
+            codecept_debug('Printing Custom report into ' . $arguments['custom']);
+            if(isset($this->config['custom_printer_class'])){
+                self::$persistentListeners[] = new $this->config['custom_printer_class']($arguments['custom'] === true ? true : $this->absolutePath(
+                    $arguments['custom']
+                ));
+            }else{
+                throw new ConfigurationException("custom_printer_class is not defined in codeception.yml. Please, define it and Autoload it or include into '_bootstrap.php' file of 'tests' directory");
+            }
         }
 
         foreach (self::$persistentListeners as $listener) {

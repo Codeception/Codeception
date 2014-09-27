@@ -36,6 +36,7 @@ class Codecept
         'xml' => false,
         'json' => false,
         'tap' => false,
+        'custom' => false,
         'report' => false,
         'colors' => false,
         'coverage' => false,
