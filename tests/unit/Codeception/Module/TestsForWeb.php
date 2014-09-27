@@ -204,6 +204,20 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('second', $form['submit']);
     }
 
+    /**
+     * Additional test to make sure no off-by-one related problem.
+     *
+     * @group testSubmitSeveralSubmitsForm
+     * @Issue https://github.com/Codeception/Codeception/issues/1183
+     */
+    public function testSubmitLotsOfSubmitsForm()
+    {
+        $this->module->amOnPage('/form/example11');
+        $this->module->click('form button[value="fifth"]');
+        $form = data::get('form');
+        $this->assertEquals('fifth', $form['submit']);
+    }
+
     public function testSelectMultipleOptionsByText()
     {
         $this->module->amOnPage('/form/select_multiple');
@@ -708,4 +722,33 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+    /**
+     * https://github.com/Codeception/Codeception/issues/1051
+     */
+    public function testSubmitFormWithTwoSubmitButtonsSubmitsCorrectValue()
+    {
+        $this->module->amOnPage('/form/example10');
+        $this->module->seeElement("#button2");
+        $this->module->click("#button2");
+        $form = data::get('form');
+        $this->assertTrue(isset($form['button2']));
+        $this->assertTrue(isset($form['username']));
+        $this->assertEquals('value2', $form['button2']);
+        $this->assertEquals('fred', $form['username']);
+    }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1051
+     */
+    public function testSubmitFormWithTwoSubmitButtonsSubmitsCorrectValueAfterFillField()
+    {
+        $this->module->amOnPage('/form/example10');
+        $this->module->fillField("username", "bob");
+        $this->module->click("#button2");
+        $form = data::get('form');
+        $this->assertTrue(isset($form['button2']));
+        $this->assertTrue(isset($form['username']));
+        $this->assertEquals('value2', $form['button2']);
+        $this->assertEquals('bob', $form['username']);
+    }
 }
