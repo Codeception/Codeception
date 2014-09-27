@@ -4,7 +4,10 @@ require_once __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Finder\Finder;
 use \Robo\Task\GenMarkdownDocTask as Doc;
 
-class RoboFile extends \Robo\Tasks {
+class RoboFile extends \Robo\Tasks
+{
+    use Codegyre\RoboCI\Command\CI;
+    use Codegyre\RoboCI\Command\Travis\Prepare;
 
     const STABLE_BRANCH = '2.0';
 
@@ -169,6 +172,7 @@ class RoboFile extends \Robo\Tasks {
             ->name('*.html.dist')
             ->exclude('ocramius')
             ->exclude('videlalvaro')
+            ->exclude('robo-ci')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')
@@ -513,7 +517,7 @@ class RoboFile extends \Robo\Tasks {
         ])->run();
     }
 
-    public function buildGuys()
+    public function buildActors()
     {
         $build = 'php codecept build';
         $this->taskExec($build)->run();
