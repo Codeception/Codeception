@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.6
+
+* Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
+
+
 #### 2.0.5
 
 * [Queue] module added with AWS, Iron.io, and Beanstalkd support. Thanks to @nathanmac *2014-08-21*
