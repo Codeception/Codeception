@@ -405,13 +405,20 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findField($selector)
     {
+        // if element already selected, return it
         if ($selector instanceof \WebDriverElement) {
             return $selector;
         }
-        if (is_array($selector) or ($selector instanceof \WebDriverBy)) {
-            return $this->matchFirstOrFail($this->webDriver, $selector);
+        
+        // try to efficiently match by id or other direct css selector (e.g. '#red-button', or 'div.color')
+        if (is_string($selector) or is_array($selector) or ($selector instanceof \WebDriverBy)) {
+            $els = $this->match($this->webDriver, $selector);
+            if (count($els)) {
+                return reset($els);
+            }
         }
 
+        // if all else fails, fall back on least efficient xpath selections
         $locator = Crawler::xpathLiteral(trim($selector));
 
         // by text or label
@@ -429,12 +436,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             return reset($els);
         }
 
-        $els = $this->match($this->webDriver, $selector);
-        if (count($els)) {
-            return reset($els);
-        }
-
-        throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
+        throw new ElementNotFound($selector, "Field by id, name, label, CSS or XPath");
     }
 
     public function seeLink($text, $url = null)
