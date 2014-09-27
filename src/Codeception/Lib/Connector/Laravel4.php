@@ -26,7 +26,7 @@ class Laravel4 extends Client
     {
         $booted = new \ReflectionProperty($this->kernel, 'booted');
         $booted->setAccessible(true);
-        $booted->setValue($this->kernel, false);
+        //$booted->setValue($this->kernel, false);
         $this->kernel->boot();
     }
 }
