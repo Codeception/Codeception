@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [WebDriver] Don't check for xpath if css selector is set by @Danielss89 #1367 *2014-09-27*
 * Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
 
 
