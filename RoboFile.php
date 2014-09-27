@@ -88,27 +88,18 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-    public function testFacebook()
+    public function testWebdriver($args = '', $opts = ['filter' => ' '])
     {
-        $this->server();
-
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','tests/unit/Codeception/Module/FacebookTest.php')
-            ->run();
-
-    }
-
-    public function testWebdriver($args = '')
-    {
-        $this->testServer();
+//        $this->testLaunchServer();
+        $this->say($opts['filter']);
         
-        $this->taskCodecept('./codecept')
-            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
-            ->args($args)
-            ->run();
+//        $this->taskCodecept('./codecept')
+//            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
+//            ->args($args)
+//            ->run();
     }
 
-    public function testServer($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    public function testLaunchServer($pathToSelenium = '~/selenium-server.jar ')
     {
         $this->taskExec('java -jar '.$pathToSelenium)
             ->background()
