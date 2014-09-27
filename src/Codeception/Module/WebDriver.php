@@ -60,6 +60,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
+ *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64' 
  *
  * ## Migration Guide (Selenium2 -> WebDriver)
  *
@@ -94,6 +95,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->firefoxProfile();
         $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $this->initialWindowSize();
@@ -103,6 +105,22 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
+        }
+    }
+
+    protected function firefoxProfile()
+    {
+
+        if (array_key_exists('firefox_profile', $this->config['capabilities'])) {
+
+            $firefox_profile = $this->config['capabilities']['firefox_profile'];
+
+            if (file_exists($firefox_profile) === false) {
+                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Firefox profile does not exists under given path " . $firefox_profile);
+            }
+
+            // Set firefox profile as capability
+            $this->capabilities['firefox_profile'] = file_get_contents($firefox_profile);
         }
     }
 
