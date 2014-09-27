@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [InnerBrowser] submitForm accepts forms with document-relative paths. Fixes #1274 *2014-09-28*
 * [InnerBrowser] Fixed #1381: fillField fails for a form without a submit button by @zbateson *2014-09-28*
 * [PhpBrowser][WebDriver] amOnPage now accepts absolute urls *2014-09-27*
 * [Db] ignore errors from lastInsertId by @tomykaira *2014-09-27*

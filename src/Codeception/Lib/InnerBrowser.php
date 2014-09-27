@@ -357,8 +357,16 @@ class InnerBrowser extends Module implements Web
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
+
+        $currentUrl = $this->client->getHistory()->current()->getUri();
+        // empty url
         if ((!$action) or ($action == '#')) {
-            $action = $this->client->getHistory()->current()->getUri();
+            $action = $currentUrl;
+        }
+        // relative url
+        if ((strpos($action, '/') !== 0) and !preg_match('~^https?://~', $action)) {
+            $path = pathinfo($currentUrl);
+            $action = $path['dirname'] . '/' . $action;
         }
         return $action;
     }
