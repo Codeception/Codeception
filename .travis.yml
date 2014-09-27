@@ -33,7 +33,7 @@ install:
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
   # Laravel
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
-  - composer install -d frameworks-laravel
+  - composer install -d frameworks-laravel --no-dev
   # Symfony
   - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev
