@@ -5,14 +5,11 @@ use Illuminate\Foundation\Testing\Client;
 
 class Laravel4 extends Client
 {
-
     protected function doRequest($request)
     {
-        $this->rebootKernel();
-        $this->kernel->setRequestForConsoleEnvironment();
-
         $headers = $request->headers;
 
+        $this->fireBootedCallbacks();
         $response = parent::doRequest($request);
 
         // saving referer for redirecting back
@@ -22,11 +19,15 @@ class Laravel4 extends Client
         return $response;
     }
 
-     protected function rebootKernel()
+     protected function fireBootedCallbacks()
     {
-        $booted = new \ReflectionProperty($this->kernel, 'booted');
-        $booted->setAccessible(true);
-        $booted->setValue($this->kernel, false);
-        $this->kernel->boot();
+        $bootedCallbacks = new \ReflectionProperty($this->kernel, 'bootedCallbacks');
+        $bootedCallbacks->setAccessible(true);
+        $callbacks = $bootedCallbacks->getValue($this->kernel);
+        foreach ($callbacks as $callback) {
+            call_user_func($callback, $this->kernel);
+        }
+
     }
+
 }
