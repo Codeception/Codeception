@@ -182,7 +182,7 @@ class Run extends Command
             $suites      = $suite ? explode(',', $suite) : Configuration::suites();        
             $this->executed    = $this->runSuites($suites, $this->options['skip']);            
             
-            if(isset($config['include'])){            
+            if(!empty($config['include'])){            
                 $current_dir = Configuration::projectDir();
                 $suites = $config['include'];
                 $this->runIncludedSuites($suites,$current_dir);            
@@ -222,7 +222,7 @@ class Run extends Command
             $this->output->writeln(
                 "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
             );
-            if(isset($config['include'])){
+            if(!empty($config['include'])){
                 $this->runIncludedSuites($config['include'],$current_dir);
             }            
         }
