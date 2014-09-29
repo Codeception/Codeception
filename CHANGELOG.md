@@ -2,16 +2,16 @@
 
 #### 2.0.6
 
-* [WebDriver] waitForElement* methods accept strict locators and WebDriverBy as parameters. See #1396 *2014-09-29*
-* [PhpBrowser] executeInGuzzle uses baseUrl set from config. Fixes #1416 *2014-09-29*
+* [WebDriver] `waitForElement*` methods accept strict locators and WebDriverBy as parameters. See #1396 *2014-09-29*
+* [PhpBrowser] `executeInGuzzle` uses baseUrl set from config. Fixes #1416 *2014-09-29*
 * [Laravel4] fire booted callbacks between requests without kernel reboot. Fixes #1389, See #1415 *2014-09-29*
-* [InnerBrowser] submitForm accepts forms with document-relative paths. Fixes #1274 *2014-09-28*
-* [InnerBrowser] Fixed #1381: fillField fails for a form without a submit button by @zbateson *2014-09-28*
-* [PhpBrowser][WebDriver] amOnPage now accepts absolute urls *2014-09-27*
+* [WebDriver][PhpBrowser][Frameworks] `submitForm` accepts forms with document-relative paths. Fixes #1274 *2014-09-28*
+* [WebDriver][PhpBrowser][Frameworks] Fixed #1381: `fillField` fails for a form without a submit button by @zbateson *2014-09-28*
+* [PhpBrowser][WebDriver] `amOnPage` now accepts absolute urls *2014-09-27*
 * [Db] ignore errors from lastInsertId by @tomykaira *2014-09-27*
 * [WebDriver] saves HTML snapshot on fail *2014-09-27*
 * [WebDriver] fixed #1392: findField should select by id, css, then fall back on xpath *2014-09-27*
-* [WebDriver] Don't check for xpath if css selector is set by @Danielss89 #1367 *2014-09-27*
+* [WebDriver] Don't check for xpath if css selector is set, by @Danielss89 #1367 *2014-09-27*
 * Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
 
 
