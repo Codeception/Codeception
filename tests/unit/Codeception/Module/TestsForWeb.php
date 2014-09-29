@@ -691,7 +691,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
      */
     public function testFillingFormFieldWithoutSubmitButton()
     {
-        $this->module->amOnPage('/form/emptyFill');
+        $this->module->amOnPage('/form/empty_fill');
         $this->module->fillField('test', 'value');
     }
 
