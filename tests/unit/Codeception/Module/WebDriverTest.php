@@ -437,9 +437,12 @@ class WebDriverTest extends TestsForBrowsers
     public function testCreateTestScreenshotOnFail()
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) use ($test) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
-        })]);
+        $wd = Stub::make('\Codeception\Module\WebDriver', [
+            '_saveScreenshot' => Stub::once(function ($actual) use ($test) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
+            })
+        ]);
+        $wd->webDriver = new \Codeception\Util\Maybe();
         $wd->_failed($test, new PHPUnit_Framework_AssertionFailedError());
     }
 
