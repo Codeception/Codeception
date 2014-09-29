@@ -191,6 +191,15 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->see('Forbidden');
     }
 
+    public function testRawGuzzle()
+    {
+        $code = $this->module->executeInGuzzle(function(\GuzzleHttp\Client $client) {
+            $res = $client->get('/info');
+            return $res->getStatusCode();
+        });
+        $this->assertEquals(200, $code);
+    }
+
     protected function mockResponse($body = "hello", $code = 200)
     {
         $mock = new \GuzzleHttp\Subscriber\Mock([

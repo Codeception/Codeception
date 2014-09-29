@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [PhpBrowser] executeInGuzzle uses baseUrl set from config. Fixes #1416 *2014-09-29*
 * [Laravel4] fire booted callbacks between requests without kernel reboot. Fixes #1389, See #1415 *2014-09-29*
 * [InnerBrowser] submitForm accepts forms with document-relative paths. Fixes #1274 *2014-09-28*
 * [InnerBrowser] Fixed #1381: fillField fails for a form without a submit button by @zbateson *2014-09-28*
