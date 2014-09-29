@@ -11,6 +11,8 @@ class WebDriverTest extends TestsForBrowsers
      * @var \Codeception\Module\WebDriver
      */
     protected $module;
+    
+    protected $webDriver;
 
     // this is my local config
     protected $is_local = false;
@@ -28,12 +30,13 @@ class WebDriverTest extends TestsForBrowsers
         }
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0));
         $this->module->_initialize();
-
         $this->module->_before($this->makeTest());
+        $this->webDriver = $this->module->webDriver;
     }
 
     public function tearDown()
     {
+        $this->module->webDriver = $this->webDriver;
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module->_after($this->makeTest());
@@ -438,6 +441,28 @@ class WebDriverTest extends TestsForBrowsers
             PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
         })]);
         $wd->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testWebDriverWaits()
+    {
+        $fakeWd = Stub::make('\Codeception\Module\WebDriver', ['wait' => Stub::exactly(12, function () {
+            return new \Codeception\Util\Maybe();
+        })]);
+        $this->module->webDriver = $fakeWd;
+        $this->module->waitForElement(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElement(['id' => 'user']);
+        $this->module->waitForElement(['css' => '.user']);
+        $this->module->waitForElement('//xpath');
+
+        $this->module->waitForElementVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementVisible(['id' => 'user']);
+        $this->module->waitForElementVisible(['css' => '.user']);
+        $this->module->waitForElementVisible('//xpath');
+
+        $this->module->waitForElementNotVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementNotVisible(['id' => 'user']);
+        $this->module->waitForElementNotVisible(['css' => '.user']);
+        $this->module->waitForElementNotVisible('//xpath');
 
     }
 }

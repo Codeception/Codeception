@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [WebDriver] waitForElement* methods accept strict locators and WebDriverBy as parameters. See #1396 *2014-09-29*
 * [PhpBrowser] executeInGuzzle uses baseUrl set from config. Fixes #1416 *2014-09-29*
 * [Laravel4] fire booted callbacks between requests without kernel reboot. Fixes #1389, See #1415 *2014-09-29*
 * [InnerBrowser] submitForm accepts forms with document-relative paths. Fixes #1274 *2014-09-28*

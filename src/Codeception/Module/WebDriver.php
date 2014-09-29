@@ -1224,24 +1224,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElement($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) {
-            $condition = \WebDriverExpectedCondition::presenceOfElementLocated(
-                \WebDriverBy::id(substr($element, 1))
-            );
-        }
-        if (!$condition and Locator::isCSS($element)) {
-            $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::cssSelector($element));
-        }
-        if (!$condition and Locator::isXPath($element)) {
-            $condition = \WebDriverExpectedCondition::presenceOfElementLocated(
-                \WebDriverBy::xpath($element)
-            );
-        }
-        if (!$condition) {
-            throw new \Exception("Only CSS or XPath allowed");
-        }
-
+        $condition = \WebDriverExpectedCondition::presenceOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
@@ -1262,24 +1245,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElementVisible($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) {
-            $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(
-                \WebDriverBy::id(substr($element, 1))
-            );
-        }
-        if (!$condition and Locator::isCSS($element)) {
-            $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::cssSelector($element));
-        }
-        if (!$condition and Locator::isXPath($element)) {
-            $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(
-                \WebDriverBy::xpath($element)
-            );
-        }
-        if (!$condition) {
-            throw new \Exception("Only CSS or XPath allowed");
-        }
-
+        $condition = \WebDriverExpectedCondition::visibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
@@ -1299,24 +1265,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElementNotVisible($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) {
-            $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(
-                \WebDriverBy::id(substr($element, 1))
-            );
-        }
-        if (!$condition and Locator::isCSS($element)) {
-            $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::cssSelector($element));
-        }
-        if (!$condition and Locator::isXPath($element)) {
-            $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(
-                \WebDriverBy::xpath($element)
-            );
-        }
-        if (!$condition) {
-            throw new \Exception("Only CSS or XPath allowed");
-        }
-
+        $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
@@ -1346,28 +1295,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             return;
         }
 
-        $condition = null;
-        if (Locator::isID($selector)) {
-            $condition = \WebDriverExpectedCondition::textToBePresentInElement(
-                \WebDriverBy::id(substr($selector, 1)),
-                $text
-            );
-        }
-        if (!$condition and Locator::isCSS($selector)) {
-            $condition = \WebDriverExpectedCondition::textToBePresentInElement(
-                \WebDriverBy::cssSelector($selector),
-                $text
-            );
-        }
-        if (!$condition and Locator::isXPath($selector)) {
-            $condition = \WebDriverExpectedCondition::textToBePresentInElement(
-                \WebDriverBy::xpath($selector),
-                $text
-            );
-        }
-        if (!$condition) {
-            throw new \Exception("Only CSS or XPath allowed");
-        }
+        $condition = \WebDriverExpectedCondition::textToBePresentInElement($this->getLocator($selector), $text);
         $this->webDriver->wait($timeout)->until($condition);
     }
 
@@ -1611,7 +1539,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $nodes = array();
         if (is_array($selector)) {
-            return $page->findElements($this->getWebDriverLocator($selector));
+            return $page->findElements($this->getStrictLocator($selector));
         }
         if ($selector instanceof \WebDriverBy) {
             return $page->findElements($selector);
@@ -1635,7 +1563,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return $nodes;
     }
 
-    protected function getWebDriverLocator(array $by)
+    /**
+     * @param array $by
+     * @return \WebDriverBy
+     */
+    protected function getStrictLocator(array $by)
     {
         $type = key($by);
         $locator = $by[$type];
@@ -1848,5 +1780,30 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
         );
         return $nodes;
+    }
+
+    /**
+     * @param $selector
+     * @return \WebDriverBy
+     * @throws \Exception
+     */
+    protected function getLocator($selector)
+    {
+        if ($selector instanceof \WebDriverBy) {
+            return $selector;
+        }
+        if (is_array($selector)) {
+            return $this->getStrictLocator($selector);
+        }
+        if (Locator::isID($selector)) {
+            return \WebDriverBy::id(substr($selector, 1));
+        }
+        if (Locator::isCSS($selector)) {
+            return \WebDriverBy::cssSelector($selector);
+        }
+        if (Locator::isXPath($selector)) {
+            return \WebDriverBy::xpath($selector);
+        }
+        throw new \Exception("Only CSS or XPath allowed");
     }
 }
