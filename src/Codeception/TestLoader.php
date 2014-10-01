@@ -51,7 +51,15 @@ class TestLoader {
 
     public function getTests()
     {
-        return $this->tests;
+        $total = array_keys($this->tests);
+        $tests = array();
+        do {
+            $i = array_rand($total, 1);
+            $tests[] = $this->tests[$i];
+            unset($total[$i]);
+        } while(count($tests) < count($this->tests));
+        return $tests;
+
     }
     
 
