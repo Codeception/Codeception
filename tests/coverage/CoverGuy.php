@@ -21,7 +21,7 @@ use Codeception\Module\CoverHelper;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method void haveFriend($name)
+ * @method void haveFriend($name, $actorClass = null)
 */
 class CoverGuy extends \Codeception\Actor
 {

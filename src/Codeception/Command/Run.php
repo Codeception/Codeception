@@ -123,9 +123,15 @@ class Run extends Command
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->ensureCurlIsAvailable();
         $this->options = $input->getOptions();
         $this->output = $output;
-        
+
+        $config = Configuration::config($this->options['config']);
+
+        if (!$this->options['colors']) {
+            $this->options['colors'] = $config['settings']['colors'];
+        }
         if (!$this->options['silent']) {
             $this->output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         }
@@ -135,22 +141,30 @@ class Run extends Command
         if ($this->options['colors']) {
             $this->output->setDecorated($this->options['colors']);
         }
-
-        $this->options = array_merge($this->options, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
-        $this->options['verbosity'] = $this->output->getVerbosity();
-        if ($this->options['no-colors']) $this->options['colors'] = false;
-        if ($this->options['report']) $this->options['silent'] = true;
-        if ($this->options['group']) $this->options['groups'] = $this->options['group'];
-        if ($this->options['skip-group']) $this->options['excludeGroups'] = $this->options['skip-group'];
-        if ($this->options['coverage-xml'] or $this->options['coverage-html']) $this->options['coverage'] = true;
+        if ($this->options['no-colors']) {
+            $this->options['colors'] = false;
+        }
 
+        $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
+        $userOptions = array_merge($userOptions, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
+        $userOptions['verbosity'] = $this->output->getVerbosity();
 
-        $this->ensureCurlIsAvailable();
+        if ($this->options['group']) {
+            $userOptions['groups'] = $this->options['group'];
+        }
+        if ($this->options['skip-group']) {
+            $userOptions['excludeGroups'] = $this->options['skip-group'];
+        }
+        if ($this->options['report']) {
+            $userOptions['silent'] = true;
+        }
+        if ($this->options['coverage-xml'] or $this->options['coverage-html'] or $this->options['coverage-text']) {
+            $this->options['coverage'] = true;
+        }
 
-        $config = Configuration::config($this->options['config']);
 
         $suite = $input->getArgument('suite');
         $test  = $input->getArgument('test');
@@ -168,24 +182,24 @@ class Run extends Command
 
         if ($test) {
             $filter            = $this->matchFilteredTestName($test);
-            $this->options['filter'] = $filter;
+            $userOptions['filter'] = $filter;
         }
 
-        $this->codecept = new Codecept((array)$this->options);
+        $this->codecept = new Codecept($userOptions);
 
         if ($suite and $test) {
             $this->codecept->run($suite, $test);
         }
 
         if (! $test) {
-            
+
             $suites      = $suite ? explode(',', $suite) : Configuration::suites();        
-            $this->executed    = $this->runSuites($suites, $this->options['skip']);            
+            $this->executed    = $this->runSuites($suites, $this->options['skip']);
             
             if(!empty($config['include'])){            
                 $current_dir = Configuration::projectDir();
                 $suites = $config['include'];
-                $this->runIncludedSuites($suites,$current_dir);            
+                $this->runIncludedSuites($suites,$current_dir);
             }
 
             if ( $this->executed ===0 ) {
@@ -279,6 +293,25 @@ class Run extends Command
         }
 
         return null;
+    }
+
+    protected function passedOptionKeys(InputInterface $input)
+    {
+        $options = [];
+        $request = (string) $input;
+        $tokens = explode(' ', $request);
+        foreach ($tokens as $token) {
+            $token = preg_replace('~=.*~','', $token); // strip = from options
+            if (strpos($token, '--') === 0) {
+                $options[] = substr($token, 2);
+                continue;
+            }
+            if (strpos($token, '-') === 0) {
+                $shortOption = substr($token, 1);
+                $options[] = $this->getDefinition()->getOptionForShortcut($shortOption)->getName();
+            }
+        }
+        return $options;
     }
 
     protected function booleanOptions(InputInterface $input, $options = [])

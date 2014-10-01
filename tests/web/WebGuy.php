@@ -19,7 +19,7 @@ use Codeception\Module\WebHelper;
  * @method void am($role)
  * @method void lookForwardTo($achieveValue)
  * @method void comment($description)
- * @method void haveFriend($name)
+ * @method void haveFriend($name, $actorClass = null)
 */
 class WebGuy extends \Codeception\Actor
 {
@@ -212,6 +212,14 @@ class WebGuy extends \Codeception\Actor
      * $I->amOnPage('/');
      * // opens /register page
      * $I->amOnPage('/register');
+     * ?>
+     * ```
+     *
+     * Unless you are using one of framework modules, absolute URL can be specified as well:
+     *
+     * ``` php
+     * <?php
+     * $I->amOnPage('http://codeception.com');
      * ?>
      * ```
      *
@@ -1933,7 +1941,7 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Executes custom JavaScript
-     * 
+     *
      * In this example we will use jQuery to get a value and assign this value to a variable.
      *
      * ```php
