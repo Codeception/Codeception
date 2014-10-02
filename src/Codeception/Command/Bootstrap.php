@@ -68,6 +68,7 @@ class Bootstrap extends Command
             return;
         }
 
+        $realpath = realpath($path);
         chdir($path);
 
         if (file_exists('codeception.yml')) {
@@ -76,7 +77,7 @@ class Bootstrap extends Command
         }
 
         $output->writeln(
-            "<fg=white;bg=magenta>Initializing Codeception in " . realpath($path) . "</fg=white;bg=magenta>\n"
+            "<fg=white;bg=magenta>Initializing Codeception in " . $realpath . "</fg=white;bg=magenta>\n"
         );
         
         if ($input->getOption('compat')) {
@@ -96,7 +97,7 @@ class Bootstrap extends Command
             $output
         );
 
-        $output->writeln("<info>\nBootstrap is done. Check out " . realpath($path) . "/tests directory</info>");
+        $output->writeln("<info>\nBootstrap is done. Check out " . $realpath . "/tests directory</info>");
     }
 
     public function createGlobalConfig()
