@@ -61,7 +61,7 @@ class Configuration
         'groups' => [],
         'settings' => array(
             'colors' => false,
-            'log' => false,
+            'log' => false, // deprecated
             'bootstrap' => '_bootstrap.php',
         ),
         'coverage' => []

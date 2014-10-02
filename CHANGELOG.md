@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* CodeCoverage can be disabled per suite. Fix #1249 *2014-10-02*
 * Fix: --colors and --no-colors options override settings from config *2014-10-02*
 * [WebDriver] `waitForElement*` methods accept strict locators and WebDriverBy as parameters. See #1396 *2014-09-29*
 * [PhpBrowser] `executeInGuzzle` uses baseUrl set from config. Fixes #1416 *2014-09-29*

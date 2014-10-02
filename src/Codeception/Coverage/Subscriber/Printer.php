@@ -16,6 +16,7 @@ class Printer implements EventSubscriberInterface {
     ];
 
     protected $settings = [
+        'enabled' => true,
         'low_limit' => '35',
         'high_limit' => '70',
         'show_uncovered' => false
@@ -54,7 +55,13 @@ class Printer implements EventSubscriberInterface {
             return;
         }
         $printer = $e->getPrinter();
+        if (!$this->settings['enabled']) {
+            $printer->write("\nCodeCoverage is disabled in `codeception.yml` config\n");
+            return;
+        }
+
         $this->printConsole($printer);
+        $printer->write("Remote CodeCoverage reports are not printed to console\n");
         $this->printPHP();
         $printer->write("\n");
         if ($this->options['coverage-html']) {

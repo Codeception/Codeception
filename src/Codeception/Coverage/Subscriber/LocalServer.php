@@ -49,7 +49,7 @@ class LocalServer extends SuiteSubscriber
 
     protected function isEnabled()
     {
-        return $this->module and !$this->settings['remote'];
+        return $this->module and !$this->settings['remote'] and $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $e)
@@ -76,7 +76,6 @@ class LocalServer extends SuiteSubscriber
                 '
             );
         }
-
     }
 
     public function beforeTest(TestEvent $e)
