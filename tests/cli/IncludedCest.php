@@ -77,6 +77,20 @@ class IncludedCest {
         $I->seeInThisFile('<class name="Musician" namespace="Jazz">');
         $I->seeInThisFile('<class name="Hobbit" namespace="Shire">');
     }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function buildIncluded(\CliGuy $I)
+    {
+        $I->executeCommand('build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInShellOutput('Jazz\\TestGuy');
+        $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
+        $I->seeInShellOutput('Shire\\TestGuy');
+
+    }
 }
 
 

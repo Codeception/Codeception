@@ -192,8 +192,7 @@ class Run extends Command
         }
 
         if (! $test) {
-
-            $suites      = $suite ? explode(',', $suite) : Configuration::suites();        
+            $suites = $suite ? explode(',', $suite) : Configuration::suites();
             $this->executed    = $this->runSuites($suites, $this->options['skip']);
             
             if(!empty($config['include'])){            
@@ -217,7 +216,6 @@ class Run extends Command
             }
         }
     }
-    
     
     /**
      * Runs included suites recursively

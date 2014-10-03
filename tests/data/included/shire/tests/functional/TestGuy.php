@@ -13,13 +13,13 @@ use Shire\Codeception\Module\TestHelper;
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
- * @method void haveFriend($name)
- * @method void comment($description)
- * @method void expect($prediction)
- * @method void lookForwardTo($achieveValue)
  * @method void expectTo($prediction)
+ * @method void expect($prediction)
  * @method void amGoingTo($argumentation)
  * @method void am($role)
+ * @method void lookForwardTo($achieveValue)
+ * @method void comment($description)
+ * @method void haveFriend($name, $actorClass = null)
 */
 class TestGuy extends \Codeception\Actor
 {

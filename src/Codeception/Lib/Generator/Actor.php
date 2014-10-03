@@ -219,7 +219,7 @@ EOF;
         return implode("\n", $inherited);
     }
 
-    public function getGuy()
+    public function getActorName()
     {
         return $this->settings['class_name'];
     }

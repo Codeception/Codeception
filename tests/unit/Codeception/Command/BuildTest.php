@@ -2,7 +2,8 @@
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class BuildTest extends BaseCommandRunner {
+class BuildTest extends BaseCommandRunner
+{
 
     protected function setUp()
     {
@@ -10,7 +11,8 @@ class BuildTest extends BaseCommandRunner {
         $this->config = array(
             'class_name' => 'HobbitGuy',
             'path' => 'tests/shire/',
-            'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper'))
+            'modules' => array('enabled' => array('Filesystem', 'EmulateModuleHelper')),
+            'include' => []
         );
     }
 
@@ -23,14 +25,14 @@ class BuildTest extends BaseCommandRunner {
         $this->assertContains('public function amInPath($path)', $this->content);
         $this->assertContains('public function copyDir($src, $dst)', $this->content);
         $this->assertContains('public function seeInThisFile($text)', $this->content);
-        
+
         // methods from EmulateHelper
         $this->assertContains('public function seeEquals($expected, $actual)', $this->content);
 
         // inherited methods from AbstractGuy
         $this->assertContains('@method void wantTo($text)', $this->content);
         $this->assertContains('@method void expectTo($prediction)', $this->content);
-        
+
         $this->assertContains('HobbitGuy.php generated successfully.', $this->output);
         $this->assertIsValidPhp($this->content);
     }
