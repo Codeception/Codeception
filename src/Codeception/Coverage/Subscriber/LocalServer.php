@@ -121,6 +121,11 @@ class LocalServer extends SuiteSubscriber
          $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
          $context = stream_context_create(array('http' => $this->c3Access));
          $contents = file_get_contents($this->module->_getUrl() . '/c3/report/' . $action, false, $context);
+
+         $okHeaders = array_filter($http_response_header, function($h) { return preg_match('~^HTTP(.*?)\s200~', $h); });
+         if (empty($okHeaders)) {
+             throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
+         }
          if ($contents === false) {
              $this->getRemoteError($http_response_header);
          }
