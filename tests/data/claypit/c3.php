@@ -13,6 +13,12 @@
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
 
+    // fix for improperly encoded JSON in Code Coverage cookie with WebDriver.
+    // @see https://github.com/Codeception/Codeception/issues/874
+    if (!is_array($cookie)) {
+        $cookie = json_decode($cookie, true);
+    }
+
     if ($cookie) {    
         foreach ($cookie as $key => $value) {
             $_SERVER["HTTP_X_CODECEPTION_".strtoupper($key)] = $value;
@@ -22,6 +28,17 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
 
 if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
+}
+
+if (!function_exists('__c3_error')) {
+    function __c3_error($message)
+    {
+        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
+        if (!headers_sent()) {
+            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
+        }
+        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
+    }
 }
 
 // Autoload Codeception classes
@@ -151,16 +168,6 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
             exit;
         }
         return null;
-    }
-
-    function __c3_error($message)
-    {
-        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
-        if (!headers_sent()) {
-            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
-        }
-        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
-        __c3_exit();
     }
 
     function __c3_clear()
