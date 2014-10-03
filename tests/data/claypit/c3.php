@@ -60,7 +60,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         ini_set('memory_limit', '384M');
     }
 
-    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::outputDir() . 'c3tmp');
+    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
     define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
@@ -223,9 +223,6 @@ if ($requested_c3_report) {
     register_shutdown_function(
         function () use ($codeCoverage, $current_report) {
             $codeCoverage->stop();
-            if (!file_exists(dirname($current_report))) {
-                mkdir(dirname($current_report),0777,true);
-            }
             file_put_contents($current_report, serialize($codeCoverage));
         }
     );
