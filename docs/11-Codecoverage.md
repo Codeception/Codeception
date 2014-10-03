@@ -77,6 +77,8 @@ XML clover reports are used by IDEs (like PHPStorm) or Continuous Integration se
 
 ## Remote CodeCoverage
 
+### Local Server
+
 If you run your application via Webserver (Apache, Nginx, PHP WebServer) you don't have a direct access to tested code,
 so collecting coverage becomes a non-trivial task. The same goes for scripts that are tested on different nodes.
 To get access to this code you need `xdebug` installed with `remote_enable` option turned on.
@@ -97,6 +99,8 @@ Think of it: Codeception runs remote coverage in the same way as local.
 
 It's never been easier to setup remote codecoverage for your application. In any other framework. Really.
 
+### Remote Server
+
 But if you run tests on different server (or your webserver doesn't use code from current directory) a single option `remote` should be added to config.
 For example, let's turn on remote coverage for acceptance suite in `acceptance.suite.yml`:
 
@@ -108,6 +112,8 @@ coverage:
 In this case remote Code Coverage results won't be merged with local ones, if this option is enabled.
 Merging is possible only in case a remote and local files have the same path.
 But in case of running tests on a remote server we are not sure of it.
+
+CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage. 
 
 ## Conclusion
 
