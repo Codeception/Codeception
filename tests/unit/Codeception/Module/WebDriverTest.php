@@ -415,35 +415,41 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testCreateCeptScreenshotFail()
     {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+                'takeScreenshot' => Stub::once(function() {}),
+                'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
         $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('loginCept.fail.png'), $actual);
-        })]);
-        $wd->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateCestScreenshotOnFail()
     {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
         $cest = (new \Codeception\TestCase\Cest())
             ->config('testClassInstance', new stdClass())
             ->config('testMethod','login');
-
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $actual);
-        })]);
-        $wd->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateTestScreenshotOnFail()
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
-        $wd = Stub::make('\Codeception\Module\WebDriver', [
-            '_saveScreenshot' => Stub::once(function ($actual) use ($test) {
-                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
-            })
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) use ($test) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
         ]);
-        $wd->webDriver = new \Codeception\Util\Maybe();
-        $wd->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->webDriver = $fakeWd;
+        $this->module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testWebDriverWaits()
