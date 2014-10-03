@@ -6,6 +6,8 @@ use Symfony\Component\BrowserKit\Response;
 
 class Universal extends Client
 {
+    use PhpSuperGlobalsConverter;
+
     protected $mockedResponse;
 
     public function setIndex($index)
@@ -28,16 +30,16 @@ class Universal extends Client
 
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
-        $_FILES  = $request->getFiles();
+        $_FILES  = $this->remapFiles($request->getFiles());
 
         $uri = str_replace('http://localhost', '', $request->getUri());
 
+        $_REQUEST = $this->remapRequestParameters($request->getParameters());
         if (strtoupper($request->getMethod()) == 'GET') {
-            $_GET = $request->getParameters();
+            $_GET = $_REQUEST;
         } else {
-            $_POST = $request->getParameters();
+            $_POST = $_REQUEST;
         }
-        $_REQUEST = $request->getParameters();
 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_SERVER['REQUEST_URI']    = $uri;
