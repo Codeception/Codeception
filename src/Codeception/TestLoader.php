@@ -51,6 +51,7 @@ class TestLoader {
 
     public function getTests()
     {
+        if(count($this->tests) == 0) return $this->tests;
         $total = array_keys($this->tests);
         $tests = array();
         do {
