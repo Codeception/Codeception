@@ -63,6 +63,7 @@ class Configuration
             'colors' => false,
             'log' => false, // deprecated
             'bootstrap' => '_bootstrap.php',
+            'strict_xml' => false
         ),
         'coverage' => []
     );
