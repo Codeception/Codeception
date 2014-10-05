@@ -638,7 +638,8 @@ class InnerBrowser extends Module implements Web
         } catch (ParseException $e) {
         }
         if (!Locator::isXPath($selector)) {
-            return null;
+//            return new \Symfony\Component\DomCrawler\Crawler;
+            throw new TestRuntime("XPath `$selector` is malformed");
         }
 
         return @$this->crawler->filterXPath($selector);

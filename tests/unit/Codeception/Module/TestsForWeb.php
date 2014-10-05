@@ -772,4 +772,14 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         ));
         $this->module->seeCurrentUrlEquals('/form/example11');
     }
+
+    /**
+     * https://github.com/Codeception/Codeception/issues/1409
+     */
+    public function testWrongXpath()
+    {
+        $this->setExpectedException('Codeception\Exception\TestRuntime');
+        $this->module->amOnPage('/');
+        $this->module->seeElement('//aas[asd}[sd]a[/[');
+    }
 }

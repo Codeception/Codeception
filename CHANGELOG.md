@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* [PhpBrowser][Frameworks] Descriptive exception is thrown on XPath syntax error. Fixes #1409 *2014-10-06*
 * Build command generates actors for included suites. See #1267 *2014-10-03*
 * CodeCoverage throws error on unsuccessful requests (status code is not 200) to remote server. Fixes #346 *2014-10-03*
 * CodeCoverage can be disabled per suite. Fix #1249 *2014-10-02*
