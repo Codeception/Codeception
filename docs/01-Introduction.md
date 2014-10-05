@@ -43,7 +43,7 @@ $I->see('Thank you for Signing Up!');
 * the slowest: requires running browser and database repopulation.
 * fewer checks can lead to false-positive results
 * yep, they are really slow.
-* not stable in execution: rendering and javascript issues, can lead to unpredicted results. 
+* not stable in execution: rendering and javascript issues, can lead to unpredictable results. 
 
 
 ### Functional Tests
