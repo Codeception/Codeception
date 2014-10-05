@@ -27,10 +27,10 @@ class RemoteServer extends LocalServer
         }
 
         $suite = $e->getSuite()->getName();
-        if ($this->options['xml']) {
+        if ($this->options['coverage-xml']) {
             $this->retrieveAndPrintXml($suite);
         }
-        if ($this->options['html']) {
+        if ($this->options['coverage-html']) {
             $this->retrieveAndPrintHtml($suite);
         }
     }
