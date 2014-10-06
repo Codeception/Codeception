@@ -37,9 +37,6 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     public function phpUnitOverriders()
     {
         require_once __DIR__ . DIRECTORY_SEPARATOR . 'Overrides/Filter.php';
-        if (!$this->config['settings']['risky_tests']) {
-            require_once __DIR__ . DIRECTORY_SEPARATOR . 'Overrides/RiskyTest.php';
-        }
     }
 
     /**
