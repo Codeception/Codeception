@@ -11,7 +11,7 @@ use Codeception\Util\Debug;
 
 class Yii2 extends Client
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     /**
      * @var string application config file

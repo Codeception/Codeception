@@ -2,12 +2,11 @@
 namespace Codeception\Lib\Connector;
 
 use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
 class ZF1 extends Client
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     /**
      * @var \Zend_Controller_Front

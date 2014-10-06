@@ -2,12 +2,12 @@
 
 namespace Codeception\Lib\Connector;
 
-use Symfony\Component\BrowserKit\Request;
+use Symfony\Component\BrowserKit\Client as BrowserKitClient;
 use Symfony\Component\BrowserKit\Response;
 
-class Kohana extends \Symfony\Component\BrowserKit\Client
+class Kohana extends BrowserKitClient
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     public function setIndex($index)
     {

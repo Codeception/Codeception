@@ -1,20 +1,13 @@
 <?php
 
 namespace Codeception\Lib\Connector;
-
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 use Yii;
 
-/**
- *
- *
- *
- *
- */
 class Yii1 extends Client
 {
-    use PhpSuperGlobalsConverter
+    use Shared\PhpSuperGlobalsConverter
     /**
      * http://localhost/path/to/your/app/index.php
      * @var string url of the entry Yii script

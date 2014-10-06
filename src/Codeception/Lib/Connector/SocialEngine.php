@@ -6,7 +6,7 @@ use Symfony\Component\BrowserKit\Response;
 
 class SocialEngine extends \Symfony\Component\BrowserKit\Client
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     /**
      * @var \Zend_Controller_Front

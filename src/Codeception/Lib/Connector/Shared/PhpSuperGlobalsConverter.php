@@ -1,6 +1,6 @@
 <?php
 
-namespace Codeception\Lib\Connector;
+namespace Codeception\Lib\Connector\Shared;
 
 /**
  * Converts BrowserKit\Request's request parameters and files into PHP-compatible structure
@@ -72,7 +72,7 @@ trait PhpSuperGlobalsConverter {
             $hasInnerArrays = count(array_filter($info, 'is_array'));
 
             if ($hasInnerArrays || !isset($info['tmp_name'])) {
-                $inner = mapFiles($info);
+                $inner = $this->remapFiles($info);
                 foreach ($inner as $innerName => $innerInfo) {
                     /**
                      * Convert from ['a' => ['tmp_name' => '/tmp/test.txt'] ]

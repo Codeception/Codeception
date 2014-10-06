@@ -2,6 +2,7 @@
 
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
 use Symfony\Component\BrowserKit\Request,
     Symfony\Component\BrowserKit\Response,
     Symfony\Component\BrowserKit\Cookie,
@@ -11,7 +12,7 @@ use Symfony\Component\BrowserKit\Request,
 
 class Phalcon1 extends Client
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     private $application;
 

@@ -6,7 +6,7 @@ use Symfony\Component\BrowserKit\Response;
 
 class Universal extends Client
 {
-    use PhpSuperGlobalsConverter;
+    use Shared\PhpSuperGlobalsConverter;
 
     protected $mockedResponse;
 
