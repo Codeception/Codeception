@@ -1557,9 +1557,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!empty($nodes)) {
             return $nodes;
         }
-        if (Locator::isXPath($selector)) {
-            $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        if (!Locator::isXPath($selector)) {
+            throw new TestRuntime("XPath `$selector` is malformed");
         }
+        $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+
         return $nodes;
     }
 
