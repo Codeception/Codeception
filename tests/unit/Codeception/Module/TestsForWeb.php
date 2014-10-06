@@ -778,7 +778,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
      */
     public function testWrongXpath()
     {
-        $this->setExpectedException('Codeception\Exception\TestRuntime');
+        $this->shouldFail();
         $this->module->amOnPage('/');
         $this->module->seeElement('//aas[asd}[sd]a[/[');
     }
