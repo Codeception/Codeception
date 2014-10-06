@@ -782,4 +782,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/');
         $this->module->seeElement('//aas[asd}[sd]a[/[');
     }
+
+    public function testFormWithFilesArray()
+    {
+        $this->module->amOnPage('/form/example13');
+        $this->module->attachFile('foo[bar]', 'app/avatar.jpg');
+        $this->module->attachFile('foo[baz]', 'app/avatar.jpg');
+        $this->module->click('Submit');
+        $this->assertNotEmpty(data::get('files'));
+        $files = data::get('files');
+        $this->assertArrayHasKey('foo', $files);
+        $this->assertArrayHasKey('bar', $files['foo']['name']);
+        $this->assertArrayHasKey('baz', $files['foo']['name']);
+
+    }
 }
