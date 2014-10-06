@@ -2,6 +2,17 @@
 
 #### 2.0.6
 
+* Risky tests are considered as errors. Fix #1373 *2014-10-06*
+
+PHPUnit throws marks test as `risky` if it does not close its output buffer. This leads to unexpected behavior (see related issue).
+`PHPUnit_Framework_RiskyTestError` is now replaced with `\PHPUnit_Framework_Error`, thus all risky tests are marked as errors.
+You can bring marking tests as risky back by enabling them in `codeception.yml`:
+
+```
+settings:
+    risky_tests: true
+```
+
 * Added strict mode for XML generation. *2014-10-06*
 
 In this mode only standard JUnit attributes are added to XML reports, so special attributes like feature won't be included. This improvement fixes usage XML reports with Jenkins #1408

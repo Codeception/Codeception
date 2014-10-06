@@ -184,6 +184,13 @@ class RunCest
         $I->seeFileFound('myownhtmlreport.html', 'tests/_log');
         $I->dontSeeFileFound('report.xml','tests/_log');
         $I->dontSeeFileFound('report.html','tests/_log');
+    }
 
+    public function runRiskyTestThatConvertedToError(\CliGuy $I)
+    {
+        $I->executeCommand('run unit OutputBufferTest.php --no-exit');
+        $I->seeInShellOutput("Test code or tested code did not (only) close its own output buffers");
+        $I->seeInShellOutput("Tests: 1, Assertions: 0, Errors: 1.");
+        $I->dontSeeInShellOutput("Risky");
     }
 }
