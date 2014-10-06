@@ -474,5 +474,4 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->waitForElementNotVisible('//xpath');
 
     }
-
 }
