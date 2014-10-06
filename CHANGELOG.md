@@ -5,7 +5,7 @@
 * [PhpBrowser] Remap files array for Guzzle so it support file[foo][bar]. Fixes #342 by @kkopachev *2014-10-07*
 * Added strict mode for XML generation. *2014-10-06*
 
-In this mode only standard JUnit attributes are added to XML reports, so special attributes like feature won't be included. This improvement fixes usage XML reports with Jenkins #1408
+In this mode only standard JUnit attributes are added to XML reports, so special attributes like `feature` won't be included. This improvement fixes usage XML reports with Jenkins #1408
   To enable strict xml generation add to `codeception.yml`:
 
 ```

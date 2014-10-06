@@ -536,6 +536,9 @@ class InnerBrowser extends Module implements Web
                  "file $filename not found in Codeception data path. Only files stored in data path accepted"
             );
         }
+        if (is_array($form[$field->attr('name')])) {
+            $this->fail("Field {$field->attr('name')} is ignored on upload, field {$field->attr('name')} is treated as array.");
+        }
         $form[$field->attr('name')]->upload($path);
     }
 

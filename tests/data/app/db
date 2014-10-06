@@ -1,1 +1,1 @@
-a:0:{}
+a:3:{s:6:"params";a:0:{}s:4:"form";a:2:{s:3:"xxx";s:0:"";s:6:"Submit";s:0:"";}s:5:"files";a:2:{s:7:"foo bar";a:5:{s:4:"name";s:10:"avatar.jpg";s:4:"type";s:0:"";s:8:"tmp_name";s:49:"/tmp/ea019cf2010d67fb250ee5fb25c79d8296add2dd.jpg";s:5:"error";s:1:"0";s:4:"size";s:4:"5621";}s:7:"foo.baz";a:5:{s:4:"name";s:10:"avatar.jpg";s:4:"type";s:0:"";s:8:"tmp_name";s:49:"/tmp/84089cd176520b6f7bc46199b6b47a040af0ed62.jpg";s:5:"error";s:1:"0";s:4:"size";s:4:"5621";}}}

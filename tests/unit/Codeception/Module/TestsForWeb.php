@@ -791,9 +791,50 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->click('Submit');
         $this->assertNotEmpty(data::get('files'));
         $files = data::get('files');
-        $this->assertArrayHasKey('foo', $files);
         $this->assertArrayHasKey('bar', $files['foo']['name']);
         $this->assertArrayHasKey('baz', $files['foo']['name']);
-
     }
+
+    public function testFormWithFileSpecialCharNames()
+    {
+        $this->module->amOnPage('/form/example14');
+        $this->module->attachFile('foo bar', 'app/avatar.jpg');
+        $this->module->attachFile('foo.baz', 'app/avatar.jpg');
+        $this->module->click('Submit');
+        $this->assertNotEmpty(data::get('files'));
+        $files = data::get('files');
+        $this->assertNotEmpty($files);
+        $this->assertArrayHasKey('foo_bar', $files);
+        $this->assertArrayHasKey('foo_baz', $files);
+    }
+
+    /**
+     * If we have a form with fields like
+     * ```
+     * <input type="file" name="foo" />
+     * <input type="file" name="foo[bar]" />
+     * ```
+     * then only array variable will be used while simple variable will be ignored in php $_FILES
+     * (eg $_FILES = [
+     *                 foo => [
+     *                     tmp_name => [
+     *                         'bar' => 'asdf'
+     *                     ],
+     *                     //...
+     *                ]
+     *              ]
+     * )
+     * (notice there is no entry for file "foo", only for file "foo[bar]"
+     * this will check if current element contains inner arrays within it's keys
+     * so we can ignore element itself and only process inner files
+     */
+    public function testFormWithFilesInOnlyArray()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/example13');
+        $this->module->attachFile('foo', 'app/avatar.jpg');
+        $this->module->attachFile('foo[bar]', 'app/avatar.jpg');
+        $this->module->click('Submit');
+    }
+
 }
