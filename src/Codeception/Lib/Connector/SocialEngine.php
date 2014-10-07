@@ -6,6 +6,7 @@ use Symfony\Component\BrowserKit\Response;
 
 class SocialEngine extends \Symfony\Component\BrowserKit\Client
 {
+    use PhpSuperGlobalsConverter;
 
     /**
      * @var \Zend_Controller_Front
@@ -56,16 +57,16 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
         $zendRequest->setCookies($request->getCookies());
         //$zendRequest->setParams($request->getParameters());
         if (strtoupper($request->getMethod()) == 'GET') {
-            $_GET = $request->getParameters();
+            $_GET = $this->remapRequestParameters($request->getParameters());
         }
         if (strtoupper($request->getMethod()) == 'POST') {
-            $_POST = $request->getParameters();
+            $_POST = $this->remapRequestParameters($request->getParameters());
         }
 
         $zendRequest->setRequestUri(str_replace('http://localhost', '', $request->getUri()));
         $zendRequest->setHeaders($request->getServer());
 
-        $_FILES = $request->getFiles();
+        $_FILES = $this->remapFiles($request->getFiles());
 
         // это нужно для нормальной работы SE
         $_SERVER['HTTP_HOST'] = str_replace('http://', '', $this->host);

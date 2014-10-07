@@ -7,6 +7,8 @@ use Symfony\Component\BrowserKit\Response;
 
 class Kohana extends \Symfony\Component\BrowserKit\Client
 {
+    use PhpSuperGlobalsConverter;
+
     public function setIndex($index)
     {
         $this->index = $index;
@@ -16,7 +18,7 @@ class Kohana extends \Symfony\Component\BrowserKit\Client
     {
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
-        $_FILES  = $request->getFiles();
+        $_FILES  = $this->remapFiles($request->getFiles());
 
         $uri = str_replace('http://localhost', '', $request->getUri());
 
@@ -30,10 +32,10 @@ class Kohana extends \Symfony\Component\BrowserKit\Client
         $kohanaRequest->method($_SERVER['REQUEST_METHOD']);
 
         if (strtoupper($request->getMethod()) == 'GET') {
-            $kohanaRequest->query($request->getParameters());
+            $kohanaRequest->query($this->remapRequestParameters($request->getParameters()));
         }
         if (strtoupper($request->getMethod()) == 'POST') {
-            $kohanaRequest->post($request->getParameters());
+            $kohanaRequest->post($this->remapRequestParameters($request->getParameters()));
         }
 
         $kohanaRequest->cookie($_COOKIE);
