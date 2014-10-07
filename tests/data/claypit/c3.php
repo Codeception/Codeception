@@ -184,7 +184,6 @@ if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
-@mkdir($path);
 
 $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
@@ -228,12 +227,14 @@ if ($requested_c3_report) {
 } else {
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-    register_shutdown_function(
-        function () use ($codeCoverage, $current_report) {
-            $codeCoverage->stop();
-            file_put_contents($current_report, serialize($codeCoverage));
-        }
-    );
+    if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) { 
+        register_shutdown_function(
+            function () use ($codeCoverage, $current_report) {
+                $codeCoverage->stop();
+                file_put_contents($current_report, serialize($codeCoverage));
+            }
+        );
+    }
 }
 
 // @codeCoverageIgnoreEnd
