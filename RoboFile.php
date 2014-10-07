@@ -39,6 +39,7 @@ class RoboFile extends \Robo\Tasks
     public function update()
     {
         $this->clean();
+        $this->taskComposerUpdate()->dir('tests/data/claypit')->run();
         $this->taskComposerUpdate()->run();
     }
 
