@@ -2,8 +2,8 @@
 
 #### 2.0.6
 
-* [Frameworks] uploading files containing square brackets, dots, spaces. See #1438. Thanks to @kkopachev *2014-10-08*
-* [PhpBrowser] Remap array of files for Guzzle so it support file[foo][bar]. Fixes #342 by @kkopachev *2014-10-07*
+* [Frameworks] support files and request names containing square brackets, dots, spaces. See #1438. Thanks to @kkopachev *2014-10-08*
+* [PhpBrowser] array of files for Guzzle to support format: file[foo][bar]. Fixes #342 by @kkopachev *2014-10-07*
 * Added strict mode for XML generation. *2014-10-06*
 
 In this mode only standard JUnit attributes are added to XML reports, so special attributes like `feature` won't be included. This improvement fixes usage XML reports with Jenkins #1408
