@@ -197,8 +197,8 @@ class Run extends Command
             
             if(!empty($config['include'])){            
                 $current_dir = Configuration::projectDir();
-                $suites = $config['include'];
-                $this->runIncludedSuites($suites,$current_dir);
+                $suites += $config['include'];
+                $this->runIncludedSuites($config['include'],$current_dir);
             }
 
             if ( $this->executed ===0 ) {

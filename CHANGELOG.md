@@ -2,6 +2,7 @@
 
 #### 2.0.6
 
+* Fixed list of executed suites while running included suites by @gureedo. See #1427 *2014-10-08*
 * [Frameworks] support files and request names containing square brackets, dots, spaces. See #1438. Thanks to @kkopachev *2014-10-08*
 * [PhpBrowser] array of files for Guzzle to support format: file[foo][bar]. Fixes #342 by @kkopachev *2014-10-07*
 * Added strict mode for XML generation. *2014-10-06*
