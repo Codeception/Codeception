@@ -184,6 +184,7 @@ if (!is_dir(C3_CODECOVERAGE_MEDIATE_STORAGE)) {
 
 // evaluate base path for c3-related files
 $path = realpath(C3_CODECOVERAGE_MEDIATE_STORAGE) . DIRECTORY_SEPARATOR . 'codecoverage';
+@mkdir($path);
 
 $requested_c3_report = (strpos($_SERVER['REQUEST_URI'], 'c3/report') !== false);
 
