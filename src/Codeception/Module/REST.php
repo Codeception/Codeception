@@ -112,15 +112,14 @@ class REST extends \Codeception\Module
      */
     public function seeHttpHeader($name, $value = null)
     {
-        if ($value) {
-            \PHPUnit_Framework_Assert::assertEquals(
+        if ($value !== null) {
+            $this->assertEquals(
                 $this->client->getInternalResponse()->getHeader($name),
                 $value
             );
+            return;
         }
-        else {
-            \PHPUnit_Framework_Assert::assertNotNull($this->client->getInternalResponse()->getHeader($name));
-        }
+        $this->assertNotNull($this->client->getInternalResponse()->getHeader($name));
     }
 
     /**
@@ -131,15 +130,14 @@ class REST extends \Codeception\Module
      * @param $value
      */
     public function dontSeeHttpHeader($name, $value = null) {
-        if ($value) {
-            \PHPUnit_Framework_Assert::assertNotEquals(
+        if ($value !== null) {
+            $this->assertNotEquals(
                 $this->client->getInternalResponse()->getHeader($name),
                 $value
             );
+            return;
         }
-        else {
-            \PHPUnit_Framework_Assert::assertNull($this->client->getInternalResponse()->getHeader($name));
-        }
+        $this->assertNull($this->client->getInternalResponse()->getHeader($name));
     }
 
     /**

@@ -66,6 +66,22 @@ class RunCest
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
+        $I->seeInThisFile('feature="');
+    }
+
+    /**
+     * @group reports
+     * @param CliGuy $I
+     */
+    public function runXmlReportsInStrictMode(\CliGuy $I)
+    {
+        $I->wantTo('check xml in strict mode');
+        $I->executeCommand('run dummy --xml -c codeception_strict_xml.yml');
+        $I->seeFileFound('report.xml', 'tests/_log');
+        $I->seeInThisFile('<?xml');
+        $I->seeInThisFile('<testsuite name="dummy"');
+        $I->seeInThisFile('<testcase name="FileExists"');
+        $I->dontSeeInThisFile('feature="');
     }
 
     /**

@@ -13,7 +13,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     use StaticEvents;
 
     protected $defaultSettings = [
-        'enabled' => true,
+        'enabled' => false,
         'remote' => false,
         'local' => false,
         'xdebug_session' => 'codeception',
@@ -23,7 +23,6 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
 
     protected $settings = [];
     protected $filters = [];
-
 
     protected $coverage;
     protected $logDir;

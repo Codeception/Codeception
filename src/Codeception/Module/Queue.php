@@ -1,6 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Driver\AmazonSQS;
+use Codeception\Lib\Driver\Beanstalk;
+use Codeception\Lib\Driver\Iron;
+
 /**
  *
  * Works with Queue servers.
@@ -84,11 +89,9 @@ class Queue extends \Codeception\Module
 {
 
     /**
-     * @var
+     * @var \Codeception\Lib\Interfaces\Queue
      */
-    protected $queue;
-
-    // ----------- SETUP METHODS BELOW HERE -------------------------//
+    public $queueDriver;
 
     /**
      * Setup connection and open/setup the connection with config settings
@@ -97,7 +100,7 @@ class Queue extends \Codeception\Module
      */
     public function _before(\Codeception\TestCase $test)
     {
-        $this->_openConnection();
+        $this->queueDriver->openConnection($this->config);
     }
 
     /**
@@ -105,23 +108,35 @@ class Queue extends \Codeception\Module
      */
     protected function validateConfig()
     {
-        // Customisable requirement fields depending on the queue type selected. (aws_sqs, iron_mq, beanstalkq)
-        switch (strtolower($this->config['type']))
-        {
+        $this->queueDriver = $this->createQueueDriver();
+        $this->requiredFields = $this->queueDriver->getRequiredConfig();
+        $this->config = array_merge($this->queueDriver->getDefaultConfig(), $this->config);
+        parent::validateConfig();
+    }
+
+    /**
+     * @return \Codeception\Lib\Interfaces\Queue
+     * @throws ModuleConfig
+     */
+    protected function createQueueDriver()
+    {
+        switch ($this->config['type']) {
             case 'aws':
             case 'sqs':
             case 'aws_sqs':
-                $this->requiredFields = array('key', 'secret', 'region');
-                break;
+                return new AmazonSQS();
             case 'iron':
             case 'iron_mq':
-                $this->requiredFields = array('host', 'token', 'project');
-                break;
+                return new Iron();
+            case 'beanstalk':
+            case 'beanstalkd':
+            case 'beanstalkq':
+                return new Beanstalk();
             default:
-                $this->requiredFields = array('host');
-                $this->config = array_merge(array('port' => 11300, 'timeout' => 90), $this->config);
+                throw new ModuleConfig(
+                    __CLASS__, "Unknown queue type {$this->config}; Supported queue types are: aws, iron, beanstalk"
+                );
         }
-        parent::validateConfig();
     }
 
     // ----------- SEARCH METHODS BELOW HERE ------------------------//
@@ -131,7 +146,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->seeQueueExists('default');
+     * $I->seeQueueExists('default');
      * ?>
      * ```
      *
@@ -139,8 +154,7 @@ class Queue extends \Codeception\Module
      */
     public function seeQueueExists($queue)
     {
-        $this->debug("see queue: [{$queue}]");
-        \PHPUnit_Framework_Assert::assertContains($queue, $this->_getQueues());
+        $this->assertContains($queue, $this->queueDriver->getQueues());
     }
 
     /**
@@ -148,7 +162,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->dontSeeQueueExists('default');
+     * $I->dontSeeQueueExists('default');
      * ?>
      * ```
      *
@@ -156,8 +170,7 @@ class Queue extends \Codeception\Module
      */
     public function dontSeeQueueExists($queue)
     {
-        $this->debug("don't see queue: [{$queue}]");
-        \PHPUnit_Framework_Assert::assertNotContains($queue, $this->_getQueues());
+        $this->assertNotContains($queue, $this->queueDriver->getQueues());
     }
 
     /**
@@ -165,7 +178,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->seeEmptyQueue('default');
+     * $I->seeEmptyQueue('default');
      * ?>
      * ```
      *
@@ -173,9 +186,7 @@ class Queue extends \Codeception\Module
      */
     public function seeEmptyQueue($queue)
     {
-        $count = $this->_getMessagesCurrentCountOnQueue($queue);
-        $this->debug("see empty queue: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertEquals(0, $count);
+        $this->assertEquals(0, $this->queueDriver->getMessagesCurrentCountOnQueue($queue));
     }
 
     /**
@@ -183,7 +194,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->dontSeeEmptyQueue('default');
+     * $I->dontSeeEmptyQueue('default');
      * ?>
      * ```
      *
@@ -191,9 +202,7 @@ class Queue extends \Codeception\Module
      */
     public function dontSeeEmptyQueue($queue)
     {
-        $count = $this->_getMessagesCurrentCountOnQueue($queue);
-        $this->debug("don't see empty queue: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertNotEquals(0, $count);
+        $this->assertNotEquals(0, $this->queueDriver->getMessagesCurrentCountOnQueue($queue));
     }
 
     /**
@@ -201,18 +210,16 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->seeQueueHasCurrentCount('default', 10);
+     * $I->seeQueueHasCurrentCount('default', 10);
      * ?>
      * ```
      *
-     * @param string $queue    Queue Name
-     * @param int    $expected Number of messages expected
+     * @param string $queue Queue Name
+     * @param int $expected Number of messages expected
      */
     public function seeQueueHasCurrentCount($queue, $expected)
     {
-        $count = $this->_getMessagesCurrentCountOnQueue($queue);
-        $this->debug("see queue has current count: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertEquals($expected, $count);
+        $this->assertEquals($expected, $this->queueDriver->getMessagesCurrentCountOnQueue($queue));
     }
 
     /**
@@ -220,18 +227,16 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->dontSeeQueueHasCurrentCount('default', 10);
+     * $I->dontSeeQueueHasCurrentCount('default', 10);
      * ?>
      * ```
      *
-     * @param string $queue    Queue Name
-     * @param int    $expected Number of messages expected
+     * @param string $queue Queue Name
+     * @param int $expected Number of messages expected
      */
     public function dontSeeQueueHasCurrentCount($queue, $expected)
     {
-        $count = $this->_getMessagesCurrentCountOnQueue($queue);
-        $this->debug("don't see queue has current count: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertNotEquals($expected, $count);
+        $this->assertNotEquals($expected, $this->queueDriver->getMessagesCurrentCountOnQueue($queue));
     }
 
     /**
@@ -239,18 +244,16 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->seeQueueHasTotalCount('default', 10);
+     * $I->seeQueueHasTotalCount('default', 10);
      * ?>
      * ```
      *
-     * @param string $queue    Queue Name
-     * @param int    $expected Number of messages expected
+     * @param string $queue Queue Name
+     * @param int $expected Number of messages expected
      */
     public function seeQueueHasTotalCount($queue, $expected)
     {
-        $count = $this->_getMessagesTotalCountOnQueue($queue);
-        $this->debug("see queue has total count: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertEquals($expected, $count);
+        $this->assertEquals($expected, $this->queueDriver->getMessagesTotalCountOnQueue($queue));
     }
 
     /**
@@ -258,18 +261,16 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->dontSeeQueueHasTotalCount('default', 10);
+     * $I->dontSeeQueueHasTotalCount('default', 10);
      * ?>
      * ```
      *
-     * @param string $queue    Queue Name
-     * @param int    $expected Number of messages expected
+     * @param string $queue Queue Name
+     * @param int $expected Number of messages expected
      */
     public function dontSeeQueueHasTotalCount($queue, $expected)
     {
-        $count = $this->_getMessagesTotalCountOnQueue($queue);
-        $this->debug("don't see queue has total count: queue [{$queue}] has [{$count}] messages");
-        \PHPUnit_Framework_Assert::assertNotEquals($expected, $count);
+        $this->assertNotEquals($expected, $this->queueDriver->getMessagesTotalCountOnQueue($queue));
     }
 
     // ----------- UTILITY METHODS BELOW HERE -------------------------//
@@ -279,17 +280,16 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->addMessageToQueue('this is a messages', 'default');
+     * $I->addMessageToQueue('this is a messages', 'default');
      * ?>
      * ```
      *
      * @param string $message Message Body
-     * @param string $queue   Queue Name
+     * @param string $queue Queue Name
      */
     public function addMessageToQueue($message, $queue)
     {
-        $this->_addMessageToQueue($message, $queue);
-        $this->debug('message queued: ['. $queue . ']');
+        $this->queueDriver->addMessageToQueue($message, $queue);
     }
 
     /**
@@ -297,7 +297,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->clearQueue('default');
+     * $I->clearQueue('default');
      * ?>
      * ```
      *
@@ -305,8 +305,7 @@ class Queue extends \Codeception\Module
      */
     public function clearQueue($queue)
     {
-        $this->debug('clear queue: [' . $queue . ']');
-        $this->_clearQueue($queue);
+        $this->queueDriver->clearQueue($queue);
     }
 
     // ----------- GRABBER METHODS BELOW HERE -----------------------//
@@ -316,7 +315,7 @@ class Queue extends \Codeception\Module
      *
      * ```php
      * <?php
-     *     $I->grabQueues();
+     * $queues = $I->grabQueues();
      * ?>
      * ```
      *
@@ -324,12 +323,7 @@ class Queue extends \Codeception\Module
      */
     public function grabQueues()
     {
-        $queues = $this->_getQueues();
-        $this->debug('grab queues:');
-        foreach ($queues as $queue) {
-            $this->debug('  - [' . $queue . ']');
-        }
-        return $queues;
+        return $this->queueDriver->getQueues();
     }
 
     /**
@@ -346,7 +340,7 @@ class Queue extends \Codeception\Module
      */
     public function grabQueueCurrentCount($queue)
     {
-        return $this->_getMessagesCurrentCountOnQueue($queue);
+        return $this->queueDriver->getMessagesCurrentCountOnQueue($queue);
     }
 
     /**
@@ -364,236 +358,7 @@ class Queue extends \Codeception\Module
      */
     public function grabQueueTotalCount($queue)
     {
-        return $this->_getMessagesTotalCountOnQueue($queue);
+        return $this->queueDriver->getMessagesTotalCountOnQueue($queue);
     }
 
-    // ----------- CONNECTION METHODS BELOW HERE -------------//
-
-    /**
-     * Connect to the queueing server. (AWS, Iron.io and Beanstalkd)
-     */
-    private function _openConnection()
-    {
-        $this->debug('');
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                $this->queue = \Aws\Sqs\SqsClient::factory(array(
-                    'credentials' => new \Aws\Common\Credentials\Credentials($this->config['key'], $this->config['secret']),
-                    'region' => $this->config['region']
-                )) OR \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
-            break;
-            case 'iron':
-            case 'iron_mq':
-                $this->queue = new \IronMQ(array(
-                    "token" => $this->config['token'],
-                    "project_id" => $this->config['project'],
-                    "host" => $this->config['host']
-                )) OR \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
-                break;
-            default:
-                $this->queue = new \Pheanstalk_Pheanstalk($this->config['host'], $this->config['port'], $this->config['timeout'])
-                                    OR \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
-        }
-    }
-
-    /**
-     * Post/Put a message on to the queue server
-     *
-     * @param string $message Message Body to be send
-     * @param string $queue   Queue Name
-     */
-    private function _addMessageToQueue($message, $queue)
-    {
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                $this->queue->sendMessage(array(
-                    'QueueUrl' => $this->_getQueueURL($queue),
-                    'MessageBody' => $message,
-                ));
-                break;
-            case 'iron':
-            case 'iron_mq':
-                $this->queue->postMessage($queue, $message);
-                break;
-            default:
-                $this->queue->putInTube($queue, $message);
-        }
-    }
-
-    /**
-     * Return a list of queues/tubes on the queueing server
-     *
-     * @return array Array of Queues
-     */
-    private function _getQueues()
-    {
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                $queueNames = array();
-                $queues = $this->queue->listQueues(array('QueueNamePrefix' => ''))->get('QueueUrls');
-                foreach ($queues as $queue) {
-                    $tokens = explode('/', $queue);
-                    $queueNames[] = $tokens[sizeof($tokens)-1];
-                }
-                return $queueNames;
-            case 'iron':
-            case 'iron_mq':
-                // Format the output to suit
-                $queues = array();
-                foreach($this->queue->getQueues() as $queue) {
-                    $queues[] = $queue->name;
-                }
-                return $queues;
-            default:
-                return $this->queue->listTubes();
-        }
-    }
-
-    /**
-     * Count the current number of messages on the queue.
-     *
-     * @param $queue Queue Name
-     *
-     * @return int Count
-     */
-    private function _getMessagesCurrentCountOnQueue($queue)
-    {
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                return $this->queue->getQueueAttributes(array(
-                    'QueueUrl' => $this->_getQueueURL($queue),
-                    'AttributeNames' => array('ApproximateNumberOfMessages'),
-                ))->get('Attributes')['ApproximateNumberOfMessages'];
-                break;
-            case 'iron':
-            case 'iron_mq':
-                try {
-                    return $this->queue->getQueue('my_queue')->size;
-                } catch (\Http_Exception $ex) {
-                    $this->debug('queue: [' . $queue . '] not found');
-                    \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-                }
-            default:
-                try {
-                    return $this->queue->statsTube($queue)['current-jobs-ready'];
-                } catch (\Pheanstalk_Exception_ServerException $ex) {
-                    $this->debug('queue: [' . $queue . '] not found');
-                    \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-                }
-        }
-    }
-
-    /**
-     * Count the total number of messages on the queue.
-     *
-     * @param $queue Queue Name
-     *
-     * @return int Count
-     */
-    private function _getMessagesTotalCountOnQueue($queue)
-    {
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                return $this->queue->getQueueAttributes(array(
-                    'QueueUrl' => $this->_getQueueURL($queue),
-                    'AttributeNames' => array('ApproximateNumberOfMessages'),
-                ))->get('Attributes')['ApproximateNumberOfMessages'];
-                break;
-            case 'iron':
-            case 'iron_mq':
-                try {
-                    return $this->queue->getQueue($queue)->total_messages;
-                } catch (\Http_Exception $ex) {
-                    $this->debug('queue: [' . $queue . '] not found');
-                    \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-                }
-            default:
-                try {
-                    return $this->queue->statsTube($queue)['total-jobs'];
-                } catch (\Pheanstalk_Exception_ServerException $ex) {
-                    $this->debug('queue: [' . $queue . '] not found');
-                    \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-                }
-        }
-    }
-
-    /**
-     * Clear the queue/tube of all messages
-     *
-     * @param $queue Queue Name
-     */
-    private function _clearQueue($queue)
-    {
-        switch(strtolower($this->config['type']))
-        {
-            case 'aws':
-            case 'sqs':
-            case 'aws_sqs':
-                $queueURL = $this->_getQueueURL($queue);
-                while(true) {
-                    $res = $this->queue->receiveMessage(array('QueueUrl' => $queueURL));
-
-                    if ($res->getPath('Messages')) {
-                        foreach ($res->getPath('Messages') as $msg) {
-                            $this->debug("  - delete message: ".$msg['MessageId']);
-                        }
-                        // Do something useful with $msg['Body'] here
-                        $this->queue->deleteMessage(array(
-                            'QueueUrl'      => $queueURL,
-                            'ReceiptHandle' => $msg['ReceiptHandle']
-                        ));
-                    } else {
-                        break;
-                    }
-                }
-            break;
-            case 'iron':
-            case 'iron_mq':
-                try {
-                    $this->queue->clearQueue($queue);
-                } catch (\Http_Exception $ex) {
-                    $this->debug('queue: [' . $queue . '] not found');
-                    \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-                }
-                break;
-            default:
-                while($job = $this->queue->reserve(0)) {
-                    $this->queue->delete($job);
-                }
-        }
-    }
-
-    /**
-     * Get the queue/tube URL from the queue name (AWS function only)
-     *
-     * @param $queue Queue Name
-     *
-     * @return string Queue URL
-     */
-    private function _getQueueURL($queue)
-    {
-        $queues = $this->queue->listQueues(array('QueueNamePrefix' => ''))->get('QueueUrls');
-        foreach ($queues as $queueURL) {
-            $tokens = explode('/', $queueURL);
-            if (strtolower($queue) == strtolower($tokens[sizeof($tokens)-1]))
-                return $queueURL;
-        }
-        $this->debug('queue: [' . $queue . '] not found');
-        \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
-    }
 }

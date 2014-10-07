@@ -7,7 +7,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Util\FileSystem;
 
 /**
- * When collecting code coverage on remote server result
+ * When collecting code coverage on remote server
  * data is retrieved over HTTP and not merged with the local code coverage results.
  *
  * Class RemoteServer
@@ -17,7 +17,7 @@ class RemoteServer extends LocalServer
 {
     public function isEnabled()
     {
-        return $this->getServerConnectionModule() and $this->settings['remote'];
+        return $this->getServerConnectionModule() and $this->settings['remote'] and $this->settings['enabled'];
     }
 
     public function afterSuite(SuiteEvent $e)
@@ -27,10 +27,10 @@ class RemoteServer extends LocalServer
         }
 
         $suite = $e->getSuite()->getName();
-        if ($this->options['xml']) {
+        if ($this->options['coverage-xml']) {
             $this->retrieveAndPrintXml($suite);
         }
-        if ($this->options['html']) {
+        if ($this->options['coverage-html']) {
             $this->retrieveAndPrintHtml($suite);
         }
     }

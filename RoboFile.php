@@ -4,7 +4,10 @@ require_once __DIR__.'/vendor/autoload.php';
 use Symfony\Component\Finder\Finder;
 use \Robo\Task\GenMarkdownDocTask as Doc;
 
-class RoboFile extends \Robo\Tasks {
+class RoboFile extends \Robo\Tasks
+{
+    use Codegyre\RoboCI\Command\CI;
+    use Codegyre\RoboCI\Command\Travis\Prepare;
 
     const STABLE_BRANCH = '2.0';
 
@@ -36,6 +39,7 @@ class RoboFile extends \Robo\Tasks {
     public function update()
     {
         $this->clean();
+        $this->taskComposerUpdate()->dir('tests/data/claypit')->run();
         $this->taskComposerUpdate()->run();
     }
 
@@ -85,27 +89,18 @@ class RoboFile extends \Robo\Tasks {
             ->run();
     }
 
-    public function testFacebook()
+    public function testWebdriver($args = '', $opts = ['filter' => ' '])
     {
-        $this->server();
-
-        $this->taskSymfonyCommand(new \Codeception\Command\Run('run'))
-            ->arg('suite','tests/unit/Codeception/Module/FacebookTest.php')
-            ->run();
-
-    }
-
-    public function testWebdriver($args = '')
-    {
-        $this->testServer();
+//        $this->testLaunchServer();
+        $this->say($opts['filter']);
         
-        $this->taskCodecept('./codecept')
-            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
-            ->args($args)
-            ->run();
+//        $this->taskCodecept('./codecept')
+//            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
+//            ->args($args)
+//            ->run();
     }
 
-    public function testServer($pathToSelenium = '~/selenium-server-standalone-2.39.0.jar ')
+    public function testLaunchServer($pathToSelenium = '~/selenium-server.jar ')
     {
         $this->taskExec('java -jar '.$pathToSelenium)
             ->background()
@@ -167,8 +162,8 @@ class RoboFile extends \Robo\Tasks {
             ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
-            ->exclude('ocramius')
             ->exclude('videlalvaro')
+            ->exclude('robo-ci')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')
@@ -513,7 +508,7 @@ class RoboFile extends \Robo\Tasks {
         ])->run();
     }
 
-    public function buildGuys()
+    public function buildActors()
     {
         $build = 'php codecept build';
         $this->taskExec($build)->run();

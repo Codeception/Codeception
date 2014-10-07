@@ -1,19 +1,13 @@
 <?php
 
 namespace Codeception\Lib\Connector;
-
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 use Yii;
 
-/**
- *
- *
- *
- *
- */
 class Yii1 extends Client
 {
+    use Shared\PhpSuperGlobalsConverter
     /**
      * http://localhost/path/to/your/app/index.php
      * @var string url of the entry Yii script
@@ -49,13 +43,13 @@ class Yii1 extends Client
         $this->_headers = array();
         $_COOKIE        = array_merge($_COOKIE, $request->getCookies());
         $_SERVER        = array_merge($_SERVER, $request->getServer());
-        $_FILES         = $request->getFiles();
-        $_REQUEST       = $request->getParameters();
+        $_FILES         = $this->remapFiles($request->getFiles());
+        $_REQUEST       = $this->remapRequestParameters($request->getParameters());
 
         if (strtoupper($request->getMethod()) == 'GET')
-            $_GET = $request->getParameters();
+            $_GET = $_REQUEST;
         else {
-            $_POST = $request->getParameters();
+            $_POST = $_REQUEST;
         }
 
         // Parse url parts

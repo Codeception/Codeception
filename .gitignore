@@ -1,4 +1,5 @@
 .idea
+Dockerfile
 composer.phar
 vendor
 package/codecept.phar

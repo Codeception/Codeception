@@ -3,6 +3,7 @@ language: php
 php:
   - 5.4
   - 5.5
+  - 5.6
   - hhvm
 
 matrix:
@@ -17,54 +18,53 @@ services:
   - mongodb
   - rabbitmq
 
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
-  - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
-  - php -S localhost:8000 -t tests/data/app &
-  - php -S localhost:8010 -t tests/data &
-  - curl -s http://getcomposer.org/installer | php
-  - composer install -n --prefer-source
-  - "mysql -e 'create database codeception_test;'"
-  - psql -c 'create database codeception_test;' -U postgres
-  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-
+  - composer global require "fxp/composer-asset-plugin:1.0.0-beta2"
+  - composer install
+  # Queue (Beanstalkd)
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq beanstalkd
   # Yii2
-  - composer create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
-  - php codecept build -c frameworks-yii-basic/tests
-
-  # Phalcon
+  - composer create-project --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
   - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
+  # Phalcon
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --enable-phalcon  &> /dev/null && make -j4 && sudo make install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
-  - "mysql -e 'CREATE DATABASE forum;'"
-  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
-  - php codecept build -c frameworks-phalcon
-
   # Laravel
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
-  - "mysql -e 'create database `l4-module`;'"
-  - composer install -d frameworks-laravel
-  - php frameworks-laravel/artisan migrate --seed -n
-  - php codecept build -c frameworks-laravel
-
+  - composer install -d frameworks-laravel --no-dev
   # Symfony
   - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev
+
+
+before_script:
+  - export DISPLAY=:99.0
+  - beanstalkd -d -l 127.0.0.1 -p 11300
+  - sh -e /etc/init.d/xvfb start
+  - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
+  - "mysql -e 'create database codeception_test;'"
+  - psql -c 'create database codeception_test;' -U postgres
+  - php -S localhost:8000 -t tests/data/app &
+  - php -S localhost:8010 -t tests/data &
+  - "mysql -e 'CREATE DATABASE forum;'"
+  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
+  # Laravel
+  - "mysql -e 'create database `l4-module`;'"
+  - php frameworks-laravel/artisan migrate --seed -n
+  # Symfony
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create
+  - php codecept build -c frameworks-yii-basic/tests
+  - php codecept build -c frameworks-phalcon
+  - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
-
-  # Queue (Beanstalkd)
-  - composer update --dev
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq beanstalkd
-  - sudo beanstalkd -d -l 127.0.0.1 -p 11300
 
 script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel # Laravel4 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests

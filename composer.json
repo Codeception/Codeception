@@ -35,7 +35,8 @@
         "videlalvaro/php-amqplib": "~2.4",
         "phpseclib/phpseclib": "~0.3.6",
         "codeception/specify": "~0.3",
-        "pda/pheanstalk": "~2.0"
+        "pda/pheanstalk": "~2.0",
+        "codegyre/robo-ci": "@dev"
     },
     "suggest": {
         "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
@@ -48,6 +49,11 @@
     "autoload":{
         "psr-0":{
             "Codeception":"src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
         }
     },
     "bin":["codecept"]

@@ -1,6 +1,6 @@
 # Parallel Execution
 
-When execution time of your tests is longer then a coffee break, it is a good reason to think about making your tests faster. If you have already tried to run them on SSD drive, or to use PhantomJS instead of Selenium, and the execution time still upsets you, it might be a good idea to run your tests in parallel.
+When execution time of your tests is longer than a coffee break, it is a good reason to think about making your tests faster. If you have already tried to run them on SSD drive, or to use PhantomJS instead of Selenium, and the execution time still upsets you, it might be a good idea to run your tests in parallel.
 
 ## Where to start
 
@@ -12,7 +12,7 @@ Codeception does not provide a command like `run-parallel`. There is no common s
 * Will they use different hosts?
 * How should I split my tests across parallel processes?
 
-And we don't have a single answer for you to any of those questions. Instead, we provide you with a customizable solution which can be easily configured to match your needs. Also we will share some ideas that you might find helpful.
+And we don't have a single answer for you to any of those questions. Instead, we provide you with a customizable solution which can be easily configured to match your needs. Also, we will share some ideas that you might find helpful.
 
 ## What to do
 
@@ -54,7 +54,7 @@ class RoboFile extends \Robo\Tasks
 
 Install `codeception/robo-paracept` via Composer and include it into your RoboFile.
 
-Each public method in robofile can be executed as a command from console. Lets define commands for 3 steps.
+Each public method in robofile can be executed as a command from console. Let's define commands for 3 steps.
 
 ```php
 <?php
@@ -243,7 +243,7 @@ env:
                     url: 'http://test5.localhost/'
 ```
 
-Now we should update our `parallelRun` method to use corresponding environment:
+Now, we should update our `parallelRun` method to use corresponding environment:
 
 ```php
 <?php
@@ -263,7 +263,7 @@ Now we should update our `parallelRun` method to use corresponding environment:
 ?>    
 ```
 
-Now we can execute tests with
+Now, we can execute tests with
 
 ```bash
 $ robo parallel:run

@@ -2,11 +2,12 @@
 namespace Codeception\Lib\Connector;
 
 use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
 class ZF1 extends Client
 {
+    use Shared\PhpSuperGlobalsConverter;
+
     /**
      * @var \Zend_Controller_Front
      */
@@ -55,7 +56,7 @@ class ZF1 extends Client
         $zendRequest->setPost($request->getParameters());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
-        $_FILES  = $request->getFiles();
+        $_FILES  = $this->remapFiles($request->getFiles());
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
         $zendResponse = new \Zend_Controller_Response_HttpTestCase;

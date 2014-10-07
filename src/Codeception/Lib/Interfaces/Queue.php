@@ -7,9 +7,11 @@ namespace Codeception\Lib\Interfaces;
 interface Queue {
 
     /**
-     * Connect to the queueing server. (AWS, Iron.io and Beanstalkd)
+     * Connect to the queueing server.
+     * @param array $config
+     * @return
      */
-    public function openConnection();
+    public function openConnection($config);
 
     /**
      * Post/Put a message on to the queue server
@@ -45,5 +47,9 @@ interface Queue {
     public function getMessagesTotalCountOnQueue($queue);
 
     public function clearQueue($queue);
+
+    public function getRequiredConfig();
+
+    public function getDefaultConfig();
 
 }

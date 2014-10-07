@@ -11,6 +11,8 @@ class WebDriverTest extends TestsForBrowsers
      * @var \Codeception\Module\WebDriver
      */
     protected $module;
+    
+    protected $webDriver;
 
     // this is my local config
     protected $is_local = false;
@@ -28,12 +30,13 @@ class WebDriverTest extends TestsForBrowsers
         }
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0));
         $this->module->_initialize();
-
         $this->module->_before($this->makeTest());
+        $this->webDriver = $this->module->webDriver;
     }
 
     public function tearDown()
     {
+        $this->module->webDriver = $this->webDriver;
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module->_after($this->makeTest());
@@ -412,32 +415,63 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testCreateCeptScreenshotFail()
     {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+                'takeScreenshot' => Stub::once(function() {}),
+                'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
         $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('loginCept.fail.png'), $actual);
-        })]);
-        $wd->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateCestScreenshotOnFail()
     {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
         $cest = (new \Codeception\TestCase\Cest())
             ->config('testClassInstance', new stdClass())
             ->config('testMethod','login');
-
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $actual);
-        })]);
-        $wd->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateTestScreenshotOnFail()
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
-        $wd = Stub::make('\Codeception\Module\WebDriver', ['_saveScreenshot' => Stub::once(function ($actual) use ($test) {
-            PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $actual);
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) use ($test) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
+        $this->module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testWebDriverWaits()
+    {
+        $fakeWd = Stub::make('\Codeception\Module\WebDriver', ['wait' => Stub::exactly(12, function () {
+            return new \Codeception\Util\Maybe();
         })]);
-        $wd->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+        $this->module->webDriver = $fakeWd;
+        $this->module->waitForElement(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElement(['id' => 'user']);
+        $this->module->waitForElement(['css' => '.user']);
+        $this->module->waitForElement('//xpath');
+
+        $this->module->waitForElementVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementVisible(['id' => 'user']);
+        $this->module->waitForElementVisible(['css' => '.user']);
+        $this->module->waitForElementVisible('//xpath');
+
+        $this->module->waitForElementNotVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementNotVisible(['id' => 'user']);
+        $this->module->waitForElementNotVisible(['css' => '.user']);
+        $this->module->waitForElementNotVisible('//xpath');
 
     }
 }

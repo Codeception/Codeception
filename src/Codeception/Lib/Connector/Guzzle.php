@@ -168,19 +168,34 @@ class Guzzle extends Client
         if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT'])) {
             return [];
         }
+
+        return $this->mapFiles($request->getFiles());
+    }
+
+    protected function mapFiles($requestFiles, $arrayName = '')
+    {
         $files = [];
-        foreach ($request->getFiles() as $name => $info) {
+        foreach ($requestFiles as $name => $info) {
+            if (!empty($arrayName)) {
+                $name = $arrayName.'['.$name.']';
+            }
+
             if (is_array($info)) {
-                if (!isset($info['tmp_name'])) {
-                    continue;
-                }
-                if ($info['tmp_name']) {
-                    $files[] = new PostFile($name, file_get_contents($info['tmp_name']));
+                if (isset($info['tmp_name'])) {
+                    if ($info['tmp_name']) {
+                        $handle = fopen($info['tmp_name'], 'r');
+                        $filename = isset($info['name']) ? $info['name'] : null;
+
+                        $files[] = new PostFile($name, $handle, $filename);
+                    }
+                } else {
+                    $files = array_merge($files, $this->mapFiles($info, $name));
                 }
             } else {
                 $files[] = new PostFile($name, fopen($info, 'r'));
             }
         }
+
         return $files;
     }
 

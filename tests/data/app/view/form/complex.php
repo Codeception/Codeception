@@ -26,6 +26,8 @@
     <label for="checkin">I Agree</label>
     <input type="checkbox" id="checkin" name="terms" value="agree" checked="checked" />
     <input type="submit" value="Submit" />
+
+    <?php print_r($_SERVER); ?>
 </form>
 </body>
 </html>

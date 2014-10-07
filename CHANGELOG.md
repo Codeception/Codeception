@@ -1,5 +1,39 @@
 # Changelog
 
+#### 2.0.6
+
+* Fixed list of executed suites while running included suites by @gureedo. See #1427 *2014-10-08*
+* [Frameworks] support files and request names containing square brackets, dots, spaces. See #1438. Thanks to @kkopachev *2014-10-08*
+* [PhpBrowser] array of files for Guzzle to support format: file[foo][bar]. Fixes #342 by @kkopachev *2014-10-07*
+* Added strict mode for XML generation. *2014-10-06*
+
+In this mode only standard JUnit attributes are added to XML reports, so special attributes like `feature` won't be included. This improvement fixes usage XML reports with Jenkins #1408
+  To enable strict xml generation add to `codeception.yml`:
+
+```
+settings:
+    strict_xml: true
+```
+
+* Fixed retrieval of codecoverage reports on remote server #1379 *2014-10-06*
+* [PhpBrowser][Frameworks] Malformed XPath won't throw fatal error, but makes tests fail. Fixes #1409 *2014-10-06*
+* Build command generates actors for included suites. See #1267 *2014-10-03*
+* CodeCoverage throws error on unsuccessful requests (status code is not 200) to remote server. Fixes #346 *2014-10-03*
+* CodeCoverage can be disabled per suite. Fix #1249 *2014-10-02*
+* Fix: --colors and --no-colors options can override settings from config *2014-10-02*
+* [WebDriver] `waitForElement*` methods accept strict locators and WebDriverBy as parameters. See #1396 *2014-09-29*
+* [PhpBrowser] `executeInGuzzle` uses baseUrl set from config. Fixes #1416 *2014-09-29*
+* [Laravel4] fire booted callbacks between requests without kernel reboot. Fixes #1389, See #1415 *2014-09-29*
+* [WebDriver][PhpBrowser][Frameworks] `submitForm` accepts forms with document-relative paths. Fixes #1274 *2014-09-28*
+* [WebDriver][PhpBrowser][Frameworks] Fixed #1381: `fillField` fails for a form without a submit button by @zbateson *2014-09-28*
+* [PhpBrowser][WebDriver] `amOnPage` now accepts absolute urls *2014-09-27*
+* [Db] ignore errors from lastInsertId by @tomykaira *2014-09-27*
+* [WebDriver] saves HTML snapshot on fail *2014-09-27*
+* [WebDriver] fixed #1392: findField should select by id, css, then fall back on xpath *2014-09-27*
+* [WebDriver] Don't check for xpath if css selector is set, by @Danielss89 #1367 *2014-09-27*
+* Specify actor class for friends by @tomykaira. See #1394 *2014-09-27*
+
+
 #### 2.0.5
 
 * [Queue] module added with AWS, Iron.io, and Beanstalkd support. Thanks to @nathanmac *2014-08-21*

@@ -63,10 +63,12 @@ class Codecept
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
-        $this->loadExtensions($options);
+        $this->loadExtensions($this->options);
 
         $this->config = Configuration::config();
-        $this->options = $this->mergeOptions($options);
+
+        $this->options = array_merge($this->options, $this->config['settings']);
+        $this->options = array_merge($this->options, $options);
 
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
@@ -76,35 +78,22 @@ class Codecept
         $this->runner->setPrinter($printer);
     }
 
-    private function mergeOptions($options) {
-
-        foreach ($this->options as $option => $default) {
-            if (!isset($options[$option])) {
-                $options[$option] = $default;
-            }
-            if (isset($this->config['settings'][$option])) {
-                $options[$option] = $this->config['settings'][$option];
-            }
-        }
-        return $options;
-    }
-
     protected function loadExtensions($options)
     {
         $config = Configuration::config();
-        // custom event listeners
-        foreach ($config['extensions']['enabled'] as $extension) {
-            if (!class_exists($extension)) {
-                throw new ConfigurationException("Class $extension not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
+        foreach ($config['extensions']['enabled'] as $extensionClass) {
+            if (!class_exists($extensionClass)) {
+                throw new ConfigurationException("Class `$extensionClass` is not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
             }
-            if ($extension instanceof EventSubscriberInterface) {
-                throw new ConfigurationException("Class $extension is not a EventListener. Please create it as Extension or Group class.");
-            }
-            $extensionConfig =  isset($config['extensions']['config'][$extension])
-                ? $config['extensions']['config'][$extension]
+            $extensionConfig =  isset($config['extensions']['config'][$extensionClass])
+                ? $config['extensions']['config'][$extensionClass]
                 : [];
 
-            $this->extensions[] = new $extension($extensionConfig, $options);
+            $extension = new $extensionClass($extensionConfig, $options);
+            if (!$extension instanceof EventSubscriberInterface) {
+                throw new ConfigurationException("Class $extensionClass is not an EventListener. Please create it as Extension or Group class.");
+            }
+            $this->extensions[] = $extension;
         }
     }
 

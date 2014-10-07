@@ -12,5 +12,18 @@ class FrameworksTest extends TestsForWeb
         $this->module = new \Codeception\Module\PhpSiteHelper();
     }
 
+    public function testHttpAuth()
+    {
+        $this->module->amOnPage('/auth');
+        $this->module->see('Unauthorized');
+        $this->module->amHttpAuthenticated('davert', 'password');
+        $this->module->amOnPage('/auth');
+        $this->module->dontSee('Unauthorized');
+        $this->module->see("Welcome, davert");
+        $this->module->amHttpAuthenticated('davert', '123456');
+        $this->module->amOnPage('/auth');
+        $this->module->see('Forbidden');
+    }
+
 
 }

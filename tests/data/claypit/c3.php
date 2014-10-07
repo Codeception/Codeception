@@ -13,6 +13,12 @@
 if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
     $cookie = json_decode($_COOKIE['CODECEPTION_CODECOVERAGE'], true);
 
+    // fix for improperly encoded JSON in Code Coverage cookie with WebDriver.
+    // @see https://github.com/Codeception/Codeception/issues/874
+    if (!is_array($cookie)) {
+        $cookie = json_decode($cookie, true);
+    }
+
     if ($cookie) {    
         foreach ($cookie as $key => $value) {
             $_SERVER["HTTP_X_CODECEPTION_".strtoupper($key)] = $value;
@@ -22,6 +28,17 @@ if (isset($_COOKIE['CODECEPTION_CODECOVERAGE'])) {
 
 if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE', $_SERVER)) {
     return;
+}
+
+if (!function_exists('__c3_error')) {
+    function __c3_error($message)
+    {
+        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
+        if (!headers_sent()) {
+            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
+        }
+        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
+    }
 }
 
 // Autoload Codeception classes
@@ -60,7 +77,7 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         ini_set('memory_limit', '384M');
     }
 
-    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::outputDir() . 'c3tmp');
+    define('C3_CODECOVERAGE_MEDIATE_STORAGE', Codeception\Configuration::logDir() . 'c3tmp');
     define('C3_CODECOVERAGE_PROJECT_ROOT', Codeception\Configuration::projectDir());
     define('C3_CODECOVERAGE_TESTNAME', $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE']);
 
@@ -153,16 +170,6 @@ if (!defined('C3_CODECOVERAGE_MEDIATE_STORAGE')) {
         return null;
     }
 
-    function __c3_error($message)
-    {
-        file_put_contents(C3_CODECOVERAGE_MEDIATE_STORAGE . DIRECTORY_SEPARATOR . 'error.txt', $message);
-        if (!headers_sent()) {
-            header('X-Codeception-CodeCoverage-Error: ' . str_replace("\n", ' ', $message), true, 500);
-        }
-        setcookie('CODECEPTION_CODECOVERAGE_ERROR', $message);
-        __c3_exit();
-    }
-
     function __c3_clear()
     {
         \Codeception\Util\FileSystem::doEmptyDir(C3_CODECOVERAGE_MEDIATE_STORAGE);
@@ -220,15 +227,14 @@ if ($requested_c3_report) {
 } else {
     $codeCoverage = __c3_factory($current_report);
     $codeCoverage->start(C3_CODECOVERAGE_TESTNAME);
-    register_shutdown_function(
-        function () use ($codeCoverage, $current_report) {
-            $codeCoverage->stop();
-            if (!file_exists(dirname($current_report))) {
-                mkdir(dirname($current_report),0777,true);
+    if (!array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_DEBUG', $_SERVER)) { 
+        register_shutdown_function(
+            function () use ($codeCoverage, $current_report) {
+                $codeCoverage->stop();
+                file_put_contents($current_report, serialize($codeCoverage));
             }
-            file_put_contents($current_report, serialize($codeCoverage));
-        }
-    );
+        );
+    }
 }
 
 // @codeCoverageIgnoreEnd

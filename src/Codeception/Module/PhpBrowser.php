@@ -82,7 +82,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         foreach ($this->config['curl'] as $key => $val) {
             if (defined($key)) $defaults['config']['curl'][constant($key)] = $val;
         }
-        $this->guzzle = new Client(['defaults' => $defaults]);
+        $this->guzzle = new Client(['base_url' => $this->config['url'], 'defaults' => $defaults]);
         $this->_initializeSession();
     }
 
@@ -99,6 +99,11 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     {
         $this->client->setHeader($header, $value);
     }
+    
+    public function amHttpAuthenticated($username, $password)
+    {
+        $this->client->setAuth($username, $password);
+    }    
 
     public function amOnSubdomain($subdomain)
     {

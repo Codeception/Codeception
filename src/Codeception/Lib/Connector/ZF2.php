@@ -40,6 +40,8 @@ class ZF2 extends Client
         $zendRequest  = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
 
+        $zendResponse->setStatusCode(200);
+
         $uri         = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method      = strtoupper($request->getMethod());

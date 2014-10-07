@@ -18,7 +18,7 @@ class Local extends SuiteSubscriber
 
     protected function isEnabled()
     {
-        return $this->getServerConnectionModule() === null;
+        return $this->getServerConnectionModule() === null and $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $e)
