@@ -11,6 +11,8 @@ use Symfony\Component\BrowserKit\Request,
 
 class Phalcon1 extends Client
 {
+    use PhpSuperGlobalsConverter;
+
     private $application;
 
     /**
@@ -59,14 +61,14 @@ class Phalcon1 extends Client
         }
 
         $_COOKIE                   = $request->getCookies();
-        $_FILES                    = $request->getFiles();
+        $_FILES                    = $this->remapFiles($request->getFiles());
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
+        $_REQUEST = $this->remapRequestParameters($request->getParameters());
         if (strtoupper($request->getMethod()) == 'GET') {
-            $_GET = $request->getParameters();
+            $_GET = $_REQUEST;
         } else {
-            $_POST = $request->getParameters();
+            $_POST = $_REQUEST;
         }
-        $_REQUEST                = $request->getParameters();
         $uri                     = str_replace('http://localhost', '', $request->getUri());
         $_SERVER['REQUEST_URI']  = $uri;
         $_GET['_url']            = strtok($uri, '?');

@@ -11,6 +11,8 @@ use Codeception\Util\Debug;
 
 class Yii2 extends Client
 {
+    use PhpSuperGlobalsConverter;
+
     /**
      * @var string application config file
      */
@@ -42,14 +44,14 @@ class Yii2 extends Client
     {
         $_COOKIE  = $request->getCookies();
         $_SERVER  = $request->getServer();
-        $_FILES   = $request->getFiles();
-        $_REQUEST = $request->getParameters();
+        $_FILES   = $this->remapFiles($request->getFiles());
+        $_REQUEST = $this->remapRequestParameters($request->getParameters());
         $_POST    = $_GET = array();
 
         if (strtoupper($request->getMethod()) == 'GET') {
-            $_GET = $request->getParameters();
+            $_GET = $_REQUEST;
         } else {
-            $_POST = $request->getParameters();
+            $_POST = $_REQUEST;
         }
 
         $uri = $request->getUri();
