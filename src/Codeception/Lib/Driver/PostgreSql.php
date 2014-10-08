@@ -7,6 +7,39 @@ class PostgreSql extends Db
 
     protected $connection = null;
 
+    public function load($sql)
+    {
+        $query           = '';
+        $delimiter       = ';';
+        $delimiterLength = 1;
+
+        $dollarsOpen = false;
+        foreach ($sql as $sqlLine) {
+            if (preg_match('/DELIMITER ([\;\$\|\\\\]+)/i', $sqlLine, $match)) {
+                $delimiter       = $match[1];
+                $delimiterLength = strlen($delimiter);
+                continue;
+            }
+
+            $parsed = trim($query) == '' && $this->sqlLine($sqlLine);
+            if ($parsed) {
+                continue;
+            }
+
+            if (strpos($sqlLine, '$$') !== false) {
+                $dollarsOpen = !$dollarsOpen;
+            }
+
+            $query .= "\n" . rtrim($sqlLine);
+
+            if (!$dollarsOpen && substr($query, -1 * $delimiterLength, $delimiterLength) == $delimiter) {
+                $this->sqlToRun = substr($query, 0, -1 * $delimiterLength);
+                $this->sqlQuery($this->sqlToRun);
+                $query = "";
+            }
+        }
+    }
+
     public function cleanup()
     {
         $tables = $this->dbh
