@@ -26,7 +26,7 @@ class PostgreSql extends Db
                 continue;
             }
 
-            if (strpos($sqlLine, '$$') !== false) {
+            if (strpos(trim($sqlLine), '$$') === 0) {
                 $dollarsOpen = !$dollarsOpen;
             }
 

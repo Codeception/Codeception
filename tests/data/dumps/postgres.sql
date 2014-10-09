@@ -280,7 +280,10 @@ ALTER TABLE ONLY permissions
     ADD CONSTRAINT pg1 FOREIGN KEY (group_id) REFERENCES groups(id);
 
 
--- test for triggers with $$ syntax
+--
+-- start test for triggers with $$ syntax
+--
+INSERT INTO users (name, email) VALUES ('This $$ should work', 'user@example.org');
 CREATE OR REPLACE FUNCTION upd_timestamp() RETURNS TRIGGER
 LANGUAGE plpgsql
 AS
@@ -289,7 +292,12 @@ BEGIN
     NEW.created_at = CURRENT_TIMESTAMP;
     RETURN NEW;
 END;
-$$;
+  $$;
+
+INSERT INTO users (name, email) VALUES ('This should work as well', 'user2@example.org');
+--
+-- end test for triggers with $$ syntax
+--
 
 --
 -- PostgreSQL database dump complete
