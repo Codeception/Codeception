@@ -7,7 +7,8 @@ use Yii;
 
 class Yii1 extends Client
 {
-    use Shared\PhpSuperGlobalsConverter
+    use Shared\PhpSuperGlobalsConverter;
+    
     /**
      * http://localhost/path/to/your/app/index.php
      * @var string url of the entry Yii script
