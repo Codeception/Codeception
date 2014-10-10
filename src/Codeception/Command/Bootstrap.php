@@ -201,6 +201,13 @@ class Bootstrap extends Command
         file_put_contents("tests/$suite.suite.yml", $config);
     }
 
+    protected function ignoreFolderContent($path)
+    {
+        if (file_exists('.gitignore')) {
+            file_put_contents("{$path}/.gitignore", "*\n!.gitignore");
+        }
+    }
+
     /**
      * Performs Codeception 1.x compatible setup using with Guy classes
      */
@@ -226,12 +233,7 @@ class Bootstrap extends Command
         $output->writeln("tests/acceptance created           <- acceptance tests");
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
 
-        if (file_exists('.gitignore')) {
-            file_put_contents('tests/_log/.gitignore', '');
-            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_log/*");
-            $output->writeln("tests/_log was added to .gitignore");
-        }
-
+        $this->ignoreFolderContent('tests/_log');
     }
 
     /**
@@ -253,11 +255,7 @@ class Bootstrap extends Command
         $output->writeln("tests/acceptance created           <- acceptance tests");
         $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
 
-        if (file_exists('.gitignore')) {
-            file_put_contents('tests/_output/.gitignore', '');
-            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_output/*");
-            $output->writeln("tests/_output was added to .gitignore");
-        }
+        $this->ignoreFolderContent('tests/_output');
     }
 
     protected function customize(OutputInterface $output)
