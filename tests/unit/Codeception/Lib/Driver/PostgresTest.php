@@ -59,6 +59,10 @@ class postgresTest extends \PHPUnit_Framework_TestCase
         $res = $this->postgres->getDbh()->query("select * from groups where name = 'coders'");
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
+
+        $res = $this->postgres->getDbh()->query("select * from users where email = 'user2@example.org'");
+        $this->assertNotEquals(false, $res);
+        $this->assertGreaterThan(0, $res->rowCount());
     }
 
     public function testSelectWithEmptyCriteria() {
