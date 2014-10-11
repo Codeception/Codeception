@@ -453,12 +453,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             return $this->matchFirstOrFail($this->webDriver, $selector);
         }
 
-        // try to match by CSS or XPath
-        $el = $this->match($this->webDriver, $selector);
-        if (!empty($el)) {
-            return reset($el);
-        }
-
         $locator = Crawler::xpathLiteral(trim($selector));
 
         // by text or label
@@ -476,6 +470,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
         if (count($els)) {
             return reset($els);
+        }
+
+        // try to match by CSS or XPath
+        $el = $this->match($this->webDriver, $selector);
+        if (!empty($el)) {
+            return reset($el);
         }
 
         throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");

@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.7
+
+* [WebDriver][PhpBrowser][Frameworks] fillField is matching element by name, then by CSS. Fixes #1454 *2014-10-12*
+
+
 #### 2.0.6
 
 * Fixed list of executed suites while running included suites by @gureedo. See #1427 *2014-10-08*

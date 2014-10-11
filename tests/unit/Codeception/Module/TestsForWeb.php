@@ -282,7 +282,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('123456', $login['LoginForm']['password']);
     }
 
-
     public function testTextFieldByLabel()
     {
         $this->module->amOnPage('/form/field');
@@ -807,5 +806,20 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('foo_bar', $files);
         $this->assertArrayHasKey('foo_baz', $files);
     }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1454
+     */
+    public function testTextFieldByNameFirstNotCss()
+    {
+        $this->module->amOnPage('/form/example15');
+        $this->module->fillField('title', 'Special Widget');
+        $this->module->fillField('description', 'description');
+        $this->module->fillField('price', '19.99');
+        $this->module->click('Create');
+        $data = data::get('form');
+        $this->assertEquals('Special Widget', $data['title']);
+    }
+
 
 }
