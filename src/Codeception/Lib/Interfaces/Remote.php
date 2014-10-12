@@ -26,5 +26,18 @@ interface Remote
      */
     public function amOnSubdomain($subdomain);
 
+    /**
+     * Open web page at absolute URL.
+     * Base url will be reconfigured to use the host of provided Url.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnUrl('http://codeception.com');
+     * $I->anOnPage('/quickstart'); // moves to http://codeception.com/quickstart
+     * ?>
+     * ```
+     */
+    public function amOnUrl($url);
+
     public function _getUrl();
 }

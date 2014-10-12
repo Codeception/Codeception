@@ -300,18 +300,20 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
+    public function amOnUrl($url)
+    {
+        $urlParts = parse_url($url);
+        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
+            throw new TestRuntime("Wrong URL passes, host and scheme not set");
+        }
+        $host = $urlParts['scheme'].'://'.$urlParts['host'];
+        $this->_reconfigure(['url' => $host]);
+        $this->debugSection('Host', $host);
+        $this->webDriver->get($url);
+    }
+
     public function amOnPage($page)
     {
-        // use absolute url
-        if ((strpos($page, 'http://') === 0) or (strpos($page, 'https://') === 0)) {
-            $url = parse_url($page);
-            if (isset($url['host']) and isset($url['scheme'])) {
-                $host = $url['scheme'].'://'.$url['host'];
-                $this->_reconfigure(['url' => $host]);
-                $page = substr($page, strlen($host));
-                $this->debugSection('Host', $host);
-            }
-        }
         $page = ltrim($page, '/');
         $host = rtrim($this->config['url'], '/');
         $this->webDriver->get($host . '/' . $page);

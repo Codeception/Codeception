@@ -2,6 +2,7 @@
 
 #### 2.0.7
 
+* [PhpBrowser][WebDriver] amOnUrl method added for opening absolute urls. This behavior taken from amOnPage method, initially introduced in 2.0.6 *2014-10-12*
 * Fixed usage of whitespaces in wantTo. See #1456 *2014-10-12*
 * [WebDriver][PhpBrowser][Frameworks] fillField is matching element by name, then by CSS. Fixes #1454 *2014-10-12*
 
