@@ -30,6 +30,13 @@ class ParserTest extends \Codeception\TestCase\Test
         $this->assertEquals('test this run', $this->scenario->getFeature());
     }
 
+    public function testParsingWithWhitespace()
+    {
+        $code = "<?php\n \\\$I->wantTo( 'run this test' ); ";
+        $this->parser->parseFeature($code);
+        $this->assertEquals('run this test', $this->scenario->getFeature());
+    }
+
     public function testScenarioOptions()
     {
         $code = "<?php\n \$scenario->group('davert'); \$scenario->env('windows');";

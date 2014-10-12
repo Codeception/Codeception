@@ -24,7 +24,7 @@ class Parser {
     {
         $matches = array();
         $code = $this->stripComments($code);
-        $res = preg_match("~\\\$I->wantTo\\(['\"](.*?)['\"]\\);~", $code, $matches);
+        $res = preg_match("~\\\$I->wantTo\\(\s*?['\"](.*?)['\"]\s*?\\);~", $code, $matches);
         if ($res) {
             $this->scenario->setFeature($matches[1]);
             return;
