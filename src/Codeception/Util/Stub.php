@@ -247,7 +247,7 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -297,7 +297,7 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
@@ -351,7 +351,7 @@ class Stub
      * ?>
      * ```
      *
-     * To replace method provide it's name as a key in second parameter and it's return value or callback function as parameter
+     * To replace method provide it's name as a key in third parameter and it's return value or callback function as parameter
      *
      * ``` php
      * <?php
