@@ -33,7 +33,7 @@ interface Remote
      * ``` php
      * <?php
      * $I->amOnUrl('http://codeception.com');
-     * $I->anOnPage('/quickstart'); // moves to http://codeception.com/quickstart
+     * $I->amOnPage('/quickstart'); // moves to http://codeception.com/quickstart
      * ?>
      * ```
      */
