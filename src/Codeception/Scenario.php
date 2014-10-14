@@ -68,9 +68,10 @@ class Scenario {
         return $this->env;
     }
 
-	public function setFeature($feature) {
-	    $this->feature = $feature;
-	}
+    public function setFeature($feature) 
+    {
+        $this->feature = $feature;
+    }
 
     public function skip($reason = "")
     {
@@ -141,11 +142,13 @@ class Scenario {
 
     }
 
-	public function comment($comment) {
-		$this->runStep(new \Codeception\Step\Comment($comment,array()));
-	}
+    public function comment($comment) 
+    {
+        $this->runStep(new \Codeception\Step\Comment($comment,array()));
+    }
 
-    public function run() {
+    public function run() 
+    {
         if ($this->isBlocked()) {
             return $this->blocker->run();
         }
@@ -164,7 +167,8 @@ class Scenario {
         return $this->running;
     }
 
-    public function preload() {
+    public function preload() 
+    {
         return !$this->running;
     }
 
