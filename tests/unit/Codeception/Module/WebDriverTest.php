@@ -472,6 +472,20 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->waitForElementNotVisible(['id' => 'user']);
         $this->module->waitForElementNotVisible(['css' => '.user']);
         $this->module->waitForElementNotVisible('//xpath');
+    }
 
+    public function testBug1467()
+    {
+        $this->module->amOnPage('/form/bug1467');
+        $this->module->selectOption('form[name=form2] input[name=first_test_radio]', 'Yes');
+        $this->module->selectOption('form[name=form2] input[name=second_test_radio]', 'No');
+        $this->module->seeOptionIsSelected('form[name=form2] input[name=first_test_radio]', 'Yes');
+        $this->module->seeOptionIsSelected('form[name=form2] input[name=second_test_radio]', 'No');
+
+        // shouldn't have touched form1 at all
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=first_test_radio]', 'No');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=first_test_radio]', 'Yes');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'No');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'Yes');
     }
 }

@@ -751,18 +751,28 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
 
         $locator = Crawler::xpathLiteral($radio_or_checkbox);
-        $xpath = Locator::combine(
-            "//input[./@type = 'checkbox'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
-            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'checkbox']",
-            "//input[./@type = 'radio'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
-            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'radio']"
-        );
-        if ($byValue) {
+        if ($context instanceof \WebDriverElement && $context->getTagName() === 'input') {
+            if (!in_array($context->getAttribute('type'), ['checkbox', 'radio'], true)) {
+                return null;
+            }
+            $nameLiteral = Crawler::xPathLiteral($context->getAttribute('name'));
+            $typeLiteral = Crawler::xPathLiteral($context->getAttribute('type'));
+            $inputLocatorFragment = "input[@type = $typeLiteral][@name = $nameLiteral]";
             $xpath = Locator::combine(
-                $xpath,
-                "//input[./@type = 'checkbox'][./@value = $locator]",
-                "//input[./@type = 'radio'][./@value = $locator]"
+                "ancestor::form//{$inputLocatorFragment}[(@id = ancestor::form//label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
+                "ancestor::form//label[contains(normalize-space(string(.)), $locator)]//{$inputLocatorFragment}"
             );
+            if ($byValue) {
+                $xpath = Locator::combine($xpath, "ancestor::form//{$inputLocatorFragment}[@value = $locator]");
+            }
+        } else {
+            $xpath = Locator::combine(
+                "//input[@type = 'checkbox' or @type = 'radio'][(@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
+                "//label[contains(normalize-space(string(.)), $locator)]//input[@type = 'radio' or @type = 'checkbox']"
+            );
+            if ($byValue) {
+                $xpath = Locator::combine($xpath, "//input[@type = 'checkbox' or @type = 'radio'][@value = $locator]");
+            }
         }
         /** @var $context \WebDriverElement  * */
         $els = $context->findElements(\WebDriverBy::xpath($xpath));
@@ -989,7 +999,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 array_filter(
                     $els,
                     function ($e) {
-                        return $e->isSelected();
+                        return $e && $e->isSelected();
                     }
                 )
             );
@@ -1012,7 +1022,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 array_filter(
                     $els,
                     function ($e) {
-                        return $e->isSelected();
+                        return $e && $e->isSelected();
                     }
                 )
             );
