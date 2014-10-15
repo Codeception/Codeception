@@ -752,11 +752,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         $locator = Crawler::xpathLiteral($radio_or_checkbox);
         if ($context instanceof \WebDriverElement && $context->getTagName() === 'input') {
-            if (!in_array($context->getAttribute('type'), ['checkbox', 'radio'], true)) {
+            $contextType = $context->getAttribute('type');
+            if (!in_array($contextType, ['checkbox', 'radio'], true)) {
                 return null;
             }
             $nameLiteral = Crawler::xPathLiteral($context->getAttribute('name'));
-            $typeLiteral = Crawler::xPathLiteral($context->getAttribute('type'));
+            $typeLiteral = Crawler::xPathLiteral($contextType);
             $inputLocatorFragment = "input[@type = $typeLiteral][@name = $nameLiteral]";
             $xpath = Locator::combine(
                 "ancestor::form//{$inputLocatorFragment}[(@id = ancestor::form//label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
