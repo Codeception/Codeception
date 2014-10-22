@@ -71,11 +71,34 @@ class ZF1 extends Client
         $response = new Response(
             $zendResponse->getBody(),
             $zendResponse->getHttpResponseCode(),
-            $zendResponse->getHeaders()
+            $this->_formatResponseHeaders($zendResponse)
         );
 
         return $response;
     }
+
+    /**
+     * Format up the ZF1 response headers into Symfony\Component\BrowserKit\Response headers format.
+     *
+     * @param \Zend_Controller_Response_Abstract $response The ZF1 Response Object.
+     * @return array the clean key/value headers
+     */
+    private function _formatResponseHeaders (\Zend_Controller_Response_Abstract $response) {
+        $headers = array();
+        foreach ($response->getHeaders() as $header) {
+            $name = $header['name'];
+            if (array_key_exists($name, $headers)) {
+                if ($header['replace']) {
+                    $headers[$name] = $header['value'];
+                }
+            } else {
+                $headers[$name] = $header['value'];
+            }
+        }
+        return $headers;
+    }
+
+
 
     /**
      * @return \Zend_Controller_Request_HttpTestCase
