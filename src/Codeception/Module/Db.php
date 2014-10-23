@@ -116,7 +116,9 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             }
             $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
             $sql = preg_replace('%/\*(?!!\d+)(?:(?!\*/).)*\*/%s', "", $sql);
-            $this->sql = explode("\n", $sql);
+            if( ! empty($sql)) {
+                $this->sql = explode("\n", $sql);
+            }
         }
 
         try {
