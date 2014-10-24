@@ -126,6 +126,8 @@ class PostgreSql extends Db
 
     public function getQuotedName($name)
     {
-        return '"' . $name . '"';
+        $name = explode('.', $name);
+        $name = array_map(function($data) { return '"' . $data . '"'; }, $name);
+        return implode('.', $name);
     }
 }
