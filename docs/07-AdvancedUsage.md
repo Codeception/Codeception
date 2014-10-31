@@ -67,7 +67,7 @@ Also you can define `_failed` method in Cest class which will be called if test 
 
 ### Before/After Annotations
 
-You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations.
+You can control execution flow with `@before` and `@after` annotations. You may move common actions into protected (non-test) methods and invoke them before or after the test method by putting them into annotations. It is possible to invoke several methods. Separate them by comma (`,`). Methods are invoked in order from left to right.
 
 ```php
 <?php
@@ -88,7 +88,18 @@ class ModeratorCest {
     {
         $I->amOnPage('/users/charlie-parker');
         $I->see('Ban', '.button');
-        $I->click('Ban');        
+        $I->click('Ban');
+    }
+    
+    /**
+     * @before login, cleanup
+     * @after logout, close
+     */
+    public function addUser(AcceptanceTester $I)
+    {
+        $I->amOnPage('/users/charlie-parker');
+        $I->see('Ban', '.button');
+        $I->click('Ban');
     }
 }
 ?>
