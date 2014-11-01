@@ -29,7 +29,7 @@ use Codeception\Lib\Interfaces\ActiveRecord;
  * ## Status
  *
  * Maintainer: **qiangxue**
- * Stability: **beta**
+ * Stability: **stable**
  *
  */
 class Yii2 extends Framework implements ActiveRecord
