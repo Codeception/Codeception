@@ -717,14 +717,14 @@ class InnerBrowser extends Module implements Web
         }
 
         if ($nodes->filter('select')->count()) {
-            /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $select */
+            /** @var  \Symfony\Component\DomCrawler\Crawler $select */
             $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
             $results     = array();
-            foreach ($select->childNodes as $option) {
-                /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $option */
+            foreach ($select->children() as $option) {
+                /** @var  \DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
-                    $val = $option->attr('value');
+                    $val = $option->getAttribute('value');
                     if (!$is_multiple) {
                         return $val;
                     }
