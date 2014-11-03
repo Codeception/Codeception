@@ -353,10 +353,14 @@ class InnerBrowser extends Module implements Web
         if ((!$action) or ($action == '#')) {
             $action = $currentUrl;
         }
-        // relative url
-        if ((strpos($action, '/') !== 0) and !preg_match('~^https?://~', $action)) {
-            $path = pathinfo($currentUrl);
-            $action = $path['dirname'] . '/' . $action;
+        // doc or site-root relative url
+        if (!preg_match('~^https?://~', $action)) {
+            if (strpos($action, '/') !== 0) {
+                $path = pathinfo($currentUrl);
+                $action = $path['dirname'] . '/' . $action;
+            } elseif (strpos($currentUrl, '://') !== false) {
+                $action = substr($currentUrl, 0, strpos($currentUrl, '/', strpos($currentUrl, '://') + 3)) . $action;
+            }
         }
         return $action;
     }
