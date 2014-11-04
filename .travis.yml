@@ -43,6 +43,7 @@ before_script:
   - export DISPLAY=:99.0
   - beanstalkd -d -l 127.0.0.1 -p 11300
   - sh -e /etc/init.d/xvfb start
+  - sleep 3
   - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
   - "mysql -e 'create database codeception_test;'"
