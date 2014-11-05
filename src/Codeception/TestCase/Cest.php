@@ -75,7 +75,9 @@ class Cest extends \Codeception\TestCase implements
         }
 
         if ($before = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('before')) {
-            $this->executeContextMethod($before, $I);
+            foreach(explode(',', $before) as $m) {
+                $this->executeContextMethod(trim($m), $I);
+            }
         }
 
     }
@@ -83,7 +85,9 @@ class Cest extends \Codeception\TestCase implements
     protected function executeAfter($testMethod, $I)
     {
         if ($after = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('after')) {
-            $this->executeContextMethod($after, $I);
+            foreach(explode(',', $after) as $m) {
+                $this->executeContextMethod(trim($m), $I);
+            }
         }
 
         if (method_exists($this->testClassInstance, '_after')) {
