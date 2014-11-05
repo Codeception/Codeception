@@ -771,6 +771,22 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         ));
         $this->module->seeCurrentUrlEquals('/form/example11');
     }
+    
+    /*
+     * https://github.com/Codeception/Codeception/issues/1507
+     */
+    public function testSubmitFormWithDefaultRadioAndCheckboxValues()
+    {
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $form = data::get('form');
+        $this->assertTrue(isset($form['checkbox1']), 'Checkbox value not sent');
+        $this->assertTrue(isset($form['radio1']), 'Radio button value not sent');
+        $this->assertEquals($form['checkbox1'], 'testing');
+        $this->assertEquals($form['radio1'], 'to be sent');
+    }
 
     /**
      * https://github.com/Codeception/Codeception/issues/1409

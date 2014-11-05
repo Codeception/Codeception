@@ -299,10 +299,7 @@ class InnerBrowser extends Module implements Web
         /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
         $fields = $form->filter('input');
         foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') {
-                continue;
-            }
-            if ($field->getAttribute('type') == 'radio') {
+            if (($field->getAttribute('type') == 'checkbox' || $field->getAttribute('type') == 'radio') && !$field->hasAttribute('checked')) {
                 continue;
             }
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
