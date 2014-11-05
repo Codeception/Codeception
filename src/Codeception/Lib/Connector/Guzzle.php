@@ -85,7 +85,26 @@ class Guzzle extends Client
         if (strpos($uri, 'http') === 0) {
             return $uri;
         }
-        $url = rtrim($this->baseUri, '/') . '/' . ltrim($uri, '/');
+        
+        $url = '';
+        $parts = parse_url($this->baseUri);
+        if ($parts === false) {
+            throw new \Codeception\Exception\TestRuntime("Configured base Url '{$this->baseUri}' is malformed");
+        } elseif (!empty($parts['scheme']) && !empty($parts['host'])) {
+            $url = $parts['scheme'] . '://';
+            $url .= $parts['host'];
+            if (!empty($parts['port'])) {
+                $url .= ':' . $parts['port'];
+            }
+            
+            if (strpos($uri, '/') === 0 || empty($parts['path'])) {
+                $url .= '/' . ltrim($uri, '/');
+            } else {
+                $url .= rtrim($parts['path'], '/') . '/' . $uri;
+            }
+        } else {
+            $url = rtrim($this->baseUri, '/') . '/' . ltrim($uri, '/');
+        }
 
         if (parse_url($url) === false) {
             throw new \Codeception\Exception\TestRuntime("Url '$url' is malformed");

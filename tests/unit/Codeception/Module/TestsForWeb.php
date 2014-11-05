@@ -771,7 +771,25 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         ));
         $this->module->seeCurrentUrlEquals('/form/example11');
     }
-    
+
+    /*
+     * https://github.com/Codeception/Codeception/issues/1510
+     */
+    public function testSiteRootRelativePathsForBasePathWithSubdir()
+    {
+        $this->module->_reconfigure(array('url' => 'http://localhost:8000/form'));
+        $this->module->amOnPage('/form/relative_siteroot');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $this->module->dontSeeInCurrentUrl('form/form/');
+        $this->module->amOnPage('relative_siteroot');
+        $this->module->click('Click me');
+        $this->module->dontSeeInCurrentUrl('form/form/');
+        $this->module->amOnPage('/relative_siteroot');
+        $this->module->dontSeeInCurrentUrl('form/');
+    }
+
     /*
      * https://github.com/Codeception/Codeception/issues/1507
      */
