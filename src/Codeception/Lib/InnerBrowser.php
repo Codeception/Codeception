@@ -358,8 +358,17 @@ class InnerBrowser extends Module implements Web
             if (strpos($action, '/') !== 0) {
                 $path = pathinfo($currentUrl);
                 $action = $path['dirname'] . '/' . $action;
-            } elseif (strpos($currentUrl, '://') !== false) {
-                $action = substr($currentUrl, 0, strpos($currentUrl, '/', strpos($currentUrl, '://') + 3)) . $action;
+            } else {
+                $parts = parse_url($currentUrl);
+                // otherwise we can't return an action with a full URL anyway, and it would be returned as-is
+                if (isset($parts['scheme']) && isset($parts['host'])) {
+                    $url = $parts['scheme'] . '://';
+                    $url .= $parts['host'];
+                    if (isset($parts['port'])) { 
+                        $url .= ':' . $parts['port'];
+                    }
+                    $action = $url . $action;
+                }
             }
         }
         return $action;
