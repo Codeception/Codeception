@@ -409,6 +409,11 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
         $this->assertEquals("kill_people", $result);
         $this->module->amOnPage('/form/textarea');
+        $result = $this->module->grabValueFrom('#description');
+        $this->assertEquals('sunrise', $result);
+        $this->module->amOnPage('/form/select');
+        $result = $this->module->grabValueFrom('#age');
+        $this->assertEquals('oldfag', $result);
     }
 
     public function testGrabAttributeFrom()
