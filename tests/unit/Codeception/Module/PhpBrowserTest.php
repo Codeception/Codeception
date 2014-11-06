@@ -96,13 +96,26 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/redirect2');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
+        
+        $this->module->amOnPage('/redirect_interval');
+        $this->module->seeCurrentUrlEquals('/redirect_interval');
     }
-
+    
+    public function testMetaRefresh()
+    {
+        $this->module->amOnPage('/redirect_self');
+        $this->module->see('Redirecting to myself');
+    }
+    
     public function testRefreshRedirect()
     {
         $this->module->amOnPage('/redirect3');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
+        
+        $this->module->amOnPage('/redirect_header_interval');
+        $this->module->seeCurrentUrlEquals('/redirect_header_interval');
+        $this->module->see('Welcome to test app!');
     }
 
     public function testRedirectWithGetParams()

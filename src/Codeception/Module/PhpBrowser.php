@@ -62,7 +62,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 {
 
     protected $requiredFields = array('url');
-    protected $config = array('verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => []);
+    protected $config = array('verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => [], 'refresh_max_interval' => 10);
     protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key','proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
 
     /**
@@ -167,6 +167,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->client = new Guzzle();
         $this->client->setClient($this->guzzle);
         $this->client->setBaseUri($this->config['url']);
+        $this->client->setRefreshMaxInterval($this->config['refresh_max_interval']);
     }
 
     public function _backupSessionData()
