@@ -114,6 +114,7 @@ interface Web
      *
      * @param $selector
      * @param $params
+     * @param $buttons
      */
     public function submitForm($selector, $params, $buttons = null);
 
