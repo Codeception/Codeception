@@ -93,9 +93,9 @@ class ModeratorCest {
     
     /**
      * @before login
-	 * @before cleanup
+     * @before cleanup
      * @after logout
-	 * @after close
+     * @after close
      */
     public function addUser(AcceptanceTester $I)
     {
