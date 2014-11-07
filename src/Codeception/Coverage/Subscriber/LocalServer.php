@@ -117,31 +117,37 @@ class LocalServer extends SuiteSubscriber
     }
 
     protected function c3Request($action)
-     {
-         $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
-         $context = stream_context_create(array('http' => $this->c3Access));
-         $contents = file_get_contents($this->module->_getUrl() . '/c3/report/' . $action, false, $context);
+    {
+        $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
+        $context = stream_context_create(array(
+            'http' => $this->c3Access,
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            )
+        ));
+        $contents = file_get_contents($this->module->_getUrl() . '/c3/report/' . $action, false, $context);
 
-         $okHeaders = array_filter($http_response_header, function($h) { return preg_match('~^HTTP(.*?)\s200~', $h); });
-         if (empty($okHeaders)) {
-             throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
-         }
-         if ($contents === false) {
-             $this->getRemoteError($http_response_header);
-         }
-         return $contents;
-     }
+        $okHeaders = array_filter($http_response_header, function($h) { return preg_match('~^HTTP(.*?)\s200~', $h); });
+        if (empty($okHeaders)) {
+            throw new RemoteException("Request was not successful. See response header: " . $http_response_header[0]);
+        }
+        if ($contents === false) {
+            $this->getRemoteError($http_response_header);
+        }
+        return $contents;
+    }
 
-     protected function startCoverageCollection($testName)
-     {
-         $cookie = [
-             'CodeCoverage'        => $testName,
-             'CodeCoverage_Suite'  => $this->suiteName,
-             'CodeCoverage_Config' => $this->settings['remote_config']
-         ];
-         $this->module->amOnPage('/');
-         $this->module->setCookie(self::COVERAGE_COOKIE, json_encode($cookie));
-     }
+    protected function startCoverageCollection($testName)
+    {
+        $cookie = [
+            'CodeCoverage'        => $testName,
+            'CodeCoverage_Suite'  => $this->suiteName,
+            'CodeCoverage_Config' => $this->settings['remote_config']
+        ];
+        $this->module->amOnPage('/');
+        $this->module->setCookie(self::COVERAGE_COOKIE, json_encode($cookie));
+    }
 
     protected function fetchErrors()
     {
@@ -151,19 +157,17 @@ class LocalServer extends SuiteSubscriber
         }
     }
 
-     protected function getRemoteError($headers)
-     {
-         foreach ($headers as $header) {
-             if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
-                 throw new RemoteException($header);
-             }
-         }
-     }
+    protected function getRemoteError($headers)
+    {
+        foreach ($headers as $header) {
+            if (strpos($header, self::COVERAGE_HEADER_ERROR) === 0) {
+                throw new RemoteException($header);
+            }
+        }
+    }
 
-     protected function addC3AccessHeader($header, $value)
-     {
-         $this->c3Access['header'] .= "$header: $value\r\n";
-     }
-
-
+    protected function addC3AccessHeader($header, $value)
+    {
+        $this->c3Access['header'] .= "$header: $value\r\n";
+    }
 }
