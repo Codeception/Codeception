@@ -165,5 +165,12 @@ class LocalServer extends SuiteSubscriber
          $this->c3Access['header'] .= "$header: $value\r\n";
      }
 
+    protected function applySettings($settings)
+    {
+        parent::applySettings($settings);
+        if (isset($settings['coverage']['remote_context_options'])) {
+            $this->c3Access = $settings['coverage']['remote_context_options'] + $this->c3Access;
+        }
+    }
 
 }
