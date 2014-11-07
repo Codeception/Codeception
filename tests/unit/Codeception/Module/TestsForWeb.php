@@ -400,6 +400,8 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Welcome to test app!", $result);
         $result = $this->module->grabTextFrom('descendant-or-self::h1');
         $this->assertEquals("Welcome to test app!", $result);
+        $result = $this->module->grabTextFrom('~Welcome to (\w+) app!~');
+        $this->assertEquals('test', $result);
     }
 
     public function testGrabValueFrom() {
