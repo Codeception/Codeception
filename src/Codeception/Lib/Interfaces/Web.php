@@ -84,7 +84,7 @@ interface Web
      *
      * ```
      *
-     * For sample Sign Up form:
+     * For a sample Sign Up form:
      *
      * ``` html
      * <form action="/sign_up">
@@ -95,14 +95,14 @@ interface Web
      *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
      * ```
-     * I can write this:
+     * You could write the following to submit it:
      *
      * ``` php
      * <?php
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
      *
      * ```
-     * Note, that pricing plan will be set to Paid, as it's selected on page.
+     * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
      * 
      * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
      * 
@@ -114,9 +114,9 @@ interface Web
      *
      * @param $selector
      * @param $params
-     * @param $buttons
+     * @param $button
      */
-    public function submitForm($selector, $params, $buttons = null);
+    public function submitForm($selector, $params, $button = null);
 
     /**
      * Perform a click on link or button.

@@ -287,7 +287,7 @@ class InnerBrowser extends Module implements Web
         return array('Contains', $value, $currentValue);
     }
 
-    public function submitForm($selector, $params, $buttons = null)
+    public function submitForm($selector, $params, $button = null)
     {
         $form = $this->match($selector)->first();
 
@@ -295,10 +295,10 @@ class InnerBrowser extends Module implements Web
             throw new ElementNotFound($selector, 'Form');
         }
         
-        if (empty($buttons)) {
-            $buttons = array();
-        } elseif (!is_array($buttons)) {
-            $buttons = array($buttons);
+        if (empty($button)) {
+            $button = array();
+        } elseif (!is_array($button)) {
+            $button = array($button);
         }
 
         $url    = '';
@@ -307,7 +307,7 @@ class InnerBrowser extends Module implements Web
         foreach ($fields as $field) {
             if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
                 continue;
-            } elseif (($field->getAttribute('type') === 'button' || $field->getAttribute('type') === 'submit' || $field->tagName === 'button') && !in_array($field->getAttribute('name'), $buttons)) {
+            } elseif (($field->getAttribute('type') === 'button' || $field->getAttribute('type') === 'submit' || $field->tagName === 'button') && !in_array($field->getAttribute('name'), $button)) {
                 continue;
             }
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
