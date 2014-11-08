@@ -24,6 +24,7 @@ $urls = array(
     '/redirect3' => 'redirect3',
     '/redirect4' => 'redirect4',
     '/redirect_interval' => 'redirect_interval',
+    '/redirect_header_interval' => 'redirect_header_interval',
     '/redirect_self' => 'redirect_self',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
