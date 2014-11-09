@@ -676,7 +676,7 @@ class InnerBrowser extends Module implements Web
     public function grabTextFrom($cssOrXPathOrRegex)
     {
         $nodes = $this->match($cssOrXPathOrRegex);
-        if ($nodes) {
+        if ($nodes->count()) {
             return $nodes->first()->text();
         }
         if (@preg_match($cssOrXPathOrRegex, $this->client->getInternalResponse()->getContent(), $matches)) {
