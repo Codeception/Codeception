@@ -1118,7 +1118,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * ``` php
      * <?php
-     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
      *
      * ```
      *
@@ -1130,22 +1130,23 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *     Password: <input type="password" name="user[password]" /><br/>
      *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
      *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
-     *     <input type="submit" value="Submit" />
+     *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
      * ```
      * You can write this:
      *
      * ``` php
      * <?php
-     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
      *
      * ```
      *
      * @param $selector
      * @param $params
+     * @param $button
      * @throws \Codeception\Exception\ElementNotFound
      */
-    public function submitForm($selector, $params)
+    public function submitForm($selector, $params, $button = null)
     {
         $form = $this->match($this->webDriver, $selector);
         if (empty($form)) {
@@ -1186,7 +1187,20 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->debugSection('Method', $form->getAttribute('method') ? $form->getAttribute('method') : 'GET');
         $this->debugSection('Parameters', json_encode($params));
 
-        $form->submit();
+        $submitted = false;
+        if (!empty($button)) {
+            $els = $form->findElements(\WebDriverBy::name($button));
+            if (!empty($els)) {
+                $el = reset($els);
+                $el->click();
+                $submitted = true;
+            }
+        }
+        
+        if (!$submitted) {
+            $form->submit();
+        }
+        
         $this->debugSection('Page', $this->_getCurrentUri());
     }
 

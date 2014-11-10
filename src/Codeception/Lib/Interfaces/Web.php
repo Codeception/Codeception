@@ -70,17 +70,16 @@ interface Web
      * You don't need to click the 'Submit' button afterwards.
      * This command itself triggers the request to form's action.
      *
-     * You can optionally specify what button or buttons to include
+     * You can optionally specify what button's value to include
      * in the request with the last parameter as an alternative to
      * explicitly setting its value in the second parameter, as
-     * button values are not included otherwise included in the
-     * request.
+     * button values are not otherwise included in the request.
      * 
      * Examples:
      *
      * ``` php
      * <?php
-     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), array('clickedButtonName', 'submitButtonName'));
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
      *
      * ```
      *

@@ -805,20 +805,10 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/form/form_with_buttons');
         $this->module->submitForm('form', array(
             'test' => 'value',
-        ), 'button1');
+        ), 'button3');
         $form = data::get('form');
-        $this->assertFalse(isset($form['button2']) || isset($form['button3']) || isset($form['button4']), 'Button values for buttons 2, 3 and 4 should not be set');
-        $this->assertTrue(isset($form['button1']), 'Button value for button1 should be set');
-        $this->assertEquals($form['button1'], 'first', 'Button value for button1 should equal first');
-        
-        $this->module->amOnPage('/form/form_with_buttons');
-        $this->module->submitForm('form', array(
-            'test' => 'value',
-        ), array('button2', 'button3'));
-        $form = data::get('form');
-        $this->assertFalse(isset($form['button1']) || isset($form['button4']), 'Button values for buttons 1 and 4 should not be set');
-        $this->assertTrue(isset($form['button2']) && isset($form['button3']), 'Button value for button2 and button3 should be set');
-        $this->assertEquals($form['button2'], 'second', 'Button value for button2 should equal second');
+        $this->assertFalse(isset($form['button1']) || isset($form['button2']) || isset($form['button4']), 'Button values for buttons 1, 2 and 4 should not be set');
+        $this->assertTrue(isset($form['button3']), 'Button value for button3 should be set');
         $this->assertEquals($form['button3'], 'third', 'Button value for button3 should equal third');
         
         $this->module->amOnPage('/form/form_with_buttons');
@@ -828,7 +818,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertFalse(isset($form['button1']) || isset($form['button2']) || isset($form['button3']), 'Button values for buttons 1, 2 and 3 should not be set');
         $this->assertTrue(isset($form['button4']), 'Button value for button4 should be set');
-        $this->assertEquals($form['button4'], 'fourth', 'Button value for button3 should equal fourth');
+        $this->assertEquals($form['button4'], 'fourth', 'Button value for button4 should equal fourth');
     }
 
     /**
