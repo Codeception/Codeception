@@ -74,18 +74,19 @@ class Cest extends \Codeception\TestCase implements
             $this->testClassInstance->_before($I);
         }
 
-        if ($before = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('before')) {
-            foreach(explode(',', $before) as $m) {
+        $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        if (!empty($annotations['method']['before'])) {
+            foreach ($annotations['method']['before'] as $m) {
                 $this->executeContextMethod(trim($m), $I);
             }
         }
-
     }
 
     protected function executeAfter($testMethod, $I)
     {
-        if ($after = Annotation::forClass($this->testClassInstance)->method($testMethod)->fetch('after')) {
-            foreach(explode(',', $after) as $m) {
+        $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
+        if (!empty($annotations['method']['after'])) {
+            foreach ($annotations['method']['after'] as $m) {
                 $this->executeContextMethod(trim($m), $I);
             }
         }
