@@ -42,7 +42,6 @@ class Listener implements \PHPUnit_Framework_TestListener
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
-        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
