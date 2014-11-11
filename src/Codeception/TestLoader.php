@@ -59,11 +59,10 @@ class TestLoader {
 
     protected function relativeName($file)
     {
-        // Add the path to the file name
+        // Add the path to the file name.
         $filepath = str_replace([$this->path, '\\'], ['', '/'], $file);
 
-        // If the file doesn't exists AND there it has is no .php extension,
-        // add the extension
+        // If the file doesn't exists AND it has no .php extension, add the extension.
         if (!file_exists($filepath) && substr($filepath, -strlen(self::PHPEXT)) !== self::PHPEXT) {
             $filepath .= self::PHPEXT;
         }
