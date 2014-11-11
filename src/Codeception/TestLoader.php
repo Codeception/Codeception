@@ -64,8 +64,7 @@ class TestLoader {
 
         // If the file doesn't exists AND there it has is no .php extension,
         // add the extension
-        if ( ! file_exists($filepath) && substr($filepath, -strlen(self::PHPEXT)) !== self::PHPEXT)
-        {
+        if (!file_exists($filepath) && substr($filepath, -strlen(self::PHPEXT)) !== self::PHPEXT) {
             $filepath .= self::PHPEXT;
         }
 
