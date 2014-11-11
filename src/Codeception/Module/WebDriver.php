@@ -314,9 +314,36 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function amOnPage($page)
     {
-        $page = ltrim($page, '/');
-        $host = rtrim($this->config['url'], '/');
-        $this->webDriver->get($host . '/' . $page);
+        $url = '';
+        $base = $this->config['url'];
+        if (strpos($page, 'http') === 0) {
+            $url = $page;
+        } else {
+            $parts = parse_url($base);
+            if ($parts === false) {
+                throw new \Codeception\Exception\TestRuntime("Configured base Url '$base' is malformed");
+            } elseif (!empty($parts['scheme']) && !empty($parts['host'])) {
+                $url = $parts['scheme'] . '://';
+                $url .= $parts['host'];
+                if (!empty($parts['port'])) {
+                    $url .= ':' . $parts['port'];
+                }
+
+                if (strpos($page, '/') === 0 || empty($parts['path'])) {
+                    $url .= '/' . ltrim($page, '/');
+                } else {
+                    $url .= rtrim($parts['path'], '/') . '/' . $page;
+                }
+            } else {
+                $url = rtrim($base, '/') . '/' . ltrim($uri, '/');
+            }
+
+            if (parse_url($url) === false) {
+                throw new \Codeception\Exception\TestRuntime("Url '$url' is malformed");
+            }
+        }
+
+        $this->webDriver->get($url);
     }
 
     public function see($text, $selector = null)
