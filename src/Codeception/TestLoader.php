@@ -40,6 +40,8 @@ use Symfony\Component\Finder\Finder;
  */
 class TestLoader {
 
+    const PHPEXT = '.php';
+
     protected static $formats = array('Cest', 'Cept', 'Test');
     protected $tests = [];
     protected $path;
@@ -53,11 +55,21 @@ class TestLoader {
     {
         return $this->tests;
     }
-    
+
 
     protected function relativeName($file)
     {
-        return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
+        // Add the path to the file name
+        $filepath = str_replace([$this->path, '\\'], ['', '/'], $file);
+
+        // If the file doesn't exists AND there it has is no .php extension,
+        // add the extension
+        if ( ! file_exists($filepath) && substr($filepath, -strlen(self::PHPEXT)) !== self::PHPEXT)
+        {
+            $filepath .= self::PHPEXT;
+        }
+
+        return $filepath;
     }
 
     public function loadTest($path)
@@ -204,4 +216,4 @@ class TestLoader {
 
 
 
-} 
+}
