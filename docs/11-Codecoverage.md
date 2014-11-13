@@ -115,6 +115,21 @@ But in case of running tests on a remote server we are not sure of it.
 
 CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage. 
 
+### Remote Context Options
+HTML report generation can at times take a little more time than the default 30 second timeout. Or maybe you want to alter SSL settings (verify_peer, for example)
+To alter the way c3 sends it's service requests to your webserver (be it a local or a remote one), you can use the `remote_context_options` key in `coverage` settings.
+
+``` yaml
+coverage:
+    remote_context_options:
+        http:
+            timeout: 60
+        ssl:
+            verify_peer: false
+```
+
+Context stream options are [well documented at php.net](http://php.net/manual/en/context.php)
+
 ## Conclusion
 
 It's never been easier to setup local and remote code coverage. Just one config and one additional file to include!
