@@ -70,15 +70,20 @@ interface Web
      * You don't need to click the 'Submit' button afterwards.
      * This command itself triggers the request to form's action.
      *
+     * You can optionally specify what button's value to include
+     * in the request with the last parameter as an alternative to
+     * explicitly setting its value in the second parameter, as
+     * button values are not otherwise included in the request.
+     * 
      * Examples:
      *
      * ``` php
      * <?php
-     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
      *
      * ```
      *
-     * For sample Sign Up form:
+     * For a sample Sign Up form:
      *
      * ``` html
      * <form action="/sign_up">
@@ -86,22 +91,31 @@ interface Web
      *     Password: <input type="password" name="user[password]" /><br/>
      *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
      *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
-     *     <input type="submit" value="Submit" />
+     *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
      * ```
-     * I can write this:
+     * You could write the following to submit it:
      *
      * ``` php
      * <?php
-     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
      *
      * ```
-     * Note, that pricing plan will be set to Paid, as it's selected on page.
+     * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
+     * 
+     * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
+     * 
+     * ```php
+     * <?php
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     * 
+     * ```
      *
      * @param $selector
      * @param $params
+     * @param $button
      */
-    public function submitForm($selector, $params);
+    public function submitForm($selector, $params, $button = null);
 
     /**
      * Perform a click on link or button.

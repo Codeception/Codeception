@@ -287,19 +287,23 @@ class InnerBrowser extends Module implements Web
         return array('Contains', $value, $currentValue);
     }
 
-    public function submitForm($selector, $params)
+    public function submitForm($selector, $params, $button = null)
     {
         $form = $this->match($selector)->first();
 
         if (!count($form)) {
             throw new ElementNotFound($selector, 'Form');
         }
-
+        
         $url    = '';
         /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input');
+        $fields = $form->filter('input,button');
         foreach ($fields as $field) {
-            if (($field->getAttribute('type') == 'checkbox' || $field->getAttribute('type') == 'radio') && !$field->hasAttribute('checked')) {
+            if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
+                continue;
+            } elseif ($field->getAttribute('type') === 'button') {
+                continue;
+            } elseif (($field->getAttribute('type') === 'submit' || $field->tagName === 'button') && $field->getAttribute('name') !== $button) {
                 continue;
             }
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
