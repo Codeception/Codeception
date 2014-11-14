@@ -91,16 +91,12 @@ class Guzzle extends Client
             throw new \Codeception\Exception\TestRuntime("URI '{$uri}' is malformed");
         }
         
-        if (!empty($uriparts['path'])) {
-            if (strpos($uriparts['path'], '/') === 0) {
-                $build['path'] = $uriparts['path'];
-            } else {
-                $build['path'] = rtrim($build['path'], '/') . '/' . $uriparts['path'];
-            }
-            unset($uriparts['path']);
-        }
         foreach ($uriparts as $part => $value) {
-            $build[$part] = $value;
+            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
+                $build[$part] = rtrim($build[$part], '/') . '/' . $value;
+            } else {
+                $build[$part] = $value;
+            }
         }
         return \GuzzleHttp\Url::buildUrl($build);
     }
