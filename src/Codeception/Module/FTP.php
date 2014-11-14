@@ -547,14 +547,22 @@ class FTP extends \Codeception\Module\Filesystem
         switch(strtolower($this->config['type']))
         {
             case 'sftp':
-                $this->ftp = new \Net_SFTP($this->config['host'], $this->config['port'], $this->config['timeout']) or \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
+                $this->ftp = new \Net_SFTP($this->config['host'], $this->config['port'], $this->config['timeout']);
+                if ($this->ftp === false) {
+                    $this->ftp = null;
+                    \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
+                }
 
                 if (!$this->ftp->login($user, $password)) {
                     \PHPUnit_Framework_Assert::fail('failed to authenticate user');
                 }
                 break;
             default:
-                $this->ftp = ftp_connect($this->config['host'], $this->config['port'], $this->config['timeout']) or \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
+                $this->ftp = ftp_connect($this->config['host'], $this->config['port'], $this->config['timeout']);
+                if ($this->ftp === false) {
+                    $this->ftp = null;
+                    \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
+                }
 
                 // Set passive mode option (ftp only option)
                 if (isset($this->config['passive']))
