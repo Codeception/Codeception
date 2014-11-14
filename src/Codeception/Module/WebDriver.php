@@ -314,36 +314,27 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function amOnPage($page)
     {
-        $url = '';
-        $base = $this->config['url'];
-        if (strpos($page, 'http') === 0) {
-            $url = $page;
-        } else {
-            $parts = parse_url($base);
-            if ($parts === false) {
-                throw new \Codeception\Exception\TestRuntime("Configured base Url '$base' is malformed");
-            } elseif (!empty($parts['scheme']) && !empty($parts['host'])) {
-                $url = $parts['scheme'] . '://';
-                $url .= $parts['host'];
-                if (!empty($parts['port'])) {
-                    $url .= ':' . $parts['port'];
-                }
-
-                if (strpos($page, '/') === 0 || empty($parts['path'])) {
-                    $url .= '/' . ltrim($page, '/');
-                } else {
-                    $url .= rtrim($parts['path'], '/') . '/' . $page;
-                }
-            } else {
-                $url = rtrim($base, '/') . '/' . ltrim($uri, '/');
-            }
-
-            if (parse_url($url) === false) {
-                throw new \Codeception\Exception\TestRuntime("Url '$url' is malformed");
-            }
+        $build = parse_url($this->config['url']);
+        $uriparts = parse_url($page);
+        
+        if ($build === false) {
+            throw new \Codeception\Exception\TestRuntime("URL '{$this->config['url']}' is malformed");
+        } elseif ($uriparts === false) {
+            throw new \Codeception\Exception\TestRuntime("URI '{$page}' is malformed");
         }
-
-        $this->webDriver->get($url);
+        
+        if (!empty($uriparts['path'])) {
+            if (strpos($uriparts['path'], '/') === 0) {
+                $build['path'] = $uriparts['path'];
+            } else {
+                $build['path'] = rtrim($build['path'], '/') . '/' . $uriparts['path'];
+            }
+            unset($uriparts['path']);
+        }
+        foreach ($uriparts as $part => $value) {
+            $build[$part] = $value;
+        }
+        $this->webDriver->get(\GuzzleHttp\Url::buildUrl($build));
     }
 
     public function see($text, $selector = null)

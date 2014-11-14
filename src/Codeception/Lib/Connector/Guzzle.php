@@ -82,35 +82,27 @@ class Guzzle extends Client
 
     public function getAbsoluteUri($uri)
     {
-        if (strpos($uri, 'http') === 0) {
-            return $uri;
+        $build = parse_url($this->baseUri);
+        $uriparts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
+        
+        if ($build === false) {
+            throw new \Codeception\Exception\TestRuntime("URL '{$this->baseUri}' is malformed");
+        } elseif ($uriparts === false) {
+            throw new \Codeception\Exception\TestRuntime("URI '{$uri}' is malformed");
         }
         
-        $url = '';
-        $parts = parse_url($this->baseUri);
-        if ($parts === false) {
-            throw new \Codeception\Exception\TestRuntime("Configured base Url '{$this->baseUri}' is malformed");
-        } elseif (!empty($parts['scheme']) && !empty($parts['host'])) {
-            $url = $parts['scheme'] . '://';
-            $url .= $parts['host'];
-            if (!empty($parts['port'])) {
-                $url .= ':' . $parts['port'];
-            }
-            
-            if (strpos($uri, '/') === 0 || empty($parts['path'])) {
-                $url .= '/' . ltrim($uri, '/');
+        if (!empty($uriparts['path'])) {
+            if (strpos($uriparts['path'], '/') === 0) {
+                $build['path'] = $uriparts['path'];
             } else {
-                $url .= rtrim($parts['path'], '/') . '/' . $uri;
+                $build['path'] = rtrim($build['path'], '/') . '/' . $uriparts['path'];
             }
-        } else {
-            $url = rtrim($this->baseUri, '/') . '/' . ltrim($uri, '/');
+            unset($uriparts['path']);
         }
-
-        if (parse_url($url) === false) {
-            throw new \Codeception\Exception\TestRuntime("Url '$url' is malformed");
+        foreach ($uriparts as $part => $value) {
+            $build[$part] = $value;
         }
-
-        return $url;
+        return \GuzzleHttp\Url::buildUrl($build);
     }
 
     protected function doRequest($request)
