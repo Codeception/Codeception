@@ -354,10 +354,23 @@ class InnerBrowser extends Module implements Web
         if ((!$action) or ($action == '#')) {
             $action = $currentUrl;
         }
-        // relative url
-        if ((strpos($action, '/') !== 0) and !preg_match('~^https?://~', $action)) {
-            $path = pathinfo($currentUrl);
-            $action = $path['dirname'] . '/' . $action;
+        // doc or site-root relative url
+        if (!preg_match('~^https?://~', $action)) {
+            if (strpos($action, '/') !== 0) {
+                $path = pathinfo($currentUrl);
+                $action = $path['dirname'] . '/' . $action;
+            } else {
+                $parts = parse_url($currentUrl);
+                // otherwise we can't return an action with a full URL anyway, and it would be returned as-is
+                if (isset($parts['scheme']) && isset($parts['host'])) {
+                    $url = $parts['scheme'] . '://';
+                    $url .= $parts['host'];
+                    if (isset($parts['port'])) { 
+                        $url .= ':' . $parts['port'];
+                    }
+                    $action = $url . $action;
+                }
+            }
         }
         return $action;
     }
