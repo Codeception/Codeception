@@ -437,6 +437,11 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $optionText
 
 
+### dontseeResponse*/seeResponse*
+
+Placeholder to highlight that Selenium Webdriver does not provide this information back to Codeception. See
+[this issue on github](https://github.com/Codeception/Codeception/issues/739) for a little more detail.
+
 
 ### doubleClick
  
@@ -935,7 +940,10 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
  * `param` $selector
  * `param` $optionText
 
+### seeResponse*/dontseeResponse*
 
+Placeholder to highlight that Selenium Webdriver does not provide this information back to Codeception. See
+[this issue on github](https://github.com/Codeception/Codeception/issues/739) for a little more detail.
 
 ### selectOption
  
