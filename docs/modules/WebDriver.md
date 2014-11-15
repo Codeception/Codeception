@@ -477,8 +477,8 @@ $I->executeInSelenium(function(\WebDriver $webdriver) {
 ```
 
 Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
-Not recommended this command too be used on regular basis.
-If Codeception lacks important Selenium methods implement then and submit patches.
+Not recommended this command to be used on regular basis.
+If Codeception lacks important Selenium methods implement them and submit patches.
 
  * `param callable` $function
 
