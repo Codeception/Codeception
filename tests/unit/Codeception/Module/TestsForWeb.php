@@ -786,7 +786,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('relative_siteroot');
         $this->module->click('Click me');
         $this->module->dontSeeInCurrentUrl('form/form/');
-        $this->module->amOnPage('/relative_siteroot');
+        $this->module->amOnPage('/info');
         $this->module->dontSeeInCurrentUrl('form/');
     }
 
