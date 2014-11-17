@@ -486,7 +486,7 @@ class InnerBrowser extends Module implements Web
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
         if ((substr($name, -2) == '[]')) {
-            $name = rtrim($name, '[]');
+            $name = substr($name, 0, -2);
             $checkbox = new ChoiceFormField($field->getNode(0));
             /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
             foreach ($form[$name] as $item) {
