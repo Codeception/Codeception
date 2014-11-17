@@ -183,7 +183,8 @@ As it was mentioned, Robo has `ParallelExec` task to spawn background processes.
                 $this->taskCodecept() // use built-in Codecept task
                 ->suite('acceptance') // run acceptance tests
                 ->group("p$i")        // for all p* groups
-                ->xml("tests/_log/result_$i.xml"); // save XML results
+                ->xml("tests/_log/result_$i.xml") // save XML results
+            );
         }
         return $parallel->run();
     }
