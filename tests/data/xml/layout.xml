@@ -1,6 +1,4 @@
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.w3.org/2001/xml.xsd">
-   <soapenv:Header>
-   </soapenv:Header>
-   <soapenv:Body>
-   </soapenv:Body>
+   <soapenv:Header/>
+   <soapenv:Body/>
 </soapenv:Envelope>

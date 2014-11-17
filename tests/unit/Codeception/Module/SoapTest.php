@@ -23,7 +23,6 @@ class SoapTest extends \PHPUnit_Framework_TestCase
     }
     
     public function testXmlIsBuilt() {
-        $this->module->xmlRequest;
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);
