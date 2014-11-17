@@ -122,7 +122,8 @@ class LocalServer extends SuiteSubscriber
      {
          $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
          $context = stream_context_create($this->c3Access);
-         $contents = file_get_contents($this->module->_getUrl() . '/c3/report/' . $action, false, $context);
+         $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
+         $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
          $okHeaders = array_filter($http_response_header, function($h) { return preg_match('~^HTTP(.*?)\s200~', $h); });
          if (empty($okHeaders)) {
