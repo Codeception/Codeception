@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.8
+
+* Dependencies updated: facebook/php-webdriver 0.5.x and guzzle 5 *2014-11-17*
+
+
 #### 2.0.7
 
 * [Db] Made the postgresql loader load $$ syntax correctly by @rtuin. See #1450 *2014-10-12*
