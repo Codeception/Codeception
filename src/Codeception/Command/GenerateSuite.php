@@ -45,6 +45,10 @@ class GenerateSuite extends Command
         $suite = lcfirst($input->getArgument('suite'));
         $actor = $input->getArgument('actor');
 
+        if ($this->containsInvalidCharacters ($suite)) {
+            throw new \Exception("Suite name '{$suite}' contains invalid characters. ([A-Za-z0-9_]).");
+        }
+
         $config = \Codeception\Configuration::config($input->getOption('config'));
         if (!$actor) {
             $actor = ucfirst($suite) . $config['actor'];
@@ -82,4 +86,10 @@ class GenerateSuite extends Command
 
         $output->writeln("<info>Suite $suite generated</info>");
     }
+
+    private function containsInvalidCharacters ($suite)
+    {
+        return preg_match ('#[^A-Za-z0-9_]#', $suite) ? true : false;
+    }
+
 }
