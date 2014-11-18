@@ -284,7 +284,11 @@ class InnerBrowser extends Module implements Web
         } elseif ($fields->filter('select')->count() !== 0) {
             $currentValues = $fields->filter('select option:selected')->extract(array('value'));
         } elseif ($fields->filter('input[type=radio],input[type=checkbox]')->count() !== 0) {
-            $currentValues = $fields->filter('input:checked')->extract(array('value'));
+            if (is_bool($value)) {
+                $currentValues = [$fields->filter('input:checked')->count() > 0];
+            } else {
+                $currentValues = $fields->filter('input:checked')->extract(array('value'));
+            }
         } else {
             $currentValues = $fields->extract(array('value'));
         }
@@ -295,6 +299,9 @@ class InnerBrowser extends Module implements Web
             $strField = key($field) . '=>' . $ident;
         }
         
+        if (is_bool($value)) {
+            
+        }
         return [
             'Contains',
             $value,

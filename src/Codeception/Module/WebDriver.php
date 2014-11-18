@@ -618,12 +618,21 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
         
         $currentValues = [];
+        if (is_bool($value)) {
+            $currentValues = [false];
+        }
+
         foreach ($els as $el) {
             if ($el->getTagName() === 'textarea') {
                 $currentValues[] = $el->getText();
             } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
                 if ($el->getAttribute('checked')) {
-                    $currentValues[] = $el->getAttribute('value');
+                    if (is_bool($value)) {
+                        $currentValues = [true];
+                        break;
+                    } else {
+                        $currentValues[] = $el->getAttribute('value');
+                    }
                 }
             } else {
                 $currentValues[] = $el->getAttribute('value');

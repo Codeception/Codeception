@@ -18,6 +18,17 @@
         <input type="radio" name="radio1" value="not seen two">
         <input type="radio" name="radio1" value="not seen three">
         
+        <input type="checkbox" name="checkbox1" value="Boolean Test CB One" checked>
+        <input type="checkbox" name="checkbox2" value="Boolean Test CB Two">
+        
+        <input type="radio" name="radio2" value="Boolean Test RD 1">
+        <input type="radio" name="radio2" value="Boolean Test RD 2" checked>
+        <input type="radio" name="radio2" value="Boolean Test RD 3">
+        
+        <input type="radio" name="radio3" value="Boolean Test RD 1">
+        <input type="radio" name="radio3" value="Boolean Test RD 2">
+        <input type="radio" name="radio3" value="Boolean Test RD 3">
+        
         <select name="select1">
             <option value="not seen one">Not selected</option>
             <option value="see test one" selected>Selected</option>

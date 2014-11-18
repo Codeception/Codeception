@@ -370,6 +370,19 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('checkbox[]', 'see test three');
     }
     
+    public function testSeeInFieldWithBoolean()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('checkbox1', true);
+        $this->module->dontSeeInField('checkbox1', false);
+        $this->module->seeInField('checkbox2', false);
+        $this->module->dontSeeInField('checkbox2', true);
+        $this->module->seeInField('radio2', true);
+        $this->module->dontSeeInField('radio2', false);
+        $this->module->seeInField('radio3', false);
+        $this->module->dontSeeInField('radio3', true);
+    }
+    
     public function testSeeInFieldOnRadio()
     {
         $this->module->amOnPage('/form/field_values');
