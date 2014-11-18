@@ -92,12 +92,21 @@ After the suite is finished, a report will be stored and Codeception will grab i
 
 Please, follow installation instructions described in a [readme file](https://github.com/Codeception/c3).
 
+To connect to `c3` Codeception uses url config from PhpBrowser or WebDriver module.
+But URL of index with `c3.php` included can be specified explicitly with `c3_url` parameter defined:
+
+
+``` yaml
+coverage:
+    # url of file which includes c3 router.
+    c3_url: 'http://127.0.0.1:8000/index-test.php/'
+```
+
+
 After the `c3.php` file is included in application you can start gather coverage.
 In case you execute your application locally there is nothing to be changed in config.
 All codecoverage reports will be collected as usual and merged afterwards.
 Think of it: Codeception runs remote coverage in the same way as local.
-
-It's never been easier to setup remote codecoverage for your application. In any other framework. Really.
 
 ### Remote Server
 
@@ -116,6 +125,7 @@ But in case of running tests on a remote server we are not sure of it.
 CodeCoverage results from remote server will be saved to `tests/_output` directory. Please note that remote codecoverage results won't be displayed in console by the reason mentioned above: local and remote results can't be merged, and console displays results for local codecoverage. 
 
 ### Remote Context Options
+
 HTML report generation can at times take a little more time than the default 30 second timeout. Or maybe you want to alter SSL settings (verify_peer, for example)
 To alter the way c3 sends it's service requests to your webserver (be it a local or a remote one), you can use the `remote_context_options` key in `coverage` settings.
 

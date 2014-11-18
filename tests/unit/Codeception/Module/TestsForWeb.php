@@ -872,5 +872,16 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Special Widget', $data['title']);
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1535
+     */
+    public function testCheckingOptionsWithComplexNames()
+    {
+        $this->module->amOnPage('/form/bug1535');
+        $this->module->checkOption('#bmessage-topicslinks input[value="4"]');
+        $this->module->click('Submit');
+        $data = data::get('form');
+        $this->assertContains(4, $data['BMessage']['topicsLinks']);
+    }
 
 }
