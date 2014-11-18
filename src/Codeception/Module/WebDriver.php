@@ -443,44 +443,58 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     /**
      * @param $selector
-     * @return \WebDriverElement
+     * @return \WebDriverElement[]
      * @throws \Codeception\Exception\ElementNotFound
      */
-    protected function findField($selector)
+    protected function findFields($selector)
     {
         if ($selector instanceof \WebDriverElement) {
-            return $selector;
+            return [$selector];
         }
-        if (is_array($selector) or ($selector instanceof \WebDriverBy)) {
-            return $this->matchFirstOrFail($this->webDriver, $selector);
+        if (is_array($selector) || ($selector instanceof \WebDriverBy)) {
+            $fields = $this->match($this->webDriver, $selector);
+            if (empty($fields)) {
+                throw new ElementNotFound($selector);
+            }
+            return $fields;
         }
 
         $locator = Crawler::xpathLiteral(trim($selector));
-
         // by text or label
         $xpath = Locator::combine(
             ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
             ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
         );
-        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) {
-            return reset($els);
+        $fields = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (!empty($fields)) {
+            return $fields;
         }
 
         // by name
         $xpath = ".//*[self::input | self::textarea | self::select][@name = $locator]";
-        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) {
-            return reset($els);
+        $fields = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (!empty($fields)) {
+            return $fields;
         }
 
         // try to match by CSS or XPath
-        $el = $this->match($this->webDriver, $selector);
-        if (!empty($el)) {
-            return reset($el);
+        $fields = $this->match($this->webDriver, $selector);
+        if (!empty($fields)) {
+            return $fields;
         }
 
         throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
+    }
+    
+    /**
+     * @param $selector
+     * @return \WebDriverElement
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    protected function findField($selector)
+    {
+        $arr = $this->findFields($selector);
+        return reset($arr);
     }
 
     public function seeLink($text, $url = null)
@@ -587,23 +601,41 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function seeInField($field, $value)
     {
-        $el = $this->findField($field);
-        if (!$el) {
-            throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
-        }
-        $el_value = $el->getTagName() == 'textarea'
-            ? $el->getText()
-            : $el->getAttribute('value');
-        $this->assertEquals($value, $el_value);
+        $this->assert($this->proceedSeeInField($field, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $el = $this->findField($field);
-        $el_value = $el->getTagName() == 'textarea'
-            ? $el->getText()
-            : $el->getAttribute('value');
-        $this->assertNotEquals($value, $el_value);
+        $this->assertNot($this->proceedSeeInField($field, $value));
+    }
+    
+    protected function proceedSeeInField($field, $value)
+    {
+        $els = $this->findFields($field);
+        if (reset($els)->getTagName() === 'select') {
+            $select = new \WebDriverSelect(reset($els));
+            $els = $select->getAllSelectedOptions();
+        }
+        
+        $currentValues = [];
+        foreach ($els as $el) {
+            if ($el->getTagName() === 'textarea') {
+                $currentValues[] = $el->getText();
+            } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                if ($el->getAttribute('checked')) {
+                    $currentValues[] = $el->getAttribute('value');
+                }
+            } else {
+                $currentValues[] = $el->getAttribute('value');
+            }
+        }
+        
+        return [
+            'Contains',
+            $value,
+            $currentValues,
+            "Failed testing for '$value' in $field's value: " . implode(', ', $currentValues)
+        ];
     }
 
     public function selectOption($select, $option)
@@ -651,9 +683,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 $matched = true;
             } catch (\NoSuchElementException $e) {
             }
-        }
-        if ($matched) {
-            return;
         }
         if ($matched) {
             return;

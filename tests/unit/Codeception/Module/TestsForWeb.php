@@ -359,6 +359,45 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('#empty_textarea','');
     }
 
+    public function testSeeInFieldOnCheckbox()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->dontSeeInField('checkbox[]', 'not seen one');
+        $this->module->seeInField('checkbox[]', 'see test one');
+        $this->module->dontSeeInField('checkbox[]', 'not seen two');
+        $this->module->seeInField('checkbox[]', 'see test two');
+        $this->module->dontSeeInField('checkbox[]', 'not seen three');
+        $this->module->seeInField('checkbox[]', 'see test three');
+    }
+    
+    public function testSeeInFieldOnRadio()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('radio1', 'see test one');
+        $this->module->dontSeeInField('radio1', 'not seen one');
+        $this->module->dontSeeInField('radio1', 'not seen two');
+        $this->module->dontSeeInField('radio1', 'not seen three');
+    }
+    
+    public function testSeeInFieldOnSelect()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('select1', 'see test one');
+        $this->module->dontSeeInField('select1', 'not seen one');
+        $this->module->dontSeeInField('select1', 'not seen two');
+        $this->module->dontSeeInField('select1', 'not seen three');
+    }
+    
+    public function testSeeInFieldOnSelectMultiple()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->dontSeeInField('select2', 'not seen one');
+        $this->module->seeInField('select2', 'see test one');
+        $this->module->dontSeeInField('select2', 'not seen two');
+        $this->module->seeInField('select2', 'see test two');
+        $this->module->dontSeeInField('select2', 'not seen three');
+        $this->module->seeInField('select2', 'see test three');
+    }
 
     public function testDontSeeInFieldOnInput()
     {
@@ -376,7 +415,8 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
     }
 
-    public function testSeeInFieldWithNonLatin() {
+    public function testSeeInFieldWithNonLatin()
+    {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }
