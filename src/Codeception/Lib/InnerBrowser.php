@@ -289,11 +289,17 @@ class InnerBrowser extends Module implements Web
             $currentValues = $fields->extract(array('value'));
         }
         
+        $strField = $field;
+        if (is_array($field)) {
+            $ident = reset($field);
+            $strField = key($field) . '=>' . $ident;
+        }
+        
         return [
             'Contains',
             $value,
             $currentValues,
-            "Failed testing for '$value' in $field's value: " . implode(', ', $currentValues)
+            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
         ];
     }
 

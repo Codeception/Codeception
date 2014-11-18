@@ -398,6 +398,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('select2', 'not seen three');
         $this->module->seeInField('select2', 'see test three');
     }
+    
+    public function testSeeInFieldWithExactMatch()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField(array('name' => 'select2'), 'see test one');
+    }
 
     public function testDontSeeInFieldOnInput()
     {
