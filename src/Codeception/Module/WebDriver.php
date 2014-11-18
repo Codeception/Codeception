@@ -1118,6 +1118,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * ``` php
      * <?php
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     * // or
      * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
      *
      * ```
