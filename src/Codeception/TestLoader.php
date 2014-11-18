@@ -59,25 +59,25 @@ class TestLoader {
         return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
-	protected function findPath($path)
-	{
+    protected function findPath($path)
+    {
         if ( ! file_exists($path)
                 && substr(strtolower($path), -strlen('.php')) !== '.php'
                 && file_exists($newPath = $path . '.php')) {
             return $newPath;
         }
 
-		return $path;
-	}
+        return $path;
+    }
 
     protected function makePath($originalPath)
     {
         $path = $this->path . $this->relativeName($originalPath);
 
-	    if (file_exists($newPath = $this->findPath($path))
-		    || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))) {
-		    $path = $newPath;
-	    }
+        if (file_exists($newPath = $this->findPath($path))
+            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))) {
+            $path = $newPath;
+        }
 
         if ( ! file_exists($path)) {
             throw new \Exception("File or path $originalPath not found");
