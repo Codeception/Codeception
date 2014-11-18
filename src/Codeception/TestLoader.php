@@ -40,8 +40,6 @@ use Symfony\Component\Finder\Finder;
  */
 class TestLoader {
 
-    const PHPEXT = '.php';
-
     protected static $formats = array('Cest', 'Cept', 'Test');
     protected $tests = [];
     protected $path;
@@ -56,26 +54,32 @@ class TestLoader {
         return $this->tests;
     }
 
-
     protected function relativeName($file)
     {
-        // Add the path to the file name.
-        $filepath = str_replace([$this->path, '\\'], ['', '/'], $file);
+        return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
+    }
 
-        // If the file doesn't exists AND it has no .php extension, add the extension.
-        if (!file_exists($filepath) && substr($filepath, -strlen(self::PHPEXT)) !== self::PHPEXT) {
-            $filepath .= self::PHPEXT;
+    protected function makePath($path)
+    {
+        $path = $this->path . $this->relativeName($path);
+
+        // If the file or directory doesn't exists, has no extension, and a .php file exists, add the extension.
+        if ( ! file_exists($path)
+                && substr(strtolower($path), -strlen('.php')) !== '.php'
+                && file_exists($newPath = $path . '.php')) {
+            $path = $newPath;
         }
 
-        return $filepath;
+        if ( ! file_exists($path)) {
+            throw new \Exception("File or path $path not found");
+        }
+
+        return $path;
     }
 
     public function loadTest($path)
     {
-        $path = $this->path . $this->relativeName($path);
-        if (!file_exists($path)) {
-            throw new \Exception("File $path not found");
-        }
+        $path = $this->makePath($path);
 
         foreach (self::$formats as $format) {
             if (preg_match("~$format.php$~", $path)) {
@@ -211,7 +215,6 @@ class TestLoader {
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         return $cest;
     }
-
 
 
 }
