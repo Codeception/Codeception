@@ -105,7 +105,7 @@ class Yii2 extends Framework implements ActiveRecord
             $this->fail("Record $model was not saved");
         }
 
-        return $record->id;
+        return $record->primaryKey;
     }
 
     /**
