@@ -1,4 +1,5 @@
-    <?php
+<?php
+
 $I = new CliGuy($scenario);
 $I->am('developer who likes testing');
 $I->wantTo('generate sample Suite');
@@ -11,3 +12,5 @@ $I->expect('guy class is generated');
 $I->seeInThisFile('class_name: HouseGuy');
 $I->seeFileFound('HouseHelper.php', 'tests/_helpers');
 $I->seeFileFound('_bootstrap.php','tests/house');
+
+$I->executeCommand('generate:suite invalid-dash-suite');
