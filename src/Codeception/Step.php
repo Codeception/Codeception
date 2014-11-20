@@ -54,17 +54,13 @@ abstract class Step
 
     protected function parseArgumentAsString($argument)
     {
-        if (is_callable($argument, true)) {
+        if (is_object($argument) && method_exists($argument, '__toString')) {
+            return (string)$argument;
+        } elseif (is_callable($argument, true)) {
             return 'lambda function';  
-        } 
-
-        if (!is_object($argument)) {
+        } elseif (!is_object($argument)) {
             return $argument;
         }
-
-        if (method_exists($argument, '__toString')) {
-            return $argument->__toString();    
-        } 
 
         return (isset($argument->__mocked)) ? $this->formatClassName($argument->__mocked) : $this->formatClassName(get_class($argument));
     }
