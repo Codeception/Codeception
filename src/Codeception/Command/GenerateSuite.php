@@ -46,7 +46,8 @@ class GenerateSuite extends Command
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters ($suite)) {
-            throw new \Exception("Suite name '{$suite}' contains invalid characters. ([A-Za-z0-9_]).");
+            $output->writeln("<error>Suite name '{$suite}' contains invalid characters. ([A-Za-z0-9_]).</error>");
+            return;
         }
 
         $config = \Codeception\Configuration::config($input->getOption('config'));
