@@ -20,6 +20,9 @@ class Actor
  * Inherited Methods
 {{inheritedMethods}}
 */
+/** 
+ * @SuppressWarnings(PHPMD)
+ */
 class {{guy}} extends \Codeception\Actor
 {
    {{methods}}
