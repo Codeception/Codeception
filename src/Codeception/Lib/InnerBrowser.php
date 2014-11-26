@@ -699,6 +699,26 @@ class InnerBrowser extends Module implements Web
     }
 
     /**
+     * @param $cssOrXpath string
+     * @param $attribute string
+     * @return array
+     * @throws ElementNotFound
+     */
+    public function grabAttributesFrom($cssOrXpath, $attribute)
+    {
+        $nodes = $this->match($cssOrXpath);
+        if (!$nodes->count()) {
+            throw new ElementNotFound($cssOrXpath, 'Element that matches CSS or XPath');
+        }
+
+        $attributes = $nodes->each(function ($node, $i) use ($attribute) {
+                return $node->attr($attribute);
+            });
+
+        return $attributes;
+    }
+
+    /**
      * @param $field
      *
      * @return array|mixed|null|string

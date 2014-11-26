@@ -874,6 +874,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         throw new ElementNotFound($cssOrXpath, 'CSS or XPath');
     }
 
+    public function grabAttributesFrom($cssOrXpath, $attribute)
+    {
+        $els = $this->match($this->webDriver, $cssOrXpath);
+        $attributes = [];
+        if (count($els)) {
+            foreach ($els as $el) {
+                $attributes[] = $el->getAttribute($attribute);
+            }
+            return $attributes;
+        }
+        throw new ElementNotFound($cssOrXpath, 'CSS or XPath');
+    }
+
     public function grabValueFrom($field)
     {
         $el = $this->findField($field);
