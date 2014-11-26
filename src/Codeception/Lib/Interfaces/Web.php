@@ -524,6 +524,24 @@ interface Web
     public function grabAttributeFrom($cssOrXpath, $attribute);
 
     /**
+     * Grabs attribute values from multiple elements.
+     * Fails if no element is found.
+     *
+     * ``` php
+     * <?php
+     * $I->grabAttributesFrom('a', 'href');
+     * ?>
+     * ```
+     *
+     *
+     * @param $cssOrXpath
+     * @param $attribute
+     * @internal param $element
+     * @return mixed
+     */
+
+    public function grabAttributesFrom($cssOrXpath, $attribute);
+    /**
      * Checks if element exists on a page, matching it by CSS or XPath.
      * You can also specify expected attributes of this element.
      *
