@@ -5,8 +5,8 @@ namespace Codeception\Lib\Interfaces;
 interface Remote
 {
     /**
-     * Sets 'url' configuration parameter to hosts subdomain.
-     * It does not open a page on subdomain. Use `amOnPage` for that
+     * Changes the subdomain for the 'url' configuration parameter.
+     * Does not open a page; use `amOnPage` for that.
      *
      * ``` php
      * <?php
@@ -27,8 +27,7 @@ interface Remote
     public function amOnSubdomain($subdomain);
 
     /**
-     * Open web page at absolute URL.
-     * Base url will be reconfigured to use the host of provided Url.
+     * Open web page at the given absolute URL and sets its hostname as the base host.
      *
      * ``` php
      * <?php
