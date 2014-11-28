@@ -126,7 +126,7 @@ class FTP extends \Codeception\Module\Filesystem
     public function _before(\Codeception\TestCase $test)
     {
         // Login using config settings
-        $this->loginAs($this->config['user'], $this->config['key'] | $this->config['password'] );
+        $this->loginAs($this->config['user'], $this->config['password'] );
     }
 
     /**
@@ -557,7 +557,7 @@ class FTP extends \Codeception\Module\Filesystem
                 }
 
                 if(isset($this->config['key'])) {
-                    $keyFile = file_get_contents($password);
+                    $keyFile = file_get_contents($this->config['key']);
                     $password = new \Crypt_RSA();
                     $password->loadKey($keyFile);
                 }
