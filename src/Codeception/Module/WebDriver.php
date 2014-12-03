@@ -324,8 +324,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
         
         foreach ($uriparts as $part => $value) {
-            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
-                $build[$part] = rtrim($build[$part], '/') . '/' . $value;
+            if ($part === 'path' && !empty($build[$part])) {
+                $build[$part] = rtrim($build[$part], '/') . '/' . ltrim($value, '/');
             } else {
                 $build[$part] = $value;
             }
