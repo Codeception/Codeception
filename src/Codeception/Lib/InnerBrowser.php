@@ -276,15 +276,38 @@ class InnerBrowser extends Module implements Web
 
     protected function proceedSeeInField($field, $value)
     {
-        $field = $this->getFieldByLabelOrCss($field);
-        if (empty($field)) {
-            throw new ElementNotFound('Input field');
+        $fields = $this->getFieldsByLabelOrCss($field);
+        
+        $currentValues = [];
+        if ($fields->filter('textarea')->count() !== 0) {
+            $currentValues = $fields->filter('textarea')->extract(array('_text'));
+        } elseif ($fields->filter('select')->count() !== 0) {
+            $currentValues = $fields->filter('select option:selected')->extract(array('value'));
+        } elseif ($fields->filter('input[type=radio],input[type=checkbox]')->count() !== 0) {
+            if (is_bool($value)) {
+                $currentValues = [$fields->filter('input:checked')->count() > 0];
+            } else {
+                $currentValues = $fields->filter('input:checked')->extract(array('value'));
+            }
+        } else {
+            $currentValues = $fields->extract(array('value'));
         }
-        $currentValue = $field->filter('textarea')->extract(array('_text'));
-        if (!$currentValue) {
-            $currentValue = $field->extract(array('value'));
+        
+        $strField = $field;
+        if (is_array($field)) {
+            $ident = reset($field);
+            $strField = key($field) . '=>' . $ident;
         }
-        return array('Contains', $value, $currentValue);
+        
+        if (is_bool($value)) {
+            
+        }
+        return [
+            'Contains',
+            $value,
+            $currentValues,
+            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+        ];
     }
 
     public function submitForm($selector, $params, $button = null)
