@@ -1,5 +1,35 @@
 # Changelog
 
+#### 2.0.8
+
+* Dependencies updated: facebook/php-webdriver 0.5.x and guzzle 5 *2014-11-17*
+* [WebDriver] Fixed selectOption and (dont)seeOptionIsSelected for multiple radio button groups by @MasonM. See #1467 *2014-11-18*
+* [WebDriver][PhpBrowser][Frameworks] Clicked submit button can be specified as 3rd parameter in `submitForm` method by @zbateson. See #1518
+* [ZF1] Format ZF response to Symfony\Component\BrowserKit\Response by @MOuli90. Fixes #1476
+* [PhpBrowser][Frameworks] fixed `grabValueFrom` method by @zbateson. See #1512
+* [Db] Fixed Postgresql error with schemas by @rafreis. Fixes #970
+* [PhpBrowser] Fix for meta refresh tags with interval by @zbateson. See #1515
+* [PhpBrowser][Frameworks] Fixed: `grabTextFrom` doesn't work with regex by @zbateson. See #1519
+* Cest tests support multiple `@before` and `@after` annotations. Thanks to @draculus and @zbateson. See #1517
+* [FTP] Stops test execution on failed connection by @yegortokmakov
+* [AMQP] Fix for purging queues on initialization stage. Check for open channel is not needed and it prevents from cleaning queue by @yegortokmakov
+* CodeCoverage remote context configuration added by @synchrone. See #1524 [Documentation updated](http://codeception.com/docs/11-Codecoverage#Remote-Context-Options)
+* Implemented better descriptions for error exception. Fix #1503
+* Added `c3_url` option to code coverage settings. `c3_url` allows to explicitly set url for index file with c3 included. See #1024
+* [PhpBrowser][Frameworks] Fixed selecting checkbock in a group of checkboxes #1535
+* [PhpBrowser][Frameworks] submitForm sends default values for radio buttons and checkboxes by @zbateson. Fixes #1507 *2014-11-3*
+* [ZF2] Close any open ZF2 sessions by @FnTm. See #1486 *2014-10-24*
+
+
+#### 2.0.7
+
+* [Db] Made the postgresql loader load $$ syntax correctly by @rtuin. See #1450 *2014-10-12*
+* [Yii1] fixed syntax typo in Yii1 Connector by @xt99 *2014-10-12*
+* [PhpBrowser][WebDriver] amOnUrl method added for opening absolute urls. This behavior taken from amOnPage method, initially introduced in 2.0.6 *2014-10-12*
+* Fixed usage of whitespaces in wantTo. See #1456 *2014-10-12*
+* [WebDriver][PhpBrowser][Frameworks] fillField is matching element by name, then by CSS. Fixes #1454 *2014-10-12*
+
+
 #### 2.0.6
 
 * Fixed list of executed suites while running included suites by @gureedo. See #1427 *2014-10-08*

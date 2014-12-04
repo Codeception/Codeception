@@ -1,4 +1,5 @@
 .idea
+.roboci
 Dockerfile
 composer.phar
 vendor

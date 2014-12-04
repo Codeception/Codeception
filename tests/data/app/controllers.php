@@ -42,6 +42,25 @@ class redirect3 {
     }
 }
 
+class redirect_interval {
+    function GET() {
+        include __DIR__.'/view/redirect_interval.php';
+    }
+}
+
+class redirect_self {
+    function GET() {
+        include __DIR__.'/view/redirect_self.php';
+    }
+}
+
+class redirect_header_interval {
+    function GET() {
+        include __DIR__.'/view/index.php';
+        header('Refresh:1800;url=/info');
+    }
+}
+
 class login {
 
     function GET($matches) {
@@ -93,6 +112,9 @@ class facebookController {
 class form {
     function GET($matches) {
         $url = strtolower($matches[1]);
+        if (empty($matches[1])) {
+            $url = 'index';
+        }
         include __DIR__.'/view/form/'.$url.'.php';
     }
 

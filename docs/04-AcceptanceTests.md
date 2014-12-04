@@ -172,7 +172,7 @@ Let's submit this sample form inside the Codeception test.
           <option value="m">Male</option>
           <option value="f">Female</option>
      </select>     
-     <input type="submit" value="Update" />
+     <input type="submit" name="submitButton" value="Update" />
 </form>
 ```
 
@@ -204,7 +204,26 @@ $I->submitForm('#update_form', array('user' => array(
 ?>
 ```
 
-The `submitForm` is not emulating a user's actions, but it's quite useful in situations when the form is not formatted properly, for example to discover that labels aren't set or that fields have unclean names or badly written ids, or the form is sent by a javascript call. 
+The `submitForm` is not emulating a user's actions, but it's quite useful in situations when the form is not formatted properly, for example to discover that labels aren't set or that fields have unclean names or badly written ids, or the form is sent by a javascript call.
+
+By default, submitForm doesn't send values for buttons.  The last parameter allows specifying what button values should be sent, or button values can be implicitly specified in the second parameter.
+
+```php
+<?php
+$I->submitForm('#update_form', array('user' => array(
+     'name' => 'Miles',
+     'email' => 'Davis',
+     'gender' => 'm'
+)), 'submitButton');
+// this would be the same effect, but the value has to be implicitly specified
+$I->submitForm('#update_form', array('user' => array(
+     'name' => 'Miles',
+     'email' => 'Davis',
+     'gender' => 'm',
+	 'submitButton' => 'Update'
+)));
+?>
+```
 
 #### AJAX Emulation
 

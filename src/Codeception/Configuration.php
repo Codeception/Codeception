@@ -172,7 +172,7 @@ class Configuration
 
     protected static function loadConfigFile($file, $parentConfig)
     {
-        $config = file_exists($file) ? Yaml::parse($file) : array();
+        $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : array();
         return self::mergeConfigs($parentConfig, $config);
     }
 
@@ -221,8 +221,8 @@ class Configuration
 
         $path = $config['paths']['tests'];
 
-        $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") : array();
-        $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") : array();
+        $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml") ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml")) : array();
+        $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml") ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml")) : array();
 
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);

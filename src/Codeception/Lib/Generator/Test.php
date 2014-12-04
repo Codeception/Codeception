@@ -15,9 +15,9 @@ class Test
 
 class {{name}}Test extends \Codeception\TestCase\Test
 {
-   /**
-    * @var \{{actorClass}}
-    */
+    /**
+     * @var \{{actorClass}}
+     */
     protected \${{actor}};
 
     protected function _before()

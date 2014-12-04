@@ -27,10 +27,10 @@ class {{class}}Page
      * You can append any additional parameter to URL
      * and use it in tests like: EditPage::route('/123-post');
      */
-     public static function route(\$param)
-     {
+    public static function route(\$param)
+    {
         return static::\$URL.\$param;
-     }
+    }
 
 {{actions}}
 }

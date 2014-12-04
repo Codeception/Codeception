@@ -166,10 +166,10 @@ class RunCest
 
     public function runTestWithFailFast(\CliGuy $I)
     {
-        $I->executeCommand('run unit --no-exit');
+        $I->executeCommand('run unit --skip-group error --no-exit');
         $I->seeInShellOutput('Running FailingTest::testMe');
         $I->seeInShellOutput("PassingTest::testMe");
-        $I->executeCommand('run unit --fail-fast --no-exit');
+        $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
         $I->dontSeeInShellOutput("PassingTest::testMe");
     }
@@ -185,5 +185,13 @@ class RunCest
         $I->dontSeeFileFound('report.xml','tests/_log');
         $I->dontSeeFileFound('report.html','tests/_log');
 
+    }
+
+    public function runErrorTest(\CliGuy $I)
+    {
+        $I->executeCommand('run unit -g error --no-exit');
+        $I->seeInShellOutput('There was 1 error');
+        $I->seeInShellOutput('Array to string conversion');
+        $I->seeInShellOutput('ErrorTest.php:9');
     }
 }

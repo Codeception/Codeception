@@ -282,7 +282,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('123456', $login['LoginForm']['password']);
     }
 
-
     public function testTextFieldByLabel()
     {
         $this->module->amOnPage('/form/field');
@@ -360,6 +359,64 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('#empty_textarea','');
     }
 
+    public function testSeeInFieldOnCheckbox()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->dontSeeInField('checkbox[]', 'not seen one');
+        $this->module->seeInField('checkbox[]', 'see test one');
+        $this->module->dontSeeInField('checkbox[]', 'not seen two');
+        $this->module->seeInField('checkbox[]', 'see test two');
+        $this->module->dontSeeInField('checkbox[]', 'not seen three');
+        $this->module->seeInField('checkbox[]', 'see test three');
+    }
+    
+    public function testSeeInFieldWithBoolean()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('checkbox1', true);
+        $this->module->dontSeeInField('checkbox1', false);
+        $this->module->seeInField('checkbox2', false);
+        $this->module->dontSeeInField('checkbox2', true);
+        $this->module->seeInField('radio2', true);
+        $this->module->dontSeeInField('radio2', false);
+        $this->module->seeInField('radio3', false);
+        $this->module->dontSeeInField('radio3', true);
+    }
+    
+    public function testSeeInFieldOnRadio()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('radio1', 'see test one');
+        $this->module->dontSeeInField('radio1', 'not seen one');
+        $this->module->dontSeeInField('radio1', 'not seen two');
+        $this->module->dontSeeInField('radio1', 'not seen three');
+    }
+    
+    public function testSeeInFieldOnSelect()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('select1', 'see test one');
+        $this->module->dontSeeInField('select1', 'not seen one');
+        $this->module->dontSeeInField('select1', 'not seen two');
+        $this->module->dontSeeInField('select1', 'not seen three');
+    }
+    
+    public function testSeeInFieldOnSelectMultiple()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->dontSeeInField('select2', 'not seen one');
+        $this->module->seeInField('select2', 'see test one');
+        $this->module->dontSeeInField('select2', 'not seen two');
+        $this->module->seeInField('select2', 'see test two');
+        $this->module->dontSeeInField('select2', 'not seen three');
+        $this->module->seeInField('select2', 'see test three');
+    }
+    
+    public function testSeeInFieldWithExactMatch()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField(array('name' => 'select2'), 'see test one');
+    }
 
     public function testDontSeeInFieldOnInput()
     {
@@ -377,7 +434,8 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
     }
 
-    public function testSeeInFieldWithNonLatin() {
+    public function testSeeInFieldWithNonLatin()
+    {
         $this->module->amOnPage('/info');
         $this->module->seeInField('rus','Верно');
     }
@@ -401,6 +459,8 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Welcome to test app!", $result);
         $result = $this->module->grabTextFrom('descendant-or-self::h1');
         $this->assertEquals("Welcome to test app!", $result);
+        $result = $this->module->grabTextFrom('~Welcome to (\w+) app!~');
+        $this->assertEquals('test', $result);
     }
 
     public function testGrabValueFrom() {
@@ -410,6 +470,11 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $result = $this->module->grabValueFrom("descendant-or-self::form/descendant::input[@name='action']");
         $this->assertEquals("kill_people", $result);
         $this->module->amOnPage('/form/textarea');
+        $result = $this->module->grabValueFrom('#description');
+        $this->assertEquals('sunrise', $result);
+        $this->module->amOnPage('/form/select');
+        $result = $this->module->grabValueFrom('#age');
+        $this->assertEquals('oldfag', $result);
     }
 
     public function testGrabAttributeFrom()
@@ -772,6 +837,66 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         ));
         $this->module->seeCurrentUrlEquals('/form/example11');
     }
+    
+    public function testSubmitFormWithDocRelativePathForActionFromDefaultPage()
+    {
+        $this->module->amOnPage('/form/');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $this->module->seeCurrentUrlEquals('/form/example11');
+    }
+    
+    public function testLinkWithDocRelativeURLFromDefaultPage()
+    {
+        $this->module->amOnPage('/form/');
+        $this->module->click('Doc-Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example11');
+    }
+
+    /*
+     * https://github.com/Codeception/Codeception/issues/1507
+     */
+    public function testSubmitFormWithDefaultRadioAndCheckboxValues()
+    {
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $form = data::get('form');
+        $this->assertTrue(isset($form['checkbox1']), 'Checkbox value not sent');
+        $this->assertTrue(isset($form['radio1']), 'Radio button value not sent');
+        $this->assertEquals($form['checkbox1'], 'testing');
+        $this->assertEquals($form['radio1'], 'to be sent');
+    }
+    
+    public function testSubmitFormWithButtons()
+    {
+        $this->module->amOnPage('/form/form_with_buttons');
+        $this->module->submitForm('form', array(
+            'test' => 'value',
+        ));
+        $form = data::get('form');
+        $this->assertFalse(isset($form['button1']) || isset($form['button2']) || isset($form['button3']) || isset($form['button4']), 'Button values should not be set');
+        
+        $this->module->amOnPage('/form/form_with_buttons');
+        $this->module->submitForm('form', array(
+            'test' => 'value',
+        ), 'button3');
+        $form = data::get('form');
+        $this->assertFalse(isset($form['button1']) || isset($form['button2']) || isset($form['button4']), 'Button values for buttons 1, 2 and 4 should not be set');
+        $this->assertTrue(isset($form['button3']), 'Button value for button3 should be set');
+        $this->assertEquals($form['button3'], 'third', 'Button value for button3 should equal third');
+        
+        $this->module->amOnPage('/form/form_with_buttons');
+        $this->module->submitForm('form', array(
+            'test' => 'value',
+        ), 'button4');
+        $form = data::get('form');
+        $this->assertFalse(isset($form['button1']) || isset($form['button2']) || isset($form['button3']), 'Button values for buttons 1, 2 and 3 should not be set');
+        $this->assertTrue(isset($form['button4']), 'Button value for button4 should be set');
+        $this->assertEquals($form['button4'], 'fourth', 'Button value for button4 should equal fourth');
+    }
 
     /**
      * https://github.com/Codeception/Codeception/issues/1409
@@ -806,6 +931,32 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($files);
         $this->assertArrayHasKey('foo_bar', $files);
         $this->assertArrayHasKey('foo_baz', $files);
+    }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1454
+     */
+    public function testTextFieldByNameFirstNotCss()
+    {
+        $this->module->amOnPage('/form/example15');
+        $this->module->fillField('title', 'Special Widget');
+        $this->module->fillField('description', 'description');
+        $this->module->fillField('price', '19.99');
+        $this->module->click('Create');
+        $data = data::get('form');
+        $this->assertEquals('Special Widget', $data['title']);
+    }
+
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1535
+     */
+    public function testCheckingOptionsWithComplexNames()
+    {
+        $this->module->amOnPage('/form/bug1535');
+        $this->module->checkOption('#bmessage-topicslinks input[value="4"]');
+        $this->module->click('Submit');
+        $data = data::get('form');
+        $this->assertContains(4, $data['BMessage']['topicsLinks']);
     }
 
 }

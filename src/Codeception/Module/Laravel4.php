@@ -163,7 +163,6 @@ class Laravel4 extends Framework implements ActiveRecord
     public function amOnRoute($route, $params = [])
     {
         $url = $this->kernel['url']->route($route, $params);
-        codecept_debug($url);
         $this->amOnPage($url);
     }
 

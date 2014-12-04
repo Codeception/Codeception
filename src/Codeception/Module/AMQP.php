@@ -190,7 +190,6 @@ class AMQP extends \Codeception\Module
             throw new ModuleException(__CLASS__, "please set queues for cleanup");
         }
         if (!$this->connection) return;
-        if ($this->connection->channel()->is_open) return;
         foreach ($this->config['queues'] as $queue) {
             try {
                 $this->connection->channel()->queue_purge($queue);

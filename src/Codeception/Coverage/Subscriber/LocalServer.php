@@ -31,8 +31,10 @@ class LocalServer extends SuiteSubscriber
 
     protected $suiteName;
     protected $c3Access = [
-        'method' => "GET",
-        'header' => ''
+        'http' => [
+            'method' => "GET",
+            'header' => ''
+        ]
     ];
 
     /**
@@ -119,8 +121,9 @@ class LocalServer extends SuiteSubscriber
     protected function c3Request($action)
      {
          $this->addC3AccessHeader(self::COVERAGE_HEADER, 'remote-access');
-         $context = stream_context_create(array('http' => $this->c3Access));
-         $contents = file_get_contents($this->module->_getUrl() . '/c3/report/' . $action, false, $context);
+         $context = stream_context_create($this->c3Access);
+         $c3Url = $this->settings['c3_url'] ? $this->settings['c3_url'] : $this->module->_getUrl();
+         $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
          $okHeaders = array_filter($http_response_header, function($h) { return preg_match('~^HTTP(.*?)\s200~', $h); });
          if (empty($okHeaders)) {
@@ -162,8 +165,15 @@ class LocalServer extends SuiteSubscriber
 
      protected function addC3AccessHeader($header, $value)
      {
-         $this->c3Access['header'] .= "$header: $value\r\n";
+         $this->c3Access['http']['header'] .= "$header: $value\r\n";
      }
 
+    protected function applySettings($settings)
+    {
+        parent::applySettings($settings);
+        if (isset($settings['coverage']['remote_context_options'])) {
+            $this->c3Access = array_merge_recursive($settings['coverage']['remote_context_options'], $this->c3Access);
+        }
+    }
 
 }

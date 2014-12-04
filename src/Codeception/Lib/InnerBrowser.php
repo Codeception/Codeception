@@ -71,16 +71,6 @@ class InnerBrowser extends Module implements Web
 
     public function amOnPage($page)
     {
-        // use absolute url
-        if ((strpos($page, 'http://') === 0) or (strpos($page, 'https://') === 0)) {
-            $url = parse_url($page);
-            if (isset($url['host']) and isset($url['scheme'])) {
-                $host = $url['scheme'].'://'.$url['host'];
-                $this->_reconfigure(['url' => $host]);
-                $page = substr($page, strlen($host));
-                $this->debugSection('Host', $host);
-            }
-        }
         $this->crawler = $this->client->request('GET', $page);
         $this->forms = [];
         $this->debugResponse();
@@ -290,33 +280,57 @@ class InnerBrowser extends Module implements Web
 
     protected function proceedSeeInField($field, $value)
     {
-        $field = $this->getFieldByLabelOrCss($field);
-        if (empty($field)) {
-            throw new ElementNotFound('Input field');
+        $fields = $this->getFieldsByLabelOrCss($field);
+        
+        $currentValues = [];
+        if ($fields->filter('textarea')->count() !== 0) {
+            $currentValues = $fields->filter('textarea')->extract(array('_text'));
+        } elseif ($fields->filter('select')->count() !== 0) {
+            $currentValues = $fields->filter('select option:selected')->extract(array('value'));
+        } elseif ($fields->filter('input[type=radio],input[type=checkbox]')->count() !== 0) {
+            if (is_bool($value)) {
+                $currentValues = [$fields->filter('input:checked')->count() > 0];
+            } else {
+                $currentValues = $fields->filter('input:checked')->extract(array('value'));
+            }
+        } else {
+            $currentValues = $fields->extract(array('value'));
         }
-        $currentValue = $field->filter('textarea')->extract(array('_text'));
-        if (!$currentValue) {
-            $currentValue = $field->extract(array('value'));
+        
+        $strField = $field;
+        if (is_array($field)) {
+            $ident = reset($field);
+            $strField = key($field) . '=>' . $ident;
         }
-        return array('Contains', $value, $currentValue);
+        
+        if (is_bool($value)) {
+            
+        }
+        return [
+            'Contains',
+            $value,
+            $currentValues,
+            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+        ];
     }
 
-    public function submitForm($selector, $params)
+    public function submitForm($selector, $params, $button = null)
     {
         $form = $this->match($selector)->first();
 
         if (!count($form)) {
             throw new ElementNotFound($selector, 'Form');
         }
-
+        
         $url    = '';
         /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input');
+        $fields = $form->filter('input,button');
         foreach ($fields as $field) {
-            if ($field->getAttribute('type') == 'checkbox') {
+            if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
                 continue;
-            }
-            if ($field->getAttribute('type') == 'radio') {
+            } elseif ($field->getAttribute('type') === 'button') {
+                continue;
+            } elseif (($field->getAttribute('type') === 'submit' || $field->tagName === 'button') && $field->getAttribute('name') !== $button) {
                 continue;
             }
             $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
@@ -361,18 +375,35 @@ class InnerBrowser extends Module implements Web
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
-
         $currentUrl = $this->client->getHistory()->current()->getUri();
-        // empty url
-        if ((!$action) or ($action == '#')) {
-            $action = $currentUrl;
+        
+        if (empty($action) || $action === '#') {
+            return $currentUrl;
         }
-        // relative url
-        if ((strpos($action, '/') !== 0) and !preg_match('~^https?://~', $action)) {
-            $path = pathinfo($currentUrl);
-            $action = $path['dirname'] . '/' . $action;
+        
+        $build = parse_url($currentUrl);
+        if ($build === false) {
+            throw new TestRuntime("URL '$currentUrl' is malformed");
         }
-        return $action;
+
+        $uriParts = parse_url($action);
+        if ($uriParts === false) {
+            throw new TestRuntime("URI '$action' is malformed");
+        }
+        
+        foreach ($uriParts as $part => $value) {
+            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
+                // if it ends with a slash, relative paths are below it
+                if (preg_match('~/$~', $build[$part])) {
+                    $build[$part] = $build[$part] . $value;
+                    continue;
+                }
+                $build[$part] = dirname($build[$part]) . '/' . $value;
+                continue;
+            }
+            $build[$part] = $value;
+        }
+        return \GuzzleHttp\Url::buildUrl($build);
     }
 
     /**
@@ -499,7 +530,7 @@ class InnerBrowser extends Module implements Web
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
         if ((substr($name, -2) == '[]')) {
-            $name = rtrim($name, '[]');
+            $name = substr($name, 0, -2);
             $checkbox = new ChoiceFormField($field->getNode(0));
             /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
             foreach ($form[$name] as $item) {
@@ -693,7 +724,7 @@ class InnerBrowser extends Module implements Web
     public function grabTextFrom($cssOrXPathOrRegex)
     {
         $nodes = $this->match($cssOrXPathOrRegex);
-        if ($nodes) {
+        if ($nodes->count()) {
             return $nodes->first()->text();
         }
         if (@preg_match($cssOrXPathOrRegex, $this->client->getInternalResponse()->getContent(), $matches)) {
@@ -731,14 +762,14 @@ class InnerBrowser extends Module implements Web
         }
 
         if ($nodes->filter('select')->count()) {
-            /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $select */
+            /** @var  \Symfony\Component\DomCrawler\Crawler $select */
             $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
             $results     = array();
-            foreach ($select->childNodes as $option) {
-                /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement $option */
+            foreach ($select->children() as $option) {
+                /** @var  \DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
-                    $val = $option->attr('value');
+                    $val = $option->getAttribute('value');
                     if (!$is_multiple) {
                         return $val;
                     }

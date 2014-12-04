@@ -16,6 +16,7 @@ class {{name}}Helper extends \\Codeception\\Module
 {
 
 }
+
 EOF;
 
     protected $namespace;

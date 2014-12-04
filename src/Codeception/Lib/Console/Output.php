@@ -54,7 +54,7 @@ class Output extends ConsoleOutput
     function message($message)
     {
         $message = call_user_func_array('sprintf', func_get_args());
-        return new Message($this, $message);
+        return new Message($message, $this);
     }
 
     public function table(TableHelper $table)

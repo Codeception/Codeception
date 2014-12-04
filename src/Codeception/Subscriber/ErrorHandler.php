@@ -45,7 +45,8 @@ class ErrorHandler implements EventSubscriberInterface
         if (strpos($errstr, 'Cannot modify header information') !== false) {
             return false;
         }
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+
+        throw new \PHPUnit_Framework_Exception($errstr, $errno);
     }
 
     public function shutdownHandler()
