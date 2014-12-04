@@ -135,23 +135,17 @@ class Run extends Command
         if (!$this->options['silent']) {
             $this->output->writeln(Codecept::versionString() . "\nPowered by " . \PHPUnit_Runner_Version::getVersionString());
         }
-        if ($this->options['no-colors']) {
-            $this->output->setDecorated(!$this->options['no-colors']);
-        }
-        if ($this->options['colors']) {
-            $this->output->setDecorated($this->options['colors']);
-        }
         if ($this->options['debug']) {
             $this->output->setVerbosity(OutputInterface::VERBOSITY_VERY_VERBOSE);
         }
-        if ($this->options['no-colors']) {
-            $this->options['colors'] = false;
-        }
-
+        
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
         $userOptions = array_merge($userOptions, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
         $userOptions['verbosity'] = $this->output->getVerbosity();
 
+        if ($this->options['no-colors']) {
+            $userOptions['colors'] = false;
+        }
         if ($this->options['group']) {
             $userOptions['groups'] = $this->options['group'];
         }
