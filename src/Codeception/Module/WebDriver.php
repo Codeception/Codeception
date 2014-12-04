@@ -343,9 +343,23 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function amOnPage($page)
     {
-        $page = ltrim($page, '/');
-        $host = rtrim($this->config['url'], '/');
-        $this->webDriver->get($host . '/' . $page);
+        $build = parse_url($this->config['url']);
+        $uriparts = parse_url($page);
+        
+        if ($build === false) {
+            throw new \Codeception\Exception\TestRuntime("URL '{$this->config['url']}' is malformed");
+        } elseif ($uriparts === false) {
+            throw new \Codeception\Exception\TestRuntime("URI '{$page}' is malformed");
+        }
+        
+        foreach ($uriparts as $part => $value) {
+            if ($part === 'path' && !empty($build[$part])) {
+                $build[$part] = rtrim($build[$part], '/') . '/' . ltrim($value, '/');
+            } else {
+                $build[$part] = $value;
+            }
+        }
+        $this->webDriver->get(\GuzzleHttp\Url::buildUrl($build));
     }
 
     public function see($text, $selector = null)

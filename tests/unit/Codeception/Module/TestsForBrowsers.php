@@ -36,5 +36,20 @@ abstract class TestsForBrowsers extends TestsForWeb
         $this->module->seeInCurrentUrl('info');
     }
 
-
+    /*
+     * https://github.com/Codeception/Codeception/issues/1510
+     */
+    public function testSiteRootRelativePathsForBasePathWithSubdir()
+    {
+        $this->module->_reconfigure(array('url' => 'http://localhost:8000/form'));
+        $this->module->amOnPage('/relative_siteroot');
+        $this->module->seeInCurrentUrl('/form/relative_siteroot');
+        $this->module->submitForm('form', array(
+            'test' => 'value'
+        ));
+        $this->module->dontSeeInCurrentUrl('form/form/');
+        $this->module->amOnPage('relative_siteroot');
+        $this->module->click('Click me');
+        $this->module->dontSeeInCurrentUrl('form/form/');
+    }
 }

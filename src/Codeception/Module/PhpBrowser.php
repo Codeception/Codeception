@@ -106,6 +106,11 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->client->setAuth($username, $password);
     }
 
+    public function amOnPage($page)
+    {
+        parent::amOnPage(ltrim($page, '/'));
+    }
+    
     public function amOnUrl($url)
     {
         $urlParts = parse_url($url);

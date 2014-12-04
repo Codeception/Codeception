@@ -348,18 +348,34 @@ class InnerBrowser extends Module implements Web
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
-
         $currentUrl = $this->client->getHistory()->current()->getUri();
-        // empty url
-        if ((!$action) or ($action == '#')) {
-            $action = $currentUrl;
+        
+        if (empty($action) || $action === '#') {
+            return $currentUrl;
         }
-        // relative url
-        if ((strpos($action, '/') !== 0) and !preg_match('~^https?://~', $action)) {
-            $path = pathinfo($currentUrl);
-            $action = $path['dirname'] . '/' . $action;
+        
+        $build = parse_url($currentUrl);
+        $uriparts = parse_url($action);
+        
+        if ($build === false) {
+            throw new \Codeception\Exception\TestRuntime("URL '{$currentUrl}' is malformed");
+        } elseif ($uriparts === false) {
+            throw new \Codeception\Exception\TestRuntime("URI '{$action}' is malformed");
         }
-        return $action;
+        
+        foreach ($uriparts as $part => $value) {
+            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
+                // if it ends with a slash, relative paths are below it
+                if (preg_match('~/$~', $build[$part])) {
+                    $build[$part] = $build[$part] . $value;
+                } else {
+                    $build[$part] = dirname($build[$part]) . '/' . $value;
+                }
+            } else {
+                $build[$part] = $value;
+            }
+        }
+        return \GuzzleHttp\Url::buildUrl($build);
     }
 
     /**
