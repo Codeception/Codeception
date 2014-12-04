@@ -355,25 +355,26 @@ class InnerBrowser extends Module implements Web
         }
         
         $build = parse_url($currentUrl);
-        $uriparts = parse_url($action);
-        
         if ($build === false) {
-            throw new \Codeception\Exception\TestRuntime("URL '{$currentUrl}' is malformed");
-        } elseif ($uriparts === false) {
-            throw new \Codeception\Exception\TestRuntime("URI '{$action}' is malformed");
+            throw new TestRuntime("URL '$currentUrl' is malformed");
+        }
+
+        $uriParts = parse_url($action);
+        if ($uriParts === false) {
+            throw new TestRuntime("URI '$action' is malformed");
         }
         
-        foreach ($uriparts as $part => $value) {
+        foreach ($uriParts as $part => $value) {
             if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
                 // if it ends with a slash, relative paths are below it
                 if (preg_match('~/$~', $build[$part])) {
                     $build[$part] = $build[$part] . $value;
-                } else {
-                    $build[$part] = dirname($build[$part]) . '/' . $value;
+                    continue;
                 }
-            } else {
-                $build[$part] = $value;
+                $build[$part] = dirname($build[$part]) . '/' . $value;
+                continue;
             }
+            $build[$part] = $value;
         }
         return \GuzzleHttp\Url::buildUrl($build);
     }
