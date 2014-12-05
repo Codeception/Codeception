@@ -146,7 +146,7 @@ In second case `Codeception\TestLoader` class will be used and test classes will
 Let's prepare group files:
 
 ```bash
-$ robo parallel:split-groups
+$ robo parallel:split-tests
 
  [Codeception\Task\SplitTestFilesByGroupsTask] Processing 33 files
  [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p1
