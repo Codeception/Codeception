@@ -45,7 +45,7 @@ use GuzzleHttp\Client;
  *        config:
  *           PhpBrowser:
  *              url: 'http://localhost'
- *              auth: ['admin', '123345]
+ *              auth: ['admin', '123345']
  *              curl:
  *                  CURLOPT_RETURNTRANSFER: true
  *
