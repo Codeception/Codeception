@@ -17,6 +17,21 @@ class SqlSrv extends Db
     public function cleanup()
     {
         $this->dbh->exec("
+            DECLARE constraints_cursor CURSOR FOR SELECT name, parent_object_id FROM sys.foreign_keys;
+            OPEN constraints_cursor
+            DECLARE @constraint sysname;
+            DECLARE @parent int;
+            DECLARE @table nvarchar(128);
+            FETCH NEXT FROM constraints_cursor INTO @constraint, @parent;
+            WHILE (@@FETCH_STATUS <> -1)
+            BEGIN
+                SET @table = OBJECT_NAME(@parent)
+                EXEC ('ALTER TABLE [' + @table + '] DROP CONSTRAINT [' + @constraint + ']')
+                FETCH NEXT FROM constraints_cursor INTO @constraint, @parent;
+            END
+            DEALLOCATE constraints_cursor;");
+
+        $this->dbh->exec("
             DECLARE tables_cursor CURSOR FOR SELECT name FROM sysobjects WHERE type = 'U';
             OPEN tables_cursor DECLARE @tablename sysname;
             FETCH NEXT FROM tables_cursor INTO @tablename;
