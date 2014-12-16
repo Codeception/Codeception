@@ -453,7 +453,7 @@ class Stub
     }
 
     /**
-     * Replaces properties and methods of current stub
+     * Replaces properties of current stub
      *
      * @param \PHPUnit_Framework_MockObject_MockObject $mock
      * @param array                                    $params
