@@ -3,20 +3,20 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\MalformedLocator;
 use Codeception\Exception\TestRuntime;
-use Codeception\PHPUnit\Constraint\Page as PageConstraint;
+use Codeception\Lib\Interfaces\Web;
+use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
 use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
-use Codeception\Module;
+use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
-use Codeception\Lib\Interfaces\Web;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
-use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 
 class InnerBrowser extends Module implements Web
@@ -671,16 +671,14 @@ class InnerBrowser extends Module implements Web
         if (is_array($selector)) {
             return $this->strictMatch($selector);
         }
-        try {
-            $selector = CssSelector::toXPath($selector);
-        } catch (ParseException $e) {
-        }
-        if (!Locator::isXPath($selector)) {
-            codecept_debug("XPath `$selector` is malformed!");
-            return new \Symfony\Component\DomCrawler\Crawler;
-        }
 
-        return @$this->crawler->filterXPath($selector);
+        if (Locator::isCSS($selector)) {
+            return $this->crawler->filter($selector);
+        }
+        if (Locator::isXPath($selector)) {
+            return $this->crawler->filterXPath($selector);
+        }
+        throw new MalformedLocator($selector, 'XPath or CSS');
     }
 
     /**
@@ -694,17 +692,17 @@ class InnerBrowser extends Module implements Web
         $locator = $by[$type];
         switch ($type) {
             case 'id':
-                return $this->crawler->filter("#$locator");
+                return $this->filterByCSS("#$locator");
             case 'name':
-                return @$this->crawler->filterXPath(sprintf('.//*[@name=%s]', Crawler::xpathLiteral($locator)));
+                return $this->filterByXPath(sprintf('.//*[@name=%s]', Crawler::xpathLiteral($locator)));
             case 'css':
-                return $this->crawler->filter($locator);
+                return $this->filterByCSS($locator);
             case 'xpath':
-                return @$this->crawler->filterXPath($locator);
+                return $this->filterByXPath($locator);
             case 'link':
-                return @$this->crawler->filterXPath(sprintf('.//a[.=%s]', Crawler::xpathLiteral($locator)));
+                return $this->filterByXPath(sprintf('.//a[.=%s]', Crawler::xpathLiteral($locator)));
             case 'class':
-                return $this->crawler->filter(".$locator");
+                return $this->filterByCSS(".$locator");
             default:
                 throw new TestRuntime("Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name");
         }
@@ -723,12 +721,12 @@ class InnerBrowser extends Module implements Web
 
     public function grabTextFrom($cssOrXPathOrRegex)
     {
+        if (@preg_match($cssOrXPathOrRegex, $this->client->getInternalResponse()->getContent(), $matches)) {
+            return $matches[1];
+        }
         $nodes = $this->match($cssOrXPathOrRegex);
         if ($nodes->count()) {
             return $nodes->first()->text();
-        }
-        if (@preg_match($cssOrXPathOrRegex, $this->client->getInternalResponse()->getContent(), $matches)) {
-            return $matches[1];
         }
         throw new ElementNotFound($cssOrXPathOrRegex, 'Element that matches CSS or XPath or Regex');
     }
@@ -940,5 +938,29 @@ class InnerBrowser extends Module implements Web
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
+    }
+
+    /**
+     * @param $locator
+     * @return Crawler
+     */
+    protected function filterByCSS($locator)
+    {
+        if (!Locator::isCSS($locator)) {
+            throw new MalformedLocator($locator, 'css');
+        }
+        return $this->crawler->filter($locator);
+    }
+
+    /**
+     * @param $locator
+     * @return Crawler
+     */
+    protected function filterByXPath($locator)
+    {
+        if (!Locator::isXPath($locator)) {
+            throw new MalformedLocator($locator, 'xpath');
+        }
+        return $this->crawler->filterXPath($locator);
     }
 }

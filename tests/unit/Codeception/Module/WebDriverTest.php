@@ -488,4 +488,11 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'No');
         $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'Yes');
     }
+
+    public function testSeeElementMalformedWdLocator()
+    {
+        $this->setExpectedException('Codeception\Exception\MalformedLocator');
+        $this->module->amOnPage('/');
+        $this->module->seeElement(WebDriverBy::xpath('H---EY!'));
+    }
 }
