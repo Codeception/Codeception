@@ -146,7 +146,7 @@ In second case `Codeception\TestLoader` class will be used and test classes will
 Let's prepare group files:
 
 ```bash
-$ robo parallel:split-groups
+$ robo parallel:split-tests
 
  [Codeception\Task\SplitTestFilesByGroupsTask] Processing 33 files
  [Codeception\Task\SplitTestFilesByGroupsTask] Writing tests/_log/p1
@@ -257,7 +257,8 @@ Now, we should update our `parallelRun` method to use corresponding environment:
                 ->suite('acceptance') // run acceptance tests
                 ->group("p$i")        // for all p* groups
                 ->env("p$i")          // in its own environment
-                ->xml("tests/_log/result_$i.xml"); // save XML results
+                ->xml("tests/_log/result_$i.xml") // save XML results
+              );
         }
         return $parallel->run();
     }
@@ -280,7 +281,7 @@ We should not rely on console output when running our tests. In case of `paralle
     {
         $merge = $this->taskMergeXmlReports();
         for ($i=1; $i<=5; $i++) {
-            $merge->from("/tests/_log/result_$i.xml")
+            $merge->from("/tests/_log/result_$i.xml");
         }
         $merge->into("/tests/_log/result.xml")
             ->run();

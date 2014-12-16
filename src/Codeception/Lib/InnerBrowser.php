@@ -302,10 +302,7 @@ class InnerBrowser extends Module implements Web
             $ident = reset($field);
             $strField = key($field) . '=>' . $ident;
         }
-        
-        if (is_bool($value)) {
-            
-        }
+
         return [
             'Contains',
             $value,
