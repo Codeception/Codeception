@@ -488,6 +488,14 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'No');
         $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'Yes');
     }
+    /**
+     * @Issue 1598
+     */
+    public function testWaitForTextBug1598()
+    {
+        $this->module->amOnPage('/form/bug1598');
+        $this->module->waitForText('12,345', 10, '#field');
+    }
 
     public function testSeeElementMalformedWdLocator()
     {
