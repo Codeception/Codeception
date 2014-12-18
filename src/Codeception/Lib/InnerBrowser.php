@@ -18,6 +18,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
+use Symfony\Component\DomCrawler\Field\TextareaFormField;
 
 class InnerBrowser extends Module implements Web
 {
@@ -437,7 +438,22 @@ class InnerBrowser extends Module implements Web
     {
         $input                      = $this->getFieldByLabelOrCss($field);
         $form                       = $this->getFormFor($input);
-        $form[$input->attr('name')] = $value;
+        $name                       = $input->attr('name');
+        if ((substr($name, -2) == '[]')) {
+            $name = substr($name, 0, -2);
+            $field = $input->getNode(0)->tagName == 'textarea'
+                ? new TextareaFormField($input->getNode(0))
+                : new InputFormField($field->getNode(0));
+            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
+            foreach ($form[$name] as $item) {
+                if ($item == $field) {
+                    $item->setValue($value);
+                    return;
+                }
+            }
+            return;
+        }
+        $form[$name] = $value;
     }
 
     /**

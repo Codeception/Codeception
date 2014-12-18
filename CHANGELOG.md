@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.9
+
+* [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. See #1585 *2014-12-18*
+
+
 #### 2.0.8
 
 * Dependencies updated: facebook/php-webdriver 0.5.x and guzzle 5 *2014-11-17*
