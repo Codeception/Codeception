@@ -2,6 +2,7 @@
 
 #### 2.0.9
 
+* Dependencies updated to Symfony 2.6.
 * [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. See #1585 *2014-12-18*
 
 
