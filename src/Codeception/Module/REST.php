@@ -215,7 +215,7 @@ class REST extends \Codeception\Module
      * Parameters and files (as array of filenames) can be provided.
      *
      * @param $url
-     * @param array $params
+     * @param array|\JsonSerializable $params
      * @param array $files
      */
     public function sendPOST($url, $params = array(), $files = array())
@@ -395,12 +395,15 @@ class REST extends \Codeception\Module
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
-            $parameters = $this->scalarizeArray($parameters);
-            if (array_key_exists('Content-Type', $this->headers)
-                && $this->headers['Content-Type'] === 'application/json'
-                && $method != 'GET'
-            ) {
+        if (array_key_exists('Content-Type', $this->headers)
+            && $this->headers['Content-Type'] === 'application/json'
+            && $method != 'GET'
+        ) {
+            if ($parameters instanceof \JsonSerializable) {
+                return json_encode($parameters);
+            }
+            if (is_array($parameters) || $parameters instanceof \ArrayAccess) {
+                $parameters = $this->scalarizeArray($parameters);
                 return json_encode($parameters);
             }
         }

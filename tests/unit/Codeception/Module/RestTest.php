@@ -164,6 +164,16 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($request->getParameters());
     }
 
+    public function testApplicationJsonIncludesObjectSerialized()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendPOST('/', new JsonSerializedItem());
+        /** @var $request \Symfony\Component\BrowserKit\Request  **/
+        $request = $this->module->client->getRequest();
+        $this->assertContains('application/json', $request->getServer());
+        $this->assertJson($request->getContent());
+    }
+
     public function testGetApplicationJsonNotIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
@@ -238,4 +248,12 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+}
+
+class JsonSerializedItem implements JsonSerializable
+{
+    public function jsonSerialize()
+    {
+        return '{"hello": "world"}';
+    }
 }
