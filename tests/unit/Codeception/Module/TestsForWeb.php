@@ -980,4 +980,23 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertContains(4, $data['BMessage']['topicsLinks']);
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1585
+     * @Issue https://github.com/Codeception/Codeception/issues/1602
+     */
+    public function testUnreachableField()
+    {
+        $this->module->amOnPage('/form/bug1585');
+        $this->module->fillField('textarea[name="captions[]"]', 'test2');
+        $this->module->fillField('items[1][]', 'test3');
+        $this->module->fillField('input[name="users[]"]', 'davert');
+        $this->module->attachFile('input[name="files[]"]', 'app/avatar.jpg');
+        $this->module->click('Submit');
+        $data = data::get('form');
+        $this->assertContains('test3', $data['items'][1]);
+        $this->assertContains('test2', $data['captions']);
+        $this->assertContains('davert', $data['users']);
+
+    }
+
 }

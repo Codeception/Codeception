@@ -1,5 +1,57 @@
 # Changelog
 
+#### 2.0.9
+
+* **Fixed Symfony 2.6 compatibility in Yaml::parse**
+* Specific tests can be executed without adding .php extension by @antonioribeiro See #1531 *2014-12-20*
+
+Now you can run specific test using shorter format:
+
+```
+codecept run unit tests/unit/Codeception/TestLoaderTest
+codecept run unit Codeception
+codecept run unit Codeception:testAddCept
+
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception:testAddCept
+
+codecept run unit Codeception/TestLoaderTest.php
+codecept run unit Codeception/TestLoaderTest
+codecept run unit Codeception/TestLoaderTest.php:testAddCept
+codecept run unit Codeception/TestLoaderTest:testAddCept
+
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest.php
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest.php:testAddCept
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest
+codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest:testAddCept
+
+codecept run unit tests/unit/Codeception
+codecept run unit tests/unit/Codeception:testAddCept
+codecept run unit tests/unit/Codeception/TestLoaderTest.php
+codecept run unit tests/unit/Codeception/TestLoaderTest.php:testAddCept
+codecept run unit tests/unit/Codeception/TestLoaderTest
+codecept run unit tests/unit/Codeception/TestLoaderTest:testAddCept
+```
+
+* [Db] Remove table constraints prior to drop table in clean up for SqlSrv by @jonsa *2014-12-20*
+* [PhpBrowser][Frameworks] Fixed: submitForm with form using site-root relative paths may fail depending on configuration #1510 by @zbateson *2014-12-20*
+* [WebDriver][PhpBrowser][Frameworks] `seeInField` method to work for radio, checkbox and select fields. Thanks to @zbateson *2014-12-20*
+* Fixed usage of `--no-colors` flag by @zbateson. Issue #1562 *2014-12-20*
+* [REST] sendXXX methods now encode objects implementing JsonSerializable interfaces. *2014-12-19*
+* [REST] added methods to validate JSON structure *2014-12-19*
+
+`seeResponseJsonMatchesJsonPath` validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
+Usage of JsonPath requires library "flow/jsonpath" to be installed.
+
+`seeResponseJsonMatchesXpath` validates response JSON against XPath.
+It converts JSON structure into valid XPath document and executes XPath for it.
+
+`grabDataFromResponseByJsonPath` method was added as well to grab data JSONPath.
+
+* [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
+* [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*
+
+
 #### 2.0.8
 
 * Dependencies updated: facebook/php-webdriver 0.5.x and guzzle 5 *2014-11-17*

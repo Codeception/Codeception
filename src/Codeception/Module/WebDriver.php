@@ -197,15 +197,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _getResponseCode()
-    {
-    }
-
-    public function _sendRequest($url)
-    {
-        $this->webDriver->get($this->_getUrl() . '');
-    }
-
     public function amOnSubdomain($subdomain)
     {
         $url = $this->config['url'];
@@ -544,26 +535,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$url) {
             return $this->assertNodesContain($text, $nodes, 'a');
         }
-        $nodes = array_filter(
-            $nodes,
-            function (\WebDriverElement $e) use ($url) {
-                $parts = parse_url($url);
-                if (!$parts) {
-                    $this->fail("Link URL of '$url' couldn't be parsed");
-                }
-                $uri = "";
-                if (isset($parts['path'])) {
-                    $uri .= $parts['path'];
-                }
-                if (isset($parts['query'])) {
-                    $uri .= "?" . $parts['query'];
-                }
-                if (isset($parts['fragment'])) {
-                    $uri .= "#" . $parts['fragment'];
-                }
-                return $uri == trim($url);
-            }
-        );
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
 
@@ -955,11 +926,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function grabAttributeFrom($cssOrXpath, $attribute)
     {
-        $els = $this->match($this->webDriver, $cssOrXpath);
-        if (count($els)) {
-            return $els[0]->getAttribute($attribute);
-        }
-        throw new ElementNotFound($cssOrXpath, 'CSS or XPath');
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXpath);
+        return $el->getAttribute($attribute);
     }
 
     public function grabValueFrom($field)
