@@ -214,6 +214,25 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeHttpHeaderOnce('Cache-Control');
     }
 
+    public function testArrayJsonPathAndXPath()
+    {
+        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//user');
+        $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
+        $this->module->seeResponseJsonMatchesJsonPath('$[1].tags');
+    }
+
+    public function testStructuredJsonPathAndXPath()
+    {
+        $this->module->response = '{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//book/category');
+        $this->module->seeResponseJsonMatchesJsonPath('$..book');
+        $this->module->seeResponseJsonMatchesJsonPath('$.store.book[2].author');
+    }
+
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');

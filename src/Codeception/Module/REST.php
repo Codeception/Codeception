@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Codeception\Exception\Module;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
+use Codeception\Util\JsonArray;
 use Symfony\Component\BrowserKit\Cookie;
 
 /**
@@ -451,7 +452,7 @@ class REST extends \Codeception\Module
      */
     public function seeResponseContains($text)
     {
-        \PHPUnit_Framework_Assert::assertContains($text, $this->response, "REST response contains");
+        $this->assertContains($text, $this->response, "REST response contains");
     }
 
     /**
@@ -461,7 +462,7 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseContains($text)
     {
-        \PHPUnit_Framework_Assert::assertNotContains($text, $this->response, "REST response contains");
+        $this->assertNotContains($text, $this->response, "REST response contains");
     }
 
     /**
@@ -489,12 +490,12 @@ class REST extends \Codeception\Module
      */
     public function seeResponseContainsJson($json = array())
     {
-        $resp_json = json_decode($this->response, true);
+        $jsonResponseArray = new JsonArray($this->response);
         \PHPUnit_Framework_Assert::assertTrue(
-            $this->arrayHasArray($json, $resp_json),
+            $jsonResponseArray->containsArray($json),
             "Response JSON contains provided\n"
             ."- <info>".var_export($json, true)."</info>\n"
-            ."+ ".var_export($resp_json, true)
+            ."+ ".var_export($jsonResponseArray->toArray(), true)
         );
     }
 
@@ -520,7 +521,9 @@ class REST extends \Codeception\Module
 
     /**
      * Returns data from the current JSON response using specified path
-     * so that it can be used in next scenario steps
+     * so that it can be used in next scenario steps.
+     *
+     * **this method is deprecated in favor of `grabDataFromResponseByJsonPath`**
      *
      * Example:
      *
@@ -531,20 +534,17 @@ class REST extends \Codeception\Module
      * ?>
      * ```
      *
+     * @deprecated please use `grabDataFromResponseByJsonPath`
      * @param string $path
-     *
-     * @since 1.1.2
      * @return string
-     *
-     * @author tiger.seo@gmail.com
      */
     public function grabDataFromJsonResponse($path = '')
     {
         $data = $response = json_decode($this->response, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->fail('Response is not of JSON format or is malformed');
             $this->debugSection('Response', $this->response);
+            $this->fail('Response is not of JSON format or is malformed');
         }
 
         if ($path === '') {
@@ -563,6 +563,127 @@ class REST extends \Codeception\Module
         return $data;
     }
 
+    /**
+     * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
+     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * Even for a single value an array is returned.
+     *
+     * This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * // match the first `user.id` in json
+     * $firstUser = $I->grabDataFromJsonResponse('$..users[0].id');
+     * $I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
+     * ?>
+     * ```
+     *
+     * @param $jsonPath
+     * @return array
+     * @version 2.0.9
+     * @throws \Exception
+     */
+    public function grabDataFromResponseByJsonPath($jsonPath)
+    {
+        return (new JsonArray($this->response))->filterByJsonPath($jsonPath);
+    }
+
+    /**
+     * Checks if json structure in response matches the xpath provided.
+     * JSON is not supposed to be checked against XPath, yet it can be converted to xml and used with XPath.
+     * This assertion allows you to check the structure of response json.
+     *     *
+     * ```json
+     * ```json
+     *   { "store": {
+     *       "book": [
+     *         { "category": "reference",
+     *           "author": "Nigel Rees",
+     *           "title": "Sayings of the Century",
+     *           "price": 8.95
+     *         },
+     *         { "category": "fiction",
+     *           "author": "Evelyn Waugh",
+     *           "title": "Sword of Honour",
+     *           "price": 12.99
+     *         }
+     *    ],
+     *       "bicycle": {
+     *         "color": "red",
+     *         "price": 19.95
+     *       }
+     *     }
+     *   }
+     * ```
+     *
+     * ```php
+     * <?php
+     * // at least one book in store has author
+     * $I->seeResponseJsonMatchesXpath('//store/book/author');
+     * // first book in store has author
+     * $I->seeResponseJsonMatchesXpath('//store/book[1]/author');
+     * // at least one item in store has price
+     * $I->seeResponseJsonMatchesXpath('/store//price');
+     * ?>
+     * ```
+     *
+     * @version 2.0.9
+     */
+    public function seeResponseJsonMatchesXpath($xpath)
+    {
+        $this->assertGreaterThan(0, (new JsonArray($this->response))->filterByXPath($xpath)->length,
+            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n".$this->response);
+    }
+
+    /**
+     * Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
+     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * This assertion allows you to check the structure of response json.
+     *
+     * This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+     *
+     * ```json
+     *   { "store": {
+     *       "book": [
+     *         { "category": "reference",
+     *           "author": "Nigel Rees",
+     *           "title": "Sayings of the Century",
+     *           "price": 8.95
+     *         },
+     *         { "category": "fiction",
+     *           "author": "Evelyn Waugh",
+     *           "title": "Sword of Honour",
+     *           "price": 12.99
+     *         }
+     *    ],
+     *       "bicycle": {
+     *         "color": "red",
+     *         "price": 19.95
+     *       }
+     *     }
+     *   }
+     * ```
+     *
+     * ```php
+     * <?php
+     * // at least one book in store has author
+     * $I->seeResponseJsonMatchesJsonPath('$.store.book[*].author');
+     * // first book in store has author
+     * $I->seeResponseJsonMatchesJsonPath('$.store.book[0].author');
+     * // at least one item in store has price
+     * $I->seeResponseJsonMatchesJsonPath('$.store..price');
+     * ?>
+     * ```
+     *
+     * @version 2.0.9
+     */
+    public function seeResponseJsonMatchesJsonPath($jsonPath)
+    {
+        $this->assertNotEmpty((new JsonArray($this->response))->filterByJsonPath($jsonPath),
+            "Received JSON did not match the JsonPath provided\n".$this->response);
+    }
 
     /**
      * Opposite to seeResponseContainsJson
@@ -571,12 +692,12 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseContainsJson($json = array())
     {
-        $resp_json = json_decode($this->response, true);
+        $jsonResponseArray = new JsonArray($this->response);
         \PHPUnit_Framework_Assert::assertFalse(
-            $this->arrayHasArray($json, $resp_json),
+            $jsonResponseArray->containsArray($json),
             "Response JSON does not contain JSON provided\n"
             ."- <info>".var_export($json, true)."</info>\n"
-            ."+ ".var_export($resp_json, true)
+            ."+ ".var_export($jsonResponseArray->toArray(), true)
         );
     }
 
@@ -630,104 +751,5 @@ class REST extends \Codeception\Module
             $this->isFunctional = true;
         }
     }
-
-    /**
-     * @author nleippe@integr8ted.com
-     * @author tiger.seo@gmail.com
-     * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
-     *
-     * @param mixed $arr1
-     * @param mixed $arr2
-     *
-     * @return array|bool
-     */
-    private function arrayIntersectRecursive($arr1, $arr2)
-    {
-        if (!is_array($arr1) || !is_array($arr2)) {
-            return null;
-        }
-        // if it is not an associative array we do not compare keys
-        if ($this->arrayIsSequential($arr1) and $this->arrayIsSequential($arr2)) {
-            return $this->sequentialArrayIntersect($arr1, $arr2);
-        }
-
-        return $this->associativeArrayIntersect($arr1, $arr2);
-    }
-
-    protected function arrayHasArray(array $needle, array $haystack)
-    {
-        return $needle == $this->arrayIntersectRecursive($needle, $haystack);
-    }
-
-
-    /**
-     * @param $arr1
-     * @return bool
-     */
-    private function arrayIsSequential($arr1)
-    {
-        return array_keys($arr1) === range(0, count($arr1) - 1);
-    }
-
-    /**
-     * @param $arr1
-     * @param $arr2
-     * @return array
-     */
-    private function sequentialArrayIntersect($arr1, $arr2)
-    {
-        $ret = array();
-        foreach ($arr1 as $key1 => $value1) {
-            foreach ($arr2 as $key2 => $value2) {
-                $_return = $this->arrayIntersectRecursive($value1, $value2);
-                if ($_return) {
-                    $ret[$key1] = $_return;
-                    continue;
-                }
-                if ($value1 === $value2) {
-                    $ret[$key1] = $value1;
-                }
-            }
-        }
-        return $ret;
-    }
-
-    /**
-     * @param $arr1
-     * @param $arr2
-     * @return array|bool|null
-     */
-    private function associativeArrayIntersect($arr1, $arr2)
-    {
-        $commonkeys = array_intersect(array_keys($arr1), array_keys($arr2));
-
-        $ret = array();
-        foreach ($commonkeys as $key) {
-            $_return = $this->arrayIntersectRecursive($arr1[$key], $arr2[$key]);
-            if ($_return) {
-                $ret[$key] = $_return;
-                continue;
-            }
-            if ($arr1[$key] === $arr2[$key]) {
-                $ret[$key] = $arr1[$key];
-            }
-        }
-
-        if (empty($commonkeys)) {
-            foreach ($arr2 as $arr) {
-                $_return = $this->arrayIntersectRecursive($arr1, $arr);
-                if ($_return && $_return == $arr1) {
-                    return $_return;
-                }
-            }
-        }
-
-        if (count($ret) < min(count($arr1), count($arr2))) {
-            return null;
-        }
-
-        return $ret;
-    }
-
 
 }

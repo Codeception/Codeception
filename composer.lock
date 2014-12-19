@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8b120692efb80ceead50f14729c78601",
+    "hash": "f0f1e58fe0de22b26e18510ecc1edd64",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1515,6 +1515,42 @@
                 "sdk"
             ],
             "time": "2013-11-19 23:11:14"
+        },
+        {
+            "name": "flow/jsonpath",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FlowCommunications/JSONPath.git",
+                "reference": "5ed0d415eb96da1f38a86710dbebaaaaea46aac7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/5ed0d415eb96da1f38a86710dbebaaaaea46aac7",
+                "reference": "5ed0d415eb96da1f38a86710dbebaaaaea46aac7",
+                "shasum": ""
+            },
+            "require-dev": {
+                "peekmo/jsonpath": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Flow\\JSONPath": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stephen Frank",
+                    "email": "stephen@flowsa.com"
+                }
+            ],
+            "description": "JSONPath implementation for parsing, searching and flattening arrays",
+            "time": "2014-10-19 11:04:47"
         },
         {
             "name": "monolog/monolog",
