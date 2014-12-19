@@ -2,6 +2,7 @@
 
 #### 2.0.9
 
+* [REST] sendXXX methods now encode objects implementing JsonSerializable interfaces. *2014-12-19*
 * [REST] added methods to validate JSON structure *2014-12-19*
 
 `seeResponseJsonMatchesJsonPath` validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
