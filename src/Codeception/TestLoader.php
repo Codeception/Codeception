@@ -53,19 +53,42 @@ class TestLoader {
     {
         return $this->tests;
     }
-    
 
     protected function relativeName($file)
     {
         return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
+    protected function findPath($path)
+    {
+        if ( ! file_exists($path)
+                && substr(strtolower($path), -strlen('.php')) !== '.php'
+                && file_exists($newPath = $path . '.php')) {
+            return $newPath;
+        }
+
+        return $path;
+    }
+
+    protected function makePath($originalPath)
+    {
+        $path = $this->path . $this->relativeName($originalPath);
+
+        if (file_exists($newPath = $this->findPath($path))
+            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))) {
+            $path = $newPath;
+        }
+
+        if ( ! file_exists($path)) {
+            throw new \Exception("File or path $originalPath not found");
+        }
+
+        return $path;
+    }
+
     public function loadTest($path)
     {
-        $path = $this->path . $this->relativeName($path);
-        if (!file_exists($path)) {
-            throw new \Exception("File $path not found");
-        }
+        $path = $this->makePath($path);
 
         foreach (self::$formats as $format) {
             if (preg_match("~$format.php$~", $path)) {
@@ -203,5 +226,4 @@ class TestLoader {
     }
 
 
-
-} 
+}
