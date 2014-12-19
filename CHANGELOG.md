@@ -2,7 +2,7 @@
 
 #### 2.0.9
 
-* **Fixed Symfony 2.6 compatibility in Yaml::parse**
+* **Fixed Symfony 2.6 compatibility in Yaml::parse by @antonioribeiro**
 * Specific tests can be executed without adding .php extension by @antonioribeiro See #1531 *2014-12-20*
 
 Now you can run specific test using shorter format:
