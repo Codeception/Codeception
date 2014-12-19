@@ -32,6 +32,12 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($this->testLoader->getTests()));
     }
 
+    public function testAddCeptWithoutExtension()
+    {
+        $this->testLoader->loadTest('SimpleCept');
+        $this->assertEquals(1, count($this->testLoader->getTests()));
+    }
+
     /**
      * @group core
      */
