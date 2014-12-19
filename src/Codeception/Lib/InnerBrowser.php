@@ -16,6 +16,7 @@ use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
@@ -439,21 +440,12 @@ class InnerBrowser extends Module implements Web
         $input                      = $this->getFieldByLabelOrCss($field);
         $form                       = $this->getFormFor($input);
         $name                       = $input->attr('name');
-        if ((substr($name, -2) == '[]')) {
-            $name = substr($name, 0, -2);
-            $field = $input->getNode(0)->tagName == 'textarea'
-                ? new TextareaFormField($input->getNode(0))
-                : new InputFormField($field->getNode(0));
-            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
-            foreach ($form[$name] as $item) {
-                if ($item == $field) {
-                    $item->setValue($value);
-                    return;
-                }
-            }
-            return;
-        }
-        $form[$name] = $value;
+
+        $dynamicField = $input->getNode(0)->tagName == 'textarea'
+            ? new TextareaFormField($input->getNode(0))
+            : new InputFormField($input->getNode(0));
+        $formField = $this->matchFormField($name, $form, $dynamicField);
+        $formField->setValue($value);
     }
 
     /**
@@ -538,18 +530,8 @@ class InnerBrowser extends Module implements Web
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
-        if ((substr($name, -2) == '[]')) {
-            $name = substr($name, 0, -2);
-            $checkbox = new ChoiceFormField($field->getNode(0));
-            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
-            foreach ($form[$name] as $item) {
-                if ($item == $checkbox) {
-                    $item->tick();
-                }
-            }
-        } else {
-            $form[$name]->tick();
-        }
+        $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
+        $formField->tick();
     }
 
     public function uncheckOption($option)
@@ -557,33 +539,25 @@ class InnerBrowser extends Module implements Web
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
-        if ((substr($name, -2) == '[]')) {
-            $name = rtrim($name, '[]');
-            $checkbox = new ChoiceFormField($field->getNode(0));
-            /** @var $item \Symfony\Component\DomCrawler\Field\ChoiceFormField */
-            foreach ($form[$name] as $item) {
-                if ($item == $checkbox) {
-                    $item->untick();
-                }
-            }
-        } else {
-            $form[$name]->untick();
-        }
+        $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
+        $formField->untick();
+
     }
 
     public function attachFile($field, $filename)
     {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($field));
         $path = Configuration::dataDir() . $filename;
+        $name = $field->attr('name');
         if (!is_readable($path)) {
-            $this->fail(
-                 "file $filename not found in Codeception data path. Only files stored in data path accepted"
-            );
+            $this->fail("file $filename not found in Codeception data path. Only files stored in data path accepted");
         }
-        if (is_array($form[$field->attr('name')])) {
-            $this->fail("Field {$field->attr('name')} is ignored on upload, field {$field->attr('name')} is treated as array.");
+        $formField = $this->matchFormField($name, $form, new FileFormField($field->getNode(0)));
+        if (is_array($formField)) {
+            $this->fail("Field $name is ignored on upload, field $name is treated as array.");
         }
-        $form[$field->attr('name')]->upload($path);
+
+        $formField->upload($path);
     }
 
     /**
@@ -949,5 +923,24 @@ class InnerBrowser extends Module implements Web
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
+    }
+
+    /**
+     * @param $name
+     * @param $form
+     * @param $dynamicField
+     * @return FileFormField
+     */
+    protected function matchFormField($name, $form, $dynamicField)
+    {
+        if (substr($name, -2) != '[]') return $form[$name];
+        $name = substr($name, 0, -2);
+        /** @var $item \Symfony\Component\DomCrawler\Field\FileFormField */
+        foreach ($form[$name] as $item) {
+            if ($item == $dynamicField) {
+                return $item;
+            }
+        }
+        return $item;
     }
 }

@@ -15,7 +15,7 @@ It converts JSON structure into valid XPath document and executes XPath for it.
 
 * [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
 * Dependencies updated to Symfony 2.6.
-* [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. See #1585 *2014-12-18*
+* [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*
 
 
 #### 2.0.8
