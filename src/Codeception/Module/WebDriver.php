@@ -537,26 +537,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$url) {
             return $this->assertNodesContain($text, $nodes, 'a');
         }
-        $nodes = array_filter(
-            $nodes,
-            function (\WebDriverElement $e) use ($url) {
-                $parts = parse_url($url);
-                if (!$parts) {
-                    $this->fail("Link URL of '$url' couldn't be parsed");
-                }
-                $uri = "";
-                if (isset($parts['path'])) {
-                    $uri .= $parts['path'];
-                }
-                if (isset($parts['query'])) {
-                    $uri .= "?" . $parts['query'];
-                }
-                if (isset($parts['fragment'])) {
-                    $uri .= "#" . $parts['fragment'];
-                }
-                return $uri == trim($url);
-            }
-        );
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
 
