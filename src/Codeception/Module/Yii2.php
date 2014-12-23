@@ -75,7 +75,7 @@ class Yii2 extends Framework implements ActiveRecord
         }
 
         if (Yii::$app) {
-            Yii::$app->session->close();
+            Yii::$app->session->destroy();
         }
 
 
