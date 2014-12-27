@@ -24,6 +24,7 @@ class BeforeAfterClass implements EventSubscriberInterface {
             if (in_array($class, $processedClasses)) {
                 continue;
             }
+            $processedClasses[] = $class;
             if (is_callable(array($class, $method))) {
                 call_user_func(array($class, $method));
             }
