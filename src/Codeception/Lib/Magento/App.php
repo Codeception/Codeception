@@ -18,7 +18,8 @@ class App
     public function initMagento()
     {
         if ($file = $this->getBaseDir('app/Mage.php')) {
-            return Mage::app(null, null, array('config_model' => '\Codeception\Lib\Magento\Config'));
+            Mage::app(null, null, array('config_model' => '\Codeception\Lib\Magento\Config'));
+            Mage::getConfig()->reinit();
         };
 
         return false;    	
