@@ -37,6 +37,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $mongo = new \MongoClient();
         
         $this->module = new MongoDb();
+
         $this->module->_setConfig($this->mongoConfig);
         $this->module->_initialize();
 
@@ -73,6 +74,13 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $user = $this->module->grabFromCollection('users', array('id' => 1));
         $this->assertTrue(isset($user['email']));
         $this->assertEquals('miles@davis.com',$user['email']);
+    }
+
+    public function testCountInCollection()
+    {
+        $this->module->countInCollection('users', 1);
+        $this->module->countInCollection('users', 1, array('email' => 'miles@davis.com'));
+        $this->module->countInCollection('users', 0, array('name' => 'Doe'));
     }
 
 }
