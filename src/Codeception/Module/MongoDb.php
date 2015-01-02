@@ -212,4 +212,24 @@ class MongoDb extends \Codeception\Module
         return $collection->findOne($criteria);
     }
 
+    /**
+     * Count number of records in a collection
+     *
+     * ``` php
+     * <?php
+     * $I->countInCollection('users', 2);
+     * $I->countInCollection('users', 1, array('name' => 'miles'));
+     * ```
+     *
+     * @param $collection
+     * @param integer $expected
+     * @param array $criteria
+     */
+    public function seeNumElementsInCollection($collection, $expected, $criteria = array())
+    {
+        $collection = $this->driver->getDbh()->selectCollection($collection);
+        $res = $collection->count($criteria);
+        \PHPUnit_Framework_Assert::assertSame($expected, $res);
+    }
+
 }
