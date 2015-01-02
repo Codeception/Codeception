@@ -217,8 +217,8 @@ class MongoDb extends \Codeception\Module
      *
      * ``` php
      * <?php
-     * $I->countInCollection('users', 2);
-     * $I->countInCollection('users', 1, array('name' => 'miles'));
+     * $I->seeNumElementsInCollection('users', 2);
+     * $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
      * ```
      *
      * @param $collection
