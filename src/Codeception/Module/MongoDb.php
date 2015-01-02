@@ -225,7 +225,7 @@ class MongoDb extends \Codeception\Module
      * @param integer $expected
      * @param array $criteria
      */
-    public function countInCollection($collection, $expected, $criteria = array())
+    public function seeNumElementsInCollection($collection, $expected, $criteria = array())
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         $res = $collection->count($criteria);
