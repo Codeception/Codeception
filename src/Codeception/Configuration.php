@@ -82,6 +82,15 @@ class Configuration
     );
 
     /**
+     * List of vendor files with suppressed E_USER_DEPRECATED error
+     *
+     * @var array
+     */
+    public static $silenceVendorDeprecatedFiles = array(
+        'Symfony/Component/Yaml/Deprecated/Unescaper.php',
+    );
+
+    /**
      * Loads global config file which is `codeception.yml` by default.
      * When config is already loaded - returns it.
      *
