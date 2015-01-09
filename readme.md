@@ -69,6 +69,20 @@ Download [codecept.phar](http://codeception.com/codecept.phar)
 
 Copy it into your project.
 
+You can also make Codeception an executable and it put it into your `$PATH`, for instance:
+
+```
+wget http://codeception.com/codecept.phar
+
+chmod +x codecept.phar
+
+sudo mv codecept.phar /usr/local/bin/codecept
+
+```
+
+You can then run Codecept in the command line using: `codecept bootstrap`, `codecept run`, etc
+
+
 Run CLI utility:
 
 ```
