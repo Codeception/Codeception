@@ -14,7 +14,7 @@ class Guzzle extends Client
 {
     protected $baseUri;
     protected $requestOptions = [
-        'allow_redirects' => false,
+        'allow_redirects' => true,
         'headers' => [],
     ];
     protected $refreshMaxInterval = 0;
