@@ -1,5 +1,5 @@
 <?php
-namespace Redmatter\Codeception\Common\Module;
+namespace Codeception\Module;
 
 use Codeception\Exception\TestRuntime as TestRuntimeException;
 use Codeception\Lib\Driver\Db as Driver;
