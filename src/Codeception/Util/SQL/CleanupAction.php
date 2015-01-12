@@ -9,7 +9,7 @@
 namespace Codeception\Util\SQL;
 
 use Codeception\Exception\TestRuntime as TestRuntimeException;
-use Redmatter\Codeception\Common\Module\MultiDb;
+use Codeception\Module\MultiDb;
 
 /**
  * Class CleanupAction
@@ -88,6 +88,16 @@ class CleanupAction
         $multi_db->amConnectedToDb($this->connector);
 
         return call_user_func_array(array($multi_db, self::getMultiDbMethod($this->type)), $this->definition);
+    }
+
+    /**
+     * Stringising the action so that the console output will look nicer.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return "cleanup on '{$this->connector}' connector {$this->type} ".json_encode($this->definition);
     }
 
     /**
