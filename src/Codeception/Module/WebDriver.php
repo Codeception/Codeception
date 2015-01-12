@@ -837,7 +837,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         /** @var $context \WebDriverElement  * */
         $noFormXpath = str_replace('ancestor::form', '', $xpath);
         foreach ([$xpath, $noFormXpath] as $testXpath) {
-            $this->debug("xpath is: $testXpath \n");
             $els = $context->findElements(\WebDriverBy::xpath($testXpath));
             if (count($els)) {
                 return reset($els);
