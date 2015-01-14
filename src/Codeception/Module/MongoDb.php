@@ -212,4 +212,22 @@ class MongoDb extends \Codeception\Module
         return $collection->findOne($criteria);
     }
 
+    /**
+     * Grabs the documents count from a collection
+     *
+     * ``` php
+     * <?php
+     * $count = $I->collectionCount('users');
+     * // or
+     * $count = $I->collectionCount('users', array('isAdmin' => true));
+     * ```
+     *
+     * @param $collection
+     * @param array $criteria
+     * @return Int
+     */
+    public function collectionCount($collection, $criteria = array()) {
+        $collection = $this->driver->getDbh()->selectCollection($collection);
+        return $collection->count($criteria);
+    }
 }
