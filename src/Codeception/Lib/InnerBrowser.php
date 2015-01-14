@@ -525,7 +525,7 @@ class InnerBrowser extends Module implements Web
     {
         $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]', $option));
         if ($options->count()) {
-            return $options->first()->attr('value');
+            return $options->first()->text();
         }
         return $option;
     }
