@@ -236,14 +236,14 @@ class MongoDb extends \Codeception\Module
      *
      * ``` php
      * <?php
-     * $I->assertElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
+     * $I->seeElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
      * ```
      *
      * @param String $collection
      * @param Array $criteria
      * @param String $elementToCheck
      */
-    public function assertElementIsArray($collection, $criteria = array(), $elementToCheck = null)
+    public function seeElementIsArray($collection, $criteria = array(), $elementToCheck = null)
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
 
@@ -257,14 +257,14 @@ class MongoDb extends \Codeception\Module
      *
      * ``` php
      * <?php
-     * $I->assertElementIsObject('users', array('name' => 'John Doe') , 'data');
+     * $I->seeElementIsObject('users', array('name' => 'John Doe') , 'data');
      * ```
      *
      * @param String $collection
      * @param Array $criteria
      * @param String $elementToCheck
      */
-    public function assertElementIsObject($collection, $criteria = array(), $elementToCheck = null)
+    public function seeElementIsObject($collection, $criteria = array(), $elementToCheck = null)
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
 

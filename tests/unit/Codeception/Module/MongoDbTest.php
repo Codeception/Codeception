@@ -88,7 +88,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     {
         $this->userCollection->insert(array('id' => 4, 'trumpets' => array('piccolo', 'bass', 'slide')));
 
-        $this->module->assertElementIsArray('users', array('id' => 4), 'trumpets');
+        $this->module->seeElementIsArray('users', array('id' => 4), 'trumpets');
     }
 
 
@@ -98,7 +98,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->userCollection->insert(array('id' => 5, 'trumpets' => array('piccolo', 'bass', 'slide')));
         $this->userCollection->insert(array('id' => 6, 'trumpets' => array('piccolo', 'bass', 'slide')));
-        $this->module->assertElementIsArray('users', array(), 'trumpets');
+        $this->module->seeElementIsArray('users', array(), 'trumpets');
     }
 
     public function testAssertElementIsObject()
@@ -111,7 +111,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));
 
-        $this->module->assertElementIsObject('users', array('id' => 6), 'trumpet');
+        $this->module->seeElementIsObject('users', array('id' => 6), 'trumpet');
     }
 
     public function testAssertElementIsObjectThrowsError()
@@ -127,6 +127,6 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->userCollection->insert(array('id' => 5, 'trumpet' => $trumpet));
         $this->userCollection->insert(array('id' => 6, 'trumpet' => $trumpet));
 
-        $this->module->assertElementIsObject('users', array(), 'trumpet');
+        $this->module->seeElementIsObject('users', array(), 'trumpet');
     }
 }
