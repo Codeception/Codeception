@@ -248,7 +248,7 @@ class MongoDb extends \Codeception\Module
         $collection = $this->driver->getDbh()->selectCollection($collection);
 
         $res = $collection->count(array_merge($criteria, array($elementToCheck => array('$exists' => true), '$where' =>"Array.isArray(this.{$elementToCheck})")));
-        if ($res > 1) \PHPUnit_Framework_Assert::fail('Warning: you should test against a single element criteria when ensuring that elementIsArray');
+        if ($res > 1) throw new \PHPUnit_Framework_ExpectationFailedException('Error: you should test against a single element criteria when asserting that elementIsArray');
         \PHPUnit_Framework_Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
     }
 
@@ -269,7 +269,7 @@ class MongoDb extends \Codeception\Module
         $collection = $this->driver->getDbh()->selectCollection($collection);
 
         $res = $collection->count(array_merge($criteria, array($elementToCheck => array('$exists' => true), '$where' =>"! Array.isArray(this.{$elementToCheck}) && isObject(this.{$elementToCheck})")));
-        if ($res > 1) \PHPUnit_Framework_Assert::fail('Warning: you should test against a single element criteria when ensuring that elementIsObject');
+        if ($res > 1) throw new \PHPUnit_Framework_ExpectationFailedException('Error: you should test against a single element criteria when asserting that elementIsObject');
         \PHPUnit_Framework_Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
     }
 }
