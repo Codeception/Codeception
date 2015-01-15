@@ -217,33 +217,33 @@ class MongoDb extends \Codeception\Module
      *
      * ``` php
      * <?php
-     * $count = $I->collectionCount('users');
+     * $count = $I->grabCollectionCount('users');
      * // or
-     * $count = $I->collectionCount('users', array('isAdmin' => true));
+     * $count = $I->grabCollectionCount('users', array('isAdmin' => true));
      * ```
      *
      * @param $collection
      * @param array $criteria
      * @return integer
      */
-    public function collectionCount($collection, $criteria = array()) {
+    public function grabCollectionCount($collection, $criteria = array()) {
         $collection = $this->driver->getDbh()->selectCollection($collection);
         return $collection->count($criteria);
     }
 
     /**
-     * Ensure that an element in a collection exists and is an Array
+     * Asserts that an element in a collection exists and is an Array
      *
      * ``` php
      * <?php
-     * $I->ensureElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
+     * $I->assertElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
      * ```
      *
      * @param String $collection
      * @param Array $criteria
      * @param String $elementToCheck
      */
-    public function ensureElementIsArray($collection, $criteria = array(), $elementToCheck = null)
+    public function assertElementIsArray($collection, $criteria = array(), $elementToCheck = null)
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
 
@@ -253,18 +253,18 @@ class MongoDb extends \Codeception\Module
     }
 
     /**
-     * Ensure that an element in a collection exists and is an Object
+     * Asserts that an element in a collection exists and is an Object
      *
      * ``` php
      * <?php
-     * $I->ensureElementIsObject('users', array('name' => 'John Doe') , 'data');
+     * $I->assertElementIsObject('users', array('name' => 'John Doe') , 'data');
      * ```
      *
      * @param String $collection
      * @param Array $criteria
      * @param String $elementToCheck
      */
-    public function ensureElementIsObject($collection, $criteria = array(), $elementToCheck = null)
+    public function assertElementIsObject($collection, $criteria = array(), $elementToCheck = null)
     {
         $collection = $this->driver->getDbh()->selectCollection($collection);
 
