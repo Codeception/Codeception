@@ -172,7 +172,7 @@ class LocalServer extends SuiteSubscriber
     {
         parent::applySettings($settings);
         if (isset($settings['coverage']['remote_context_options'])) {
-            $this->c3Access = array_merge_recursive($settings['coverage']['remote_context_options'], $this->c3Access);
+            $this->c3Access = array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
         }
     }
 
