@@ -83,4 +83,24 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $this->module->collectionCount('users', array('id' => 3)));
         $this->assertEquals(3, $this->module->collectionCount('users'));
     }
+
+    public function testElementIsArray()
+    {
+        $this->userCollection->insert(array('id' => 4, 'trumpets' => array('piccolo', 'bass', 'slide')));
+
+        $this->module->ensureElementIsArray('users', array('id' => 4), 'trumpets');
+    }
+
+    public function testElementIsObject()
+    {
+        $trumpet = new \StdClass;
+
+        $trumpet->name = 'Trumpet 1';
+        $trumpet->pitch = 'B♭';
+        $trumpet->price = array('min' => 458, 'max' => 891);
+
+        $this->userCollection->insert(array('id' => 5, 'trumpet' => $trumpet));
+
+        $this->module->ensureElementIsObject('users', array('id' => 5), 'trumpet');
+    }
 }
