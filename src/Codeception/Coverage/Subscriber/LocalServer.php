@@ -165,7 +165,10 @@ class LocalServer extends SuiteSubscriber
 
      protected function addC3AccessHeader($header, $value)
      {
-         $this->c3Access['http']['header'] .= "$header: $value\r\n";
+         $headerString = "$header: $value\r\n";
+         if (strpos($this->c3Access['http']['header'], $headerString) === false) {
+             $this->c3Access['http']['header'] .= $headerString;
+         }
      }
 
     protected function applySettings($settings)
