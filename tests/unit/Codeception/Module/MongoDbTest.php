@@ -84,7 +84,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $this->module->grabCollectionCount('users'));
     }
 
-    public function testAssertElementIsArray()
+    public function testSeeElementIsArray()
     {
         $this->userCollection->insert(array('id' => 4, 'trumpets' => array('piccolo', 'bass', 'slide')));
 
@@ -92,7 +92,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testAssertElementIsArrayThrowsError()
+    public function testSeeElementIsArrayThrowsError()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
 
@@ -101,7 +101,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->module->seeElementIsArray('users', array(), 'trumpets');
     }
 
-    public function testAssertElementIsObject()
+    public function testSeeElementIsObject()
     {
         $trumpet = new \StdClass;
 
@@ -114,7 +114,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->module->seeElementIsObject('users', array('id' => 6), 'trumpet');
     }
 
-    public function testAssertElementIsObjectThrowsError()
+    public function testSeeElementIsObjectThrowsError()
     {
         $trumpet = new \StdClass;
 
