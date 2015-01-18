@@ -6,6 +6,7 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\TestCase;
+use Codeception\Exception\ConditionalAssertionFailed;
 use Exception;
 use PHPUnit_Framework_Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -42,7 +43,9 @@ class Listener implements \PHPUnit_Framework_TestListener
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
-        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
+        if (!$e instanceof ConditionalAssertionFailed) {
+            $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
+        }
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
