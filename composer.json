@@ -33,7 +33,6 @@
         "monolog/monolog": "~1.8",
         "facebook/php-sdk": "~3.2",
         "videlalvaro/php-amqplib": "~2.4",
-        "phpseclib/phpseclib": "~0.3.6",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
         "codegyre/robo-ci": "@dev",

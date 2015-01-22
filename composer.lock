@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f0f1e58fe0de22b26e18510ecc1edd64",
+    "hash": "ea0cc2c7f30468d4e016618636fd1649",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1709,104 +1709,6 @@
             "time": "2014-12-02 22:44:56"
         },
         {
-            "name": "phpseclib/phpseclib",
-            "version": "0.3.9",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.0.0"
-            },
-            "require-dev": {
-                "phing/phing": "2.7.*",
-                "phpunit/phpunit": "4.0.*",
-                "sami/sami": "1.*",
-                "squizlabs/php_codesniffer": "1.*"
-            },
-            "suggest": {
-                "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
-                "ext-mcrypt": "Install the Mcrypt extension in order to speed up a wide variety of cryptographic operations.",
-                "pear-pear/PHP_Compat": "Install PHP_Compat to get phpseclib working on PHP < 4.3.3."
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.3-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Crypt": "phpseclib/",
-                    "File": "phpseclib/",
-                    "Math": "phpseclib/",
-                    "Net": "phpseclib/",
-                    "System": "phpseclib/"
-                },
-                "files": [
-                    "phpseclib/Crypt/Random.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "include-path": [
-                "phpseclib/"
-            ],
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Patrick Monnerat",
-                    "email": "pm@datasphere.ch",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Andreas Fischer",
-                    "email": "bantu@phpbb.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Hans-Jürgen Petrich",
-                    "email": "petrich@tronic-media.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
-            "homepage": "http://phpseclib.sourceforge.net",
-            "keywords": [
-                "BigInteger",
-                "aes",
-                "asn.1",
-                "asn1",
-                "blowfish",
-                "crypto",
-                "cryptography",
-                "encryption",
-                "rsa",
-                "security",
-                "sftp",
-                "signature",
-                "signing",
-                "ssh",
-                "twofish",
-                "x.509",
-                "x509"
-            ],
-            "time": "2014-11-10 03:08:59"
-        },
-        {
             "name": "psr/log",
             "version": "1.0.0",
             "source": {
@@ -1904,6 +1806,7 @@
         "codegyre/robo-ci": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.4.0",
         "ext-json": "*",

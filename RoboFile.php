@@ -15,6 +15,7 @@ class RoboFile extends \Robo\Tasks
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
         $this->update();
+        $this->buildDocs();
         $this->publishDocs();
         $this->buildPhar();
         $this->publishPhar();
@@ -165,6 +166,7 @@ class RoboFile extends \Robo\Tasks
             ->name('*.html.dist')
             ->exclude('videlalvaro')
             ->exclude('pheanstalk')
+            ->exclude('phpseclib')
             ->exclude('codegyre')
             ->exclude('Tests')
             ->exclude('tests')
