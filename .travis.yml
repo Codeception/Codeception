@@ -24,8 +24,8 @@ install:
   - composer global require "fxp/composer-asset-plugin:1.0.0-beta2"
   - composer install
   # Queue (Beanstalkd)
-  - apt-get update -qq
-  - apt-get install -qq beanstalkd
+  #  - apt-get update -qq
+  #  - apt-get install -qq beanstalkd
   # Yii2
   - composer create-project --stability=dev yiisoft/yii2-app-basic frameworks-yii-basic
   - 'git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b 1.2.4'
