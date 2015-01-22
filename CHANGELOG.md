@@ -12,18 +12,10 @@ codecept run unit tests/unit/Codeception/TestLoaderTest
 codecept run unit Codeception
 codecept run unit Codeception:testAddCept
 
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception:testAddCept
-
 codecept run unit Codeception/TestLoaderTest.php
 codecept run unit Codeception/TestLoaderTest
 codecept run unit Codeception/TestLoaderTest.php:testAddCept
 codecept run unit Codeception/TestLoaderTest:testAddCept
-
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest.php
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest.php:testAddCept
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest
-codecept run unit /var/www/myapp.dev/vendor/codeception/codeception/tests/unit/Codeception/TestLoaderTest:testAddCept
 
 codecept run unit tests/unit/Codeception
 codecept run unit tests/unit/Codeception:testAddCept
@@ -40,13 +32,13 @@ codecept run unit tests/unit/Codeception/TestLoaderTest:testAddCept
 * [REST] sendXXX methods now encode objects implementing JsonSerializable interfaces. *2014-12-19*
 * [REST] added methods to validate JSON structure *2014-12-19*
 
-`seeResponseJsonMatchesJsonPath` validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
-Usage of JsonPath requires library "flow/jsonpath" to be installed.
+[seeResponseJsonMatchesJsonPath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesJsonPath) validates response JSON against [JsonPath](http://goessner.net/articles/JsonPath/).
+Usage of JsonPath requires library `flow/jsonpath` to be installed.
 
-`seeResponseJsonMatchesXpath` validates response JSON against XPath.
-It converts JSON structure into valid XPath document and executes XPath for it.
+[seeResponseJsonMatchesXpath](http://codeception.com/docs/modules/REST#seeResponseJsonMatchesXpath) validates response JSON against XPath.
+It converts JSON structure into valid XML document and executes XPath for it.
 
-`grabDataFromResponseByJsonPath` method was added as well to grab data JSONPath.
+[grabDataFromResponseByJsonPath](http://codeception.com/docs/modules/REST#grabDataFromResponseByJsonPath) method was added as well to grab data JSONPath.
 
 * [REST] `grabDataFromJsonResponse` deprecated in favor of `grabDataFromResponseByJsonPath` *2014-12-19*
 * [PhpBrowser][Frameworks] fixed `Unreachable field` error while filling [] fields in input and textarea fields. Issues #1585 #1602 *2014-12-18*

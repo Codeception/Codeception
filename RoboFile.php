@@ -2,13 +2,10 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
-use \Robo\Task\GenMarkdownDocTask as Doc;
+use \Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    use Codegyre\RoboCI\Command\CI;
-    use Codegyre\RoboCI\Command\Travis\Prepare;
-
     const STABLE_BRANCH = '2.0';
 
     public function release()
@@ -140,7 +137,7 @@ class RoboFile extends \Robo\Tasks
 
         $finder = Finder::create()
             ->ignoreVCS(true)
-            ->name('*.php')
+            ->nzame('*.php')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->in('src');
