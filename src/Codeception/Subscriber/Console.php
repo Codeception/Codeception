@@ -424,7 +424,7 @@ class Console implements EventSubscriberInterface
     {
         $this->getTestMessage($test)->write();
         if (!$this->isDetailed($test)) {
-            $this->message('... ')->write();
+            $this->message('... ')->append("\x0D")->write();
         }
     }
 
