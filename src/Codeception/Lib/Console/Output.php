@@ -4,9 +4,7 @@ namespace Codeception\Lib\Console;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Output extends ConsoleOutput
 {
@@ -55,14 +53,6 @@ class Output extends ConsoleOutput
     {
         $message = call_user_func_array('sprintf', func_get_args());
         return new Message($message, $this);
-    }
-
-    public function table(TableHelper $table)
-    {
-        $table->setLayout(TableHelper::LAYOUT_BORDERLESS);
-        $table->setCellHeaderFormat('<info>%s</info>');
-        $table->setCellRowFormat('%s');
-        $table->render($this);
     }
 
     public function exception(\Exception $e)

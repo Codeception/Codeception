@@ -90,35 +90,15 @@ class Console implements EventSubscriberInterface
         $test = $e->getTest();
         $this->printedTest = $test;
 
-        if ($test instanceof TestCase) {
-            return;
+        if (!$test instanceof TestCase) {
+            $this->writeCurrentTest($test);
         }
-
-        $this->message($test->toString())
-            ->style('focus')
-            ->prepend('Running ')
-            ->width($this->columns[0])
-            ->write();
     }
 
     public function before(TestEvent $e)
     {
         $test = $e->getTest();
-        $filename = $test->getSignature();
-
-        if ($test->getFeature()) {
-            $this->message("Trying to <focus>%s</focus> (%s) ")
-                ->with($test->getFeature(), $filename)
-                ->width($this->columns[0])
-                ->write();
-
-        } else {
-            $this->message("Running <focus>%s</focus> ")
-                ->with($filename)
-                ->width($this->columns[0])
-                ->write();
-        }
-
+        $this->writeCurrentTest($test);
         if ($this->steps && $this->isDetailed($test)) {
             $this->output->writeln("\nScenario:");
         }
@@ -135,6 +115,7 @@ class Console implements EventSubscriberInterface
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
             return;
         }
+        $this->writeFinishedTest($e->getTest());
         $this->message('Ok')->writeln();
     }
 
@@ -153,6 +134,7 @@ class Console implements EventSubscriberInterface
             $this->message('FAIL')->center(' ')->style('error')->append("\n")->writeln();
             return;
         }
+        $this->writeFinishedTest($e->getTest());
         $this->message('Fail')->style('error')->writeln();
     }
 
@@ -162,6 +144,7 @@ class Console implements EventSubscriberInterface
             $this->message('ERROR')->center(' ')->style('error')->append("\n")->writeln();
             return;
         }
+        $this->writeFinishedTest($e->getTest());
         $this->message('Error')->style('error')->writeln();
     }
 
@@ -170,6 +153,7 @@ class Console implements EventSubscriberInterface
         if (!$this->printedTest) {
             return;
         }
+        $this->writeFinishedTest($e->getTest());
         $message = $this->message('Skipped');
         if ($this->isDetailed($e->getTest())) {
             $message->apply('strtoupper')->append("\n");
@@ -179,6 +163,7 @@ class Console implements EventSubscriberInterface
 
     public function testIncomplete(FailEvent $e)
     {
+        $this->writeFinishedTest($e->getTest());
         $message = $this->message('Incomplete');
         if ($this->isDetailed($e->getTest())) {
             $message->apply('strtoupper')->append("\n");
@@ -412,6 +397,43 @@ class Console implements EventSubscriberInterface
             }
             $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
         }
+    }
+
+    /**
+     * @param \PHPUnit_Framework_TestCase $test
+     * @return Message
+     */
+    protected function getTestMessage(\PHPUnit_Framework_TestCase $test)
+    {
+        if (!$test instanceof TestCase) {
+            return $this->message($test->toString())
+                ->style('focus')
+                ->prepend('Running ');
+        }
+        $filename = $test->getSignature();
+
+        if ($test->getFeature()) {
+            return $this->message("Trying to <focus>%s</focus> (%s) ")
+                ->with($test->getFeature(), $filename);
+        }
+        return $this->message("Running <focus>%s</focus> ")
+            ->with($filename);
+    }
+
+    protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)
+    {
+        $this->getTestMessage($test)->write();
+        if (!$this->isDetailed($test)) {
+            $this->message('... ')->write();
+        }
+    }
+
+    protected function writeFinishedTest(\PHPUnit_Framework_TestCase $test)
+    {
+        if ($this->isDetailed($test)) {
+            return;
+        }
+        $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
     }
 
 }
