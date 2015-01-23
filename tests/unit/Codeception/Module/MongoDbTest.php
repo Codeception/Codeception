@@ -75,6 +75,13 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('miles@davis.com',$user['email']);
     }
 
+    public function testSeeNumElementsInCollection()
+    {
+        $this->module->seeNumElementsInCollection('users', 1);
+        $this->module->seeNumElementsInCollection('users', 1, array('email' => 'miles@davis.com'));
+        $this->module->seeNumElementsInCollection('users', 0, array('name' => 'Doe'));
+    }
+
     public function testGrabCollectionCount()
     {
         $this->userCollection->insert(array('id' => 2, 'email' => 'louis@armstrong.com'));
