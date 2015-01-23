@@ -269,7 +269,12 @@ class Console implements EventSubscriberInterface
     {
 
         static $limit = 10;
-        $this->message("[%s] %s")->with(get_class($e), $e->getMessage())->block('error')->writeln(
+//
+        $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
+            ? $e->getClassname()
+            : get_class($e);
+
+        $this->message("[%s] %s")->with($class, $e->getMessage())->block('error')->writeln(
             $e instanceof \PHPUnit_Framework_AssertionFailedError
                 ? OutputInterface::VERBOSITY_DEBUG
                 : OutputInterface::VERBOSITY_VERBOSE
@@ -284,15 +289,25 @@ class Console implements EventSubscriberInterface
 
         $i = 0;
         foreach ($trace as $step) {
-            $i++;
-
-            $message = $this->message($i)->prepend('#')->width(4);
-            $message->append($step['file'] . ':' . $step['line']);
-            $message->writeln();
-
             if ($i >= $limit) {
                 break;
             }
+            $i++;
+
+            $message = $this->message($i)->prepend('#')->width(4);
+
+            if (!isset($step['file'])) {
+                foreach (['class','type','function'] as $info) {
+                    if (!isset($step[$info])) {
+                        continue;
+                    }
+                    $message->append($step[$info]);
+                }
+                $message->writeln();
+                continue;
+            }
+            $message->append($step['file'] . ':' . $step['line']);
+            $message->writeln();
         }
 
         $prev = $e->getPrevious();

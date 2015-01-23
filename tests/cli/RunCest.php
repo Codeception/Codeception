@@ -189,9 +189,20 @@ class RunCest
 
     public function runErrorTest(\CliGuy $I)
     {
-        $I->executeCommand('run unit -g error --no-exit');
+        $I->executeCommand('run unit ErrorTest --no-exit');
         $I->seeInShellOutput('There was 1 error');
         $I->seeInShellOutput('Array to string conversion');
         $I->seeInShellOutput('ErrorTest.php:9');
+    }
+
+    public function runTestWithException(\CliGuy $I)
+    {
+        $I->executeCommand('run unit ExceptionTest --no-exit -v');
+        $I->seeInShellOutput('There was 1 error');
+        $I->seeInShellOutput('Helllo!');
+        $I->expect('Exceptions are not wrapped into ExceptionWrapper');
+        $I->dontSeeInShellOutput('PHPUnit_Framework_ExceptionWrapper');
+        $I->seeInShellOutput('RuntimeException');
+
     }
 }
