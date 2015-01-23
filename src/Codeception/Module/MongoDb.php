@@ -272,4 +272,24 @@ class MongoDb extends \Codeception\Module
         if ($res > 1) throw new \PHPUnit_Framework_ExpectationFailedException('Error: you should test against a single element criteria when asserting that elementIsObject');
         \PHPUnit_Framework_Assert::assertEquals(1, $res, 'Specified element is not a Mongo Object');
     }
+    /**
+     * Count number of records in a collection
+     *
+     * ``` php
+     * <?php
+     * $I->seeNumElementsInCollection('users', 2);
+     * $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
+     * ```
+     *
+     * @param $collection
+     * @param integer $expected
+     * @param array $criteria
+     */
+    public function seeNumElementsInCollection($collection, $expected, $criteria = array())
+    {
+        $collection = $this->driver->getDbh()->selectCollection($collection);
+        $res = $collection->count($criteria);
+        \PHPUnit_Framework_Assert::assertSame($expected, $res);
+    }
+
 }
