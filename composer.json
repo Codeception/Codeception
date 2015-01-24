@@ -35,7 +35,7 @@
         "videlalvaro/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
-        "codegyre/robo": "0.5.*",
+        "codegyre/robo": "@dev",
         "flow/jsonpath": "~0.1"
     },
     "suggest": {

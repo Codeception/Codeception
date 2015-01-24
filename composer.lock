@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ab4d208666d9cbb05667d5bb61b58b67",
+    "hash": "914742cd5a908bd95c24b0f675b8dce0",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1402,16 +1402,16 @@
         },
         {
             "name": "codegyre/robo",
-            "version": "0.5.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codegyre/Robo.git",
-                "reference": "cf9491a591c18415c50c9613798e1d216f194d93"
+                "reference": "d309f29221fb4bd484eb624d18417d93b77c76e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codegyre/Robo/zipball/cf9491a591c18415c50c9613798e1d216f194d93",
-                "reference": "cf9491a591c18415c50c9613798e1d216f194d93",
+                "url": "https://api.github.com/repos/Codegyre/Robo/zipball/d309f29221fb4bd484eb624d18417d93b77c76e0",
+                "reference": "d309f29221fb4bd484eb624d18417d93b77c76e0",
                 "shasum": ""
             },
             "require": {
@@ -1449,7 +1449,7 @@
                 }
             ],
             "description": "Modern task runner",
-            "time": "2015-01-22 03:40:25"
+            "time": "2015-01-24 00:50:18"
         },
         {
             "name": "facebook/php-sdk",
@@ -1986,7 +1986,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "codegyre/robo": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
