@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.0.10
+
+* [PhpBrowser][WebDriver] allows to handle domain and path for cookies *2015-01-24*
+
+
 #### 2.0.9
 
 * **Fixed Symfony 2.6 compatibility in Yaml::parse by @antonioribeiro**
