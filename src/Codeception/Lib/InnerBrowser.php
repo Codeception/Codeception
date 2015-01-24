@@ -770,38 +770,38 @@ class InnerBrowser extends Module implements Web
         $this->fail("Element $field is not a form field or does not contain a form field");
     }
 
-    public function setCookie($name, $val)
+    public function setCookie($name, $val, $path = "/", $domain = null)
     {
         $cookies = $this->client->getCookieJar();
-        $cookies->set(new Cookie($name, $val));
+        $cookies->set(new Cookie($name, $val, null, $path, $domain));
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
-    public function grabCookie($name)
+    public function grabCookie($name, $path = "/", $domain = null)
     {
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $cookies = $this->client->getCookieJar()->get($name);
+        $cookies = $this->client->getCookieJar()->get($name, $path, $domain);
         if (!$cookies) {
             return null;
         }
         return $cookies->getValue();
     }
 
-    public function seeCookie($name)
+    public function seeCookie($name, $path = "/", $domain = null)
     {
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNotNull($this->client->getCookieJar()->get($name));
+        $this->assertNotNull($this->client->getCookieJar()->get($name, $path, $domain));
     }
 
-    public function dontSeeCookie($name)
+    public function dontSeeCookie($name, $path = "/", $domain = null)
     {
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNull($this->client->getCookieJar()->get($name));
+        $this->assertNull($this->client->getCookieJar()->get($name, $path, $domain));
     }
 
-    public function resetCookie($name)
+    public function resetCookie($name, $path = "/", $domain = null)
     {
-        $this->client->getCookieJar()->expire($name);
+        $this->client->getCookieJar()->expire($name, $path, $domain);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
