@@ -393,7 +393,13 @@ class InnerBrowser extends Module implements Web
                     $build[$part] = $build[$part] . $value;
                     continue;
                 }
-                $build[$part] = dirname($build[$part]) . '/' . $value;
+                $dir = dirname($build[$part]);
+                
+                // Do not double the slashes and guard against the Windows backslash
+                if ($dir === '/' || $dir === '\\') {
+                    $dir = '';
+                }
+                $build[$part] =  $dir . '/' . $value;
                 continue;
             }
             $build[$part] = $value;

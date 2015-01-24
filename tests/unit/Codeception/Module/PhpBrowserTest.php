@@ -249,5 +249,14 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->attachFile('foo[bar]', 'app/avatar.jpg');
         $this->module->click('Submit');
     }
-
+    
+    public function testDoubleSlash()
+    {
+        $I = $this->module;
+        $I->amOnPage('/register');
+        $I->submitForm('form', array('test' => 'test'));
+        $formUrl = $this->module->client->getHistory()->current()->getUri();
+        $formPath = parse_url($formUrl)['path'];
+        $this->assertEquals($formPath, '/register');
+    }
 }
