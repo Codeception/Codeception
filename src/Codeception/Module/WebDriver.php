@@ -835,13 +835,16 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
         }
         /** @var $context \WebDriverElement  * */
-        $els = $context->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) {
-            return reset($els);
-        }
-        $els = $this->match($context, $radio_or_checkbox);
-        if (count($els)) {
-            return reset($els);
+        $noFormXpath = str_replace('ancestor::form', '', $xpath);
+        foreach ([$xpath, $noFormXpath] as $testXpath) {
+            $els = $context->findElements(\WebDriverBy::xpath($testXpath));
+            if (count($els)) {
+                return reset($els);
+            }
+            $els = $this->match($context, $radio_or_checkbox);
+            if (count($els)) {
+                return reset($els);
+            }
         }
         return null;
     }
