@@ -2,6 +2,7 @@
 
 #### 2.0.10
 
+* [PhpBrowser][Frameworks] Fixed matchOption to return the option value in case there is no value attribute by @synchrone. See #1663 *2015-01-26*
 * Fixed remote context options on CodeCoverage by @synchrone. See #1664 *2015-01-26*
 * Improved console: better formatting for test progress, debug messages and fatals.
   Codeception now uses interactive shell features to print testing progress.
