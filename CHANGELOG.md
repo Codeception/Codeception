@@ -2,6 +2,7 @@
 
 #### 2.0.10
 
+* Fixed remote context options on CodeCoverage by @synchrone. See #1664 *2015-01-26*
 * Improved console: better formatting for test progress, debug messages and fatals.
   Codeception now uses interactive shell features to print testing progress.
   In case of non-interactive shells when running from CI like Jenkins this feature is gracefully degradated to standard mode.
