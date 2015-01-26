@@ -142,6 +142,7 @@ class Run extends Command
         $userOptions = array_intersect_key($this->options, array_flip($this->passedOptionKeys($input)));
         $userOptions = array_merge($userOptions, $this->booleanOptions($input, ['xml','html', 'json', 'tap', 'coverage','coverage-xml','coverage-html']));
         $userOptions['verbosity'] = $this->output->getVerbosity();
+        $userOptions['interactive'] = !$input->hasParameterOption(array('--no-interaction', '-n'));
 
         if ($this->options['no-colors']) {
             $userOptions['colors'] = false;

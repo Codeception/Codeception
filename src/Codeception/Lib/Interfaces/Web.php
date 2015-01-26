@@ -601,6 +601,7 @@ interface Web
 
     /**
      * Checks that a cookie with the given name is set.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * ``` php
      * <?php
@@ -609,22 +610,25 @@ interface Web
      * ```
      *
      * @param $cookie
-     *
+     * @param array $params
      * @return mixed
      */
-    public function seeCookie($cookie);
+    public function seeCookie($cookie, array $params = []);
 
     /**
      * Checks that there isn't a cookie with the given name.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      */
-    public function dontSeeCookie($cookie);
+    public function dontSeeCookie($cookie, array $params = []);
 
     /**
      * Sets a cookie with the given name and value.
+     * You can set additional cookie params like `domain`, `path`, `expire`, `secure` in array passed as last argument.
      *
      * ``` php
      * <?php
@@ -632,28 +636,35 @@ interface Web
      * ?>
      * ```
      *
-     * @param $cookie
-     * @param $value
+     * @param $name
+     * @param $val
+     * @param array $params
+     * @internal param $cookie
+     * @internal param $value
      *
      * @return mixed
      */
-    public function setCookie($cookie, $value);
+    public function setCookie($name, $val, array $params = []);
 
     /**
      * Unsets cookie with the given name.
+     * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      */
-    public function resetCookie($cookie);
+    public function resetCookie($cookie, array $params = []);
 
     /**
      * Grabs a cookie value.
+     * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      */
-    public function grabCookie($cookie);
+    public function grabCookie($cookie, array $params = []);
 }

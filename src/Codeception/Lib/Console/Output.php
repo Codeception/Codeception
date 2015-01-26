@@ -4,15 +4,14 @@ namespace Codeception\Lib\Console;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class Output extends ConsoleOutput
 {
     protected $config = array(
         'colors'    => true,
-        'verbosity' => self::VERBOSITY_NORMAL
+        'verbosity' => self::VERBOSITY_NORMAL,
+        'interactive' => true
     );
 
     /**
@@ -20,9 +19,14 @@ class Output extends ConsoleOutput
      */
     public $formatHelper;
 
+    public $waitForDebugOutput = true;
+
     function __construct($config)
     {
         $this->config = array_merge($this->config, $config);
+
+        // enable interactive output mode for CLI
+        $this->isInteractive = $this->config['interactive'] && isset($_SERVER['TERM']) && php_sapi_name() == 'cli' && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, array('bold')));
@@ -34,7 +38,13 @@ class Output extends ConsoleOutput
 
         $this->formatHelper = new FormatterHelper();
 
+
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
+    }
+
+    public function isInteractive()
+    {
+        return $this->isInteractive;
     }
 
     protected function clean($message)
@@ -48,6 +58,11 @@ class Output extends ConsoleOutput
     {
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);
+        $message = $this->clean($message);
+        if ($this->waitForDebugOutput) {
+            $this->writeln('');
+            $this->waitForDebugOutput = false;
+        }
         $this->writeln("<debug>  $message</debug>");
     }
 
@@ -55,14 +70,6 @@ class Output extends ConsoleOutput
     {
         $message = call_user_func_array('sprintf', func_get_args());
         return new Message($message, $this);
-    }
-
-    public function table(TableHelper $table)
-    {
-        $table->setLayout(TableHelper::LAYOUT_BORDERLESS);
-        $table->setCellHeaderFormat('<info>%s</info>');
-        $table->setCellRowFormat('%s');
-        $table->render($this);
     }
 
     public function exception(\Exception $e)

@@ -165,14 +165,17 @@ class LocalServer extends SuiteSubscriber
 
      protected function addC3AccessHeader($header, $value)
      {
-         $this->c3Access['http']['header'] .= "$header: $value\r\n";
+         $headerString = "$header: $value\r\n";
+         if (strpos($this->c3Access['http']['header'], $headerString) === false) {
+             $this->c3Access['http']['header'] .= $headerString;
+         }
      }
 
     protected function applySettings($settings)
     {
         parent::applySettings($settings);
         if (isset($settings['coverage']['remote_context_options'])) {
-            $this->c3Access = array_merge_recursive($settings['coverage']['remote_context_options'], $this->c3Access);
+            $this->c3Access = array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
         }
     }
 

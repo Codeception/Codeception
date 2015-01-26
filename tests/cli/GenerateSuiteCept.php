@@ -11,3 +11,7 @@ $I->expect('guy class is generated');
 $I->seeInThisFile('class_name: HouseGuy');
 $I->seeFileFound('HouseHelper.php', 'tests/_helpers');
 $I->seeFileFound('_bootstrap.php','tests/house');
+
+$I->expect ('suite is not created due to dashes');
+$I->executeCommand('generate:suite invalid-dash-suite');
+$I->seeInShellOutput('contains invalid characters');

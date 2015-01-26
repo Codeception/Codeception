@@ -44,7 +44,7 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - java -jar selenium-server-standalone-2.42.2.jar -port 4444 &
+  - java -jar selenium-server-standalone-2.42.2.jar -port 4444 & > /dev/null
   - sleep 5  
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
@@ -54,7 +54,7 @@ before_script:
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   # Laravel
   - "mysql -e 'create database `l4-module`;'"
-  - php frameworks-laravel/artisan migrate --seed -n
+  - php frameworks-laravel/artisan migrate --seed -n --force
   # Symfony
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create

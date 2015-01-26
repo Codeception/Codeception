@@ -5,9 +5,7 @@
         "This file is @generated automatically"
     ],
     "hash": "760216d5aa884e9054018c935911ad4a",
-    "packages": [
-
-    ],
+    "packages": [],
     "packages-dev": [
         {
             "name": "codeception/c3",
@@ -52,18 +50,11 @@
             "time": "2014-10-07 22:56:24"
         }
     ],
-    "aliases": [
-
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": [],
     "prefer-stable": false,
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
 }

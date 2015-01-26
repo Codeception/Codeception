@@ -56,6 +56,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Facebook::haveFacebookTestUserId
      * @covers Facebook::haveFacebookTestUserAccount
      * @covers Facebook::grabFacebookTestUserEmail
      * @covers Facebook::grabFacebookTestUserAccessToken
@@ -63,6 +64,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     public function testHaveFacebookTestUserAccount()
     {
         $this->module->haveFacebookTestUserAccount(false);
+        $this->assertNotEmpty($this->module->grabFacebookTestUserId());
         $this->assertNotEmpty($this->module->grabFacebookTestUserEmail());
         $this->assertNotEmpty($this->module->grabFacebookTestUserAccessToken());
 
@@ -70,6 +72,11 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->haveFacebookTestUserAccount(true);
         $testUserEmailAfterRenew = $this->module->grabFacebookTestUserEmail();
         $this->assertNotEquals($testUserEmailBeforeRenew, $testUserEmailAfterRenew);
+
+        $testUserIdBeforeRenew = $this->module->grabFacebookTestUserId();
+        $this->module->haveFacebookTestUserAccount(true);
+        $testUserIdAfterRenew = $this->module->grabFacebookTestUserId();
+        $this->assertNotEquals($testUserIdBeforeRenew, $testUserIdAfterRenew);
     }
 
     public function testSeePostOnFacebookWithAttachedPlace()
