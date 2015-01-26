@@ -142,7 +142,7 @@ class RunCest
     public function runOneTestFromUnit(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeShellOutputMatches("~Running AnotherTest::testFirst\s*?Ok~");
+        $I->seeShellOutputMatches("~AnotherTest::testFirst\s*?Ok~");
         $I->dontSeeInShellOutput('AnotherTest::testSecond');
     }
 

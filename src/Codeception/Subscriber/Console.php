@@ -37,6 +37,10 @@ class Console implements EventSubscriberInterface
         Events::TEST_FAIL_PRINT => 'printFail',
     ];
 
+    /**
+     * @var Message
+     */
+    protected $message = null;
     protected $steps = true;
     protected $debug = false;
     protected $color = true;
@@ -44,10 +48,9 @@ class Console implements EventSubscriberInterface
     protected $lastTestFailed = false;
     protected $printedTest = null;
     protected $rawStackTrace = false;
-
     protected $traceLength = 5;
-
     protected $columns = array(40, 5);
+
 
     public function __construct($options)
     {
@@ -89,6 +92,8 @@ class Console implements EventSubscriberInterface
     {
         $test = $e->getTest();
         $this->printedTest = $test;
+        $this->message = null;
+        $this->output->waitForDebugOutput = true;
 
         if (!$test instanceof TestCase) {
             $this->writeCurrentTest($test);
@@ -121,6 +126,9 @@ class Console implements EventSubscriberInterface
 
     public function endTest(TestEvent $e)
     {
+        if (!$this->output->waitForDebugOutput) {
+            $this->message()->width($this->columns[0]+$this->columns[1],'^')->writeln();
+        }
         $this->printedTest = null;
     }
 
@@ -401,31 +409,36 @@ class Console implements EventSubscriberInterface
 
     /**
      * @param \PHPUnit_Framework_TestCase $test
+     * @param bool $inProgress
      * @return Message
      */
-    protected function getTestMessage(\PHPUnit_Framework_TestCase $test)
+    protected function getTestMessage(\PHPUnit_Framework_TestCase $test, $inProgress = false)
     {
         if (!$test instanceof TestCase) {
-            return $this->message($test->toString())
+            return $this->message = $this->message($test->toString())
                 ->style('focus')
-                ->prepend('Running ');
+                ->prepend($inProgress ? 'Running ' : '');
         }
         $filename = $test->getSignature();
 
         if ($test->getFeature()) {
-            return $this->message("Trying to <focus>%s</focus> (%s) ")
-                ->with($test->getFeature(), $filename);
+            return $this->message = $this->message("<focus>%s</focus> (%s) ")
+                ->prepend($inProgress ? 'Trying to ' : '')
+                ->with($inProgress ? $test->getFeature() : ucfirst($test->getFeature()), $filename);
         }
-        return $this->message("Running <focus>%s</focus> ")
+        return $this->message = $this->message("<focus>%s</focus> ")
+            ->prepend($inProgress ? 'Running ' : '')
             ->with($filename);
     }
-
+    
     protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)
     {
-        $this->getTestMessage($test)->write();
-        if (!$this->isDetailed($test)) {
+        if (!$this->isDetailed($test) and $this->output->isInteractive()) {
+            $this->getTestMessage($test, true)->write();
             $this->message('... ')->append("\x0D")->write();
+            return;
         }
+        $this->getTestMessage($test)->write();
     }
 
     protected function writeFinishedTest(\PHPUnit_Framework_TestCase $test)
@@ -433,7 +446,13 @@ class Console implements EventSubscriberInterface
         if ($this->isDetailed($test)) {
             return;
         }
-        $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
+        if ($this->output->isInteractive()) {
+            $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
+            return;
+        } 
+        if ($this->message) {
+            $this->message('')->width($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
+        }
     }
 
 }

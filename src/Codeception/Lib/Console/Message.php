@@ -36,8 +36,6 @@ class Message
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
         }
-
-        // todo: cut?
         return $this;
     }
 
@@ -101,6 +99,14 @@ class Message
         $this->message = $this->output->formatHelper->formatBlock($this->message, $style, true);
 
         return $this;
+    }
+
+    public function getLength()
+    {
+        if (function_exists('mb_strlen')) {
+            return mb_strlen($this->message);
+        }
+        return strlen($this->message);
     }
 
     public function __toString()

@@ -10,7 +10,8 @@ class Output extends ConsoleOutput
 {
     protected $config = array(
         'colors'    => true,
-        'verbosity' => self::VERBOSITY_NORMAL
+        'verbosity' => self::VERBOSITY_NORMAL,
+        'interactive' => true
     );
 
     /**
@@ -18,9 +19,14 @@ class Output extends ConsoleOutput
      */
     public $formatHelper;
 
+    public $waitForDebugOutput = true;
+
     function __construct($config)
     {
         $this->config = array_merge($this->config, $config);
+
+        // enable interactive output mode for CLI
+        $this->isInteractive = $this->config['interactive'] && isset($_SERVER['TERM']) && php_sapi_name() == 'cli' && $_SERVER['TERM'] != 'linux';
 
         $formatter = new OutputFormatter($this->config['colors']);
         $formatter->setStyle('bold', new OutputFormatterStyle(null, null, array('bold')));
@@ -32,7 +38,13 @@ class Output extends ConsoleOutput
 
         $this->formatHelper = new FormatterHelper();
 
+
         parent::__construct($this->config['verbosity'], $this->config['colors'], $formatter);
+    }
+
+    public function isInteractive()
+    {
+        return $this->isInteractive;
     }
 
     protected function clean($message)
@@ -46,6 +58,11 @@ class Output extends ConsoleOutput
     {
         $message = print_r($message, true);
         $message = str_replace("\n", "\n  ", $message);
+        $message = $this->clean($message);
+        if ($this->waitForDebugOutput) {
+            $this->writeln('');
+            $this->waitForDebugOutput = false;
+        }
         $this->writeln("<debug>  $message</debug>");
     }
 

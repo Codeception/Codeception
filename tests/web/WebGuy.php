@@ -99,6 +99,7 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that a cookie with the given name is set.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * ``` php
      * <?php
@@ -107,18 +108,19 @@ class WebGuy extends \Codeception\Actor
      * ```
      *
      * @param $cookie
-     *
+     * @param array $params
      * @return mixed
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\WebDriver::seeCookie()
      */
-    public function canSeeCookie($cookie) {
+    public function canSeeCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCookie', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that a cookie with the given name is set.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * ``` php
      * <?php
@@ -127,11 +129,11 @@ class WebGuy extends \Codeception\Actor
      * ```
      *
      * @param $cookie
-     *
+     * @param array $params
      * @return mixed
      * @see \Codeception\Module\WebDriver::seeCookie()
      */
-    public function seeCookie($cookie) {
+    public function seeCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCookie', func_get_args()));
     }
 
@@ -140,27 +142,31 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that there isn't a cookie with the given name.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      * Conditional Assertion: Test won't be stopped on fail
      * @see \Codeception\Module\WebDriver::dontSeeCookie()
      */
-    public function cantSeeCookie($cookie) {
+    public function cantSeeCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCookie', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Checks that there isn't a cookie with the given name.
+     * You can set additional cookie params like `domain`, `path` as array passed in last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      * @see \Codeception\Module\WebDriver::dontSeeCookie()
      */
-    public function dontSeeCookie($cookie) {
+    public function dontSeeCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCookie', func_get_args()));
     }
 
@@ -169,6 +175,7 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Sets a cookie with the given name and value.
+     * You can set additional cookie params like `domain`, `path`, `expire`, `secure` in array passed as last argument.
      *
      * ``` php
      * <?php
@@ -176,13 +183,16 @@ class WebGuy extends \Codeception\Actor
      * ?>
      * ```
      *
-     * @param $cookie
-     * @param $value
+     * @param $name
+     * @param $val
+     * @param array $params
+     * @internal param $cookie
+     * @internal param $value
      *
      * @return mixed
      * @see \Codeception\Module\WebDriver::setCookie()
      */
-    public function setCookie($cookie, $value) {
+    public function setCookie($cookie, $value, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('setCookie', func_get_args()));
     }
 
@@ -191,13 +201,15 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Unsets cookie with the given name.
+     * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      * @see \Codeception\Module\WebDriver::resetCookie()
      */
-    public function resetCookie($cookie) {
+    public function resetCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('resetCookie', func_get_args()));
     }
 
@@ -206,13 +218,15 @@ class WebGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      * Grabs a cookie value.
+     * You can set additional cookie params like `domain`, `path` in array passed as last argument.
      *
      * @param $cookie
      *
+     * @param array $params
      * @return mixed
      * @see \Codeception\Module\WebDriver::grabCookie()
      */
-    public function grabCookie($cookie) {
+    public function grabCookie($cookie, $params = null) {
         return $this->scenario->runStep(new \Codeception\Step\Action('grabCookie', func_get_args()));
     }
 

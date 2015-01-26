@@ -2,6 +2,10 @@
 
 #### 2.0.10
 
+* Improved console: better formatting for test progress, debug messages and fatals.
+  Codeception now uses interactive shell features to print testing progress.
+  In case of non-interactive shells when running from CI like Jenkins this feature is gracefully degradated to standard mode.
+  You can turn off interactive printing manually by providing `--no-interaction` option or simply `-n`
 * [PhpBrowser][WebDriver] allows to handle domain and path for cookies *2015-01-24*
 
 
