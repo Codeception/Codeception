@@ -152,7 +152,7 @@ class RoboFile extends \Robo\Tasks
 
         $finder = Finder::create()
             ->ignoreVCS(true)
-            ->nzame('*.php')
+            ->name('*.php')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
             ->in('src');
