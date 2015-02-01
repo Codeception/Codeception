@@ -3,18 +3,18 @@ namespace Codeception\Lib\Connector;
 
 class Symfony2 extends \Symfony\Component\HttpKernel\Client
 {
-    private $hasPerformedRequest = false;
+    private static $hasPerformedRequest;
 
     public $persistentServices = [];
 
     protected function doRequest($request)
     {
         $services = [];
-        if ($this->hasPerformedRequest) {
+        if (static::$hasPerformedRequest) {
             $services = $this->persistServices();
             $this->kernel->shutdown();
         } else {
-            $this->hasPerformedRequest = true;
+            static::$hasPerformedRequest = true;
         }
         $this->kernel->boot();
 
