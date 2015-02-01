@@ -2,6 +2,7 @@
 
 #### 2.0.10
 
+* [REST] request params are now correcly saved to $params property. Fixes #1682 by @gmhenderson *2015-02-01*
 * Interactive shell updated: deprecated Symfony helpers replaced, printed output cleaned *2015-01-28*
 * [PhpBrowser][Frameworks] Fixed `matchOption` to return the option value in case there is no value attribute by @synchrone. See #1663 *2015-01-26*
 * Fixed remote context options on CodeCoverage by @synchrone. See #1664 *2015-01-26*
