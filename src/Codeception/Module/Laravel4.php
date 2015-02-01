@@ -122,8 +122,8 @@ class Laravel4 extends Framework implements ActiveRecord
         }
 
         // disconnect from DB to prevent "Too many connections" issue
-        if ($this->app['db']) {
-            $this->app['db']->disconnect();
+        if ($this->kernel['db']) {
+            $this->kernel['db']->disconnect();
         }
     }
 
