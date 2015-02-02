@@ -157,6 +157,9 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      */
     public function testHostHeaders()
     {
+        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
+            $this->markTestSkipped('only for php 5.5');
+        }
         $this->module->haveHttpHeader('Host','http://www.example.com');
         $this->module->sendGET('/rest/ping/');
         $this->module->seeResponseContains('host: http://www.example.com');
