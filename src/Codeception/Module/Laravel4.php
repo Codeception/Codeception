@@ -120,6 +120,11 @@ class Laravel4 extends Framework implements ActiveRecord
         if ($this->kernel['session']) {
             $this->kernel['session']->flush();
         }
+
+        // disconnect from DB to prevent "Too many connections" issue
+        if ($this->kernel['db']) {
+            $this->kernel['db']->disconnect();
+        }
     }
 
     /**
