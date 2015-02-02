@@ -248,6 +248,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+
 }
 
 class JsonSerializedItem implements JsonSerializable

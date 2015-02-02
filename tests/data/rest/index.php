@@ -15,9 +15,16 @@ $GLOBALS['RESTmap']['GET'] = array('user' => function() {
         'address' => array(
             'city'    => 'Kyiv',
             'country' => 'Ukraine',
-        ),
-    );
-});
+        ));
+    },
+    'ping' => function() {
+        $resp = "";
+        foreach (getallheaders() as $k => $v) {
+            $resp .= strtolower($k) . ": $v\n";
+        }
+        return $resp;
+    }
+);
 
 $GLOBALS['RESTmap']['POST'] = array('user' => function() {
     $name = $_POST['name'];

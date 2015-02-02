@@ -152,6 +152,16 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://localhost:8010/api/v1/users',$request->getUri());
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/1650
+     */
+    public function testHostHeaders()
+    {
+        $this->module->haveHttpHeader('Host','http://www.example.com');
+        $this->module->sendGET('/rest/ping/');
+        $this->module->seeResponseContains('host: http://www.example.com');
+    }
+
 
     protected function shouldFail()
     {
