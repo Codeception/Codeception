@@ -37,6 +37,14 @@ class OrderCest
         $I->seeFileContentsEqual("BIB([0123456])");
     }
 
+    public function checkFailingCestOrder(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run tests/order/FailedCest.php --no-exit');
+        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileContentsEqual("BIB([a%F])");
+    }
+
     public function checkCodeceptionTest(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
