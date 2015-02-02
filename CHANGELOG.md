@@ -8,10 +8,12 @@
 * Interactive shell updated: deprecated Symfony helpers replaced, printed output cleaned *2015-01-28*
 * [PhpBrowser][Frameworks] Fixed `matchOption` to return the option value in case there is no value attribute by @synchrone. See #1663 *2015-01-26*
 * Fixed remote context options on CodeCoverage by @synchrone. See #1664 *2015-01-26*
-* Improved console: better formatting for test progress, debug messages and fatals.
-  Codeception now uses interactive shell features to print testing progress.
-  In case of non-interactive shells when running from CI like Jenkins this feature is gracefully degradated to standard mode.
+* **Console Improvement**: better formatting for test progress, debug messages and fatal errors.
+  Codeception now uses interactive shell features to print progress.
+  In case of non-interactive shells when running from CI like Jenkins this feature is gracefully degraded to standard mode.
   You can turn off interactive printing manually by providing `--no-interaction` option or simply `-n`
+* Replaced ExceptionWrapper messages with more clean output.
+* Exception stack traces made more verbose.
 * [PhpBrowser][WebDriver] allows to handle domain and path for cookies *2015-01-24*
 
 
