@@ -46,7 +46,7 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = str_replace(['::','\\','/'], ['.','',''], TestCase::getTestSignature($test)).'.fail.html';
+        $filename = str_replace(['::','\\','/'], ['.','.','.'], TestCase::getTestSignature($test)).'.fail.html';
         file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
     }
 

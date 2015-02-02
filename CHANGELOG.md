@@ -2,6 +2,7 @@
 
 #### 2.0.10
 
+* [Laravel4] Disconnecting from database after each test to prevent Too many connections #1665 by @mnabialek *2015-02-02*
 * [Symfony2] Fixed kernel reusage in #1656 by @hacfi *2015-02-01*
 * [REST] request params are now correctly saved to $params property. Fixes #1682 by @gmhenderson *2015-02-01*
 * Interactive shell updated: deprecated Symfony helpers replaced, printed output cleaned *2015-01-28*
