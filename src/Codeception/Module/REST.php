@@ -606,7 +606,6 @@ class REST extends \Codeception\Module
      * This assertion allows you to check the structure of response json.
      *     *
      * ```json
-     * ```json
      *   { "store": {
      *       "book": [
      *         { "category": "reference",
