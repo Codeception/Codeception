@@ -21,9 +21,19 @@ class Cli extends \Codeception\Module
     }
 
     /**
-     * Executes a shell command
+     * Executes a shell command.
+     * Fails If exit code is > 0. You can disable this by setting second parameter to false
+     *
+     * ```php
+     * <?php
+     * $I->runShellCommand('phpunit');
+     *
+     * // do not fail test when command fails
+     * $I->runShellCommand('phpunit', false);
+     * ```
      *
      * @param $command
+     * @param bool $failNonZero
      */
     public function runShellCommand($command, $failNonZero = true) {
         $data = array();
