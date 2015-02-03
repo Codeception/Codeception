@@ -90,7 +90,6 @@
 		 padding: 20px;
 		 }
 		 ul#toolbar-filter {
-			margin: 200px;
 			display: inline;
 		 }
 		 ul#toolbar-filter li {
