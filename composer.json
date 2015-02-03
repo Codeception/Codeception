@@ -30,10 +30,12 @@
         "symfony/dom-crawler": "~2.4,!=2.4.5"
     },
     "require-dev": {
+        "monolog/monolog": "~1.8",
         "facebook/php-sdk": "~3.2",
         "videlalvaro/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
+        "codegyre/robo": "@dev",
         "flow/jsonpath": "~0.1"
     },
     "suggest": {
