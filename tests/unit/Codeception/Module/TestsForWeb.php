@@ -528,7 +528,10 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 		$cookie_name = 'test_cookie';
 		$cookie_value = 'this is a test';
         $this->module->amOnPage('/');
+        $this->module->setCookie('nocookie', '1111');
 		$this->module->setCookie($cookie_name, $cookie_value);
+        $this->module->setCookie('notthatcookie', '22222');
+
 
 		$this->module->seeCookie($cookie_name);
 		$this->module->dontSeeCookie('evil_cookie');
