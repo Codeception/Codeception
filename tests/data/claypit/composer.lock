@@ -9,16 +9,16 @@
     "packages-dev": [
         {
             "name": "codeception/c3",
-            "version": "2.0.2",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Codeception/c3.git",
-                "reference": "9c144d5bd3a12a5e8359d38c582238c1f1253fdb"
+                "reference": "30321efb2421c5d201d02e2cb8da1a1ca96e4a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Codeception/c3/zipball/9c144d5bd3a12a5e8359d38c582238c1f1253fdb",
-                "reference": "9c144d5bd3a12a5e8359d38c582238c1f1253fdb",
+                "url": "https://api.github.com/repos/Codeception/c3/zipball/30321efb2421c5d201d02e2cb8da1a1ca96e4a38",
+                "reference": "30321efb2421c5d201d02e2cb8da1a1ca96e4a38",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
                 "code coverage",
                 "codecoverage"
             ],
-            "time": "2014-10-07 22:56:24"
+            "time": "2014-11-18 22:06:45"
         }
     ],
     "aliases": [],

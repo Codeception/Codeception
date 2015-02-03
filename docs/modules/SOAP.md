@@ -33,55 +33,6 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### dontSeeSoapResponseContainsXPath
  
 Checks XML response doesn't contain XPath locator
@@ -114,10 +65,6 @@ Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, 
  * `param` $xml
 
 
-
-
-
-
 ### grabAttributeFrom
  
 Finds and returns attribute of element.
@@ -137,7 +84,6 @@ Element is matched by either CSS or XPath
 @version 1.1
  * `param` $cssOrXPath
 @return string
-
 
 
 ### haveSoapHeader
@@ -166,12 +112,6 @@ Will produce header:
 
  * `param` $header
  * `param array` $params
-
-
-
-
-
-
 
 
 ### seeResponseCodeIs
@@ -281,6 +221,5 @@ $I->sendRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
 
  * `param` $request
  * `param` $body
-
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>

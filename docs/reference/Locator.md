@@ -7,6 +7,7 @@ Set of useful functions for using CSS and XPath locators.
 Please check them before writing complex functional or acceptance tests.
 
 
+
 #### *public static* combine($selector1, $selector2) 
 
 Applies OR operator to any number of CSS or XPath selectors.

@@ -38,55 +38,6 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### dontSeeInCollection
  
 Checks if collection doesn't contain an item.
@@ -100,7 +51,20 @@ $I->dontSeeInCollection('users', array('name' => 'miles'));
  * `param array` $criteria
 
 
+### grabCollectionCount
+ 
+Grabs the documents count from a collection
 
+``` php
+<?php
+$count = $I->grabCollectionCount('users');
+// or
+$count = $I->grabCollectionCount('users', array('isAdmin' => true));
+```
+
+ * `param` $collection
+ * `param array` $criteria
+@return integer
 
 
 ### grabFromCollection
@@ -117,7 +81,6 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
 @return \MongoCursor
 
 
-
 ### haveInCollection
  
 Inserts data into collection
@@ -131,7 +94,32 @@ $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
  * `param array` $data
 
 
+### seeElementIsArray
+ 
+Asserts that an element in a collection exists and is an Array
 
+``` php
+<?php
+$I->seeElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
+```
+
+ * `param String` $collection
+ * `param Array` $criteria
+ * `param String` $elementToCheck
+
+
+### seeElementIsObject
+ 
+Asserts that an element in a collection exists and is an Object
+
+``` php
+<?php
+$I->seeElementIsObject('users', array('name' => 'John Doe') , 'data');
+```
+
+ * `param String` $collection
+ * `param Array` $criteria
+ * `param String` $elementToCheck
 
 
 ### seeInCollection
@@ -144,6 +132,21 @@ $I->seeInCollection('users', array('name' => 'miles'));
 ```
 
  * `param` $collection
+ * `param array` $criteria
+
+
+### seeNumElementsInCollection
+ 
+Count number of records in a collection
+
+``` php
+<?php
+$I->seeNumElementsInCollection('users', 2);
+$I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
+```
+
+ * `param` $collection
+ * `param integer` $expected
  * `param array` $criteria
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

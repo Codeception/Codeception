@@ -82,28 +82,6 @@ service.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### addMessageToQueue
  
 Add a message to a queue/tube
@@ -118,26 +96,6 @@ $I->addMessageToQueue('this is a messages', 'default');
  * `param string` $queue Queue Name
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### clearQueue
  
 Clear all messages of the queue/tube
@@ -149,9 +107,6 @@ $I->clearQueue('default');
 ```
 
  * `param string` $queue Queue Name
-
-
-
 
 
 ### dontSeeEmptyQueue
@@ -208,9 +163,6 @@ $I->dontSeeQueueHasTotalCount('default', 10);
  * `param int` $expected Number of messages expected
 
 
-
-
-
 ### grabQueueCurrentCount
  
 Grabber method to get the current number of messages on the queue/tube (pending/ready)
@@ -251,9 +203,6 @@ $queues = $I->grabQueues();
 ```
 
 @return array List of Queues/Tubes
-
-
-
 
 
 ### seeEmptyQueue
