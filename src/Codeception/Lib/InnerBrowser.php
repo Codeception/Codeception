@@ -44,12 +44,14 @@ class InnerBrowser extends Module implements Web
      */
     protected $forms = array();
 
+    protected $defaultCookieParameters = ['expires' => null, 'path' => '/', 'domain' => '', 'secure' => false];
+
     public function _failed(TestCase $test, $fail)
     {
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = str_replace(['::','\\','/'], ['.','',''], TestCase::getTestSignature($test)).'.fail.html';
+        $filename = str_replace(['::','\\','/'], ['.','.','.'], TestCase::getTestSignature($test)).'.fail.html';
         file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
     }
 
@@ -398,7 +400,10 @@ class InnerBrowser extends Module implements Web
                     $build[$part] = $build[$part] . $value;
                     continue;
                 }
-                $build[$part] = dirname($build[$part]) . '/' . $value;
+                // remove double slashes
+                $dir = rtrim(dirname($build[$part]), '\\/');
+
+                $build[$part] = $dir . '/' . $value;;
                 continue;
             }
             $build[$part] = $value;
@@ -525,7 +530,10 @@ class InnerBrowser extends Module implements Web
     {
         $options = $field->filterXPath(sprintf('//option[text()=normalize-space("%s")]', $option));
         if ($options->count()) {
-            return $options->first()->attr('value');
+            if ($options->first()->attr('value')) {
+                return $options->first()->attr('value');
+            }
+            return $options->first()->text();
         }
         return $option;
     }
@@ -770,38 +778,44 @@ class InnerBrowser extends Module implements Web
         $this->fail("Element $field is not a form field or does not contain a form field");
     }
 
-    public function setCookie($name, $val)
+    public function setCookie($name, $val, array $params = [])
     {
         $cookies = $this->client->getCookieJar();
-        $cookies->set(new Cookie($name, $val));
+        $params = array_merge($this->defaultCookieParameters, $params);
+        extract($params);
+        $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure));
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
-    public function grabCookie($name)
+    public function grabCookie($name, array $params = [])
     {
+        $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $cookies = $this->client->getCookieJar()->get($name);
+        $cookies = $this->client->getCookieJar()->get($name, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
         }
         return $cookies->getValue();
     }
 
-    public function seeCookie($name)
+    public function seeCookie($name, array $params = [])
     {
+        $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNotNull($this->client->getCookieJar()->get($name));
+        $this->assertNotNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
-    public function dontSeeCookie($name)
+    public function dontSeeCookie($name, array $params = [])
     {
+        $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNull($this->client->getCookieJar()->get($name));
+        $this->assertNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
-    public function resetCookie($name)
+    public function resetCookie($name, array $params = [])
     {
-        $this->client->getCookieJar()->expire($name);
+        $params = array_merge($this->defaultCookieParameters, $params);
+        $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
@@ -828,11 +842,11 @@ class InnerBrowser extends Module implements Web
     public function seeNumberOfElements($selector, $expected)
     {
         $counted = count($this->match($selector));
-        if(is_array($expected)){
+        if (is_array($expected)) {
             list($floor,$ceil) = $expected;
             $this->assertTrue($floor<=$counted &&  $ceil>=$counted,
                     'Number of elements counted differs from expected range' );
-        }else{
+        } else {
             $this->assertEquals($expected, $counted,
                     'Number of elements counted differs from expected number' );
         }

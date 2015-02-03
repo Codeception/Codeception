@@ -162,3 +162,13 @@ class httpAuth {
         echo "Forbidden";
     }
 }
+
+class register {
+    function GET() {
+        include __DIR__.'/view/register.php';
+    }
+    
+    function POST() {
+        $this->GET();
+    }
+}

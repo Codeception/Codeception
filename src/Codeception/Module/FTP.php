@@ -60,6 +60,7 @@ namespace Codeception\Module;
  *              timeout: 120
  *              user: 'root'
  *              password: 'root'
+ *              key: ~/.ssh/id_rsa
  *              tmp: 'tests/_data/ftp'
  *              passive: true
  *              cleanup: false

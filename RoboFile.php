@@ -2,19 +2,17 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\Finder\Finder;
-use \Robo\Task\GenMarkdownDocTask as Doc;
+use \Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    use Codegyre\RoboCI\Command\CI;
-    use Codegyre\RoboCI\Command\Travis\Prepare;
-
     const STABLE_BRANCH = '2.0';
 
     public function release()
     {
         $this->say("CODECEPTION RELEASE: ".\Codeception\Codecept::VERSION);
         $this->update();
+        $this->buildDocs();
         $this->publishDocs();
         $this->buildPhar();
         $this->publishPhar();
@@ -59,24 +57,26 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-    public function testPhpbrowser($args = '')
+    public function testPhpbrowser($args = '', $opt = ['test|t' => null])
     {
+        $test = $opt['test'] ? ':'.$opt['test'] : '';
         $this->server();
         $this->taskCodecept('./codecept')
             ->args($args)
-            ->test('tests/unit/Codeception/Module/PhpBrowserTest.php')
+            ->test('tests/unit/Codeception/Module/PhpBrowserTest.php'.$test)
             ->run();
     }
 
-    public function testRestBrowser($args = '')
+    public function testRestBrowser($args = '', $opt = ['test|t' => null])
     {
+        $test = $opt['test'] ? ':'.$opt['test'] : '';
         $this->taskServer(8010)
             ->background()
             ->dir('tests/data')
             ->run();
 
         $this->taskCodecept('./codecept')
-            ->test('tests/unit/Codeception/Module/PhpBrowserRestTest.php')
+            ->test('tests/unit/Codeception/Module/PhpBrowserRestTest.php'.$test)
             ->args($args)
             ->run();
     }
@@ -89,15 +89,29 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
-    public function testWebdriver($args = '', $opts = ['filter' => ' '])
+    public function testWebdriver($args = '', $opt = ['test|t' => null])
     {
-//        $this->testLaunchServer();
-        $this->say($opts['filter']);
+        $test = $opt['test'] ? ':'.$opt['test'] : '';
+        $container = $this->taskDockerRun('davert/selenium-env')
+            ->detached()
+            ->publish(4444,4444)
+            ->env('APP_PORT', 8000)
+            ->run();
+
+        $this->taskServer(8000)
+            ->dir('tests/data/app')
+            ->background()
+            ->host('0.0.0.0')
+            ->run();
+
+        sleep(3); // wait for selenium to launch
+
+        $this->taskCodecept('./codecept')
+            ->test('tests/unit/Codeception/Module/WebDriverTest.php'.$test)
+            ->args($args)
+            ->run();
         
-//        $this->taskCodecept('./codecept')
-//            ->test('tests/unit/Codeception/Module/WebDriverTest.php')
-//            ->args($args)
-//            ->run();
+        $this->taskDockerStop($container)->run();
     }
 
     public function testLaunchServer($pathToSelenium = '~/selenium-server.jar ')
@@ -165,6 +179,7 @@ class RoboFile extends \Robo\Tasks
             ->name('*.html.dist')
             ->exclude('videlalvaro')
             ->exclude('pheanstalk')
+            ->exclude('phpseclib')
             ->exclude('codegyre')
             ->exclude('Tests')
             ->exclude('tests')

@@ -190,6 +190,16 @@ class Facebook extends BaseModule
     }
 
     /**
+     * Returns the test user id.
+     *
+     * @return string
+     */
+    public function grabFacebookTestUserId()
+    {
+        return $this->testUser['id'];
+    }
+
+    /**
      * Returns the test user email.
      *
      * @return string

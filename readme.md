@@ -1,4 +1,5 @@
-# Codeception [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception) [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception)
+# Codeception [![Latest Stable](https://poser.pugx.org/Codeception/Codeception/version.png)](https://packagist.org/packages/Codeception/Codeception) [![Total Downloads](https://poser.pugx.org/codeception/codeception/downloads.png)](https://packagist.org/packages/codeception/codeception) [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Codeception/Codeception?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 
 **Modern PHP Testing for everyone** 
 
@@ -66,6 +67,20 @@ Documentation is currently included within the project. Look for it in the 'docs
 Download [codecept.phar](http://codeception.com/codecept.phar)
 
 Copy it into your project.
+
+You can also make Codeception an executable and it put it into your `$PATH`, for instance:
+
+```
+wget http://codeception.com/codecept.phar
+
+chmod +x codecept.phar
+
+sudo mv codecept.phar /usr/local/bin/codecept
+
+```
+
+You can then run Codecept in the command line using: `codecept bootstrap`, `codecept run`, etc
+
 
 Run CLI utility:
 

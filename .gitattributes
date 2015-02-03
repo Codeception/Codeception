@@ -1,0 +1,35 @@
+# Auto detect text files and perform LF normalization
+*       text=auto
+
+# Denote text files explicitly, normalize line endings to LF on checkin and forbid conversion to CRLF on checkout
+# Without eol=lf, core.autocrlf might come in effect
+*.html  eol=lf diff=html
+*.css   eol=lf
+*.js    eol=lf
+*.sql   eol=lf
+*.php   eol=lf diff=php
+*.yml   eol=lf
+*.xml   eol=lf
+*.dist  eol=lf
+*.conf  eol=lf
+*.json  eol=lf
+*.lock  eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+# Git would detect them automatically, but this will save the autodetection
+*.png   binary
+*.jpg   binary
+*.gif   binary
+*.ico   binary
+*.zip   binary
+*.jar   binary
+*.docx  binary
+*.docx  binary
+*.dot   binary
+*.xls   binary
+*.otf   binary
+*.eot   binary
+*.ttf   binary
+*.ttf   binary
+*.woff  binary
+*.phar  binary

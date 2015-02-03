@@ -503,4 +503,17 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->amOnPage('/');
         $this->module->seeElement(WebDriverBy::xpath('H---EY!'));
     }
+
+    public function testBug1637()
+    {
+        $this->module->amOnPage('/form/bug1637');
+
+        // confirm that options outside a form are still selectable
+        $this->module->selectOption('input[name=first_test_radio]', 'Yes');
+
+        // confirm that it did what we expected and did not do anything else
+        $this->module->seeOptionIsSelected('input[name=first_test_radio]', 'Yes');
+        $this->module->dontSeeOptionIsSelected('input[name=first_test_radio]', 'No');
+    }
+
 }

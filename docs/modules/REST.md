@@ -115,10 +115,6 @@ Adds HTTP authentication via username/password.
 
 
 
-
-
-
-
 ### dontSeeHttpHeader
  
 Checks over the given HTTP header and (optionally)
@@ -157,7 +153,9 @@ Opposite to seeResponseContainsJson
 ### grabDataFromJsonResponse
  
 Returns data from the current JSON response using specified path
-so that it can be used in next scenario steps
+so that it can be used in next scenario steps.
+
+**this method is deprecated in favor of `grabDataFromResponseByJsonPath`**
 
 Example:
 
@@ -168,12 +166,33 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 ?>
 ```
 
+@deprecated please use `grabDataFromResponseByJsonPath`
  * `param string` $path
-
- * available since version 1.1.2
 @return string
 
-@author tiger.seo@gmail.com
+
+### grabDataFromResponseByJsonPath
+ 
+Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
+JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+Even for a single value an array is returned.
+
+This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+
+Example:
+
+``` php
+<?php
+// match the first `user.id` in json
+$firstUser = $I->grabDataFromJsonResponse('$..users[0].id');
+$I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
+?>
+```
+
+ * `param` $jsonPath
+@return array
+@version 2.0.9
+ \Exception
 
 
 ### grabHttpHeader
@@ -300,6 +319,93 @@ This is done with libxml_get_last_error function.
 
 
 
+### seeResponseJsonMatchesJsonPath
+ 
+Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
+JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+This assertion allows you to check the structure of response json.
+
+This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+
+```json
+  { "store": {
+      "book": [
+        { "category": "reference",
+          "author": "Nigel Rees",
+          "title": "Sayings of the Century",
+          "price": 8.95
+        },
+        { "category": "fiction",
+          "author": "Evelyn Waugh",
+          "title": "Sword of Honour",
+          "price": 12.99
+        }
+   ],
+      "bicycle": {
+        "color": "red",
+        "price": 19.95
+      }
+    }
+  }
+```
+
+```php
+<?php
+// at least one book in store has author
+$I->seeResponseJsonMatchesJsonPath('$.store.book[*].author');
+// first book in store has author
+$I->seeResponseJsonMatchesJsonPath('$.store.book[0].author');
+// at least one item in store has price
+$I->seeResponseJsonMatchesJsonPath('$.store..price');
+?>
+```
+
+@version 2.0.9
+
+
+### seeResponseJsonMatchesXpath
+ 
+Checks if json structure in response matches the xpath provided.
+JSON is not supposed to be checked against XPath, yet it can be converted to xml and used with XPath.
+This assertion allows you to check the structure of response json.
+    *
+```json
+```json
+  { "store": {
+      "book": [
+        { "category": "reference",
+          "author": "Nigel Rees",
+          "title": "Sayings of the Century",
+          "price": 8.95
+        },
+        { "category": "fiction",
+          "author": "Evelyn Waugh",
+          "title": "Sword of Honour",
+          "price": 12.99
+        }
+   ],
+      "bicycle": {
+        "color": "red",
+        "price": 19.95
+      }
+    }
+  }
+```
+
+```php
+<?php
+// at least one book in store has author
+$I->seeResponseJsonMatchesXpath('//store/book/author');
+// first book in store has author
+$I->seeResponseJsonMatchesXpath('//store/book[1]/author');
+// at least one item in store has price
+$I->seeResponseJsonMatchesXpath('/store//price');
+?>
+```
+
+@version 2.0.9
+
+
 ### sendDELETE
  
 Sends DELETE request to given uri.
@@ -361,7 +467,7 @@ Sends a POST request to given uri.
 Parameters and files (as array of filenames) can be provided.
 
  * `param` $url
- * `param array` $params
+ * `param array|\JsonSerializable` $params
  * `param array` $files
 
 
@@ -382,7 +488,6 @@ Sends UNLINK request to given uri.
  * `param array` $linkEntries (entry is array with keys "uri" and "link-param")
 @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 @author samva.ua@gmail.com
-
 
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>

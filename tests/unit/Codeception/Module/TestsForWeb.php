@@ -527,6 +527,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 	{
 		$cookie_name = 'test_cookie';
 		$cookie_value = 'this is a test';
+        $this->module->amOnPage('/');
 		$this->module->setCookie($cookie_name, $cookie_value);
 
 		$this->module->seeCookie($cookie_name);
@@ -538,6 +539,24 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 		$this->module->resetCookie($cookie_name);
 		$this->module->dontSeeCookie($cookie_name);
 	}
+
+    public function testCookiesWithPath()
+    {
+        $cookie_name = 'cookie';
+        $cookie_value = 'tasty';
+        $this->module->amOnPage('/info');
+        $this->module->setCookie($cookie_name, $cookie_value, ['path' => '/info']);
+
+        $this->module->seeCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie('evil_cookie');
+
+        $cookie = $this->module->grabCookie($cookie_name, ['path' => '/info']);
+        $this->assertEquals($cookie_value, $cookie);
+
+        $this->module->resetCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie($cookie_name, ['path' => '/info']);
+        $this->module->dontSeeCookie($cookie_name);
+    }
 
     public function testPageTitle()
     {

@@ -18,8 +18,8 @@
         "php": ">=5.4.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "phpunit/phpunit": "~4.0",
-        "facebook/webdriver": "~0.4",
+        "phpunit/phpunit": "4.4.*",
+        "facebook/webdriver": "~0.4|~0.5",
         "guzzlehttp/guzzle": "~4.0|~5.0",
         "symfony/finder": "~2.4",
         "symfony/console": "~2.4",
@@ -33,10 +33,9 @@
         "monolog/monolog": "~1.8",
         "facebook/php-sdk": "~3.2",
         "videlalvaro/php-amqplib": "~2.4",
-        "phpseclib/phpseclib": "~0.3.6",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
-        "codegyre/robo-ci": "@dev",
+        "codegyre/robo": "@dev",
         "flow/jsonpath": "~0.1"
     },
     "suggest": {

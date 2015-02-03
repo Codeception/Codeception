@@ -357,7 +357,12 @@ class REST extends \Codeception\Module
             $header = str_replace('-','_',strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
 
-            # Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
+            // Issue #1650 - Symfony BrowserKit changes HOST header to request URL
+            if (strtolower($header) == 'host') {
+                $this->client->setServerParameter("HTTP_ HOST", $val);
+            }
+
+            // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
             if ($this->isFunctional and $header == 'CONTENT_TYPE') {
                 $this->client->setServerParameter($header, $val);
             }
@@ -366,6 +371,8 @@ class REST extends \Codeception\Module
         // allow full url to be requested
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
+        $this->params = $parameters;
+        
         $parameters = $this->encodeApplicationJson($method, $parameters);
 
         if (is_array($parameters) || $method == 'GET') {
@@ -598,7 +605,6 @@ class REST extends \Codeception\Module
      * JSON is not supposed to be checked against XPath, yet it can be converted to xml and used with XPath.
      * This assertion allows you to check the structure of response json.
      *     *
-     * ```json
      * ```json
      *   { "store": {
      *       "book": [
