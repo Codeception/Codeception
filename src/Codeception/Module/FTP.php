@@ -76,7 +76,7 @@ namespace Codeception\Module;
  *              timeout: 120
  *              user: 'root'
  *              password: 'root'
- *              'key' => '',
+ *              key: ''
  *              tmp: 'tests/_data/ftp'
  *              cleanup: false
  *
