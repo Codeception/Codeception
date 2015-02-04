@@ -129,7 +129,9 @@ class Configuration
 
         self::$dir = $dir;
         self::$parameters = self::loadParameters($config);
-        self::$config = (count(self::$parameters)) ? self::exchangePlaceholders($config) : $config;
+        if (count(self::$parameters))
+            $config = self::exchangePlaceholders($config);
+        self::$config = $config;
 
         if (!isset($config['paths']['log'])) {
             throw new ConfigurationException('Log path is not defined by key "paths: log"');
