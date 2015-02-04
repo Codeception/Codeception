@@ -17,6 +17,11 @@ class Configuration
     protected static $config = null;
 
     /**
+     * @var array Paceholder parameters
+     */
+    protected static $parameters = null;
+
+    /**
      * @var string Directory containing main configuration file.
      * @see self::projectDir() 
      */
@@ -123,7 +128,8 @@ class Configuration
         }
 
         self::$dir = $dir;
-        self::$config = $config;
+        self::$parameters = self::loadParameters($config);
+        self::$config = (count(self::$parameters)) ? self::exchangePlaceholders($config) : $config;
 
         if (!isset($config['paths']['log'])) {
             throw new ConfigurationException('Log path is not defined by key "paths: log"');
@@ -174,6 +180,43 @@ class Configuration
     {
         $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : array();
         return self::mergeConfigs($parentConfig, $config);
+    }
+
+    protected static function loadParameters($config)
+    {
+        $parameters = array();
+
+        if (isset($config['imports']))
+        {
+            foreach ($config['imports'] as $importConfig)
+            {
+                if (isset($importConfig['resource']))
+                {
+                    $parameters = self::loadConfigFile($importConfig['resource'], $parameters);
+                }
+            }
+        }
+
+        return $parameters;
+    }
+
+    protected static function exchangePlaceholders($config)
+    {
+        foreach ($config as $key => $configItem)
+            if (is_array($configItem))
+                $config[$key] = self::exchangePlaceholders($configItem);
+            else
+            {
+                if (preg_match_all('/%(.*?)%/', $configItem, $matches))
+                {
+                    foreach ($matches[1] as $match)
+                        if (isset(self::$parameters['parameters'][$match]))
+                            $configItem = str_replace('%'.$match.'%', self::$parameters['parameters'][$match], $configItem);
+                    $config[$key] = $configItem;
+                }
+            }
+
+        return $config;
     }
 
     protected static function autoloadHelpers()
