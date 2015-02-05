@@ -3,6 +3,7 @@
 namespace Codeception\Lib\Connector;
 
 use Yii;
+use yii\base\Exception;
 use yii\web\Response as YiiResponse;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Client;
@@ -79,7 +80,15 @@ class Yii2 extends Client
         $this->statusCode = null;
 
         ob_start();
-        $app->handleRequest($app->getRequest())->send();
+
+        try {
+            $app->handleRequest($app->getRequest())->send();
+        } catch (Exception $e) {
+            // we shouldn't discard existing output as PHPUnit preform output level verification from PHPUnit 4.2.
+            $app->errorHandler->discardExistingOutput = false;
+            $app->errorHandler->handleException($e);
+        }
+
         $content = ob_get_clean();
 
         // catch "location" header and display it in debug, otherwise it would be handled
