@@ -695,6 +695,17 @@ class REST extends \Codeception\Module
     }
 
     /**
+     * Opposite to seeResponseJsonMatchesJsonPath
+     *
+     * @param array $jsonPath
+     */
+    public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
+    {
+        $this->assertEmpty((new JsonArray($this->response))->filterByJsonPath($jsonPath),
+            "Received JSON did (but should not) match the JsonPath provided\n".$this->response);
+    }
+
+    /**
      * Opposite to seeResponseContainsJson
      *
      * @param array $json
