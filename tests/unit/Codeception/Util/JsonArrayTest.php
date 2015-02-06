@@ -51,6 +51,7 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $this->assertNotEmpty($this->jsonArray->filterByJsonPath('$.ticket.user.name'));
         $this->assertNotEmpty($this->jsonArray->filterByJsonPath('$..user.name'));
         $this->assertEquals(['Davert'], $this->jsonArray->filterByJsonPath('$.ticket.user.name'));
+        $this->assertEmpty($this->jsonArray->filterByJsonPath('$..invalid'));
     }
 
 
