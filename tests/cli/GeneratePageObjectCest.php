@@ -12,7 +12,7 @@ class GeneratePageObjectCest
         $I->seeInThisFile('static $URL = ');
         $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
         $I->seeFileFound('tests/_bootstrap.php');
-        $I->seeInThisFile("\\Codeception\\Util\\Autoload::registerSuffix('Page', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
+        $I->seeInThisFile("\\Codeception\\Util\\Autoload::addNamespace('', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
     }
 
     public function generateSuitePageObject(CliGuy\GeneratorSteps $I) {
@@ -23,7 +23,7 @@ class GeneratePageObjectCest
         $I->seeInThisFile('protected $dumbGuy;');
         $I->seeInThisFile('public static function of(DumbGuy $I)');
         $I->seeInThisFile('@return LoginPage');
-        $I->seeAutoloaderWasAdded('Page', 'tests/dummy');
+        $I->seeAutoloaderWasAdded('', 'tests/dummy');
 
     }
 
@@ -35,7 +35,7 @@ class GeneratePageObjectCest
         $I->seeInThisFile('static $URL = ');
         $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
         $I->seeFileFound('tests/_bootstrap.php');
-        $I->seeInThisFile("\\Codeception\\Util\\Autoload::registerSuffix('Page', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
+        $I->seeInThisFile("\\Codeception\\Util\\Autoload::addNamespace('', __DIR__.DIRECTORY_SEPARATOR.'_pages'");
 
     }
 

@@ -40,7 +40,7 @@ class GenerateGroup extends Command
         $filename = $this->completeSuffix($class, 'Group');
         $filename = $path.$filename;
 
-        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Group','_groups');
+        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'], $config['namespace'], '_groups');
 
         $gen = new GroupGenerator($config, $group);
         $res = $this->save($filename, $gen->produce());
@@ -49,7 +49,7 @@ class GenerateGroup extends Command
             $output->writeln("<error>Group $filename already exists</error>");
             return;
         }
-        
+
         $output->writeln("<info>Group extension was created in $filename</info>");
         $output->writeln('To use this group extension, include it to "extensions" option of global Codeception config.');
     }

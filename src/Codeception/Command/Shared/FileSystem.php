@@ -67,20 +67,20 @@ trait FileSystem
         return true;
     }
 
-    protected function introduceAutoloader($file, $suffix, $relativePath)
+    protected function introduceAutoloader($file, $prefix, $baseDir)
     {
         $line = sprintf(
-            '\Codeception\Util\Autoload::registerSuffix(\'%s\', __DIR__.DIRECTORY_SEPARATOR.\'%s\');',
-            $suffix,
-            $relativePath
+            '\Codeception\Util\Autoload::addNamespace(\'%s\', __DIR__.DIRECTORY_SEPARATOR.\'%s\');',
+            $prefix,
+            $baseDir
         );
 
         if (!file_exists($file)) {
-            return $this->save($file, "<?php \n" . $line);
+            return $this->save($file, "<?php\n" . $line);
         }
 
         $contents = file_get_contents($file);
-        if (preg_match('~Autoload::registerSuffix\([\'"]' . $suffix . '[\'"]~', $contents)) {
+        if (strpos($contents, $line) !== false) {
             return false;
         }
         $contents .= "\n" . $line;
@@ -89,4 +89,4 @@ trait FileSystem
     }
 
 
-} 
+}

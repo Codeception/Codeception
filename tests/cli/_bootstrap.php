@@ -1,2 +1,2 @@
-<?php 
-\Codeception\Util\Autoload::registerSuffix('Steps', __DIR__.DIRECTORY_SEPARATOR.'_steps');
+<?php
+\Codeception\Util\Autoload::addNamespace('CliGuy', __DIR__.DIRECTORY_SEPARATOR.'_steps');

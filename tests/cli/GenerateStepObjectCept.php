@@ -5,4 +5,4 @@ $I->amInPath('tests/data/sandbox');
 $I->executeCommand('generate:stepobject dummy Login --silent');
 $I->seeFileWithGeneratedClass('LoginSteps','tests/dummy/_steps');
 $I->seeInThisFile('LoginSteps extends \DumbGuy');
-$I->seeAutoloaderWasAdded('Steps','tests/dummy');
+$I->seeAutoloaderWasAdded('DumbGuy', 'tests/dummy');

@@ -71,7 +71,7 @@ class GeneratePageObject extends Command
     {
         $path = $this->buildPath(Configuration::projectDir().$config['paths']['tests'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
-        $this->introduceAutoloader(Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Page','_pages');
+        $this->introduceAutoloader(Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'], $config['namespace'], '_pages');
         return  $path.$filename;
     }
 
@@ -79,7 +79,7 @@ class GeneratePageObject extends Command
     {
         $path = $this->buildPath($config['path'].'/_pages/', $class);
         $filename = $this->completeSuffix($class, 'Page');
-        $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'],'Page','_pages');
+        $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'], $config['namespace'], '_pages');
         return  $path.$filename;
     }
 
