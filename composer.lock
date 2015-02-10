@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3000e5a627fbf63fccbf5020ffbe2bd",
+    "hash": "078b30c15b22bb616421ad1cea8bc51e",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -1457,12 +1457,12 @@
             "version": "v3.2.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/facebook-php-sdk.git",
+                "url": "https://github.com/facebookarchive/facebook-php-sdk.git",
                 "reference": "6714042fa2f5979d4c64c7d11fb4bcab16bdf6cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-php-sdk/zipball/6714042fa2f5979d4c64c7d11fb4bcab16bdf6cb",
+                "url": "https://api.github.com/repos/facebookarchive/facebook-php-sdk/zipball/6714042fa2f5979d4c64c7d11fb4bcab16bdf6cb",
                 "reference": "6714042fa2f5979d4c64c7d11fb4bcab16bdf6cb",
                 "shasum": ""
             },
@@ -1496,29 +1496,32 @@
                 "facebook",
                 "sdk"
             ],
+            "abandoned": "facebook/php-sdk-v4",
             "time": "2013-11-19 23:11:14"
         },
         {
             "name": "flow/jsonpath",
-            "version": "0.1.1",
+            "version": "0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FlowCommunications/JSONPath.git",
-                "reference": "5ed0d415eb96da1f38a86710dbebaaaaea46aac7"
+                "reference": "501f13c8a14d64fbb7a1a0161efdcb6345aedc8f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/5ed0d415eb96da1f38a86710dbebaaaaea46aac7",
-                "reference": "5ed0d415eb96da1f38a86710dbebaaaaea46aac7",
+                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/501f13c8a14d64fbb7a1a0161efdcb6345aedc8f",
+                "reference": "501f13c8a14d64fbb7a1a0161efdcb6345aedc8f",
                 "shasum": ""
             },
             "require-dev": {
-                "peekmo/jsonpath": "dev-master"
+                "peekmo/jsonpath": "dev-master",
+                "phpunit/phpunit": "dev-master"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "Flow\\JSONPath": "src/"
+                    "Flow\\JSONPath": "src/",
+                    "Flow\\JSONPath\\Test": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1532,7 +1535,7 @@
                 }
             ],
             "description": "JSONPath implementation for parsing, searching and flattening arrays",
-            "time": "2014-10-19 11:04:47"
+            "time": "2015-02-05 07:08:12"
         },
         {
             "name": "monolog/monolog",
