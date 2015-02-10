@@ -36,7 +36,6 @@ install:
   - composer install -d frameworks-laravel --no-dev
   # Laravel 5
   - git clone -q https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5
-  - touch frameworks-l5/storage/testing.sqlite
   - composer install -d frameworks-l5 --no-dev
   # Symfony
   - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
@@ -54,13 +53,15 @@ before_script:
   - psql -c 'create database codeception_test;' -U postgres
   - php -S localhost:8000 -t tests/data/app &
   - php -S localhost:8010 -t tests/data &
+  # Phalcon
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   # Laravel 4
   - "mysql -e 'create database `l4-module`;'"
   - php frameworks-laravel/artisan migrate --seed -n --force
   # Laravel 5
-  - php frameworks-laravel/artisan migrate --database=sqlite_testing --force
+  - touch frameworks-l5/storage/testing.sqlite
+  - php frameworks-l5/artisan migrate --database=sqlite_testing --force
   # Symfony
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create
