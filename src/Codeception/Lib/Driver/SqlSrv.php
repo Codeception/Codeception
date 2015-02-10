@@ -43,7 +43,7 @@ class SqlSrv extends Db
             DEALLOCATE tables_cursor;");
     }
     
-    public function select($column, $table, array $criteria)
+    public function select($column, $table, array &$criteria)
     {
         $where  = $criteria ? "where %s" : '';
         $query  = "select %s from " . $this->getQuotedName('%s') . " $where";

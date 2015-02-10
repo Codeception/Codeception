@@ -319,12 +319,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (empty($cookies)) {
             return null;
         }
-        return $cookies[0]['value'];
+        $cookie = reset($cookies);
+        return $cookie['value'];
     }
 
     protected function filterCookies($cookies, $params = [])
     {
-        foreach (['domain' ,'path'] as $filter) {
+        foreach (['domain' ,'path', 'name'] as $filter) {
             if (!isset($params[$filter])) continue;
             $cookies = array_filter($cookies, function ($item) use ($filter, $params) {
                 return $item[$filter] == $params[$filter];

@@ -1,1 +1,1 @@
-a:3:{s:6:"params";a:0:{}s:4:"form";a:3:{s:8:"captions";a:1:{i:0;s:5:"test2";}s:5:"items";a:1:{i:1;a:2:{s:8:"quantity";s:1:"1";i:0;s:5:"test3";}}s:5:"users";a:1:{i:0;s:6:"davert";}}s:5:"files";a:1:{s:5:"files";a:5:{s:4:"name";a:1:{i:0;s:10:"avatar.jpg";}s:4:"type";a:1:{i:0;s:0:"";}s:8:"tmp_name";a:1:{i:0;s:49:"/tmp/1ad67d9811653c62681c2acf55024204cdff66ba.jpg";}s:5:"error";a:1:{i:0;s:1:"0";}s:4:"size";a:1:{i:0;s:4:"5621";}}}}
+a:0:{}

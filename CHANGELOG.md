@@ -18,8 +18,6 @@
 * Fixed remote context options on CodeCoverage by @synchrone. See #1664 *2015-01-26*
 * [MongoDb] `seeNumElementsInCollection` method added by @sahanh
 * [MongoDb] Added new methods: `grabCollectionCount`, `seeElementIsArray`, `seeElementIsObject` by @antoniofrignani
-
-  ![MongoTests](https://cloud.githubusercontent.com/assets/802713/5755827/4dcbfd9e-9ca9-11e4-826f-fb262aa2ee8c.png)
 * [WebDriver] Allow `selectOption()` to select options not inside forms by @n8whnp See #1638
 * [FTP] Added support for sftp connections with an RSA SSH key by @mattvot.
 * [PhpBrowser][WebDriver] allows to handle domain and path for cookies *2015-01-24*

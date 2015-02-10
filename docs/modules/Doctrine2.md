@@ -36,52 +36,6 @@ It can be done in bootstrap file, by setting static $em property:
               cleanup: false
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### dontSeeInRepository
  
 Flushes changes to database and performs ->findOneBy() call for current repository.
@@ -90,12 +44,9 @@ Flushes changes to database and performs ->findOneBy() call for current reposito
  * `param array` $params
 
 
-
 ### flushToDatabase
  
 Performs $em->flush();
-
-
 
 
 ### grabFromRepository
@@ -117,7 +68,6 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * `param` $field
  * `param array` $params
 @return array
-
 
 
 ### haveFakeRepository
@@ -154,7 +104,6 @@ $I->haveInRepository('Entity\User', array('name' => 'davert'));
 ```
 
 
-
 ### persistEntity
  
 Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
@@ -169,8 +118,6 @@ $I->persistEntity($user, array('name' => 'Miles'));
 
  * `param` $obj
  * `param array` $values
-
-
 
 
 ### seeInRepository

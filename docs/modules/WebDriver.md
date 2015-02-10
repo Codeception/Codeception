@@ -87,38 +87,6 @@ Be warned that fuzzy locators can be significantly slower than strict locators. 
 # Methods
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### acceptPopup
  
 Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
@@ -189,30 +157,6 @@ $I->appendField('#myTextField', 'appended');
  * `param string` $field
  * `param string` $value
  \Codeception\Exception\ElementNotFound
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### attachFile
@@ -289,9 +233,6 @@ Performs contextual click with the right mouse button on an element.
  \Codeception\Exception\ElementNotFound
 
 
-
-
-
 ### dontSee
  
 Checks that the current page doesn't contain the text specified.
@@ -326,9 +267,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ### dontSeeCookie
  
 Checks that there isn't a cookie with the given name.
+You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
  * `param` $cookie
 
+ * `param array` $params
 
 
 ### dontSeeCurrentUrlEquals
@@ -519,7 +462,6 @@ $myVar = $I->executeJS('return $("#myField").val()');
  * `param` $script
 
 
-
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -533,15 +475,6 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
 
  * `param` $field
  * `param` $value
-
-
-
-
-
-
-
-
-
 
 
 ### getVisibleText
@@ -571,9 +504,11 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ### grabCookie
  
 Grabs a cookie value.
+You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
  * `param` $cookie
 
+ * `param array` $params
 
 
 ### grabFromCurrentUrl
@@ -628,9 +563,6 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
 
 
-
-
-
 ### makeScreenshot
  
 Takes a screenshot of the current window and saves it to `tests/_output/debug`.
@@ -644,10 +576,6 @@ $I->makeScreenshot('edit_page');
 ```
 
  * `param` $name
-
-
-
-
 
 
 ### maximizeWindow
@@ -684,7 +612,6 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
  \Codeception\Exception\ElementNotFound
 
 
-
 ### pauseExecution
  
 Pauses test execution in debug mode.
@@ -716,7 +643,6 @@ $I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
  \Codeception\Exception\ElementNotFound
 
 
-
 ### reloadPage
  
 Reloads the current page.
@@ -725,9 +651,11 @@ Reloads the current page.
 ### resetCookie
  
 Unsets cookie with the given name.
+You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
  * `param` $cookie
 
+ * `param array` $params
 
 
 ### resizeWindow
@@ -742,7 +670,6 @@ $I->resizeWindow(800, 600);
 
  * `param int` $width
  * `param int` $height
-
 
 
 ### see
@@ -780,6 +707,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ### seeCookie
  
 Checks that a cookie with the given name is set.
+You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
 ``` php
 <?php
@@ -788,7 +716,7 @@ $I->seeCookie('PHPSESSID');
 ```
 
  * `param` $cookie
-
+ * `param array` $params
 
 
 ### seeCurrentUrlEquals
@@ -998,6 +926,7 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ### setCookie
  
 Sets a cookie with the given name and value.
+You can set additional cookie params like `domain`, `path`, `expire`, `secure` in array passed as last argument.
 
 ``` php
 <?php
@@ -1005,8 +934,11 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
 ?>
 ```
 
- * `param` $cookie
- * `param` $value
+ * `param` $name
+ * `param` $val
+ * `param array` $params
+ * `internal param` $cookie
+ * `internal param` $value
 
 
 
@@ -1150,7 +1082,6 @@ $I->uncheckOption('#notify');
 __not documented__
 
 
-
 ### wait
  
 Wait for $timeout seconds.
@@ -1262,4 +1193,5 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param null` $selector
  \Exception
  * `internal param string` $element
+
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>

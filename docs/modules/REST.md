@@ -43,33 +43,6 @@ This module requires PHPBrowser or any of Framework modules enabled.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### amBearerAuthenticated
  
 Adds Bearer authentication via access token.
@@ -91,28 +64,6 @@ Adds HTTP authentication via username/password.
 
  * `param` $username
  * `param` $password
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### dontSeeHttpHeader
@@ -143,11 +94,6 @@ Checks whether last response do not contain text.
 Opposite to seeResponseContainsJson
 
  * `param array` $json
-
-
-
-
-
 
 
 ### grabDataFromJsonResponse
@@ -222,17 +168,12 @@ $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
 @return string
 
 
-
 ### haveHttpHeader
  
 Sets HTTP header
 
  * `param` $name
  * `param` $value
-
-
-
-
 
 
 ### seeHttpHeader
@@ -370,7 +311,6 @@ JSON is not supposed to be checked against XPath, yet it can be converted to xml
 This assertion allows you to check the structure of response json.
     *
 ```json
-```json
   { "store": {
       "book": [
         { "category": "reference",
@@ -488,6 +428,5 @@ Sends UNLINK request to given uri.
  * `param array` $linkEntries (entry is array with keys "uri" and "link-param")
 @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 @author samva.ua@gmail.com
-
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>

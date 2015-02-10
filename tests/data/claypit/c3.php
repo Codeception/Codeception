@@ -56,7 +56,7 @@ if (!class_exists('\\Codeception\\Codecept')) {
 
 // Load Codeception Config
 $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . 'codeception.yml';
-if (array_key_exists('HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG', $_SERVER)) {
+if (isset($_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'])) {
     $config_file = realpath(__DIR__) . DIRECTORY_SEPARATOR . $_SERVER['HTTP_X_CODECEPTION_CODECOVERAGE_CONFIG'];
 }
 if (!file_exists($config_file)) {

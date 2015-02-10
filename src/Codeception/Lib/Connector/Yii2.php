@@ -3,6 +3,8 @@
 namespace Codeception\Lib\Connector;
 
 use Yii;
+use yii\web\HttpException;
+use yii\base\ExitException;
 use yii\web\Response as YiiResponse;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Client;
@@ -52,6 +54,7 @@ class Yii2 extends Client
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
+            $_POST[Yii::$app->getRequest()->methodParam] = $request->getMethod();
         }
 
         $uri = $request->getUri();
@@ -79,7 +82,22 @@ class Yii2 extends Client
         $this->statusCode = null;
 
         ob_start();
-        $app->handleRequest($app->getRequest())->send();
+
+        try {
+            $app->handleRequest($app->getRequest())->send();
+        } catch (\Exception $e) {
+            if ($e instanceof HttpException) {
+                // we shouldn't discard existing output as PHPUnit preform output level verification since PHPUnit 4.2.
+                $app->errorHandler->discardExistingOutput = false;
+                $app->errorHandler->handleException($e);
+            } elseif ($e instanceof ExitException) {
+                // nothing to do
+            } else {
+                // for exceptions not related to Http, we pass them to Codeception
+                throw $e;
+            }
+        }
+
         $content = ob_get_clean();
 
         // catch "location" header and display it in debug, otherwise it would be handled

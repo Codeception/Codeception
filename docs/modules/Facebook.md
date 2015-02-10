@@ -73,55 +73,6 @@ $I->see('Welcome, ' . $fbUserFirstName);
 @author tiger.seo@gmail.com
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### grabFacebookTestUserAccessToken
  
 Returns the test user access token.
@@ -143,12 +94,18 @@ Returns the test user first name.
 @return string
 
 
+### grabFacebookTestUserId
+ 
+Returns the test user id.
+
+@return string
+
+
 ### grabFacebookTestUserLoginUrl
  
 Returns URL for test user auto-login.
 
 @return string
-
 
 
 ### haveFacebookTestUserAccount
@@ -165,8 +122,6 @@ Get facebook test user be created.
 Get facebook test user be logged in on facebook.
 
  ModuleConfigException
-
-
 
 
 ### seePostOnFacebookWithAttachedPlace

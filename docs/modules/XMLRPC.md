@@ -35,66 +35,12 @@ Otherwise sends raw HTTP requests to url via PHPBrowser.
 @author tiger.seo@gmail.com
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### haveHttpHeader
  
 Sets HTTP header
 
  * `param string` $name
  * `param string` $value
-
-
 
 
 ### seeResponseCodeIs

@@ -118,6 +118,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
             throw new TestRuntime("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'].'://'.$urlParts['host'];
+        if (isset($urlParts['port'])) {
+            $host .= ':'.$urlParts['port'];
+        }
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
         $this->debugSection('Host', $host);

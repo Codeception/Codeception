@@ -36,32 +36,6 @@ Uses 'bootstrap/start.php' to launch.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### amHttpAuthenticated
  
 Authenticates user for HTTP_AUTH
@@ -122,30 +96,6 @@ $I->amOnRoute('posts.create');
 
  * `param` $route
  * `param array` $params
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ### attachFile
@@ -209,10 +159,6 @@ $I->click(['link' => 'Login']);
  * `param` $context
 
 
-
-
-
-
 ### dontSee
  
 Checks that the current page doesn't contain the text specified.
@@ -252,9 +198,11 @@ $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user
 ### dontSeeCookie
  
 Checks that there isn't a cookie with the given name.
+You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
  * `param` $cookie
 
+ * `param array` $params
 
 
 ### dontSeeCurrentUrlEquals
@@ -390,8 +338,6 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
  * `param array` $attributes
 
 
-
-
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -405,16 +351,6 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
 
  * `param` $field
  * `param` $value
-
-
-
-
-
-
-
-
-
-
 
 
 ### grabAttributeFrom
@@ -437,9 +373,11 @@ $I->grabAttributeFrom('#tooltip', 'title');
 ### grabCookie
  
 Grabs a cookie value.
+You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
  * `param` $cookie
 
+ * `param array` $params
 
 
 ### grabFromCurrentUrl
@@ -521,7 +459,6 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
 @return array|mixed|null|string
 
 
-
 ### haveDisabledFilters
  
 Disable Laravel filters for next requests.
@@ -551,20 +488,14 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 Logs user out
 
 
-
-
-
-
-
-
 ### resetCookie
  
 Unsets cookie with the given name.
+You can set additional cookie params like `domain`, `path` in array passed as last argument.
 
  * `param` $cookie
 
-
-
+ * `param array` $params
 
 
 ### see
@@ -607,6 +538,7 @@ $I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ### seeCookie
  
 Checks that a cookie with the given name is set.
+You can set additional cookie params like `domain`, `path` as array passed in last argument.
 
 ``` php
 <?php
@@ -615,7 +547,7 @@ $I->seeCookie('PHPSESSID');
 ```
 
  * `param` $cookie
-
+ * `param array` $params
 
 
 ### seeCurrentActionIs
@@ -941,6 +873,7 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
 ### setCookie
  
 Sets a cookie with the given name and value.
+You can set additional cookie params like `domain`, `path`, `expire`, `secure` in array passed as last argument.
 
 ``` php
 <?php
@@ -948,9 +881,11 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
 ?>
 ```
 
- * `param` $cookie
- * `param` $value
-
+ * `param` $name
+ * `param` $val
+ * `param array` $params
+ * `internal param` $cookie
+ * `internal param` $value
 
 
 
@@ -1010,8 +945,6 @@ $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password
  * `param` $selector
  * `param` $params
  * `param` $button
-
-
 
 
 ### uncheckOption
