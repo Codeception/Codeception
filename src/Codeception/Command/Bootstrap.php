@@ -38,7 +38,7 @@ class Bootstrap extends Command
             new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
             new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers'),
             new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester'),
-            new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create suites' )
+            new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create standard suites' )
         ]);
     }
 
@@ -74,9 +74,22 @@ class Bootstrap extends Command
             "<fg=white;bg=magenta>Initializing Codeception in " . $realpath . "</fg=white;bg=magenta>\n"
         );
 
+        $this->createGlobalConfig();
+        $output->writeln("File codeception.yml created       <- global configuration");
+        $this->createDirs();
+
         if (!$input->getOption('empty')) {
-            $this->setup($output);
+            $this->createUnitSuite();
+            $output->writeln("tests/unit created                 <- unit tests");
+            $output->writeln("tests/unit.suite.yml written       <- unit tests suite configuration");
+            $this->createFunctionalSuite();
+            $output->writeln("tests/functional created           <- functional tests");
+            $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+            $this->createAcceptanceSuite();
+            $output->writeln("tests/acceptance created           <- acceptance tests");
+            $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
         }
+        $this->ignoreFolderContent('tests/_output');
 
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading\n");
         $output->writeln("tests/_bootstrap.php written <- global bootstrap file");
@@ -195,28 +208,6 @@ class Bootstrap extends Command
         if (file_exists('.gitignore')) {
             file_put_contents("{$path}/.gitignore", "*\n!.gitignore");
         }
-    }
-
-    /**
-     * @param OutputInterface $output
-     */
-    protected function setup(OutputInterface $output)
-    {
-        $this->createGlobalConfig();
-        $output->writeln("File codeception.yml created       <- global configuration");
-
-        $this->createDirs();
-        $this->createUnitSuite();
-        $output->writeln("tests/unit created                 <- unit tests");
-        $output->writeln("tests/unit.suite.yml written       <- unit tests suite configuration");
-        $this->createFunctionalSuite();
-        $output->writeln("tests/functional created           <- functional tests");
-        $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
-        $this->createAcceptanceSuite();
-        $output->writeln("tests/acceptance created           <- acceptance tests");
-        $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
-
-        $this->ignoreFolderContent('tests/_output');
     }
 
     protected function createDirs()

@@ -36,6 +36,15 @@ class BootstrapCest
         $I->seeFileFound('AcceptanceNinja.php','tests/acceptance');
     }
 
+    public function bootstrapEmpty(\CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox/tests/_data/');
+        $I->executeCommand('bootstrap --empty');
+        $I->dontSeeFileFound('tests/acceptance');
+        $I->dontSeeFileFound('AcceptanceTester.php','tests/acceptance');
+        $I->seeFileFound('codeception.yml');
+    }
+
     protected function checkFilesCreated(\CliGuy $I)
     {
         $I->seeDirFound('tests/_support');
