@@ -52,7 +52,7 @@ class JsonArray
     public function filterByJsonPath($jsonPath)
     {
         if (!class_exists('Flow\JSONPath\JSONPath')) {
-            throw new \Exception('JSONPath library not installed. Please add `flow/jsonpath` to composer.json');
+            throw new \Exception('JSONPath library not installed. Please add `flow/jsonpath` `0.1.*` to composer.json');
         }
         return (new JSONPath($this->jsonArray))->find($jsonPath);
     }
