@@ -231,6 +231,8 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseJsonMatchesXpath('//user');
         $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
         $this->module->seeResponseJsonMatchesJsonPath('$[1].tags');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].user.badKey');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$[1].tags.badKey');
     }
 
     public function testStructuredJsonPathAndXPath()
@@ -240,6 +242,8 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseJsonMatchesXpath('//book/category');
         $this->module->seeResponseJsonMatchesJsonPath('$..book');
         $this->module->seeResponseJsonMatchesJsonPath('$.store.book[2].author');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$..book.badKey');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$.store.book[2].author.badKey');
     }
 
 
