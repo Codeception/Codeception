@@ -57,12 +57,13 @@ class Codecept
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
-        $this->loadExtensions($this->options);
 
         $this->config = Configuration::config();
 
         $this->options = array_merge($this->options, $this->config['settings']);
         $this->options = array_merge($this->options, $options);
+
+        $this->loadExtensions($this->options);
 
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
