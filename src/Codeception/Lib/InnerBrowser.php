@@ -681,6 +681,10 @@ class InnerBrowser extends Module implements Web
      */
     protected function strictMatch(array $by)
     {
+        if (!$this->crawler) {
+            throw new TestRuntime('Crawler is null. Perhaps you forgot to call "amOnPage"?');
+        }
+
         $type = key($by);
         $locator = $by[$type];
         switch ($type) {

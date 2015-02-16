@@ -522,7 +522,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeElement('input[name=name]');
     }
 
-
 	public function testCookies()
 	{
 		$cookie_name = 'test_cookie';
