@@ -210,8 +210,10 @@ class Laravel5 extends Framework implements ActiveRecord
      */
     public function amOnRoute($route, $params = [])
     {
-        $url = $this->app['url']->route($route, $params, false);
-        codecept_debug($url);
+        $domain = $this->app['routes']->getByName($route)->domain();
+        $absolute = ! is_null($domain);
+
+        $url = $this->app['url']->route($route, $params, $absolute);
         $this->amOnPage($url);
     }
 
@@ -229,8 +231,46 @@ class Laravel5 extends Framework implements ActiveRecord
      */
     public function amOnAction($action, $params = [])
     {
-        $url = $this->app['url']->action($action, $params, false);
+        $namespacedAction = $this->actionWithNamespace($action);
+
+        $domain = $this->app['routes']->getByAction($namespacedAction)->domain();
+        $absolute = ! is_null($domain);
+
+        $url = $this->app['url']->action($action, $params, $absolute);
         $this->amOnPage($url);
+    }
+
+    /**
+     * Normalize an action to full namespaced action.
+     *
+     * @param string $action
+     * @return string
+     */
+    protected function actionWithNamespace($action)
+    {
+        $rootNamespace = $this->getRootControllerNamespace();
+
+        if ($rootNamespace && ! (strpos($action, '\\') === 0)) {
+            return $rootNamespace . '\\' . $action;
+        } else {
+            return trim($action, '\\');
+        }
+    }
+
+    /**
+     * Get the root controller namespace for the application.
+     *
+     * @return string
+     */
+    protected function getRootControllerNamespace()
+    {
+        $urlGenerator = $this->app['url'];
+        $reflection = new \ReflectionClass($urlGenerator);
+
+        $property = $reflection->getProperty('rootNamespace');
+        $property->setAccessible(true);
+
+        return $property->getValue($urlGenerator);
     }
 
     /**
@@ -525,4 +565,5 @@ class Laravel5 extends Framework implements ActiveRecord
         }
         return $query->first();
     }
+
 }
