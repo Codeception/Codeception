@@ -84,17 +84,22 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     public $dbh;
 
     /**
-     * @var
+     * @var array
      */
+    protected $sql = [];
 
-    protected $sql = array();
-
-    protected $config = array(
+    /**
+     * @var array
+     */
+    protected $config = [
       'populate' => true,
       'cleanup'  => true,
       'dump'     => null
-    );
+    ];
 
+    /**
+     * @var bool
+     */
     protected $populated = false;
 
     /**
@@ -102,9 +107,15 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
      */
     public $driver;
 
-    protected $insertedIds = array();
+    /**
+     * @var array
+     */
+    protected $insertedIds = [];
 
-    protected $requiredFields = array('dsn', 'user', 'password');
+    /**
+     * @var array
+     */
+    protected $requiredFields = ['dsn', 'user', 'password'];
 
     public function _initialize()
     {
@@ -165,7 +176,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
                 $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
             }
         }
-        $this->insertedIds = array();
+        $this->insertedIds = [];
     }
 
     protected function cleanup()
@@ -243,18 +254,18 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
         }
-        $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
+        $this->insertedIds[] = ['table' => $table, 'id' => $lastInsertId];
 
         return $lastInsertId;
     }
 
-    public function seeInDatabase($table, $criteria = array())
+    public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res, 'No matching records found');
     }
 
-    public function dontSeeInDatabase($table, $criteria = array())
+    public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
@@ -275,7 +286,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         return $sth->fetchColumn();
     }
 
-    public function grabFromDatabase($table, $column, $criteria = array())
+    public function grabFromDatabase($table, $column, $criteria = [])
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
     }
