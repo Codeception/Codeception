@@ -283,6 +283,10 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
      */
     protected function getPrimaryColumn($tableName)
     {
+        if ('sqlite' === $this->driver->getProvider($this->config['dsn'])) {
+            return 'id'; // @TODO: Fix this for SQLite because it can't use "SHOW KEYS"
+        }
+
         if (false === isset($this->primaryKeys[$tableName])) {
             $pdo  = $this->driver->getDbh();
             $stmt = $pdo->prepare('SHOW KEYS FROM ' . $tableName . ' WHERE Key_name = ?');
