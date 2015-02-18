@@ -113,6 +113,13 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     protected $insertedIds = [];
 
     /**
+     * associative array with table name => primary-key
+     *
+     * @var array
+     */
+    protected $primaryKeys = [];
+
+    /**
      * @var array
      */
     protected $requiredFields = ['dsn', 'user', 'password'];
@@ -171,7 +178,11 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         foreach ($this->insertedIds as $insertId) {
             try {
-                $this->driver->deleteQuery($insertId['table'], $insertId['id']);
+                $pdo  = $this->driver->getDbh();
+                $stmt = $pdo->prepare(
+                  'DELETE FROM `' . $insertId['table'] . '` WHERE `' . $insertId['primary'] . '` = ?'
+                );
+                $stmt->execute([$insertId['id']]);
             } catch (\Exception $e) {
                 $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
             }
@@ -254,9 +265,39 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
         }
-        $this->insertedIds[] = ['table' => $table, 'id' => $lastInsertId];
+
+        $this->insertedIds[] = [
+          'table'   => $table,
+          'id'      => $lastInsertId,
+          'primary' => $this->getPrimaryColumn($table)
+        ];
 
         return $lastInsertId;
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function getPrimaryColumn($tableName)
+    {
+        if (false === isset($this->primaryKeys[$tableName])) {
+            $pdo  = $this->driver->getDbh();
+            $stmt = $pdo->prepare('SHOW KEYS FROM ' . $tableName . ' WHERE Key_name = ?');
+            $stmt->execute(['PRIMARY']);
+
+            $columnInformation = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (true === empty($columnInformation)) { // Need a primary key
+                throw new \Exception('Table ' . $tableName . ' is not valid or doesn\'t have no primary key');
+            }
+
+            $this->primaryKeys[$tableName] = $columnInformation['Column_name'];
+        }
+
+        return $this->primaryKeys[$tableName];
     }
 
     public function seeInDatabase($table, $criteria = [])
