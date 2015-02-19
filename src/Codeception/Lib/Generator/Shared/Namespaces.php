@@ -13,15 +13,14 @@ trait Namespaces
     protected function getNamespaceString($class)
     {
         $namespaces = $this->getNamespaces($class);
-        return $namespaces
-            ? 'namespace ' . implode('\\', $namespaces) . ";\n"
-            : '';
+        return implode('\\', $namespaces);
     }
 
     protected function getNamespaces($class)
     {
         $namespaces = $this->breakParts($class);
         array_pop($namespaces);
+        $namespaces = array_filter($namespaces, 'strlen');
         return $namespaces;
     }
 

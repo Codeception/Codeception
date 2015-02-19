@@ -3,6 +3,7 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Lib\Di;
 use Codeception\Util\Autoload;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
@@ -36,7 +37,7 @@ class Configuration
     /**
      * @var string Directory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
      */
-    protected static $helpersDir = null;
+    protected static $supportDir = null;
 
     /**
      * @var string Directory containing tests and suites of the current project.
@@ -144,12 +145,17 @@ class Configuration
             throw new ConfigurationException('Data path is not defined Codeception config by key "paths: data"');
         }
 
-        if (!isset($config['paths']['helpers'])) {
-           throw new ConfigurationException('Helpers path is not defined by key "paths: helpers"');
+        // compatibility with 1.x, 2.0
+        if (!isset($config['paths']['support']) and isset($config['paths']['helpers'])) {
+            $config['paths']['support'] = $config['paths']['helpers'];
+        }
+
+        if (!isset($config['paths']['support'])) {
+           throw new ConfigurationException('Helpers path is not defined by key "paths: support"');
         }
 
         self::$dataDir = $config['paths']['data'];
-        self::$helpersDir = $config['paths']['helpers'];
+        self::$supportDir = $config['paths']['support'];
         self::$testsDir = $config['paths']['tests'];
 
         self::loadBootstrap($config['settings']['bootstrap']);
@@ -179,8 +185,10 @@ class Configuration
     protected static function autoloadHelpers()
     {
         $namespace = self::$config['namespace'];
-        Autoload::addNamespace($namespace, self::helpersDir());
-        Autoload::addNamespace($namespace.'\Codeception\Module', self::helpersDir());
+        Autoload::addNamespace($namespace, self::supportDir());
+
+        // deprecated
+        Autoload::addNamespace($namespace.'\Codeception\Module', self::supportDir());
     }
 
     protected static function loadSuites()
@@ -286,7 +294,7 @@ class Configuration
 
         foreach ($moduleNames as $moduleName) {
             $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
-            $modules[$moduleName] = static::createModule($moduleName, $moduleConfig, $namespace);
+            $modules[$moduleName] = static::createModule($moduleName, [$moduleConfig], $namespace);
         }
 
         return $modules;
@@ -296,10 +304,8 @@ class Configuration
      * Creates new module and configures it.
      * Module class is searched and resolves according following rules:
      *
-     * 1. if "class" element is fully qualified class name, it will be taken to create module;
-     * 2. module class will be searched under default namespace, according $namespace parameter:
-     * $namespace.'\Codeception\Module\' . $class;
-     * 3. module class will be searched under Codeception module namespace, that is "\Codeception\Module".
+     * 1. if "class" element is fully qualified class name (started with "\"), it will be taken to create module;
+     * 2. module class will be searched under Codeception module namespace, that is "\Codeception\Module".
      *
      * @param $class
      * @param array $config module configuration
@@ -309,24 +315,25 @@ class Configuration
      */
     public static function createModule($class, $config, $namespace = '')
     {
+        $di = new Di();
         $hasNamespace = (mb_strpos($class, '\\') !== false);
 
         if ($hasNamespace) {
-            return new $class($config);
+            return $di->instantiate($class, $config);
         }
 
         // try find module under users suite namespace setting
         $className = $namespace.'\\Codeception\\Module\\' . $class;
 
-        if (!@class_exists($className)) {
+        if (!class_exists($className)) {
             // fallback to default namespace
             $className = '\\Codeception\\Module\\' . $class;
-            if (!@class_exists($className)) {
+            if (!class_exists($className)) {
                 throw new ConfigurationException($class.' could not be found and loaded');
             }
         }
 
-        return new $className($config);
+        return $di->instantiate($className, $config);
     }
 
     public static function isExtensionEnabled($extensionName)
@@ -386,9 +393,9 @@ class Configuration
      *
      * @return string
      */
-    public static function helpersDir()
+    public static function supportDir()
     {
-        return self::$dir . DIRECTORY_SEPARATOR . self::$helpersDir . DIRECTORY_SEPARATOR;
+        return self::$dir . DIRECTORY_SEPARATOR . self::$supportDir . DIRECTORY_SEPARATOR;
     }
 
     /**

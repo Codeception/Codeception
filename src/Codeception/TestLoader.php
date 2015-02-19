@@ -2,6 +2,7 @@
 namespace Codeception;
 
 use Codeception\Lib\Parser;
+use Codeception\Lib\Di;
 use Codeception\TestCase\Cept;
 use Codeception\TestCase\Cest;
 use Codeception\Util\Annotation;
@@ -47,12 +48,14 @@ class TestLoader {
     public function __construct($path)
     {
         $this->path = $path;
+        $this->di = new Di;
     }
 
     public function getTests()
     {
         return $this->tests;
     }
+
 
     protected function relativeName($file)
     {
@@ -157,12 +160,11 @@ class TestLoader {
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-            $reflected = new \ReflectionClass($testClass);
-            if ($reflected->isAbstract()) {
+            $unit = $this->di->instantiate($testClass);
+            if (!$unit) {
                 continue;
             }
 
-            $unit = new $testClass;
             $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
                 $test = $this->createTestFromCestMethod($unit, $method, $file);
@@ -204,6 +206,7 @@ class TestLoader {
         }
         $test->initConfig();
         $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
+        $this->di->injectDependencies($test);
     }
 
     protected function createTestFromCestMethod($cestInstance, $methodName, $file)
@@ -224,6 +227,5 @@ class TestLoader {
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         return $cest;
     }
-
 
 }

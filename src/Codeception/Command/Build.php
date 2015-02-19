@@ -2,6 +2,7 @@
 namespace Codeception\Command;
 
 use Codeception\Configuration;
+use Codeception\Lib\Generator\Actions as ActionsGenerator;
 use Codeception\Lib\Generator\Actor as ActorGenerator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -64,14 +65,23 @@ class Build extends Command
         }
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite, $configFile);
-            $gen = new ActorGenerator($settings);
-            $this->output->writeln('<info>'.Configuration::config()['namespace'].'\\'.$gen->getActorName() . "</info> includes modules: ".implode(', ',$gen->getModules()));
-            $contents = $gen->produce();
+            $actionsGenerator = new ActionsGenerator($settings);
+            $contents = $actionsGenerator->produce();
 
-            @mkdir($settings['path'],0755, true);
-            $file = $settings['path'].$this->getClassName($settings['class_name']).'.php';
+            $actorGenerator = new ActorGenerator($settings);
+            $file = $this->buildPath(Configuration::supportDir().'_generated', $settings['class_name']).$this->getClassName($settings['class_name']).'Actions.php';
             $this->save($file, $contents, true);
-            $this->output->writeln("{$settings['class_name']}.php generated successfully. ".$gen->getNumMethods()." methods added");
+
+            $this->output->writeln('<info>'.Configuration::config()['namespace'].'\\'.$actorGenerator->getActorName() . "</info> includes modules: ".implode(', ',$actorGenerator->getModules()));
+            $this->output->writeln(" -> {$settings['class_name']}Actions.php generated successfully. ".$actionsGenerator->getNumMethods()." methods added");
+
+            $contents = $actorGenerator->produce();
+
+            $file = $this->buildPath(Configuration::supportDir(), $settings['class_name']).$this->getClassName($settings['class_name']).'.php';
+            if ($this->save($file, $contents)) {
+                $this->output->writeln("{$settings['class_name']}.php created.");
+            }
+
         }
     }
 

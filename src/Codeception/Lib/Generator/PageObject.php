@@ -10,8 +10,9 @@ class PageObject
 
     protected $template  = <<<EOF
 <?php
-{{namespace}}
-class {{class}}Page
+namespace {{namespace}};
+
+class {{class}}
 {
     // include url of current page
     public static \$URL = '';
@@ -25,7 +26,7 @@ class {{class}}Page
     /**
      * Basic route example for your current URL
      * You can append any additional parameter to URL
-     * and use it in tests like: EditPage::route('/123-post');
+     * and use it in tests like: Page\\Edit::route('/123-post');
      */
     public static function route(\$param)
     {
@@ -59,19 +60,19 @@ EOF;
     protected $actions = '';
     protected $settings;
     protected $name;
+    protected $namespace;
 
     public function __construct($settings, $name)
     {
         $this->settings = $settings;
-        $this->name = $this->getShortClassName($this->removeSuffix($name, 'Page'));
+        $this->name = $this->getShortClassName($name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\'.$name);
     }
 
     public function produce()
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
-        
         return (new Template($this->template))
-            ->place('namespace', $ns)
+            ->place('namespace', $this->namespace)
             ->place('actions', $this->produceActions())
             ->place('class', $this->name)
             ->produce();

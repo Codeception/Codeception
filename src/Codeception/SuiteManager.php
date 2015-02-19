@@ -75,10 +75,9 @@ class SuiteManager
 
     protected function initializeActors()
     {
-        if (!file_exists($this->path . $this->settings['class_name'] . '.php')) {
+        if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
             throw new Exception\Configuration($this->settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
-        require_once $this->settings['path'] . DIRECTORY_SEPARATOR . $this->settings['class_name'] . '.php';
     }
 
     public static function hasModule($moduleName)

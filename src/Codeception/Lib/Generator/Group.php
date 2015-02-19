@@ -10,7 +10,7 @@ class Group {
 
     protected $template = <<<EOF
 <?php
-{{namespace}}
+namespace {{namespace}};
 
 use \Codeception\Event\TestEvent;
 /**
@@ -23,9 +23,9 @@ use \Codeception\Event\TestEvent;
  * To use this group extension, include it to "extensions" option of global Codeception config.
  */
 
-class {{class}}Group extends \Codeception\Platform\Group
+class {{class}} extends \Codeception\Platform\Group
 {
-    public static \$group = '{{name}}';
+    public static \$group = '{{groupName}}';
 
     public function _before(TestEvent \$e)
     {
@@ -38,21 +38,24 @@ class {{class}}Group extends \Codeception\Platform\Group
 EOF;
 
     protected $name;
+    protected $namespace;
     protected $settings;
 
     public function __construct($settings, $name)
     {
         $this->settings = $settings;
-        $this->name = $this->removeSuffix($name, 'Group');
+        $this->name = $name;
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Group\\'.$name);
+
     }
     
     public function produce()
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
         return (new Template($this->template))
             ->place('class', ucfirst($this->name))
             ->place('name', $this->name)
-            ->place('namespace', $ns)
+            ->place('namespace', $this->namespace)
+            ->place('groupName', strtolower($this->name))
             ->produce();
     }
 

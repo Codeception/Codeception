@@ -18,7 +18,7 @@ class GenerateSuiteTest extends BaseCommandRunner {
         $this->assertContains('Suite shire generated', $this->output);
 
         $helper = $this->log[1];
-        $this->assertEquals(\Codeception\Configuration::helpersDir().'HobbitHelper.php',$helper['filename']);
+        $this->assertEquals(\Codeception\Configuration::supportDir().'HobbitHelper.php',$helper['filename']);
         $this->assertContains('class HobbitHelper extends \Codeception\Module', $helper['content']);
 
         $bootstrap = $this->log[0];
@@ -33,7 +33,7 @@ class GenerateSuiteTest extends BaseCommandRunner {
         $this->assertContains('HobbitHelper',$conf['modules']['enabled']);
 
         $helper = $this->log[1];
-        $this->assertEquals(\Codeception\Configuration::helpersDir().'HobbitHelper.php',$helper['filename']);
+        $this->assertEquals(\Codeception\Configuration::supportDir().'HobbitHelper.php',$helper['filename']);
         $this->assertContains('class HobbitHelper extends \Codeception\Module', $helper['content']);
     }
 

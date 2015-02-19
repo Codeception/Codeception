@@ -28,7 +28,7 @@ class Bootstrap extends Command
     // defaults
     protected $namespace = '';
     protected $actorSuffix = 'Tester';
-    protected $helperDir = 'tests/_support';
+    protected $supportDir = 'tests/_support';
     protected $logDir = 'tests/_output';
     protected $dataDir = 'tests/_data';
 
@@ -49,7 +49,9 @@ class Bootstrap extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->namespace = rtrim($input->getOption('namespace'), '\\');
+        if ($input->getOption('namespace')) {
+            $this->namespace = trim($input->getOption('namespace'), '\\').'\\';
+        }
 
         if ($input->getOption('actor')) {
             $this->actorSuffix = $input->getOption('actor');
@@ -111,7 +113,7 @@ class Bootstrap extends Command
                 'tests'   => 'tests',
                 'log'     => $this->logDir,
                 'data'    => $this->dataDir,
-                'helpers' => $this->helperDir
+                'support' => $this->supportDir
             ),
             'settings' => array(
                 'bootstrap'    => '_bootstrap.php',
@@ -141,7 +143,7 @@ class Bootstrap extends Command
     {
         $suiteConfig = array(
             'class_name' => $actor.$this->actorSuffix,
-            'modules'    => array('enabled' => array('Filesystem', $actor.'Helper')),
+            'modules'    => array('enabled' => array('Filesystem', "\\{$this->namespace}Helper\\$actor")),
         );
 
         $str  = "# Codeception Test Suite Configuration\n\n";
@@ -157,7 +159,7 @@ class Bootstrap extends Command
         $suiteConfig = array(
             'class_name' => $actor.$this->actorSuffix,
             'modules'    => array(
-                'enabled' => array('PhpBrowser', $actor . 'Helper'),
+                'enabled' => array('PhpBrowser', "\\{$this->namespace}Helper\\$actor"),
                 'config'  => array(
                     'PhpBrowser' => array(
                         'url' => 'http://localhost/myapp/'
@@ -179,7 +181,7 @@ class Bootstrap extends Command
     {
         $suiteConfig = array(
             'class_name' => $actor.$this->actorSuffix,
-            'modules'    => array('enabled' => array('Asserts', $actor . 'Helper')),
+            'modules'    => array('enabled' => array('Asserts', "\\{$this->namespace}Helper\\$actor")),
         );
 
         $str = "# Codeception Test Suite Configuration\n\n";
@@ -196,9 +198,10 @@ class Bootstrap extends Command
             "tests/$suite/_bootstrap.php",
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
+        @mkdir($this->supportDir.DIRECTORY_SEPARATOR."Helper");
         file_put_contents(
-            $this->helperDir.DIRECTORY_SEPARATOR.$actor.'Helper.php',
-            (new Helper($actor, $this->namespace))->produce()
+            $this->supportDir.DIRECTORY_SEPARATOR."Helper".DIRECTORY_SEPARATOR."$actor.php",
+            (new Helper($actor, rtrim($this->namespace, '\\')))->produce()
         );
         file_put_contents("tests/$suite.suite.yml", $config);
     }
@@ -215,7 +218,7 @@ class Bootstrap extends Command
         @mkdir('tests');
         @mkdir($this->logDir);
         @mkdir($this->dataDir);
-        @mkdir($this->helperDir);
+        @mkdir($this->supportDir);
         file_put_contents($this->dataDir . '/dump.sql', '/* Replace this file with actual dump of your database */');
     }
 

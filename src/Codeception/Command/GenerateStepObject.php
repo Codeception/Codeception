@@ -1,12 +1,14 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Configuration;
 use Codeception\Lib\Generator\StepObject as StepObjectGenerator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Generates StepObject class. You will be asked for steps you want to implement.
@@ -30,7 +32,8 @@ class GenerateStepObject extends Command
          ));
      }
 
-     public function getDescription() {
+     public function getDescription()
+     {
          return 'Generates empty StepObject class';
      }
 
@@ -41,19 +44,19 @@ class GenerateStepObject extends Command
         $config = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $class = $this->getClassName($step);
-        $class = $this->removeSuffix($class, 'Steps');
 
-        $path = $this->buildPath($config['path'].'/_steps/', $class);
-        $filename = $this->completeSuffix($class, 'Steps');
-        $filename = $path.$filename;
+        $path = $this->buildPath(Configuration::supportDir().'Step'. DIRECTORY_SEPARATOR . ucfirst($suite), $class);
 
-        $dialog = $this->getHelperSet()->get('dialog');
+        $filename = $path.$class.'.php';
 
-        $gen = new StepObjectGenerator($config, $class);
+        $helper = $this->getHelper('question');
+        $question = new Question("Add action to StepObject class (ENTER to exit): ");
+
+        $gen = new StepObjectGenerator($config, ucfirst($suite) .'\\' . $class);
 
         if (!$input->getOption('silent')) {
             do {
-                $action = $dialog->ask($output, "Add action to StepObject class (ENTER to exit): ", null);
+                $action = $helper->ask($input, $output, $question);
                 if ($action) {
                     $gen->createAction($action);
                 }
@@ -62,13 +65,10 @@ class GenerateStepObject extends Command
 
         $res = $this->save($filename, $gen->produce());
 
-        $this->introduceAutoloader($config['path'].'/'.$config['bootstrap'], trim($config['namespace'].'\\'.$config['class_name'], '\\'), '_steps');
-
         if (!$res) {
             $output->writeln("<error>StepObject $filename already exists</error>");
             exit;
         }
         $output->writeln("<info>StepObject was created in $filename</info>");
     }
-
 }
