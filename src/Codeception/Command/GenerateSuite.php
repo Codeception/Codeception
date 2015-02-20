@@ -70,16 +70,19 @@ class GenerateSuite extends Command
         );
         $actorName = $this->removeSuffix($actor, $config['actor']);
 
+        $file = $this->buildPath(\Codeception\Configuration::supportDir() . "Helper", "$actorName.php")."$actorName.php";
+
+        $gen = new Helper($actorName, $config['namespace']);
         // generate helper
         $this->save(
-            \Codeception\Configuration::helpersDir() . $actorName . 'Helper.php',
-            (new Helper($actorName, $config['namespace']))->produce()
+            $file,
+            $gen->produce()
         );
 
         $conf = array(
             'class_name' => $actorName.$config['actor'],
             'modules' => array(
-                'enabled' => array($actorName . 'Helper')
+                'enabled' => array($gen->getHelperName())
             ),
         );
 

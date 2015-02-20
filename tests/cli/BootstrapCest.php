@@ -22,10 +22,10 @@ class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('AcceptanceHelper.php');
-        $I->seeInThisFile('namespace Generated\Codeception\Module;');
+        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
+        $I->seeInThisFile('namespace Generated\Helper;');
 
-        $I->seeFileFound('AcceptanceTester.php');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
         $I->seeInThisFile('namespace Generated;');
     }
 
@@ -33,7 +33,7 @@ class BootstrapCest
     {
         $I->amInPath('tests/data/sandbox/tests/_data/');
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php','tests/acceptance');
+        $I->seeFileFound('AcceptanceNinja.php','tests/_support/');
     }
 
     public function bootstrapEmpty(\CliGuy $I)
@@ -60,13 +60,13 @@ class BootstrapCest
         $I->seeFileFound('_bootstrap.php','tests/functional');
         $I->seeFileFound('_bootstrap.php','tests/unit');
 
-        $I->seeFileFound('AcceptanceTester.php','tests/acceptance');
-        $I->seeFileFound('FunctionalTester.php','tests/functional');
-        $I->seeFileFound('UnitTester.php','tests/unit');
+        $I->seeFileFound('AcceptanceTester.php','tests/_support');
+        $I->seeFileFound('FunctionalTester.php','tests/_support');
+        $I->seeFileFound('UnitTester.php','tests/_support');
 
-        $I->seeFileFound('AcceptanceHelper.php','tests/_support');
-        $I->seeFileFound('FunctionalHelper.php','tests/_support');
-        $I->seeFileFound('UnitHelper.php','tests/_support');
+        $I->seeFileFound('Acceptance.php','tests/_support/Helper');
+        $I->seeFileFound('Functional.php','tests/_support/Helper');
+        $I->seeFileFound('Unit.php','tests/_support/Helper');
     }
 
 }

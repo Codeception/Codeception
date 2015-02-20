@@ -49,7 +49,7 @@ EOF;
     }
 
     /**
-     * @return {{pageObject}}Page
+     * @return {{class}}
      */
     public static function of({{actorClass}} \$I)
     {
@@ -66,7 +66,7 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\'.$name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Page\\'.$name);
     }
 
     public function produce()

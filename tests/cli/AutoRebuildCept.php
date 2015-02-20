@@ -10,6 +10,6 @@ EOF
 );
 $I->executeCommand('run unit PassingTest.php --debug');
 $I->seeInShellOutput('Cli');
-$I->seeFileFound('tests/unit/CodeGuy.php');
+$I->seeFileFound('tests/_support/_generated/CodeGuyActions.php');
 $I->seeInThisFile('public function seeInShellOutput');
 $I->seeInThisFile('public function runShellCommand');

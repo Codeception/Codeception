@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\Configuration;
 use Codeception\Events;
 use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Generator\Actions;
@@ -18,7 +19,7 @@ class AutoRebuild implements EventSubscriberInterface
     public function updateActor(SuiteEvent $e)
     {
         $settings = $e->getSettings();
-        $actorFile = $settings['path'] . DIRECTORY_SEPARATOR . '_generated' . DIRECTORY_SEPARATOR . $settings['class_name'] . 'Actions.php';
+        $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR . $settings['class_name'] . 'Actions.php';
 
         // load actor class to see hash
         $handle = @fopen($actorFile, "r");
@@ -38,7 +39,7 @@ class AutoRebuild implements EventSubscriberInterface
                     return;
                 }
             }
-            fclose($handle);
+            @fclose($handle);
         }
     }
 }

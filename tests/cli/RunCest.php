@@ -24,7 +24,7 @@ class RunCest
     {
         $I->wantTo('execute tests with html output');
         $I->executeCommand('run dummy --html');
-        $I->seeFileFound('report.html', 'tests/_log');
+        $I->seeFileFound('report.html', 'tests/_output');
     }
 
     /**
@@ -36,7 +36,7 @@ class RunCest
     {
         $I->wantTo('check json reports');
         $I->executeCommand('run dummy --json');
-        $I->seeFileFound('report.json', 'tests/_log');
+        $I->seeFileFound('report.json', 'tests/_output');
         $I->seeInThisFile('"suite":');
         $I->seeInThisFile('"dummy"');
     }
@@ -50,7 +50,7 @@ class RunCest
     {
         $I->wantTo('check tap reports');
         $I->executeCommand('run dummy --tap');
-        $I->seeFileFound('report.tap.log', 'tests/_log');
+        $I->seeFileFound('report.tap.log', 'tests/_output');
     }
 
     /**
@@ -62,7 +62,7 @@ class RunCest
     {
         $I->wantTo('check xml reports');
         $I->executeCommand('run dummy --xml');
-        $I->seeFileFound('report.xml', 'tests/_log');
+        $I->seeFileFound('report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
@@ -77,7 +77,7 @@ class RunCest
     {
         $I->wantTo('check xml in strict mode');
         $I->executeCommand('run dummy --xml -c codeception_strict_xml.yml');
-        $I->seeFileFound('report.xml', 'tests/_log');
+        $I->seeFileFound('report.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
@@ -177,13 +177,13 @@ class RunCest
     public function runWithCustomOuptutPath(\CliGuy $I)
     {
         $I->executeCommand('run dummy --xml myverycustom.xml --html myownhtmlreport.html');
-        $I->seeFileFound('myverycustom.xml', 'tests/_log');
+        $I->seeFileFound('myverycustom.xml', 'tests/_output');
         $I->seeInThisFile('<?xml');
         $I->seeInThisFile('<testsuite name="dummy"');
         $I->seeInThisFile('<testcase name="FileExists"');
-        $I->seeFileFound('myownhtmlreport.html', 'tests/_log');
-        $I->dontSeeFileFound('report.xml','tests/_log');
-        $I->dontSeeFileFound('report.html','tests/_log');
+        $I->seeFileFound('myownhtmlreport.html', 'tests/_output');
+        $I->dontSeeFileFound('report.xml','tests/_output');
+        $I->dontSeeFileFound('report.html','tests/_output');
     }
 
     public function runTestsWithDependencyInjections(\CliGuy $I)

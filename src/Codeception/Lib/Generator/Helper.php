@@ -36,4 +36,9 @@ EOF;
             ->produce();
     }
 
+    public function getHelperName()
+    {
+        return '\\'.$this->namespace . 'Helper\\'.$this->name;
+    }
+
 }

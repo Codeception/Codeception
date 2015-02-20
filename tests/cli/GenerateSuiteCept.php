@@ -9,7 +9,7 @@ $I->executeCommand('generate:suite house HouseGuy');
 $I->seeFileFound('house.suite.yml', 'tests');
 $I->expect('guy class is generated');
 $I->seeInThisFile('class_name: HouseGuy');
-$I->seeFileFound('HouseHelper.php', 'tests/_helpers');
+$I->seeFileFound('House.php', 'tests/_support/Helper');
 $I->seeFileFound('_bootstrap.php','tests/house');
 
 $I->expect ('suite is not created due to dashes');

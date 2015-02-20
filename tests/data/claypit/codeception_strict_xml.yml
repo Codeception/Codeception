@@ -1,8 +1,8 @@
 paths:
     tests: tests
-    log: tests/_log
+    log: tests/_output
     data: tests/_data
-    helpers: tests/_helpers
+    helpers: tests/_support
 settings:
     bootstrap: _bootstrap.php
     colors: false
