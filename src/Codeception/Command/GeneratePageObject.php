@@ -51,12 +51,17 @@ class GeneratePageObject extends Command
             ? $this->getSuiteConfig($suite, $input->getOption('config'))
             : $this->getGlobalConfig($input->getOption('config'));
 
-        $class = ucfirst($suite) .'\\' . $class;
-        $className = $this->getClassName($class);
+        if ($suite) {
+            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
+        }
 
-        $filename = $this->pathToPageObject($className, $suite);
+        $path = $this->buildPath(Configuration::supportDir().'Page'.$suite, $class);
 
-        $gen = new PageObjectGenerator($conf, $class);
+        $filename = $path.$this->getClassName($class).'.php';
+
+        $output->writeln($filename);
+
+        $gen = new PageObjectGenerator($conf, ucfirst($suite) .'\\' .$class);
         $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
@@ -68,11 +73,6 @@ class GeneratePageObject extends Command
 
     protected function pathToPageObject($class, $suite)
     {
-        if ($suite) {
-            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
-        }
-        $path = $this->buildPath(Configuration::supportDir().'Page'.$suite, $class);
-        return  $path.$class.'.php';
     }
 
 }

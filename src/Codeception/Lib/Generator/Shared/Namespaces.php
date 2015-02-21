@@ -16,6 +16,15 @@ trait Namespaces
         return implode('\\', $namespaces);
     }
 
+    protected function getNamespaceHeader($class)
+    {
+        $str = $this->getNamespaceString($class);
+        if (!$str) {
+            return "";
+        }
+        return "namespace $str;\n";
+    }
+
     protected function getNamespaces($class)
     {
         $namespaces = $this->breakParts($class);

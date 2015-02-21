@@ -8,7 +8,7 @@ paths:
     exclude:
         - vendor/*
     data: tests/data
-    helpers: tests/helpers
+    support: tests/support
 settings:
     bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
