@@ -1,9 +1,6 @@
 <?php
 namespace Math;
 
-use Math\AdderHelper as Adder;
-use Math\SubtractorHelper as Subtractor;
-
 class CalcHelper extends \Codeception\Module
 {
     /**

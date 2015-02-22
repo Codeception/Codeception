@@ -2,10 +2,10 @@
 
 namespace Math;
 
-class AdderHelper
+class Subtractor
 {
     public function perform($a, $b)
     {
-        return $a + $b;
+        return $a - $b;
     }
 }

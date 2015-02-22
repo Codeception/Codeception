@@ -1,6 +1,5 @@
 <?php
 
-use \MathTester;
 use \Math\CalcHelper as Calc;
 
 class MathCest
