@@ -14,6 +14,11 @@ branches:
   except:
     - gh-pages
 
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
 services:
   - mongodb
   - rabbitmq
@@ -21,7 +26,7 @@ services:
 install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - composer global require "fxp/composer-asset-plugin:1.0.0-beta2"
-  - composer install
+  - composer install --prefer-dist --no-interaction
   # Queue (Beanstalkd)
   - sudo apt-get update -qq
   - sudo apt-get install -qq beanstalkd
