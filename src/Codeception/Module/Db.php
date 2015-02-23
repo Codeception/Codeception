@@ -113,13 +113,6 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     protected $insertedIds = [];
 
     /**
-     * associative array with table name => primary-key
-     *
-     * @var array
-     */
-    protected $primaryColumns = [];
-
-    /**
      * @var array
      */
     protected $requiredFields = ['dsn', 'user', 'password'];
@@ -178,11 +171,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         foreach ($this->insertedIds as $insertId) {
             try {
-                $pdo  = $this->driver->getDbh();
-                $stmt = $pdo->prepare(
-                  'DELETE FROM `' . $insertId['table'] . '` WHERE `' . $insertId['primary'] . '` = ?'
-                );
-                $stmt->execute([$insertId['id']]);
+                $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
                 $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
             }

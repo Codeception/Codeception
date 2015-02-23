@@ -20,6 +20,8 @@ class Db
     public $sqlToRun;
 
     /**
+     * associative array with table name => primary-key
+     *
      * @var array
      */
     protected $primaryColumns = [];
