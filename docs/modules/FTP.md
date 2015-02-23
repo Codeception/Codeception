@@ -77,7 +77,7 @@ For SFTP, add [phpseclib](http://phpseclib.sourceforge.net/) to require list.
              timeout: 120
              user: 'root'
              password: 'root'
-             'key' => '',
+             key: ''
              tmp: 'tests/_data/ftp'
              cleanup: false
 

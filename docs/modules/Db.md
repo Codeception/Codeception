@@ -126,8 +126,9 @@ $I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com
 ?>
 ```
 
- * `param` $table
+ * `param`       $table
  * `param array` $data
+
  * `return integer` $id
 
 
