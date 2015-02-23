@@ -37,4 +37,15 @@ class Sqlite extends Db
             $this->hasSnapshot = true;
         }
     }
+
+    /**
+     * @param string $tableName
+     *
+     * @return string
+     */
+    public function getPrimaryColumn($tableName)
+    {
+        // @TODO: Implement this for SQLite later
+        return 'id';
+    }
 }

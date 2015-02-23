@@ -63,11 +63,11 @@ class SqlSrv extends Db
         return '[' . $name . ']';
     }
     
-    public function deleteQuery($table, $id)
+    public function deleteQuery($table, $id, $primaryKey = 'id')
     {
         $query = "delete from " 
             . $this->getQuotedName($table)
-            . " where " . $this->getQuotedName('id') . " = $id";
+            . " where " . $this->getQuotedName($primaryKey) . " = $id";
         
         $this->sqlQuery($query);
     }
