@@ -181,6 +181,8 @@ class RoboFile extends \Robo\Tasks
             ->exclude('pheanstalk')
             ->exclude('phpseclib')
             ->exclude('codegyre')
+            ->exclude('monolog')
+            ->exclude('phpspec')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')

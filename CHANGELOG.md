@@ -2,7 +2,7 @@
 
 #### 2.0.11
 
-* Updated to PHPUnit 4.5 (with Prophecy mocking framework included) *2015-02-23*
+* Updated to PHPUnit 4.5 *2015-02-23*
 * [Laravel5] module added by @janhenkgerritsen *2015-02-23*
 * Fixed problem with extensions being always loaded with default options by @sjableka. Fixes #1716 *2015-02-23*
 * [Db] Cleanup now works for tables with primary is not named 'id'. Fix by @KennethVeipert See #1727 *2015-02-23*

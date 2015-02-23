@@ -26,7 +26,7 @@ modules:
             queues: [queue1, queue2]
 
 extensions:
-    enabled: [Codeception\Platform\RunFailed, Codeception\Platform\Logger]
+    enabled: [Codeception\Platform\RunFailed]
 
 coverage:
     enabled: true
