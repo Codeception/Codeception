@@ -1,5 +1,26 @@
 # Changelog
 
+#### 2.0.11
+
+* Updated to PHPUnit 4.5 (with Prophecy mocking framework included) *2015-02-23*
+* [Laravel5] module added by @janhenkgerritsen *2015-02-23*
+* [PhpBrowser][Frameworks] `submitForm` improvements by @zbateson: *2015-02-23*
+
+Removed submitForm's reliance on using parse_str and parse_url to
+generate params (which caused unexpected side-effects like failing
+for values with ampersands).
+
+Modified the css selector for input elements so disabled input
+elements don't get sent default values.
+
+Modifications to ensure multiple values get sent correctly.
+
+* [Laravel4] middleware is loaded on requests. Fixed #1680 by @jotweh *2015-02-23*
+* [Dbh] Begin transaction only unless transaction is already in progress by @thecatontheflat *2015-02-23*
+* [PhpBrowser][Frameworks] Fix quiet crash when crawler is null by @aivus. See #1714 *2015-02-23*
+* [Yii2] Fixed usage of PUT method by @miroslav-chandler *2015-02-23*
+
+
 #### 2.0.10
 
 * **Console Improvement**: better formatting of test progress. Improved displaying of debug messages and PHP Fatal Errors.
