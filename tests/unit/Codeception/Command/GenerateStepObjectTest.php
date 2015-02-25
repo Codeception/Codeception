@@ -17,15 +17,12 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
 
         $generated = $this->log[0];
-        $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
-        $this->assertContains('class LoginSteps extends \HobbitGuy', $generated['content']);
-        $this->assertContains('namespace HobbitGuy;', $generated['content']);
+        $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
+        $this->assertContains('class Login extends \HobbitGuy', $generated['content']);
+        $this->assertContains('namespace Step\\Shire;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
 
-        $bootstrap = $this->content;
-        $this->assertContains("\\Codeception\\Util\\Autoload::addNamespace('HobbitGuy', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
-        $this->assertIsValidPhp($bootstrap);
-
+        $this->assertIsValidPhp($this->content);
     }
 
     public function testNamespace()
@@ -33,21 +30,19 @@ class GenerateStepObjectTest extends BaseCommandRunner {
         $this->config['namespace'] = 'MiddleEarth';
         $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
         $generated = $this->log[0];
-        $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
-        $this->assertContains('namespace MiddleEarth\HobbitGuy;', $generated['content']);
-        $this->assertContains('class LoginSteps extends \MiddleEarth\HobbitGuy', $generated['content']);
+        $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/Login.php', $generated['filename']);
+        $this->assertContains('namespace MiddleEarth\Step\Shire;', $generated['content']);
+        $this->assertContains('class Login extends \MiddleEarth\HobbitGuy', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
 
-        $bootstrap = $this->content;
-        $this->assertContains("\\Codeception\\Util\\Autoload::addNamespace('MiddleEarth\HobbitGuy', __DIR__.DIRECTORY_SEPARATOR.'_steps');", $bootstrap);
-        $this->assertIsValidPhp($bootstrap);
+        $this->assertIsValidPhp($this->content);
     }
 
      public function testCreateInSubpath()
      {
-         $this->execute(array('suite' => 'shire', 'step' => 'user/Login', '--silent' => true));
+         $this->execute(array('suite' => 'shire', 'step' => 'User/Login', '--silent' => true));
          $generated = $this->log[0];
-         $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
+         $this->assertEquals(\Codeception\Configuration::supportDir().'Step/Shire/User/Login.php', $generated['filename']);
          $this->assertIsValidPhp($this->content);
      }
 

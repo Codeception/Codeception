@@ -20,7 +20,11 @@ class BuildTest extends BaseCommandRunner
     {
         $this->execute();
         $this->assertContains('class HobbitGuy extends \Codeception\Actor', $this->content);
+        // inherited methods from Actor
+        $this->assertContains('@method void wantTo($text)', $this->content);
+        $this->assertContains('@method void expectTo($prediction)', $this->content);
 
+        $this->content = $this->log[0]['content'];
         // methods from Filesystem module
         $this->assertContains('public function amInPath($path)', $this->content);
         $this->assertContains('public function copyDir($src, $dst)', $this->content);
@@ -29,21 +33,17 @@ class BuildTest extends BaseCommandRunner
         // methods from EmulateHelper
         $this->assertContains('public function seeEquals($expected, $actual)', $this->content);
 
-        // inherited methods from AbstractGuy
-        $this->assertContains('@method void wantTo($text)', $this->content);
-        $this->assertContains('@method void expectTo($prediction)', $this->content);
-
-        $this->assertContains('HobbitGuy.php generated successfully.', $this->output);
+        $this->assertContains('HobbitGuyActions.php generated successfully.', $this->output);
         $this->assertIsValidPhp($this->content);
     }
 
-    public function testBuildNamespacedGuy()
+    public function testBuildNamespacedActor()
     {
         $this->config['namespace'] = 'Shire';
         $this->execute();
         $this->assertContains('namespace Shire;', $this->content);
         $this->assertContains('class HobbitGuy extends \Codeception\Actor', $this->content);
-        $this->assertContains('public function amInPath($path)', $this->content);
+        $this->assertContains('use _generated\HobbitGuyActions;', $this->content);
         $this->assertIsValidPhp($this->content);
     }
 

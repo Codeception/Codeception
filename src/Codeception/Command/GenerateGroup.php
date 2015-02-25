@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Configuration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -36,11 +37,9 @@ class GenerateGroup extends Command
         $group = $input->getArgument('group');
 
         $class = ucfirst($group);
-        $path = $this->buildPath($config['paths']['tests'].'/_groups/', $class);
-        $filename = $this->completeSuffix($class, 'Group');
-        $filename = $path.$filename;
+        $path = $this->buildPath(Configuration::supportDir().'Group'. DIRECTORY_SEPARATOR, $class);
 
-        $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'], $config['namespace'], '_groups');
+        $filename = $path.$class.'.php';
 
         $gen = new GroupGenerator($config, $group);
         $res = $this->save($filename, $gen->produce());

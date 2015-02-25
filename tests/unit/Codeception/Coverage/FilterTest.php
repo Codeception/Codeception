@@ -24,7 +24,7 @@ class FilterTest extends \Codeception\TestCase\Test
                     'src/Codeception/Codecept.php'
                 ],
                 'exclude' => [
-                    'tests/unit/CodeGuy.php'
+                    'tests/support/CodeGuy.php'
                 ]
             ]
         ]];
@@ -34,7 +34,7 @@ class FilterTest extends \Codeception\TestCase\Test
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('src/Codeception/Codecept.php')));
         $this->assertTrue($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/tests/ClientTest.php')));
         $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('vendor/guzzlehttp/guzzle/src/Client.php')));
-        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/unit/CodeGuy.php')));
+        $this->assertFalse($fileFilter->isFiltered(codecept_root_dir('tests/support/CodeGuy.php')));
     }
 
     public function testWhitelistFilterApplied()

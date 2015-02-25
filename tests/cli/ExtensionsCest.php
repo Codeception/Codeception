@@ -18,7 +18,7 @@ class ExtensionsCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run unit FailingTest.php -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('FAILURES');
-        $I->seeFileFound('failed','tests/_log');
+        $I->seeFileFound('failed','tests/_output');
         $I->seeFileContentsEqual(<<<EOF
 tests/unit/FailingTest.php:testMe
 EOF

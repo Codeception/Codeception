@@ -38,7 +38,7 @@ class GenerateHelper extends Command
     {
         $name = ucfirst($input->getArgument('name'));
         $config = \Codeception\Configuration::config($input->getOption('config'));
-        $file = \Codeception\Configuration::helpersDir() . "{$name}Helper.php";
+        $file = \Codeception\Configuration::supportDir() . "Helper\\{$name}.php";
 
         $res = $this->save($file, (new Helper($name, $config['namespace']))->produce());
         if ($res) {

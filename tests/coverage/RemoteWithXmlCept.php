@@ -9,5 +9,5 @@ index
   Methods:  50.00% ( 1/ 2)   Lines:  50.00% (  2/  4)
 EOF
 );
-$I->seeFileFound('coverage.xml','tests/_log');
+$I->seeFileFound('coverage.xml','tests/_output');
 

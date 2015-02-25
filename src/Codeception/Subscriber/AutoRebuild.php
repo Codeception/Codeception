@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Subscriber;
 
+use Codeception\Configuration;
 use Codeception\Events;
 use Codeception\Event\SuiteEvent;
-use Codeception\Lib\Generator\Actor;
+use Codeception\Lib\Generator\Actions;
 use Codeception\SuiteManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -12,33 +13,33 @@ class AutoRebuild implements EventSubscriberInterface
     use Shared\StaticEvents;
 
     static $events = [
-        Events::SUITE_INIT => 'updateGuy'
+        Events::SUITE_INIT => 'updateActor'
     ];
 
-    public function updateGuy(SuiteEvent $e)
+    public function updateActor(SuiteEvent $e)
     {
         $settings = $e->getSettings();
-        $guyFile = $settings['path'] . $settings['class_name'] . '.php';
+        $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR . $settings['class_name'] . 'Actions.php';
 
-        // load guy class to see hash
-        $handle = fopen($guyFile, "r");
+        // load actor class to see hash
+        $handle = @fopen($actorFile, "r");
         if ($handle) {
-            $line = fgets($handle);
+            $line = @fgets($handle);
             if (preg_match('~\[STAMP\] ([a-f0-9]*)~', $line, $matches)) {
                 $hash = $matches[1];
-                $currentHash = Actor::genHash(SuiteManager::$actions, $settings);
+                $currentHash = Actions::genHash(SuiteManager::$actions, $settings);
 
                 // regenerate guy class when hashes do not match
                 if ($hash != $currentHash) {
                     codecept_debug("Rebuilding {$settings['class_name']}...");
-                    $guyGenerator = new Actor($settings);
-                    fclose($handle);
-                    $generated = $guyGenerator->produce();
-                    file_put_contents($guyFile, $generated);
+                    $actionsGenerator = new Actions($settings);
+                    @fclose($handle);
+                    $generated = $actionsGenerator->produce();
+                    @file_put_contents($actorFile, $generated);
                     return;
                 }
             }
-            fclose($handle);
+            @fclose($handle);
         }
     }
 }

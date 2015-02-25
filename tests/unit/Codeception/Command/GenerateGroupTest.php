@@ -9,7 +9,7 @@ class GenerateGroupTest extends BaseCommandRunner {
         $this->config = array(
             'class_name' => 'HobbitGuy',
             'path' => 'tests/shire',
-            'paths' => array('tests' => 'tests'),
+            'paths' => array('support' => 'tests/_support','tests' => 'tests'),
             'settings' => array('bootstrap' => '_bootstrap.php')
         );
     }
@@ -18,12 +18,13 @@ class GenerateGroupTest extends BaseCommandRunner {
     {
         $this->execute(array('group' => 'Core'));
 
-        $generated = $this->log[1];
-        $this->assertEquals('tests/_groups/CoreGroup.php', $generated['filename']);
-        $this->assertContains('class CoreGroup', $generated['content']);
+        $generated = $this->log[0];
+        $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
+        $this->assertContains('namespace Group;', $generated['content']);
+        $this->assertContains('class Core', $generated['content']);
         $this->assertContains('public function _before', $generated['content']);
         $this->assertContains('public function _after', $generated['content']);
-        $this->assertContains('static $group = \'Core\'', $generated['content']);
+        $this->assertContains('static $group = \'core\'', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
     }
 
@@ -32,9 +33,9 @@ class GenerateGroupTest extends BaseCommandRunner {
         $this->config['namespace'] = 'Shire';
         $this->execute(array('group' => 'Core'));
 
-        $generated = $this->log[1];
-        $this->assertEquals('tests/_groups/CoreGroup.php', $generated['filename']);
-        $this->assertContains('namespace Shire;', $generated['content']);
+        $generated = $this->log[0];
+        $this->assertEquals(\Codeception\Configuration::supportDir().'Group/Core.php', $generated['filename']);
+        $this->assertContains('namespace Shire\Group;', $generated['content']);
         $this->assertIsValidPhp($generated['content']);
     }
 

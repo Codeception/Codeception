@@ -7,7 +7,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order LoadingOrderCept.php');
         $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap(B), test(T), after, afterSuite');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->seeFileContentsEqual("BIB([ST])");
     }
 
@@ -15,7 +15,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order FailedCept.php --no-exit');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap, test, fail, after, afterSuite');
         $I->seeFileContentsEqual("BIB([STF])");
     }
@@ -25,7 +25,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->seeFileContentsEqual("BIB({{{[ST][STF][ST])}}}");
     }
 
@@ -33,7 +33,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/order/ReorderCest.php --no-exit');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->seeFileContentsEqual("BIB([0123456])");
     }
 
@@ -41,7 +41,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/order/FailedCest.php --no-exit');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->seeFileContentsEqual("BIB([a%F])");
     }
 
@@ -49,7 +49,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order CodeTest.php --no-exit');
-        $I->seeFileFound('order.txt','tests/_log');
+        $I->seeFileFound('order.txt','tests/_output');
         $I->expect('
             global bootstrap,
             initialization,
@@ -72,7 +72,7 @@ class OrderCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order BeforeAfterClassTest.php');
-        $I->seeFileFound('order.txt', 'tests/_log');
+        $I->seeFileFound('order.txt', 'tests/_output');
         $I->seeInThisFile('BIB({[1][2])}');
     }
 }

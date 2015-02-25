@@ -51,13 +51,17 @@ class GeneratePageObject extends Command
             ? $this->getSuiteConfig($suite, $input->getOption('config'))
             : $this->getGlobalConfig($input->getOption('config'));
 
-        $className = $this->getClassName($class);
+        if ($suite) {
+            $suite = DIRECTORY_SEPARATOR . ucfirst($suite);
+        }
 
-        $filename = $suite
-            ? $this->pathToSuitePageObject($conf, $className)
-            : $this->pathToGlobalPageObject($conf, $className);
+        $path = $this->buildPath(Configuration::supportDir().'Page'.$suite, $class);
 
-        $gen = new PageObjectGenerator($conf, $class);
+        $filename = $path.$this->getClassName($class).'.php';
+
+        $output->writeln($filename);
+
+        $gen = new PageObjectGenerator($conf, ucfirst($suite) .'\\' .$class);
         $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
@@ -67,20 +71,8 @@ class GeneratePageObject extends Command
         $output->writeln("<info>PageObject was created in $filename</info>");
     }
 
-    protected function pathToGlobalPageObject($config, $class)
+    protected function pathToPageObject($class, $suite)
     {
-        $path = $this->buildPath(Configuration::projectDir().$config['paths']['tests'].'/_pages/', $class);
-        $filename = $this->completeSuffix($class, 'Page');
-        $this->introduceAutoloader(Configuration::projectDir().$config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'], $config['namespace'], '_pages');
-        return  $path.$filename;
-    }
-
-    protected function pathToSuitePageObject($config, $class)
-    {
-        $path = $this->buildPath($config['path'].'/_pages/', $class);
-        $filename = $this->completeSuffix($class, 'Page');
-        $this->introduceAutoloader($config['path'].DIRECTORY_SEPARATOR.$config['bootstrap'], $config['namespace'], '_pages');
-        return  $path.$filename;
     }
 
 }

@@ -22,10 +22,10 @@ class BootstrapCest
         $I->dontSeeInThisFile('namespace Generated\\');
         $this->checkFilesCreated($I);
 
-        $I->seeFileFound('AcceptanceHelper.php');
-        $I->seeInThisFile('namespace Generated\Codeception\Module;');
+        $I->seeFileFound('Acceptance.php', 'tests/_support/Helper');
+        $I->seeInThisFile('namespace Generated\Helper;');
 
-        $I->seeFileFound('AcceptanceTester.php');
+        $I->seeFileFound('AcceptanceTester.php', 'tests/_support');
         $I->seeInThisFile('namespace Generated;');
     }
 
@@ -33,33 +33,16 @@ class BootstrapCest
     {
         $I->amInPath('tests/data/sandbox/tests/_data/');
         $I->executeCommand('bootstrap --actor Ninja');
-        $I->seeFileFound('AcceptanceNinja.php','tests/acceptance');
+        $I->seeFileFound('AcceptanceNinja.php','tests/_support/');
     }
 
-    public function bootstrapCompatibilityProject(\CliGuy $I) {
-        $I->amInPath('tests/data/sandbox/tests/_data/');
-        $I->executeCommand('bootstrap --compat');
-        $I->seeFileFound('codeception.yml');
-        $this->checkCompatFilesCreated($I);
-        $I->seeInShellOutput('Building Actor classes for suites');
-    }
-
-    public function bootstrapCompatibilityWithNamespace(\CliGuy $I)
+    public function bootstrapEmpty(\CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox/tests/_data/');
-        $I->executeCommand('bootstrap --namespace Generated --compat');
-
-        $I->seeInShellOutput('Building Actor classes for suites');
+        $I->executeCommand('bootstrap --empty');
+        $I->dontSeeFileFound('tests/acceptance');
+        $I->dontSeeFileFound('AcceptanceTester.php','tests/acceptance');
         $I->seeFileFound('codeception.yml');
-        $I->seeInThisFile('namespace: Generated');
-        $I->dontSeeInThisFile('namespace Generated\\');
-        $this->checkCompatFilesCreated($I);
-
-        $I->seeFileFound('WebHelper.php');
-        $I->seeInThisFile('namespace Generated\Codeception\Module;');
-
-        $I->seeFileFound('WebGuy.php');
-        $I->seeInThisFile('namespace Generated;');
     }
 
     protected function checkFilesCreated(\CliGuy $I)
@@ -77,37 +60,13 @@ class BootstrapCest
         $I->seeFileFound('_bootstrap.php','tests/functional');
         $I->seeFileFound('_bootstrap.php','tests/unit');
 
-        $I->seeFileFound('AcceptanceTester.php','tests/acceptance');
-        $I->seeFileFound('FunctionalTester.php','tests/functional');
-        $I->seeFileFound('UnitTester.php','tests/unit');
+        $I->seeFileFound('AcceptanceTester.php','tests/_support');
+        $I->seeFileFound('FunctionalTester.php','tests/_support');
+        $I->seeFileFound('UnitTester.php','tests/_support');
 
-        $I->seeFileFound('AcceptanceHelper.php','tests/_support');
-        $I->seeFileFound('FunctionalHelper.php','tests/_support');
-        $I->seeFileFound('UnitHelper.php','tests/_support');
+        $I->seeFileFound('Acceptance.php','tests/_support/Helper');
+        $I->seeFileFound('Functional.php','tests/_support/Helper');
+        $I->seeFileFound('Unit.php','tests/_support/Helper');
     }
-
-
-    protected function checkCompatFilesCreated(\CliGuy $I)
-    {
-        $I->seeDirFound('tests/_log');
-        $I->seeDirFound('tests/_data');
-        $I->seeDirFound('tests/_helpers');
-
-        $I->seeFileFound('functional.suite.yml','tests');
-        $I->seeFileFound('acceptance.suite.yml','tests');
-        $I->seeFileFound('unit.suite.yml','tests');
-
-        $I->seeFileFound('_bootstrap.php','tests/acceptance');
-        $I->seeFileFound('_bootstrap.php','tests/functional');
-        $I->seeFileFound('_bootstrap.php','tests/unit');
-
-        $I->seeFileFound('WebGuy.php','tests/acceptance');
-        $I->seeFileFound('TestGuy.php','tests/functional');
-        $I->seeFileFound('CodeGuy.php','tests/unit');
-
-        $I->seeFileFound('WebHelper.php','tests/_helpers');
-        $I->seeFileFound('TestHelper.php','tests/_helpers');
-        $I->seeFileFound('CodeHelper.php','tests/_helpers');
-    }        
 
 }
