@@ -39,22 +39,15 @@ EOF;
 
     protected $actionsTemplate  = <<<EOF
     /**
-     * @var {{actorClass}};
+     * @var \\{{actorClass}};
      */
     protected \${{actor}};
 
-    public function __construct({{actorClass}} \$I)
+    public function __construct(\\{{actorClass}} \$I)
     {
         \$this->{{actor}} = \$I;
     }
 
-    /**
-     * @return {{class}}
-     */
-    public static function of({{actorClass}} \$I)
-    {
-        return new static(\$I);
-    }
 EOF;
 
     protected $actions = '';

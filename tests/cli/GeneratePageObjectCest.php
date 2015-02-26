@@ -10,7 +10,7 @@ class GeneratePageObjectCest
         $I->executeCommand('generate:page Login');
         $I->seeFileWithGeneratedClass('Login','tests/_support/Page');
         $I->seeInThisFile('static $URL = ');
-        $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
+        $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
         $I->seeFileFound('tests/_bootstrap.php');
     }
 
@@ -21,8 +21,7 @@ class GeneratePageObjectCest
         $I->seeInThisFile('namespace Page\\Dummy;');
         $I->seeInThisFile('class Login');
         $I->seeInThisFile('protected $dumbGuy;');
-        $I->seeInThisFile('public static function of(DumbGuy $I)');
-        $I->seeInThisFile('@return Login');
+        $I->seeInThisFile('public function __construct(\DumbGuy $I)');
 
     }
 
@@ -32,7 +31,7 @@ class GeneratePageObjectCest
         $I->amInPath('tests/data/sandbox');
         $I->seeFileWithGeneratedClass('Login','tests/_support/Page');
         $I->seeInThisFile('static $URL = ');
-        $I->dontSeeInThisFile('public static function of(DummyGuy $I)');
+        $I->dontSeeInThisFile('public function __construct(\DumbGuy $I)');
         $I->seeFileFound('tests/_bootstrap.php');
     }
 
