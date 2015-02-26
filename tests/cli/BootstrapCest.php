@@ -50,7 +50,7 @@ class BootstrapCest
         $I->seeDirFound('tests/_support');
         $I->seeDirFound('tests/_data');
         $I->seeDirFound('tests/_output');
-
+        $I->seeDirFound('tests/_envs');
 
         $I->seeFileFound('functional.suite.yml','tests');
         $I->seeFileFound('acceptance.suite.yml','tests');

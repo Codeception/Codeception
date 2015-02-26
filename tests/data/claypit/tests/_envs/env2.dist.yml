@@ -1,0 +1,4 @@
+modules:
+      config:
+          MessageHelper:
+                message1: MESSAGE1 FROM ENV2-DIST.

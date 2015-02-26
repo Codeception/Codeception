@@ -139,11 +139,21 @@ class Codecept
             return;
         }
 
-        foreach ($environments as $env => $config) {
-            if (!in_array($env, $selectedEnvironments)) {
+        foreach ($selectedEnvironments as $envList) {
+            $envArray = explode(',', $envList);
+            $config = array();
+            foreach ($envArray as $env) {
+                if (isset($environments[$env])) {
+                    $currentEnvironment = isset($config['current_environment']) ? array($config['current_environment']) : array();
+                    $config = Configuration::mergeConfigs($config, $environments[$env]);
+                    $currentEnvironment[] = $config['current_environment'];
+                    $config['current_environment'] = implode(',', $currentEnvironment);
+                }
+            }
+            if (empty($config)) {
                 continue;
             }
-            $suiteToRun = is_int($env) ? $suite : "{$suite}-{$env}";
+            $suiteToRun = "{$suite}-{$envList}";
             $this->runSuite($config, $suiteToRun, $test);
         }
     }
