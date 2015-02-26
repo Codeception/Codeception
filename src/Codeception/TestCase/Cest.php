@@ -4,6 +4,7 @@ namespace Codeception\TestCase;
 
 use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Lib\Di;
 use Codeception\Util\Annotation;
 
 class Cest extends \Codeception\TestCase implements
@@ -18,6 +19,11 @@ class Cest extends \Codeception\TestCase implements
 
     protected $testClassInstance = null;
     protected $testMethod = null;
+
+    /**
+     * @var Di
+     */
+    protected $di;
 
     public function __construct(array $data = array(), $dataName = '')
     {
@@ -103,9 +109,7 @@ class Cest extends \Codeception\TestCase implements
     {
         if (method_exists($this->testClassInstance, $context)) {
             $this->executeBefore($context, $I);
-            $contextMethod = new \ReflectionMethod($this->testClassInstance, $context);
-            $contextMethod->setAccessible(true);
-            $contextMethod->invoke($this->testClassInstance, $I);
+            $this->invoke($context, [$I, $this->scenario]);
             $this->executeAfter($context, $I);
             return;
         }
@@ -127,13 +131,21 @@ class Cest extends \Codeception\TestCase implements
         return $I;
     }
 
+    protected function invoke($methodName, array $context)
+    {
+        foreach ($context as $class) {
+            $this->di->set($class);
+        }
+        $this->di->injectDependencies($this->testClassInstance, $methodName, $context);
+    }
+
     protected function executeTestMethod($I)
     {
         $testMethodSignature = array($this->testClassInstance, $this->testMethod);
         if (! is_callable($testMethodSignature)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
-        call_user_func($testMethodSignature, $I, $this->scenario);
+        $this->invoke($this->testMethod, [$I, $this->scenario]);
     }
 
     public function getTestClass()

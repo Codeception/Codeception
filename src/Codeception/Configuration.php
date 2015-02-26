@@ -46,6 +46,8 @@ class Configuration
 
     public static $lock = false;
 
+    protected static $di;
+
     /**
      * @var array Default config
      */
@@ -315,11 +317,10 @@ class Configuration
      */
     public static function createModule($class, $config, $namespace = '')
     {
-        $di = new Di();
         $hasNamespace = (mb_strpos($class, '\\') !== false);
 
         if ($hasNamespace) {
-            return $di->instantiate($class, $config);
+            return self::DI()->instantiate($class, $config);
         }
 
         // try find module under users suite namespace setting
@@ -332,8 +333,18 @@ class Configuration
                 throw new ConfigurationException($class.' could not be found and loaded');
             }
         }
+        return self::DI()->instantiate($className, $config);
+    }
 
-        return $di->instantiate($className, $config);
+    /**
+     * @return Di
+     */
+    public static function DI()
+    {
+        if (!self::$di) {
+            self::$di = new Di();
+        }
+        return self::$di;
     }
 
     public static function isExtensionEnabled($extensionName)

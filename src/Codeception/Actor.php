@@ -17,6 +17,7 @@ abstract class Actor
     public function __construct(\Codeception\Scenario $scenario)
     {
         $this->scenario = $scenario;
+        Configuration::DI()->injectDependencies($this);
     }
 
 
