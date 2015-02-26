@@ -31,4 +31,16 @@ class MathCest
         $I->assertEquals(3, $this->calc->squareOfCircle(1));
         $I->assertEquals(12, $this->calc->squareOfCircle(2));
     }
+
+    public function testTrigonometry(MathTester $I, \Page\Math\Trigonometry $t)
+    {
+        $I->assertLessThan(0.9, $t->tan(0.5));
+    }
+
+    public function testTrigonometryPage(\Page\Math\Trigonometry $t)
+    {
+        $t->assertTanIsLessThen(0.5, 0.9);
+    }
+
+
 }

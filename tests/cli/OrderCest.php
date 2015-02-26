@@ -40,7 +40,7 @@ class OrderCest
     public function checkFailingCestOrder(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run tests/order/FailedCest.php --no-exit');
+        $I->executeCommand('run tests/order/FailedCest.php --no-exit -vvv');
         $I->seeFileFound('order.txt','tests/_output');
         $I->seeFileContentsEqual("BIB([a%F])");
     }

@@ -192,6 +192,7 @@ abstract class Module
             throw new Exception\Module(__CLASS__, "Module $name couldn't be connected");
         }
 
+        // replace with container
         return SuiteManager::$modules[$name];
     }
 

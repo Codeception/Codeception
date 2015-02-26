@@ -48,14 +48,13 @@ class TestLoader {
     public function __construct($path)
     {
         $this->path = $path;
-        $this->di = new Di;
+        $this->di = Configuration::DI();
     }
 
     public function getTests()
     {
         return $this->tests;
     }
-
 
     protected function relativeName($file)
     {
@@ -221,6 +220,7 @@ class TestLoader {
             ->configFile($file)
             ->config('testClassInstance', $cestInstance)
             ->config('testMethod', $methodName)
+            ->config('di', new Di($this->di))
             ->initConfig();
 
         $cest->getScenario()->env(Annotation::forMethod($testClass, $methodName)->fetchAll('env'));
