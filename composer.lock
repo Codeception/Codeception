@@ -161,16 +161,16 @@
         },
         {
             "name": "guzzlehttp/ringphp",
-            "version": "1.0.5",
+            "version": "1.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "a903f51b692427318bc813217c0e6505287e79a4"
+                "reference": "f43ab34aad69ca0ba04172cf2c3cd5c12fc0e5a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/a903f51b692427318bc813217c0e6505287e79a4",
-                "reference": "a903f51b692427318bc813217c0e6505287e79a4",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/f43ab34aad69ca0ba04172cf2c3cd5c12fc0e5a4",
+                "reference": "f43ab34aad69ca0ba04172cf2c3cd5c12fc0e5a4",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,8 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "time": "2014-12-11 05:50:32"
+            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "time": "2015-02-26 20:43:09"
         },
         {
             "name": "guzzlehttp/streams",
@@ -1608,16 +1609,16 @@
         },
         {
             "name": "flow/jsonpath",
-            "version": "0.2.3",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FlowCommunications/JSONPath.git",
-                "reference": "b45607d5004679b494926d05faaed923e02a691d"
+                "reference": "c0ca6a388ff3b1da784de059b948fa5874c26050"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/b45607d5004679b494926d05faaed923e02a691d",
-                "reference": "b45607d5004679b494926d05faaed923e02a691d",
+                "url": "https://api.github.com/repos/FlowCommunications/JSONPath/zipball/c0ca6a388ff3b1da784de059b948fa5874c26050",
+                "reference": "c0ca6a388ff3b1da784de059b948fa5874c26050",
                 "shasum": ""
             },
             "require-dev": {
@@ -1642,7 +1643,7 @@
                 }
             ],
             "description": "JSONPath implementation for parsing, searching and flattening arrays",
-            "time": "2015-02-07 15:19:56"
+            "time": "2015-02-26 07:26:33"
         },
         {
             "name": "monolog/monolog",
@@ -1840,20 +1841,21 @@
         },
         {
             "name": "videlalvaro/php-amqplib",
-            "version": "v2.4.1",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/videlalvaro/php-amqplib.git",
-                "reference": "58044157b30853a1a425e26e9ff9895247668ac3"
+                "reference": "7989ddce7c4aa6038483d8999b12d3b1f7c81ff9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/58044157b30853a1a425e26e9ff9895247668ac3",
-                "reference": "58044157b30853a1a425e26e9ff9895247668ac3",
+                "url": "https://api.github.com/repos/videlalvaro/php-amqplib/zipball/7989ddce7c4aa6038483d8999b12d3b1f7c81ff9",
+                "reference": "7989ddce7c4aa6038483d8999b12d3b1f7c81ff9",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
+                "ext-mbstring": "*",
                 "php": ">=5.3.0"
             },
             "require-dev": {
@@ -1889,7 +1891,7 @@
                 "queue",
                 "rabbitmq"
             ],
-            "time": "2014-10-06 11:00:55"
+            "time": "2015-02-18 18:16:04"
         }
     ],
     "aliases": [],
