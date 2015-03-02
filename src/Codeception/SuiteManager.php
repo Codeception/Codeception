@@ -4,7 +4,9 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
+use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
+use Codeception\Lib\ModuleContainer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
@@ -35,6 +37,16 @@ class SuiteManager
      */
     protected $testLoader;
 
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
+    /**
+     * @var Di
+     */
+    protected $di;
+
     protected $tests = array();
     protected $debug = false;
     protected $path = '';
@@ -48,6 +60,8 @@ class SuiteManager
         $this->suite = $this->createSuite($name);
         $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
+        $this->di = new Di();
+        $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
@@ -65,12 +79,14 @@ class SuiteManager
 
     protected function initializeModules()
     {
-        self::$modules = Configuration::modules($this->settings);
-        self::$actions = Configuration::actions(self::$modules);
-
-        foreach (self::$modules as $module) {
+        $modules = Configuration::modules($this->settings);
+        foreach ($modules as $moduleName => $state) {
+            $module = $this->moduleContainer->create($moduleName);
             $module->_initialize();
         }
+        self::$actions = Configuration::actions(self::$modules);
+
+
     }
 
     protected function initializeActors()

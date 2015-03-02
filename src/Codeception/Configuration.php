@@ -289,17 +289,7 @@ class Configuration
      */
     public static function modules($settings)
     {
-        $modules = array();
-        $namespace = isset($settings['namespace']) ? $settings['namespace'] : '';
-
-        $moduleNames = $settings['modules']['enabled'];
-
-        foreach ($moduleNames as $moduleName) {
-            $moduleConfig = (isset($settings['modules']['config'][$moduleName])) ? $settings['modules']['config'][$moduleName] : array();
-            $modules[$moduleName] = static::createModule($moduleName, [$moduleConfig], $namespace);
-        }
-
-        return $modules;
+        return $settings['modules']['enabled'];
     }
 
     /**
