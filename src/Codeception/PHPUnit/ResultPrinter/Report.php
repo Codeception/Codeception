@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\PhpUnit\ResultPrinter;
+namespace Codeception\PHPUnit\ResultPrinter;
 
 class Report extends \Codeception\PHPUnit\ResultPrinter
 {
