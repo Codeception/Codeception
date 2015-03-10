@@ -3,15 +3,15 @@ namespace Codeception\Platform;
 
 use Codeception\Configuration as Config;
 use Codeception\Exception\ModuleRequire;
-use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Lib\Console\Output;
+use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Extension implements EventSubscriberInterface
 {
     use StaticEvents;
-    
-    protected $config = array();
+
+    protected $config = [];
     protected $options;
     protected $output;
     protected $globalConfig;
@@ -24,14 +24,14 @@ class Extension implements EventSubscriberInterface
         $this->_initialize();
     }
 
-    static $events = array();
+    static $events = [];
 
     /**
      * Pass config variables that should be injected into global config.
      *
      * @param array $config
      */
-    public function _reconfigure($config = array())
+    public function _reconfigure($config = [])
     {
         if (is_array($config)) {
             Config::append($config);
@@ -49,18 +49,23 @@ class Extension implements EventSubscriberInterface
 
     protected function write($message)
     {
-        if (!$this->options['silent']) $this->output->write($message);
+        if (!$this->options['silent']) {
+            $this->output->write($message);
+        }
     }
 
     protected function writeln($message)
     {
-        if (!$this->options['silent']) $this->output->writeln($message);
+        if (!$this->options['silent']) {
+            $this->output->writeln($message);
+        }
     }
 
     public function getModule($name)
     {
-        if (!isset(\Codeception\SuiteManager::$modules[$name])) 
+        if (!isset(\Codeception\SuiteManager::$modules[$name])) {
             throw new ModuleRequire($name, "module is not enabled");
+        }
         return \Codeception\SuiteManager::$modules[$name];
     }
 

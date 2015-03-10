@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\TestCase\Interfaces;
 
-interface Reported {
+interface Reported
+{
 
     /**
      * @return array

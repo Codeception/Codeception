@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Lib;
 
 class Suite extends \PHPUnit_Framework_TestSuite

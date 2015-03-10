@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\TestCase;
 use Exception;
 use PHPUnit_Framework_Test;
@@ -18,7 +18,7 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     protected $dispatcher;
 
-    protected $unsuccessfulTests = array();
+    protected $unsuccessfulTests = [];
 
     public function __construct(EventDispatcher $dispatcher)
     {
@@ -83,7 +83,7 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        if (! in_array(spl_object_hash($test), $this->unsuccessfulTests)) {
+        if (!in_array(spl_object_hash($test), $this->unsuccessfulTests)) {
             $this->fire(Events::TEST_SUCCESS, new TestEvent($test));
         }
 

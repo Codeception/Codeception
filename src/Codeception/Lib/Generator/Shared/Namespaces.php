@@ -35,7 +35,7 @@ trait Namespaces
 
     protected function breakParts($class)
     {
-        $class      = str_replace('/', '\\', $class);
+        $class = str_replace('/', '\\', $class);
         $namespaces = explode('\\', $class);
         if (count($namespaces)) {
             $namespaces[0] = ltrim($namespaces[0], '\\');

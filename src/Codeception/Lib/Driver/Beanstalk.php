@@ -45,7 +45,7 @@ class Beanstalk implements Queue
 
     public function clearQueue($queue)
     {
-        while($job = $this->queue->reserve(0)) {
+        while ($job = $this->queue->reserve(0)) {
             $this->queue->delete($job);
         }
     }
@@ -78,11 +78,11 @@ class Beanstalk implements Queue
 
     public function getRequiredConfig()
     {
-        return array('host');
+        return ['host'];
     }
 
     public function getDefaultConfig()
     {
-        return array('port' => 11300, 'timeout' => 90);
+        return ['port' => 11300, 'timeout' => 90];
     }
 }

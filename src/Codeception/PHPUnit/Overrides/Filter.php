@@ -4,7 +4,7 @@ class PHPUnit_Util_Filter
 {
     public static function getFilteredStackTrace(Exception $e, $asString = true)
     {
-        $stackTrace = $asString ? '' : array();
+        $stackTrace = $asString ? '' : [];
 
         $trace = $e->getPrevious() ? $e->getPrevious()->getTrace() : $e->getTrace();
         if ($e instanceof \PHPUnit_Framework_ExceptionWrapper) {
@@ -36,7 +36,7 @@ class PHPUnit_Util_Filter
 
     protected static function classIsFiltered($step)
     {
-        if (! isset($step['class'])) {
+        if (!isset($step['class'])) {
             return false;
         }
 
@@ -55,7 +55,7 @@ class PHPUnit_Util_Filter
 
     protected static function fileIsFiltered($step)
     {
-        if (! isset($step['file'])) {
+        if (!isset($step['file'])) {
             return false;
         }
 

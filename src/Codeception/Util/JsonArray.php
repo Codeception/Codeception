@@ -21,7 +21,7 @@ class JsonArray
         if ($this->jsonXml) {
             return $this->jsonXml;
         }
-        
+
         $root = 'root';
         $jsonArray = $this->jsonArray;
         if (count($jsonArray) == 1) {
@@ -106,7 +106,7 @@ class JsonArray
      */
     private function sequentialArrayIntersect($arr1, $arr2)
     {
-        $ret = array();
+        $ret = [];
         foreach ($arr1 as $key1 => $value1) {
             foreach ($arr2 as $key2 => $value2) {
                 $_return = $this->arrayIntersectRecursive($value1, $value2);
@@ -131,7 +131,7 @@ class JsonArray
     {
         $commonKeys = array_intersect(array_keys($arr1), array_keys($arr2));
 
-        $ret = array();
+        $ret = [];
         foreach ($commonKeys as $key) {
             $_return = $this->arrayIntersectRecursive($arr1[$key], $arr2[$key]);
             if ($_return) {
@@ -161,7 +161,7 @@ class JsonArray
 
     private function arrayToXml(\DOMDocument $doc, \DOMNode $node, $array)
     {
-        foreach($array as $key => $value) {
+        foreach ($array as $key => $value) {
             if (is_numeric($key)) {
                 $subNode = $doc->createElement($node->nodeName);
                 $node->parentNode->appendChild($subNode);
@@ -169,7 +169,7 @@ class JsonArray
                 $subNode = $doc->createElement($key);
                 $node->appendChild($subNode);
             }
-            if ( is_array($value) ) {
+            if (is_array($value)) {
                 $this->arrayToXml($doc, $subNode, $value);
             } else {
                 $subNode->nodeValue = (string)$value;

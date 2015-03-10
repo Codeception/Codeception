@@ -76,13 +76,13 @@ class Facebook extends \BaseFacebook
     public function createTestUser(array $permissions)
     {
         $response = $this->api(
-                         $this->getAppId() . '/accounts/test-users',
-                             'POST',
-                             array(
-                                 'installed'    => true,
-                                 'permissions'  => implode(',', $permissions),
-                                 'access_token' => $this->getApplicationAccessToken(),
-                             )
+            $this->getAppId() . '/accounts/test-users',
+            'POST',
+            [
+                'installed'    => true,
+                'permissions'  => implode(',', $permissions),
+                'access_token' => $this->getApplicationAccessToken(),
+            ]
         );
 
         // set user access token
@@ -94,9 +94,9 @@ class Facebook extends \BaseFacebook
     public function deleteTestUser($testUserID)
     {
         $this->api(
-             $testUserID,
-                 'DELETE',
-                 array('access_token' => $this->getApplicationAccessToken())
+            $testUserID,
+            'DELETE',
+            ['access_token' => $this->getApplicationAccessToken()]
         );
     }
 

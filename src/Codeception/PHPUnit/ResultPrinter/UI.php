@@ -2,8 +2,8 @@
 
 namespace Codeception\PHPUnit\ResultPrinter;
 
-use Codeception\Events;
 use Codeception\Event\FailEvent;
+use Codeception\Events;
 use Codeception\TestCase\Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -24,8 +24,8 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
     {
         $this->write("\n---------\n");
         $this->dispatcher->dispatch(
-                         Events::TEST_FAIL_PRINT,
-                         new FailEvent($defect->failedTest(), $defect->thrownException(), $count)
+            Events::TEST_FAIL_PRINT,
+            new FailEvent($defect->failedTest(), $defect->thrownException(), $count)
         );
     }
 
@@ -40,17 +40,17 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
         $stackTrace = \PHPUnit_Util_Filter::getFilteredStacktrace($defect->thrownException(), false);
 
         foreach ($stackTrace as $i => $frame) {
-            if (! isset($frame['file'])) {
+            if (!isset($frame['file'])) {
                 continue;
             }
 
             $this->write(
-                 sprintf(
-                     "#%d %s(%s)",
-                     $i + 1,
-                     $frame['file'],
-                     isset($frame['line']) ? $frame['line'] : '?'
-                 )
+                sprintf(
+                    "#%d %s(%s)",
+                    $i + 1,
+                    $frame['file'],
+                    isset($frame['line']) ? $frame['line'] : '?'
+                )
             );
 
             $this->writeNewLine();

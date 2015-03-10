@@ -1,5 +1,6 @@
-<?php 
+<?php
 namespace Codeception\Lib\Generator;
+
 use Codeception\Codecept;
 use Codeception\Configuration;
 use Codeception\Lib\Di;
@@ -120,7 +121,7 @@ EOF;
                 ->place('step', 'ConditionalAssertion')
                 ->produce();
 
-        // generate negative assertion
+            // generate negative assertion
         } elseif (0 === strpos($refMethod->name, 'dontSee')) {
             $type = 'Assertion';
             $body .= $methodTemplate
@@ -150,7 +151,7 @@ EOF;
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
-        $params = array();
+        $params = [];
         foreach ($refMethod->getParameters() as $param) {
 
             if ($param->isOptional()) {
@@ -196,7 +197,7 @@ EOF;
 
     public static function genHash($actions, $settings)
     {
-        return md5(Codecept::VERSION.serialize($actions).serialize($settings['modules']));
+        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']));
     }
 
     public function getNumMethods()

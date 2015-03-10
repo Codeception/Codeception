@@ -88,7 +88,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
         if ($this->val === null) {
             return new Maybe();
         }
-        return call_user_func_array(array($this->val, $method), $args);
+        return call_user_func_array([$this->val, $method], $args);
     }
 
     function __clone()
@@ -160,7 +160,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      */
     public function current()
     {
-        if (! is_array($this->val)) {
+        if (!is_array($this->val)) {
             return null;
         }
         if ($this->assocArray) {
@@ -207,7 +207,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
      */
     public function valid()
     {
-        if (! is_array($this->val)) {
+        if (!is_array($this->val)) {
             return null;
         }
         if ($this->assocArray) {

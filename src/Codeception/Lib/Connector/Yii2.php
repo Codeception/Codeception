@@ -2,14 +2,14 @@
 
 namespace Codeception\Lib\Connector;
 
-use Yii;
-use yii\web\HttpException;
-use yii\base\ExitException;
-use yii\web\Response as YiiResponse;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Response;
 use Codeception\Util\Debug;
+use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\BrowserKit\Response;
+use Yii;
+use yii\base\ExitException;
+use yii\web\HttpException;
+use yii\web\Response as YiiResponse;
 
 class Yii2 extends Client
 {
@@ -44,11 +44,11 @@ class Yii2 extends Client
      */
     public function doRequest($request)
     {
-        $_COOKIE  = $request->getCookies();
-        $_SERVER  = $request->getServer();
-        $_FILES   = $this->remapFiles($request->getFiles());
+        $_COOKIE = $request->getCookies();
+        $_SERVER = $request->getServer();
+        $_FILES = $this->remapFiles($request->getFiles());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
-        $_POST    = $_GET = array();
+        $_POST = $_GET = [];
 
         if (strtoupper($request->getMethod()) == 'GET') {
             $_GET = $_REQUEST;
@@ -59,9 +59,9 @@ class Yii2 extends Client
 
         $uri = $request->getUri();
 
-        $pathString                = parse_url($uri, PHP_URL_PATH);
-        $queryString               = parse_url($uri, PHP_URL_QUERY);
-        $_SERVER['REQUEST_URI']    = $queryString === null ? $pathString : $pathString . '?' . $queryString;
+        $pathString = parse_url($uri, PHP_URL_PATH);
+        $queryString = parse_url($uri, PHP_URL_QUERY);
+        $_SERVER['REQUEST_URI'] = $queryString === null ? $pathString : $pathString . '?' . $queryString;
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
 
         parse_str($queryString, $params);
@@ -71,14 +71,14 @@ class Yii2 extends Client
 
         $app = $this->startApp();
 
-        $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, array($this, 'processResponse'));
+        $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
 
         // disabling logging. Logs are slowing test execution down
         foreach ($app->log->targets as $target) {
             $target->enabled = false;
         }
 
-        $this->headers    = array();
+        $this->headers = [];
         $this->statusCode = null;
 
         ob_start();
@@ -112,12 +112,12 @@ class Yii2 extends Client
     public function processResponse($event)
     {
         /** @var \yii\web\Response $response */
-        $response      = $event->sender;
-        $request       = Yii::$app->getRequest();
+        $response = $event->sender;
+        $request = Yii::$app->getRequest();
         $this->headers = $response->getHeaders()->toArray();
         $response->getHeaders()->removeAll();
         $this->statusCode = $response->getStatusCode();
-        $cookies          = $response->getCookies();
+        $cookies = $response->getCookies();
 
         if ($request->enableCookieValidation) {
             $validationKey = $request->cookieValidationKey;

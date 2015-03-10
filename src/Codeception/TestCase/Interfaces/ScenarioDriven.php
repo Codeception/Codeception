@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\TestCase\Interfaces;
 
-interface ScenarioDriven {
+interface ScenarioDriven
+{
 
     public function getFeature();
 

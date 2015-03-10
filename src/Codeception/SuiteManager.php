@@ -12,8 +12,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class SuiteManager
 {
 
-    public static $modules = array();
-    public static $actions = array();
+    public static $modules = [];
+    public static $actions = [];
     public static $environment;
     public static $name;
 
@@ -47,7 +47,7 @@ class SuiteManager
      */
     protected $di;
 
-    protected $tests = array();
+    protected $tests = [];
     protected $debug = false;
     protected $path = '';
     protected $printer = null;
@@ -135,7 +135,7 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
     }
-    
+
     protected function createSuite($name)
     {
         $suite = new Lib\Suite();

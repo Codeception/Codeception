@@ -2,14 +2,14 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
-use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
-use Illuminate\Http\Request;
 use Illuminate\Auth\UserInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -57,14 +57,14 @@ class Laravel4 extends Framework implements ActiveRecord
     public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
-            array(
-                'cleanup' => true,
-                'unit' => true,
+            [
+                'cleanup'     => true,
+                'unit'        => true,
                 'environment' => 'testing',
-                'start' => 'bootstrap' . DIRECTORY_SEPARATOR . 'start.php',
-                'root' => '',
-                'filters' => false,
-            ),
+                'start'       => 'bootstrap' . DIRECTORY_SEPARATOR . 'start.php',
+                'root'        => '',
+                'filters'     => false,
+            ],
             (array)$config
         );
 
@@ -83,7 +83,7 @@ class Laravel4 extends Framework implements ActiveRecord
     protected function revertErrorHandler()
     {
         $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
+        set_error_handler([$handler, 'errorHandler']);
     }
 
     public function _before(\Codeception\TestCase $test)
@@ -201,7 +201,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $route
      * @param array $params
      */
-    public function seeCurrentRouteIs($route, $params = array())
+    public function seeCurrentRouteIs($route, $params = [])
     {
         $this->seeCurrentUrlEquals($this->kernel['url']->route($route, $params, false));
     }
@@ -218,7 +218,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $action
      * @param array $params
      */
-    public function seeCurrentActionIs($action, $params = array())
+    public function seeCurrentActionIs($action, $params = [])
     {
         $this->seeCurrentUrlEquals($this->kernel['url']->action($action, $params, false));
     }
@@ -380,7 +380,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($model, $attributes = [])
     {
         $id = $this->kernel['db']->table($model)->insertGetId($attributes);
         if (!$id) {
@@ -399,7 +399,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
@@ -420,7 +420,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
@@ -442,12 +442,12 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($model, $attributes = [])
     {
         return $this->findRecord($model, $attributes);
     }
 
-    protected function findRecord($model, $attributes = array())
+    protected function findRecord($model, $attributes = [])
     {
         $query = $this->kernel['db']->table($model);
         foreach ($attributes as $key => $value) {

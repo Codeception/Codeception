@@ -2,13 +2,11 @@
 
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
-use Symfony\Component\BrowserKit\Request,
-    Symfony\Component\BrowserKit\Response,
-    Symfony\Component\BrowserKit\Cookie,
-    Symfony\Component\BrowserKit\Client,
-    Codeception\Util\Stub,
-    Phalcon\DI;
+use Codeception\Util\Stub;
+use Phalcon\DI;
+use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\BrowserKit\Response;
 
 class Phalcon1 extends Client
 {
@@ -48,11 +46,11 @@ class Phalcon1 extends Client
     public function doRequest($request)
     {
         $application = $this->getApplication();
-        $di          = $application->getDI();
+        $di = $application->getDI();
         DI::reset();
         DI::setDefault($di);
 
-        $_SERVER = array();
+        $_SERVER = [];
         foreach ($request->getServer() as $key => $value) {
             $_SERVER[strtoupper(str_replace('-', '_', $key))] = $value;
         }
@@ -61,8 +59,8 @@ class Phalcon1 extends Client
             throw new \Exception('Unsupported application class');
         }
 
-        $_COOKIE                   = $request->getCookies();
-        $_FILES                    = $this->remapFiles($request->getFiles());
+        $_COOKIE = $request->getCookies();
+        $_FILES = $this->remapFiles($request->getFiles());
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
         if (strtoupper($request->getMethod()) == 'GET') {
@@ -70,24 +68,24 @@ class Phalcon1 extends Client
         } else {
             $_POST = $_REQUEST;
         }
-        $uri                     = str_replace('http://localhost', '', $request->getUri());
-        $_SERVER['REQUEST_URI']  = $uri;
-        $_GET['_url']            = strtok($uri, '?');
+        $uri = str_replace('http://localhost', '', $request->getUri());
+        $_SERVER['REQUEST_URI'] = $uri;
+        $_GET['_url'] = strtok($uri, '?');
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
-        $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), [], array('getRawBody' => $request->getContent()));
+        $di['request'] = Stub::construct($di->get('request'), [], ['getRawBody' => $request->getContent()]);
 
         $response = $application->handle();
 
         $headers = $response->getHeaders();
-        $status  = (int)$headers->get('Status');
+        $status = (int)$headers->get('Status');
 
         $headersProperty = new \ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);
         $headers = $headersProperty->getValue($headers);
         if (!is_array($headers)) {
-            $headers = array();
+            $headers = [];
         }
 
         $cookiesProperty = new \ReflectionProperty($di['cookies'], '_cookies');
@@ -100,7 +98,7 @@ class Phalcon1 extends Client
             $valueProperty->setAccessible(true);
             foreach ($cookies as $name => $cookie) {
                 if (!$restoredProperty->getValue($cookie)) {
-                    $clientCookie            = new Cookie(
+                    $clientCookie = new Cookie(
                         $name,
                         $valueProperty->getValue($cookie),
                         $cookie->getExpiration(),
@@ -117,14 +115,15 @@ class Phalcon1 extends Client
         return new Response(
             $response->getContent(),
             $status ? $status : 200,
-            $headers);
+            $headers
+        );
     }
 }
 
 class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\Session\AdapterInterface
 {
     private $isStarted = false;
-    private $data = array();
+    private $data = [];
 
     public function start()
     {
@@ -161,10 +160,10 @@ class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\
         return $this->isStarted;
     }
 
-    public function destroy($session_id = NULL)
+    public function destroy($session_id = null)
     {
         $this->isStarted = false;
-        $this->data      = array();
+        $this->data = [];
     }
 
     public function getAll()

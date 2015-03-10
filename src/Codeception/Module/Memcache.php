@@ -32,7 +32,7 @@ class Memcache extends \Codeception\Module
      */
     public $memcache = null;
 
-    protected $config = array('host' => 'localhost', 'port' => 11211);
+    protected $config = ['host' => 'localhost', 'port' => 11211];
 
     public function _before(\Codeception\TestCase $test)
     {
@@ -44,7 +44,7 @@ class Memcache extends \Codeception\Module
             $this->memcache = new \Memcached;
             $this->memcache->addServer($this->config['host'], $this->config['port']);
         } else {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__,'Memcache classes not loaded');
+            throw new \Codeception\Exception\ModuleConfig(__CLASS__, 'Memcache classes not loaded');
         }
     }
 

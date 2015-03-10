@@ -4,14 +4,14 @@ namespace Codeception\TestCase\Shared;
 use Codeception\Event\StepEvent;
 use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Step;
-use Codeception\Scenario;
-use Codeception\Lib\Parser;
 use Codeception\Exception\Configuration as ConfigurationException;
-use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Lib\Parser;
+use Codeception\Scenario;
+use Codeception\Step;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
 trait Actor
@@ -49,8 +49,8 @@ trait Actor
 
     public function initConfig()
     {
-        $this->scenario  = new Scenario($this);
-        $this->parser    = new Parser($this->scenario);
+        $this->scenario = new Scenario($this);
+        $this->parser = new Parser($this->scenario);
         return $this;
     }
 

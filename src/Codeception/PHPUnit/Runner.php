@@ -9,26 +9,26 @@ use Codeception\PHPUnit\ResultPrinter\Report;
 
 class Runner extends \PHPUnit_TextUI_TestRunner
 {
-    public static $persistentListeners = array();
+    public static $persistentListeners = [];
 
-    protected $defaultListeners = array(
+    protected $defaultListeners = [
         'xml'  => false,
         'html' => false,
         'tap'  => false,
         'json' => false
-    );
+    ];
 
-    protected $config = array();
+    protected $config = [];
 
     protected $logDir = null;
 
-    protected $defaultArguments = array(
+    protected $defaultArguments = [
         'report' => false,
-    );
+    ];
 
     public function __construct()
     {
-        $this->config  = Configuration::config();
+        $this->config = Configuration::config();
         $this->logDir = Configuration::outputDir(); // prepare log dir
         $this->phpUnitOverriders();
         parent::__construct();
@@ -50,7 +50,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     public function doEnhancedRun(
         \PHPUnit_Framework_Test $suite,
         \PHPUnit_Framework_TestResult $result,
-        array $arguments = array()
+        array $arguments = []
     ) {
         unset($GLOBALS['app']); // hook for not to serialize globals
 
@@ -109,32 +109,32 @@ class Runner extends \PHPUnit_TextUI_TestRunner
 
     /**
      * @param \PHPUnit_Framework_TestResult $result
-     * @param array                         $arguments
+     * @param array $arguments
      *
      * @return array
      */
     protected function applyReporters(\PHPUnit_Framework_TestResult $result, array $arguments)
     {
         foreach ($this->defaultListeners as $listener => $value) {
-            if (! isset($arguments[$listener])) {
+            if (!isset($arguments[$listener])) {
                 $arguments[$listener] = $value;
             }
         }
 
         if ($arguments['html']) {
-            codecept_debug('Printing HTML report into '.$arguments['html']);
+            codecept_debug('Printing HTML report into ' . $arguments['html']);
             self::$persistentListeners[] = new HTML($this->absolutePath($arguments['html']));
         }
         if ($arguments['xml']) {
-            codecept_debug('Printing JUNIT report into '.$arguments['xml']);
+            codecept_debug('Printing JUNIT report into ' . $arguments['xml']);
             self::$persistentListeners[] = new JUnit($this->absolutePath($arguments['xml']), false);
         }
         if ($arguments['tap']) {
-            codecept_debug('Printing TAP report into '.$arguments['tap']);
+            codecept_debug('Printing TAP report into ' . $arguments['tap']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_TAP($this->absolutePath($arguments['tap']));
         }
         if ($arguments['json']) {
-            codecept_debug('Printing JSON report into '.$arguments['json']);
+            codecept_debug('Printing JSON report into ' . $arguments['json']);
             self::$persistentListeners[] = new \PHPUnit_Util_Log_JSON($this->absolutePath($arguments['json']));
         }
 

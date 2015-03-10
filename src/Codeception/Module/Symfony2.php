@@ -2,11 +2,11 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleRequire;
+use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\Response;
-use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
@@ -28,11 +28,11 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
- * 
+ *
  *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
- *     modules: 
+ *     modules:
  *        enabled: [Symfony2]
  *        config:
  *           Symfony2:
@@ -64,7 +64,6 @@ use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
  * * container - dependency injection container instance
  *
  */
-
 class Symfony2 extends \Codeception\Lib\Framework
 {
     /**
@@ -77,8 +76,8 @@ class Symfony2 extends \Codeception\Lib\Framework
      */
     public $container;
 
-    public $config = array('app_path' => 'app', 'var_path' => 'app', 'environment' => 'test', 'debug' => true);
-    
+    public $config = ['app_path' => 'app', 'var_path' => 'app', 'environment' => 'test', 'debug' => true];
+
     /**
      * @var
      */
@@ -87,10 +86,11 @@ class Symfony2 extends \Codeception\Lib\Framework
     public $permanentServices = [];
 
 
-    public function _initialize() {
+    public function _initialize()
+    {
         $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in '.$cache);
+            throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in ' . $cache);
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
@@ -98,7 +98,8 @@ class Symfony2 extends \Codeception\Lib\Framework
         ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\TestCase $test)
+    {
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
         $this->client = new Symfony2Connector($this->kernel);
@@ -134,10 +135,15 @@ class Symfony2 extends \Codeception\Lib\Framework
      *
      * @throws \LogicException
      */
-    public function seeEmailIsSent() {
+    public function seeEmailIsSent()
+    {
         $profile = $this->getProfiler();
-        if (!$profile) \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without Profiler');
-        if (!$profile->hasCollector('swiftmailer')) \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without SwiftMailer connector');
+        if (!$profile) {
+            \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without Profiler');
+        }
+        if (!$profile->hasCollector('swiftmailer')) {
+            \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without SwiftMailer connector');
+        }
 
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
     }
@@ -155,8 +161,11 @@ class Symfony2 extends \Codeception\Lib\Framework
      * @param $service
      * @return mixed
      */
-    public function grabServiceFromContainer($service) {
-        if (!$this->kernel->getContainer()->has($service)) $this->fail("Service $service is not available in container");
+    public function grabServiceFromContainer($service)
+    {
+        if (!$this->kernel->getContainer()->has($service)) {
+            $this->fail("Service $service is not available in container");
+        }
         return $this->kernel->getContainer()->get($service);
     }
 
@@ -165,7 +174,9 @@ class Symfony2 extends \Codeception\Lib\Framework
      */
     protected function getProfiler()
     {
-        if (!$this->kernel->getContainer()->has('profiler')) return null;
+        if (!$this->kernel->getContainer()->has('profiler')) {
+            return null;
+        }
         $profiler = $this->kernel->getContainer()->get('profiler');
         return $profiler->loadProfileFromResponse($this->client->getResponse());
     }
@@ -183,9 +194,13 @@ class Symfony2 extends \Codeception\Lib\Framework
             }
             if ($profile->hasCollector('swiftmailer')) {
                 $messages = $profile->getCollector('swiftmailer')->getMessageCount();
-                if ($messages) $this->debugSection('Emails', $messages . ' sent');
+                if ($messages) {
+                    $this->debugSection('Emails', $messages . ' sent');
+                }
             }
-            if ($profile->hasCollector('timer'))    $this->debugSection('Time', $profile->getCollector('timer')->getTime());
+            if ($profile->hasCollector('timer')) {
+                $this->debugSection('Time', $profile->getCollector('timer')->getTime());
+            }
         }
     }
 }

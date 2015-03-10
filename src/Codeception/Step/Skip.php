@@ -9,10 +9,10 @@ class Skip extends \Codeception\Step
     {
         throw new \PHPUnit_Framework_SkippedTestError($this->getAction());
     }
-    
+
     public function __toString()
     {
         return $this->getAction();
-    }    
+    }
 
 }

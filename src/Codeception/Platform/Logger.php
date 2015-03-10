@@ -1,11 +1,11 @@
 <?php
 namespace Codeception\Platform;
 
-use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Monolog\Handler\RotatingFileHandler;
 
 /**
@@ -46,17 +46,17 @@ class Logger extends Extension
             throw new \Codeception\Exception\Configuration("Logger extension requires Monolog library to be installed");
         }
 
-        $this->path     = $this->getLogDir();
+        $this->path = $this->getLogDir();
 
         // internal log
-        $logHandler   = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
+        $logHandler = new RotatingFileHandler($this->path . 'codeception.log', $this->config['max_files']);
         $this->logger = new \Monolog\Logger('Codeception');
         $this->logger->pushHandler($logHandler);
     }
 
     public function beforeSuite(SuiteEvent $e)
     {
-        $suite            = str_replace('\\', '_', $e->getSuite()->getName());
+        $suite = str_replace('\\', '_', $e->getSuite()->getName());
         $this->logHandler = new RotatingFileHandler($this->path . $suite, $this->config['max_files']);
     }
 

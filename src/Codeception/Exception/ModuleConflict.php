@@ -3,7 +3,8 @@ namespace Codeception\Exception;
 
 class ModuleConflict extends \Exception
 {
-    public function __construct($module, $conflicted, $message) {
+    public function __construct($module, $conflicted, $message)
+    {
         if (is_object($module)) {
             $module = get_class($module);
         }

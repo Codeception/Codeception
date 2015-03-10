@@ -2,8 +2,8 @@
 namespace Codeception\Subscriber;
 
 use Codeception\Configuration;
-use Codeception\Events;
 use Codeception\Event\SuiteEvent;
+use Codeception\Events;
 use Codeception\Lib\Generator\Actions;
 use Codeception\SuiteManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

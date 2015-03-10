@@ -26,31 +26,31 @@ abstract class Module
      *
      * @var array
      */
-    public static $onlyActions = array();
+    public static $onlyActions = [];
 
     /**
      * Allows to explicitly exclude actions from module.
      *
      * @var array
      */
-    public static $excludeActions = array();
+    public static $excludeActions = [];
 
     /**
      * Allows to rename actions
      *
      * @var array
      */
-    public static $aliases = array();
+    public static $aliases = [];
 
-    protected $storage = array();
+    protected $storage = [];
 
-    protected $config = array();
+    protected $config = [];
 
-    protected $backupConfig = array();
+    protected $backupConfig = [];
 
-    protected $requiredFields = array();
+    protected $requiredFields = [];
 
-    protected $conflicts = array();
+    protected $conflicts = [];
 
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
@@ -71,7 +71,7 @@ abstract class Module
 
     public function _reconfigure($config)
     {
-        $this->config =  array_merge($this->backupConfig, $config);
+        $this->config = array_merge($this->backupConfig, $config);
         $this->onReconfigure();
         $this->validateConfig();
     }
@@ -92,7 +92,7 @@ abstract class Module
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfig(
                 get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n".
+                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
             );
         }
@@ -114,10 +114,10 @@ abstract class Module
     public function _getName()
     {
         $module = get_class($this);
-         if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
-             $module = $matches[1];
-         }
-         return $module;
+        if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
+            $module = $matches[1];
+        }
+        return $module;
     }
 
     public function _hasRequiredFields()
@@ -136,7 +136,7 @@ abstract class Module
     }
 
     // HOOK: before each suite
-    public function _beforeSuite($settings = array())
+    public function _beforeSuite($settings = [])
     {
     }
 

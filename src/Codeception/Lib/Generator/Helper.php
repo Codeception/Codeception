@@ -38,7 +38,7 @@ EOF;
 
     public function getHelperName()
     {
-        return '\\'.$this->namespace . 'Helper\\'.$this->name;
+        return '\\' . $this->namespace . 'Helper\\' . $this->name;
     }
 
 }

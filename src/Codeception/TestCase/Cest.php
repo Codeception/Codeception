@@ -2,9 +2,8 @@
 
 namespace Codeception\TestCase;
 
-use Codeception\Events;
 use Codeception\Event\TestEvent;
-use Codeception\Lib\Di;
+use Codeception\Events;
 use Codeception\Util\Annotation;
 
 class Cest extends \Codeception\TestCase implements
@@ -20,12 +19,12 @@ class Cest extends \Codeception\TestCase implements
     protected $testClassInstance = null;
     protected $testMethod = null;
 
-    public function __construct(array $data = array(), $dataName = '')
+    public function __construct(array $data = [], $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
     }
 
-    public function getName($withDataSet = TRUE)
+    public function getName($withDataSet = true)
     {
         return $this->testMethod;
     }
@@ -135,8 +134,8 @@ class Cest extends \Codeception\TestCase implements
 
     protected function executeTestMethod($I)
     {
-        $testMethodSignature = array($this->testClassInstance, $this->testMethod);
-        if (! is_callable($testMethodSignature)) {
+        $testMethodSignature = [$this->testClassInstance, $this->testMethod];
+        if (!is_callable($testMethodSignature)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -196,18 +195,18 @@ class Cest extends \Codeception\TestCase implements
 
     public function toString()
     {
-        return $this->getFeature(). " (".$this->getSignature().")";
+        return $this->getFeature() . " (" . $this->getSignature() . ")";
     }
-    
+
     /**
      * @return array
      */
     public function getReportFields()
     {
         return [
-            'file' => $this->getFileName(),
-            'name' => $this->getTestMethod(),
-            'class' => get_class($this->getTestClass()),
+            'file'    => $this->getFileName(),
+            'name'    => $this->getTestMethod(),
+            'class'   => get_class($this->getTestClass()),
             'feature' => $this->getFeature()
         ];
     }

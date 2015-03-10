@@ -8,7 +8,7 @@ class PageObject
     use Shared\Namespaces;
     use Shared\Classname;
 
-    protected $template  = <<<EOF
+    protected $template = <<<EOF
 <?php
 namespace {{namespace}};
 
@@ -37,7 +37,7 @@ class {{class}}
 }
 EOF;
 
-    protected $actionsTemplate  = <<<EOF
+    protected $actionsTemplate = <<<EOF
     /**
      * @var \\{{actorClass}};
      */
@@ -59,7 +59,7 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $this->getShortClassName($name);
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Page\\'.$name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Page\\' . $name);
     }
 
     public function produce()

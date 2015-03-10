@@ -9,20 +9,20 @@ namespace Codeception\Util;
  * <?php
  * $xml = new \Codeception\Util\XmlBuilder();
  * $xml->users
- * 	->user
- * 		->val(1)
- * 		->email
- * 			->val('davert@mail.ua')
- * 			->attr('valid','true')
- * 			->parent()
- * 		->cart
- * 			->attr('empty','false')
- * 			->items
- * 				->item
- * 					->val('useful item');
- * 				->parents('user')
- * 		->active
- * 			->val(1);
+ *    ->user
+ *        ->val(1)
+ *        ->email
+ *            ->val('davert@mail.ua')
+ *            ->attr('valid','true')
+ *            ->parent()
+ *        ->cart
+ *            ->attr('empty','false')
+ *            ->items
+ *                ->item
+ *                    ->val('useful item');
+ *                ->parents('user')
+ *        ->active
+ *            ->val(1);
  * echo $xml;
  * ```
  *
@@ -31,16 +31,16 @@ namespace Codeception\Util;
  * ```xml
  * <?xml version="1.0"?>
  * <users>
- * 	<user>
- * 		1
- * 		<email valid="true">davert@mail.ua</email>
- * 		<cart empty="false">
- * 			<items>
- * 				<item>useful item</item>
- * 			</items>
- * 		</cart>
- * 		<active>1</active>
- * 	</user>
+ *    <user>
+ *        1
+ *        <email valid="true">davert@mail.ua</email>
+ *        <cart empty="false">
+ *            <items>
+ *                <item>useful item</item>
+ *            </items>
+ *        </cart>
+ *        <active>1</active>
+ *    </user>
  * </users>
  * ```
  *
@@ -76,7 +76,7 @@ class XmlBuilder
 
     public function __construct()
     {
-        $this->__dom__         = new \DOMDocument();
+        $this->__dom__ = new \DOMDocument();
         $this->__currentNode__ = $this->__dom__;
     }
 
@@ -142,12 +142,12 @@ class XmlBuilder
     public function parents($tag)
     {
         $traverseNode = $this->__currentNode__;
-        $elFound      = false;
+        $elFound = false;
         while ($traverseNode->parentNode) {
             $traverseNode = $traverseNode->parentNode;
             if ($traverseNode->tagName == $tag) {
                 $this->__currentNode__ = $traverseNode;
-                $elFound               = true;
+                $elFound = true;
                 break;
             }
         }

@@ -34,12 +34,14 @@ class Bootstrap extends Command
 
     protected function configure()
     {
-        $this->setDefinition([
-            new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
-            new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers'),
-            new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester'),
-            new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create standard suites' )
-        ]);
+        $this->setDefinition(
+            [
+                new InputArgument('path', InputArgument::OPTIONAL, 'custom installation path', '.'),
+                new InputOption('namespace', 'ns', InputOption::VALUE_OPTIONAL, 'Namespace to add for actor classes and helpers'),
+                new InputOption('actor', 'a', InputOption::VALUE_OPTIONAL, 'Custom actor instead of Tester'),
+                new InputOption('empty', 'e', InputOption::VALUE_NONE, 'Don\'t create standard suites')
+            ]
+        );
     }
 
     public function getDescription()
@@ -50,7 +52,7 @@ class Bootstrap extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('namespace')) {
-            $this->namespace = trim($input->getOption('namespace'), '\\').'\\';
+            $this->namespace = trim($input->getOption('namespace'), '\\') . '\\';
         }
 
         if ($input->getOption('actor')) {
@@ -98,7 +100,7 @@ class Bootstrap extends Command
 
         $output->writeln("<info>Building initial {$this->actorSuffix} classes</info>");
         $this->getApplication()->find('build')->run(
-            new ArrayInput(array('command' => 'build')),
+            new ArrayInput(['command' => 'build']),
             $output
         );
 
@@ -107,30 +109,30 @@ class Bootstrap extends Command
 
     public function createGlobalConfig()
     {
-        $basicConfig = array(
-            'actor' => $this->actorSuffix,
-            'paths'    => array(
+        $basicConfig = [
+            'actor'    => $this->actorSuffix,
+            'paths'    => [
                 'tests'   => 'tests',
                 'log'     => $this->logDir,
                 'data'    => $this->dataDir,
                 'support' => $this->supportDir
-            ),
-            'settings' => array(
+            ],
+            'settings' => [
                 'bootstrap'    => '_bootstrap.php',
                 'colors'       => (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'),
                 'memory_limit' => '1024M'
-            ),
-            'modules'  => array(
-                'config' => array(
-                    'Db' => array(
+            ],
+            'modules'  => [
+                'config' => [
+                    'Db' => [
                         'dsn'      => '',
                         'user'     => '',
                         'password' => '',
                         'dump'     => 'tests/_data/dump.sql'
-                    )
-                )
-            )
-        );
+                    ]
+                ]
+            ]
+        ];
 
         $str = Yaml::dump($basicConfig, 4);
         if ($this->namespace) {
@@ -141,12 +143,12 @@ class Bootstrap extends Command
 
     protected function createFunctionalSuite($actor = 'Functional')
     {
-        $suiteConfig = array(
-            'class_name' => $actor.$this->actorSuffix,
-            'modules'    => array('enabled' => array('Filesystem', "\\{$this->namespace}Helper\\$actor")),
-        );
+        $suiteConfig = [
+            'class_name' => $actor . $this->actorSuffix,
+            'modules'    => ['enabled' => ['Filesystem', "\\{$this->namespace}Helper\\$actor"]],
+        ];
 
-        $str  = "# Codeception Test Suite Configuration\n\n";
+        $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
         $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel4) to use it.\n\n";
@@ -156,17 +158,17 @@ class Bootstrap extends Command
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
     {
-        $suiteConfig = array(
-            'class_name' => $actor.$this->actorSuffix,
-            'modules'    => array(
-                'enabled' => array('PhpBrowser', "\\{$this->namespace}Helper\\$actor"),
-                'config'  => array(
-                    'PhpBrowser' => array(
+        $suiteConfig = [
+            'class_name' => $actor . $this->actorSuffix,
+            'modules'    => [
+                'enabled' => ['PhpBrowser', "\\{$this->namespace}Helper\\$actor"],
+                'config'  => [
+                    'PhpBrowser' => [
                         'url' => 'http://localhost/myapp/'
-                    ),
-                )
-            ),
-        );
+                    ],
+                ]
+            ],
+        ];
 
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for acceptance tests.\n";
@@ -179,10 +181,10 @@ class Bootstrap extends Command
 
     protected function createUnitSuite($actor = 'Unit')
     {
-        $suiteConfig = array(
-            'class_name' => $actor.$this->actorSuffix,
-            'modules'    => array('enabled' => array('Asserts', "\\{$this->namespace}Helper\\$actor")),
-        );
+        $suiteConfig = [
+            'class_name' => $actor . $this->actorSuffix,
+            'modules'    => ['enabled' => ['Asserts', "\\{$this->namespace}Helper\\$actor"]],
+        ];
 
         $str = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for unit (internal) tests.\n";
@@ -198,9 +200,9 @@ class Bootstrap extends Command
             "tests/$suite/_bootstrap.php",
             "<?php\n// Here you can initialize variables that will be available to your tests\n"
         );
-        @mkdir($this->supportDir.DIRECTORY_SEPARATOR."Helper");
+        @mkdir($this->supportDir . DIRECTORY_SEPARATOR . "Helper");
         file_put_contents(
-            $this->supportDir.DIRECTORY_SEPARATOR."Helper".DIRECTORY_SEPARATOR."$actor.php",
+            $this->supportDir . DIRECTORY_SEPARATOR . "Helper" . DIRECTORY_SEPARATOR . "$actor.php",
             (new Helper($actor, rtrim($this->namespace, '\\')))->produce()
         );
         file_put_contents("tests/$suite.suite.yml", $config);

@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Module;
+
 use Codeception\Util\FileSystem as Util;
 use Symfony\Component\Finder\Finder;
 
@@ -42,9 +43,13 @@ class Filesystem extends \Codeception\Module
     protected function absolutizePath($path)
     {
         // *nix way
-        if (strpos($path, '/') === 0) return $path;
+        if (strpos($path, '/') === 0) {
+            return $path;
+        }
         // windows
-        if (strpos($path, ':\\') === 1) return $path;
+        if (strpos($path, ':\\') === 1) {
+            return $path;
+        }
 
         return $this->path . $path;
     }
@@ -81,7 +86,9 @@ class Filesystem extends \Codeception\Module
      */
     public function deleteFile($filename)
     {
-        if (!file_exists($this->absolutizePath($filename))) \PHPUnit_Framework_Assert::fail('file not found');
+        if (!file_exists($this->absolutizePath($filename))) {
+            \PHPUnit_Framework_Assert::fail('file not found');
+        }
         unlink($this->absolutizePath($filename));
     }
 
@@ -114,7 +121,8 @@ class Filesystem extends \Codeception\Module
      * @param $src
      * @param $dst
      */
-    public function copyDir($src, $dst) {
+    public function copyDir($src, $dst)
+    {
         Util::copyDir($src, $dst);
     }
 
@@ -155,7 +163,7 @@ class Filesystem extends \Codeception\Module
      */
     public function seeFileContentsEqual($text)
     {
-        $file = str_replace("\r",'',$this->file);
+        $file = str_replace("\r", '', $this->file);
         \PHPUnit_Framework_Assert::assertEquals($text, $file);
     }
 
@@ -209,7 +217,9 @@ class Filesystem extends \Codeception\Module
 
         $path = $this->absolutizePath($path);
         $this->debug($path);
-        if (!file_exists($path)) \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
+        if (!file_exists($path)) {
+            \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
+        }
 
         $files = Finder::create()->files()->name($filename)->in($path);
         foreach ($files as $file) {
@@ -234,7 +244,6 @@ class Filesystem extends \Codeception\Module
     {
         \PHPUnit_Framework_Assert::assertFileNotExists($path . $filename);
     }
-
 
 
     /**

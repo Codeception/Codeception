@@ -4,10 +4,9 @@ namespace Codeception\Module;
 
 use Codeception\Exception\Module as ModuleException;
 use Exception;
-use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
-use PhpAmqpLib\Exception\AMQPChannelException;
+use PhpAmqpLib\Connection\AMQPConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 
 /**
  * This module interacts with message broker software that implements
@@ -58,14 +57,14 @@ use PhpAmqpLib\Exception\AMQPChannelException;
  */
 class AMQP extends \Codeception\Module
 {
-    protected $config = array(
-        'host' => 'locahost',
+    protected $config = [
+        'host'     => 'locahost',
         'username' => 'guest',
         'password' => 'guest',
-        'port' => '5672',
-        'vhost' => '/',
-        'cleanup' => true,
-    );
+        'port'     => '5672',
+        'vhost'    => '/',
+        'cleanup'  => true,
+    ];
 
     /**
      * @var AMQPConnection
@@ -77,7 +76,7 @@ class AMQP extends \Codeception\Module
      */
     protected $channel;
 
-    protected $requiredFields = array('host', 'username', 'password', 'vhost');
+    protected $requiredFields = ['host', 'username', 'password', 'vhost'];
 
     public function _initialize()
     {
@@ -142,7 +141,7 @@ class AMQP extends \Codeception\Module
             : new AMQPMessage($message);
 
         $this->connection->channel()->queue_declare($queue);
-        $this->connection->channel()->basic_publish($message, '',$queue);
+        $this->connection->channel()->basic_publish($message, '', $queue);
     }
 
     /**
@@ -164,9 +163,13 @@ class AMQP extends \Codeception\Module
     public function seeMessageInQueueContainsText($queue, $text)
     {
         $msg = $this->connection->channel()->basic_get($queue);
-        if (!$msg) $this->fail("Message was not received");
-        if (!$msg instanceof AMQPMessage) $this->fail("Received message is not format of AMQPMessage");
-        $this->debugSection("Message",$msg->body);
+        if (!$msg) {
+            $this->fail("Message was not received");
+        }
+        if (!$msg instanceof AMQPMessage) {
+            $this->fail("Received message is not format of AMQPMessage");
+        }
+        $this->debugSection("Message", $msg->body);
         $this->assertContains($text, $msg->body);
     }
 
@@ -186,10 +189,12 @@ class AMQP extends \Codeception\Module
 
     protected function cleanup()
     {
-        if (! isset($this->config['queues'])) {
+        if (!isset($this->config['queues'])) {
             throw new ModuleException(__CLASS__, "please set queues for cleanup");
         }
-        if (!$this->connection) return;
+        if (!$this->connection) {
+            return;
+        }
         foreach ($this->config['queues'] as $queue) {
             try {
                 $this->connection->channel()->queue_purge($queue);

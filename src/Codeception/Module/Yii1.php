@@ -27,8 +27,8 @@ use Yii;
  * defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
  * require_once($yii);
  * return array(
- *		'class' => 'CWebApplication',
- *		'config' => $config,
+ *        'class' => 'CWebApplication',
+ *        'config' => $config,
  * );
  * </pre>
  *
@@ -72,91 +72,94 @@ use Yii;
 class Yii1 extends \Codeception\Lib\Framework
 {
 
-	/**
-	 * Application path and url must be set always
-	 * @var array
-	 */
-	protected $requiredFields = array('appPath','url');
+    /**
+     * Application path and url must be set always
+     * @var array
+     */
+    protected $requiredFields = ['appPath', 'url'];
 
-	/**
-	 * Application settings array('class'=>'YourAppClass','config'=>'YourAppArrayConfig');
-	 * @var array
-	 */
-	private $appSettings;
+    /**
+     * Application settings array('class'=>'YourAppClass','config'=>'YourAppArrayConfig');
+     * @var array
+     */
+    private $appSettings;
 
-	private $_appConfig;
+    private $_appConfig;
 
-	public function _initialize()
-	{
+    public function _initialize()
+    {
         if (!file_exists($this->config['appPath'])) {
-            throw new ModuleConfig(__CLASS__,
-                "Couldn't load application config file {$this->config['appPath']}\n".
+            throw new ModuleConfig(
+                __CLASS__,
+                "Couldn't load application config file {$this->config['appPath']}\n" .
                 "Please provide application bootstrap file configured for testing"
             );
         }
 
-		$this->appSettings = include($this->config['appPath']); //get application settings in the entry script
+        $this->appSettings = include($this->config['appPath']); //get application settings in the entry script
 
-		// get configuration from array or file
-		if (is_array($this->appSettings['config'])) {
-			$this->_appConfig = $this->appSettings['config'];
-		} else {
+        // get configuration from array or file
+        if (is_array($this->appSettings['config'])) {
+            $this->_appConfig = $this->appSettings['config'];
+        } else {
             if (!file_exists($this->appSettings['config'])) {
-                throw new ModuleConfig(__CLASS__,
-                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n".
+                throw new ModuleConfig(
+                    __CLASS__,
+                    "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n" .
                     "Please provide valid 'config' parameter"
                 );
             }
-			$this->_appConfig = include($this->appSettings['config']);
-		}
+            $this->_appConfig = include($this->appSettings['config']);
+        }
 
         defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER', false);
         defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
 
-		$_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
-		$_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
+        $_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
+        $_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
         if (!function_exists('launch_codeception_yii_bridge')) {
-            throw new ModuleConfig(__CLASS__,
-                "Codeception-Yii Bridge is not launched. In order to run tests you need to install https://github.com/Codeception/YiiBridge".
+            throw new ModuleConfig(
+                __CLASS__,
+                "Codeception-Yii Bridge is not launched. In order to run tests you need to install https://github.com/Codeception/YiiBridge" .
                 "Implement function 'launch_codeception_yii_bridge' to load all Codeception overrides"
             );
         }
         launch_codeception_yii_bridge();
 
-		Yii::$enableIncludePath = false;
-		Yii::setApplication(null);
-		Yii::createApplication($this->appSettings['class'],$this->_appConfig);
-	}
+        Yii::$enableIncludePath = false;
+        Yii::setApplication(null);
+        Yii::createApplication($this->appSettings['class'], $this->_appConfig);
+    }
 
-	/*
-	 * Create the client connector. Called before each test
-	 */
-	public function _createClient()
-	{
-		$this->client = new \Codeception\Lib\Connector\Yii1();
-		$this->client->appPath = $this->config['appPath'];
-		$this->client->url = $this->config['url'];
-		$this->client->appSettings = array(
-			'class' => $this->appSettings['class'],
-			'config' => $this->_appConfig,
-		);
-	}
+    /*
+     * Create the client connector. Called before each test
+     */
+    public function _createClient()
+    {
+        $this->client = new \Codeception\Lib\Connector\Yii1();
+        $this->client->appPath = $this->config['appPath'];
+        $this->client->url = $this->config['url'];
+        $this->client->appSettings = [
+            'class'  => $this->appSettings['class'],
+            'config' => $this->_appConfig,
+        ];
+    }
 
-	public function _before(\Codeception\TestCase $test)
-	{
-		$this->_createClient();
-	}
+    public function _before(\Codeception\TestCase $test)
+    {
+        $this->_createClient();
+    }
 
-	public function _after(\Codeception\TestCase $test)
-	{
-		$_SESSION = array();
-		$_GET     = array();
-		$_POST    = array();
-		$_COOKIE  = array();
-		$_REQUEST = array();
-		Yii::app()->session->close();
-		parent::_after($test);
-	}
+    public function _after(\Codeception\TestCase $test)
+    {
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        $_COOKIE = [];
+        $_REQUEST = [];
+        Yii::app()->session->close();
+        parent::_after($test);
+    }
 
 }

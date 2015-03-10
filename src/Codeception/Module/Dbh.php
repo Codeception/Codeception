@@ -37,7 +37,7 @@ namespace Codeception\Module;
  *
  * ### Example
  *
- *     modules: 
+ *     modules:
  *        enabled: [Dbh]
  *        config:
  *           Dbh:
@@ -49,36 +49,46 @@ class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 {
     public static $dbh;
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\TestCase $test)
+    {
 
-        if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Transaction module requires PDO instance explicitly set.\n" .
-            "You can use your bootstrap file to assign the dbh:\n\n" .
-            '\Codeception\Module\Dbh::$dbh = $dbh');
+        if (!self::$dbh) {
+            throw new \Codeception\Exception\ModuleConfig(
+                __CLASS__,
+                "Transaction module requires PDO instance explicitly set.\n" .
+                "You can use your bootstrap file to assign the dbh:\n\n" .
+                '\Codeception\Module\Dbh::$dbh = $dbh'
+            );
+        }
 
         self::$dbh->beginTransaction();
     }
 
-    public function _after(\Codeception\TestCase $test) {
+    public function _after(\Codeception\TestCase $test)
+    {
 
-        if (!self::$dbh) throw new \Codeception\Exception\ModuleConfig(__CLASS__,
-            "Transaction module requires PDO instance explicitly set.\n" .
-            "You can use your bootstrap file to assign the dbh:\n\n" .
-            '\Codeception\Module\Dbh::$dbh = $dbh');
+        if (!self::$dbh) {
+            throw new \Codeception\Exception\ModuleConfig(
+                __CLASS__,
+                "Transaction module requires PDO instance explicitly set.\n" .
+                "You can use your bootstrap file to assign the dbh:\n\n" .
+                '\Codeception\Module\Dbh::$dbh = $dbh'
+            );
+        }
 
-        if(self::$dbh->inTransaction()) {
-          self::$dbh->rollback();
+        if (self::$dbh->inTransaction()) {
+            self::$dbh->rollback();
         }
     }
 
-    public function seeInDatabase($table, $criteria = array())
+    public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, "count(*)", $criteria);
         \PHPUnit_Framework_Assert::assertGreaterThan(0, $res);
     }
 
 
-    public function dontSeeInDatabase($table, $criteria = array())
+    public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, "count(*)", $criteria);
         \PHPUnit_Framework_Assert::assertLessThan(1, $res);
@@ -88,22 +98,23 @@ class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         $query = "select %s from %s where %s";
 
-        $params = array();
+        $params = [];
         foreach ($criteria as $k => $v) {
             $params[] = "$k = ?";
         }
-        $params = implode('AND ',$params);
+        $params = implode('AND ', $params);
 
         $query = sprintf($query, $column, $table, $params);
 
-        $this->debugSection('Query',$query, $params);
+        $this->debugSection('Query', $query, $params);
 
         $sth = self::$dbh->prepare($query);
         $sth->execute(array_values($criteria));
         return $sth->fetchColumn();
     }
 
-    public function grabFromDatabase($table, $column, $criteria = array()) {
+    public function grabFromDatabase($table, $column, $criteria = [])
+    {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
     }
 }

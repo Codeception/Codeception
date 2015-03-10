@@ -5,17 +5,17 @@ namespace Codeception\Lib\Connector;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostFile;
-use Symfony\Component\BrowserKit\Client;
-use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 use GuzzleHttp\Url;
+use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
+use Symfony\Component\BrowserKit\Response as BrowserKitResponse;
 
 class Guzzle extends Client
 {
     protected $baseUri;
     protected $requestOptions = [
         'allow_redirects' => false,
-        'headers' => [],
+        'headers'         => [],
     ];
     protected $refreshMaxInterval = 0;
 
@@ -27,16 +27,16 @@ class Guzzle extends Client
     {
         $this->baseUri = $uri;
     }
-    
+
     /**
      * Sets the maximum allowable timeout interval for a meta tag refresh to
      * automatically redirect a request.
-     * 
+     *
      * A meta tag detected with an interval equal to or greater than $seconds
      * would not result in a redirect.  A meta tag without a specified interval
      * or one with a value less than $seconds would result in the client
      * automatically redirecting to the specified URL
-     * 
+     *
      * @param int $seconds Number of seconds
      */
     public function setRefreshMaxInterval($seconds)
@@ -78,12 +78,12 @@ class Guzzle extends Client
             }
             $response->setHeader('Content-Type', $contentType);
         }
-        
+
         $headers = $response->getHeaders();
         $status = $response->getStatusCode();
         $matchesMeta = null;
         $matchesHeader = null;
-        
+
         $isMetaMatch = preg_match(
             '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
             $response->getBody(true),
@@ -95,7 +95,7 @@ class Guzzle extends Client
             $matchesHeader
         );
         $matches = ($isMetaMatch) ? $matchesMeta : $matchesHeader;
-        
+
         if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
             $uri = $this->getAbsoluteUri($matches[2]);
             $partsUri = parse_url($uri);
@@ -119,13 +119,13 @@ class Guzzle extends Client
     {
         $build = parse_url($this->baseUri);
         $uriparts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
-        
+
         if ($build === false) {
             throw new \Codeception\Exception\TestRuntime("URL '{$this->baseUri}' is malformed");
         } elseif ($uriparts === false) {
             throw new \Codeception\Exception\TestRuntime("URI '{$uri}' is malformed");
         }
-        
+
         foreach ($uriparts as $part => $value) {
             if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
                 $build[$part] = rtrim($build[$part], '/') . '/' . $value;
@@ -138,12 +138,12 @@ class Guzzle extends Client
 
     protected function doRequest($request)
     {
-        /** @var $request BrowserKitRequest  **/
-        $requestOptions = array(
-            'body' => $this->extractBody($request),
+        /** @var $request BrowserKitRequest  * */
+        $requestOptions = [
+            'body'    => $this->extractBody($request),
             'cookies' => $this->extractCookies($request),
             'headers' => $this->extractHeaders($request)
-        );
+        ];
 
         $requestOptions = array_merge_recursive($requestOptions, $this->requestOptions);
 
@@ -174,16 +174,16 @@ class Guzzle extends Client
         $headers = [];
         $server = $request->getServer();
 
-        $uri                 = Url::fromString($request->getUri());
+        $uri = Url::fromString($request->getUri());
         $server['HTTP_HOST'] = $uri->getHost();
-        $port                = $uri->getPort();
+        $port = $uri->getPort();
         if ($port !== null && $port !== 443 && $port != 80) {
             $server['HTTP_HOST'] .= ':' . $port;
         }
 
         foreach ($server as $header => $val) {
             $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
-            $contentHeaders = array('Content-length' => true, 'Content-md5' => true, 'Content-type' => true);
+            $contentHeaders = ['Content-length' => true, 'Content-md5' => true, 'Content-type' => true];
             if (strpos($header, 'Http-') === 0) {
                 $headers[substr($header, 5)] = $val;
             } elseif (isset($contentHeaders[$header])) {
@@ -195,7 +195,7 @@ class Guzzle extends Client
 
     protected function extractBody(BrowserKitRequest $request)
     {
-        if (in_array(strtoupper($request->getMethod()), array('GET','HEAD'))) {
+        if (in_array(strtoupper($request->getMethod()), ['GET', 'HEAD'])) {
             return null;
         }
         if ($request->getContent() != null) {
@@ -203,7 +203,7 @@ class Guzzle extends Client
         } else {
             return $request->getParameters();
         }
-}
+    }
 
     protected function extractFiles(BrowserKitRequest $request)
     {
@@ -219,7 +219,7 @@ class Guzzle extends Client
         $files = [];
         foreach ($requestFiles as $name => $info) {
             if (!empty($arrayName)) {
-                $name = $arrayName.'['.$name.']';
+                $name = $arrayName . '[' . $name . ']';
             }
 
             if (is_array($info)) {

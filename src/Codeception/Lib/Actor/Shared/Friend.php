@@ -4,6 +4,7 @@ namespace Codeception\Lib\Actor\Shared;
 trait Friend
 {
     protected $friends = [];
+
     /**
      * @param $name
      * @param $actorClass

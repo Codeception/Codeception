@@ -5,12 +5,12 @@ namespace Codeception;
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\Lib\Di;
 use Codeception\Util\Autoload;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 
 class Configuration
 {
-    protected static $suites = array();
+    protected static $suites = [];
 
     /**
      * @var array Current configuration
@@ -51,38 +51,38 @@ class Configuration
     /**
      * @var array Default config
      */
-    public static $defaultConfig = array(
-        'actor' => 'Guy',
-        'namespace' => '',
-        'include' => array(),
-        'paths' => array(),
-        'modules' => array(),
-        'extensions' => array(
-            'enabled' => array(),
-            'config' => array(),
-        ),
-        'groups' => [],
-        'settings' => array(
-            'colors' => false,
-            'log' => false, // deprecated
-            'bootstrap' => '_bootstrap.php',
+    public static $defaultConfig = [
+        'actor'      => 'Guy',
+        'namespace'  => '',
+        'include'    => [],
+        'paths'      => [],
+        'modules'    => [],
+        'extensions' => [
+            'enabled' => [],
+            'config'  => [],
+        ],
+        'groups'     => [],
+        'settings'   => [
+            'colors'     => false,
+            'log'        => false, // deprecated
+            'bootstrap'  => '_bootstrap.php',
             'strict_xml' => false
-        ),
-        'coverage' => []
-    );
+        ],
+        'coverage'   => []
+    ];
 
-    public static $defaultSuiteSettings = array(
-        'class_name' => 'NoGuy',
-        'modules' => array(
-            'enabled' => array(),
-            'config' => array(),
-        ),
-        'namespace' => null,
-        'path' => '',
-        'groups' => [],
+    public static $defaultSuiteSettings = [
+        'class_name'  => 'NoGuy',
+        'modules'     => [
+            'enabled' => [],
+            'config'  => [],
+        ],
+        'namespace'   => null,
+        'path'        => '',
+        'groups'      => [],
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
-    );
+    ];
 
     /**
      * Loads global config file which is `codeception.yml` by default.
@@ -114,7 +114,7 @@ class Configuration
 
         $configDistFile = $dir . DIRECTORY_SEPARATOR . 'codeception.dist.yml';
 
-        if (! (file_exists($configDistFile) || file_exists($configFile))) {
+        if (!(file_exists($configDistFile) || file_exists($configFile))) {
             throw new ConfigurationException("Configuration file could not be found.\nRun `bootstrap` to initialize Codeception.");
         }
 
@@ -153,7 +153,7 @@ class Configuration
         }
 
         if (!isset($config['paths']['support'])) {
-           throw new ConfigurationException('Helpers path is not defined by key "paths: support"');
+            throw new ConfigurationException('Helpers path is not defined by key "paths: support"');
         }
 
         self::$dataDir = $config['paths']['data'];
@@ -172,7 +172,7 @@ class Configuration
         if (!$bootstrap) {
             return;
         }
-        $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir.DIRECTORY_SEPARATOR.$bootstrap;
+        $bootstrap = self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR . $bootstrap;
         if (file_exists($bootstrap)) {
             include_once $bootstrap;
         }
@@ -180,7 +180,7 @@ class Configuration
 
     protected static function loadConfigFile($file, $parentConfig)
     {
-        $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : array();
+        $config = file_exists($file) ? Yaml::parse(file_get_contents($file)) : [];
         return self::mergeConfigs($parentConfig, $config);
     }
 
@@ -190,13 +190,13 @@ class Configuration
         Autoload::addNamespace($namespace, self::supportDir());
 
         // deprecated
-        Autoload::addNamespace($namespace.'\Codeception\Module', self::supportDir());
+        Autoload::addNamespace($namespace . '\Codeception\Module', self::supportDir());
     }
 
     protected static function loadSuites()
     {
-        $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir.DIRECTORY_SEPARATOR.self::$testsDir)->depth('< 1');
-        self::$suites = array();
+        $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)->depth('< 1');
+        self::$suites = [];
 
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
@@ -225,7 +225,7 @@ class Configuration
 
         $globalConf = $config['settings'];
 
-        foreach (array('modules','coverage', 'namespace', 'groups', 'env') as $key) {
+        foreach (['modules', 'coverage', 'namespace', 'groups', 'env'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
@@ -235,11 +235,11 @@ class Configuration
 
         $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml")
             ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"))
-            : array();
+            : [];
 
         $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml")
             ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"))
-            : array();
+            : [];
 
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
@@ -262,10 +262,10 @@ class Configuration
         $settings = self::suiteSettings($suite, self::config());
 
         if (!isset($settings['env']) || !is_array($settings['env'])) {
-            return array();
+            return [];
         }
 
-        $environments = array();
+        $environments = [];
 
         foreach ($settings['env'] as $env => $envConfig) {
             $environments[$env] = $envConfig ? self::mergeConfigs($settings, $envConfig) : $settings;
@@ -306,8 +306,8 @@ class Configuration
     public static function isExtensionEnabled($extensionName)
     {
         return isset(self::$config['extensions'])
-            && isset(self::$config['extensions']['enabled'])
-            && in_array($extensionName, self::$config['extensions']['enabled']);
+        && isset(self::$config['extensions']['enabled'])
+        && in_array($extensionName, self::$config['extensions']['enabled']);
     }
 
     /**
@@ -405,7 +405,7 @@ class Configuration
      * @param array $config
      * @return array
      */
-    public static function append(array $config = array())
+    public static function append(array $config = [])
     {
         return self::$config = self::mergeConfigs(self::$config, $config);
     }
@@ -416,7 +416,7 @@ class Configuration
             return $a2;
         }
 
-        $res = array();
+        $res = [];
 
         foreach ($a2 as $k2 => $v2) {
 

@@ -19,7 +19,7 @@ class Laravel4 extends Client
         return $response;
     }
 
-     protected function fireBootedCallbacks()
+    protected function fireBootedCallbacks()
     {
         $bootedCallbacks = new \ReflectionProperty($this->kernel, 'bootedCallbacks');
         $bootedCallbacks->setAccessible(true);

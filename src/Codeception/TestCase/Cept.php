@@ -2,8 +2,8 @@
 
 namespace Codeception\TestCase;
 
-use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Step;
 use Codeception\TestCase;
 
@@ -17,14 +17,14 @@ class Cept extends TestCase implements
     use Shared\Actor;
     use Shared\ScenarioPrint;
 
-    public function __construct(array $data = array(), $dataName = '')
+    public function __construct(array $data = [], $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
     }
 
     public function getSignature()
     {
-        return ltrim(substr($this->testName, 0,-4),'\\/'); // cut ".php" in end; cut "/" in start
+        return ltrim(substr($this->testName, 0, -4), '\\/'); // cut ".php" in end; cut "/" in start
     }
 
     public function getName($withDataSet = true)
@@ -39,11 +39,11 @@ class Cept extends TestCase implements
 
     public function toString()
     {
-        return $this->getFeature(). " (".$this->getSignature().")";
+        return $this->getFeature() . " (" . $this->getSignature() . ")";
     }
 
     public function preload()
-    { 
+    {
         $this->parser->prepareToRun($this->getRawBody());
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
@@ -68,6 +68,6 @@ class Cept extends TestCase implements
 
     public function getReportFields()
     {
-        return ['name' => basename($this->getFileName(),'Cept.php'), 'file' => $this->getFileName(), 'feature' => $this->getFeature()];
+        return ['name' => basename($this->getFileName(), 'Cept.php'), 'file' => $this->getFileName(), 'feature' => $this->getFeature()];
     }
 }

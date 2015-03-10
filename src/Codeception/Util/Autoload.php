@@ -14,7 +14,9 @@ class Autoload
      */
     protected static $map = [];
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * Adds a base directory for a namespace prefix.
@@ -41,16 +43,16 @@ class Autoload
     public static function addNamespace($prefix, $base_dir, $prepend = false)
     {
         if (!self::$registered) {
-            spl_autoload_register(array(__CLASS__, 'load'));
+            spl_autoload_register([__CLASS__, 'load']);
             self::$registered = true;
         }
 
         // normalize namespace prefix
-        $prefix = trim($prefix, '\\').'\\';
+        $prefix = trim($prefix, '\\') . '\\';
 
         // normalize the base directory with a trailing separator
-        $base_dir = rtrim($base_dir, '/').DIRECTORY_SEPARATOR;
-        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR).'/';
+        $base_dir = rtrim($base_dir, '/') . DIRECTORY_SEPARATOR;
+        $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR) . '/';
 
         // initialize the namespace prefix array
         if (isset(self::$map[$prefix]) === false) {
@@ -107,7 +109,7 @@ class Autoload
 
         // fix for empty prefix
         if (isset(self::$map['\\']) && ($class[0] != '\\')) {
-            return self::load('\\'.$class);
+            return self::load('\\' . $class);
         }
 
         // backwards compatibility with old autoloader
@@ -138,8 +140,8 @@ class Autoload
 
         foreach (self::$map[$prefix] as $base_dir) {
             $file = $base_dir
-                .str_replace('\\', '/', $relative_class)
-                .'.php';
+                . str_replace('\\', '/', $relative_class)
+                . '.php';
 
             // 'static' is for testing purposes
             if (static::requireFile($file)) {

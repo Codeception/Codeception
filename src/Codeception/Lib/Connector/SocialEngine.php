@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 
 class SocialEngine extends \Symfony\Component\BrowserKit\Client
@@ -28,7 +27,7 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
     public function setBootstrap($bootstrap)
     {
         $this->bootstrap = $bootstrap;
-        $this->front     = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
+        $this->front = $this->bootstrap->getBootstrap()->getContainer()->frontcontroller;
 
         $this->front
             ->throwExceptions(false)
@@ -75,12 +74,12 @@ class SocialEngine extends \Symfony\Component\BrowserKit\Client
         }
         //$_SERVER['SERVER_SOFTWARE'] = '';
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI']    = str_replace('http://localhost', '', $request->getUri());
+        $_SERVER['REQUEST_URI'] = str_replace('http://localhost', '', $request->getUri());
 
         $zendResponse = new \Zend_Controller_Response_Http;
 
         $this->bootstrap->getBootstrap()->getContainer()->frontcontroller->setRequest($zendRequest)->setResponse(
-                                                                         $zendResponse
+            $zendResponse
         );
 
         ob_start();

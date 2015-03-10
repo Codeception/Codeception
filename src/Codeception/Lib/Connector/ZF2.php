@@ -37,14 +37,14 @@ class ZF2 extends Client
      */
     public function doRequest($request)
     {
-        $zendRequest  = $this->application->getRequest();
+        $zendRequest = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
 
         $zendResponse->setStatusCode(200);
 
-        $uri         = new HttpUri($request->getUri());
+        $uri = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
-        $method      = strtoupper($request->getMethod());
+        $method = strtoupper($request->getMethod());
 
         $zendRequest->setCookies(new Parameters($request->getCookies()));
 

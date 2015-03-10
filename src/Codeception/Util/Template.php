@@ -41,7 +41,7 @@ class Template
     {
         $result = $this->template;
         foreach ($this->vars as $var => $value) {
-            $result = str_replace('{{'.$var.'}}', $value, $result);
+            $result = str_replace('{{' . $var . '}}', $value, $result);
         }
         return $result;
     }

@@ -3,8 +3,8 @@
 namespace Codeception\TestCase;
 
 use Codeception\Configuration;
-use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\TestCase;
@@ -62,7 +62,7 @@ class Test extends TestCase implements
 
     public function getSignature()
     {
-        return get_class($this).'::'.$this->getName(false);
+        return get_class($this) . '::' . $this->getName(false);
     }
 
     public function getFileName()

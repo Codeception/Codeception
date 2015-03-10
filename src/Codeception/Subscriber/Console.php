@@ -1,21 +1,20 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Lib\Suite;
-use Codeception\SuiteManager;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
-use Codeception\TestCase;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\Suite;
+use Codeception\TestCase;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Console implements EventSubscriberInterface
 {
@@ -50,13 +49,13 @@ class Console implements EventSubscriberInterface
     protected $printedTest = null;
     protected $rawStackTrace = false;
     protected $traceLength = 5;
-    protected $columns = array(40, 5);
+    protected $columns = [40, 5];
 
 
     public function __construct($options)
     {
-        $this->debug  = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
-        $this->steps  = $this->debug || $options['steps'];
+        $this->debug = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
+        $this->steps = $this->debug || $options['steps'];
         $this->rawStackTrace = ($options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
         $this->output = new Output($options);
         if ($this->debug) {
@@ -77,10 +76,16 @@ class Console implements EventSubscriberInterface
             ->writeln();
 
         if ($e->getSuite() instanceof Suite) {
-            $message = $this->message(implode(', ',array_map(function ($module) {
-                return $module->_getName();
-            }, $e->getSuite()->getModules())));
-    
+            $message = $this->message(
+                implode(
+                    ', ', array_map(
+                        function ($module) {
+                            return $module->_getName();
+                        }, $e->getSuite()->getModules()
+                    )
+                )
+            );
+
             $message->style('info')
                 ->prepend('Modules: ')
                 ->writeln(OutputInterface::VERBOSITY_VERBOSE);
@@ -130,7 +135,7 @@ class Console implements EventSubscriberInterface
     public function endTest(TestEvent $e)
     {
         if (!$this->output->waitForDebugOutput) {
-            $this->message()->width($this->columns[0]+$this->columns[1],'^')->writeln();
+            $this->message()->width($this->columns[0] + $this->columns[1], '^')->writeln();
         }
         $this->printedTest = null;
     }
@@ -280,7 +285,7 @@ class Console implements EventSubscriberInterface
             $this->message($e->getTraceAsString())->writeln();
             return;
         }
-        
+
         $trace = \PHPUnit_Util_Filter::getFilteredStacktrace($e, false);
 
         $i = 0;
@@ -293,7 +298,7 @@ class Console implements EventSubscriberInterface
             $message = $this->message($i)->prepend('#')->width(4);
 
             if (!isset($step['file'])) {
-                foreach (['class','type','function'] as $info) {
+                foreach (['class', 'type', 'function'] as $info) {
                     if (!isset($step[$info])) {
                         continue;
                     }
@@ -385,7 +390,7 @@ class Console implements EventSubscriberInterface
      */
     protected function buildResultsTable(SuiteEvent $e)
     {
-        $this->columns = array(40, 5);
+        $this->columns = [40, 5];
         foreach ($e->getSuite()->tests() as $test) {
             if ($test instanceof TestCase) {
                 $this->columns[0] = max(
@@ -402,7 +407,7 @@ class Console implements EventSubscriberInterface
 
                 $this->columns[0] = max(
                     $this->columns[0],
-                    15 +$output_length
+                    15 + $output_length
                 );
                 continue;
             }
@@ -433,7 +438,7 @@ class Console implements EventSubscriberInterface
             ->prepend($inProgress ? 'Running ' : '')
             ->with($filename);
     }
-    
+
     protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)
     {
         if (!$this->isDetailed($test) and $this->output->isInteractive()) {
@@ -452,7 +457,7 @@ class Console implements EventSubscriberInterface
         if ($this->output->isInteractive()) {
             $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
             return;
-        } 
+        }
         if ($this->message) {
             $this->message('')->width($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
         }

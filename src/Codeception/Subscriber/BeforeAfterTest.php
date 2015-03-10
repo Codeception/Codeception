@@ -1,12 +1,12 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\Event\TestEvent;
-use Codeception\Events;
 use Codeception\Event\SuiteEvent;
+use Codeception\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class BeforeAfterTest implements EventSubscriberInterface {
+class BeforeAfterTest implements EventSubscriberInterface
+{
     use Shared\StaticEvents;
 
     static $events = [
@@ -19,7 +19,7 @@ class BeforeAfterTest implements EventSubscriberInterface {
     public function beforeClass(SuiteEvent $e)
     {
         foreach ($e->getSuite()->tests() as $test) {
-            /** @var $test \PHPUnit_Framework_Test  **/
+            /** @var $test \PHPUnit_Framework_Test  * */
             $testClass = get_class($test);
             $this->hooks[$testClass] = \PHPUnit_Util_Test::getHookMethods($testClass);
         }

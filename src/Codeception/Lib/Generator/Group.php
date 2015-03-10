@@ -3,7 +3,8 @@ namespace Codeception\Lib\Generator;
 
 use Codeception\Util\Template;
 
-class Group {
+class Group
+{
 
     use Shared\Namespaces;
     use Shared\Classname;
@@ -45,10 +46,10 @@ EOF;
     {
         $this->settings = $settings;
         $this->name = $name;
-        $this->namespace = $this->getNamespaceString($this->settings['namespace'].'\\Group\\'.$name);
+        $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
 
     }
-    
+
     public function produce()
     {
         return (new Template($this->template))

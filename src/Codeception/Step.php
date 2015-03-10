@@ -21,7 +21,7 @@ abstract class Step
 
     public function __construct($action, array $arguments)
     {
-        $this->action    = $action;
+        $this->action = $action;
         $this->arguments = $arguments;
     }
 
@@ -41,7 +41,7 @@ abstract class Step
         return ($asString) ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
     }
 
-    protected function getArgumentsAsString(array $arguments) 
+    protected function getArgumentsAsString(array $arguments)
     {
         foreach ($arguments as $key => $argument) {
             $arguments[$key] = (is_string($argument)) ? $argument : $this->parseArgumentAsString($argument);
@@ -59,7 +59,7 @@ abstract class Step
         if (is_object($argument) && method_exists($argument, '__toString')) {
             return (string)$argument;
         } elseif (is_callable($argument, true)) {
-            return 'lambda function';  
+            return 'lambda function';
         } elseif (!is_object($argument)) {
             return $argument;
         }
@@ -117,12 +117,12 @@ abstract class Step
         if (!$container) {
             return null;
         }
-        $activeModule   = $container->moduleForAction($this->action);
+        $activeModule = $container->moduleForAction($this->action);
 
-        if (!is_callable(array($activeModule, $this->action))) {
+        if (!is_callable([$activeModule, $this->action])) {
             throw new \RuntimeException("Action '{$this->action}' can't be called");
-        } 
-        
-        return call_user_func_array(array($activeModule, $this->action), $this->arguments);
+        }
+
+        return call_user_func_array([$activeModule, $this->action], $this->arguments);
     }
 }

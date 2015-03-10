@@ -3,8 +3,8 @@ namespace Codeception\Module;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfig;
-use Codeception\TestCase;
 use Codeception\Lib\InnerBrowser;
+use Codeception\TestCase;
 
 /**
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
@@ -55,14 +55,14 @@ class Silex extends InnerBrowser
 
     public function _initialize()
     {
-        if (!file_exists(Configuration::projectDir().$this->config['app'])) {
+        if (!file_exists(Configuration::projectDir() . $this->config['app'])) {
             throw new ModuleConfig(__CLASS__, "Bootstrap file {$this->config['app']} not found");
         }
     }
 
     public function _before(TestCase $test)
     {
-        $this->app = require Configuration::projectDir().$this->config['app'];
+        $this->app = require Configuration::projectDir() . $this->config['app'];
 
         // if $app is not returned but exists
         if (isset($app)) {

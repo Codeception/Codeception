@@ -4,9 +4,9 @@ namespace Codeception\Command;
 use Codeception\Configuration;
 use Codeception\Lib\Generator\StepObject as StepObjectGenerator;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
@@ -23,19 +23,21 @@ class GenerateStepObject extends Command
     use Shared\Config;
 
     protected function configure()
-     {
-         $this->setDefinition(array(
-             new InputArgument('suite', InputArgument::REQUIRED, 'Suite for StepObject'),
-             new InputArgument('step', InputArgument::REQUIRED, 'StepObject name'),
-             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-             new InputOption('silent', '',InputOption::VALUE_NONE, 'skip verification question'),
-         ));
-     }
+    {
+        $this->setDefinition(
+            [
+                new InputArgument('suite', InputArgument::REQUIRED, 'Suite for StepObject'),
+                new InputArgument('step', InputArgument::REQUIRED, 'StepObject name'),
+                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+                new InputOption('silent', '', InputOption::VALUE_NONE, 'skip verification question'),
+            ]
+        );
+    }
 
-     public function getDescription()
-     {
-         return 'Generates empty StepObject class';
-     }
+    public function getDescription()
+    {
+        return 'Generates empty StepObject class';
+    }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -45,14 +47,14 @@ class GenerateStepObject extends Command
 
         $class = $this->getClassName($step);
 
-        $path = $this->buildPath(Configuration::supportDir().'Step'. DIRECTORY_SEPARATOR . ucfirst($suite), $step);
+        $path = $this->buildPath(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
 
-        $filename = $path.$class.'.php';
+        $filename = $path . $class . '.php';
 
         $helper = $this->getHelper('question');
         $question = new Question("Add action to StepObject class (ENTER to exit): ");
 
-        $gen = new StepObjectGenerator($config, ucfirst($suite) .'\\' . $step);
+        $gen = new StepObjectGenerator($config, ucfirst($suite) . '\\' . $step);
 
         if (!$input->getOption('silent')) {
             do {

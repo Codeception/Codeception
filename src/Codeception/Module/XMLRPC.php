@@ -2,8 +2,8 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleRequire as ModuleRequireException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
+use Codeception\Exception\ModuleRequire as ModuleRequireException;
 
 /**
  * Module for testing XMLRPC WebService.
@@ -39,7 +39,7 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
  */
 class XMLRPC extends \Codeception\Module
 {
-    protected $config = array('url' => "");
+    protected $config = ['url' => ""];
 
     /**
      * @var \Symfony\Component\BrowserKit\Client
@@ -47,8 +47,8 @@ class XMLRPC extends \Codeception\Module
     public $client = null;
     public $is_functional = false;
 
-    public $headers = array();
-    public $params = array();
+    public $headers = [];
+    public $params = [];
     public $response = "";
 
     public function _initialize()
@@ -82,11 +82,11 @@ class XMLRPC extends \Codeception\Module
             }
         }
 
-        $this->headers = array();
-        $this->params = array();
+        $this->headers = [];
+        $this->params = [];
         $this->response = '';
 
-        $this->client->setServerParameters(array());
+        $this->client->setServerParameters([]);
     }
 
     /**
@@ -95,7 +95,8 @@ class XMLRPC extends \Codeception\Module
      * @param string $name
      * @param string $value
      */
-    public function haveHttpHeader($name, $value) {
+    public function haveHttpHeader($name, $value)
+    {
         $this->headers[$name] = $value;
     }
 
@@ -104,7 +105,8 @@ class XMLRPC extends \Codeception\Module
      *
      * @param $num
      */
-    public function seeResponseCodeIs($num) {
+    public function seeResponseCodeIs($num)
+    {
         \PHPUnit_Framework_Assert::assertEquals($num, $this->client->getInternalResponse()->getStatus());
     }
 
@@ -113,7 +115,8 @@ class XMLRPC extends \Codeception\Module
      * This is done with xmlrpc_decode function.
      *
      */
-    public function seeResponseIsXMLRPC() {
+    public function seeResponseIsXMLRPC()
+    {
         $result = xmlrpc_decode($this->response);
         \PHPUnit_Framework_Assert::assertNotNull($result, 'Invalid response document returned from XmlRpc server');
     }
@@ -124,8 +127,9 @@ class XMLRPC extends \Codeception\Module
      * @param string $methodName
      * @param array $parameters
      */
-    public function sendXMLRPCMethodCall($methodName, $parameters = array()) {
-        if (! array_key_exists('Content-Type', $this->headers)) {
+    public function sendXMLRPCMethodCall($methodName, $parameters = [])
+    {
+        if (!array_key_exists('Content-Type', $this->headers)) {
             $this->headers['Content-Type'] = 'text/xml';
         }
 
@@ -142,7 +146,7 @@ class XMLRPC extends \Codeception\Module
         $requestBody = xmlrpc_encode_request($methodName, array_values($parameters));
 
         $this->debugSection('Request', $url . PHP_EOL . $requestBody);
-        $this->client->request('POST', $url, array(), array(), array(), $requestBody);
+        $this->client->request('POST', $url, [], [], [], $requestBody);
 
         $this->response = $this->client->getInternalResponse()->getContent();
         $this->debugSection('Response', $this->response);

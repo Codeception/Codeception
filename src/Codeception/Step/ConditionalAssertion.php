@@ -5,7 +5,8 @@ namespace Codeception\Step;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\ModuleContainer;
 
-class ConditionalAssertion extends Assertion {
+class ConditionalAssertion extends Assertion
+{
 
     public function run(ModuleContainer $container = null)
     {
@@ -18,7 +19,7 @@ class ConditionalAssertion extends Assertion {
 
     public function getAction()
     {
-        return 'can'.ucfirst($this->action);
+        return 'can' . ucfirst($this->action);
     }
 
     public function getHumanizedAction()

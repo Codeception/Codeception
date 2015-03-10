@@ -1,11 +1,11 @@
 <?php
 namespace Codeception\Subscriber;
 
-use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Lib\Suite;
 use Codeception\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,7 +24,7 @@ class Module implements EventSubscriberInterface
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::SUITE_AFTER  => 'afterSuite'
     ];
-    
+
     protected $modules = [];
 
     public function beforeSuite(SuiteEvent $e)

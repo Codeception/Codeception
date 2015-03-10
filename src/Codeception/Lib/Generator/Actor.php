@@ -64,7 +64,7 @@ EOF;
 
     protected function prependAbstractGuyDocBlocks()
     {
-        $inherited = array();
+        $inherited = [];
 
         $class = new \ReflectionClass('\Codeception\\Actor');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -92,7 +92,7 @@ EOF;
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
-        $params = array();
+        $params = [];
         foreach ($refMethod->getParameters() as $param) {
 
             if ($param->isOptional()) {

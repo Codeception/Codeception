@@ -5,15 +5,15 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Exception\TestRuntime;
-use Codeception\Util\Debug;
-use Codeception\Util\Locator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
-use Codeception\Lib\Interfaces\Web as WebInterface;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
-use Symfony\Component\DomCrawler\Crawler;
+use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\PHPUnit\Constraint\Page as PageConstraint;
+use Codeception\Util\Debug;
+use Codeception\Util\Locator;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * New generation Selenium WebDriver module.
@@ -65,31 +65,31 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
- *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64' 
+ *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
  *
  *
  * ## Locating Elements
- * 
+ *
  * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
- * 
+ *
  * If the locator is an array, it should have a single element, with the key signifying the locator type (`id`, `name`, `css`, `xpath`, `link`, or `class`) and the value being the locator itself. This is called a "strict" locator. Examples:
- * 
+ *
  * * `['id' => 'foo']` matches `<div id="foo">`
  * * `['name' => 'foo']` matches `<div name="foo">`
  * * `['css' => 'input[type=input][value=foo]']` matches `<input type="input" value="foo">`
  * * `['xpath' => "//input[@type='submit'][contains(@value, 'foo')]"]` matches `<input type="submit" value="foobar">`
  * * `['link' => 'Click here']` matches `<a href="google.com">Click here</a>`
  * * `['class' => 'foo']` matches `<div class="foo">`
- * 
+ *
  * Writing good locators can be tricky. The Mozilla team has written an excellent guide titled [Writing reliable locators for Selenium and WebDriver tests](https://blog.mozilla.org/webqa/2013/09/26/writing-reliable-locators-for-selenium-and-webdriver-tests/).
- * 
+ *
  * If you prefer, you may also pass a string for the locator. This is called a "fuzzy" locator. In this case, Codeception uses a a variety of heuristics (depending on the exact method called) to determine what element you're referring to. For example, here's the heuristic used for the `submitForm` method:
- * 
+ *
  * 1. Does the locator look like an ID selector (e.g. "#foo")? If so, try to find a form matching that ID.
  * 2. If nothing found, check if locator looks like a CSS selector. If so, run it.
  * 3. If nothing found, check if locator looks like an XPath expression. If so, run it.
  * 4. Throw an `ElementNotFound` exception.
- * 
+ *
  * Be warned that fuzzy locators can be significantly slower than strict locators. If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
  *
  * ## Migration Guide (Selenium2 -> WebDriver)
@@ -102,16 +102,16 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface
 {
 
-    protected $requiredFields = array('browser', 'url');
-    protected $config = array(
-        'host' => '127.0.0.1',
-        'port' => '4444',
-        'restart' => false,
-        'wait' => 0,
+    protected $requiredFields = ['browser', 'url'];
+    protected $config = [
+        'host'          => '127.0.0.1',
+        'port'          => '4444',
+        'restart'       => false,
+        'wait'          => 0,
         'clear_cookies' => true,
-        'window_size' => false,
-        'capabilities' => array()
-    );
+        'window_size'   => false,
+        'capabilities'  => []
+    ];
 
     protected $wd_host;
     protected $capabilities;
@@ -182,9 +182,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $filename = str_replace(['::', '\\', '/'],['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
-        $this->_saveScreenshot(codecept_output_dir().$filename.'.png');
-        file_put_contents(codecept_output_dir().$filename.'.html', $this->webDriver->getPageSource());
+        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
+        $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
+        file_put_contents(codecept_output_dir() . $filename . '.html', $this->webDriver->getPageSource());
         $this->debug("Screenshot and HTML snapshot were saved into '_output' dir");
     }
 
@@ -202,7 +202,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $url = $this->config['url'];
         $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
         $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
-        $this->_reconfigure(array('url' => $url));
+        $this->_reconfigure(['url' => $url]);
     }
 
     public function _getUrl()
@@ -285,7 +285,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function seeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_map(function ($c) { return $c['name']; }, $cookies);
+        $cookies = array_map(
+            function ($c) {
+                return $c['name'];
+            }, $cookies
+        );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
     }
@@ -293,7 +297,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function dontSeeCookie($cookie, array $params = [])
     {
         $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
-        $cookies = array_map(function ($c) { return $c['name']; }, $cookies);
+        $cookies = array_map(
+            function ($c) {
+                return $c['name'];
+            }, $cookies
+        );
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertNotContains($cookie, $cookies);
     }
@@ -325,11 +333,15 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     protected function filterCookies($cookies, $params = [])
     {
-        foreach (['domain' ,'path', 'name'] as $filter) {
-            if (!isset($params[$filter])) continue;
-            $cookies = array_filter($cookies, function ($item) use ($filter, $params) {
-                return $item[$filter] == $params[$filter];
-            });
+        foreach (['domain', 'path', 'name'] as $filter) {
+            if (!isset($params[$filter])) {
+                continue;
+            }
+            $cookies = array_filter(
+                $cookies, function ($item) use ($filter, $params) {
+                    return $item[$filter] == $params[$filter];
+                }
+            );
         }
         return $cookies;
     }
@@ -340,7 +352,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
             throw new TestRuntime("Wrong URL passes, host and scheme not set");
         }
-        $host = $urlParts['scheme'].'://'.$urlParts['host'];
+        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
         $this->_reconfigure(['url' => $host]);
         $this->debugSection('Host', $host);
         $this->webDriver->get($url);
@@ -350,13 +362,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $build = parse_url($this->config['url']);
         $uriparts = parse_url($page);
-        
+
         if ($build === false) {
             throw new \Codeception\Exception\TestRuntime("URL '{$this->config['url']}' is malformed");
         } elseif ($uriparts === false) {
             throw new \Codeception\Exception\TestRuntime("URI '{$page}' is malformed");
         }
-        
+
         foreach ($uriparts as $part => $value) {
             if ($part === 'path' && !empty($build[$part])) {
                 $build[$part] = rtrim($build[$part], '/') . '/' . ltrim($value, '/');
@@ -530,7 +542,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
         throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
     }
-    
+
     /**
      * @param $selector
      * @return \WebDriverElement
@@ -603,7 +615,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!$uri) {
             return $this->_getCurrentUri();
         }
-        $matches = array();
+        $matches = [];
         $res = preg_match($uri, $this->_getCurrentUri(), $matches);
         if (!$res) {
             $this->fail("Couldn't match $uri in " . $this->_getCurrentUri());
@@ -633,7 +645,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $this->assertNot($this->proceedSeeInField($field, $value));
     }
-    
+
     protected function proceedSeeInField($field, $value)
     {
         $els = $this->findFields($field);
@@ -641,7 +653,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $select = new \WebDriverSelect(reset($els));
             $els = $select->getAllSelectedOptions();
         }
-        
+
         $currentValues = [];
         if (is_bool($value)) {
             $currentValues = [false];
@@ -663,13 +675,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 $currentValues[] = $el->getAttribute('value');
             }
         }
-        
+
         $strField = $field;
         if (is_array($field)) {
             $ident = reset($field);
             $strField = key($field) . '=>' . $ident;
         }
-        
+
         return [
             'Contains',
             $value,
@@ -702,7 +714,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $wdSelect->deselectAll();
         }
         if (!is_array($option)) {
-            $option = array($option);
+            $option = [$option];
         }
 
         $matched = false;
@@ -779,7 +791,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $wdSelect = new \WebDriverSelect($el);
 
         if (!is_array($option)) {
-            $option = array($option);
+            $option = [$option];
         }
 
         $matched = false;
@@ -971,14 +983,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return $els;
     }
 
-    public function seeElement($selector, $attributes = array())
+    public function seeElement($selector, $attributes = [])
     {
         $els = $this->matchVisible($selector);
         $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
 
-    public function dontSeeElement($selector, $attributes = array())
+    public function dontSeeElement($selector, $attributes = [])
     {
         $els = $this->matchVisible($selector);
         $els = $this->filterByAttributes($els, $attributes);
@@ -996,7 +1008,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param $selector
      */
-    public function seeElementInDOM($selector, $attributes = array())
+    public function seeElementInDOM($selector, $attributes = [])
     {
         $els = $this->match($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
@@ -1009,7 +1021,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param $selector
      */
-    public function dontSeeElementInDOM($selector, $attributes = array())
+    public function dontSeeElementInDOM($selector, $attributes = [])
     {
         $els = $this->match($this->webDriver, $selector);
         $els = $this->filterByAttributes($els, $attributes);
@@ -1164,7 +1176,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * in the request with the last parameter as an alternative to
      * explicitly setting its value in the second parameter, as
      * button values are not otherwise included in the request.
-     * 
+     *
      * Examples:
      *
      * ``` php
@@ -1195,13 +1207,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * ```
      * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
-     * 
+     *
      * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
-     * 
+     *
      * ```php
      * <?php
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-     * 
+     *
      * ```
      *
      * @param $selector
@@ -1258,11 +1270,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 $submitted = true;
             }
         }
-        
+
         if (!$submitted) {
             $form->submit();
         }
-        
+
         $this->debugSection('Page', $this->_getCurrentUri());
     }
 
@@ -1633,7 +1645,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 return $page->findElements($this->getStrictLocator($selector));
             } catch (\InvalidSelectorException $e) {
-                throw new MalformedLocator(key($selector).' => '.reset($selector), "Strict locator");
+                throw new MalformedLocator(key($selector) . ' => ' . reset($selector), "Strict locator");
             }
         }
         if ($selector instanceof \WebDriverBy) {
@@ -1689,7 +1701,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             case 'class':
                 return \WebDriverBy::className($locator);
             default:
-                throw new MalformedLocator("$by => $locator",
+                throw new MalformedLocator(
+                    "$by => $locator",
                     "Strict locator can be either xpath, css, id, link, class, name: "
                 );
         }
@@ -1711,8 +1724,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Presses the given key on the given element. 
-     * To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with 
+     * Presses the given key on the given element.
+     * To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with
      * the modifier as the first element and the character as the second.
      * For special keys use key constants from \WebDriverKeys class.
      *
@@ -1736,7 +1749,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $el = $this->matchFirstOrFail($this->webDriver, $element);
         $args = func_get_args();
         array_shift($args);
-        $keys = array();
+        $keys = [];
         foreach ($args as $key) {
             $keys[] = $this->convertKeyModifier($key);
         }
@@ -1756,13 +1769,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         switch ($modifier) {
             case 'ctrl':
             case 'control':
-                return array(\WebDriverKeys::CONTROL, $key);
+                return [\WebDriverKeys::CONTROL, $key];
             case 'alt':
-                return array(\WebDriverKeys::ALT, $key);
+                return [\WebDriverKeys::ALT, $key];
             case 'shift':
-                return array(\WebDriverKeys::SHIFT, $key);
+                return [\WebDriverKeys::SHIFT, $key];
             case 'meta':
-                return array(\WebDriverKeys::META, $key);
+                return [\WebDriverKeys::META, $key];
         }
         return $keys;
     }

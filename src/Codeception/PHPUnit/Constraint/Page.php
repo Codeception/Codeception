@@ -9,14 +9,14 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
 
     public function __construct($string, $uri = '')
     {
-        $this->string     = (string)$string;
+        $this->string = (string)$string;
         $this->uri = $uri;
         $this->ignoreCase = true;
     }
 
     protected function failureDescription($other)
     {
-        $page = substr($other,0,300);
+        $page = substr($other, 0, 300);
         $message = new Message($page);
         $message->style('info');
         $message->prepend("\n--> ");
@@ -32,7 +32,9 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
 
     protected function uriMessage($onPage = "")
     {
-        if (!$this->uri) return "";
+        if (!$this->uri) {
+            return "";
+        }
         $message = new Message($this->uri);
         $message->style('bold');
         $message->prepend(" $onPage ");

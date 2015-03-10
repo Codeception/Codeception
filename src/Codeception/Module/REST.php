@@ -36,7 +36,7 @@ use Symfony\Component\BrowserKit\Cookie;
  *        enabled: [PhpBrowser, REST]
  *        config:
  *           PhpBrowser:
-                url: http://serviceapp/
+ * url: http://serviceapp/
  *           REST:
  *              url: 'http://serviceapp/api/v1/'
  *
@@ -50,10 +50,10 @@ use Symfony\Component\BrowserKit\Cookie;
  */
 class REST extends \Codeception\Module
 {
-    protected $config = array(
-        'url'                 => '',
-        'xdebug_remote'       => false
-    );
+    protected $config = [
+        'url'           => '',
+        'xdebug_remote' => false
+    ];
 
     /**
      * @var \Symfony\Component\HttpKernel\Client|\Symfony\Component\BrowserKit\Client
@@ -62,8 +62,8 @@ class REST extends \Codeception\Module
     public $isFunctional = false;
     protected $connectionModule;
 
-    public $headers = array();
-    public $params = array();
+    public $headers = [];
+    public $params = [];
     public $response = "";
 
 
@@ -85,11 +85,11 @@ class REST extends \Codeception\Module
 
     protected function resetVariables()
     {
-        $this->headers = array();
-        $this->params = array();
+        $this->headers = [];
+        $this->params = [];
         $this->response = "";
         if ($this->client) {
-            $this->client->setServerParameters(array());
+            $this->client->setServerParameters([]);
         }
     }
 
@@ -130,7 +130,8 @@ class REST extends \Codeception\Module
      * @param $name
      * @param $value
      */
-    public function dontSeeHttpHeader($name, $value = null) {
+    public function dontSeeHttpHeader($name, $value = null)
+    {
         if ($value !== null) {
             $this->assertNotEquals(
                 $this->client->getInternalResponse()->getHeader($name),
@@ -164,11 +165,12 @@ class REST extends \Codeception\Module
      * Returns the value of the specified header name
      *
      * @param $name
-     * @param Boolean $first  Whether to return the first value or all header values
+     * @param Boolean $first Whether to return the first value or all header values
      *
      * @return string|array The first header value if $first is true, an array of values otherwise
      */
-    public function grabHttpHeader($name, $first = true) {
+    public function grabHttpHeader($name, $first = true)
+    {
         return $this->client->getInternalResponse()->getHeader($name, $first);
     }
 
@@ -188,16 +190,16 @@ class REST extends \Codeception\Module
         }
     }
 
-	/**
-	 * Adds Digest authentication via username/password.
-	 *
-	 * @param $username
-	 * @param $password
-	 */
-	public function amDigestAuthenticated($username, $password)
-	{
-		$this->client->setAuth($username, $password, CURLAUTH_DIGEST);
-	}
+    /**
+     * Adds Digest authentication via username/password.
+     *
+     * @param $username
+     * @param $password
+     */
+    public function amDigestAuthenticated($username, $password)
+    {
+        $this->client->setAuth($username, $password, CURLAUTH_DIGEST);
+    }
 
     /**
      * Adds Bearer authentication via access token.
@@ -206,9 +208,9 @@ class REST extends \Codeception\Module
      */
     public function amBearerAuthenticated($accessToken)
     {
-        $this->haveHttpHeader('Authorization', 'Bearer '.$accessToken);
+        $this->haveHttpHeader('Authorization', 'Bearer ' . $accessToken);
     }
-    
+
     /**
      * Sends a POST request to given uri.
      *
@@ -218,7 +220,7 @@ class REST extends \Codeception\Module
      * @param array|\JsonSerializable $params
      * @param array $files
      */
-    public function sendPOST($url, $params = array(), $files = array())
+    public function sendPOST($url, $params = [], $files = [])
     {
         $this->execute('POST', $url, $params, $files);
     }
@@ -229,7 +231,7 @@ class REST extends \Codeception\Module
      * @param $url
      * @param array $params
      */
-    public function sendHEAD($url, $params = array())
+    public function sendHEAD($url, $params = [])
     {
         $this->execute('HEAD', $url, $params);
     }
@@ -240,7 +242,7 @@ class REST extends \Codeception\Module
      * @param $url
      * @param array $params
      */
-    public function sendOPTIONS($url, $params = array())
+    public function sendOPTIONS($url, $params = [])
     {
         $this->execute('OPTIONS', $url, $params);
     }
@@ -251,7 +253,7 @@ class REST extends \Codeception\Module
      * @param $url
      * @param array $params
      */
-    public function sendGET($url, $params = array())
+    public function sendGET($url, $params = [])
     {
         $this->execute('GET', $url, $params);
     }
@@ -263,7 +265,7 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendPUT($url, $params = array(), $files = array())
+    public function sendPUT($url, $params = [], $files = [])
     {
         $this->execute('PUT', $url, $params, $files);
     }
@@ -275,7 +277,7 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendPATCH($url, $params = array(), $files = array())
+    public function sendPATCH($url, $params = [], $files = [])
     {
         $this->execute('PATCH', $url, $params, $files);
     }
@@ -287,7 +289,7 @@ class REST extends \Codeception\Module
      * @param array $params
      * @param array $files
      */
-    public function sendDELETE($url, $params = array(), $files = array())
+    public function sendDELETE($url, $params = [], $files = [])
     {
         $this->execute('DELETE', $url, $params, $files);
     }
@@ -303,7 +305,7 @@ class REST extends \Codeception\Module
      */
     private function setHeaderLink(array $linkEntries)
     {
-        $values = array();
+        $values = [];
         foreach ($linkEntries as $linkEntry) {
             \PHPUnit_Framework_Assert::assertArrayHasKey(
                 'uri',
@@ -351,10 +353,10 @@ class REST extends \Codeception\Module
         $this->execute('UNLINK', $url);
     }
 
-    protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
+    protected function execute($method = 'GET', $url, $parameters = [], $files = [])
     {
         foreach ($this->headers as $header => $val) {
-            $header = str_replace('-','_',strtoupper($header));
+            $header = str_replace('-', '_', strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
 
             // Issue #1650 - Symfony BrowserKit changes HOST header to request URL
@@ -372,23 +374,23 @@ class REST extends \Codeception\Module
         $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
 
         $this->params = $parameters;
-        
+
         $parameters = $this->encodeApplicationJson($method, $parameters);
 
         if (is_array($parameters) || $method == 'GET') {
             if (!empty($parameters) && $method == 'GET') {
                 $url .= '?' . http_build_query($parameters);
             }
-            if($method == 'GET') {
+            if ($method == 'GET') {
                 $this->debugSection("Request", "$method $url");
             } else {
-                $this->debugSection("Request", "$method $url ".json_encode($parameters));
+                $this->debugSection("Request", "$method $url " . json_encode($parameters));
             }
             $this->client->request($method, $url, $parameters, $files);
 
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
-            $this->client->request($method, $url, array(), $files, array(), $parameters);
+            $this->client->request($method, $url, [], $files, [], $parameters);
         }
         $this->response = (string)$this->client->getInternalResponse()->getContent();
         $this->debugSection("Response", $this->response);
@@ -431,6 +433,7 @@ class REST extends \Codeception\Module
             "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
         );
     }
+
     /**
      * Checks whether last response was valid XML.
      * This is done with libxml_get_last_error function.
@@ -440,17 +443,18 @@ class REST extends \Codeception\Module
     {
         libxml_use_internal_errors(true);
         $doc = simplexml_load_string($this->response);
-        $num="";
-        $title="";
-        if ($doc===false) {
+        $num = "";
+        $title = "";
+        if ($doc === false) {
             $error = libxml_get_last_error();
-            $num=$error->code;
-            $title=trim($error->message);
+            $num = $error->code;
+            $title = trim($error->message);
             libxml_clear_errors();
         }
         libxml_use_internal_errors(false);
-        \PHPUnit_Framework_Assert::assertNotSame(false,
-            $doc ,
+        \PHPUnit_Framework_Assert::assertNotSame(
+            false,
+            $doc,
             "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
         );
     }
@@ -498,14 +502,14 @@ class REST extends \Codeception\Module
      *
      * @param array $json
      */
-    public function seeResponseContainsJson($json = array())
+    public function seeResponseContainsJson($json = [])
     {
         $jsonResponseArray = new JsonArray($this->response);
         \PHPUnit_Framework_Assert::assertTrue(
             $jsonResponseArray->containsArray($json),
             "Response JSON contains provided\n"
-            ."- <info>".var_export($json, true)."</info>\n"
-            ."+ ".var_export($jsonResponseArray->toArray(), true)
+            . "- <info>" . var_export($json, true) . "</info>\n"
+            . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
     }
 
@@ -642,8 +646,10 @@ class REST extends \Codeception\Module
      */
     public function seeResponseJsonMatchesXpath($xpath)
     {
-        $this->assertGreaterThan(0, (new JsonArray($this->response))->filterByXPath($xpath)->length,
-            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n".$this->response);
+        $this->assertGreaterThan(
+            0, (new JsonArray($this->response))->filterByXPath($xpath)->length,
+            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $this->response
+        );
     }
 
     /**
@@ -690,8 +696,10 @@ class REST extends \Codeception\Module
      */
     public function seeResponseJsonMatchesJsonPath($jsonPath)
     {
-        $this->assertNotEmpty((new JsonArray($this->response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath provided\n".$this->response);
+        $this->assertNotEmpty(
+            (new JsonArray($this->response))->filterByJsonPath($jsonPath),
+            "Received JSON did not match the JsonPath provided\n" . $this->response
+        );
     }
 
     /**
@@ -701,8 +709,10 @@ class REST extends \Codeception\Module
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
     {
-        $this->assertEmpty((new JsonArray($this->response))->filterByJsonPath($jsonPath),
-            "Received JSON did (but should not) match the JsonPath provided\n".$this->response);
+        $this->assertEmpty(
+            (new JsonArray($this->response))->filterByJsonPath($jsonPath),
+            "Received JSON did (but should not) match the JsonPath provided\n" . $this->response
+        );
     }
 
     /**
@@ -710,14 +720,14 @@ class REST extends \Codeception\Module
      *
      * @param array $json
      */
-    public function dontSeeResponseContainsJson($json = array())
+    public function dontSeeResponseContainsJson($json = [])
     {
         $jsonResponseArray = new JsonArray($this->response);
         \PHPUnit_Framework_Assert::assertFalse(
             $jsonResponseArray->containsArray($json),
             "Response JSON does not contain JSON provided\n"
-            ."- <info>".var_export($json, true)."</info>\n"
-            ."+ ".var_export($jsonResponseArray->toArray(), true)
+            . "- <info>" . var_export($json, true) . "</info>\n"
+            . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
     }
 

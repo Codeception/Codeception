@@ -25,10 +25,10 @@ class SuiteEvent extends Event
     public function __construct(
         \PHPUnit_Framework_TestSuite $suite,
         \PHPUnit_Framework_TestResult $result = null,
-        $settings = array()
+        $settings = []
     ) {
-        $this->suite    = $suite;
-        $this->result   = $result;
+        $this->suite = $suite;
+        $this->result = $result;
         $this->settings = $settings;
     }
 

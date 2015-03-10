@@ -12,7 +12,7 @@ class SqliteGeneral extends Db
     {
         parent::__construct($dsn, $user, $password);
         $this->filename = \Codeception\Configuration::projectDir() . substr($this->dsn, 7);
-        $this->dsn      = 'sqlite:' . $this->filename;
+        $this->dsn = 'sqlite:' . $this->filename;
     }
 
     public function cleanup()

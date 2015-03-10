@@ -2,12 +2,12 @@
 namespace Codeception\Command;
 
 use Codeception\Configuration;
+use Codeception\Lib\Generator\Group as GroupGenerator;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Codeception\Lib\Generator\Group as GroupGenerator;
 
 /**
  * Creates empty Group file - extension which handles all group events.
@@ -21,13 +21,16 @@ class GenerateGroup extends Command
 
     protected function configure()
     {
-        $this->setDefinition(array(
-            new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-        ));
+        $this->setDefinition(
+            [
+                new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
+                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            ]
+        );
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return 'Generates Group subscriber';
     }
 
@@ -37,9 +40,9 @@ class GenerateGroup extends Command
         $group = $input->getArgument('group');
 
         $class = ucfirst($group);
-        $path = $this->buildPath(Configuration::supportDir().'Group'. DIRECTORY_SEPARATOR, $class);
+        $path = $this->buildPath(Configuration::supportDir() . 'Group' . DIRECTORY_SEPARATOR, $class);
 
-        $filename = $path.$class.'.php';
+        $filename = $path . $class . '.php';
 
         $gen = new GroupGenerator($config, $group);
         $res = $this->save($filename, $gen->produce());

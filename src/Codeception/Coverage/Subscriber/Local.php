@@ -1,9 +1,9 @@
 <?php
 namespace Codeception\Coverage\Subscriber;
 
-use Codeception\Events;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
+use Codeception\Events;
 
 /**
  * Collects code coverage from unit and functional tests.
@@ -13,7 +13,7 @@ class Local extends SuiteSubscriber
 {
     static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
-        Events::SUITE_AFTER => 'afterSuite',
+        Events::SUITE_AFTER  => 'afterSuite',
     ];
 
     protected function isEnabled()
