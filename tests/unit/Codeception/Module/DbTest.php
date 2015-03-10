@@ -15,7 +15,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->module = new \Codeception\Module\Db();
+        $this->module = new \Codeception\Module\Db(make_container());
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
 //        $this->loadDump(); // enable this when you want to change fixtures
@@ -30,11 +30,13 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $sqlite->load($sql);
     }
 
-    public function testSeeInDatabase() {
+    public function testSeeInDatabase()
+    {
         $this->module->seeInDatabase('users', array('name' => 'davert'));
     }
 
-    public function testDontSeeInDatabase() {
+    public function testDontSeeInDatabase()
+    {
         $this->module->dontSeeInDatabase('users', array('name' => 'user1'));
     }
 

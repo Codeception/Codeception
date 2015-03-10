@@ -111,9 +111,12 @@ abstract class Step
         return strtolower($text);
     }
 
-    public function run(ModuleContainer $container)
+    public function run(ModuleContainer $container = null)
     {
         $this->executed = true;
+        if (!$container) {
+            return null;
+        }
         $activeModule   = $container->moduleForAction($this->action);
 
         if (!is_callable(array($activeModule, $this->action))) {

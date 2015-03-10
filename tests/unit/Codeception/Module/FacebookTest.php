@@ -40,7 +40,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->module = new Facebook;
+        $this->module = new Facebook(Stub::make('Codeception\Lib\ModuleContainer'));
         $this->module->_setConfig($this->config);
         $this->module->_initialize();
 

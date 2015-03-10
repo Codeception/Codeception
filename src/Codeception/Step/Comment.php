@@ -13,7 +13,7 @@ class Comment extends \Codeception\Step {
         return '<strong>' . $this->getAction(). '</strong>';
     }
 
-    public function run(ModuleContainer $container)
+    public function run(ModuleContainer $container = null)
     {
         // don't do anything, let's rest
     }

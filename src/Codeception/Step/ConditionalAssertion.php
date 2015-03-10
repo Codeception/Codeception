@@ -7,10 +7,10 @@ use Codeception\Lib\ModuleContainer;
 
 class ConditionalAssertion extends Assertion {
 
-    public function run(ModuleContainer $moduleContainer)
+    public function run(ModuleContainer $container = null)
     {
         try {
-            parent::run($moduleContainer);
+            parent::run($container);
         } catch (\PHPUnit_Framework_AssertionFailedError $e) {
             throw new ConditionalAssertionFailed($e->getMessage(), $e->getCode(), $e);
         }
