@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Step;
  
+use Codeception\Lib\ModuleContainer;
+
 class Comment extends \Codeception\Step {
 
 	public function __toString() {
@@ -11,7 +13,7 @@ class Comment extends \Codeception\Step {
         return '<strong>' . $this->getAction(). '</strong>';
     }
 
-    public function run()
+    public function run(ModuleContainer $container)
     {
         // don't do anything, let's rest
     }
