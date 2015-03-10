@@ -1,15 +1,25 @@
 <?php
 
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Stub;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class GenerateScenarioTest extends BaseCommandRunner {
+class GenerateScenarioTest extends BaseCommandRunner
+{
+
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
 
     protected function setUp()
     {
-        $this->modules = \Codeception\SuiteManager::$modules;
-        $this->actions = \Codeception\SuiteManager::$actions;
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
+        $this->moduleContainer->create('EmulateModuleHelper');
+
+        $this->modules = $this->moduleContainer->all();
+        $this->actions = $this->moduleContainer->getActions();
 
         $this->makeCommand('\Codeception\Command\GenerateScenarios');
         $this->config = array(
@@ -23,16 +33,10 @@ class GenerateScenarioTest extends BaseCommandRunner {
         );
     }
 
-    protected function tearDown()
-    {
-        \Codeception\SuiteManager::$modules = $this->modules;
-        \Codeception\SuiteManager::$actions = $this->actions;
-    }
-
     public function testBasic()
     {
         $this->execute(array('suite' => 'dummy'));
-        $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/dummy/File_Exists.txt', $this->filename);
+        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt', $this->filename);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('I see file found "$codeception"', $this->content);
         $this->assertContains('* File_Exists generated', $this->output);
@@ -41,7 +45,7 @@ class GenerateScenarioTest extends BaseCommandRunner {
     public function testHtml()
     {
         $this->execute(array('suite' => 'dummy', '--format' => 'html'));
-        $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/dummy/File_Exists.html', $this->filename);
+        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html', $this->filename);
         $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $this->content);
         $this->assertContains('I see file found "$codeception"', strip_tags($this->content));
         $this->assertContains('* File_Exists generated', $this->output);        
@@ -53,7 +57,7 @@ class GenerateScenarioTest extends BaseCommandRunner {
         $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(array('suite' => 'skipped', '--single-file' => true));
-        $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/skipped.txt', $this->filename);
+        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.txt', $this->filename);
         $this->assertContains('I WANT TO SKIP IT', $this->content);
         $this->assertContains('I WANT TO MAKE IT INCOMPLETE', $this->content);
         $this->assertContains('* Skip_Me rendered', $this->output);
@@ -66,7 +70,7 @@ class GenerateScenarioTest extends BaseCommandRunner {
         $this->config['class_name'] = 'SkipGuy';
 
         $this->execute(array('suite' => 'skipped', '--single-file' => true, '--format' => 'html'));
-        $this->assertEquals(\Codeception\Configuration::projectDir().'tests/data/scenarios/skipped.html', $this->filename);
+        $this->assertEquals(codecept_root_dir().'tests/data/scenarios/skipped.html', $this->filename);
         $this->assertContains('<h3>I WANT TO MAKE IT INCOMPLETE</h3>', $this->content);
         $this->assertContains('<h3>I WANT TO SKIP IT</h3>', $this->content);
         $this->assertContains('<body><h3>', $this->content);
@@ -83,6 +87,5 @@ class GenerateScenarioTest extends BaseCommandRunner {
         $this->assertContains('* File_Exists rendered', $this->output);
 
     }
-
 
 }

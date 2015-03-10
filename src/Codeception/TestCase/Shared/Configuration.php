@@ -12,6 +12,7 @@ trait Configuration
      * @var EventDispatcher
      */
     protected $dispatcher;
+
     protected $actor;
     protected $name;
     protected $testFile;

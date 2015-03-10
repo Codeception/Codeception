@@ -1,6 +1,8 @@
 <?php
 namespace Codeception;
 
+use Codeception\Lib\ModuleContainer;
+
 abstract class Step
 {
     /**
@@ -109,13 +111,13 @@ abstract class Step
         return strtolower($text);
     }
 
-    public function run()
+    public function run(ModuleContainer $container)
     {
         $this->executed = true;
-        $activeModule   = \Codeception\SuiteManager::$modules[\Codeception\SuiteManager::$actions[$this->action]];
+        $activeModule   = $container->moduleForAction($this->action);
 
         if (!is_callable(array($activeModule, $this->action))) {
-            throw new \RuntimeException("Action can't be called");  
+            throw new \RuntimeException("Action '{$this->action}' can't be called");
         } 
         
         return call_user_func_array(array($activeModule, $this->action), $this->arguments);

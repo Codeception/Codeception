@@ -7,6 +7,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Lib\Suite;
 use Codeception\SuiteManager;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase;
@@ -75,13 +76,15 @@ class Console implements EventSubscriberInterface
             ->prepend("\n")
             ->writeln();
 
-        $message = $this->message(implode(', ',array_map(function ($module) {
-            return $module->_getName();
-        }, SuiteManager::$modules)));
-
-        $message->style('info')
-            ->prepend('Modules: ')
-            ->writeln(OutputInterface::VERBOSITY_VERBOSE);
+        if ($e->getSuite() instanceof Suite) {
+            $message = $this->message(implode(', ',array_map(function ($module) {
+                return $module->_getName();
+            }, $e->getSuite()->getModules())));
+    
+            $message->style('info')
+                ->prepend('Modules: ')
+                ->writeln(OutputInterface::VERBOSITY_VERBOSE);
+        }
 
         $this->message('')->width(array_sum($this->columns), '-')->writeln(OutputInterface::VERBOSITY_VERBOSE);
 

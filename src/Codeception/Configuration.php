@@ -293,40 +293,6 @@ class Configuration
     }
 
     /**
-     * Creates new module and configures it.
-     * Module class is searched and resolves according following rules:
-     *
-     * 1. if "class" element is fully qualified class name (started with "\"), it will be taken to create module;
-     * 2. module class will be searched under Codeception module namespace, that is "\Codeception\Module".
-     *
-     * @param $class
-     * @param array $config module configuration
-     * @param string $namespace default namespace for module.
-     * @throws Exception\Configuration
-     * @return \Codeception\Module
-     */
-    public static function createModule($class, $config, $namespace = '')
-    {
-        $hasNamespace = (mb_strpos($class, '\\') !== false);
-
-        if ($hasNamespace) {
-            return self::DI()->instantiate($class, $config);
-        }
-
-        // try find module under users suite namespace setting
-        $className = $namespace.'\\Codeception\\Module\\' . $class;
-
-        if (!class_exists($className)) {
-            // fallback to default namespace
-            $className = '\\Codeception\\Module\\' . $class;
-            if (!class_exists($className)) {
-                throw new ConfigurationException($class.' could not be found and loaded');
-            }
-        }
-        return self::DI()->instantiate($className, $config);
-    }
-
-    /**
      * @return Di
      */
     public static function DI()
@@ -342,39 +308,6 @@ class Configuration
         return isset(self::$config['extensions'])
             && isset(self::$config['extensions']['enabled'])
             && in_array($extensionName, self::$config['extensions']['enabled']);
-    }
-
-    public static function actions($modules)
-    {
-        $actions = array();
-
-        foreach ($modules as $moduleName => $module) {
-            $class   = new \ReflectionClass($module);
-            $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
-            foreach ($methods as $method) {
-                $inherit = $class->getStaticPropertyValue('includeInheritedActions');
-                $only = $class->getStaticPropertyValue('onlyActions');
-                $exclude = $class->getStaticPropertyValue('excludeActions');
-
-                // exclude methods when they are listed as excluded
-                if (in_array($method->name, $exclude)) continue;
-
-                if (!empty($only)) {
-                    // skip if method is not listed
-                    if (!in_array($method->name, $only)) continue;
-                } else {
-                    // skip if method is inherited and inheritActions == false
-                    if (!$inherit and $method->getDeclaringClass() != $class) continue;
-                }
-
-                // those with underscore at the beginning are considered as hidden
-                if (strpos($method->name, '_') === 0) continue;
-
-                $actions[$method->name] = $moduleName;
-            }
-        }
-
-        return $actions;
     }
 
     /**

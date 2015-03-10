@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Step;
  
+use Codeception\Lib\ModuleContainer;
+
 class Executor extends \Codeception\Step {
 
     protected $callable = null;
@@ -13,7 +15,7 @@ class Executor extends \Codeception\Step {
         $this->callable = $callable;
     }
 
-    public function run()
+    public function run(ModuleContainer $container)
     {
         $callable = $this->callable;
 

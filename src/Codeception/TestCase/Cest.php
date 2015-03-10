@@ -20,11 +20,6 @@ class Cest extends \Codeception\TestCase implements
     protected $testClassInstance = null;
     protected $testMethod = null;
 
-    /**
-     * @var Di
-     */
-    protected $di;
-
     public function __construct(array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);

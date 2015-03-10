@@ -1,6 +1,9 @@
 <?php 
 namespace Codeception\Lib\Generator;
 use Codeception\Codecept;
+use Codeception\Configuration;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 
 class Actions
@@ -46,8 +49,13 @@ EOF;
     {
         $this->name = $settings['class_name'];
         $this->settings = $settings;
-        $this->modules = \Codeception\Configuration::modules($this->settings);
-        $this->actions = \Codeception\Configuration::actions($this->modules);
+        $this->di = new Di();
+        $modules = Configuration::modules($this->settings);
+        $this->moduleContainer = new ModuleContainer($this->di, $settings);
+        foreach ($modules as $moduleName) {
+            $this->modules[$moduleName] = $this->moduleContainer->create($moduleName);
+        }
+        $this->actions = $this->moduleContainer->getActions();
     }
 
 

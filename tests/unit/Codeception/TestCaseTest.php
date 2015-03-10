@@ -13,22 +13,37 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
      */
     protected $dispatcher;
 
+    /**
+     * @var \Codeception\Lib\ModuleContainer
+     */
+    protected $moduleContainer;
+
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
+        $di = new \Codeception\Lib\Di();
+        $this->moduleContainer = new \Codeception\Lib\ModuleContainer($di, []);
+        \Codeception\Module\EmulateModuleHelper::$onlyActions = [];
+        \Codeception\Module\EmulateModuleHelper::$excludeActions = [];
+        $module = $this->moduleContainer->create('EmulateModuleHelper');
+        $module->_initialize();
+
+
         $this->testcase = new \Codeception\TestCase\Cept;
         $this->testcase->configDispatcher($this->dispatcher)
             ->configName('mocked test')
-            ->configFile(\Codeception\Configuration::dataDir().'SimpleCept.php')
+            ->configFile(codecept_data_dir().'SimpleCept.php')
+            ->configDi($di)
+            ->configModules($this->moduleContainer)
             ->initConfig();
-
-        \Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions = 0;
     }
 
     /**
      * @group core
      */
-    public function testRunStepEvents() {
+    public function testRunStepEvents()
+    {
         $events = array();
+        codecept_debug($this->moduleContainer->getActions());
         $this->dispatcher->addListener('step.before', function () use (&$events) { $events[] = 'step.before'; });
         $this->dispatcher->addListener('step.after', function () use (&$events) { $events[] = 'step.after'; });
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
@@ -40,7 +55,7 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
      * @group core
      */
     public function testRunStep() {
-        $assertions = &\Codeception\SuiteManager::$modules['EmulateModuleHelper']->assertions;
+        $assertions = &$this->moduleContainer->getModule('EmulateModuleHelper')->assertions;
         $step = new \Codeception\Step\Action('seeEquals', array(5,5));
         $this->testcase->runStep($step);
         $this->assertEquals(1, $assertions);

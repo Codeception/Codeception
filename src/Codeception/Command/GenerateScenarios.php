@@ -45,7 +45,7 @@ class GenerateScenarios extends Command
     {
         $suite = $input->getArgument('suite');
 
-        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $suiteConf = $this->getSuiteConfig($suite, $input->getOption('config'));
 
         $path = $input->getOption('path')
             ? $input->getOption('path')
@@ -62,11 +62,11 @@ class GenerateScenarios extends Command
         $path = $path . DIRECTORY_SEPARATOR . $suite;
         if (!$input->getOption('single-file')) @mkdir($path);
 
-        $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteconf);
+        $suiteManager = new \Codeception\SuiteManager(new EventDispatcher(), $suite, $suiteConf);
 
-        if ($suiteconf['bootstrap']) {
-            if (file_exists($suiteconf['path'] . $suiteconf['bootstrap'])) {
-                require_once $suiteconf['path'] . $suiteconf['bootstrap'];
+        if ($suiteConf['bootstrap']) {
+            if (file_exists($suiteConf['path'] . $suiteConf['bootstrap'])) {
+                require_once $suiteConf['path'] . $suiteConf['bootstrap'];
             }
         }
 

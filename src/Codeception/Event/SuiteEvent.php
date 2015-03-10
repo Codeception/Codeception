@@ -2,6 +2,7 @@
 
 namespace Codeception\Event;
 
+use Codeception\Lib\Suite;
 use Symfony\Component\EventDispatcher\Event;
 
 class SuiteEvent extends Event
@@ -32,7 +33,7 @@ class SuiteEvent extends Event
     }
 
     /**
-     * @return \PHPUnit_Framework_TestSuite
+     * @return Suite
      */
     public function getSuite()
     {

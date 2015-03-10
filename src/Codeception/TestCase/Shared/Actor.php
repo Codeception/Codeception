@@ -10,6 +10,8 @@ use Codeception\Lib\Parser;
 use Codeception\Exception\Configuration as ConfigurationException;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
 
 
 trait Actor
@@ -18,6 +20,17 @@ trait Actor
      * @var EventDispatcher
      */
     protected $dispatcher;
+
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
+    /**
+     * @var Di
+     */
+    protected $di;
+
     protected $actor;
     protected $testName;
     protected $testFile;
@@ -64,7 +77,7 @@ trait Actor
         $this->trace[] = $step;
         $this->fire(Events::STEP_BEFORE, new StepEvent($this, $step));
         try {
-            $result = $step->run();
+            $result = $step->run($this->moduleContainer);
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->getTestResultObject();
             $result->addFailure(clone($this), $f, $result->time());
@@ -119,6 +132,19 @@ trait Actor
         $this->env = $env;
         return $this;
     }
+
+    public function configModules(ModuleContainer $moduleContainer)
+    {
+        $this->moduleContainer = $moduleContainer;
+        return $this;
+    }
+
+    public function configDi(Di $di)
+    {
+        $this->di = $di;
+        return $this;
+    }
+
 
     public function config($property, $value)
     {

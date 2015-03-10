@@ -2,11 +2,16 @@
 
 namespace Codeception;
 
-use Codeception\Util\Debug;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Shared\Asserts;
 
 abstract class Module
 {
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
     use Asserts;
 
     /**
@@ -47,8 +52,10 @@ abstract class Module
 
     protected $conflicts = array();
 
-    public function __construct($config = null)
+    public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
+        $this->moduleContainer = $moduleContainer;
+
         $this->backupConfig = $this->config;
         if (is_array($config)) {
             $this->_setConfig($config);
@@ -85,8 +92,8 @@ abstract class Module
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfig(
                 get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
-                Please, update the configuration and set all the required fields\n\n"
+                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n".
+                "Please, update the configuration and set all the required fields\n\n"
             );
         }
     }
@@ -165,7 +172,7 @@ abstract class Module
 
     protected function debug($message)
     {
-        Debug::debug($message);
+        codecept_debug($message);
     }
 
     protected function debugSection($title, $message)
@@ -178,12 +185,12 @@ abstract class Module
 
     protected function hasModule($name)
     {
-        return SuiteManager::hasModule($name);
+        return $this->moduleContainer->hasModule($name);
     }
 
     protected function getModules()
     {
-        return SuiteManager::$modules;
+        return $this->moduleContainer->all();
     }
 
     protected function getModule($name)
@@ -191,9 +198,7 @@ abstract class Module
         if (!$this->hasModule($name)) {
             throw new Exception\Module(__CLASS__, "Module $name couldn't be connected");
         }
-
-        // replace with container
-        return SuiteManager::$modules[$name];
+        return $this->moduleContainer->getModule($name);
     }
 
     protected function scalarizeArray($array)
