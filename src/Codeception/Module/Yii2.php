@@ -56,6 +56,7 @@ class Yii2 extends Framework implements ActiveRecord
         $this->client = new \Codeception\Lib\Connector\Yii2();
         $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
         $this->client->setServerParameter('HTTP_HOST', parse_url(\Codeception\Configuration::config()['config']['test_entry_url'], PHP_URL_HOST));
+        $this->client->setServerParameter('HTTPS', parse_url(\Codeception\Configuration::config()['config']['test_entry_url'], PHP_URL_SCHEME) === 'https');
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
