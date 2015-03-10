@@ -23,7 +23,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->noPhpWebserver();
         $this->noSelenium();
-        $this->module = new \Codeception\Module\WebDriver();
+        $this->module = new \Codeception\Module\WebDriver(make_container());
         $url = '';
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $url = 'http://localhost:8000';

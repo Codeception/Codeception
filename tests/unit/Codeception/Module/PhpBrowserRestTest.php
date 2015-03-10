@@ -15,7 +15,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     protected $phpBrowser;
 
     public function setUp() {
-        $this->phpBrowser = new \Codeception\Module\PhpBrowser();
+        $this->phpBrowser = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8010';
         $this->phpBrowser->_setConfig(array('url' => $url));
         $this->phpBrowser->_initialize();

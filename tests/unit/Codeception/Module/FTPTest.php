@@ -28,7 +28,7 @@ class FTPTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->module = new \Codeception\Module\FTP();
+        $this->module = new \Codeception\Module\FTP(make_container());
         $this->module->_setConfig($this->config);
 
         $this->module->_before(Stub::make('\Codeception\TestCase'));
