@@ -1376,7 +1376,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param int $timeout seconds
      * @param null $selector
      * @throws \Exception
-     * @internal param string $element
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {
