@@ -7,7 +7,6 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
-use Codeception\TestCase\Interfaces\Plain;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -77,16 +76,11 @@ class SuiteManager
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
-        $this->initializeActors();
-        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
-    }
-
-    protected function initializeActors()
-    {
         if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
             throw new Exception\Configuration($this->settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
+        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     public function loadTests($path = null)
