@@ -145,7 +145,6 @@ trait Actor
         return $this;
     }
 
-
     public function config($property, $value)
     {
         $this->$property = $value;

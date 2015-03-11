@@ -11,9 +11,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-
-    public static $modules = [];
-    public static $actions = [];
     public static $environment;
     public static $name;
 

@@ -84,7 +84,7 @@ EOF;
 
         return (new Template($this->template))
             ->place('namespace', $namespace ? $namespace . '\\' : '')
-            ->place('hash', self::genHash($this->actions, $this->settings))
+            ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
             ->place('use', implode("\n", $uses))
             ->place('methods', implode("\n\n ", $code))
@@ -195,8 +195,13 @@ EOF;
         return $doc;
     }
 
-    public static function genHash($actions, $settings)
+    public static function genHash($modules, $settings)
     {
+        $actions = [];
+        foreach ($modules as $moduleName => $module) {
+            $actions[$moduleName] = get_class_methods(get_class($module));
+        }
+
         return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']));
     }
 

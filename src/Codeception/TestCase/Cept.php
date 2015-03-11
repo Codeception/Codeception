@@ -58,7 +58,7 @@ class Cept extends TestCase implements
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
 
         $scenario = $this->scenario;
-        $scenario->run();
+        $scenario->stopIfBlocked();
 
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;

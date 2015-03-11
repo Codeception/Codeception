@@ -56,13 +56,13 @@ class LocalServer extends SuiteSubscriber
 
     public function beforeSuite(SuiteEvent $e)
     {
-        $this->module = $this->getServerConnectionModule();
+        $this->module = $this->getServerConnectionModule($e->getSuite()->getModules());
         $this->applySettings($e->getSettings());
         if (!$this->isEnabled()) {
             return;
         }
 
-        $this->suiteName = $e->getSuite()->baseName;
+        $this->suiteName = $e->getSuite()->getBaseName();
 
         if ($this->settings['remote_config']) {
             $this->addC3AccessHeader(self::COVERAGE_HEADER_CONFIG, $this->settings['remote_config']);

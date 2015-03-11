@@ -13,8 +13,8 @@ trait Friend
     public function haveFriend($name, $actorClass = null)
     {
         if (!isset($this->friends[$name])) {
-            $guy = $actorClass === null ? $this : new $actorClass($this->scenario);
-            $this->friends[$name] = new \Codeception\Lib\Friend($name, $guy);
+            $actor = $actorClass === null ? $this : new $actorClass($this->scenario);
+            $this->friends[$name] = new \Codeception\Lib\Friend($name, $actor);
         }
         return $this->friends[$name];
     }

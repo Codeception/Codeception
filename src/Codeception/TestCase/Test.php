@@ -27,7 +27,7 @@ class Test extends TestCase implements
             $actorProperty = lcfirst($actor);
             $this->$actorProperty = $this->$property;
         }
-        $this->getScenario()->run();
+        $this->getScenario()->stopIfBlocked();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
     }

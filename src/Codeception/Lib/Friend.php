@@ -7,16 +7,15 @@ use Codeception\SuiteManager;
 
 class Friend
 {
-
     protected $name;
     protected $actor;
     protected $data = [];
     protected $multiSessionModules = [];
 
-    public function __construct($name, Actor $guy)
+    public function __construct($name, Actor $actor)
     {
         $this->name = $name;
-        $this->actor = $guy;
+        $this->actor = $actor;
         $this->multiSessionModules = array_filter(
             SuiteManager::$modules, function ($m) {
                 return $m instanceof Interfaces\MultiSession;

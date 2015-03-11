@@ -1,6 +1,8 @@
 <?php
 namespace Codeception;
 
+use Codeception\Exception\TestRuntime;
+
 class Scenario
 {
     /**
@@ -21,6 +23,12 @@ class Scenario
     protected $blocker = null;
     protected $groups = [];
     protected $env = [];
+
+    protected $current = [
+        'env' => null,
+        'modules' => [],
+        'suite' => null
+    ];
 
     /**
      * Constructor.
@@ -149,29 +157,23 @@ class Scenario
         $this->runStep(new \Codeception\Step\Comment($comment, []));
     }
 
-    public function run()
+    public function stopIfBlocked()
     {
         if ($this->isBlocked()) {
             return $this->blocker->run();
         }
+    }
 
-        $this->running = true;
-        $this->steps = [];
+    public function current($key)
+    {
+        if (!isset($this->current[$key])) {
+            throw new TestRuntime("Current $key is not set in this scenario");
+        }
+        return $this->current[$key];
     }
 
     public function isBlocked()
     {
         return (bool)$this->blocker;
     }
-
-    public function running()
-    {
-        return $this->running;
-    }
-
-    public function preload()
-    {
-        return !$this->running;
-    }
-
 }

@@ -24,6 +24,7 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
 
     protected $settings = [];
     protected $filters = [];
+    protected $modules = [];
 
     protected $coverage;
     protected $logDir;
@@ -57,11 +58,12 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @param array $modules
      * @return \Codeception\Lib\Interfaces\Remote|null
      */
-    protected function getServerConnectionModule()
+    protected function getServerConnectionModule(array $modules)
     {
-        foreach (\Codeception\SuiteManager::$modules as $module) {
+        foreach ($modules as $module) {
             if ($module instanceof Remote) {
                 return $module;
             }

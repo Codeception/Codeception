@@ -4,6 +4,7 @@ namespace Codeception\Coverage\Subscriber;
 use Codeception\Coverage\SuiteSubscriber;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\Lib\Interfaces\Remote;
 
 /**
  * Collects code coverage from unit and functional tests.
@@ -16,14 +17,20 @@ class Local extends SuiteSubscriber
         Events::SUITE_AFTER  => 'afterSuite',
     ];
 
+    /**
+     * @var Remote
+     */
+    protected $module;
+
     protected function isEnabled()
     {
-        return $this->getServerConnectionModule() === null and $this->settings['enabled'];
+        return $this->module === null and $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $e)
     {
         $this->applySettings($e->getSettings());
+        $this->module = $this->getServerConnectionModule($e->getSuite()->getModules());
         if (!$this->isEnabled()) {
             return;
         }

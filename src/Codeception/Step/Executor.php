@@ -16,7 +16,7 @@ class Executor extends \Codeception\Step
         $this->callable = $callable;
     }
 
-    public function run(ModuleContainer $container)
+    public function run(ModuleContainer $container = null)
     {
         $callable = $this->callable;
 

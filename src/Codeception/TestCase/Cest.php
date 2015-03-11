@@ -35,7 +35,6 @@ class Cest extends \Codeception\TestCase implements
         $code = $this->getRawBody();
         $this->parser->parseFeature($code);
         $this->parser->parseScenarioOptions($code, 'scenario');
-
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
 
@@ -52,7 +51,7 @@ class Cest extends \Codeception\TestCase implements
     {
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
 
-        $this->scenario->run();
+        $this->scenario->stopIfBlocked();
         $I = $this->makeIObject();
 
         try {
