@@ -1,7 +1,6 @@
 <?php
 namespace Codeception;
 
-use Codeception\Lib\Di;
 use Codeception\Lib\Parser;
 use Codeception\TestCase\Cept;
 use Codeception\TestCase\Cest;
@@ -49,7 +48,6 @@ class TestLoader
     public function __construct($path)
     {
         $this->path = $path;
-        $this->di = Configuration::DI();
     }
 
     public function getTests()
@@ -151,8 +149,7 @@ class TestLoader
 
         $cept = new Cept();
         $cept->configName($name)
-            ->configFile($file)
-            ->initConfig();
+            ->configFile($file);
 
         $this->tests[] = $cept;
     }
@@ -162,7 +159,7 @@ class TestLoader
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-            $unit = $this->di->instantiate($testClass);
+            $unit = new $testClass;
             if (!$unit) {
                 continue;
             }
@@ -206,9 +203,6 @@ class TestLoader
         if (!$test instanceof \Codeception\TestCase) {
             return;
         }
-        $test->initConfig();
-        $test->getScenario()->env(Annotation::forMethod($className, $methodName)->fetchAll('env'));
-        $this->di->injectDependencies($test);
     }
 
     protected function createTestFromCestMethod($cestInstance, $methodName, $file)
@@ -222,11 +216,8 @@ class TestLoader
         $cest->configName($methodName)
             ->configFile($file)
             ->config('testClassInstance', $cestInstance)
-            ->config('testMethod', $methodName)
-            ->config('di', new Di($this->di))
-            ->initConfig();
+            ->config('testMethod', $methodName);
 
-        $cest->getScenario()->env(Annotation::forMethod($testClass, $methodName)->fetchAll('env'));
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         return $cest;
     }

@@ -49,7 +49,11 @@ trait Actor
 
     public function initConfig()
     {
-        $this->scenario = new Scenario($this);
+        $this->scenario = new Scenario($this, [
+            'env'       => $this->env,
+            'modules'   => $this->moduleContainer->all(),
+            'name'      => $this->testName
+        ]);
         $this->parser = new Parser($this->scenario);
         return $this;
     }

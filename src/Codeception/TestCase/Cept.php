@@ -66,6 +66,11 @@ class Cept extends TestCase implements
         $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
+    public function getEnvironment()
+    {
+        return $this->scenario->getEnv();
+    }
+
     public function getReportFields()
     {
         return ['name' => basename($this->getFileName(), 'Cept.php'), 'file' => $this->getFileName(), 'feature' => $this->getFeature()];

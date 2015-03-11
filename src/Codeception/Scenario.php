@@ -24,20 +24,17 @@ class Scenario
     protected $groups = [];
     protected $env = [];
 
-    protected $current = [
-        'env' => null,
-        'modules' => [],
-        'suite' => null
-    ];
+    protected $currents = [];
 
     /**
      * Constructor.
      *
      * @param  \Codeception\TestCase $test
      */
-    public function __construct(\Codeception\TestCase $test)
+    public function __construct(\Codeception\TestCase $test, $currents = array())
     {
         $this->test = $test;
+        $this->currents = $currents;
     }
 
     public function group($group)
@@ -166,10 +163,10 @@ class Scenario
 
     public function current($key)
     {
-        if (!isset($this->current[$key])) {
+        if (!isset($this->currents[$key])) {
             throw new TestRuntime("Current $key is not set in this scenario");
         }
-        return $this->current[$key];
+        return $this->currents[$key];
     }
 
     public function isBlocked()

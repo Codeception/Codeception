@@ -7,6 +7,8 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
+use Codeception\TestCase\Interfaces\Plain;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
@@ -48,6 +50,7 @@ class SuiteManager
     protected $debug = false;
     protected $path = '';
     protected $printer = null;
+
     protected $env = null;
 
     public function __construct(EventDispatcher $dispatcher, $name, array $settings)
@@ -101,31 +104,20 @@ class SuiteManager
 
     protected function addToSuite($test)
     {
-        if ($test instanceof TestCase\Interfaces\Configurable) {
-            $test->configDispatcher($this->dispatcher);
-            $test->configActor($this->getActor());
-            $test->configEnv($this->env);
-            $test->configDi($this->di);
-            $test->configModules($this->moduleContainer);
-        }
+        $this->configureTest($test);
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
-                if (!$t instanceof TestCase\Interfaces\Configurable) {
-                    continue;
-                }
-                $t->configDispatcher($this->dispatcher);
-                $t->configActor($this->getActor());
-                $t->configEnv($this->env);
-                $t->configDi($this->di);
-                $t->configModules($this->moduleContainer);
+                $this->configureTest($t);
             }
         }
 
-        if ($test instanceof TestCase\Interfaces\ScenarioDriven) {
-            if (!$this->isCurrentEnvironment($test->getScenario()->getEnv())) {
-                return;
+        if ($test instanceof TestCase) {
+            if (!$this->isCurrentEnvironment($test->getEnvironment())) {
+                return; // skip tests from other environments
             }
+        }
+        if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
 
@@ -162,6 +154,13 @@ class SuiteManager
         return $this->suite;
     }
 
+    protected function getActor()
+    {
+        return $this->settings['namespace']
+            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+            : $this->settings['class_name'];
+    }
+
     protected function isCurrentEnvironment($envs)
     {
         if (empty($envs)) {
@@ -170,10 +169,22 @@ class SuiteManager
         return $this->env and in_array($this->env, $envs);
     }
 
-    protected function getActor()
+    /**
+     * @param $t
+     * @throws Exception\InjectionException
+     */
+    protected function configureTest($t)
     {
-        return $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
-            : $this->settings['class_name'];
+        if (!$t instanceof TestCase\Interfaces\Configurable) {
+            return;
+        }
+        $t->configDispatcher($this->dispatcher);
+        $t->configActor($this->getActor());
+        $t->configEnv($this->env);
+        $t->configDi($this->di);
+        $t->configModules($this->moduleContainer);
+        $t->initConfig();
+        $this->di->injectDependencies($t);
     }
 }
+

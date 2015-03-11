@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Actor;
 use Codeception\Exception\TestRuntime;
+use Codeception\Scenario;
 use Codeception\SuiteManager;
 
 class Friend
@@ -12,15 +13,15 @@ class Friend
     protected $data = [];
     protected $multiSessionModules = [];
 
-    public function __construct($name, Actor $actor)
+    public function __construct($name, Actor $actor, $modules = [])
     {
         $this->name = $name;
         $this->actor = $actor;
-        $this->multiSessionModules = array_filter(
-            SuiteManager::$modules, function ($m) {
-                return $m instanceof Interfaces\MultiSession;
-            }
-        );
+
+        $this->multiSessionModules = array_filter($modules, function ($m) {
+            return $m instanceof Interfaces\MultiSession;
+        });
+
         if (empty($this->multiSessionModules)) {
             throw new TestRuntime("No multisession modules used. Can't instantiate friend");
         }

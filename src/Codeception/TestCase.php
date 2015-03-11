@@ -10,6 +10,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_
      * scenario stores steps and test settings: groups, environment, etc
      */
     abstract public function getScenario();
+    abstract public function getEnvironment();
 
     public static function getTestSignature(\PHPUnit_Framework_TestCase $testCase)
     {

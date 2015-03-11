@@ -14,7 +14,7 @@ trait Friend
     {
         if (!isset($this->friends[$name])) {
             $actor = $actorClass === null ? $this : new $actorClass($this->scenario);
-            $this->friends[$name] = new \Codeception\Lib\Friend($name, $actor);
+            $this->friends[$name] = new \Codeception\Lib\Friend($name, $actor, $this->scenario->current('modules'));
         }
         return $this->friends[$name];
     }
