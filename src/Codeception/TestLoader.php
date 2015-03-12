@@ -129,6 +129,7 @@ class TestLoader
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
+
             if (!$reflected->isInstantiable()) {
                 continue;
             }
@@ -159,6 +160,9 @@ class TestLoader
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
+            if (substr($testClass, -strlen('Cest')) !== 'Cest') {
+                continue;
+            }
             if (!(new \ReflectionClass($testClass))->isInstantiable()) {
                 continue;
             }

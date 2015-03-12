@@ -34,6 +34,9 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFewTests() {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
+
+
+
         $this->suiteman->loadTests($file);
         $this->assertEquals(2, $this->suiteman->getSuite()->count());
 
