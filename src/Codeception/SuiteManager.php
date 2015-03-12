@@ -4,14 +4,14 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
+use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
+use Codeception\Lib\ModuleContainer;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
 {
-
-    public static $modules = array();
-    public static $actions = array();
     public static $environment;
     public static $name;
 
@@ -35,54 +35,52 @@ class SuiteManager
      */
     protected $testLoader;
 
-    protected $tests = array();
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
+    /**
+     * @var Di
+     */
+    protected $di;
+
+    protected $tests = [];
     protected $debug = false;
     protected $path = '';
     protected $printer = null;
+
     protected $env = null;
 
     public function __construct(EventDispatcher $dispatcher, $name, array $settings)
     {
         $this->settings = $settings;
         $this->dispatcher = $dispatcher;
-        $this->suite = $this->createSuite($name);
+        $this->di = new Di();
         $this->path = $settings['path'];
         $this->groupManager = new GroupManager($settings['groups']);
+        $this->moduleContainer = new ModuleContainer($this->di, $settings);
 
+        $modules = Configuration::modules($this->settings);
+        foreach ($modules as $moduleName) {
+            $this->moduleContainer->create($moduleName);
+        }
+        $this->suite = $this->createSuite($name);
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
         }
-        $this->suite = $this->createSuite($name);
     }
 
     public function initialize()
     {
-        $this->initializeModules();
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
-        $this->initializeActors();
-        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
-    }
-
-    protected function initializeModules()
-    {
-        self::$modules = Configuration::modules($this->settings);
-        self::$actions = Configuration::actions(self::$modules);
-
-        foreach (self::$modules as $module) {
+        foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
-    }
-
-    protected function initializeActors()
-    {
         if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
             throw new Exception\Configuration($this->settings['class_name'] . " class doesn't exists in suite folder.\nRun the 'build' command to generate it");
         }
-    }
-
-    public static function hasModule($moduleName)
-    {
-        return isset(self::$modules[$moduleName]);
+        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     public function loadTests($path = null)
@@ -100,48 +98,36 @@ class SuiteManager
 
     protected function addToSuite($test)
     {
-        if ($test instanceof TestCase\Interfaces\Configurable) {
-            $test->configDispatcher($this->dispatcher);
-            $test->configActor($this->getActor());
-            $test->configEnv($this->env);
-        }
+        $this->configureTest($test);
 
         if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
             foreach ($test->tests() as $t) {
-                if (!$t instanceof TestCase\Interfaces\Configurable) {
-                    continue;
-                }
-                $t->configDispatcher($this->dispatcher);
-                $t->configActor($this->getActor());
-                $t->configEnv($this->env);
+                $this->configureTest($t);
             }
         }
 
-        if ($test instanceof TestCase\Interfaces\ScenarioDriven) {
-            if (!$this->isCurrentEnvironment($test->getScenario()->getEnv())) {
-                return;
+        if ($test instanceof TestCase) {
+            if (!$this->isCurrentEnvironment($test->getEnvironment())) {
+                return; // skip tests from other environments
             }
+        }
+        if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
 
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
     }
-    
+
     protected function createSuite($name)
     {
-        $suite = new \PHPUnit_Framework_TestSuite();
-        $suite->baseName = $this->env
-            ? substr($name, 0, strpos($name, '-' . $this->env))
-            : $name;
-
+        $suite = new Lib\Suite();
+        $suite->setBaseName($this->env ? substr($name, 0, strpos($name, '-' . $this->env)) : $name);
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
         }
         $suite->setName($name);
-        if (!($suite instanceof \PHPUnit_Framework_TestSuite)) {
-            throw new Exception\Configuration("Suite class is not inherited from PHPUnit_Framework_TestSuite");
-        }
+        $suite->setModules($this->moduleContainer->all());
         return $suite;
     }
 
@@ -162,6 +148,13 @@ class SuiteManager
         return $this->suite;
     }
 
+    protected function getActor()
+    {
+        return $this->settings['namespace']
+            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+            : $this->settings['class_name'];
+    }
+
     protected function isCurrentEnvironment($envs)
     {
         if (empty($envs)) {
@@ -180,10 +173,24 @@ class SuiteManager
         return false;
     }
 
-    protected function getActor()
+    /**
+     * @param $t
+     * @throws Exception\InjectionException
+     */
+    protected function configureTest($t)
     {
-        return $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
-            : $this->settings['class_name'];
+        if (!$t instanceof TestCase\Interfaces\Configurable) {
+            return;
+        }
+        $t->configDispatcher($this->dispatcher);
+        $t->configActor($this->getActor());
+        $t->configEnv($this->env);
+        $t->configDi($this->di);
+        $t->configModules($this->moduleContainer);
+        $t->initConfig();
+        $this->di->injectDependencies($t);
     }
+
+
 }
+

@@ -2,10 +2,10 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
-use Codeception\Step;
+use Codeception\LIb\Connector\PhalconMemorySession;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
-use Codeception\LIb\Connector\PhalconMemorySession;
+use Codeception\Step;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
@@ -57,11 +57,11 @@ use Codeception\LIb\Connector\PhalconMemorySession;
  */
 class Phalcon1 extends Framework implements ActiveRecord
 {
-    protected $config = array(
-        'bootstrap' => 'app/config/bootstrap.php',
-        'cleanup' => true,
+    protected $config = [
+        'bootstrap'  => 'app/config/bootstrap.php',
+        'cleanup'    => true,
         'savepoints' => true,
-    );
+    ];
 
 
     /**
@@ -72,15 +72,16 @@ class Phalcon1 extends Framework implements ActiveRecord
     public function _initialize()
     {
         if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['bootstrap'])) {
-            throw new ModuleConfig(__CLASS__,
-                "Bootstrap file does not exist in ".$this->config['bootstrap']."\n".
-                "Please create the bootstrap file that returns Application object\n".
-                "And specify path to it with 'bootstrap' config\n\n".
-                "Sample bootstrap: \n\n<?php\n".
-                '$config = include __DIR__ . "/config.php";'."\n".
-                'include __DIR__ . "/loader.php";'."\n".
-                '$di = new \Phalcon\DI\FactoryDefault();'."\n".
-                'include __DIR__ . "/services.php";'."\n".
+            throw new ModuleConfig(
+                __CLASS__,
+                "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n" .
+                "Please create the bootstrap file that returns Application object\n" .
+                "And specify path to it with 'bootstrap' config\n\n" .
+                "Sample bootstrap: \n\n<?php\n" .
+                '$config = include __DIR__ . "/config.php";' . "\n" .
+                'include __DIR__ . "/loader.php";' . "\n" .
+                '$di = new \Phalcon\DI\FactoryDefault();' . "\n" .
+                'include __DIR__ . "/services.php";' . "\n" .
                 'return new \Phalcon\Mvc\Application($di);'
             );
         }
@@ -116,21 +117,23 @@ class Phalcon1 extends Framework implements ActiveRecord
             $this->di['db']->begin();
         }
 
-        $this->client->setApplication(function () use ($bootstrap) {
-            $currentDi = \Phalcon\DI::getDefault();
-            $application = require $bootstrap;
-            $di = $application->getDi();
-            if (isset($currentDi['db'])) {
-                $di['db'] = $currentDi['db'];
+        $this->client->setApplication(
+            function () use ($bootstrap) {
+                $currentDi = \Phalcon\DI::getDefault();
+                $application = require $bootstrap;
+                $di = $application->getDi();
+                if (isset($currentDi['db'])) {
+                    $di['db'] = $currentDi['db'];
+                }
+                if (isset($currentDi['session'])) {
+                    $di['session'] = $currentDi['session'];
+                }
+                if (isset($di['cookies'])) {
+                    $di['cookies']->useEncryption(false);
+                }
+                return $application;
             }
-            if (isset($currentDi['session'])) {
-                $di['session'] = $currentDi['session'];
-            }
-            if (isset($di['cookies'])) {
-                $di['cookies']->useEncryption(false);
-            }
-            return $application;
-        });
+        );
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -140,7 +143,8 @@ class Phalcon1 extends Framework implements ActiveRecord
                 $level = $this->di['db']->getTransactionLevel();
                 try {
                     $this->di['db']->rollback(true);
-                } catch (\PDOException $e) {}
+                } catch (\PDOException $e) {
+                }
                 if ($level == $this->di['db']->getTransactionLevel()) {
                     break;
                 }
@@ -149,12 +153,12 @@ class Phalcon1 extends Framework implements ActiveRecord
         $this->di = null;
         \Phalcon\DI::reset();
 
-        $_SESSION = array();
-        $_FILES = array();
-        $_GET = array();
-        $_POST = array();
-        $_COOKIE = array();
-        $_REQUEST = array();
+        $_SESSION = [];
+        $_FILES = [];
+        $_GET = [];
+        $_POST = [];
+        $_COOKIE = [];
+        $_REQUEST = [];
     }
 
     /**
@@ -200,16 +204,16 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($model, $attributes = [])
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
         if (!$res) {
-            $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
+            $this->fail("Record $model was not saved. Messages: " . implode(', ', $record->getMessages()));
         }
         $this->debugSection($model, json_encode($record));
-        
-        $reflectedProperty =   new \ReflectionProperty(get_class($record), 'id');
+
+        $reflectedProperty = new \ReflectionProperty(get_class($record), 'id');
         $reflectedProperty->setAccessible(true);
         return $reflectedProperty->getValue($record);
     }
@@ -224,11 +228,11 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with ".json_encode($attributes));
+            $this->fail("Couldn't find $model with " . json_encode($attributes));
         }
         $this->debugSection($model, json_encode($record));
     }
@@ -243,12 +247,12 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with ".json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
         }
     }
 
@@ -263,21 +267,21 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($model, $attributes = [])
     {
         return $this->findRecord($model, $attributes);
     }
 
-    protected function findRecord($model, $attributes = array())
+    protected function findRecord($model, $attributes = [])
     {
         $this->getModelRecord($model);
-        $query = array();
+        $query = [];
         foreach ($attributes as $key => $value) {
             $query[] = "$key = '$value'";
         }
         $query = implode(' AND ', $query);
         $this->debugSection('Query', $query);
-        return call_user_func_array(array($model, 'findFirst'), array($query));
+        return call_user_func_array([$model, 'findFirst'], [$query]);
     }
 
     protected function getModelRecord($model)

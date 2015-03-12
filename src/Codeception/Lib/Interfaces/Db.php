@@ -25,7 +25,7 @@ interface Db
      * @param       $table
      * @param array $criteria
      */
-    public function seeInDatabase($table, $criteria = array());
+    public function seeInDatabase($table, $criteria = []);
 
     /**
      * Effect is opposite to ->seeInDatabase
@@ -50,7 +50,7 @@ interface Db
      * @param       $table
      * @param array $criteria
      */
-    public function dontSeeInDatabase($table, $criteria = array());
+    public function dontSeeInDatabase($table, $criteria = []);
 
     /**
      * Fetches a single column value from a database.
@@ -72,5 +72,5 @@ interface Db
      *
      * @return mixed
      */
-    public function grabFromDatabase($table, $column, $criteria = array());
+    public function grabFromDatabase($table, $column, $criteria = []);
 }

@@ -44,26 +44,26 @@ class MongoDb
         }
         $this->host = rtrim(str_replace($this->dbName, '', $this->host), '/');
 
-        $options = array(
+        $options = [
             'connect' => true
-        );
+        ];
 
         if ($user && $password) {
-            $options += array(
+            $options += [
                 'username' => $user,
                 'password' => $password
-            );
+            ];
         }
 
         try {
-            $m         = new \MongoClient($dsn, $options);
+            $m = new \MongoClient($dsn, $options);
             $this->dbh = $m->selectDB($this->dbName);
         } catch (\MongoConnectionException $e) {
             throw new \Exception(sprintf('Failed to open Mongo connection: %s', $e->getMessage()));
         }
 
-        $this->dsn      = $dsn;
-        $this->user     = $user;
+        $this->dsn = $dsn;
+        $this->user = $user;
         $this->password = $password;
     }
 

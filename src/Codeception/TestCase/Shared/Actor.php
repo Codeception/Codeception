@@ -4,10 +4,12 @@ namespace Codeception\TestCase\Shared;
 use Codeception\Event\StepEvent;
 use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Step;
-use Codeception\Scenario;
-use Codeception\Lib\Parser;
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
+use Codeception\Lib\Parser;
+use Codeception\Scenario;
+use Codeception\Step;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -18,6 +20,17 @@ trait Actor
      * @var EventDispatcher
      */
     protected $dispatcher;
+
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
+    /**
+     * @var Di
+     */
+    protected $di;
+
     protected $actor;
     protected $testName;
     protected $testFile;
@@ -36,8 +49,12 @@ trait Actor
 
     public function initConfig()
     {
-        $this->scenario  = new Scenario($this);
-        $this->parser    = new Parser($this->scenario);
+        $this->scenario = new Scenario($this, [
+            'env'       => $this->env,
+            'modules'   => $this->moduleContainer->all(),
+            'name'      => $this->testName
+        ]);
+        $this->parser = new Parser($this->scenario);
         return $this;
     }
 
@@ -64,7 +81,7 @@ trait Actor
         $this->trace[] = $step;
         $this->fire(Events::STEP_BEFORE, new StepEvent($this, $step));
         try {
-            $result = $step->run();
+            $result = $step->run($this->moduleContainer);
         } catch (ConditionalAssertionFailed $f) {
             $result = $this->getTestResultObject();
             $result->addFailure(clone($this), $f, $result->time());
@@ -117,6 +134,18 @@ trait Actor
     public function configEnv($env)
     {
         $this->env = $env;
+        return $this;
+    }
+
+    public function configModules(ModuleContainer $moduleContainer)
+    {
+        $this->moduleContainer = $moduleContainer;
+        return $this;
+    }
+
+    public function configDi(Di $di)
+    {
+        $this->di = $di;
         return $this;
     }
 

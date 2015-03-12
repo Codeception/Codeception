@@ -3,27 +3,28 @@ namespace Codeception\Coverage;
 
 use Codeception\Configuration;
 use Codeception\Coverage\Subscriber\Printer;
-use Codeception\Coverage\DummyCodeCoverage;
-use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Lib\Interfaces\Remote;
+use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-abstract class SuiteSubscriber implements EventSubscriberInterface {
+abstract class SuiteSubscriber implements EventSubscriberInterface
+{
 
     use StaticEvents;
 
     protected $defaultSettings = [
-        'enabled' => false,
-        'remote' => false,
-        'local' => false,
+        'enabled'        => false,
+        'remote'         => false,
+        'local'          => false,
         'xdebug_session' => 'codeception',
         'remote_config'  => null,
         'show_uncovered' => false,
-        'c3_url' => null
+        'c3_url'         => null
     ];
 
     protected $settings = [];
     protected $filters = [];
+    protected $modules = [];
 
     protected $coverage;
     protected $logDir;
@@ -57,11 +58,12 @@ abstract class SuiteSubscriber implements EventSubscriberInterface {
     }
 
     /**
+     * @param array $modules
      * @return \Codeception\Lib\Interfaces\Remote|null
      */
-    protected function getServerConnectionModule()
+    protected function getServerConnectionModule(array $modules)
     {
-        foreach (\Codeception\SuiteManager::$modules as $module) {
+        foreach ($modules as $module) {
             if ($module instanceof Remote) {
                 return $module;
             }

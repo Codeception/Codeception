@@ -17,7 +17,7 @@ class RemoteServer extends LocalServer
 {
     public function isEnabled()
     {
-        return $this->getServerConnectionModule() and $this->settings['remote'] and $this->settings['enabled'];
+        return $this->module and $this->settings['remote'] and $this->settings['enabled'];
     }
 
     public function afterSuite(SuiteEvent $e)

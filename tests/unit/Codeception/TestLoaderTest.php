@@ -82,39 +82,4 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame(false, array_search($name, $testNames), "$name not found in tests");
     }
 
-    public function testDependencyResolution()
-    {
-        $this->testLoader->loadTest('SimpleWithDependencyInjectionCest.php');
-        $this->assertEquals(3, count($this->testLoader->getTests()));
-    }
-
-    protected function shouldFail($msg = '')
-    {
-        $this->setExpectedException('Exception', $msg);
-    }
-
-    public function testFailDependenciesCyclic()
-    {
-        $this->shouldFail('Failed to resolve cyclic dependencies for class \'FailDependenciesCyclic\IncorrectDependenciesClass\'');
-        $this->testLoader->loadTest('FailDependenciesCyclicCest.php');
-    }
-
-    public function testFailDependenciesInChain()
-    {
-        $this->shouldFail('Failed to resolve dependency \'FailDependenciesInChain\AnotherClass\'');
-        $this->testLoader->loadTest('FailDependenciesInChainCest.php');
-    }
-
-    public function testFailDependenciesNonExistent()
-    {
-        $this->shouldFail('Class FailDependenciesNonExistent\NonExistentClass does not exist');
-        $this->testLoader->loadTest('FailDependenciesNonExistentCest.php');
-    }
-
-    public function testFailDependenciesPrimitiveParam()
-    {
-        $this->shouldFail('Parameter \'required\' must have default value');
-        $this->testLoader->loadTest('FailDependenciesPrimitiveParamCest.php');
-    }
-
 }

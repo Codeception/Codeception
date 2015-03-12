@@ -18,7 +18,8 @@ trait Comment
         return $this->comment('I am going to ' . $argumentation);
     }
 
-    public function am($role) {
+    public function am($role)
+    {
         return $this->comment('As a ' . $role);
     }
 

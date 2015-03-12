@@ -17,7 +17,7 @@ class PhpBrowserTest extends TestsForBrowsers
     protected $history;
 
     protected function setUp() {
-        $this->module = new \Codeception\Module\PhpBrowser();
+        $this->module = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8000';
         $this->module->_setConfig(array('url' => $url));
         $this->module->_initialize();

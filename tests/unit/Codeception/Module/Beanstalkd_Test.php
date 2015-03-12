@@ -16,7 +16,7 @@ class Beanstalkd_Test extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->module = new \Codeception\Module\Queue();
+        $this->module = new \Codeception\Module\Queue(make_container());
             $this->module->_setConfig($this->config);
             $this->module->_before(Stub::make('\Codeception\TestCase'));
         try {

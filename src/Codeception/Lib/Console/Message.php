@@ -12,12 +12,12 @@ class Message
     public function __construct($message, Output $output = null)
     {
         $this->message = $message;
-        $this->output  = $output;
+        $this->output = $output;
     }
 
     public function with($param)
     {
-        $args          = array_merge(array($this->message), func_get_args());
+        $args = array_merge([$this->message], func_get_args());
         $this->message = call_user_func_array('sprintf', $args);
 
         return $this;

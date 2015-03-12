@@ -4,7 +4,7 @@ namespace Codeception\TestCase\Shared;
 trait Dependencies
 {
     protected $dependencies;
-    protected $dependencyInput = array();
+    protected $dependencyInput = [];
 
     protected function handleDependencies()
     {
@@ -13,9 +13,10 @@ trait Dependencies
         }
 
         $passed = $this->getTestResultObject()->passed();
-        $passedKeys = array_map(function ($testname) {
+        $passedKeys = array_map(
+            function ($testname) {
                 if ($this instanceof \Codeception\TestCase\Cest) {
-                    $testname = str_replace('Codeception\TestCase\Cest::', get_class($this->getTestClass()).'::', $testname);
+                    $testname = str_replace('Codeception\TestCase\Cest::', get_class($this->getTestClass()) . '::', $testname);
                 }
                 return preg_replace('~with data set (.*?)~', '', $testname);
             }, array_keys($passed)

@@ -2,8 +2,8 @@
 
 namespace Codeception\Platform;
 
-use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 
 class Group extends Extension
 {
@@ -19,12 +19,12 @@ class Group extends Extension
 
     static function getSubscribedEvents()
     {
-        $events = array();
+        $events = [];
         if (static::$group) {
-            $events = array(
+            $events = [
                 Events::TEST_BEFORE . '.' . static::$group => '_before',
                 Events::TEST_AFTER . '.' . static::$group  => '_after',
-            );
+            ];
         }
         $events = array_merge($events, static::$events);
 

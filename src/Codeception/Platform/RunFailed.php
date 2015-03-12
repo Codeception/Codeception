@@ -17,7 +17,7 @@ use Codeception\TestCase;
 class RunFailed extends Extension
 {
     static $events = [
-      Events::RESULT_PRINT_AFTER => 'saveFailed'
+        Events::RESULT_PRINT_AFTER => 'saveFailed'
     ];
 
     protected $config = ['file' => 'failed'];
@@ -30,7 +30,7 @@ class RunFailed extends Extension
 
     public function saveFailed(PrintResultEvent $e)
     {
-        $file = $this->getLogDir().$this->config['file'];
+        $file = $this->getLogDir() . $this->config['file'];
         $result = $e->getResult();
         if ($result->wasSuccessful()) {
             if (is_file($file)) {
@@ -51,7 +51,7 @@ class RunFailed extends Extension
 
     protected function localizePath($path)
     {
-        $root = realpath($this->getRootDir()).DIRECTORY_SEPARATOR;
+        $root = realpath($this->getRootDir()) . DIRECTORY_SEPARATOR;
         if (substr($path, 0, strlen($root)) == $root) {
             return substr($path, strlen($root));
         }

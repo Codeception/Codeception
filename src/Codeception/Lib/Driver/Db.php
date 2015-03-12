@@ -57,8 +57,8 @@ class Db
         $this->dbh = new \PDO($dsn, $user, $password);
         $this->dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $this->dsn      = $dsn;
-        $this->user     = $user;
+        $this->dsn = $dsn;
+        $this->user = $user;
         $this->password = $password;
     }
 
@@ -69,7 +69,7 @@ class Db
 
     public function getDb()
     {
-        $matches = array();
+        $matches = [];
         $matched = preg_match('~dbname=(.*);~s', $this->dsn, $matches);
         if (!$matched) {
             return false;
@@ -83,13 +83,13 @@ class Db
 
     public function load($sql)
     {
-        $query           = '';
-        $delimiter       = ';';
+        $query = '';
+        $delimiter = ';';
         $delimiterLength = 1;
 
         foreach ($sql as $sqlLine) {
             if (preg_match('/DELIMITER ([\;\$\|\\\\]+)/i', $sqlLine, $match)) {
-                $delimiter       = $match[1];
+                $delimiter = $match[1];
                 $delimiterLength = strlen($delimiter);
                 continue;
             }
@@ -112,7 +112,7 @@ class Db
     public function insert($tableName, array &$data)
     {
         $columns = array_map(
-            array($this, 'getQuotedName'),
+            [$this, 'getQuotedName'],
             array_keys($data)
         );
 
@@ -124,10 +124,11 @@ class Db
         );
     }
 
-    public function select($column, $table, array &$criteria) {
+    public function select($column, $table, array &$criteria)
+    {
         $where = $criteria ? "where %s" : '';
         $query = "select %s from `%s` $where";
-        $params = array();
+        $params = [];
         foreach ($criteria as $k => $v) {
             $k = $this->getQuotedName($k);
             if ($v === null) {

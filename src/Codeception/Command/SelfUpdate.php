@@ -1,9 +1,9 @@
 <?php
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -42,10 +42,12 @@ class SelfUpdate extends Command
 
         $this
             // ->setAliases(array('selfupdate'))
-            ->setDescription(sprintf(
-                'Upgrade <comment>%s</comment> to the latest version',
-                $this->filename
-            ));
+            ->setDescription(
+                sprintf(
+                    'Upgrade <comment>%s</comment> to the latest version',
+                    $this->filename
+                )
+            );
 
         parent::configure();
     }
@@ -57,23 +59,29 @@ class SelfUpdate extends Command
     {
         $version = \Codeception\Codecept::VERSION;
 
-        $output->writeln(sprintf(
+        $output->writeln(
+            sprintf(
                 '<info>%s</info> version <comment>%s</comment>',
                 self::NAME, $version
-        ));
+            )
+        );
 
         $output->writeln("\n<info>Checking for a new version...</info>\n");
         try {
             if ($this->isOutOfDate($version)) {
-                $output->writeln(sprintf(
-                    'A newer version is available: <comment>%s</comment>',
-                    $this->liveVersion
-                ));
+                $output->writeln(
+                    sprintf(
+                        'A newer version is available: <comment>%s</comment>',
+                        $this->liveVersion
+                    )
+                );
                 if (!$input->getOption('no-interaction')) {
 
                     $dialog = $this->getHelperSet()->get('dialog');
-                    if (!$dialog->askConfirmation($output,
-                        "\n<question>Do you want to update?</question> ", false)
+                    if (!$dialog->askConfirmation(
+                        $output,
+                        "\n<question>Do you want to update?</question> ", false
+                    )
                     ) {
                         $output->writeln("\n<info>Bye-bye!</info>\n");
 
@@ -89,10 +97,12 @@ class SelfUpdate extends Command
             }
 
         } catch (\Exception $e) {
-            $output->writeln(sprintf(
-                "<error>\n%s\n</error>",
-                $e->getMessage()
-            ));
+            $output->writeln(
+                sprintf(
+                    "<error>\n%s\n</error>",
+                    $e->getMessage()
+                )
+            );
         }
 
     }
@@ -100,16 +110,18 @@ class SelfUpdate extends Command
     /**
      * Checks wether the provided version is current.
      *
-     * @param  string  $version The version number to check.
+     * @param  string $version The version number to check.
      * @return boolean Returns True if a new version is available.
      */
     private function isOutOfDate($version)
     {
         $tags = $this->getGithubTags(self::GITHUB);
 
-        $this->liveVersion = array_reduce($tags, function ($a, $b) {
-            return version_compare($a, $b, '>') ? $a : $b;
-        });
+        $this->liveVersion = array_reduce(
+            $tags, function ($a, $b) {
+                return version_compare($a, $b, '>') ? $a : $b;
+            }
+        );
 
         return -1 != version_compare($version, $this->liveVersion, '>=');
     }
@@ -127,7 +139,9 @@ class SelfUpdate extends Command
         );
 
         return array_map(
-            function ($tag) { return $tag['name']; },
+            function ($tag) {
+                return $tag['name'];
+            },
             json_decode($jsonTags, true)
         );
     }
@@ -141,19 +155,21 @@ class SelfUpdate extends Command
      */
     private function retrieveContentFromUrl($url)
     {
-        $opts = array('http' => array(
-            'follow_location' => 1,
-            'max_redirects' => 20,
-            'timeout' => 60,
-            'user_agent' => self::NAME
-        ));
+        $opts = [
+            'http' => [
+                'follow_location' => 1,
+                'max_redirects'   => 20,
+                'timeout'         => 60,
+                'user_agent'      => self::NAME
+            ]
+        ];
 
-        $ctx  = stream_context_create($opts);
+        $ctx = stream_context_create($opts);
         $body = file_get_contents($url, 0, $ctx);
 
         if (isset($http_response_header)) {
             $code = substr($http_response_header[0], 9, 3);
-            if (floor($code/100)>3) {
+            if (floor($code / 100) > 3) {
                 throw new \Exception($http_response_header[0]);
             }
         } else {
@@ -193,16 +209,20 @@ class SelfUpdate extends Command
             }
             unlink($temp);
 
-            $output->writeln(sprintf(
-                "<error>\nSomething went wrong (%s).\nPlease re-run this again.</error>\n",
-                $e->getMessage()
-            ));
+            $output->writeln(
+                sprintf(
+                    "<error>\nSomething went wrong (%s).\nPlease re-run this again.</error>\n",
+                    $e->getMessage()
+                )
+            );
         }
 
-        $output->writeln(sprintf(
-            "\n<comment>%s</comment> has been updated.\n",
-            $this->filename
-        ));
+        $output->writeln(
+            sprintf(
+                "\n<comment>%s</comment> has been updated.\n",
+                $this->filename
+            )
+        );
     }
 
 }

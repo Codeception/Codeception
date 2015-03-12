@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\Module as ModuleException;
-use \Codeception\Lib\Driver\Redis as RedisDriver;
+use Codeception\Lib\Driver\Redis as RedisDriver;
 
 /**
  * Works with Redis database.
@@ -34,16 +34,16 @@ use \Codeception\Lib\Driver\Redis as RedisDriver;
  */
 class Redis extends \Codeception\Module
 {
-    protected $config = array(
+    protected $config = [
         'cleanup' => true
-    );
+    ];
 
     /**
      * @var RedisDriver
      */
     public $driver;
 
-    protected $requiredFields = array('host', 'port', 'database');
+    protected $requiredFields = ['host', 'port', 'database'];
 
     public function _initialize()
     {
@@ -72,7 +72,8 @@ class Redis extends \Codeception\Module
     /**
      * Cleans up Redis database.
      */
-    public function cleanupRedis() {
+    public function cleanupRedis()
+    {
         $this->cleanup();
     }
 

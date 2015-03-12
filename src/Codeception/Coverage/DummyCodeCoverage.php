@@ -3,12 +3,12 @@ namespace Codeception\Coverage;
 
 class DummyCodeCoverage extends \PHP_CodeCoverage
 {
-    public function start($id, $clear = FALSE)
+    public function start($id, $clear = false)
     {
 
     }
 
-    function stop($append = true, $linesToBeCovered = array(), array $linesToBeUsed = array())
+    function stop($append = true, $linesToBeCovered = [], array $linesToBeUsed = [])
     {
 
     }

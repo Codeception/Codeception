@@ -36,14 +36,17 @@ class Redis
             return;
         }
         $msg = "Cannot open socket to {$this->host}:{$this->port}";
-        if ($errno || $errmsg)
+        if ($errno || $errmsg) {
             $msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
+        }
         throw new RedisException ("$msg.");
     }
 
     private function debug($msg)
     {
-        if ($this->debug) echo sprintf("[Redis] %s\n", $msg);
+        if ($this->debug) {
+            echo sprintf("[Redis] %s\n", $msg);
+        }
     }
 
     private function read()
@@ -70,8 +73,9 @@ class Redis
                 return substr($s, 1) + 0;
             case '$' : //Bulk data response
                 $i = ( int )(substr($s, 1));
-                if ($i == -1)
+                if ($i == -1) {
                     return null;
+                }
                 $buffer = '';
                 if ($i == 0) {
                     $s = $this->read();
@@ -80,17 +84,19 @@ class Redis
                     $s = $this->read();
                     $l = strlen($s);
                     $i -= $l;
-                    if ($i < 0)
+                    if ($i < 0) {
                         $s = substr($s, 0, $i);
+                    }
                     $buffer .= $s;
                 }
                 return $buffer;
                 break;
             case '*' : // Multi-bulk data (a list of values)
                 $i = ( int )(substr($s, 1));
-                if ($i == -1)
+                if ($i == -1) {
                     return null;
-                $res = array();
+                }
+                $res = [];
                 for ($c = 0; $c < $i; $c++) {
                     $res [] = $this->cmdResponse();
                 }
@@ -107,13 +113,13 @@ class Redis
 
     function pipeline_begin()
     {
-        $this->pipeline          = true;
+        $this->pipeline = true;
         $this->pipeline_commands = 0;
     }
 
     function pipeline_responses()
     {
-        $response = array();
+        $response = [];
         for ($i = 0; $i < $this->pipeline_commands; $i++) {
             $response[] = $this->cmdResponse();
         }
@@ -139,8 +145,9 @@ class Redis
         }
         while ($s) {
             $i = fwrite($this->_sock, $s);
-            if ($i == 0)
+            if ($i == 0) {
                 break;
+            }
             $s = substr($s, $i);
         }
         if ($this->pipeline) {
@@ -153,8 +160,9 @@ class Redis
 
     function disconnect()
     {
-        if ($this->_sock)
+        if ($this->_sock) {
             @fclose($this->_sock);
+        }
         $this->_sock = null;
     }
 
@@ -194,7 +202,7 @@ class Redis
      */
     function auth($password)
     {
-        return $this->cmd(array('AUTH', $password));
+        return $this->cmd(['AUTH', $password]);
     }
 
     ////////////////////////////////
@@ -215,7 +223,7 @@ class Redis
      */
     function set($key, $value, $preserve = false)
     {
-        return $this->cmd(array(($preserve ? 'SETNX' : 'SET'), $key, $value));
+        return $this->cmd([($preserve ? 'SETNX' : 'SET'), $key, $value]);
     }
 
     /**
@@ -250,7 +258,7 @@ class Redis
             array_unshift($key, "MGET");
             return $this->cmd($key);
         } else {
-            return $this->cmd(array("GET", $key));
+            return $this->cmd(["GET", $key]);
         }
     }
 
@@ -284,7 +292,7 @@ class Redis
      */
     function getset($key, $value)
     {
-        return $this->cmd(array("GETSET", $key, $value));
+        return $this->cmd(["GETSET", $key, $value]);
     }
 
     /**
@@ -306,10 +314,11 @@ class Redis
      */
     function incr($key, $amount = 1)
     {
-        if ($amount == 1)
-            return $this->cmd(array("INCR", $key));
-        else
-            return $this->cmd(array("INCRBY", $key, $amount));
+        if ($amount == 1) {
+            return $this->cmd(["INCR", $key]);
+        } else {
+            return $this->cmd(["INCRBY", $key, $amount]);
+        }
     }
 
     /**
@@ -330,10 +339,11 @@ class Redis
      */
     function decr($key, $amount = 1)
     {
-        if ($amount == 1)
-            return $this->cmd(array("DECR", $key));
-        else
-            return $this->cmd(array("DECRBY", $key, $amount));
+        if ($amount == 1) {
+            return $this->cmd(["DECR", $key]);
+        } else {
+            return $this->cmd(["DECRBY", $key, $amount]);
+        }
     }
 
     /**
@@ -350,7 +360,7 @@ class Redis
      */
     function exists($key)
     {
-        return $this->cmd(array("EXISTS", $key));
+        return $this->cmd(["EXISTS", $key]);
     }
 
     function __isset($key)
@@ -371,7 +381,7 @@ class Redis
      */
     function delete($key)
     {
-        return $this->cmd(array("DEL", $key));
+        return $this->cmd(["DEL", $key]);
     }
 
     function __unset($key)
@@ -392,7 +402,7 @@ class Redis
      */
     function type($key)
     {
-        return $this->cmd(array("TYPE", $key));
+        return $this->cmd(["TYPE", $key]);
     }
 
     ////////////////////////////////
@@ -407,7 +417,7 @@ class Redis
      */
     function keys($pattern)
     {
-        return $this->cmd(array("KEYS", $pattern));
+        return $this->cmd(["KEYS", $pattern]);
     }
 
     /**
@@ -435,9 +445,9 @@ class Redis
     function rename($src, $dst, $preserve = false)
     {
         if ($preserve) {
-            return $this->cmd(array("RENAMENX", $src, $dst));
+            return $this->cmd(["RENAMENX", $src, $dst]);
         }
-        return $this->cmd(array("RENAME", $src, $dst));
+        return $this->cmd(["RENAME", $src, $dst]);
     }
 
     /**
@@ -453,13 +463,13 @@ class Redis
      * set a time to live in seconds on a key
      *
      * @param string $key
-     * @param int    $ttl in seconds
+     * @param int $ttl in seconds
      *
      * @return int 1: the timeout was set. | 0: the timeout was not set since the key already has an associated timeout, or the key does not exist.
      */
     function expire($key, $ttl)
     {
-        return $this->cmd(array("EXPIRE", $key, $ttl));
+        return $this->cmd(["EXPIRE", $key, $ttl]);
     }
 
     /**
@@ -471,7 +481,7 @@ class Redis
      */
     function ttl($key)
     {
-        return $this->cmd(array("TTL", $key));
+        return $this->cmd(["TTL", $key]);
     }
 
     ////////////////////////////////
@@ -491,7 +501,7 @@ class Redis
     function push($key, $value, $tail = true)
     {
         // default is to append the element to the list
-        return $this->cmd(array($tail ? 'RPUSH' : 'LPUSH', $key, $value));
+        return $this->cmd([$tail ? 'RPUSH' : 'LPUSH', $key, $value]);
     }
 
     /**
@@ -503,7 +513,7 @@ class Redis
      */
     function llen($key)
     {
-        return $this->cmd(array("LLEN", $key));
+        return $this->cmd(["LLEN", $key]);
     }
 
     /**
@@ -517,7 +527,7 @@ class Redis
      */
     function lrange($key, $start, $end)
     {
-        return $this->cmd(array("LRANGE", $key, $start, $end));
+        return $this->cmd(["LRANGE", $key, $start, $end]);
     }
 
     /**
@@ -531,7 +541,7 @@ class Redis
      */
     function ltrim($key, $start, $end)
     {
-        return $this->cmd(array("LTRIM", $key, $start, $end));
+        return $this->cmd(["LTRIM", $key, $start, $end]);
     }
 
     /**
@@ -544,7 +554,7 @@ class Redis
      */
     function lindex($key, $index)
     {
-        return $this->cmd(array("LINDEX", $key, $index));
+        return $this->cmd(["LINDEX", $key, $index]);
     }
 
     /**
@@ -558,7 +568,7 @@ class Redis
      */
     function lset($key, $value, $index)
     {
-        return $this->cmd(array("LSET", $key, $index, $value));
+        return $this->cmd(["LSET", $key, $index, $value]);
     }
 
     /**
@@ -583,7 +593,7 @@ class Redis
      */
     function lrem($key, $value, $count = 1)
     {
-        return $this->cmd(array("LREM", $key, $count, $value));
+        return $this->cmd(["LREM", $key, $count, $value]);
     }
 
     /**
@@ -596,7 +606,7 @@ class Redis
      */
     function pop($key, $tail = true)
     {
-        return $this->cmd(array($tail ? 'RPOP' : 'LPOP', $key));
+        return $this->cmd([$tail ? 'RPOP' : 'LPOP', $key]);
     }
 
 
@@ -614,7 +624,7 @@ class Redis
      */
     function sadd($key, $value)
     {
-        return $this->cmd(array("SADD", $key, $value));
+        return $this->cmd(["SADD", $key, $value]);
     }
 
     /**
@@ -627,7 +637,7 @@ class Redis
      */
     function srem($key, $value)
     {
-        return $this->cmd(array("SREM", $key, $value));
+        return $this->cmd(["SREM", $key, $value]);
     }
 
     /**
@@ -637,7 +647,7 @@ class Redis
      */
     function spop($key)
     {
-        return $this->cmd(array("SPOP", $key));
+        return $this->cmd(["SPOP", $key]);
     }
 
     /**
@@ -651,7 +661,7 @@ class Redis
      */
     function smove($srckey, $dstkey, $member)
     {
-        $this->cmd(array("SMOVE", $srckey, $dstkey, $member));
+        $this->cmd(["SMOVE", $srckey, $dstkey, $member]);
     }
 
     /**
@@ -663,7 +673,7 @@ class Redis
      */
     function scard($key)
     {
-        return $this->cmd(array("SCARD", $key));
+        return $this->cmd(["SCARD", $key]);
     }
 
     /**
@@ -676,7 +686,7 @@ class Redis
      */
     function sismember($key, $value)
     {
-        return $this->cmd(array("SISMEMBER", $key, $value));
+        return $this->cmd(["SISMEMBER", $key, $value]);
     }
 
     /**
@@ -802,7 +812,7 @@ class Redis
      */
     function smembers($key)
     {
-        return $this->cmd(array("SMEMBERS", $key));
+        return $this->cmd(["SMEMBERS", $key]);
     }
 
 
@@ -819,7 +829,7 @@ class Redis
      */
     function select_db($key)
     {
-        return $this->cmd(array("SELECT", $key));
+        return $this->cmd(["SELECT", $key]);
     }
 
     /**
@@ -832,7 +842,7 @@ class Redis
      */
     function move($key, $db)
     {
-        return $this->cmd(array("MOVE", $key, $db));
+        return $this->cmd(["MOVE", $key, $db]);
     }
 
     /**
@@ -868,9 +878,9 @@ class Redis
     function sort($key, $query = false)
     {
         if ($query === false) {
-            return $this->cmd(array("SORT", $key));
+            return $this->cmd(["SORT", $key]);
         } else {
-            return $this->cmd(array("SORT", $key, $query));
+            return $this->cmd(["SORT", $key, $query]);
         }
     }
 
@@ -924,7 +934,7 @@ class Redis
         if ($section === false) {
             return $this->cmd("INFO");
         } else {
-            return $this->cmd(array("INFO", $section));
+            return $this->cmd(["INFO", $section]);
         }
     }
 
@@ -951,7 +961,7 @@ class Redis
      */
     function slaveof($host = null, $port = 6379)
     {
-        return $this->cmd(array('SLAVEOF', $host ? "$host $port" : 'no one'));
+        return $this->cmd(['SLAVEOF', $host ? "$host $port" : 'no one']);
     }
 
     ////////////////////////////////
@@ -964,14 +974,14 @@ class Redis
 
     function do_echo($s)
     {
-        return $this->cmd(array("ECHO", $s));
+        return $this->cmd(["ECHO", $s]);
     }
 
     /**
      * Call any non-implemented function of redis using the new unified request protocol
      *
      * @param string $name
-     * @param array  $params
+     * @param array $params
      */
     function __call($name, $params)
     {

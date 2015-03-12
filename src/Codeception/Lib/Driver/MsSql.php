@@ -8,7 +8,7 @@ class MsSql extends Db
         $this->dbh->exec("DECLARE tables_cursor CURSOR FOR SELECT name FROM sysobjects WHERE type = 'U'");
         $this->dbh->exec("OPEN tables_cursor DECLARE @tablename sysname");
         $this->dbh->exec(
-                  "FETCH NEXT FROM tables_cursor INTO @tablename
+            "FETCH NEXT FROM tables_cursor INTO @tablename
                                                WHILE (@@FETCH_STATUS <> -1)
                                                BEGIN
                                                EXEC ('DROP TABLE ' + @tablename)

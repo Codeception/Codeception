@@ -1,9 +1,9 @@
 <?php
 namespace Codeception;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use \Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Exception\Configuration as ConfigurationException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Codecept
 {
@@ -31,35 +31,36 @@ class Codecept
     /**
      * @var array
      */
-    protected $options = array(
-        'silent' => false,
-        'debug' => false,
-        'steps' => false,
-        'html' => false,
-        'xml' => false,
-        'json' => false,
-        'tap' => false,
-        'report' => false,
-        'colors' => false,
-        'coverage' => false,
-        'coverage-xml' => false,
+    protected $options = [
+        'silent'        => false,
+        'debug'         => false,
+        'steps'         => false,
+        'html'          => false,
+        'xml'           => false,
+        'json'          => false,
+        'tap'           => false,
+        'report'        => false,
+        'colors'        => false,
+        'coverage'      => false,
+        'coverage-xml'  => false,
         'coverage-html' => false,
         'coverage-text' => false,
-        'groups' => null,
+        'groups'        => null,
         'excludeGroups' => null,
-        'filter' => null,
-        'env' => null,
-        'fail-fast' => false,
-        'verbosity' => 1,
-        'interactive' => true
-    );
+        'filter'        => null,
+        'env'           => null,
+        'fail-fast'     => false,
+        'verbosity'     => 1,
+        'interactive'   => true
+    ];
 
     /**
      * @var array
      */
-    protected $extensions = array();
+    protected $extensions = [];
 
-    public function __construct($options = array()) {
+    public function __construct($options = [])
+    {
         $this->result = new \PHPUnit_Framework_TestResult;
         $this->dispatcher = new EventDispatcher();
         $this->loadExtensions($this->options);
@@ -84,7 +85,7 @@ class Codecept
             if (!class_exists($extensionClass)) {
                 throw new ConfigurationException("Class `$extensionClass` is not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
             }
-            $extensionConfig =  isset($config['extensions']['config'][$extensionClass])
+            $extensionConfig = isset($config['extensions']['config'][$extensionClass])
                 ? $config['extensions']['config'][$extensionClass]
                 : [];
 
@@ -96,12 +97,14 @@ class Codecept
         }
     }
 
-    protected function registerPHPUnitListeners() {
+    protected function registerPHPUnitListeners()
+    {
         $listener = new PHPUnit\Listener($this->dispatcher);
         $this->result->addListener($listener);
     }
 
-    public function registerSubscribers() {
+    public function registerSubscribers()
+    {
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
@@ -110,8 +113,12 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
 
         // optional
-        if (!$this->options['silent'])    $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
-        if ($this->options['fail-fast'])  $this->dispatcher->addSubscriber(new Subscriber\FailFast());
+        if (!$this->options['silent']) {
+            $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        }
+        if ($this->options['fail-fast']) {
+            $this->dispatcher->addSubscriber(new Subscriber\FailFast());
+        }
 
         if ($this->options['coverage']) {
             $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
@@ -158,7 +165,8 @@ class Codecept
         }
     }
 
-    public function runSuite($settings, $suite, $test = null) {
+    public function runSuite($settings, $suite, $test = null)
+    {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
         $suiteManager->initialize();
         $suiteManager->loadTests($test);
@@ -167,11 +175,13 @@ class Codecept
         return $this->result;
     }
 
-    public static function versionString() {
-        return 'Codeception PHP Testing Framework v'.self::VERSION;
+    public static function versionString()
+    {
+        return 'Codeception PHP Testing Framework v' . self::VERSION;
     }
 
-    public function printResult() {
+    public function printResult()
+    {
         $result = $this->getResult();
         $result->flushListeners();
 
@@ -184,11 +194,13 @@ class Codecept
     /**
      * @return \PHPUnit_Framework_TestResult
      */
-    public function getResult() {
+    public function getResult()
+    {
         return $this->result;
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 

@@ -18,13 +18,13 @@ class Kohana extends BrowserKitClient
     {
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
-        $_FILES  = $this->remapFiles($request->getFiles());
+        $_FILES = $this->remapFiles($request->getFiles());
 
         $uri = str_replace('http://localhost', '', $request->getUri());
 
-        $_SERVER['KOHANA_ENV']     = 'testing';
+        $_SERVER['KOHANA_ENV'] = 'testing';
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI']    = strtoupper($uri);
+        $_SERVER['REQUEST_URI'] = strtoupper($uri);
 
         $this->_initRequest();
 
@@ -41,11 +41,11 @@ class Kohana extends BrowserKitClient
         $kohanaRequest->cookie($_COOKIE);
 
         $kohanaRequest::$initial = $kohanaRequest;
-        $content                 = $kohanaRequest->execute()->render();
+        $content = $kohanaRequest->execute()->render();
 
-        $headers                 = (array)$kohanaRequest->response()->headers();
+        $headers = (array)$kohanaRequest->response()->headers();
         $headers['Content-type'] = "text/html; charset=UTF-8";
-        $response                = new Response($content, 200, $headers);
+        $response = new Response($content, 200, $headers);
         return $response;
     }
 

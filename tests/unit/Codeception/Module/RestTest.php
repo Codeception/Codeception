@@ -18,7 +18,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module = Stub::make(
             '\Codeception\Module\REST',
             [
-                'getModules' => [new \Codeception\Module\PhpBrowser()]
+                'getModules' => [new \Codeception\Module\PhpBrowser(make_container())]
             ]
         );
         $this->module->_initialize();

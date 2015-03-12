@@ -23,7 +23,7 @@ class Di
     {
         return isset($this->container[$className]) ? $this->container[$className] : null;
     }
-    
+
     public function set($class)
     {
         $this->container[get_class($class)] = $class;
@@ -71,7 +71,7 @@ class Di
                     $constructorArgs = $this->prepareArgs($reflectedConstructor);
                 }
             } catch (\Exception $e) {
-                throw new InjectionException("Failed to create instance of '$className'. ".$e->getMessage());
+                throw new InjectionException("Failed to create instance of '$className'. " . $e->getMessage());
             }
             $object = $reflectedClass->newInstanceArgs($constructorArgs);
         }
@@ -102,7 +102,7 @@ class Di
         try {
             $args = $this->prepareArgs($reflectedMethod, $defaults);
         } catch (\Exception $e) {
-            throw new InjectionException("Failed to inject dependencies in instance of '{$reflectedObject->name}'. ".$e->getMessage());
+            throw new InjectionException("Failed to inject dependencies in instance of '{$reflectedObject->name}'. " . $e->getMessage());
         }
 
         if (!$reflectedMethod->isPublic()) {

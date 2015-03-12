@@ -66,7 +66,7 @@ interface Web
      * in the request with the last parameter as an alternative to
      * explicitly setting its value in the second parameter, as
      * button values are not otherwise included in the request.
-     * 
+     *
      * Examples:
      *
      * ``` php
@@ -97,13 +97,13 @@ interface Web
      *
      * ```
      * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
-     * 
+     *
      * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
-     * 
+     *
      * ```php
      * <?php
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-     * 
+     *
      * ```
      *
      * @param $selector
@@ -312,7 +312,7 @@ interface Web
     public function dontSeeCheckboxIsChecked($checkbox);
 
     /**
-     * Checks that the given input field or textarea contains the given value. 
+     * Checks that the given input field or textarea contains the given value.
      * For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
      *
      * ``` php
@@ -507,7 +507,7 @@ interface Web
      * @param array $attributes
      * @return
      */
-    public function seeElement($selector, $attributes = array());
+    public function seeElement($selector, $attributes = []);
 
     /**
      * Checks that the given element is invisible or not present on the page.
@@ -525,11 +525,11 @@ interface Web
      * @param $selector
      * @param array $attributes
      */
-    public function dontSeeElement($selector, $attributes = array());
+    public function dontSeeElement($selector, $attributes = []);
 
-   /**
+    /**
      * Checks that there are a certain number of elements matched by the given locator on the page.
-     * 
+     *
      * ``` php
      * <?php
      * $I->seeNumberOfElements('tr', 10);
@@ -537,12 +537,12 @@ interface Web
      * ?>
      * ```
      * @param $selector
-     * @param mixed $expected:
+     * @param mixed $expected :
      * - string: strict number
-     * - array: range of numbers [0,10]  
+     * - array: range of numbers [0,10]
      */
-    public function seeNumberOfElements($selector, $expected);    
-    
+    public function seeNumberOfElements($selector, $expected);
+
     /**
      * Checks that the given option is selected.
      *

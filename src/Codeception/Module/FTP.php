@@ -99,23 +99,24 @@ class FTP extends \Codeception\Module\Filesystem
      *
      * @var array
      */
-    protected $config = array(
-        'type' => 'ftp',
-        'port' => 21,
-        'timeout' => 90,
-        'user' => 'anonymous',
+    protected $config = [
+        'type'     => 'ftp',
+        'port'     => 21,
+        'timeout'  => 90,
+        'user'     => 'anonymous',
         'password' => '',
-        'key' => '',
-        'tmp' => 'tests/_data',
-        'passive' => false,
-        'cleanup' => true);
+        'key'      => '',
+        'tmp'      => 'tests/_data',
+        'passive'  => false,
+        'cleanup'  => true
+    ];
 
     /**
      * Required configuration fields
      *
      * @var array
      */
-    protected $requiredFields = array('host');
+    protected $requiredFields = ['host'];
 
     // ----------- SETUP METHODS BELOW HERE -------------------------//
 
@@ -127,7 +128,7 @@ class FTP extends \Codeception\Module\Filesystem
     public function _before(\Codeception\TestCase $test)
     {
         // Login using config settings
-        $this->loginAs($this->config['user'], $this->config['password'] );
+        $this->loginAs($this->config['user'], $this->config['password']);
     }
 
     /**
@@ -138,10 +139,10 @@ class FTP extends \Codeception\Module\Filesystem
         $this->_closeConnection();
 
         // Clean up temp files
-        if ($this->config['cleanup'])
-        {
-            if (file_exists($this->config['tmp'] . '/ftp_data_file.tmp'))
+        if ($this->config['cleanup']) {
+            if (file_exists($this->config['tmp'] . '/ftp_data_file.tmp')) {
                 unlink($this->config['tmp'] . '/ftp_data_file.tmp');
+            }
         }
     }
 
@@ -186,7 +187,9 @@ class FTP extends \Codeception\Module\Filesystem
      */
     protected function absolutizePath($path)
     {
-        if (strpos($path, '/') === 0) return $path;
+        if (strpos($path, '/') === 0) {
+            return $path;
+        }
         return $this->path . $path;
     }
 
@@ -227,8 +230,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function seeFileFoundMatches($regex, $path = '')
     {
-        foreach ($this->grabFileList($path) as $filename)
-        {
+        foreach ($this->grabFileList($path) as $filename) {
             preg_match($regex, $filename, $matches);
             if (!empty($matches)) {
                 $this->debug("file '{$filename}' matches '{$regex}'");
@@ -260,8 +262,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function dontSeeFileFoundMatches($regex, $path = '')
     {
-        foreach ($this->grabFileList($path) as $filename)
-        {
+        foreach ($this->grabFileList($path) as $filename) {
             preg_match($regex, $filename, $matches);
             if (!empty($matches)) {
                 \PHPUnit_Framework_Assert::fail("file matches found for {$regex}");
@@ -332,7 +333,8 @@ class FTP extends \Codeception\Module\Filesystem
      * @param $src
      * @param $dst
      */
-    public function copyDir($src, $dst) {
+    public function copyDir($src, $dst)
+    {
         \PHPUnit_Framework_Assert::fail('copyDir() currently unsupported by FTP module');
     }
 
@@ -440,13 +442,14 @@ class FTP extends \Codeception\Module\Filesystem
         $absolutize_path = $this->absolutizePath($path) . ($path != '' && substr($path, -1) != '/' ? DIRECTORY_SEPARATOR : '');
         $files = $this->_listFiles($absolutize_path);
 
-        $display_files = array();
+        $display_files = [];
         if (is_array($files) && !empty($files)) {
             $this->debug('File List:');
             foreach ($files as &$file) {
                 if (strtolower($file) != '.' &&
                     strtolower($file) != '..' &&
-                    strtolower($file) != 'thumbs.db') {    // Ignore '.', '..' and 'thumbs.db'
+                    strtolower($file) != 'thumbs.db'
+                ) {    // Ignore '.', '..' and 'thumbs.db'
 
                     $file = str_replace($absolutize_path, '', $file); // Replace full path from file listings if returned in listing
                     $display_files[] = $file;
@@ -456,7 +459,7 @@ class FTP extends \Codeception\Module\Filesystem
             return $ignore ? $display_files : $files;
         }
         $this->debug("File List: <empty>");
-        return array();
+        return [];
     }
 
     /**
@@ -548,8 +551,7 @@ class FTP extends \Codeception\Module\Filesystem
     {
         $this->_closeConnection();   // Close connection if already open
 
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
                 $this->ftp = new \Net_SFTP($this->config['host'], $this->config['port'], $this->config['timeout']);
                 if ($this->ftp === false) {
@@ -557,7 +559,7 @@ class FTP extends \Codeception\Module\Filesystem
                     \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
                 }
 
-                if(isset($this->config['key'])) {
+                if (isset($this->config['key'])) {
                     $keyFile = file_get_contents($this->config['key']);
                     $password = new \Crypt_RSA();
                     $password->loadKey($keyFile);
@@ -575,14 +577,12 @@ class FTP extends \Codeception\Module\Filesystem
                 }
 
                 // Set passive mode option (ftp only option)
-                if (isset($this->config['passive']))
-                {
+                if (isset($this->config['passive'])) {
                     ftp_pasv($this->ftp, strtolower($this->config['passive']) == 'enabled');
                 }
 
                 // Login using given access details
-                if (!@ftp_login($this->ftp, $user, $password))
-                {
+                if (!@ftp_login($this->ftp, $user, $password)) {
                     \PHPUnit_Framework_Assert::fail('failed to authenticate user');
                 }
         }
@@ -596,8 +596,7 @@ class FTP extends \Codeception\Module\Filesystem
     private function _closeConnection()
     {
         if (!is_null($this->ftp)) {
-            switch(strtolower($this->config['type']))
-            {
+            switch (strtolower($this->config['type'])) {
                 case 'sftp':
                     break;
                 default:
@@ -614,17 +613,18 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _listFiles($path)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
                 $files = @$this->ftp->nlist($path);
-                if ($files !== false)
+                if ($files !== false) {
                     return $files;
+                }
                 break;
             default:
                 $files = @ftp_nlist($this->ftp, $path);
-                if ($files !== false)
+                if ($files !== false) {
                     return $files;
+                }
         }
         \PHPUnit_Framework_Assert::fail("couldn't list files");
     }
@@ -636,15 +636,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _directory()
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if ($pwd = @$this->ftp->pwd())
-                    return $pwd;// == DIRECTORY_SEPARATOR ? '' : $pwd;
+                if ($pwd = @$this->ftp->pwd()) {
+                    return $pwd;
+                }// == DIRECTORY_SEPARATOR ? '' : $pwd;
                 break;
             default:
-                if ($pwd = @ftp_pwd($this->ftp))
+                if ($pwd = @ftp_pwd($this->ftp)) {
                     return $pwd;
+                }
         }
         \PHPUnit_Framework_Assert::fail("couldn't get current directory");
     }
@@ -656,15 +657,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _changeDirectory($path)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (@$this->ftp->chdir($path))
+                if (@$this->ftp->chdir($path)) {
                     return;
+                }
                 break;
             default:
-                if (@ftp_chdir($this->ftp, $path))
+                if (@ftp_chdir($this->ftp, $path)) {
                     return;
+                }
         }
         \PHPUnit_Framework_Assert::fail("couldn't change directory {$path}");
     }
@@ -683,19 +685,20 @@ class FTP extends \Codeception\Module\Filesystem
 
         // Download file to local tmp directory
         $tmp_file = $this->config['tmp'] . "/ftp_data_file.tmp";
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->get($filename, $tmp_file))
+                if (!@$this->ftp->get($filename, $tmp_file)) {
                     \PHPUnit_Framework_Assert::fail('failed to download file to tmp directory');
+                }
                 break;
             default:
-                if (!@ftp_get($this->ftp, $tmp_file, $filename, FTP_BINARY))
+                if (!@ftp_get($this->ftp, $tmp_file, $filename, FTP_BINARY)) {
                     \PHPUnit_Framework_Assert::fail('failed to download file to tmp directory');
+                }
         }
 
         // Open file content to variable
-        if($this->file = file_get_contents($tmp_file)){
+        if ($this->file = file_get_contents($tmp_file)) {
             $this->filepath = $filename;
         } else {
             \PHPUnit_Framework_Assert::fail('failed to open tmp file');
@@ -724,15 +727,16 @@ class FTP extends \Codeception\Module\Filesystem
         $this->file = $contents;
 
         // Upload the file to server
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->put($filename, $tmp_file, NET_SFTP_LOCAL_FILE))
+                if (!@$this->ftp->put($filename, $tmp_file, NET_SFTP_LOCAL_FILE)) {
                     \PHPUnit_Framework_Assert::fail('failed to upload file to server');
+                }
                 break;
             default:
-                if (!ftp_put($this->ftp, $filename, $tmp_file, FTP_BINARY))
+                if (!ftp_put($this->ftp, $filename, $tmp_file, FTP_BINARY)) {
                     \PHPUnit_Framework_Assert::fail('failed to upload file to server');
+                }
 
         }
     }
@@ -744,15 +748,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _makeDirectory($path)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->mkdir($path, true))
+                if (!@$this->ftp->mkdir($path, true)) {
                     \PHPUnit_Framework_Assert::fail("couldn't make directory {$path}");
+                }
                 break;
             default:
-                if (!@ftp_mkdir($this->ftp, $path))
+                if (!@ftp_mkdir($this->ftp, $path)) {
                     \PHPUnit_Framework_Assert::fail("couldn't make directory {$path}");
+                }
         }
         $this->debug("Make directory: {$path}");
     }
@@ -765,15 +770,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _renameDirectory($path, $rename)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->rename($path, $rename))
+                if (!@$this->ftp->rename($path, $rename)) {
                     \PHPUnit_Framework_Assert::fail("couldn't rename directory {$path} to {$rename}");
+                }
                 break;
             default:
-                if (!@ftp_rename($this->ftp, $path, $rename))
+                if (!@ftp_rename($this->ftp, $path, $rename)) {
                     \PHPUnit_Framework_Assert::fail("couldn't rename directory {$path} to {$rename}");
+                }
         }
         $this->debug("Renamed directory: {$path} to {$rename}");
     }
@@ -785,15 +791,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _deleteFile($filename)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->delete($filename))
+                if (!@$this->ftp->delete($filename)) {
                     \PHPUnit_Framework_Assert::fail("couldn't delete {$filename}");
+                }
                 break;
             default:
-                if (!@ftp_delete($this->ftp, $filename))
+                if (!@ftp_delete($this->ftp, $filename)) {
                     \PHPUnit_Framework_Assert::fail("couldn't delete {$filename}");
+                }
         }
         $this->debug("Deleted file: {$filename}");
     }
@@ -805,15 +812,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _deleteDirectory($path)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if (!@$this->ftp->delete($path, true))
+                if (!@$this->ftp->delete($path, true)) {
                     \PHPUnit_Framework_Assert::fail("couldn't delete directory {$path}");
+                }
                 break;
             default:
-                if (!@$this->_ftp_delete($path))
+                if (!@$this->_ftp_delete($path)) {
                     \PHPUnit_Framework_Assert::fail("couldn't delete directory {$path}");
+                }
         }
         $this->debug("Deleted directory: {$path}");
     }
@@ -827,14 +835,12 @@ class FTP extends \Codeception\Module\Filesystem
     private function _ftp_delete($directory)
     {
         # here we attempt to delete the file/directory
-        if( !(@ftp_rmdir($this->ftp, $directory) || @ftp_delete($this->ftp, $directory)) )
-        {
+        if (!(@ftp_rmdir($this->ftp, $directory) || @ftp_delete($this->ftp, $directory))) {
             # if the attempt to delete fails, get the file listing
             $filelist = @ftp_nlist($this->ftp, $directory);
 
             # loop through the file list and recursively delete the FILE in the list
-            foreach($filelist as $file)
-            {
+            foreach ($filelist as $file) {
                 $this->_ftp_delete($file);
             }
 
@@ -864,15 +870,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _size($filename)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if ($size = @$this->ftp->size($filename))
+                if ($size = @$this->ftp->size($filename)) {
                     return $size;
+                }
                 break;
             default:
-                if ($size = @ftp_size($this->ftp, $filename) > 0)
+                if ($size = @ftp_size($this->ftp, $filename) > 0) {
                     return $size;
+                }
         }
         \PHPUnit_Framework_Assert::fail("couldn't get the file size for {$filename}");
     }
@@ -885,15 +892,16 @@ class FTP extends \Codeception\Module\Filesystem
      */
     private function _modified($filename)
     {
-        switch(strtolower($this->config['type']))
-        {
+        switch (strtolower($this->config['type'])) {
             case 'sftp':
-                if ($info = @$this->ftp->lstat($filename))
+                if ($info = @$this->ftp->lstat($filename)) {
                     return $info['mtime'];
+                }
                 break;
             default:
-                if ($time = @ftp_mdtm($this->ftp, $filename))
+                if ($time = @ftp_mdtm($this->ftp, $filename)) {
                     return $time;
+                }
         }
         \PHPUnit_Framework_Assert::fail("couldn't get the file size for {$filename}");
     }

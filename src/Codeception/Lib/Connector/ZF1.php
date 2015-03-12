@@ -43,7 +43,7 @@ class ZF1 extends Client
         $redirector->setExit(false);
 
         // json helper should not exit
-        $json               = \Zend_Controller_Action_HelperBroker::getStaticHelper('json');
+        $json = \Zend_Controller_Action_HelperBroker::getStaticHelper('json');
         $json->suppressExit = true;
 
         $zendRequest = new \Zend_Controller_Request_HttpTestCase();
@@ -54,9 +54,9 @@ class ZF1 extends Client
         // so we set all parameters in ZF's request here to not break apps
         // relying on $request->getPost()
         $zendRequest->setPost($request->getParameters());
-        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+        $zendRequest->setRequestUri(str_replace('http://localhost', '', $request->getUri()));
         $zendRequest->setHeaders($request->getServer());
-        $_FILES  = $this->remapFiles($request->getFiles());
+        $_FILES = $this->remapFiles($request->getFiles());
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
         $zendResponse = new \Zend_Controller_Response_HttpTestCase;
@@ -83,8 +83,9 @@ class ZF1 extends Client
      * @param \Zend_Controller_Response_Abstract $response The ZF1 Response Object.
      * @return array the clean key/value headers
      */
-    private function _formatResponseHeaders (\Zend_Controller_Response_Abstract $response) {
-        $headers = array();
+    private function _formatResponseHeaders(\Zend_Controller_Response_Abstract $response)
+    {
+        $headers = [];
         foreach ($response->getHeaders() as $header) {
             $name = $header['name'];
             if (array_key_exists($name, $headers)) {
@@ -97,7 +98,6 @@ class ZF1 extends Client
         }
         return $headers;
     }
-
 
 
     /**

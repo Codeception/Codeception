@@ -2,11 +2,11 @@
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Helper;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Creates empty Helper class.
@@ -22,10 +22,10 @@ class GenerateHelper extends Command
     protected function configure()
     {
         $this->setDefinition(
-            array(
+            [
                 new InputArgument('name', InputArgument::REQUIRED, 'suite to be generated'),
                 new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            )
+            ]
         );
     }
 

@@ -1,6 +1,10 @@
-<?php 
+<?php
 namespace Codeception\Lib\Generator;
+
 use Codeception\Codecept;
+use Codeception\Configuration;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 
 class Actions
@@ -46,8 +50,13 @@ EOF;
     {
         $this->name = $settings['class_name'];
         $this->settings = $settings;
-        $this->modules = \Codeception\Configuration::modules($this->settings);
-        $this->actions = \Codeception\Configuration::actions($this->modules);
+        $this->di = new Di();
+        $modules = Configuration::modules($this->settings);
+        $this->moduleContainer = new ModuleContainer($this->di, $settings);
+        foreach ($modules as $moduleName) {
+            $this->modules[$moduleName] = $this->moduleContainer->create($moduleName);
+        }
+        $this->actions = $this->moduleContainer->getActions();
     }
 
 
@@ -75,7 +84,7 @@ EOF;
 
         return (new Template($this->template))
             ->place('namespace', $namespace ? $namespace . '\\' : '')
-            ->place('hash', self::genHash($this->actions, $this->settings))
+            ->place('hash', self::genHash($this->modules, $this->settings))
             ->place('name', $this->name)
             ->place('use', implode("\n", $uses))
             ->place('methods', implode("\n\n ", $code))
@@ -112,7 +121,7 @@ EOF;
                 ->place('step', 'ConditionalAssertion')
                 ->produce();
 
-        // generate negative assertion
+            // generate negative assertion
         } elseif (0 === strpos($refMethod->name, 'dontSee')) {
             $type = 'Assertion';
             $body .= $methodTemplate
@@ -142,7 +151,7 @@ EOF;
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
-        $params = array();
+        $params = [];
         foreach ($refMethod->getParameters() as $param) {
 
             if ($param->isOptional()) {
@@ -186,9 +195,14 @@ EOF;
         return $doc;
     }
 
-    public static function genHash($actions, $settings)
+    public static function genHash($modules, $settings)
     {
-        return md5(Codecept::VERSION.serialize($actions).serialize($settings['modules']));
+        $actions = [];
+        foreach ($modules as $moduleName => $module) {
+            $actions[$moduleName] = get_class_methods(get_class($module));
+        }
+
+        return md5(Codecept::VERSION . serialize($actions) . serialize($settings['modules']));
     }
 
     public function getNumMethods()

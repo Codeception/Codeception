@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
@@ -53,21 +54,22 @@ class Laravel5 extends Framework implements ActiveRecord
     /**
      * Constructor.
      *
+     * @param ModuleContainer $container
      * @param $config
      */
-    public function __construct($config = null)
+    public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
-            array(
-                'cleanup' => true,
+            [
+                'cleanup'          => true,
                 'environment_file' => '.env',
-                'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
-                'root' => '',
-            ),
-            (array) $config
+                'bootstrap'        => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
+                'root'             => '',
+            ],
+            (array)$config
         );
 
-        parent::__construct();
+        parent::__construct($container);
     }
 
     /**
@@ -142,7 +144,7 @@ class Laravel5 extends Framework implements ActiveRecord
     protected function revertErrorHandler()
     {
         $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
+        set_error_handler([$handler, 'errorHandler']);
     }
 
     /**
@@ -174,7 +176,7 @@ class Laravel5 extends Framework implements ActiveRecord
 
         $bootstrapFile = $projectDir . $this->config['bootstrap'];
 
-        if (! file_exists($bootstrapFile)) {
+        if (!file_exists($bootstrapFile)) {
             throw new ModuleConfig(
                 $this, "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
             );
@@ -186,15 +188,15 @@ class Laravel5 extends Framework implements ActiveRecord
         return $app;
     }
 
-	/**
+    /**
      * Provides access the Laravel application object.
      *
      * @return \Illuminate\Foundation\Application
      */
-	public function getApplication()
-	{
-		return $this->app;
-	}
+    public function getApplication()
+    {
+        return $this->app;
+    }
 
     /**
      * Opens web page using route name and parameters.
@@ -244,7 +246,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $route
      * @param array $params
      */
-    public function seeCurrentRouteIs($route, $params = array())
+    public function seeCurrentRouteIs($route, $params = [])
     {
         $this->seeCurrentUrlEquals($this->app['url']->route($route, $params, false));
     }
@@ -261,7 +263,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $action
      * @param array $params
      */
-    public function seeCurrentActionIs($action, $params = array())
+    public function seeCurrentActionIs($action, $params = [])
     {
         $this->seeCurrentUrlEquals($this->app['url']->action($action, $params, false));
     }
@@ -445,7 +447,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($model, $attributes = [])
     {
         $id = $this->app['db']->table($model)->insertGetId($attributes);
         if (!$id) {
@@ -464,7 +466,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
@@ -485,7 +487,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
@@ -507,7 +509,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($model, $attributes = [])
     {
         return $this->findRecord($model, $attributes);
     }
@@ -517,7 +519,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    protected function findRecord($model, $attributes = array())
+    protected function findRecord($model, $attributes = [])
     {
         $query = $this->app['db']->table($model);
         foreach ($attributes as $key => $value) {

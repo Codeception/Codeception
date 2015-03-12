@@ -21,7 +21,7 @@ class AMQPTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->module = new \Codeception\Module\AMQP;
+        $this->module = new \Codeception\Module\AMQP(make_container());
         $this->module->_setConfig($this->config);
         $res = stream_socket_client('tcp://localhost:5672');
         if ($res === false) $this->markTestSkipped('AMQP is not running');

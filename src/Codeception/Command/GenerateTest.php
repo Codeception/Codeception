@@ -2,11 +2,11 @@
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Test as TestGenerator;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Generates skeleton for Unit Test that extends `Codeception\TestCase\Test`.
@@ -21,15 +21,18 @@ class GenerateTest extends Command
 
     protected function configure()
     {
-        $this->setDefinition(array(
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-            new InputArgument('class', InputArgument::REQUIRED, 'class name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-        ));
+        $this->setDefinition(
+            [
+                new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
+                new InputArgument('class', InputArgument::REQUIRED, 'class name'),
+                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            ]
+        );
         parent::configure();
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return 'Generates empty unit test file in suite';
     }
 
@@ -44,7 +47,7 @@ class GenerateTest extends Command
         $path = $this->buildPath($config['path'], $class);
 
         $filename = $this->completeSuffix($className, 'Test');
-        $filename = $path.$filename;
+        $filename = $path . $filename;
 
         $gen = new TestGenerator($config, $class);
 

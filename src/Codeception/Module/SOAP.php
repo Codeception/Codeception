@@ -37,8 +37,8 @@ use Codeception\Util\Soap as SoapUtils;
 class SOAP extends \Codeception\Module
 {
 
-    protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/');
-    protected $requiredFields = array('endpoint');
+    protected $config = ['schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/'];
+    protected $requiredFields = ['endpoint'];
     /**
      * @var \Symfony\Component\BrowserKit\Client
      */
@@ -67,11 +67,14 @@ class SOAP extends \Codeception\Module
                     }
                 }
             } else {
-                if (!$this->hasModule('PhpBrowser'))
+                if (!$this->hasModule('PhpBrowser')) {
                     throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For Soap testing via HTTP please enable PhpBrowser module");
+                }
                 $this->client = $this->getModule('PhpBrowser')->client;
             }
-            if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
+            if (!$this->client) {
+                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
+            }
         }
 
         $this->buildRequest();
@@ -104,7 +107,7 @@ class SOAP extends \Codeception\Module
      * @param $header
      * @param array $params
      */
-    public function haveSoapHeader($header, $params = array())
+    public function haveSoapHeader($header, $params = [])
     {
         $soap_schema_url = $this->config['schema_url'];
         $xml = $this->xmlRequest;
@@ -271,7 +274,8 @@ class SOAP extends \Codeception\Module
      *
      * @param $xml
      */
-    public function seeSoapResponseContainsStructure($xml) {
+    public function seeSoapResponseContainsStructure($xml)
+    {
         $xml = SoapUtils::toXml($xml);
         $this->debugSection("Structure", $xml->saveXML());
         $root = $xml->firstChild;
@@ -280,7 +284,9 @@ class SOAP extends \Codeception\Module
 
         $els = $this->xmlResponse->getElementsByTagName($root->nodeName);
 
-        if (empty($els)) return \PHPUnit_Framework_Assert::fail("Element {$root->nodeName} not found in response");
+        if (empty($els)) {
+            return \PHPUnit_Framework_Assert::fail("Element {$root->nodeName} not found in response");
+        }
 
         $matches = false;
         foreach ($els as $node) {
@@ -305,7 +311,9 @@ class SOAP extends \Codeception\Module
     {
         $path = new \DOMXPath($this->xmlResponse);
         $res = $path->query($xpath);
-        if ($res === false) $this->fail("XPath selector is malformed");
+        if ($res === false) {
+            $this->fail("XPath selector is malformed");
+        }
         $this->assertGreaterThan(0, $res->length);
     }
 
@@ -324,10 +332,11 @@ class SOAP extends \Codeception\Module
     {
         $path = new \DOMXPath($this->xmlResponse);
         $res = $path->query($xpath);
-        if ($res === false) $this->fail("XPath selector is malformed");
+        if ($res === false) {
+            $this->fail("XPath selector is malformed");
+        }
         $this->assertEquals(0, $res->length);
     }
-
 
 
     /**
@@ -335,7 +344,8 @@ class SOAP extends \Codeception\Module
      *
      * @param $code
      */
-    public function seeResponseCodeIs($code) {
+    public function seeResponseCodeIs($code)
+    {
         \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getInternalResponse()->getStatus(), "soap response code matches expected");
     }
 
@@ -347,7 +357,8 @@ class SOAP extends \Codeception\Module
      * @param $cssOrXPath
      * @return string
      */
-    public function grabTextContentFrom($cssOrXPath) {
+    public function grabTextContentFrom($cssOrXPath)
+    {
         $el = $this->matchElement($cssOrXPath);
         return $el->textContent;
     }
@@ -361,9 +372,12 @@ class SOAP extends \Codeception\Module
      * @param $attribute
      * @return string
      */
-    public function grabAttributeFrom($cssOrXPath, $attribute) {
+    public function grabAttributeFrom($cssOrXPath, $attribute)
+    {
         $el = $this->matchElement($cssOrXPath);
-        if (!$el->hasAttribute($attribute)) $this->fail("Attribute not found in element matched by '$cssOrXPath'");
+        if (!$el->hasAttribute($attribute)) {
+            $this->fail("Attribute not found in element matched by '$cssOrXPath'");
+        }
         return $el->getAttribute($attribute);
     }
 
@@ -377,8 +391,11 @@ class SOAP extends \Codeception\Module
         try {
             $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($cssOrXPath);
             $els = $xpath->query($selector);
-            if ($els) return $els->item(0);
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {}
+            if ($els) {
+                return $els->item(0);
+            }
+        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
+        }
         $els = $xpath->query($cssOrXPath);
         if ($els) {
             return $els->item(0);
@@ -394,10 +411,14 @@ class SOAP extends \Codeception\Module
             foreach ($xml->childNodes as $node2) {
                 if ($node1->nodeName == $node2->nodeName) {
                     $matched = $this->structureMatches($node1, $node2);
-                    if ($matched) break;
+                    if ($matched) {
+                        break;
+                    }
                 }
             }
-            if (!$matched) return false;
+            if (!$matched) {
+                return false;
+            }
         }
         return true;
     }
@@ -434,14 +455,16 @@ class SOAP extends \Codeception\Module
 
     protected function processRequest($action, $body)
     {
-        $this->client->request('POST',
-        $this->config['endpoint'],
-        array(), array(),
-        array(
-            "HTTP_Content-Type" => "text/xml; charset=UTF-8",
-            'HTTP_Content-Length' => strlen($body),
-            'HTTP_SOAPAction' => $action),
-        $body
+        $this->client->request(
+            'POST',
+            $this->config['endpoint'],
+            [], [],
+            [
+                "HTTP_Content-Type"   => "text/xml; charset=UTF-8",
+                'HTTP_Content-Length' => strlen($body),
+                'HTTP_SOAPAction'     => $action
+            ],
+            $body
         );
     }
 
@@ -453,7 +476,7 @@ class SOAP extends \Codeception\Module
             $this->processRequest($action, $body);
         } catch (\ErrorException $e) {
             // Zend_Soap outputs warning as an exception
-            if (strpos($e->getMessage(),'Warning: Cannot modify header information')===false) {
+            if (strpos($e->getMessage(), 'Warning: Cannot modify header information') === false) {
                 ob_end_clean();
                 throw $e;
             }

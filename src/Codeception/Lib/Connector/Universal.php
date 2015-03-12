@@ -23,14 +23,14 @@ class Universal extends Client
     public function doRequest($request)
     {
         if ($this->mockedResponse) {
-            $response             = $this->mockedResponse;
+            $response = $this->mockedResponse;
             $this->mockedResponse = null;
             return $response;
         }
 
         $_COOKIE = $request->getCookies();
         $_SERVER = $request->getServer();
-        $_FILES  = $this->remapFiles($request->getFiles());
+        $_FILES = $this->remapFiles($request->getFiles());
 
         $uri = str_replace('http://localhost', '', $request->getUri());
 
@@ -42,7 +42,7 @@ class Universal extends Client
         }
 
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
-        $_SERVER['REQUEST_URI']    = $uri;
+        $_SERVER['REQUEST_URI'] = $uri;
 
         ob_start();
         include $this->index;
@@ -50,7 +50,7 @@ class Universal extends Client
         $content = ob_get_contents();
         ob_end_clean();
 
-        $headers     = array();
+        $headers = [];
         $php_headers = headers_list();
         foreach ($php_headers as $value) {
             // Get the header name

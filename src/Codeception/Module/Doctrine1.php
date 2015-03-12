@@ -21,18 +21,20 @@ namespace Codeception\Module;
 
 class Doctrine1 extends \Codeception\Module
 {
-    protected $config = array('cleanup' => true);
+    protected $config = ['cleanup' => true];
 
-    public function _initialize() {
+    public function _initialize()
+    {
         $this->dbh = \Doctrine_Manager::connection()->getDbh();
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\TestCase $test)
+    {
         if ($this->config['cleanup']) {
             \Doctrine_Manager::connection()->beginTransaction();
         }
     }
-    
+
     public function _after(\Codeception\TestCase $test)
     {
         if ($this->config['cleanup']) {
@@ -49,15 +51,15 @@ class Doctrine1 extends \Codeception\Module
         }
     }
 
-    protected function proceedSeeInDatabase($model, $values = array())
+    protected function proceedSeeInDatabase($model, $values = [])
     {
         $query = \Doctrine_Core::getTable($model)->createQuery();
-        $string = array();
+        $string = [];
         foreach ($values as $key => $value) {
             $query->addWhere("$key = ?", $value);
             $string[] = "$key = '$value'";
         }
-        return array('True', ($query->count() > 0), "$model with " . implode(', ', $string));
+        return ['True', ($query->count() > 0), "$model with " . implode(', ', $string)];
     }
 
     /**
@@ -75,7 +77,7 @@ class Doctrine1 extends \Codeception\Module
      * @param $model
      * @param array $values
      */
-    public function seeInTable($model, $values = array())
+    public function seeInTable($model, $values = [])
     {
         $res = $this->proceedSeeInDatabase($model, $values);
         $this->assert($res);
@@ -97,7 +99,7 @@ class Doctrine1 extends \Codeception\Module
      * @param $model
      * @param array $values
      */
-    public function dontSeeInTable($model, $values = array())
+    public function dontSeeInTable($model, $values = [])
     {
         $res = $this->proceedSeeInDatabase($model, $values);
         $this->assertNot($res);
@@ -121,9 +123,10 @@ class Doctrine1 extends \Codeception\Module
      * @param array $values
      * @return mixed
      */
-    public function grabFromTable($model, $column, $values = array()) {
+    public function grabFromTable($model, $column, $values = [])
+    {
         $query = \Doctrine_Core::getTable($model)->createQuery();
-        $string = array();
+        $string = [];
         foreach ($values as $key => $value) {
             $query->addWhere("$key = ?", $value);
             $string[] = "$key = '$value'";

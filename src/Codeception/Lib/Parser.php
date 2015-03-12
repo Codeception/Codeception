@@ -4,7 +4,8 @@ namespace Codeception\Lib;
 use Codeception\Scenario;
 use Codeception\Step;
 
-class Parser {
+class Parser
+{
 
     protected $scenario;
     protected $code;
@@ -22,7 +23,7 @@ class Parser {
 
     public function parseFeature($code)
     {
-        $matches = array();
+        $matches = [];
         $code = $this->stripComments($code);
         $res = preg_match("~\\\$I->wantTo\\(\s*?['\"](.*?)['\"]\s*?\\);~", $code, $matches);
         if ($res) {
@@ -31,14 +32,14 @@ class Parser {
         }
         $res = preg_match("~\\\$I->wantToTest\\(['\"](.*?)['\"]\\);~", $code, $matches);
         if ($res) {
-            $this->scenario->setFeature("test ".$matches[1]);
+            $this->scenario->setFeature("test " . $matches[1]);
             return;
         }
     }
 
     public function parseScenarioOptions($code, $var = 'scenario')
     {
-        $matches = array();
+        $matches = [];
         $code = $this->stripComments($code);
         $res = preg_match_all("~\\\$$var->.*?;~", $code, $matches);
         if (!$res or !$var) {
@@ -59,7 +60,7 @@ class Parser {
         foreach ($lines as $line) {
             // friends
             if (preg_match("~\\\$I->haveFriend\((.*?)\);~", $line, $matches)) {
-                $friends[] = trim($matches[1],'\'"');
+                $friends[] = trim($matches[1], '\'"');
             }
             // friend's section start
             if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
@@ -88,7 +89,7 @@ class Parser {
     protected function addStep($matches)
     {
         list($m, $action, $params) = $matches;
-        if (in_array($action, array('wantTo','wantToTest'))) {
+        if (in_array($action, ['wantTo', 'wantToTest'])) {
             return;
         }
         $this->scenario->addStep(new Step\Action($action, explode(',', $params)));
@@ -96,14 +97,14 @@ class Parser {
 
     protected function addCommentStep($comment)
     {
-        $this->scenario->addStep(new \Codeception\Step\Comment($comment,array()));
+        $this->scenario->addStep(new \Codeception\Step\Comment($comment, []));
     }
 
     public static function getClassesFromFile($file)
     {
         include_once $file;
         $sourceCode = file_get_contents($file);
-        $classes = array();
+        $classes = [];
         $tokens = token_get_all($sourceCode);
         $namespace = '';
 
@@ -122,14 +123,14 @@ class Parser {
             }
 
             if ($tokens[$i][0] === T_CLASS) {
-                if (!isset($tokens[$i-2])) {
+                if (!isset($tokens[$i - 2])) {
                     $classes[] = $namespace . $tokens[$i + 2][1];
                     continue;
                 }
-                if ($tokens[$i-1][0] === T_WHITESPACE and $tokens[$i-2][0] === T_DOUBLE_COLON) {
+                if ($tokens[$i - 1][0] === T_WHITESPACE and $tokens[$i - 2][0] === T_DOUBLE_COLON) {
                     continue;
                 }
-                if ($tokens[$i-1][0] === T_DOUBLE_COLON) {
+                if ($tokens[$i - 1][0] === T_DOUBLE_COLON) {
                     continue;
                 }
                 $classes[] = $namespace . $tokens[$i + 2][1];

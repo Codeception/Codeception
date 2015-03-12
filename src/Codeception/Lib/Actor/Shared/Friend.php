@@ -4,6 +4,7 @@ namespace Codeception\Lib\Actor\Shared;
 trait Friend
 {
     protected $friends = [];
+
     /**
      * @param $name
      * @param $actorClass
@@ -12,8 +13,8 @@ trait Friend
     public function haveFriend($name, $actorClass = null)
     {
         if (!isset($this->friends[$name])) {
-            $guy = $actorClass === null ? $this : new $actorClass($this->scenario);
-            $this->friends[$name] = new \Codeception\Lib\Friend($name, $guy);
+            $actor = $actorClass === null ? $this : new $actorClass($this->scenario);
+            $this->friends[$name] = new \Codeception\Lib\Friend($name, $actor, $this->scenario->current('modules'));
         }
         return $this->friends[$name];
     }

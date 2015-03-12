@@ -8,9 +8,9 @@ trait FileSystem
     protected function buildPath($basePath, $testName)
     {
         $basePath = rtrim($basePath, DIRECTORY_SEPARATOR);
-        $testName = str_replace(array('/','\\'),array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $testName);
-        $path = $basePath.DIRECTORY_SEPARATOR.$testName;
-        $path = pathinfo($path, PATHINFO_DIRNAME).DIRECTORY_SEPARATOR;
+        $testName = str_replace(['/', '\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $testName);
+        $path = $basePath . DIRECTORY_SEPARATOR . $testName;
+        $path = pathinfo($path, PATHINFO_DIRNAME) . DIRECTORY_SEPARATOR;
         if (!file_exists($path)) {
             // Second argument should be mode. Well, umask() doesn't seem to return any if not set. Config may fix this.
             mkdir($path, 0775, true); // Third parameter commands to create directories recursively
@@ -26,7 +26,7 @@ trait FileSystem
 
     protected function breakParts($class)
     {
-        $class      = str_replace('/', '\\', $class);
+        $class = str_replace('/', '\\', $class);
         $namespaces = explode('\\', $class);
         if (count($namespaces)) {
             $namespaces[0] = ltrim($namespaces[0], '\\');

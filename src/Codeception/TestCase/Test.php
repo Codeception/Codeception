@@ -3,11 +3,12 @@
 namespace Codeception\TestCase;
 
 use Codeception\Configuration;
-use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\TestCase;
+use Codeception\Util\Annotation;
 
 class Test extends TestCase implements
     Interfaces\Descriptive,
@@ -27,7 +28,7 @@ class Test extends TestCase implements
             $actorProperty = lcfirst($actor);
             $this->$actorProperty = $this->$property;
         }
-        $this->getScenario()->run();
+        $this->getScenario()->stopIfBlocked();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
     }
@@ -62,7 +63,12 @@ class Test extends TestCase implements
 
     public function getSignature()
     {
-        return get_class($this).'::'.$this->getName(false);
+        return get_class($this) . '::' . $this->getName(false);
+    }
+
+    public function getEnvironment()
+    {
+        return Annotation::forMethod($this, $this->getName(false))->fetchAll('env');
     }
 
     public function getFileName()

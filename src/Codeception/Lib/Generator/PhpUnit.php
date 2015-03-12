@@ -3,11 +3,12 @@ namespace Codeception\Lib\Generator;
 
 use Codeception\Util\Template;
 
-class PhpUnit {
+class PhpUnit
+{
     use Shared\Namespaces;
     use Shared\Classname;
 
-    protected $template  = <<<EOF
+    protected $template = <<<EOF
 <?php
 {{namespace}}
 class {{name}}Test extends \PHPUnit_Framework_TestCase
@@ -39,7 +40,7 @@ EOF;
 
     public function produce()
     {
-        $ns = $this->getNamespaceHeader($this->settings['namespace'].'\\'.$this->name);
+        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
 
         return (new Template($this->template))
             ->place('namespace', $ns)

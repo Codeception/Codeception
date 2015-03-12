@@ -2,11 +2,16 @@
 
 namespace Codeception;
 
-use Codeception\Util\Debug;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Shared\Asserts;
 
 abstract class Module
 {
+    /**
+     * @var ModuleContainer
+     */
+    protected $moduleContainer;
+
     use Asserts;
 
     /**
@@ -21,34 +26,36 @@ abstract class Module
      *
      * @var array
      */
-    public static $onlyActions = array();
+    public static $onlyActions = [];
 
     /**
      * Allows to explicitly exclude actions from module.
      *
      * @var array
      */
-    public static $excludeActions = array();
+    public static $excludeActions = [];
 
     /**
      * Allows to rename actions
      *
      * @var array
      */
-    public static $aliases = array();
+    public static $aliases = [];
 
-    protected $storage = array();
+    protected $storage = [];
 
-    protected $config = array();
+    protected $config = [];
 
-    protected $backupConfig = array();
+    protected $backupConfig = [];
 
-    protected $requiredFields = array();
+    protected $requiredFields = [];
 
-    protected $conflicts = array();
+    protected $conflicts = [];
 
-    public function __construct($config = null)
+    public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
+        $this->moduleContainer = $moduleContainer;
+
         $this->backupConfig = $this->config;
         if (is_array($config)) {
             $this->_setConfig($config);
@@ -64,7 +71,7 @@ abstract class Module
 
     public function _reconfigure($config)
     {
-        $this->config =  array_merge($this->backupConfig, $config);
+        $this->config = array_merge($this->backupConfig, $config);
         $this->onReconfigure();
         $this->validateConfig();
     }
@@ -85,8 +92,8 @@ abstract class Module
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
             throw new Exception\ModuleConfig(
                 get_class($this),
-                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n
-                Please, update the configuration and set all the required fields\n\n"
+                "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
+                "Please, update the configuration and set all the required fields\n\n"
             );
         }
     }
@@ -107,10 +114,10 @@ abstract class Module
     public function _getName()
     {
         $module = get_class($this);
-         if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
-             $module = $matches[1];
-         }
-         return $module;
+        if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
+            $module = $matches[1];
+        }
+        return $module;
     }
 
     public function _hasRequiredFields()
@@ -129,7 +136,7 @@ abstract class Module
     }
 
     // HOOK: before each suite
-    public function _beforeSuite($settings = array())
+    public function _beforeSuite($settings = [])
     {
     }
 
@@ -165,7 +172,7 @@ abstract class Module
 
     protected function debug($message)
     {
-        Debug::debug($message);
+        codecept_debug($message);
     }
 
     protected function debugSection($title, $message)
@@ -178,12 +185,12 @@ abstract class Module
 
     protected function hasModule($name)
     {
-        return SuiteManager::hasModule($name);
+        return $this->moduleContainer->hasModule($name);
     }
 
     protected function getModules()
     {
-        return SuiteManager::$modules;
+        return $this->moduleContainer->all();
     }
 
     protected function getModule($name)
@@ -191,9 +198,7 @@ abstract class Module
         if (!$this->hasModule($name)) {
             throw new Exception\Module(__CLASS__, "Module $name couldn't be connected");
         }
-
-        // replace with container
-        return SuiteManager::$modules[$name];
+        return $this->moduleContainer->getModule($name);
     }
 
     protected function scalarizeArray($array)

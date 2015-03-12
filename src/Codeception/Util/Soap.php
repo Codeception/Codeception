@@ -8,12 +8,12 @@ class Soap
      * @static
      *
      * @param \DOMDocument $xml
-     * @param \DOMNode     $node
-     * @param array       $array
+     * @param \DOMNode $node
+     * @param array $array
      *
      * @return \DOMDocument
      */
-    public static function arrayToXml(\DOMDocument $xml, \DOMNode $node, $array = array())
+    public static function arrayToXml(\DOMDocument $xml, \DOMNode $node, $array = [])
     {
         foreach ($array as $el => $val) {
             if (is_array($val)) {
@@ -40,7 +40,7 @@ class Soap
         if ($xml instanceof \DOMDocument) {
             return $xml;
         }
-        $dom                     = new \DOMDocument();
+        $dom = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
         if ($xml instanceof \DOMNode) {
             $xml = $dom->importNode($xml, true);

@@ -1,12 +1,11 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Codecept;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
 use Zend\Mvc\Application;
-use Zend\View\Helper\Placeholder;
 use Zend\Version\Version;
+use Zend\View\Helper\Placeholder;
 
 /**
  * This module allows you to run tests inside Zend Framework 2.
@@ -31,12 +30,11 @@ use Zend\Version\Version;
  * * client - BrowserKit client
  *
  */
-
 class ZF2 extends \Codeception\Lib\Framework
 {
-    protected $config = array(
+    protected $config = [
         'config' => 'tests/application.config.php',
-    );
+    ];
 
     /**
      * @var \Zend\Mvc\ApplicationInterface
@@ -56,13 +54,15 @@ class ZF2 extends \Codeception\Lib\Framework
     protected $queries = 0;
     protected $time = 0;
 
-    public function _initialize() {
-        require \Codeception\Configuration::projectDir().'init_autoloader.php';
+    public function _initialize()
+    {
+        require \Codeception\Configuration::projectDir() . 'init_autoloader.php';
 
         $this->client = new \Codeception\Lib\Connector\ZF2();
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\TestCase $test)
+    {
         $applicationConfig = require \Codeception\Configuration::projectDir() . $this->config['config'];
         if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
@@ -76,15 +76,16 @@ class ZF2 extends \Codeception\Lib\Framework
         $_SERVER['REQUEST_URI'] = '';
     }
 
-    public function _after(\Codeception\TestCase $test) {
-        $_SESSION = array();
-        $_GET     = array();
-        $_POST    = array();
-        $_COOKIE  = array();
+    public function _after(\Codeception\TestCase $test)
+    {
+        $_SESSION = [];
+        $_GET = [];
+        $_POST = [];
+        $_COOKIE = [];
 
         // reset singleton
         StaticEventManager::resetInstance();
-        
+
         // Reset singleton placeholder if version < 2.2.0, no longer required in 2.2.0+
         if (Version::compareVersion('2.2.0') >= 0) {
             Placeholder\Registry::unsetRegistry();

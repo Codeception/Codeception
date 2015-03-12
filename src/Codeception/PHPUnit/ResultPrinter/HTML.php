@@ -6,7 +6,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     /**
      * @var boolean
      */
-    protected $printsHTML = TRUE;
+    protected $printsHTML = true;
 
     /**
      * @var integer
@@ -23,27 +23,27 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
      */
     protected $templatePath;
 
-	/**
-	 * @var int
-	 */
-	protected $timeTaken = 0;
+    /**
+     * @var int
+     */
+    protected $timeTaken = 0;
 
     /**
      * Constructor.
      *
-     * @param  mixed   $out
+     * @param  mixed $out
      * @throws InvalidArgumentException
      */
-    public function __construct($out = NULL)
+    public function __construct($out = null)
     {
         parent::__construct($out);
 
         $this->templatePath = sprintf(
-          '%s%stemplate%s',
+            '%s%stemplate%s',
 
-          dirname(__FILE__),
-          DIRECTORY_SEPARATOR,
-          DIRECTORY_SEPARATOR
+            dirname(__FILE__),
+            DIRECTORY_SEPARATOR,
+            DIRECTORY_SEPARATOR
         );
     }
 
@@ -59,61 +59,59 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     /**
      * Handler for 'on test' event.
      *
-     * @param  string  $name
+     * @param  string $name
      * @param  boolean $success
-     * @param  array   $steps
+     * @param  array $steps
      */
-    protected function onTest($name, $success = TRUE, array $steps = array(), $time = 0)
+    protected function onTest($name, $success = true, array $steps = [], $time = 0)
     {
-	    $this->timeTaken += $time;
+        $this->timeTaken += $time;
         if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
             $scenarioStatus = 'scenarioFailed';
+        } else {
+            if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+                $scenarioStatus = 'scenarioSkipped';
+            } else {
+                if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+                    $scenarioStatus = 'scenarioIncomplete';
+                } else {
+                    if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+                        $scenarioStatus = 'scenarioFailed';
+                    } else {
+                        $scenarioStatus = 'scenarioSuccess';
+                    }
+                }
+            }
         }
 
-        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
-            $scenarioStatus = 'scenarioSkipped';
-        }
-
-        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
-            $scenarioStatus = 'scenarioIncomplete';
-        }
-
-        else if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR){
-            $scenarioStatus = 'scenarioFailed';
-        }
-
-        else {
-            $scenarioStatus = 'scenarioSuccess';
-        }
-
-        $stepsBuffer  = '';
+        $stepsBuffer = '';
 
         foreach ($steps as $step) {
             $stepTemplate = new \Text_Template(
-              $this->templatePath . 'step.html'
+                $this->templatePath . 'step.html'
             );
 
             $stepTemplate->setVar(
-              array(
-                'action' => $step->getHtmlAction(),
-              )
+                [
+                    'action' => $step->getHtmlAction(),
+                ]
             );
 
             $stepsBuffer .= $stepTemplate->render();
         }
 
         $scenarioTemplate = new \Text_Template(
-          $this->templatePath . 'scenario.html'
+            $this->templatePath . 'scenario.html'
         );
 
         $scenarioTemplate->setVar(
-          array(
-            'id'             => ++$this->id,
-            'name'           => $name,
-            'scenarioStatus' => $scenarioStatus,
-            'steps'          => $stepsBuffer,
-	        'time' => round($time, 2)
-          )
+            [
+                'id'             => ++$this->id,
+                'name'           => $name,
+                'scenarioStatus' => $scenarioStatus,
+                'steps'          => $stepsBuffer,
+                'time'           => round($time, 2)
+            ]
         );
 
         $this->scenarios .= $scenarioTemplate->render();
@@ -122,10 +120,10 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
     {
         $suiteTemplate = new \Text_Template(
-          $this->templatePath . 'suite.html'
+            $this->templatePath . 'suite.html'
         );
-        
-        $suiteTemplate->setVar(array('suite' => ucfirst($suite->getName())));
+
+        $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
 
         $this->scenarios .= $suiteTemplate->render();
 
@@ -139,34 +137,34 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     {
 
         $scenarioHeaderTemplate = new \Text_Template(
-          $this->templatePath . 'scenario_header.html'
+            $this->templatePath . 'scenario_header.html'
         );
 
-	    $status = !$this->failed ? '<span style="color: green">OK</span>' : '<span style="color: red">FAILED</span>';
+        $status = !$this->failed ? '<span style="color: green">OK</span>' : '<span style="color: red">FAILED</span>';
 
         $scenarioHeaderTemplate->setVar(
-          array(
-            'name' => 'Codeception Results',
-	        'status' => $status,
-	        'time' => round($this->timeTaken,1)
-	      )
+            [
+                'name'   => 'Codeception Results',
+                'status' => $status,
+                'time'   => round($this->timeTaken, 1)
+            ]
         );
 
         $header = $scenarioHeaderTemplate->render();
 
         $scenariosTemplate = new \Text_Template(
-          $this->templatePath . 'scenarios.html'
+            $this->templatePath . 'scenarios.html'
         );
 
         $scenariosTemplate->setVar(
-          array(
-	        'header'              => $header,
-            'scenarios'           => $this->scenarios,
-            'successfulScenarios' => $this->successful,
-            'failedScenarios'     => $this->failed,
-            'skippedScenarios'    => $this->skipped,
-            'incompleteScenarios' => $this->incomplete
-          )
+            [
+                'header'              => $header,
+                'scenarios'           => $this->scenarios,
+                'successfulScenarios' => $this->successful,
+                'failedScenarios'     => $this->failed,
+                'skippedScenarios'    => $this->skipped,
+                'incompleteScenarios' => $this->incomplete
+            ]
         );
 
         $this->write($scenariosTemplate->render());

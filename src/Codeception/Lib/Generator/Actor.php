@@ -1,6 +1,9 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Configuration;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Util\Template;
 
 class Actor
@@ -36,8 +39,16 @@ EOF;
     public function __construct($settings)
     {
         $this->settings = $settings;
-        $this->modules = \Codeception\Configuration::modules($settings);
-        $this->actions = \Codeception\Configuration::actions($this->modules);
+        $this->di = new Di();
+        $this->moduleContainer = new ModuleContainer($this->di, $settings);
+
+        $modules = Configuration::modules($this->settings);
+        foreach ($modules as $moduleName) {
+            $this->moduleContainer->create($moduleName);
+        }
+
+        $this->modules = $this->moduleContainer->all();
+        $this->actions = $this->moduleContainer->getActions();
     }
 
     public function produce()
@@ -53,7 +64,7 @@ EOF;
 
     protected function prependAbstractGuyDocBlocks()
     {
-        $inherited = array();
+        $inherited = [];
 
         $class = new \ReflectionClass('\Codeception\\Actor');
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -81,7 +92,7 @@ EOF;
      */
     protected function getParamsString(\ReflectionMethod $refMethod)
     {
-        $params = array();
+        $params = [];
         foreach ($refMethod->getParameters() as $param) {
 
             if ($param->isOptional()) {

@@ -5,18 +5,18 @@ trait Asserts
 {
     protected function assert($arguments, $not = false)
     {
-        $not    = $not ? 'Not' : '';
+        $not = $not ? 'Not' : '';
         $method = ucfirst(array_shift($arguments));
         if (($method === 'True') && $not) {
             $method = 'False';
-            $not    = '';
+            $not = '';
         }
         if (($method === 'False') && $not) {
             $method = 'True';
-            $not    = '';
+            $not = '';
         }
 
-        call_user_func_array(array('\PHPUnit_Framework_Assert', 'assert' . $not . $method), $arguments);
+        call_user_func_array(['\PHPUnit_Framework_Assert', 'assert' . $not . $method], $arguments);
     }
 
     protected function assertNot($arguments)

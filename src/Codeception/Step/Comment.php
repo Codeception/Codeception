@@ -1,17 +1,22 @@
 <?php
 namespace Codeception\Step;
- 
-class Comment extends \Codeception\Step {
 
-	public function __toString() {
-	    return $this->getAction();
-	}
+use Codeception\Lib\ModuleContainer;
 
-    public function getHtmlAction() {
-        return '<strong>' . $this->getAction(). '</strong>';
+class Comment extends \Codeception\Step
+{
+
+    public function __toString()
+    {
+        return $this->getAction();
     }
 
-    public function run()
+    public function getHtmlAction()
+    {
+        return '<strong>' . $this->getAction() . '</strong>';
+    }
+
+    public function run(ModuleContainer $container = null)
     {
         // don't do anything, let's rest
     }

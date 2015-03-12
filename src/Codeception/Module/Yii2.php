@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\Module;
 
-use Yii;
-use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Yii;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -38,15 +38,15 @@ class Yii2 extends Framework implements ActiveRecord
      * Application config file must be set.
      * @var array
      */
-    protected $config = array('cleanup' => false);
-    protected $requiredFields = array('configFile');
+    protected $config = ['cleanup' => false];
+    protected $requiredFields = ['configFile'];
     protected $transaction;
 
     public $app;
 
     public function _initialize()
     {
-        if (!is_file(\Codeception\Configuration::projectDir().$this->config['configFile'])) {
+        if (!is_file(\Codeception\Configuration::projectDir() . $this->config['configFile'])) {
             throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
     }
@@ -54,7 +54,7 @@ class Yii2 extends Framework implements ActiveRecord
     public function _before(\Codeception\TestCase $test)
     {
         $this->client = new \Codeception\Lib\Connector\Yii2();
-        $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
+        $this->client->configFile = \Codeception\Configuration::projectDir() . $this->config['configFile'];
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
@@ -64,12 +64,12 @@ class Yii2 extends Framework implements ActiveRecord
 
     public function _after(\Codeception\TestCase $test)
     {
-        $_SESSION = array();
-        $_FILES = array();
-        $_GET = array();
-        $_POST = array();
-        $_COOKIE = array();
-        $_REQUEST = array();
+        $_SESSION = [];
+        $_FILES = [];
+        $_GET = [];
+        $_POST = [];
+        $_COOKIE = [];
+        $_REQUEST = [];
         if ($this->transaction and $this->config['cleanup']) {
             $this->transaction->rollback();
         }
@@ -95,7 +95,7 @@ class Yii2 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($model, $attributes = [])
     {
         /** @var $record \yii\db\ActiveRecord  * */
         $record = $this->getModelRecord($model);
@@ -118,7 +118,7 @@ class Yii2 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
@@ -137,7 +137,7 @@ class Yii2 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
@@ -157,15 +157,15 @@ class Yii2 extends Framework implements ActiveRecord
      * @param array $attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($model, $attributes = [])
     {
         return $this->findRecord($model, $attributes);
     }
 
-    protected function findRecord($model, $attributes = array())
+    protected function findRecord($model, $attributes = [])
     {
         $this->getModelRecord($model);
-        return call_user_func(array($model, 'find'))
+        return call_user_func([$model, 'find'])
             ->where($attributes)
             ->one();
     }
@@ -190,9 +190,10 @@ class Yii2 extends Framework implements ActiveRecord
      *  $I->amOnPage('index-test.php?site/index');
      *  $I->amOnPage('http://localhost/index-test.php?site/index');
      */
-    public function amOnPage($page) {
-                
-        if(is_array($page)){
+    public function amOnPage($page)
+    {
+
+        if (is_array($page)) {
             $page = \Yii::$app->getUrlManager()->createUrl($page);
         }
 

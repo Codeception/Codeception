@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Platform;
 
-use Codeception\Events;
 use Codeception\Event\TestEvent;
+use Codeception\Events;
 
 class SimpleOutput extends Extension
 {
@@ -13,13 +13,13 @@ class SimpleOutput extends Extension
     }
 
     // we are listening for events
-    static $events = array(
+    static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_END     => 'after',
         Events::TEST_SUCCESS => 'success',
         Events::TEST_FAIL    => 'fail',
         Events::TEST_ERROR   => 'error',
-    );
+    ];
 
     public function beforeSuite()
     {
@@ -47,7 +47,7 @@ class SimpleOutput extends Extension
         $seconds_input = $e->getTime();
         // stack overflow: http://stackoverflow.com/questions/16825240/how-to-convert-microtime-to-hhmmssuu
         $seconds = (int)($milliseconds = (int)($seconds_input * 1000)) / 1000;
-        $time    = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
+        $time = ($seconds % 60) . (($milliseconds === 0) ? '' : '.' . $milliseconds);
 
         $this->write($e->getTest()->toString());
         $this->writeln(' (' . $time . 's)');

@@ -1,14 +1,15 @@
 <?php
 namespace Codeception\Coverage\Subscriber;
 
-use Codeception\Events;
 use Codeception\Configuration;
-use Codeception\Event\PrintResultEvent;
-use Codeception\Subscriber\Shared\StaticEvents;
 use Codeception\Coverage\Filter;
+use Codeception\Event\PrintResultEvent;
+use Codeception\Events;
+use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class Printer implements EventSubscriberInterface {
+class Printer implements EventSubscriberInterface
+{
     use StaticEvents;
 
     static $events = [
@@ -16,9 +17,9 @@ class Printer implements EventSubscriberInterface {
     ];
 
     protected $settings = [
-        'enabled' => true,
-        'low_limit' => '35',
-        'high_limit' => '70',
+        'enabled'        => true,
+        'low_limit'      => '35',
+        'high_limit'     => '70',
         'show_uncovered' => false
     ];
 

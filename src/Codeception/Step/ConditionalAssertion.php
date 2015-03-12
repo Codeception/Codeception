@@ -3,13 +3,15 @@ namespace Codeception\Step;
 
 
 use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Lib\ModuleContainer;
 
-class ConditionalAssertion extends Assertion {
+class ConditionalAssertion extends Assertion
+{
 
-    public function run()
+    public function run(ModuleContainer $container = null)
     {
         try {
-            parent::run();
+            parent::run($container);
         } catch (\PHPUnit_Framework_AssertionFailedError $e) {
             throw new ConditionalAssertionFailed($e->getMessage(), $e->getCode(), $e);
         }
@@ -17,7 +19,7 @@ class ConditionalAssertion extends Assertion {
 
     public function getAction()
     {
-        return 'can'.ucfirst($this->action);
+        return 'can' . ucfirst($this->action);
     }
 
     public function getHumanizedAction()

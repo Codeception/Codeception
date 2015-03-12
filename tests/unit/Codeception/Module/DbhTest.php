@@ -21,7 +21,7 @@ class DbhTest extends \PHPUnit_Framework_TestCase
     public function setUp() {
       $this->testCase = Stub::make('\Codeception\TestCase');
 
-      $module = new \Codeception\Module\Dbh();
+      $module = new \Codeception\Module\Dbh(make_container());
 
       try {
         $driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);

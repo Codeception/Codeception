@@ -99,7 +99,7 @@ class ParserTest extends \Codeception\TestCase\Test
         $code = "<?php\n \$scenario->skip('pass along'); ";
         $this->parser->parseScenarioOptions($code);
         $this->assertTrue($this->scenario->isBlocked());
-        $this->scenario->run();
+        $this->scenario->stopIfBlocked();
     }
 
     public function testScenarioIncompleteOptionHandled()
@@ -108,7 +108,7 @@ class ParserTest extends \Codeception\TestCase\Test
         $code = "<?php\n \$scenario->incomplete('not ready yet'); ";
         $this->parser->parseScenarioOptions($code);
         $this->assertTrue($this->scenario->isBlocked());
-        $this->scenario->run();
+        $this->scenario->stopIfBlocked();
     }
 
     public function testSteps()

@@ -61,9 +61,9 @@ use GuzzleHttp\Client;
 class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 {
 
-    protected $requiredFields = array('url');
-    protected $config = array('verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => [], 'refresh_max_interval' => 10);
-    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key','proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
+    protected $requiredFields = ['url'];
+    protected $config = ['verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => [], 'refresh_max_interval' => 10];
+    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key', 'proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
 
     /**
      * @var \Codeception\Lib\Connector\Guzzle
@@ -81,13 +81,16 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $defaults['config']['curl'] = $this->config['curl'];
 
         foreach ($this->config['curl'] as $key => $val) {
-            if (defined($key)) $defaults['config']['curl'][constant($key)] = $val;
+            if (defined($key)) {
+                $defaults['config']['curl'][constant($key)] = $val;
+            }
         }
         $this->guzzle = new Client(['base_url' => $this->config['url'], 'defaults' => $defaults]);
         $this->_initializeSession();
     }
 
-    public function _before(TestCase $test) {
+    public function _before(TestCase $test)
+    {
         $this->_initializeSession();
     }
 
@@ -100,7 +103,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     {
         $this->client->setHeader($header, $value);
     }
-    
+
     public function amHttpAuthenticated($username, $password)
     {
         $this->client->setAuth($username, $password);
@@ -110,16 +113,16 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     {
         parent::amOnPage(ltrim($page, '/'));
     }
-    
+
     public function amOnUrl($url)
     {
         $urlParts = parse_url($url);
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
             throw new TestRuntime("Wrong URL passes, host and scheme not set");
         }
-        $host = $urlParts['scheme'].'://'.$urlParts['host'];
+        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
         if (isset($urlParts['port'])) {
-            $host .= ':'.$urlParts['port'];
+            $host .= ':' . $urlParts['port'];
         }
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
@@ -132,7 +135,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $url = $this->config['url'];
         $url = preg_replace('~(https?:\/\/)(.*\.)(.*\.)~', "$1$3", $url); // removing current subdomain
         $url = preg_replace('~(https?:\/\/)(.*)~', "$1$subdomain.$2", $url); // inserting new
-        $this->_reconfigure(array('url' => $url));
+        $this->_reconfigure(['url' => $url]);
     }
 
     protected function onReconfigure()
@@ -181,9 +184,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     public function _backupSessionData()
     {
         return [
-            'client'    => $this->client,
-            'guzzle'    => $this->guzzle,
-            'crawler'   => $this->crawler
+            'client'  => $this->client,
+            'guzzle'  => $this->guzzle,
+            'crawler' => $this->crawler
         ];
     }
 

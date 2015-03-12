@@ -1,7 +1,10 @@
 <?php
 namespace Codeception;
- 
-class Scenario {
+
+use Codeception\Exception\TestRuntime;
+
+class Scenario
+{
     /**
      * @var    \Codeception\TestCase
      */
@@ -10,25 +13,28 @@ class Scenario {
     /**
      * @var    array
      */
-    protected $steps = array();
+    protected $steps = [];
 
     /**
      * @var    string
      */
-	protected $feature;
+    protected $feature;
     protected $running = false;
     protected $blocker = null;
-    protected $groups = array();
-    protected $env = array();
+    protected $groups = [];
+    protected $env = [];
+
+    protected $currents = [];
 
     /**
      * Constructor.
      *
      * @param  \Codeception\TestCase $test
      */
-    public function __construct(\Codeception\TestCase $test)
+    public function __construct(\Codeception\TestCase $test, $currents = array())
     {
-		$this->test = $test;
+        $this->test = $test;
+        $this->currents = $currents;
     }
 
     public function group($group)
@@ -68,19 +74,19 @@ class Scenario {
         return $this->env;
     }
 
-    public function setFeature($feature) 
+    public function setFeature($feature)
     {
         $this->feature = $feature;
     }
 
     public function skip($reason = "")
     {
-        $this->blocker = new \Codeception\Step\Skip($reason, array());
+        $this->blocker = new \Codeception\Step\Skip($reason, []);
     }
 
     public function incomplete($reason = "")
     {
-        $this->blocker = new \Codeception\Step\Incomplete($reason, array());
+        $this->blocker = new \Codeception\Step\Incomplete($reason, []);
     }
 
     protected function ignore()
@@ -112,14 +118,15 @@ class Scenario {
         return $this->steps;
     }
 
-	public function getFeature() {
-	    return $this->feature;
-	}
+    public function getFeature()
+    {
+        return $this->feature;
+    }
 
     public function getHtml()
     {
         $text = '';
-        foreach($this->getSteps() as $step) {
+        foreach ($this->getSteps() as $step) {
             /** @var Step $step */
             if ($step->getName() !== 'Comment') {
                 $text .= 'I ' . $step->getHtmlAction() . '<br/>';
@@ -127,7 +134,7 @@ class Scenario {
                 $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
             }
         }
-        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
+        $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
         $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
         return $text;
 
@@ -136,40 +143,34 @@ class Scenario {
     public function getText()
     {
         $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
+        $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
         $text = strtoupper('I want to ' . $this->getFeature()) . "\r\n\r\n" . $text;
         return $text;
 
     }
 
-    public function comment($comment) 
+    public function comment($comment)
     {
-        $this->runStep(new \Codeception\Step\Comment($comment,array()));
+        $this->runStep(new \Codeception\Step\Comment($comment, []));
     }
 
-    public function run() 
+    public function stopIfBlocked()
     {
         if ($this->isBlocked()) {
             return $this->blocker->run();
         }
+    }
 
-        $this->running = true;
-        $this->steps = array();
+    public function current($key)
+    {
+        if (!isset($this->currents[$key])) {
+            throw new TestRuntime("Current $key is not set in this scenario");
+        }
+        return $this->currents[$key];
     }
 
     public function isBlocked()
     {
         return (bool)$this->blocker;
     }
-
-    public function running()
-    {
-        return $this->running;
-    }
-
-    public function preload() 
-    {
-        return !$this->running;
-    }
-
 }
