@@ -148,10 +148,10 @@ class Codecept
 
         foreach ($selectedEnvironments as $envList) {
             $envArray = explode(',', $envList);
-            $config = array();
+            $config = [];
             foreach ($envArray as $env) {
                 if (isset($environments[$env])) {
-                    $currentEnvironment = isset($config['current_environment']) ? array($config['current_environment']) : array();
+                    $currentEnvironment = isset($config['current_environment']) ? [$config['current_environment']] : [];
                     $config = Configuration::mergeConfigs($config, $environments[$env]);
                     $currentEnvironment[] = $config['current_environment'];
                     $config['current_environment'] = implode(',', $currentEnvironment);

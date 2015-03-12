@@ -20,7 +20,7 @@ class Configuration
     /**
      * @var array environmental files configuration cache
      */
-    protected static $envConfig = array();
+    protected static $envConfig = [];
 
     /**
      * @var string Directory containing main configuration file.
@@ -211,6 +211,7 @@ class Configuration
         $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)->depth('< 1');
         self::$suites = [];
 
+        /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
             self::$suites[$matches[1]] = $matches[1];
@@ -272,7 +273,7 @@ class Configuration
             return self::$envConfig[$path];
         }
         if (!is_dir($path)) {
-            self::$envConfig[$path] = array();
+            self::$envConfig[$path] = [];
         } else {
             $envFiles = Finder::create()
                 ->files()
@@ -280,16 +281,16 @@ class Configuration
                 ->in($path)
                 ->depth('< 1');
 
-            $envs = array();
+            $envs = [];
             /** @var SplFileInfo $envFile */
             foreach ($envFiles as $envFile) {
                 preg_match('~^(.*?)(\.dist)?\.yml$~', $envFile->getFilename(), $matches);
                 $envs[] = $matches[1];
             }
 
-            $envConfig = array();
+            $envConfig = [];
             foreach ($envs as $env) {
-                $envConfig[$env] = array();
+                $envConfig[$env] = [];
                 $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . '.dist.yml', null);
                 if ($envConf !== null) {
                     $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
@@ -300,7 +301,7 @@ class Configuration
                 }
             }
 
-            self::$envConfig[$path] = array('env' => $envConfig);
+            self::$envConfig[$path] = ['env' => $envConfig];
         }
         return self::$envConfig[$path];
     }
@@ -312,7 +313,7 @@ class Configuration
      * @param mixed $nonExistentValue value used if filename is not found
      * @return array
      */
-    protected static function getConfFromFile($filename, $nonExistentValue = array())
+    protected static function getConfFromFile($filename, $nonExistentValue = [])
     {
         if (file_exists($filename)) {
             return Yaml::parse(file_get_contents($filename));
