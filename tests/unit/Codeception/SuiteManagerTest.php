@@ -20,13 +20,13 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      * @group core
      */
     public function testRun() {
-        $events = array();
+        $events = [];
         $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = $e->getName(); });
         $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = $e->getName(); });
         $runner = new \Codeception\PHPUnit\Runner;
         $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($this->dispatcher));
-        $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, array('colors' => false, 'steps' => true, 'debug' => false));
-        $this->assertEquals($events, array('suite.before', 'suite.after'));
+        $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
+        $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
 
     /**
@@ -57,4 +57,12 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $newSuiteMan->loadTests($file);
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
+
+    public function testDependencyResolution()
+    {
+        $this->suiteman->loadTests(codecept_data_dir().'SimpleWithDependencyInjectionCest.php');
+        $this->assertEquals(3, $this->suiteman->getSuite()->count());
+    }
+
+
 }

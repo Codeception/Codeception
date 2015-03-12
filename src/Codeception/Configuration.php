@@ -3,7 +3,6 @@
 namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
-use Codeception\Lib\Di;
 use Codeception\Util\Autoload;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
@@ -287,20 +286,10 @@ class Configuration
      * @param array $settings suite settings
      * @return array|\Codeception\Module[]
      */
-    public static function modules($settings)
+    public static function modules(&$settings)
     {
-        return $settings['modules']['enabled'];
-    }
 
-    /**
-     * @return Di
-     */
-    public static function DI()
-    {
-        if (!self::$di) {
-            self::$di = new Di();
-        }
-        return self::$di;
+        return $settings['modules']['enabled'];
     }
 
     public static function isExtensionEnabled($extensionName)

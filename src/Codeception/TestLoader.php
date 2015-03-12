@@ -129,7 +129,7 @@ class TestLoader
 
         foreach ($testClasses as $testClass) {
             $reflected = new \ReflectionClass($testClass);
-            if ($reflected->isAbstract()) {
+            if (!$reflected->isInstantiable()) {
                 continue;
             }
 
@@ -159,10 +159,10 @@ class TestLoader
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
-            $unit = new $testClass;
-            if (!$unit) {
+            if (!(new \ReflectionClass($testClass))->isInstantiable()) {
                 continue;
             }
+            $unit = new $testClass;
 
             $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
@@ -221,5 +221,6 @@ class TestLoader
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         return $cest;
     }
+
 
 }
