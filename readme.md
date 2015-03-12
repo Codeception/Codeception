@@ -112,4 +112,4 @@ See Documentation for more information.
 MIT
 
 (c) Michael Bodnarchuk "Davert"
-2011-2014
+2011-2015
