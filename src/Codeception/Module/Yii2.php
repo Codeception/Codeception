@@ -99,7 +99,7 @@ class Yii2 extends Framework implements ActiveRecord
     {
         /** @var $record \yii\db\ActiveRecord  * */
         $record = $this->getModelRecord($model);
-        $record->setAttributes($attributes);
+        $record->setAttributes($attributes, false);
         $res = $record->save(false);
         if (!$res) {
             $this->fail("Record $model was not saved");
