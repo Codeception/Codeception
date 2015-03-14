@@ -166,7 +166,7 @@ class Laravel5 extends Framework implements ActiveRecord
      */
     protected function bootApplication()
     {
-        $projectDir = \Codeception\Configuration::projectDir();
+        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
         $projectDir .= $this->config['root'];
         require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
