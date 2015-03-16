@@ -7,6 +7,7 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Exception\TestRuntime;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
+use Codeception\Lib\Interfaces\SessionSnapshot;
 use Codeception\Lib\Interfaces\Web as WebInterface;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
@@ -99,7 +100,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * # Methods
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot
 {
 
     protected $requiredFields = ['browser', 'url'];
@@ -116,6 +117,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected $wd_host;
     protected $capabilities;
     protected $test;
+    protected $sessionSnapshots = [];
 
     /**
      * @var \RemoteWebDriver
@@ -763,12 +765,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
     }
 
-    public function _loadSessionData($data)
+    public function _loadSession($session)
     {
-        $this->webDriver = $data;
+        $this->webDriver = $session;
     }
 
-    public function _backupSessionData()
+    public function _backupSession()
     {
         return $this->webDriver;
     }
@@ -1924,4 +1926,20 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         throw new \Exception("Only CSS or XPath allowed");
     }
 
+    public function saveSessionSnapshot($name)
+    {
+        $this->sessionSnapshots[$name] = $this->webDriver->manage()->getCookies();
+    }
+
+    public function loadSessionSnapshot($name)
+    {
+        if (!isset($this->sessionSnapshots[$name])) {
+            return false;
+        }
+        foreach ($this->sessionSnapshots[$name] as $cookie) {
+            $this->webDriver->manage()->addCookie($cookie);
+        }
+        $this->debugSection('Snapshot', "$name session restored");
+        return true;
+    }
 }

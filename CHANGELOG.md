@@ -1,5 +1,10 @@
 # Changelog
 
+#### 2.1.0
+
+* [WebDriver] Saving and restoring session snapshots implemented *2015-03-16*
+
+
 #### 2.0.10
 
 * **Console Improvement**: better formatting of test progress. Improved displaying of debug messages and PHP Fatal Errors.

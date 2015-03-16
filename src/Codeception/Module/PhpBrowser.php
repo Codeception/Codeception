@@ -181,7 +181,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         $this->client->setRefreshMaxInterval($this->config['refresh_max_interval']);
     }
 
-    public function _backupSessionData()
+    public function _backupSession()
     {
         return [
             'client'  => $this->client,
@@ -190,15 +190,15 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         ];
     }
 
-    public function _loadSessionData($data)
+    public function _loadSession($session)
     {
-        foreach ($data as $key => $val) {
+        foreach ($session as $key => $val) {
             $this->$key = $val;
         }
     }
 
-    public function _closeSession($data)
+    public function _closeSession($session)
     {
-        unset($data);
+        unset($session);
     }
 }
