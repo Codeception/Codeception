@@ -3,8 +3,6 @@ namespace Codeception\Lib;
 
 use Codeception\Actor;
 use Codeception\Exception\TestRuntime;
-use Codeception\Scenario;
-use Codeception\SuiteManager;
 
 class Friend
 {
@@ -33,13 +31,13 @@ class Friend
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();
-            $currentUserData[$name] = $module->_backupSessionData();
+            $currentUserData[$name] = $module->_backupSession();
             if (empty($this->data[$name])) {
                 $module->_initializeSession();
-                $this->data[$name] = $module->_backupSessionData();
+                $this->data[$name] = $module->_backupSession();
                 continue;
             }
-            $module->_loadSessionData($this->data[$name]);
+            $module->_loadSession($this->data[$name]);
         };
 
         $this->actor->comment(strtoupper("<info>{$this->name} does</info>:"));
@@ -48,8 +46,8 @@ class Friend
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();
-            $this->data[$name] = $module->_backupSessionData();
-            $module->_loadSessionData($currentUserData[$name]);
+            $this->data[$name] = $module->_backupSession();
+            $module->_loadSession($currentUserData[$name]);
         };
         return $ret;
     }
