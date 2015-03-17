@@ -24,6 +24,30 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 * debug: true - turn on/off debug mode
 
 
+### Example (`codeception.yml`) - Symfony 2.x Directory Structure
+
+    imports:
+        - { resource: "app/config/parameters.yml" }   # relative to from where the codecept is running
+    modules:
+        config:
+            Db:
+                dsn: "%database_driver%:host=%database_host%;dbname=%database_name%_dev;charset=%database_charset%"
+                user: "%database_user%"
+                password: "%database_password%"
+                dump: tests/_data/dump.sql
+
+
+* Importing "parameters" from yml file - like in symfony2, with placeholders: %variable% 
+* file (parameters.yml) has to be:
+* paramaters
+*   variable1:    value
+*   variable2:    value
+*
+* then it can be imported with "imports" directive:
+* imports:
+*   - { resource: "app/config/parameters.yml" }   # relative to from where the codeception is run
+
+
 ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
     modules: 
@@ -31,7 +55,9 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
        config:
           Symfony2:
              app_path: 'app/front'
+             var_path: 'app/front'
              environment: 'local_test'
+
 
 ### Symfony 3.x Directory Structure
 
