@@ -51,6 +51,32 @@ trait Asserts
     }
 
     /**
+     * Checks that two variables are same
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     *
+     * @return mixed
+     */
+    protected function assertSame($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertSame($expected, $actual, $message);
+    }
+
+    /**
+     * Checks that two variables are not same
+     *
+     * @param        $expected
+     * @param        $actual
+     * @param string $message
+     */
+    protected function assertNotSame($expected, $actual, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertNotSame($expected, $actual, $message);
+    }
+
+    /**
      * Checks that expected is greater than actual
      *
      * @param        $expected
