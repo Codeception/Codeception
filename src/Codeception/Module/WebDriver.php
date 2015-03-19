@@ -1226,20 +1226,23 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $el = reset($els);
             if ($el->getTagName() == 'textarea') {
                 $this->fillField($el, $value);
-            }
-            if ($el->getTagName() == 'select') {
+            } elseif ($el->getTagName() == 'select') {
                 $this->selectOption($el, $value);
-            }
-            if ($el->getTagName() == 'input') {
+            } elseif ($el->getTagName() == 'input') {
                 $type = $el->getAttribute('type');
-                if ($type == 'text' or $type == 'password') {
+                if ($type == 'text' || $type == 'password') {
                     $this->fillField($el, $value);
-                }
-                if ($type == 'radio' or $type == 'checkbox') {
+                } elseif ($type == 'radio') {
                     foreach ($els as $radio) {
                         if ($radio->getAttribute('value') == $value) {
                             $this->checkOption($radio);
                         }
+                    }
+                } elseif ($type == 'checkbox') {
+                    if ($value === true || $value == $el->getAttribute('value')) {
+                        $this->checkOption($el);
+                    } else {
+                        $this->uncheckOption($el);
                     }
                 }
             }

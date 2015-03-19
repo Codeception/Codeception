@@ -909,6 +909,24 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals($form['radio1'], 'to be sent');
     }
     
+    public function testSubmitFormCheckboxWithBoolean()
+    {
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'checkbox1' => true
+        ));
+        $form = data::get('form');
+        $this->assertTrue(isset($form['checkbox1']), 'Checkbox value not sent');
+        $this->assertEquals($form['checkbox1'], 'testing');
+        
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'checkbox1' => false
+        ));
+        $form = data::get('form');
+        $this->assertFalse(isset($form['checkbox1']), 'Checkbox value sent');
+    }
+    
     public function testSubmitFormWithButtons()
     {
         $this->module->amOnPage('/form/form_with_buttons');

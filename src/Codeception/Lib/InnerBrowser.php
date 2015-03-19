@@ -362,6 +362,19 @@ class InnerBrowser extends Module implements Web
 
         $requestParams = array_merge($defaults, $params);
         
+        // set boolean values of checkboxes to the input field's actual value
+        $checkboxes = $form->filter('input[type=checkbox]');
+        foreach ($checkboxes as $box) {
+            $fieldName = $this->getSubmissionFormFieldName($box->getAttribute('name'));
+            if (isset($requestParams[$fieldName]) && is_bool($requestParams[$fieldName])) {
+                if ($requestParams[$fieldName] === true) {
+                    $requestParams[$fieldName] = $box->getAttribute('value');
+                } else {
+                    unset($requestParams[$fieldName]);
+                }
+            }
+        }
+        
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
         $query = '';
         if (strtoupper($method) == 'GET') {
