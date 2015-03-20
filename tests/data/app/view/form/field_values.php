@@ -45,6 +45,12 @@
             <option value="see test three" selected>Selected</option>
         </select>
         
+        <select name="select3">
+            <option value="not seen one">Nothing selected</option>
+            <option value="not seen two">Not selected</option>
+            <option value="not seen three">Not selected</option>
+        </select>
+        
         <input type="submit" name="submit" value="Submit" />
     </form>
 </body>

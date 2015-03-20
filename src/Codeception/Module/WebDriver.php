@@ -628,20 +628,61 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function seeInField($field, $value)
     {
-        $this->assert($this->proceedSeeInField($field, $value));
+        $els = $this->findFields($field);
+        $this->assert($this->proceedSeeInField($els, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $this->assertNot($this->proceedSeeInField($field, $value));
+        $els = $this->findFields($field);
+        $this->assertNot($this->proceedSeeInField($els, $value));
     }
     
-    protected function proceedSeeInField($field, $value)
+    public function seeInFormFields($formSelector, array $params)
     {
-        $els = $this->findFields($field);
-        if (reset($els)->getTagName() === 'select') {
-            $select = new \WebDriverSelect(reset($els));
-            $els = $select->getAllSelectedOptions();
+        $this->proceedSeeInFormFields($formSelector, $params, false);
+    }
+    
+    public function dontSeeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, true);
+    }
+    
+    protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
+    {
+        $form = $this->match($this->webDriver, $formSelector);
+        if (empty($form)) {
+            throw new ElementNotFound($formSelector, "Form via CSS or XPath");
+        }
+        $form = reset($form);
+        foreach ($params as $name => $values) {
+            $els = $form->findElements(\WebDriverBy::name($name));
+            if (empty($els)) {
+                throw new ElementNotFound($name);
+            }
+            if (!is_array($values)) {
+                $values = [$values];
+            }
+            foreach ($values as $value) {
+                $ret = $this->proceedSeeInField($els, $value);
+                if ($assertNot) {
+                    $this->assertNot($ret);
+                } else {
+                    $this->assert($ret);
+                }
+            }
+        }
+    }
+    
+    protected function proceedSeeInField(array $elements, $value)
+    {
+        $strField = reset($elements)->getAttribute('name');
+        if (reset($elements)->getTagName() === 'select') {
+            $el = reset($elements);
+            $elements = $el->findElements(\WebDriverBy::xpath('.//option[@selected]'));
+            if (empty($value) && empty($elements)) {
+                return ['True', true];
+            }
         }
         
         $currentValues = [];
@@ -649,7 +690,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $currentValues = [false];
         }
 
-        foreach ($els as $el) {
+        foreach ($elements as $el) {
             if ($el->getTagName() === 'textarea') {
                 $currentValues[] = $el->getText();
             } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
@@ -664,12 +705,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             } else {
                 $currentValues[] = $el->getAttribute('value');
             }
-        }
-        
-        $strField = $field;
-        if (is_array($field)) {
-            $ident = reset($field);
-            $strField = key($field) . '=>' . $ident;
         }
         
         return [

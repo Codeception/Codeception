@@ -401,6 +401,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('select1', 'not seen three');
     }
     
+    public function testSeeInFieldEmptyValueForUnselectedSelect()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('select3', '');
+    }
+    
     public function testSeeInFieldOnSelectMultiple()
     {
         $this->module->amOnPage('/form/field_values');
@@ -432,6 +438,82 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('Description','sunset');
         $this->module->dontSeeInField('textarea','sunset');
         $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
+    }
+    
+    public function testSeeInFormFields()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $params = [
+            'checkbox[]' => [
+                'see test one',
+                'see test two',
+            ],
+            'radio1' => 'see test one',
+            'checkbox1' => true,
+            'checkbox2' => false,
+            'select1' => 'see test one',
+            'select2' => [
+                'see test one',
+                'see test two',
+                'see test three'
+            ]
+        ];
+        $this->module->seeInFormFields('form', $params);
+    }
+    
+    public function testSeeInFormFieldsFails()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $params = [
+            'radio1' => 'something I should not see',
+            'checkbox1' => true,
+            'checkbox2' => false,
+            'select1' => 'see test one',
+            'select2' => [
+                'see test one',
+                'see test two',
+                'see test three'
+            ]
+        ];
+        $this->module->seeInFormFields('form', $params);
+    }
+    
+    public function testDontSeeInFormFields()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $params = [
+            'checkbox[]' => [
+                'not seen one',
+                'not seen two',
+            ],
+            'radio1' => 'not seen one',
+            'checkbox1' => false,
+            'checkbox2' => true,
+            'select1' => 'not seen one',
+            'select2' => [
+                'not seen one',
+                'No where to be seen'
+            ]
+        ];
+        $this->module->dontSeeInFormFields('form', $params);
+    }
+    
+    public function testDontSeeInFormFieldsFails()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $params = [
+            'checkbox[]' => [
+                'wont see this anyway',
+                'see test one',
+            ],
+            'select2' => [
+                'not seen one',
+                'No where to be seen'
+            ]
+        ];
+        $this->module->dontSeeInFormFields('form', $params);
     }
 
     public function testSeeInFieldWithNonLatin()
