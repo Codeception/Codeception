@@ -270,23 +270,64 @@ class InnerBrowser extends Module implements Web
 
     public function seeInField($field, $value)
     {
-        $this->assert($this->proceedSeeInField($field, $value));
+        $crawler = $this->getFieldsByLabelOrCss($field);
+        $this->assert($this->proceedSeeInField($crawler, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $this->assertNot($this->proceedSeeInField($field, $value));
+        $crawler = $this->getFieldsByLabelOrCss($field);
+        $this->assertNot($this->proceedSeeInField($crawler, $value));
+    }
+    
+    public function seeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, false);
+    }
+    
+    public function dontSeeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, true);
+    }
+    
+    protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
+    {
+        $form = $this->match($formSelector)->first();
+        if ($form->count() === 0) {
+            throw new ElementNotFound($formSelector, 'Form');
+        }
+        foreach ($params as $name => $values) {
+            $field = $form->filterXPath(sprintf('.//*[@name=%s]', Crawler::xpathLiteral($name)));
+            if ($field->count() === 0) {
+                throw new ElementNotFound(
+                    sprintf('//*[@name=%s]', Crawler::xpathLiteral($name)),
+                    'Form'
+                );
+            }
+            if (!is_array($values)) {
+                $values = [$values];
+            }
+            foreach ($values as $value) {
+                $ret = $this->proceedSeeInField($field, $value);
+                if ($assertNot) {
+                    $this->assertNot($ret);
+                } else {
+                    $this->assert($ret);
+                }
+            }
+        }
     }
 
-    protected function proceedSeeInField($field, $value)
+    protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $fields = $this->getFieldsByLabelOrCss($field);
-        
         $currentValues = [];
         if ($fields->filter('textarea')->count() !== 0) {
             $currentValues = $fields->filter('textarea')->extract(array('_text'));
         } elseif ($fields->filter('select')->count() !== 0) {
             $currentValues = $fields->filter('select option:selected')->extract(array('value'));
+            if (empty($value) && empty($currentValues)) {
+                return ['True', true];
+            }
         } elseif ($fields->filter('input[type=radio],input[type=checkbox]')->count() !== 0) {
             if (is_bool($value)) {
                 $currentValues = [$fields->filter('input:checked')->count() > 0];
@@ -297,12 +338,7 @@ class InnerBrowser extends Module implements Web
             $currentValues = $fields->extract(array('value'));
         }
         
-        $strField = $field;
-        if (is_array($field)) {
-            $ident = reset($field);
-            $strField = key($field) . '=>' . $ident;
-        }
-
+        $strField = $fields->attr('name');
         return [
             'Contains',
             $value,

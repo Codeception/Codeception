@@ -105,6 +105,22 @@ interface Web
      * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
      * 
      * ```
+     * 
+     * Pair this with seeInFormFields for quick testing magic.
+     * 
+     * ``` php
+     * <?php
+     * $form = [
+     *      'field1' => 'value',
+     *      'field2' => 'another value',
+     *      'checkbox1' => true,
+     *      // ...
+     * ];
+     * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+     * // $I->amOnPage('/path/to/form-page') may be needed
+     * $I->seeInFormFields('//form[@id=my-form]', $form);
+     * ?>
+     * ```
      *
      * @param $selector
      * @param $params
@@ -350,6 +366,112 @@ interface Web
      * @param $value
      */
     public function dontSeeInField($field, $value);
+
+    /**
+     * Checks if the array of form parameters (name => value) are set on the form matched with the
+     * passed selector.
+     * 
+     * ``` php
+     * <?php
+     * $I->seeInFormFields('form[name=myform]', [
+     *      'input1' => 'value',
+     *      'input2' => 'other value',
+     * ]);
+     * ?>
+     * ```
+     * 
+     * For multi-select elements, or to check values of multiple elements with the same name, an
+     * array may be passed:
+     * 
+     * ``` php
+     * <?php
+     * $I->seeInFormFields('.form-class', [
+     *      'multiselect' => [
+     *          'value1',
+     *          'value2',
+     *      ],
+     *      'checkbox[]' => [
+     *          'a checked value',
+     *          'another checked value',
+     *      ],
+     * ]);
+     * ?>
+     * ```
+     *
+     * Additionally, checkbox values can be checked with a boolean.
+     * 
+     * ``` php
+     * <?php
+     * $I->seeInFormFields('#form-id', [
+     *      'checkbox1' => true,        // passes if checked
+     *      'checkbox2' => false,       // passes if unchecked
+     * ]);
+     * ?>
+     * ```
+     * 
+     * Pair this with submitForm for quick testing magic.
+     * 
+     * ``` php
+     * <?php
+     * $form = [
+     *      'field1' => 'value',
+     *      'field2' => 'another value',
+     *      'checkbox1' => true,
+     *      // ...
+     * ];
+     * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+     * // $I->amOnPage('/path/to/form-page') may be needed
+     * $I->seeInFormFields('//form[@id=my-form]', $form);
+     * ?>
+     * ```
+     * 
+     * @param $formSelector
+     * @param $params
+     */
+    public function seeInFormFields($formSelector, array $params);
+
+    /**
+     * Checks if the array of form parameters (name => value) are not set on the form matched with
+     * the passed selector.
+     * 
+     * ``` php
+     * <?php
+     * $I->dontSeeInFormFields('form[name=myform]', [
+     *      'input1' => 'non-existent value',
+     *      'input2' => 'other non-existent value',
+     * ]);
+     * ?>
+     * ```
+     * 
+     * To check that an element hasn't been assigned any one of many values, an array can be passed
+     * as the value:
+     * 
+     * ``` php
+     * <?php
+     * $I->dontSeeInFormFields('.form-class', [
+     *      'fieldName' => [
+     *          'This value shouldn\'t be set',
+     *          'And this value shouldn\'t be set',
+     *      ],
+     * ]);
+     * ?>
+     * ```
+     *
+     * Additionally, checkbox values can be checked with a boolean.
+     * 
+     * ``` php
+     * <?php
+     * $I->dontSeeInFormFields('#form-id', [
+     *      'checkbox1' => true,        // fails if checked
+     *      'checkbox2' => false,       // fails if unchecked
+     * ]);
+     * ?>
+     * ```
+     * 
+     * @param $formSelector
+     * @param $params
+     */
+    public function dontSeeInFormFields($formSelector, array $params);
 
     /**
      * Selects an option in a select tag or in radio button group.
