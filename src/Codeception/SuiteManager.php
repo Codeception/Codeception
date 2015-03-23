@@ -160,7 +160,17 @@ class SuiteManager
         if (empty($envs)) {
             return true;
         }
-        return $this->env and in_array($this->env, $envs);
+        if (!$this->env) {
+            return false;
+        }
+        $currentEnvironments = explode(',', $this->env);
+        foreach ($envs as $envList) {
+            $envList = explode(',', $envList);
+            if (count($envList) == count(array_intersect($currentEnvironments, $envList))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\Util\Autoload;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
@@ -15,6 +16,11 @@ class Configuration
      * @var array Current configuration
      */
     protected static $config = null;
+
+    /**
+     * @var array environmental files configuration cache
+     */
+    protected static $envConfig = [];
 
     /**
      * @var string Directory containing main configuration file.
@@ -39,6 +45,11 @@ class Configuration
     protected static $supportDir = null;
 
     /**
+     * @var string Directory containing environment configuration files.
+     */
+    protected static $envsDir = null;
+
+    /**
      * @var string Directory containing tests and suites of the current project.
      */
     protected static $testsDir = null;
@@ -54,7 +65,9 @@ class Configuration
         'actor'      => 'Guy',
         'namespace'  => '',
         'include'    => [],
-        'paths'      => [],
+        'paths'      => [
+            'envs' => 'tests/_envs',
+        ],
         'modules'    => [],
         'extensions' => [
             'enabled' => [],
@@ -157,6 +170,7 @@ class Configuration
 
         self::$dataDir = $config['paths']['data'];
         self::$supportDir = $config['paths']['support'];
+        self::$envsDir = $config['paths']['envs'];
         self::$testsDir = $config['paths']['tests'];
 
         self::loadBootstrap($config['settings']['bootstrap']);
@@ -197,6 +211,7 @@ class Configuration
         $suites = Finder::create()->files()->name('*.{suite,suite.dist}.yml')->in(self::$dir . DIRECTORY_SEPARATOR . self::$testsDir)->depth('< 1');
         self::$suites = [];
 
+        /** @var SplFileInfo $suite */
         foreach ($suites as $suite) {
             preg_match('~(.*?)(\.suite|\.suite\.dist)\.yml~', $suite->getFilename(), $matches);
             self::$suites[$matches[1]] = $matches[1];
@@ -206,8 +221,8 @@ class Configuration
     /**
      * Returns suite configuration. Requires suite name and global config used (Configuration::config)
      *
-     * @param $suite
-     * @param $config
+     * @param string $suite
+     * @param array $config
      * @return array
      * @throws \Exception
      */
@@ -232,21 +247,78 @@ class Configuration
 
         $path = $config['paths']['tests'];
 
-        $suiteConf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml")
-            ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml"))
-            : [];
-
-        $suiteDistconf = file_exists(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml")
-            ? Yaml::parse(file_get_contents(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml"))
-            : [];
+        $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+        $suiteDistconf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
 
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
+        $settings = self::mergeConfigs($settings, $envConf);
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
 
         $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
+    }
+
+    /**
+     * Loads environments configuration from set directory
+     *
+     * @param string $path path to the directory
+     * @return array
+     */
+    protected static function loadEnvConfigs($path)
+    {
+        if (isset(self::$envConfig[$path])) {
+            return self::$envConfig[$path];
+        }
+        if (!is_dir($path)) {
+            self::$envConfig[$path] = [];
+        } else {
+            $envFiles = Finder::create()
+                ->files()
+                ->name('*{.dist}.yml')
+                ->in($path)
+                ->depth('< 1');
+
+            $envs = [];
+            /** @var SplFileInfo $envFile */
+            foreach ($envFiles as $envFile) {
+                preg_match('~^(.*?)(\.dist)?\.yml$~', $envFile->getFilename(), $matches);
+                $envs[] = $matches[1];
+            }
+
+            $envConfig = [];
+            foreach ($envs as $env) {
+                $envConfig[$env] = [];
+                $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . '.dist.yml', null);
+                if ($envConf !== null) {
+                    $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
+                }
+                $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . '.yml', null);
+                if ($envConf !== null) {
+                    $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
+                }
+            }
+
+            self::$envConfig[$path] = ['env' => $envConfig];
+        }
+        return self::$envConfig[$path];
+    }
+
+    /**
+     * Loads configuration from Yaml file or returns given value if the file doesn't exist
+     *
+     * @param string $filename filename
+     * @param mixed $nonExistentValue value used if filename is not found
+     * @return array
+     */
+    protected static function getConfFromFile($filename, $nonExistentValue = [])
+    {
+        if (file_exists($filename)) {
+            return Yaml::parse(file_get_contents($filename));
+        }
+        return $nonExistentValue;
     }
 
     /**
@@ -375,6 +447,17 @@ class Configuration
     public static function testsDir()
     {
         return self::$dir . DIRECTORY_SEPARATOR . self::$testsDir . DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Return current path to `_envs` dir.
+     * Use it to store environment specific configuration.
+     *
+     * @return string
+     */
+    public static function envsDir()
+    {
+        return self::$dir . DIRECTORY_SEPARATOR . self::$envsDir . DIRECTORY_SEPARATOR;
     }
 
     /**

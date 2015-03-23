@@ -585,9 +585,28 @@ env:
         # nothing changed
 ```
 
-At first these config trees may look ugly, but it is the cleanest way of doing this.
 Basically you can define different environments inside the `env` root, name them (`phantom`, `chrome` etc.),
 and then redefine any configuration parameters that were set before.
+
+You can also define environments in separate configuration files placed in the directory specified by `envs` option in
+`paths` configuration:
+
+```yaml
+paths:
+    envs: tests/_envs
+```
+
+Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`)
+and in there you can just specify options that you wish to override:
+
+```yaml
+modules:
+    config:
+        WebDriver:
+            browser: 'chrome'
+```
+
+Environment configuration files are merged into the main configuration before suite configuration is merged.
 
 You can easily switch between those configs by running tests with `--env` option. To run tests only for PhantomJS you need to pass `--env phantom` option:
 
@@ -602,6 +621,14 @@ $ php codecept.phar run acceptance --env phantom --env chrome --env firefox
 ```
 
 and tests will be executed 3 times, each time in a different browser.
+
+It's also possible to merge multiple environments into one configuration by using comma as a separator:
+
+```bash
+$ php codecept.phar run acceptance --env dev,phantom --env dev,chrome --env dev,firefox
+```
+
+Configuration is merged in the given order. This way you can easily create multiple combinations of your environment configurations.
 
 Depending on environment you may choose which tests are to be executed.
 For example, you might need some tests to be executed only in Firefox, and few tests only in Chrome.
@@ -637,7 +664,16 @@ $scenario->env(array('phantom', 'firefox'));
 ?>
 ```
 
-This way you can easily control what tests will be executed for which browsers.
+If merged environments are used, then you can specify multiple required environments (order is ignored):
+
+```php
+<?php
+$scenario->env('firefox,dev');
+$scenario->env('dev,phantom');
+?>
+```
+
+This way you can easily control what tests will be executed for which environments.
 
 
 ## Conclusion

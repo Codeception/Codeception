@@ -1,0 +1,27 @@
+class_name: MessageGuy
+paths:
+    tests: tests
+    log: tests/_log
+    data: tests/_data
+    helpers: tests/_helpers
+    envs: tests/_envs
+
+settings:
+    bootstrap: _bootstrap.php
+    colors: false
+    log: false
+
+modules:
+      enabled:
+          - MessageHelper
+      config:
+          MessageHelper:
+                message3: MESSAGE3 FROM SUITE.
+
+env:
+    env1:
+        modules:
+            config:
+                MessageHelper:
+                    message1: MESSAGE1 FROM SUITE-ENV1.
+                    message4: MESSAGE4 FROM SUITE-ENV1.

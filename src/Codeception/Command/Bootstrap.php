@@ -31,6 +31,7 @@ class Bootstrap extends Command
     protected $supportDir = 'tests/_support';
     protected $logDir = 'tests/_output';
     protected $dataDir = 'tests/_data';
+    protected $envsDir = 'tests/_envs';
 
     protected function configure()
     {
@@ -115,7 +116,8 @@ class Bootstrap extends Command
                 'tests'   => 'tests',
                 'log'     => $this->logDir,
                 'data'    => $this->dataDir,
-                'support' => $this->supportDir
+                'support' => $this->supportDir,
+                'envs'    => $this->envsDir,
             ],
             'settings' => [
                 'bootstrap'    => '_bootstrap.php',
@@ -221,6 +223,7 @@ class Bootstrap extends Command
         @mkdir($this->logDir);
         @mkdir($this->dataDir);
         @mkdir($this->supportDir);
+        @mkdir($this->envsDir);
         file_put_contents($this->dataDir . '/dump.sql', '/* Replace this file with actual dump of your database */');
     }
 
