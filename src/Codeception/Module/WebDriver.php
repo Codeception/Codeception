@@ -7,7 +7,9 @@ use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Exception\TestRuntime;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
+use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Lib\Interfaces\SessionSnapshot;
+use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web as WebInterface;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
@@ -100,7 +102,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * # Methods
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot, ScreenshotSaver, PageSourceSaver
 {
 
     protected $requiredFields = ['browser', 'url'];
@@ -186,8 +188,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $filename = str_replace(['::', '\\', '/'], ['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
-        file_put_contents(codecept_output_dir() . $filename . '.html', $this->webDriver->getPageSource());
-        $this->debug("Screenshot and HTML snapshot were saved into '_output' dir");
+        $this->_savePageSource(codecept_output_dir() . $filename . '.html');
+        $this->debug("Screenshot and page source were saved into '_output' dir");
     }
 
     public function _afterSuite()
@@ -241,6 +243,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function _saveScreenshot($filename)
     {
         $this->webDriver->takeScreenshot($filename);
+    }
+
+    public function _savePageSource($filename)
+    {
+        file_put_contents($filename, $this->webDriver->getPageSource());
     }
 
     /**

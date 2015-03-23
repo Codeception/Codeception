@@ -5,6 +5,7 @@ use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
 use Codeception\Exception\TestRuntime;
+use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -19,7 +20,7 @@ use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
 
-class InnerBrowser extends Module implements Web
+class InnerBrowser extends Module implements Web, PageSourceSaver
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
@@ -49,8 +50,7 @@ class InnerBrowser extends Module implements Web
         if (!$this->client || !$this->client->getInternalResponse()) {
             return;
         }
-        $filename = str_replace(['::', '\\', '/'], ['.', '.', '.'], TestCase::getTestSignature($test)) . '.fail.html';
-        file_put_contents(codecept_output_dir($filename), $this->client->getInternalResponse()->getContent());
+        $this->_savePageSource(codecept_output_dir().str_replace(['::', '\\', '/'], ['.', '.', '.'], TestCase::getTestSignature($test)) . '.fail.html');
     }
 
     public function _after(TestCase $test)
@@ -58,6 +58,11 @@ class InnerBrowser extends Module implements Web
         $this->client = null;
         $this->crawler = null;
         $this->forms = [];
+    }
+
+    public function _savePageSource($filename)
+    {
+        file_put_contents($filename, $this->client->getInternalResponse()->getContent());
     }
 
     /**
