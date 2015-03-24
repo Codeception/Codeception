@@ -187,21 +187,19 @@ class Yii2 extends Framework implements ActiveRecord
         return $record;
     }
 
-
     /**
-     *  Converting $page to valid Yii2 url
-     *  Allows input like:
-     *  $I->amOnPage(['site/view','page'=>'about']);
-     *  $I->amOnPage('index-test.php?site/index');
-     *  $I->amOnPage('http://localhost/index-test.php?site/index');
+     * Converting $page to valid Yii2 url
+     * Allows input like:
+     * $I->amOnPage(['site/view','page'=>'about']);
+     * $I->amOnPage('index-test.php?site/index');
+     * $I->amOnPage('http://localhost/index-test.php?site/index');
+     * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
      */
-    public function amOnPage($page) {
-
-        if(is_array($page)){
+    public function amOnPage($page)
+    {
+        if (is_array($page)) {
             $page = \Yii::$app->getUrlManager()->createUrl($page);
         }
-
         parent::amOnPage($page);
     }
-
 }
