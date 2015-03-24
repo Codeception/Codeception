@@ -91,6 +91,9 @@ class SuiteManager
             : $testLoader->loadTests();
 
         $tests = $testLoader->getTests();
+        if ($this->settings['shuffle']) {
+            shuffle($tests);
+        }
         foreach ($tests as $test) {
             $this->addToSuite($test);
         }
@@ -163,6 +166,7 @@ class SuiteManager
         if (!$this->env) {
             return false;
         }
+
         $currentEnvironments = explode(',', $this->env);
         foreach ($envs as $envList) {
             $envList = explode(',', $envList);

@@ -1,15 +1,10 @@
 paths:
     tests: tests
     log: tests/log
-    show_uncovered: true
-    include:
-        - src/*
-        - tests/data/claypit/c3.php
-    exclude:
-        - vendor/*
     data: tests/data
     support: tests/support
 settings:
+    shuffle: true
     bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true

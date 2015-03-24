@@ -92,6 +92,7 @@ class Configuration
         'namespace'   => null,
         'path'        => '',
         'groups'      => [],
+        'shuffle'   => false,
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];
