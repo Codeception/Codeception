@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/_data/MyGroupHighlighter.php';
+require_once __DIR__.'/_data/VerbosityLevelOutput.php';
 
 
 

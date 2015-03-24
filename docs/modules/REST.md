@@ -96,6 +96,13 @@ Opposite to seeResponseContainsJson
  * `param array` $json
 
 
+### dontSeeResponseJsonMatchesJsonPath
+ 
+Opposite to seeResponseJsonMatchesJsonPath
+
+ * `param array` $jsonPath
+
+
 ### grabDataFromJsonResponse
  
 Returns data from the current JSON response using specified path

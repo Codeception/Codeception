@@ -11,6 +11,7 @@ extensions:
     enabled:
       - Codeception\Platform\SimpleOutput
       - Codeception\Platform\RunFailed
+      - VerbosityLevelOutput
 modules:
     config:
         Db:

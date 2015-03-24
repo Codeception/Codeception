@@ -259,4 +259,10 @@ class PhpBrowserTest extends TestsForBrowsers
         $formPath = parse_url($formUrl)['path'];
         $this->assertEquals($formPath, '/register');
     }
+
+    public function testFillFieldWithoutPage()
+    {
+        $this->setExpectedException("\\Codeception\\Exception\\TestRuntime");
+        $this->module->fillField('#name', 'Nothing special');
+    }
 }

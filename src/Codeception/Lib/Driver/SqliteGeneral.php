@@ -30,4 +30,15 @@ class SqliteGeneral extends Db
         $this->dbh->exec('PRAGMA ignore_check_constraints = 0;');
         $this->dbh->exec('PRAGMA writable_schema = 0;');
     }
+
+    /**
+     * @param string $tableName
+     *
+     * @return string
+     */
+    public function getPrimaryColumn($tableName)
+    {
+        // @TODO: Implement this for SQLite later
+        return 'id';
+    }
 }

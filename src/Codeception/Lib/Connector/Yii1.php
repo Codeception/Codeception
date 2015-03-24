@@ -91,8 +91,10 @@ class Yii1 extends Client
         Yii::createApplication($this->appSettings['class'], $this->appSettings['config']);
 
         // disabling logging. Logs slow down test execution
-        foreach (Yii::app()->log->routes as $route) {
-            $route->enabled = false;
+        if (Yii::app()->hasComponent('log')) {
+            foreach (Yii::app()->getComponent('log')->routes as $route) {
+                $route->enabled = false;
+            }
         }
         Yii::app()->onEndRequest->add([$this, 'setHeaders']);
         Yii::app()->run();

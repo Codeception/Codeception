@@ -61,7 +61,9 @@ class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             );
         }
 
-        self::$dbh->beginTransaction();
+        if(!self::$dbh->inTransaction()) {
+            self::$dbh->beginTransaction();
+        }
     }
 
     public function _after(\Codeception\TestCase $test)

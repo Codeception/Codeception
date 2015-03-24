@@ -319,6 +319,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         ];
     }
 
+    protected function getSubmissionFormFieldName($name)
+    {
+        if (substr($name, -2) === '[]') {
+            return substr($name, 0, -2);
+        }
+        return $name;
+    }
+
     public function submitForm($selector, $params, $button = null)
     {
         $form = $this->match($selector)->first();
@@ -327,48 +335,51 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             throw new ElementNotFound($selector, 'Form');
         }
 
-        $url = '';
+        $defaults = [];
         /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input,button');
+        $fields = $form->filter('input:enabled,textarea:enabled,select:enabled,button:enabled,input[type=hidden]');
         foreach ($fields as $field) {
+            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
             if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
                 continue;
             } elseif ($field->getAttribute('type') === 'button') {
                 continue;
             } elseif (($field->getAttribute('type') === 'submit' || $field->tagName === 'button') && $field->getAttribute('name') !== $button) {
                 continue;
-            }
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->getAttribute('value')) . '&';
-        }
-
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('textarea');
-        foreach ($fields as $field) {
-            $url .= sprintf('%s=%s', $field->getAttribute('name'), $field->nodeValue) . '&';
-        }
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('select');
-        foreach ($fields as $field) {
-            /** @var  \DOMElement $option */
-            foreach ($field->childNodes as $option) {
-                if ($option->getAttribute('selected') == 'selected') {
-                    $url .= sprintf('%s=%s', $field->getAttribute('name'), $option->getAttribute('value')) . '&';
+            } elseif ($field->tagName === 'select') {
+                $values = [];
+                $select = new Crawler($field);
+                $options = $select->filter('option:enabled:selected');
+                foreach ($options as $option) {
+                    $values[] = $option->getAttribute('value');
+                    if (!$field->hasAttribute('multiple')) {
+                        break;
+                    }
                 }
+                if (count($values) > 1) {
+                    $defaults[$fieldName] = $values;
+                } elseif (count($values) === 1) {
+                    $defaults[$fieldName] = reset($values);
+                }
+                continue;
+            } elseif (!empty($field->nodeValue)) {
+                $defaults[$fieldName] = $field->nodeValue;
             }
+            $defaults[$fieldName] = $field->getAttribute('value');
         }
 
-        $url .= http_build_query($params);
-        parse_str($url, $params);
+        $requestParams = array_merge($defaults, $params);
+        
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
         $query = '';
         if (strtoupper($method) == 'GET') {
-            $query = '?' . http_build_query($params);
+            $query = '?' . http_build_query($requestParams);
         }
         $this->debugSection('Uri', $this->getFormUrl($form));
         $this->debugSection('Method', $method);
-        $this->debugSection('Parameters', $params);
+        $this->debugSection('Parameters', $requestParams);
 
-        $this->crawler = $this->client->request($method, $this->getFormUrl($form) . $query, $params);
+        $this->crawler = $this->client->request($method, $this->getFormUrl($form) . $query, $requestParams);
         $this->debugResponse();
     }
 
@@ -687,6 +698,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
      */
     protected function strictMatch(array $by)
     {
+        if (!$this->crawler) {
+            throw new TestRuntime('Crawler is null. Perhaps you forgot to call "amOnPage"?');
+        }
+
         $type = key($by);
         $locator = $by[$type];
         switch ($type) {

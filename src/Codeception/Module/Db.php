@@ -84,25 +84,37 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     public $dbh;
 
     /**
-     * @var
+     * @var array
      */
-
     protected $sql = [];
 
+    /**
+     * @var array
+     */
     protected $config = [
-        'populate' => true,
-        'cleanup'  => true,
-        'dump'     => null
+      'populate' => true,
+      'cleanup'  => true,
+      'dump'     => null
     ];
 
+    /**
+     * @var bool
+     */
     protected $populated = false;
 
     /**
      * @var \Codeception\Lib\Driver\Db
      */
     public $driver;
+
+    /**
+     * @var array
+     */
     protected $insertedIds = [];
 
+    /**
+     * @var array
+     */
     protected $requiredFields = ['dsn', 'user', 'password'];
 
     public function _initialize()
@@ -111,8 +123,8 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
-                    __CLASS__,
-                    "\nFile with dump doesn't exist.
+                  __CLASS__,
+                  "\nFile with dump doesn't exist.
                     Please, check path for sql file: " . $this->config['dump']
                 );
             }
@@ -159,7 +171,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         foreach ($this->insertedIds as $insertId) {
             try {
-                $this->driver->deleteQuery($insertId['table'], $insertId['id']);
+                $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
                 $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
             }
@@ -172,8 +184,8 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new ModuleConfigException(
-                __CLASS__,
-                "No connection to database. Remove this module from config if you don't need database repopulation"
+              __CLASS__,
+              "No connection to database. Remove this module from config if you don't need database repopulation"
             );
         }
         try {
@@ -196,8 +208,8 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
             throw new ModuleException(
-                __CLASS__,
-                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
+              __CLASS__,
+              $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
             );
         }
     }
@@ -211,8 +223,9 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
      * ?>
      * ```
      *
-     * @param $table
+     * @param       $table
      * @param array $data
+     *
      * @return integer $id
      */
     public function haveInDatabase($table, array $data)
@@ -241,7 +254,13 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
         }
-        $this->insertedIds[] = ['table' => $table, 'id' => $lastInsertId];
+        $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
+
+        $this->insertedIds[] = [
+          'table'   => $table,
+          'id'      => $lastInsertId,
+          'primary' => $this->driver->getPrimaryColumn($table)
+        ];
 
         return $lastInsertId;
     }
@@ -269,6 +288,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         }
 
         $sth->execute(array_values($criteria));
+
         return $sth->fetchColumn();
     }
 
@@ -276,5 +296,4 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         return $this->proceedSeeInDatabase($table, $column, $criteria);
     }
-
 }

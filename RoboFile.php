@@ -181,6 +181,8 @@ class RoboFile extends \Robo\Tasks
             ->exclude('pheanstalk')
             ->exclude('phpseclib')
             ->exclude('codegyre')
+            ->exclude('monolog')
+            ->exclude('phpspec')
             ->exclude('Tests')
             ->exclude('tests')
             ->exclude('benchmark')
@@ -488,7 +490,7 @@ class RoboFile extends \Robo\Tasks
      */
     public function publishGit($branch = null, $opt = ['tag|t' => null])
     {
-        $version = $opt['tag'] ? $opt['tag'] : \Codeception\Codecept::VERSION;
+        $version = isset($opt['tag']) ? $opt['tag'] : \Codeception\Codecept::VERSION;
         $this->say('creating new tag for '.$version);
         if (!$branch) {
             $branch = explode('.', $version);

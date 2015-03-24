@@ -55,16 +55,17 @@ class Laravel5 extends Client implements HttpKernelInterface, TerminableInterfac
         return $this->httpKernel->handle($request);
     }
 
-    /**
-     * Terminates a request/response cycle.
-     *
-     * @param DomRequest $request A Request instance
-     * @param Response $response A Response instance
-     *
-     * @api
-     */
-    public function terminate(DomRequest $request, Response $response)
-    {
-        $this->httpKernel->terminate($request, $response);
-    }
+	/**
+	 * Terminates a request/response cycle.
+	 *
+	 * @param DomRequest $request A Request instance
+	 * @param Response $response A Response instance
+	 *
+	 * @api
+	 */
+	public function terminate(DomRequest $request, Response $response)
+	{
+		$this->httpKernel->terminate(Request::createFromBase($request), $response);
+	}
+
 }
