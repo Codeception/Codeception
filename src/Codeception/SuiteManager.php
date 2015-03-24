@@ -74,6 +74,7 @@ class SuiteManager
 
     public function initialize()
     {
+        $this->dispatcher->dispatch(Events::MODULE_INIT, new SuiteEvent($this->suite, null, $this->settings));
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }

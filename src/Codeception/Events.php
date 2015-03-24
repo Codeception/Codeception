@@ -16,10 +16,16 @@ final class Events
     {
     }
 
+    /**
+     * The <b>MODULE_INIT</b> event occurs before modules are initialized.
+     *
+     * The event listener method receives a {@link Codeception\Event\SuiteEvent} instance.
+     */
+    const MODULE_INIT = 'module.init';
 
     /**
      * The <b>SUITE_INIT</b> event occurs when suite is initialized.
-     * Modules are initialized, but Guy class is not loaded.
+     * Modules are created and initialized, but Actor class is not loaded.
      *
      * The event listener method receives a {@link Codeception\Event\SuiteEvent} instance.
      */
