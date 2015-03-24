@@ -65,6 +65,7 @@ class SuiteManager
         foreach ($modules as $moduleName) {
             $this->moduleContainer->create($moduleName);
         }
+        $this->moduleContainer->validateConflicts();
         $this->suite = $this->createSuite($name);
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];

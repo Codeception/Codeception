@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\Exception\Module as ModuleException;
+use Codeception\Exception\ModuleConflict as ModuleConflictException;
 use Codeception\Module;
 
 class ModuleContainer
@@ -130,5 +131,21 @@ class ModuleContainer
             $this->actions[$method->name] = $name;
         }
         return $module;
+    }
+
+    public function validateConflicts()
+    {
+        $moduleNames = array_keys($this->modules);
+        for ($i = 0; $i < count($this->modules); $i++) {
+            /** @var $currentModule Module  **/
+            $currentModule = $this->modules[$moduleNames[$i]];
+            for ($j = $i; $j < count($this->modules); $j++) {
+                $inspectedModule = $this->modules[$moduleNames[$j]];
+                $nameAndInterfaces = array_merge([get_class($inspectedModule), $inspectedModule->_getName()], class_implements($inspectedModule));
+                if (in_array(ltrim($currentModule->_conflicts(), '\\'), $nameAndInterfaces)) {
+                    throw new ModuleConflictException($currentModule, $inspectedModule);
+                }
+            }
+        }
     }
 }

@@ -50,8 +50,6 @@ abstract class Module
 
     protected $requiredFields = [];
 
-    protected $conflicts = [];
-
     public function __construct(ModuleContainer $moduleContainer, $config = null)
     {
         $this->moduleContainer = $moduleContainer;
@@ -98,17 +96,13 @@ abstract class Module
         }
     }
 
-    protected function validateConflicts()
+    /**
+     * Returns class name or interface of module which can conflict with current
+     * @return array
+     */
+    public function _conflicts()
     {
-        foreach ($this->getModules() as $module) {
-            $nameAndInterfaces = array_merge([get_class($module), $module->_getName()], class_implements($module));
-
-            foreach ($this->conflicts as $conflictedModuleOrInterface => $message) {
-                if (in_array($conflictedModuleOrInterface, $nameAndInterfaces)) {
-                    throw new \Codeception\Exception\ModuleConflict(get_class($this), $conflictedModuleOrInterface, $message);
-                }
-            }
-        }
+        // Ex: return '\Codeception\Module\WebDriver';
     }
 
     public function _getName()

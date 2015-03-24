@@ -5,7 +5,6 @@ namespace Codeception\Module;
 
 class CliHelper extends \Codeception\Module
 {
-
     public function _before(\Codeception\TestCase $test) {
         $this->getModule('Filesystem')->copyDir(\Codeception\Configuration::dataDir().'claypit', \Codeception\Configuration::dataDir().'sandbox');
     }

@@ -16,6 +16,14 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), []);
     }
 
+    protected function tearDown()
+    {
+        \Codeception\Module\PhpSiteHelper::$includeInheritedActions = true;
+        \Codeception\Module\PhpSiteHelper::$onlyActions = [];
+        \Codeception\Module\PhpSiteHelper::$excludeActions = [];
+        \Codeception\Module\PhpSiteHelper::$aliases = [];
+    }
+
     /**
      * @group core
      * @throws \Codeception\Exception\Configuration
@@ -75,7 +83,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testExplicitlySetActionsOnNotInherited()
     {
         \Codeception\Module\PhpSiteHelper::$includeInheritedActions = false;
-        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        \Codeception\Module\PhpSiteHelper::$onlyActions = ['see'];
         $this->moduleContainer->create('\Codeception\Module\PhpSiteHelper');
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayNotHasKey('amOnPage', $actions);
@@ -88,7 +96,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
      */
     public function testActionsExplicitlySetForNotInheritedModule()
     {
-        \Codeception\Module\PhpSiteHelper::$onlyActions = array('see');
+        \Codeception\Module\PhpSiteHelper::$onlyActions = ['see'];
         $this->moduleContainer->create('\Codeception\Module\PhpSiteHelper');
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayNotHasKey('amOnPage', $actions);
@@ -101,7 +109,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testCreateModuleWithoutRequiredFields()
     {
         $this->setExpectedException('\Codeception\Exception\ModuleConfig');
-        $this->moduleContainer->create('Codeception\Lib\StubModule', array('secondField' => 'none'));
+        $this->moduleContainer->create('Codeception\Lib\StubModule', ['secondField' => 'none']);
     }
 
     /**
@@ -140,7 +148,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
-        $module->_reconfigure(array('firstField' => '1st', 'secondField' => '2nd'));
+        $module->_reconfigure(['firstField' => '1st', 'secondField' => '2nd']);
         $this->assertEquals('1st', $module->_getFirstField());
         $this->assertEquals('2nd', $module->_getSecondField());
         $module->_resetConfig();
@@ -148,15 +156,39 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('secondValue', $module->_getSecondField());
     }
 
+    public function testConflictsByModuleName()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->moduleContainer->create('Codeception\Lib\ConflictedModule');
+        $this->moduleContainer->create('Cli');
+        $this->moduleContainer->validateConflicts();
+    }
+
+
+    public function testConflictsByClass()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->moduleContainer->create('Codeception\Lib\ConflictedModule2');
+        $this->moduleContainer->create('Cli');
+        $this->moduleContainer->validateConflicts();
+    }
+
+    public function testConflictsByInterface()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->moduleContainer->create('Codeception\Lib\ConflictedModule3');
+        $this->moduleContainer->create('Symfony2');
+        $this->moduleContainer->validateConflicts();
+    }
+
 }
 
 class StubModule extends \Codeception\Module
 {
-
-    protected $requiredFields = array(
+    protected $requiredFields = [
         'firstField',
         'secondField',
-    );
+    ];
 
     public function _getFirstField()
     {
@@ -170,3 +202,26 @@ class StubModule extends \Codeception\Module
 
 }
 
+class ConflictedModule extends \Codeception\Module
+{
+    public function _conflicts()
+    {
+        return 'Cli';
+    }
+}
+
+class ConflictedModule2 extends \Codeception\Module
+{
+    public function _conflicts()
+    {
+        return '\Codeception\Module\Cli';
+    }
+}
+
+class ConflictedModule3 extends \Codeception\Module
+{
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\Web';
+    }
+}
