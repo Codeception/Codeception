@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Lib\Interfaces\ConflictsWithModule;
+use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Util\Stub;
 
 class ModuleContainerTest extends \PHPUnit_Framework_TestCase
@@ -181,6 +183,24 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->validateConflicts();
     }
 
+    public function testModuleDependenciesFail()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleRequire');
+        $this->moduleContainer->create('Codeception\Lib\DependencyModule');
+    }
+
+    public function testModuleDependencies()
+    {
+        $config = ['modules' => [
+            'enabled' => ['Codeception\Lib\DependencyModule'],
+            'depends' => [
+                'Codeception\Lib\DependencyModule' => 'Codeception\Lib\ConflictedModule'
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Codeception\Lib\DependencyModule');
+    }
+    
 }
 
 class StubModule extends \Codeception\Module
@@ -202,7 +222,7 @@ class StubModule extends \Codeception\Module
 
 }
 
-class ConflictedModule extends \Codeception\Module
+class ConflictedModule extends \Codeception\Module implements ConflictsWithModule
 {
     public function _conflicts()
     {
@@ -210,7 +230,7 @@ class ConflictedModule extends \Codeception\Module
     }
 }
 
-class ConflictedModule2 extends \Codeception\Module
+class ConflictedModule2 extends \Codeception\Module implements ConflictsWithModule
 {
     public function _conflicts()
     {
@@ -218,10 +238,23 @@ class ConflictedModule2 extends \Codeception\Module
     }
 }
 
-class ConflictedModule3 extends \Codeception\Module
+class ConflictedModule3 extends \Codeception\Module implements ConflictsWithModule
 {
     public function _conflicts()
     {
         return 'Codeception\Lib\Interfaces\Web';
+    }
+}
+
+class DependencyModule extends \Codeception\Module implements DependsOnModule
+{
+    public function _depends()
+    {
+        return ['Codeception\Lib\ConflictedModule' => 'Error message'];
+    }
+
+    public function _inject()
+    {
+        
     }
 }

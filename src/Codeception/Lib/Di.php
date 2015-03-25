@@ -76,7 +76,9 @@ class Di
             $object = $reflectedClass->newInstanceArgs($constructorArgs);
         }
 
-        $this->injectDependencies($object, $injectMethodName);
+        if ($injectMethodName) {
+            $this->injectDependencies($object, $injectMethodName);
+        }
 
         $this->container[$className] = $object;
         return $object;

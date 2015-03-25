@@ -88,6 +88,7 @@ class Configuration
         'modules'     => [
             'enabled' => [],
             'config'  => [],
+            'depends' => []
         ],
         'namespace'   => null,
         'path'        => '',

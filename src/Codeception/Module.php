@@ -64,7 +64,6 @@ abstract class Module
     {
         $this->config = $this->backupConfig = array_merge($this->config, $config);
         $this->validateConfig();
-//        $this->validateConflicts();
     }
 
     public function _reconfigure($config)
@@ -94,15 +93,6 @@ abstract class Module
                 "Please, update the configuration and set all the required fields\n\n"
             );
         }
-    }
-
-    /**
-     * Returns class name or interface of module which can conflict with current
-     * @return array
-     */
-    public function _conflicts()
-    {
-        // Ex: return '\Codeception\Module\WebDriver';
     }
 
     public function _getName()

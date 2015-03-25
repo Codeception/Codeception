@@ -4,6 +4,9 @@ namespace Codeception\Lib;
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConflict as ModuleConflictException;
+use Codeception\Exception\ModuleRequire;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
+use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module;
 
 class ModuleContainer
@@ -96,8 +99,17 @@ class ModuleContainer
 
     private function instantiate($name, $class, $config)
     {
-        $module = $this->di->instantiate($class, [$this, $config]);
+        $module = $this->di->instantiate($class, [$this, $config], false);
         $this->modules[$name] = $module;
+
+        if (!$this->active[$name]) {
+            // if module is not active, its actions should not be included into list
+            return $module;
+        }
+        
+        if ($module instanceof DependsOnModule) {
+            $this->injectDependentModule($name, $module);
+        }
 
         $class = new \ReflectionClass($module);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
@@ -133,12 +145,36 @@ class ModuleContainer
         return $module;
     }
 
+    public function injectDependentModule($name, DependsOnModule $module)
+    {
+        $message = '';
+        $dependency = $module->_depends();
+        if (is_array($dependency)) {
+            $message = reset($dependency);
+            $dependency = key($dependency);
+        }
+        if (!isset($this->config['modules']['depends'][$name])) {
+            throw new ModuleRequire($module,
+                "\nThis module depends on module of $dependency\n" .
+                "Please specify the dependent module inside module configuration section.\n" .
+                "\n\n$message");
+        }
+        $dependentModule = $this->create($name, false);
+        if (!method_exists($module, '_inject')) {
+            throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
+        }
+        $module->_inject($dependentModule);
+    }
+
     public function validateConflicts()
     {
         $moduleNames = array_keys($this->modules);
         for ($i = 0; $i < count($this->modules); $i++) {
             /** @var $currentModule Module  **/
             $currentModule = $this->modules[$moduleNames[$i]];
+            if (!$currentModule instanceof ConflictsWithModule) {
+                continue;
+            }
             for ($j = $i; $j < count($this->modules); $j++) {
                 $inspectedModule = $this->modules[$moduleNames[$j]];
                 $nameAndInterfaces = array_merge([get_class($inspectedModule), $inspectedModule->_getName()], class_implements($inspectedModule));
