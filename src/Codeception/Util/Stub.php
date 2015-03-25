@@ -66,6 +66,62 @@ class Stub
     }
 
     /**
+     *
+     * Works exactly the same as Stub::make, but doesn't fail when the mocked class implements __set
+     * In some extensions, the __set method is implemented and triggers errors when an undefined property is set
+     * Stub::makeNative checks the errors, and will return the mocked object regardless
+     *
+     * ``` php
+     * <?php
+     * Stub::makeNative('\CouchbaseBucket');
+     * ?>
+     * ```
+     * @param                                  $class - A class to be mocked
+     * @param array                            $params - properties and methods to set
+     * @param bool|\PHPUnit_Framework_TestCase $testCase
+     *
+     * @return object - mock
+     * @throws \RuntimeException when class not exists
+     */
+    public static function makeNative($class, $params = [], $testCase = false)
+    {
+        $class = self::getClassname($class);
+        if (!class_exists($class)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Stubbed extension class %s does not exist',
+                    $class
+                )
+            );
+        }
+        $reflection = new \ReflectionClass($class);
+        $callables  = self::getMethodsToReplace($reflection, $params);
+        if ($reflection->isAbstract()) {
+            $arguments = empty($callables) ? [] : array_keys($callables);
+            $mock      = self::generateMockForAbstractClass($class, $arguments, '', false, $testCase);
+        } else {
+            $arguments = empty($callables) ? null : array_keys($callables);
+            $mock = self::generateMock($class, $arguments, [], '', false, $testCase);
+        }
+
+        self::bindParameters($mock, $params);
+        try {
+            $mock->__mocked = $class;
+        } catch (\PHPUnit_Framework_Exception $e) {
+            if (
+                strstr($e->getMessage(), 'property via __set(): __mocked') === false
+                ||
+                strstr($e->getTraceAsString(), 'Native]') === false
+            ) {
+                throw $e;
+            }
+        }
+
+        return $mock;
+
+    }
+
+    /**
      * Creates $num instances of class through `Stub::make`.
      *
      * @param       $class
