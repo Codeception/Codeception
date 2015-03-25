@@ -60,7 +60,11 @@ class Stub
         }
 
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        //only set __mocked if __set is not implemented
+        //to avoid __set implementations that error on overloading
+        if (!$reflection->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
 
         return $mock;
     }
@@ -208,7 +212,9 @@ class Stub
         $methods = count($methods) ? $methods : null;
         $mock    = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        if (!$reflectionClass->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
 
         return $mock;
     }
@@ -252,6 +258,8 @@ class Stub
     public static function makeEmpty($class, $params = array(), $testCase = false)
     {
         $class   = self::getClassname($class);
+        $reflection = new \ReflectionClass($class);
+
         $methods = get_class_methods($class);
         $methods = array_filter(
             $methods,
@@ -261,7 +269,9 @@ class Stub
         );
         $mock    = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        if (!$reflection->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
 
         return $mock;
     }
@@ -322,12 +332,16 @@ class Stub
     public static function construct($class, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class     = self::getClassname($class);
-        $callables = self::getMethodsToReplace(new \ReflectionClass($class), $params);
+        $reflection = new \ReflectionClass($class);
+
+        $callables = self::getMethodsToReplace($reflection, $params);
 
         $arguments = empty($callables) ? null : array_keys($callables);
         $mock      = self::generateMock($class, $arguments, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        if (!$reflection->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
 
         return $mock;
     }
@@ -372,6 +386,8 @@ class Stub
     public static function constructEmpty($class, $constructorParams = array(), $params = array(), $testCase = false)
     {
         $class   = self::getClassname($class);
+        $reflection = new \ReflectionClass($class);
+
         $methods = get_class_methods($class);
         $methods = array_filter(
             $methods,
@@ -381,7 +397,9 @@ class Stub
         );
         $mock    = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        if (!$reflection->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
 
         return $mock;
     }
@@ -420,7 +438,7 @@ class Stub
      * @param                                 $method
      * @param array                           $constructorParams
      * @param array                           $params
-     * @param bool|PHPUnit_Framework_TestCase $testCase
+     * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
      * @return object
      */
@@ -455,7 +473,9 @@ class Stub
         $methods         = count($methods) ? $methods : null;
         $mock            = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        $mock->__mocked = $class;
+        if (!$reflectionClass->hasMethod('__set')) {
+            $mock->__mocked = $class;
+        }
         return $mock;
     }
 
@@ -480,7 +500,7 @@ class Stub
      *
      * @return object
      * @since  Method available since Release 1.0.0
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private static function generateMockForAbstractClass()
     {
@@ -519,7 +539,8 @@ class Stub
      */
     public static function update($mock, array $params)
     {
-        if (!$mock->__mocked) {
+        //do not rely on __mocked property, check typ eof $mock
+        if (!$mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
             throw new \LogicException('You can update only stubbed objects');
         }
 
@@ -568,7 +589,15 @@ class Stub
                 $reflectionProperty->setValue($mock, $value);
                 continue;
             } else {
-                $mock->$param = $value;
+                if ($reflectionClass->hasMethod('__set')) {
+                    try {
+                        $mock->{$param} = $value;
+                    } catch (\Exception $e) {
+                        //silence exception, decide what is best -> trigger error, let exception fly, or...
+                    }
+                } else {
+                    $mock->{$param} = $value;
+                }
                 continue;
             }
         }
@@ -590,7 +619,7 @@ class Stub
         return $object;
     }
 
-    protected static function getMethodsToReplace($reflection, $params)
+    protected static function getMethodsToReplace(\ReflectionClass $reflection, $params)
     {
         $callables = array();
         foreach ($params as $method => $value) {
