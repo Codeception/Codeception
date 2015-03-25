@@ -60,12 +60,22 @@ class Stub
         }
 
         self::bindParameters($mock, $params);
-        //only set __mocked if __set is not implemented
-        //to avoid __set implementations that error on overloading
-        if (!$reflection->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
 
+        return self::markAsMock($mock, $reflection);
+    }
+
+    /**
+     * Set __mock flag, if at all possible
+     *
+     * @param object $mock
+     * @param \ReflectionClass $reflection
+     * @return object
+     */
+    private static function markAsMock($mock, \ReflectionClass $reflection)
+    {
+        if (!$reflection->hasMethod('__set')) {
+            $mock->__mocked = $reflection->getName();
+        }
         return $mock;
     }
 
@@ -156,11 +166,8 @@ class Stub
         $methods = count($methods) ? $methods : null;
         $mock    = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
-        if (!$reflectionClass->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
 
-        return $mock;
+        return self::markAsMock($mock, $reflectionClass);
     }
 
     /**
@@ -213,11 +220,8 @@ class Stub
         );
         $mock    = self::generateMock($class, $methods, array(), '', false, $testCase);
         self::bindParameters($mock, $params);
-        if (!$reflection->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
 
-        return $mock;
+        return self::markAsMock($mock, $reflection);
     }
 
     /**
@@ -283,11 +287,8 @@ class Stub
         $arguments = empty($callables) ? null : array_keys($callables);
         $mock      = self::generateMock($class, $arguments, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        if (!$reflection->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
 
-        return $mock;
+        return self::markAsMock($mock, $reflection);
     }
 
     /**
@@ -341,11 +342,8 @@ class Stub
         );
         $mock    = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        if (!$reflection->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
 
-        return $mock;
+        return self::markAsMock($mock, $reflection);
     }
 
     /**
@@ -417,10 +415,8 @@ class Stub
         $methods         = count($methods) ? $methods : null;
         $mock            = self::generateMock($class, $methods, $constructorParams, $testCase);
         self::bindParameters($mock, $params);
-        if (!$reflectionClass->hasMethod('__set')) {
-            $mock->__mocked = $class;
-        }
-        return $mock;
+
+        return self::markAsMock($mock, $reflectionClass);
     }
 
     private static function generateMock()
@@ -571,6 +567,11 @@ class Stub
         return $object;
     }
 
+    /**
+     * @param \ReflectionClass $reflection
+     * @param $params
+     * @return array
+     */
     protected static function getMethodsToReplace(\ReflectionClass $reflection, $params)
     {
         $callables = array();
