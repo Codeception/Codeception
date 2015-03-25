@@ -593,7 +593,15 @@ class Stub
                     try {
                         $mock->{$param} = $value;
                     } catch (\Exception $e) {
-                        //silence exception, decide what is best -> trigger error, let exception fly, or...
+                        throw new \PHPUnit_Framework_Exception(
+                            sprintf(
+                                'Could not add property %s, class %s implements __set method, and no %s property exists',
+                                $param,
+                                $reflectionClass->getName()
+                            ),
+                            $e->getCode(),
+                            $e
+                        );
                     }
                 } else {
                     $mock->{$param} = $value;
