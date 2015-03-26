@@ -10,6 +10,7 @@ use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Illuminate\Http\Request;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Support\MessageBag;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  *
@@ -453,6 +454,25 @@ class Laravel4 extends Framework implements ActiveRecord
             $query->where($key, $value);
         }
         return $query->first();
+    }
+
+    /**
+     * Calls an Artisan command and returns output as a string
+     *
+     * @param string $command       The name of the command as displayed in the artisan command list
+     * @param array  $parameters    An associative array of command arguments
+     *
+     * @return string
+     */
+    public function callArtisan($command, array $parameters = array())
+    {
+        $output = new BufferedOutput();
+
+        /** @var \Illuminate\Console\Application $artisan */
+        $artisan = $this->kernel['artisan'];
+        $artisan->call($command, $parameters, $output);
+
+        return $output->fetch();
     }
 
     /**
