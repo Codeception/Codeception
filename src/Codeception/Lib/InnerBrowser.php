@@ -347,12 +347,63 @@ class InnerBrowser extends Module implements Web
         ];
     }
 
+    /**
+     * Strips out one pair of trailing square brackets from a field's
+     * name.
+     *
+     * @param string $name the field name
+     * @return string the name after stripping trailing square brackets
+     */
     protected function getSubmissionFormFieldName($name)
     {
         if (substr($name, -2) === '[]') {
             return substr($name, 0, -2);
         }
         return $name;
+    }
+
+    /**
+     * Replaces boolean values in $params with the corresponding field's
+     * value for checkbox form fields.
+     *
+     * The function loops over all input checkbox fields, checking if a
+     * corresponding key is set in $params.  If it is, and the value is
+     * boolean or an array containing booleans, the value(s) are
+     * replaced in the array with the real value of the checkbox, and
+     * the array is returned.
+     *
+     * @param Crawler $form the form to find checkbox elements
+     * @param array $params the parameters to be submitted
+     * @return array the $params array after replacing bool values
+     */
+    protected function setCheckboxBoolValues(Crawler $form, array $params)
+    {
+        $checkboxes = $form->filter('input[type=checkbox]');
+        $chFoundByName = [];
+        foreach ($checkboxes as $box) {
+            $fieldName = $this->getSubmissionFormFieldName($box->getAttribute('name'));
+            $pos = (!isset($chFoundByName[$fieldName])) ? 0 : $chFoundByName[$fieldName];
+            $skip = (!isset($params[$fieldName]))
+                || (!is_array($params[$fieldName]) && !is_bool($params[$fieldName]))
+                || ($pos >= count($params[$fieldName])
+                || (is_array($params[$fieldName]) && !is_bool($params[$fieldName][$pos])));
+            if ($skip) {
+                continue;
+            }
+            $values = $params[$fieldName];
+            if ($values === true) {
+                $params[$fieldName] = $box->getAttribute('value');
+                $chFoundByName[$fieldName] = $pos + 1;
+            } elseif ($values[$pos] === true) {
+                $params[$fieldName][$pos] = $box->getAttribute('value');
+                $chFoundByName[$fieldName] = $pos + 1;
+            } elseif (is_array($values)) {
+                array_splice($params[$fieldName], $pos, 1);
+            } else {
+                unset($params[$fieldName]);
+            }
+        }
+        return $params;
     }
 
     public function submitForm($selector, $params, $button = null)
@@ -396,21 +447,9 @@ class InnerBrowser extends Module implements Web
             $defaults[$fieldName] = $field->getAttribute('value');
         }
 
-        $requestParams = array_merge($defaults, $params);
-        
-        // set boolean values of checkboxes to the input field's actual value
-        $checkboxes = $form->filter('input[type=checkbox]');
-        foreach ($checkboxes as $box) {
-            $fieldName = $this->getSubmissionFormFieldName($box->getAttribute('name'));
-            if (isset($requestParams[$fieldName]) && is_bool($requestParams[$fieldName])) {
-                if ($requestParams[$fieldName] === true) {
-                    $requestParams[$fieldName] = $box->getAttribute('value');
-                } else {
-                    unset($requestParams[$fieldName]);
-                }
-            }
-        }
-        
+        $merged = array_merge($defaults, $params);
+        $requestParams = $this->setCheckboxBoolValues($form, $merged);
+
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
         $query = '';
         if (strtoupper($method) == 'GET') {
