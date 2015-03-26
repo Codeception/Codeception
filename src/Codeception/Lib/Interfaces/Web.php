@@ -122,6 +122,35 @@ interface Web
      * ?>
      * ```
      *
+     * Parameter values can be set to arrays for multiple input fields
+     * of the same name, or multi-select combo boxes.  For checkboxes,
+     * either the string value can be used, or boolean values which will
+     * be replaced by the checkbox's value in the DOM.
+     *
+     * ``` php
+     * <?php
+     * $I->submitForm('#my-form', [
+     *      'field1' => 'value',
+     *      'checkbox' => [
+     *          'value of first checkbox',
+     *          'value of second checkbox,
+     *      ],
+     *      'otherCheckboxes' => [
+     *          true,
+     *          false,
+     *          false
+     *      ],
+     *      'multiselect' => [
+     *          'first option value',
+     *          'second option value'
+     *      ]
+     * ]);
+     * ?>
+     * ```
+     *
+     * Mixing string and boolean values for a checkbox's value is not
+     * supported and may produce unexpected results.
+     * 
      * @param $selector
      * @param $params
      * @param $button

@@ -1189,6 +1189,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->debug($this->_getCurrentUri());
     }
 
+    protected function getSubmissionFormFieldName($name)
+    {
+        if (substr($name, -2) === '[]') {
+            return substr($name, 0, -2);
+        }
+        return $name;
+    }
+
     /**
      * Submits the given form on the page, optionally with the given form values.
      * Give the form fields values as an array. Note that hidden fields can't be accessed.
@@ -1252,36 +1260,49 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             throw new ElementNotFound($selector, "Form via CSS or XPath");
         }
         $form = reset($form);
-        /** @var $form \WebDriverElement  * */
-        foreach ($params as $param => $value) {
-            $els = $form->findElements(\WebDriverBy::name($param));
-            if (empty($els)) {
-                throw new ElementNotFound($param);
+        
+        $defaults = [];
+        $fields = $form->findElements(\WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]'));
+        foreach ($fields as $field) {
+            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
+            if (!isset($params[$fieldName])) {
+                continue;
             }
-            $el = reset($els);
-            if ($el->getTagName() == 'textarea') {
-                $this->fillField($el, $value);
-            } elseif ($el->getTagName() == 'select') {
-                $this->selectOption($el, $value);
-            } elseif ($el->getTagName() == 'input') {
-                $type = $el->getAttribute('type');
-                if ($type == 'text' || $type == 'password') {
-                    $this->fillField($el, $value);
-                } elseif ($type == 'radio') {
-                    foreach ($els as $radio) {
-                        if ($radio->getAttribute('value') == $value) {
-                            $this->checkOption($radio);
+            $value = $params[$fieldName];
+            if (is_array($value) && $field->getTagName() !== 'select') {
+                if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                    $found = false;
+                    foreach ($value as $index => $val) {
+                        if (!is_bool($val) && $val === $field->getAttribute('value')) {
+                            array_splice($params[$fieldName], $index, 1);
+                            $value = $val;
+                            $found = true;
+                            break;
                         }
                     }
-                } elseif ($type == 'checkbox') {
-                    if ($value === true || $value == $el->getAttribute('value')) {
-                        $this->checkOption($el);
-                    } else {
-                        $this->uncheckOption($el);
+                    if (!$found && !empty($value) && is_bool(reset($value))) {
+                        $value = array_pop($params[$fieldName]);
                     }
+                } else {
+                    $value = array_pop($params[$fieldName]);
                 }
             }
+            
+            if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                if ($value === true || $value === $field->getAttribute('value')) {
+                    $this->checkOption($field);
+                } else {
+                    $this->uncheckOption($field);
+                }
+            } elseif ($field->getAttribute('type') === 'button' || $field->getAttribute('type') === 'submit') {
+                continue;
+            } elseif ($field->getTagName() === 'select') {
+                $this->selectOption($field, $value);
+            } else {
+                $this->fillField($field, $value);
+            }
         }
+        
         $this->debugSection(
             'Uri',
             $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri()
