@@ -5,6 +5,7 @@ use Codeception\Events;
 use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
+use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\TestCase;
 use Exception;
 use PHPUnit_Framework_Test;
@@ -42,7 +43,11 @@ class Listener implements \PHPUnit_Framework_TestListener
     {
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
-        $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
+        if ($e instanceof ConditionalAssertionFailed) {
+            // do not fail test on ConditionalAssertionFailed
+        } else {
+            $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
+        }
     }
 
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
