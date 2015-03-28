@@ -159,7 +159,7 @@ class SOAP extends \Codeception\Module
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
-        if ($this->is_functional and $this->config['framework_collect_buffer']) {
+        if ($this->is_functional && $this->config['framework_collect_buffer']) {
             $response = $this->processInternalRequest($action, $req);
         } else {
             $response = $this->processExternalRequest($action, $req);
