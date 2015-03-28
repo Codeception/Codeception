@@ -441,10 +441,13 @@ class InnerBrowser extends Module implements Web
                     $defaults[$fieldName] = reset($values);
                 }
                 continue;
-            } elseif (!empty($field->nodeValue)) {
+            }
+            // <button> tags have both, nodeValue is set to the content of the <button> tag, so preference is for "value" first
+            if ($field->hasAttribute('value')) {
+                $defaults[$fieldName] = $field->getAttribute('value');
+            } else {
                 $defaults[$fieldName] = $field->nodeValue;
             }
-            $defaults[$fieldName] = $field->getAttribute('value');
         }
 
         $merged = array_merge($defaults, $params);

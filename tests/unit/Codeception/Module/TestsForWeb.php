@@ -830,7 +830,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     }
 
-
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
@@ -927,6 +926,14 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/form/empty_fill');
         $this->module->fillField('test', 'value');
+    }
+    
+    public function testSubmitFormWithDefaultTextareaValue()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->submitForm('form', []);
+        $form = data::get('form');
+        $this->assertEquals('sunrise', $form['description']);
     }
 
     /**
