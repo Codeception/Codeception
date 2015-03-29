@@ -114,12 +114,12 @@ class AMQP extends \Codeception\Module
      * @param $exchange
      * @param $message string|AMQPMessage
      */
-    public function pushToExchange($exchange, $message)
+    public function pushToExchange($exchange, $message, $routing_key)
     {
         $message = $message instanceof AMQPMessage
             ? $message
             : new AMQPMessage($message);
-        $this->connection->channel()->basic_publish($message, $exchange);
+        $this->connection->channel()->basic_publish($message, $exchange, $routing_key);
     }
 
     /**
