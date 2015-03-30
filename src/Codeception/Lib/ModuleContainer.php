@@ -159,7 +159,7 @@ class ModuleContainer
                 "Please specify the dependent module inside module configuration section.\n" .
                 "\n\n$message");
         }
-        $dependentModule = $this->create($name, false);
+        $dependentModule = $this->create($this->config['modules']['depends'][$name], false);
         if (!method_exists($module, '_inject')) {
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
