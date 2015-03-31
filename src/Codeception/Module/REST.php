@@ -57,13 +57,14 @@ class REST extends \Codeception\Module implements DependsOnModule
     ];
 
     protected $dependencyMessage = <<<EOF
-Example to use PhpBrowser as backend for REST module.
-Framework modules can be used as well for functional testing of API.
+Example using PhpBrowser as backend for REST module.
 --
 modules:
     enabled: [REST, ApiHelper]
     depends:
         REST: PhpBrowser
+--
+Framework modules can be used as well for functional testing of API.
 EOF;
 
     /**

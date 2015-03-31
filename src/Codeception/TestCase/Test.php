@@ -5,8 +5,6 @@ namespace Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Exception\TestRuntime;
-use Codeception\SuiteManager;
 use Codeception\TestCase;
 use Codeception\Util\Annotation;
 
@@ -84,10 +82,6 @@ class Test extends TestCase implements
      */
     public function getModule($module)
     {
-        if (SuiteManager::hasModule($module)) {
-            return SuiteManager::$modules[$module];
-        }
-
-        throw new TestRuntime("Module $module is not enabled for this test suite");
+        return $this->moduleContainer->getModule($module);
     }
 }

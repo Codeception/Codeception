@@ -255,6 +255,5 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
 
     public function _inject()
     {
-        
     }
 }

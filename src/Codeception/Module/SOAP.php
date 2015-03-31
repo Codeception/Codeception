@@ -32,10 +32,25 @@ namespace Codeception\Module;
  *
  */
 
+use Codeception\Exception\ModuleRequire;
+use Codeception\Lib\Framework;
+use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Soap as SoapUtils;
 
 class SOAP extends \Codeception\Module
 {
+
+    protected $dependencyMessage = <<<EOF
+Example using PhpBrowser as backend for SOAP module.
+--
+modules:
+    enabled: [SOAP, ApiHelper]
+    depends:
+        SOAP: PhpBrowser
+--
+Framework modules can be used as well for functional testing of SOAP API.
+EOF;
+
 
     protected $config = ['schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/'];
     protected $requiredFields = ['endpoint'];
@@ -43,7 +58,7 @@ class SOAP extends \Codeception\Module
      * @var \Symfony\Component\BrowserKit\Client
      */
     public $client = null;
-    public $is_functional = false;
+    public $isFunctional = false;
 
     /**
      * @var \DOMDocument
@@ -54,32 +69,39 @@ class SOAP extends \Codeception\Module
      */
     public $xmlResponse = null;
 
+    /**
+     * @var InnerBrowser
+     */
+    protected $connectionModule;
+
     public function _before(\Codeception\TestCase $test)
     {
-        if (!$this->client) {
-            if (!strpos($this->config['endpoint'], '://')) {
-                // not valid url
-                foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Lib\Framework) {
-                        $this->client = $module->client;
-                        $this->is_functional = true;
-                        break;
-                    }
-                }
-            } else {
-                if (!$this->hasModule('PhpBrowser')) {
-                    throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For Soap testing via HTTP please enable PhpBrowser module");
-                }
-                $this->client = $this->getModule('PhpBrowser')->client;
-            }
-            if (!$this->client) {
-                throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
-            }
-        }
-
+        $this->client = &$this->connectionModule->client;
         $this->buildRequest();
         $this->xmlResponse = null;
     }
+
+    public function _depends()
+    {
+        return ['Codeception\Lib\InnerBrowser' => $this->dependencyMessage];
+    }
+
+    public function _inject(InnerBrowser $connectionModule)
+    {
+        $this->connectionModule = $connectionModule;
+        if ($connectionModule instanceof Framework) {
+            $this->isFunctional = true;
+        }
+    }
+    
+    private function getClient()
+    {
+        if (!$this->client) {
+            throw new ModuleRequire($this, "Connection client is not available.");
+        }
+        return $this->client;
+    }
+
 
     /**
      * Prepare SOAP header.
@@ -162,7 +184,7 @@ class SOAP extends \Codeception\Module
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
-        if ($this->is_functional) {
+        if ($this->isFunctional) {
             $response = $this->processInternalRequest($action, $req);
         } else {
             $response = $this->processExternalRequest($action, $req);
@@ -195,7 +217,7 @@ class SOAP extends \Codeception\Module
     public function seeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        \PHPUnit_Framework_Assert::assertEquals($this->xmlResponse->C14N(), $xml->C14N());
+        $this->assertEquals($this->xmlResponse->C14N(), $xml->C14N());
     }
 
     /**
@@ -221,7 +243,7 @@ class SOAP extends \Codeception\Module
     public function seeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        \PHPUnit_Framework_Assert::assertContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
+        $this->assertContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
     }
 
 
@@ -250,7 +272,7 @@ class SOAP extends \Codeception\Module
     public function dontSeeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        \PHPUnit_Framework_Assert::assertNotContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
+        $this->assertNotContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
     }
 
     /**
@@ -285,14 +307,14 @@ class SOAP extends \Codeception\Module
         $els = $this->xmlResponse->getElementsByTagName($root->nodeName);
 
         if (empty($els)) {
-            return \PHPUnit_Framework_Assert::fail("Element {$root->nodeName} not found in response");
+            $this->fail("Element {$root->nodeName} not found in response");
         }
 
         $matches = false;
         foreach ($els as $node) {
             $matches |= $this->structureMatches($root, $node);
         }
-        \PHPUnit_Framework_Assert::assertTrue((bool)$matches, "this structure is in response");
+        $this->assertTrue((bool)$matches, "this structure is in response");
 
     }
 
@@ -455,7 +477,7 @@ class SOAP extends \Codeception\Module
 
     protected function processRequest($action, $body)
     {
-        $this->client->request(
+        $this->getClient()->request(
             'POST',
             $this->config['endpoint'],
             [], [],
@@ -472,7 +494,7 @@ class SOAP extends \Codeception\Module
     {
         ob_start();
         try {
-            $this->client->setServerParameter('HTTP_HOST', 'localhost');
+            $this->getClient()->setServerParameter('HTTP_HOST', 'localhost');
             $this->processRequest($action, $body);
         } catch (\ErrorException $e) {
             // Zend_Soap outputs warning as an exception

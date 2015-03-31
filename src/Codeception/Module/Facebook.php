@@ -5,6 +5,7 @@ namespace Codeception\Module;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module as BaseModule;
 
 /**
@@ -42,6 +43,8 @@ use Codeception\Module as BaseModule;
  *                     name: FacebookGuy
  *                     locale: uk_UA
  *                     permissions: [email, publish_stream]
+ *         depends:
+ *             Facebook: PhpBrowser
  *
  * ###  Test example:
  *
@@ -77,7 +80,7 @@ use Codeception\Module as BaseModule;
  * @since 1.6.3
  * @author tiger.seo@gmail.com
  */
-class Facebook extends BaseModule
+class Facebook extends BaseModule implements DependsOnModule
 {
     protected $requiredFields = ['app_id', 'secret'];
 
@@ -90,6 +93,21 @@ class Facebook extends BaseModule
      * @var array
      */
     protected $testUser = [];
+
+    /**
+     * @var PhpBrowser
+     */
+    protected $phpBrowser;
+
+    public function _depends()
+    {
+        return 'Codeception\Module\PhpBrowser';
+    }
+
+    public function _inject(PhpBrowser $browser)
+    {
+        $this->phpBrowser = $browser;
+    }
 
     protected function deleteTestUser()
     {
@@ -156,27 +174,16 @@ class Facebook extends BaseModule
      */
     public function haveTestUserLoggedInOnFacebook()
     {
-        if (!$this->hasModule('PhpBrowser')) {
-            throw new ModuleConfigException(
-                __CLASS__,
-                'PhpBrowser module has to be enabled to be able to login to Facebook.'
-            );
-        }
-
         if (!array_key_exists('id', $this->testUser)) {
             throw new ModuleException(
                 __CLASS__,
                 'Facebook test user was not found. Did you forget to create one?'
             );
         }
-
-        /** @var PhpBrowser $phpBrowser */
-        $phpBrowser = $this->getModule('PhpBrowser');
-
         // go to facebook and make login; it work only if you visit facebook.com first
-        $phpBrowser->amOnPage('https://www.facebook.com/');
-        $phpBrowser->amOnPage($this->grabFacebookTestUserLoginUrl());
-        $phpBrowser->seeCurrentUrlMatches('~/profile.php~');
+        $this->phpBrowser->amOnPage('https://www.facebook.com/');
+        $this->phpBrowser->amOnPage($this->grabFacebookTestUserLoginUrl());
+        $this->phpBrowser->seeCurrentUrlMatches('~/profile.php~');
     }
 
     /**

@@ -177,12 +177,6 @@ class Cest extends \Codeception\TestCase implements
         return $this;
     }
 
-    public function configEnv($env)
-    {
-        $this->testClassInstance->env = $env;
-        return $this;
-    }
-
     public function getSignature()
     {
         return get_class($this->getTestClass()) . "::" . $this->getTestMethod();

@@ -103,7 +103,7 @@ class ModuleContainer
         $this->modules[$name] = $module;
 
         if (!$this->active[$name]) {
-            // if module is not active, its actions should not be included into list
+            // if module is not active, its actions should not be included into actor class
             return $module;
         }
         
@@ -134,7 +134,6 @@ class ModuleContainer
                     continue;
                 }
             }
-
             // those with underscore at the beginning are considered as hidden
             if (strpos($method->name, '_') === 0) {
                 continue;
@@ -155,11 +154,10 @@ class ModuleContainer
         }
         if (!isset($this->config['modules']['depends'][$name])) {
             throw new ModuleRequire($module,
-                "\nThis module depends on module of $dependency\n" .
-                "Please specify the dependent module inside module configuration section.\n" .
-                "\n\n$message");
+                "\nThis module depends on $dependency\n" .
+                "\n \n$message");
         }
-        $dependentModule = $this->create($name, false);
+        $dependentModule = $this->create($this->config['modules']['depends'][$name], false);
         if (!method_exists($module, '_inject')) {
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
