@@ -96,9 +96,47 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         return $this->config['url'];
     }
 
-    public function setHeader($header, $value)
+    /**
+     * Sets the HTTP header to the passed value - which is used on
+     * subsequent HTTP requests through PhpBrowser.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->setHeader('X-Requested-With', 'Codeception');
+     * $I->amOnPage('test-headers.php');
+     * ?>
+     * ```
+     *
+     * @param string $name the name of the request header
+     * @param string $value the value to set it to for subsequent
+     *        requests
+     */
+    public function setHeader($name, $value)
     {
-        $this->client->setHeader($header, $value);
+        $this->client->setHeader($name, $value);
+    }
+
+    /**
+     * Deletes the header with the passed name.  Subsequent requests
+     * will not have the deleted header in its request.
+     *
+     * Example:
+     * ```php
+     * <?php
+     * $I->setHeader('X-Requested-With', 'Codeception');
+     * $I->amOnPage('test-headers.php');
+     * // ...
+     * $I->deleteHeader('X-Requested-With');
+     * $I->amOnPage('some-other-page.php');
+     * ?>
+     * ```
+     * 
+     * @param string $name the name of the header to delete.
+     */
+    public function deleteHeader($name)
+    {
+        $this->client->deleteHeader($name);
     }
     
     public function amHttpAuthenticated($username, $password)
