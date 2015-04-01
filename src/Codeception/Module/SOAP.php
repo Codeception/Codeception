@@ -37,7 +37,7 @@ use Codeception\Util\Soap as SoapUtils;
 class SOAP extends \Codeception\Module
 {
 
-    protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/');
+    protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/', 'framework_collect_buffer' => true);
     protected $requiredFields = array('endpoint');
     /**
      * @var \Symfony\Component\BrowserKit\Client
@@ -159,7 +159,7 @@ class SOAP extends \Codeception\Module
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
-        if ($this->is_functional) {
+        if ($this->is_functional && $this->config['framework_collect_buffer']) {
             $response = $this->processInternalRequest($action, $req);
         } else {
             $response = $this->processExternalRequest($action, $req);
