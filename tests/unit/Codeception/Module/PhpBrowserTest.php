@@ -182,6 +182,22 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertTrue($this->history->getLastRequest()->hasHeader('xxx'));
     }
 
+    public function testDeleteHeaders()
+    {
+		$this->module->setHeader('xxx', 'yyyy');
+		$this->module->deleteHeader('xxx');
+        $this->module->amOnPage('/');
+        $this->assertFalse($this->history->getLastRequest()->hasHeader('xxx'));
+	}
+
+	public function testDeleteHeadersByEmptyValue()
+    {
+		$this->module->setHeader('xxx', 'yyyy');
+		$this->module->setHeader('xxx', '');
+        $this->module->amOnPage('/');
+        $this->assertFalse($this->history->getLastRequest()->hasHeader('xxx'));
+	}
+
     public function testCurlOptions()
     {
         $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
