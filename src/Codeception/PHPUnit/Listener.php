@@ -44,8 +44,6 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_FAIL, new FailEvent($test, $e));
         if (!$e instanceof ConditionalAssertionFailed) {
-            //var_dump(get_class($e));
-            //exit;
             $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
         }
     }
