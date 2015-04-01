@@ -96,7 +96,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
       'cleanup'    => true,
       'dump'       => null,
       'ignoredrop' => false,
-    ]
+    ];
 
     /**
      * @var bool
