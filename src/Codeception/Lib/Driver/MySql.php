@@ -12,7 +12,7 @@ class MySql extends Db
                 $this->dbh->exec('drop table `' . $row[0] . '`');
             } catch (\PDOException $e) {
                 if ($ignoreDrop) {
-                    trigger_error('Unable to drop table '.$row[0].' during cleanup', E_WARNING);
+                    trigger_error('Unable to drop table '.$row[0].' during cleanup', E_USER_WARNING);
                 } else {
                     throw $e;
                 }
