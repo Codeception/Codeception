@@ -33,6 +33,16 @@ class OrderHelper extends Module
         $this->fail("intentionally");
     }
 
+    public function seeFailNow()
+    {
+        $this->fail("intentionally");
+    }
+
+    public function dontSeeFailNow()
+    {
+        $this->fail("intentionally");
+    }
+
     public function _beforeSuite($settings = array())
     {
         self::appendToFile('(');
