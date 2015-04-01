@@ -134,9 +134,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
      * 
      * @param string $name the name of the header to delete.
      */
-    public function deleteHeader($header)
+    public function deleteHeader($name)
     {
-        $this->client->deleteHeader($header);
+        $this->client->deleteHeader($name);
     }
     
     public function amHttpAuthenticated($username, $password)
