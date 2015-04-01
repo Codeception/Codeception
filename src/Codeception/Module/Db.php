@@ -92,10 +92,11 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
      * @var array
      */
     protected $config = [
-      'populate' => true,
-      'cleanup'  => true,
-      'dump'     => null
-    ];
+      'populate'   => true,
+      'cleanup'    => true,
+      'dump'       => null,
+      'ignoredrop' => false,
+    ]
 
     /**
      * @var bool
@@ -193,7 +194,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             if (!count($this->sql)) {
                 return;
             }
-            $this->driver->cleanup();
+            $this->driver->cleanup($this->config['ignoredrop']);
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
