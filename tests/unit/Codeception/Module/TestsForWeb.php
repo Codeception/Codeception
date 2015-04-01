@@ -401,6 +401,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('select1', 'not seen three');
     }
     
+    public function testSeeInFieldEmptyValueForUnselectedSelect()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->seeInField('select3', '');
+    }
+    
     public function testSeeInFieldOnSelectMultiple()
     {
         $this->module->amOnPage('/form/field_values');
@@ -432,6 +438,82 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeInField('Description','sunset');
         $this->module->dontSeeInField('textarea','sunset');
         $this->module->dontSeeInField('descendant-or-self::textarea[@id="description"]','sunset');
+    }
+    
+    public function testSeeInFormFields()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $params = [
+            'checkbox[]' => [
+                'see test one',
+                'see test two',
+            ],
+            'radio1' => 'see test one',
+            'checkbox1' => true,
+            'checkbox2' => false,
+            'select1' => 'see test one',
+            'select2' => [
+                'see test one',
+                'see test two',
+                'see test three'
+            ]
+        ];
+        $this->module->seeInFormFields('form', $params);
+    }
+    
+    public function testSeeInFormFieldsFails()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $params = [
+            'radio1' => 'something I should not see',
+            'checkbox1' => true,
+            'checkbox2' => false,
+            'select1' => 'see test one',
+            'select2' => [
+                'see test one',
+                'see test two',
+                'see test three'
+            ]
+        ];
+        $this->module->seeInFormFields('form', $params);
+    }
+    
+    public function testDontSeeInFormFields()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $params = [
+            'checkbox[]' => [
+                'not seen one',
+                'not seen two',
+            ],
+            'radio1' => 'not seen one',
+            'checkbox1' => false,
+            'checkbox2' => true,
+            'select1' => 'not seen one',
+            'select2' => [
+                'not seen one',
+                'No where to be seen'
+            ]
+        ];
+        $this->module->dontSeeInFormFields('form', $params);
+    }
+    
+    public function testDontSeeInFormFieldsFails()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->setExpectedException("PHPUnit_Framework_AssertionFailedError");
+        $params = [
+            'checkbox[]' => [
+                'wont see this anyway',
+                'see test one',
+            ],
+            'select2' => [
+                'not seen one',
+                'No where to be seen'
+            ]
+        ];
+        $this->module->dontSeeInFormFields('form', $params);
     }
 
     public function testSeeInFieldWithNonLatin()
@@ -748,7 +830,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
 
     }
 
-
     public function testSubmitForm() {
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form', array(
@@ -779,7 +860,22 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('this & that', $form['test']);
     }
-    
+
+    public function testSubmitFormMultiSelectWithArrayParameter()
+    {
+        $this->module->amOnPage('/form/submitform_multiple');
+        $this->module->submitForm('form', [
+            'select' => [
+                'see test one',
+                'not seen four'
+            ]
+        ]);
+        $form = data::get('form');
+        $this->assertCount(2, $form['select']);
+        $this->assertEquals('see test one', $form['select'][0]);
+        $this->assertEquals('not seen four', $form['select'][1]);
+    }
+
     public function testSubmitFormWithMultiSelect()
     {
         $this->module->amOnPage('/form/submitform_multiple');
@@ -789,6 +885,39 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('see test one', $form['select'][0]);
         $this->assertEquals('see test two', $form['select'][1]);
     }
+    
+    public function testSubmitFormCheckboxWithArrayParameter()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->submitForm('form', [
+            'checkbox' => [
+                'not seen one',
+                'see test two',
+                'not seen three'
+            ]
+        ]);
+        $form = data::get('form');
+        $this->assertCount(3, $form['checkbox']);
+        $this->assertEquals('not seen one', $form['checkbox'][0]);
+        $this->assertEquals('see test two', $form['checkbox'][1]);
+        $this->assertEquals('not seen three', $form['checkbox'][2]);
+    }
+    
+    public function testSubmitFormCheckboxWithBooleanArrayParameter()
+    {
+        $this->module->amOnPage('/form/field_values');
+        $this->module->submitForm('form', [
+            'checkbox' => [
+                true,
+                false,
+                true
+            ]
+        ]);
+        $form = data::get('form');
+        $this->assertCount(2, $form['checkbox']);
+        $this->assertEquals('not seen one', $form['checkbox'][0]);
+        $this->assertEquals('not seen two', $form['checkbox'][1]);
+    }
 
     /**
      * https://github.com/Codeception/Codeception/issues/1381
@@ -797,6 +926,14 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/form/empty_fill');
         $this->module->fillField('test', 'value');
+    }
+    
+    public function testSubmitFormWithDefaultTextareaValue()
+    {
+        $this->module->amOnPage('/form/textarea');
+        $this->module->submitForm('form', []);
+        $form = data::get('form');
+        $this->assertEquals('sunrise', $form['description']);
     }
 
     /**
@@ -905,8 +1042,26 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertTrue(isset($form['checkbox1']), 'Checkbox value not sent');
         $this->assertTrue(isset($form['radio1']), 'Radio button value not sent');
-        $this->assertEquals($form['checkbox1'], 'testing');
-        $this->assertEquals($form['radio1'], 'to be sent');
+        $this->assertEquals('testing', $form['checkbox1']);
+        $this->assertEquals('to be sent', $form['radio1']);
+    }
+    
+    public function testSubmitFormCheckboxWithBoolean()
+    {
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'checkbox1' => true
+        ));
+        $form = data::get('form');
+        $this->assertTrue(isset($form['checkbox1']), 'Checkbox value not sent');
+        $this->assertEquals('testing', $form['checkbox1']);
+        
+        $this->module->amOnPage('/form/example16');
+        $this->module->submitForm('form', array(
+            'checkbox1' => false
+        ));
+        $form = data::get('form');
+        $this->assertFalse(isset($form['checkbox1']), 'Checkbox value sent');
     }
     
     public function testSubmitFormWithButtons()

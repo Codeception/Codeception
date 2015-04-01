@@ -30,6 +30,7 @@ use Illuminate\Http\Request;
  * * environment_file: `string`, default `.env` - The .env file to load for the tests.
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
+ * * packages: `string`, default `workbench` - Root path of application packages (if any).
  *
  * ## API
  *
@@ -63,6 +64,7 @@ class Laravel5 extends Framework implements ActiveRecord
                 'environment_file' => '.env',
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
+                'packages' => 'workbench',
             ),
             (array) $config
         );
@@ -166,7 +168,7 @@ class Laravel5 extends Framework implements ActiveRecord
      */
     protected function bootApplication()
     {
-        $projectDir = \Codeception\Configuration::projectDir();
+        $projectDir = explode($this->config['packages'], \Codeception\Configuration::projectDir())[0];
         $projectDir .= $this->config['root'];
         require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 

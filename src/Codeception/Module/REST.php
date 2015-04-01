@@ -353,6 +353,8 @@ class REST extends \Codeception\Module
 
     protected function execute($method = 'GET', $url, $parameters = array(), $files = array())
     {
+        $this->debugSection("Request headers", $this->headers);
+
         foreach ($this->headers as $header => $val) {
             $header = str_replace('-','_',strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);

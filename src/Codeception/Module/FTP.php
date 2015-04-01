@@ -572,16 +572,16 @@ class FTP extends \Codeception\Module\Filesystem
                     \PHPUnit_Framework_Assert::fail('failed to connect to ftp server');
                 }
 
-                // Set passive mode option (ftp only option)
-                if (isset($this->config['passive']))
-                {
-                    ftp_pasv($this->ftp, strtolower($this->config['passive']) == 'enabled');
-                }
-
                 // Login using given access details
                 if (!@ftp_login($this->ftp, $user, $password))
                 {
                     \PHPUnit_Framework_Assert::fail('failed to authenticate user');
+                }
+                
+                // Set passive mode option (ftp only option)
+                if (isset($this->config['passive']))
+                {
+                    ftp_pasv($this->ftp, $this->config['passive']);
                 }
         }
         $pwd = $this->grabDirectory();
