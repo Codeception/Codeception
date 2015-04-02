@@ -2,6 +2,12 @@
 
 #### 2.0.12
 
+* Fixed conditional assertions firing TEST_AFTER event by @zbateson. Issues #1647 #1354 and #1111 *2015-04-03*
+* Fixing mocking Laravel models by removing `__mocked` property in classes created with Stub by @EVODelavega See #1785 *2015-04-03*
+* [WebDriver] `submitForm` allows array parameter values by @zbateson *2015-04-03*
+* [SOAP] Added `framework_collect_buffer` option to disable buffering output by @Noles *2015-04-03*
+* [Laravel4] added  to run artisan commands by @bgetsug *2015-04-03*
+* [AMQP] add a routing key to a push to exchange by @jistok *2015-04-03*
 * Interactive console updated to work with namespaces by @jistok *2015-04-03*
 * [PhpBrowser] added deleteHeader method by @zbateson *2015-04-03*
 * loading `_bootstrap.php` for suites can be disabled by removing bootstrap line from settings *2015-04-03*
