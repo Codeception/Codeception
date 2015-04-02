@@ -1,5 +1,12 @@
 # Changelog
 
+#### 2.0.12
+
+* Interactive console updated to work with namespaces by @jistok *2015-04-03*
+* [PhpBrowser] added deleteHeader method by @zbateson *2015-04-03*
+* loading `_bootstrap.php` for suites can be disabled by removing bootstrap line from settings *2015-04-03*
+
+
 #### 2.0.11
 
 * Updated to PHPUnit 4.5 *2015-02-23*
