@@ -40,6 +40,48 @@ class OrderGuy extends \Codeception\Actor
      * [!] Method is generated. Documentation taken from corresponding module.
      *
      *
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\OrderHelper::seeFailNow()
+     */
+    public function canSeeFailNow() {
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFailNow', func_get_args()));
+    }
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \Codeception\Module\OrderHelper::seeFailNow()
+     */
+    public function seeFailNow() {
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFailNow', func_get_args()));
+    }
+
+
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * Conditional Assertion: Test won't be stopped on fail
+     * @see \Codeception\Module\OrderHelper::dontSeeFailNow()
+     */
+    public function cantSeeFailNow() {
+        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeFailNow', func_get_args()));
+    }
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
+     * @see \Codeception\Module\OrderHelper::dontSeeFailNow()
+     */
+    public function dontSeeFailNow() {
+        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeFailNow', func_get_args()));
+    }
+
+ 
+    /**
+     * [!] Method is generated. Documentation taken from corresponding module.
+     *
+     *
      * @see \Codeception\Module\OrderHelper::writeToFile()
      */
     public function writeToFile($text) {
