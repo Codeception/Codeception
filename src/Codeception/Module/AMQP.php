@@ -102,24 +102,27 @@ class AMQP extends \Codeception\Module
     }
 
     /**
-     * Sends message to exchange
-     *
+     * Sends message to exchange by sending exchange name, message
+     * and (optionally) a routing key
+     * 
      * ``` php
      * <?php
      * $I->pushToExchange('exchange.emails', 'thanks');
      * $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'));
+     * $I->pushToExchange('exchange.emails', new AMQPMessage('Thanks!'), 'severity');
      * ?>
      * ```
      *
      * @param $exchange
      * @param $message string|AMQPMessage
+     * @param $routing_key
      */
-    public function pushToExchange($exchange, $message)
+    public function pushToExchange($exchange, $message, $routing_key = null)
     {
         $message = $message instanceof AMQPMessage
             ? $message
             : new AMQPMessage($message);
-        $this->connection->channel()->basic_publish($message, $exchange);
+        $this->connection->channel()->basic_publish($message, $exchange, $routing_key);
     }
 
     /**
