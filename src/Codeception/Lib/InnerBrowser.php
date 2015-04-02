@@ -415,7 +415,7 @@ class InnerBrowser extends Module implements Web
         }
 
         $filledValues = $this->getFormFor($form)->getValues();
-        $merged = array_merge($filledValues, $params);
+        $merged = array_merge($params, $filledValues);
         $requestParams = $this->setCheckboxBoolValues($form, $merged);
 
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
