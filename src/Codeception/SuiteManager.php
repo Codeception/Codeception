@@ -128,7 +128,7 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
 
-        if (!empty($groups)) {
+        if (!empty($groups) && null !== $test->getScenario()) {
             $test->getScenario()->group($groups);
         }
     }
