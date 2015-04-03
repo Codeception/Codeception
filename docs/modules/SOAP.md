@@ -25,9 +25,6 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 ## Configuration
 
 * endpoint *required* - soap wsdl endpoint
-* schema - namespace (ns) schema (default: *empty*)
-* schema_url - soap schema url (default: http://schemas.xmlsoap.org/soap/envelope/)
-* framework_collect_buffer - use output buffer collection inside framework (default: true)
 
 ## Public Properties
 
