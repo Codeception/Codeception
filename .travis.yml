@@ -72,14 +72,14 @@ before_script:
   - frameworks-symfony/app/console doctrine:schema:create
   - php codecept build -c frameworks-yii-basic/tests
   - php codecept build -c frameworks-phalcon
-  - php codecept build -c frameworks-laravel
-  - php codecept build -c frameworks-symfony
-  - php codecept build -c frameworks-l5
+  #- php codecept build -c frameworks-laravel
+  #- php codecept build -c frameworks-symfony
+  #- php codecept build -c frameworks-l5
 
 script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
-  - php codecept run -c frameworks-laravel # Laravel4 Tests
-  - php codecept run -c frameworks-l5 # Laravel5 Tests
+  #- php codecept run -c frameworks-laravel # Laravel4 Tests
+  #- php codecept run -c frameworks-l5 # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
-  - php codecept run functional -c frameworks-symfony # Symfony Tests
+  #- php codecept run functional -c frameworks-symfony # Symfony Tests
