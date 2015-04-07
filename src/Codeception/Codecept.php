@@ -122,6 +122,7 @@ class Codecept
     public function registerSubscribers()
     {
         // required
+        $this->dispatcher->addSubscriber(new Subscriber\GracefulTermintation());
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
