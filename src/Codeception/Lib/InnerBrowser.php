@@ -539,9 +539,13 @@ class InnerBrowser extends Module implements Web
      */
     protected function getFormFor(Crawler $node)
     {
-        $form = $node->parents()->filter('form')->first();
+        if (strcasecmp($node->first()->getNode(0)->tagName, 'form') === 0) {
+            $form = $node->first();
+        } else {
+            $form = $node->parents()->filter('form')->first();
+        }
         if (!$form) {
-            $this->fail('The selected node does not have a form ancestor.');
+            $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
         $action = $this->getFormUrl($form);
         if (!isset($this->forms[$action])) {

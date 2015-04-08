@@ -1183,4 +1183,14 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertContains('test2', $data['captions']);
         $this->assertContains('davert', $data['users']);
     }
+    
+    public function testSubmitAdjacentForms()
+    {
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->submitForm('#form-2', []);
+        $data = data::get('form');
+        $this->assertTrue(isset($data['second-field']));
+        $this->assertFalse(isset($data['first-field']));
+        $this->assertEquals('Killgore Trout', $data['second-field']);
+    }
 }
