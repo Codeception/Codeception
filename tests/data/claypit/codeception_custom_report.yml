@@ -1,0 +1,19 @@
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: false
+    silent: false
+    log: false
+reporters:
+    report: MyReportPrinter
+modules:
+    config:
+        Db:
+            dsn: ''
+            user: ''
+            password: ''
+            dump: tests/_data/dump.sql

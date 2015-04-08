@@ -1,11 +1,7 @@
 <?php
-
 namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
-use Codeception\PHPUnit\Log\JUnit;
-use Codeception\PHPUnit\ResultPrinter\HTML;
-use Codeception\PHPUnit\ResultPrinter\Report;
 
 class Runner extends \PHPUnit_TextUI_TestRunner
 {

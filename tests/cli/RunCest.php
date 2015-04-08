@@ -97,6 +97,19 @@ class RunCest
         $I->seeInShellOutput('........Ok');
     }
 
+    /**
+     * @group reports
+     *
+     * @param CliGuy $I
+     */
+    public function runCustomReport(\CliGuy $I)
+    {
+        $I->wantTo('try the reporting mode');
+        $I->executeCommand('run dummy --report -c codeception_custom_report.yml');
+        $I->seeInShellOutput('✔ check config exists (FileExistsCept)');
+        $I->dontSeeInShellOutput('Ok');
+    }
+
     public function runOneGroup(\CliGuy $I)
     {
         $I->executeCommand('run skipped -g notorun');
