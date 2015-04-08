@@ -155,7 +155,7 @@ interface Web
      * @param $params
      * @param $button
      */
-    public function submitForm($selector, $params, $button = null);
+    public function submitForm($selector, array $params, $button = null);
 
     /**
      * Perform a click on a link or a button, given by a locator.

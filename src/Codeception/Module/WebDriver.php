@@ -1253,7 +1253,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param $params
      * @param $button
      */
-    public function submitForm($selector, $params, $button = null)
+    public function submitForm($selector, array $params, $button = null)
     {
         $form = $this->match($this->webDriver, $selector);
         if (empty($form)) {
