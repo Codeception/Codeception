@@ -414,43 +414,8 @@ class InnerBrowser extends Module implements Web
             throw new ElementNotFound($selector, 'Form');
         }
 
-        $defaults = [];
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input:enabled,textarea:enabled,select:enabled,button:enabled,input[type=hidden]');
-        foreach ($fields as $field) {
-            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
-            if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
-                continue;
-            } elseif ($field->getAttribute('type') === 'button') {
-                continue;
-            } elseif (($field->getAttribute('type') === 'submit' || $field->tagName === 'button') && $field->getAttribute('name') !== $button) {
-                continue;
-            } elseif ($field->tagName === 'select') {
-                $values = [];
-                $select = new Crawler($field);
-                $options = $select->filter('option:enabled:selected');
-                foreach ($options as $option) {
-                    $values[] = $option->getAttribute('value');
-                    if (!$field->hasAttribute('multiple')) {
-                        break;
-                    }
-                }
-                if (count($values) > 1) {
-                    $defaults[$fieldName] = $values;
-                } elseif (count($values) === 1) {
-                    $defaults[$fieldName] = reset($values);
-                }
-                continue;
-            }
-            // <button> tags have both, nodeValue is set to the content of the <button> tag, so preference is for "value" first
-            if ($field->hasAttribute('value')) {
-                $defaults[$fieldName] = $field->getAttribute('value');
-            } else {
-                $defaults[$fieldName] = $field->nodeValue;
-            }
-        }
-
-        $merged = array_merge($defaults, $params);
+        $filledValues = $this->getFormFor($form)->getValues();
+        $merged = array_merge($params, $filledValues);
         $requestParams = $this->setCheckboxBoolValues($form, $merged);
 
         $method = $form->attr('method') ? $form->attr('method') : 'GET';
