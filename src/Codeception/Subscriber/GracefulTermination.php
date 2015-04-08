@@ -4,22 +4,18 @@ declare(ticks = 1);
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class GracefulTermintation implements EventSubscriberInterface
+class GracefulTermination implements EventSubscriberInterface
 {
-    use Shared\StaticEvents;
-
     const SIGNAL_FUNC = 'pcntl_signal';
 
+    /**
+     * @var SuiteEvent
+     */
     protected $suiteEvent;
 
-    static $events = [
-        Events::SUITE_BEFORE => 'handleSuite',
-    ];
-
-    public function handleSuite(SuiteEvent $event, $name, EventDispatcher $dispatcher)
+    public function handleSuite(SuiteEvent $event)
     {
         if (function_exists(self::SIGNAL_FUNC)) {
             pcntl_signal(SIGTERM, [$this, 'terminate']);
@@ -39,12 +35,12 @@ class GracefulTermintation implements EventSubscriberInterface
         throw new \RuntimeException("\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n");
     }
 
-    static function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         if (!function_exists(self::SIGNAL_FUNC)) {
             return [];
         }
-        return static::$events;
+        return [Events::SUITE_BEFORE => 'handleSuite'];
     }
 
 }
