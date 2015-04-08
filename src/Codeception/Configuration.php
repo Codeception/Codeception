@@ -4,8 +4,8 @@ namespace Codeception;
 
 use Codeception\Exception\Configuration as ConfigurationException;
 use Codeception\Util\Autoload;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Yaml\Yaml;
 
 class Configuration
@@ -73,6 +73,13 @@ class Configuration
             'enabled' => [],
             'config'  => [],
         ],
+        'reporters'  => [
+            'xml'    => 'Codeception\PHPUnit\Log\JUnit',
+            'html'   => 'Codeception\PHPUnit\ResultPrinter\HTML',
+            'tap'    => 'PHPUnit_Util_Log_TAP',
+            'json'   => 'PHPUnit_Util_Log_JSON',
+            'report' => 'Codeception\PHPUnit\ResultPrinter\Report',
+        ],
         'groups'     => [],
         'settings'   => [
             'colors'     => false,
@@ -93,7 +100,7 @@ class Configuration
         'namespace'   => null,
         'path'        => '',
         'groups'      => [],
-        'shuffle'   => false,
+        'shuffle'     => false,
         'suite_class' => '\PHPUnit_Framework_TestSuite',
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
     ];

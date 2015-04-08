@@ -1,7 +1,10 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
-class Report extends \Codeception\PHPUnit\ResultPrinter
+use Codeception\PHPUnit\ConsolePrinter;
+use Codeception\PHPUnit\ResultPrinter;
+
+class Report extends ResultPrinter implements ConsolePrinter
 {
 
     /**
