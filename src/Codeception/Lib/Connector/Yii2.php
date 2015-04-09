@@ -54,7 +54,6 @@ class Yii2 extends Client
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
-            $_POST[Yii::$app->getRequest()->methodParam] = $request->getMethod();
         }
 
         $uri = $request->getUri();
