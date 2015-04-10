@@ -19,6 +19,14 @@ trait Comment
     }
 
     public function am($role) {
+	    $role = (string) trim($role);
+	    $firstLetter = $role[0];
+
+	    if(preg_match('/[aeiouAEIOU]/i', $firstLetter))
+	    {
+            return $this->comment('As an ' . $role);
+	    }
+
         return $this->comment('As a ' . $role);
     }
 
