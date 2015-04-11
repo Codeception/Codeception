@@ -200,7 +200,7 @@ class Console implements EventSubscriberInterface
         if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
         }
-        $this->output->writeln("* " . $e->getStep());
+        $this->output->writeln("* I " . $e->getStep()->getHumanizedAction());
     }
 
     public function afterStep(StepEvent $e)
@@ -223,26 +223,44 @@ class Console implements EventSubscriberInterface
             return;
         }
 
-        $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-        $this->message(get_class($failedTest))
-            ->append('::')
-            ->append($failedTest->getName())
-            ->style('bold')
-            ->append("\n")
-            ->append($failToString)
-            ->writeln();
-
         $this->printException($fail);
+        $this->printExceptionTrace($fail);
+    }
+
+    protected function printException($e, $cause = null)
+    {
+        $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
+            ? $e->getClassname()
+            : get_class($e);
+
+        if (strpos($class, 'Codeception\Exception') === 0) {
+            $class = substr($class, strlen('Codeception\Exception\\'));
+        }
+
+        $this->output->writeln('');
+        $message = $this->message("%s")->with($e->getMessage());
+        $isFailure = $e instanceof \PHPUnit_Framework_AssertionFailedError
+            || $class == 'PHPUnit_Framework_ExpectationFailedException'
+            || $class == 'PHPUnit_Framework_AssertionFailedError';
+        if (!$isFailure) {
+            $message->prepend("[$class] ")->block("error");
+        }
+        if ($isFailure and $cause) {
+            $message->prepend("<error>  $cause  </error>: ");
+        }
+        $message->writeln();
+
     }
 
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
         $feature = $failedTest->getFeature();
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
+
         $failMessage = $this->message($failedTest->getSignature())
             ->style('bold')
             ->append(' (')
-            ->append($failedTest->getFileName())
+            ->append(codecept_relative_path($failedTest->getFileName()))
             ->append(')');
 
         if ($fail instanceof \PHPUnit_Framework_SkippedTest
@@ -255,31 +273,31 @@ class Console implements EventSubscriberInterface
             $failMessage->prepend("Failed to $feature in ");
         }
         $failMessage->writeln();
+
+        $failedStep = "";
+        foreach ($failedTest->getScenario()->getSteps() as $step) {
+            if ($step->hasFailed()) {
+                $failedStep = (string)$step;
+                break;
+            }
+        }
+        $this->printException($fail,$failedStep);
+
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
-            $this->printException($fail);
+            $this->printExceptionTrace($fail);
             return;
         }
         if (!$fail instanceof \PHPUnit_Framework_AssertionFailedError) {
-            $this->printException($fail);
+            $this->printExceptionTrace($fail);
             return;
         }
     }
 
-    public function printException(\Exception $e)
+    public function printExceptionTrace(\Exception $e)
     {
 
         static $limit = 10;
-//
-        $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
-            ? $e->getClassname()
-            : get_class($e);
-
-        $this->message("[%s] %s")->with($class, $e->getMessage())->block('error')->writeln(
-            $e instanceof \PHPUnit_Framework_AssertionFailedError
-                ? OutputInterface::VERBOSITY_DEBUG
-                : OutputInterface::VERBOSITY_VERBOSE
-        );
 
         if ($this->rawStackTrace) {
             $this->message($e->getTraceAsString())->writeln();
@@ -313,7 +331,7 @@ class Console implements EventSubscriberInterface
 
         $prev = $e->getPrevious();
         if ($prev) {
-            $this->printException($prev);
+            $this->printExceptionTrace($prev);
         }
     }
 
@@ -343,41 +361,32 @@ class Console implements EventSubscriberInterface
     }
 
     /**
-     * @param $action
-     * @param $failToString
-     */
-    public function printFailMessage($action, $failToString)
-    {
-        if (strpos($action, "don't") === 0) {
-            $action = substr($action, 6);
-            $this->output->writeln("Unexpectedly managed to $action:\n$failToString");
-        } elseif (strpos($action, 'am ') === 0) {
-            $action = substr($action, 3);
-            $this->output->writeln("Can't be $action:\n$failToString");
-        } else {
-            $this->output->writeln("Couldn't $action:\n$failToString");
-        }
-    }
-
-    /**
      * @param $failedTest
      * @param $fail
      */
-    public function printScenarioTrace($failedTest, $failToString)
+    public function printScenarioTrace($failedTest)
     {
         $trace = array_reverse($failedTest->getTrace());
         $length = $i = count($trace);
-        $last = array_shift($trace);
-        if (!method_exists($last, 'getHumanizedAction')) {
-            return;
-        }
-        $this->printFailMessage($last->getHumanizedAction(), $failToString);
 
-        $this->output->writeln("Scenario Steps:");
-        $this->message($last)->style('error')->prepend("$i. ")->writeln();
+        if (!$length) return;
+
+        $this->output->writeln("\nScenario Steps:\n");
+
         foreach ($trace as $step) {
+            $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". $step");
+
+            if ($step->hasFailed()) {
+                $message->append(' ')->style('bold');
+            }
+
+            $line = $step->getLineNumber();
+            if ($line) {
+                $message->append('<info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
+            }
+
             $i--;
-            $this->message($i)->width(strlen($length))->append(". $step")->writeln();
+            $message->writeln();
             if (($length - $i - 1) >= $this->traceLength) {
                 break;
             }

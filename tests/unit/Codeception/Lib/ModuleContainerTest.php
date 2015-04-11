@@ -28,7 +28,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @group core
-     * @throws \Codeception\Exception\Configuration
+     * @throws \Codeception\Exception\ConfigurationException
      */
     public function testCreateModule()
     {

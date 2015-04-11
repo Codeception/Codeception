@@ -142,7 +142,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     protected function instantiateReporter($name, $args = [])
     {
         if (!isset($this->config['reporters'][$name])) {
-            throw new \Codeception\Exception\Configuration("Reporter $name not defined");
+            throw new \Codeception\Exception\ConfigurationException("Reporter $name not defined");
         }
         return (new \ReflectionClass($this->config['reporters'][$name]))->newInstanceArgs($args);
 

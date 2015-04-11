@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleRequire;
+use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,7 +90,7 @@ class Symfony2 extends \Codeception\Lib\Framework
     {
         $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequire(__CLASS__, 'Symfony2 bootstrap file not found in ' . $cache);
+            throw new ModuleRequireException(__CLASS__, 'Symfony2 bootstrap file not found in ' . $cache);
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
@@ -119,7 +119,7 @@ class Symfony2 extends \Codeception\Lib\Framework
         $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequire(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_path" parameter.');
+            throw new ModuleRequireException(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_path" parameter.');
         }
 
         $file = current($results);

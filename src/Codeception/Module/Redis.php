@@ -2,7 +2,7 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\Module as ModuleException;
+use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Driver\Redis as RedisDriver;
 
 /**

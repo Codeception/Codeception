@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class Extension extends \Exception
+class ExtensionException extends \Exception
 {
     public function __construct($extension, $message, \Exception $previous = null)
     {

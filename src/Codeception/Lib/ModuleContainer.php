@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Exception\Configuration as ConfigurationException;
-use Codeception\Exception\Module as ModuleException;
-use Codeception\Exception\ModuleConflict as ModuleConflictException;
-use Codeception\Exception\ModuleRequire;
+use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\Exception\ModuleConflictException as ModuleConflictException;
+use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module;
@@ -42,6 +42,11 @@ class ModuleContainer
         $config = isset($this->config['modules']['config'][$moduleName])
             ? $this->config['modules']['config'][$moduleName]
             : [];
+
+        // skip config validation on dependent module
+        if (empty($config) and !$active) {
+            $config = null;
+        }
 
         // helper
         $hasNamespace = (mb_strpos($moduleName, '\\') !== false);
@@ -153,7 +158,7 @@ class ModuleContainer
             $dependency = key($dependency);
         }
         if (!isset($this->config['modules']['depends'][$name])) {
-            throw new ModuleRequire($module,
+            throw new ModuleRequireException($module,
                 "\nThis module depends on $dependency\n" .
                 "\n \n$message");
         }
@@ -162,6 +167,7 @@ class ModuleContainer
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
         $module->_inject($dependentModule);
+        $dependentModule->_setConfig([]);
     }
 
     public function validateConflicts()

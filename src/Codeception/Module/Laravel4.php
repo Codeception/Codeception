@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
@@ -304,6 +304,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param  \Illuminate\Auth\UserInterface|array $user
      * @param  string $driver
      * @return void
+     * @part framework
      */
     public function amLoggedAs($user, $driver = null)
     {
@@ -316,6 +317,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     /**
      * Logs user out
+     * @part framework
      */
     public function logout()
     {
@@ -324,6 +326,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     /**
      * Checks that user is authenticated
+     * @part framework
      */
     public function seeAuthentication()
     {
@@ -361,6 +364,7 @@ class Laravel4 extends Framework implements ActiveRecord
      *
      * @param  string $class
      * @return mixed
+     * @part framework
      */
     public function grabService($class)
     {
@@ -379,6 +383,8 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part ORM
+     * @part framework
      */
     public function haveRecord($model, $attributes = [])
     {
@@ -398,6 +404,8 @@ class Laravel4 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part ORM
+     * @part framework
      */
     public function seeRecord($model, $attributes = [])
     {
@@ -419,6 +427,8 @@ class Laravel4 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part ORM
+     * @part framework
      */
     public function dontSeeRecord($model, $attributes = [])
     {
@@ -441,6 +451,8 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part ORM
+     * @part framework
      */
     public function grabRecord($model, $attributes = [])
     {
@@ -458,7 +470,7 @@ class Laravel4 extends Framework implements ActiveRecord
 
     /**
      * @return \Illuminate\Foundation\Application
-     * @throws \Codeception\Exception\ModuleConfig
+     * @throws \Codeception\Exception\ModuleConfigException
      */
     protected function getApplication()
     {
@@ -475,7 +487,7 @@ class Laravel4 extends Framework implements ActiveRecord
         $startFile = $projectDir . $this->config['start'];
 
         if (!file_exists($startFile)) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 $this, "Laravel start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
             );
         }

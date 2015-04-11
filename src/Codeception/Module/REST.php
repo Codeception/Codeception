@@ -2,12 +2,14 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\Module;
+use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Util\JsonArray;
+use Codeception\Util\XmlStructure;
 use Symfony\Component\BrowserKit\Cookie;
+use Codeception\Util\Soap as XmlUtils;
 
 /**
  * Module for testing REST WebService.
@@ -115,6 +117,19 @@ EOF;
         if ($this->connectionModule instanceof Framework) {
             $this->isFunctional = true;
         }
+        if ($this->connectionModule instanceof PhpBrowser) {
+            $this->connectionModule->_setConfig(['url' => $this->config['url']]);
+        }
+
+    }
+
+    private function getClient()
+    {
+        if ($this->client->getHistory()->isEmpty()) {
+            throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
+        }
+        return $this->client;
+
     }
 
     /**
@@ -122,6 +137,8 @@ EOF;
      *
      * @param $name
      * @param $value
+     * @part json
+     * @part xml
      */
     public function haveHttpHeader($name, $value)
     {
@@ -134,17 +151,19 @@ EOF;
      *
      * @param $name
      * @param $value
+     * @part json
+     * @part xml
      */
     public function seeHttpHeader($name, $value = null)
     {
         if ($value !== null) {
             $this->assertEquals(
-                $this->client->getInternalResponse()->getHeader($name),
+                $this->getClient()->getInternalResponse()->getHeader($name),
                 $value
             );
             return;
         }
-        $this->assertNotNull($this->client->getInternalResponse()->getHeader($name));
+        $this->assertNotNull($this->getClient()->getInternalResponse()->getHeader($name));
     }
 
     /**
@@ -153,17 +172,19 @@ EOF;
      *
      * @param $name
      * @param $value
+     * @part json
+     * @part xml
      */
     public function dontSeeHttpHeader($name, $value = null)
     {
         if ($value !== null) {
             $this->assertNotEquals(
-                $this->client->getInternalResponse()->getHeader($name),
+                $this->getClient()->getInternalResponse()->getHeader($name),
                 $value
             );
             return;
         }
-        $this->assertNull($this->client->getInternalResponse()->getHeader($name));
+        $this->assertNull($this->getClient()->getInternalResponse()->getHeader($name));
     }
 
     /**
@@ -178,10 +199,12 @@ EOF;
      * ```
      *
      * @param $name
+     * @part json
+     * @part xml
      */
     public function seeHttpHeaderOnce($name)
     {
-        $headers = $this->client->getInternalResponse()->getHeader($name, false);
+        $headers = $this->getClient()->getInternalResponse()->getHeader($name, false);
         $this->assertEquals(1, count($headers));
     }
 
@@ -192,10 +215,12 @@ EOF;
      * @param Boolean $first Whether to return the first value or all header values
      *
      * @return string|array The first header value if $first is true, an array of values otherwise
+     * @part json
+     * @part xml
      */
     public function grabHttpHeader($name, $first = true)
     {
-        return $this->client->getInternalResponse()->getHeader($name, $first);
+        return $this->getClient()->getInternalResponse()->getHeader($name, $first);
     }
 
     /**
@@ -203,6 +228,8 @@ EOF;
      *
      * @param $username
      * @param $password
+     * @part json
+     * @part xml
      */
     public function amHttpAuthenticated($username, $password)
     {
@@ -219,6 +246,8 @@ EOF;
      *
      * @param $username
      * @param $password
+     * @part json
+     * @part xml
      */
     public function amDigestAuthenticated($username, $password)
     {
@@ -229,6 +258,8 @@ EOF;
      * Adds Bearer authentication via access token.
      *
      * @param $accessToken
+     * @part json
+     * @part xml
      */
     public function amBearerAuthenticated($accessToken)
     {
@@ -243,6 +274,8 @@ EOF;
      * @param $url
      * @param array|\JsonSerializable $params
      * @param array $files
+     * @part json
+     * @part xml
      */
     public function sendPOST($url, $params = [], $files = [])
     {
@@ -254,6 +287,8 @@ EOF;
      *
      * @param $url
      * @param array $params
+     * @part json
+     * @part xml
      */
     public function sendHEAD($url, $params = [])
     {
@@ -265,6 +300,8 @@ EOF;
      *
      * @param $url
      * @param array $params
+     * @part json
+     * @part xml
      */
     public function sendOPTIONS($url, $params = [])
     {
@@ -276,6 +313,8 @@ EOF;
      *
      * @param $url
      * @param array $params
+     * @part json
+     * @part xml
      */
     public function sendGET($url, $params = [])
     {
@@ -288,6 +327,8 @@ EOF;
      * @param $url
      * @param array $params
      * @param array $files
+     * @part json
+     * @part xml
      */
     public function sendPUT($url, $params = [], $files = [])
     {
@@ -300,6 +341,8 @@ EOF;
      * @param       $url
      * @param array $params
      * @param array $files
+     * @part json
+     * @part xml
      */
     public function sendPATCH($url, $params = [], $files = [])
     {
@@ -312,6 +355,8 @@ EOF;
      * @param $url
      * @param array $params
      * @param array $files
+     * @part json
+     * @part xml
      */
     public function sendDELETE($url, $params = [], $files = [])
     {
@@ -356,6 +401,8 @@ EOF;
      * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
      *
      * @author samva.ua@gmail.com
+     * @part json
+     * @part xml
      */
     public function sendLINK($url, array $linkEntries)
     {
@@ -370,6 +417,8 @@ EOF;
      * @param array $linkEntries (entry is array with keys "uri" and "link-param")
      * @link http://tools.ietf.org/html/rfc2068#section-19.6.2.4
      * @author samva.ua@gmail.com
+     * @part json
+     * @part xml
      */
     public function sendUNLINK($url, array $linkEntries)
     {
@@ -447,6 +496,7 @@ EOF;
      * Checks whether last response was valid JSON.
      * This is done with json_last_error function.
      *
+     * @part json
      */
     public function seeResponseIsJson()
     {
@@ -459,34 +509,11 @@ EOF;
     }
 
     /**
-     * Checks whether last response was valid XML.
-     * This is done with libxml_get_last_error function.
-     *
-     */
-    public function seeResponseIsXml()
-    {
-        libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($this->response);
-        $num = "";
-        $title = "";
-        if ($doc === false) {
-            $error = libxml_get_last_error();
-            $num = $error->code;
-            $title = trim($error->message);
-            libxml_clear_errors();
-        }
-        libxml_use_internal_errors(false);
-        \PHPUnit_Framework_Assert::assertNotSame(
-            false,
-            $doc,
-            "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
-        );
-    }
-
-    /**
      * Checks whether the last response contains text.
      *
      * @param $text
+     * @part json
+     * @part xml
      */
     public function seeResponseContains($text)
     {
@@ -497,6 +524,8 @@ EOF;
      * Checks whether last response do not contain text.
      *
      * @param $text
+     * @part json
+     * @part xml
      */
     public function dontSeeResponseContains($text)
     {
@@ -525,6 +554,7 @@ EOF;
      * This method recursively checks if one array can be found inside of another.
      *
      * @param array $json
+     * @part json
      */
     public function seeResponseContainsJson($json = [])
     {
@@ -551,6 +581,8 @@ EOF;
      *
      * @version 1.1
      * @return string
+     * @part json
+     * @part xml
      */
     public function grabResponse()
     {
@@ -575,6 +607,7 @@ EOF;
      * @deprecated please use `grabDataFromResponseByJsonPath`
      * @param string $path
      * @return string
+     * @part json
      */
     public function grabDataFromJsonResponse($path = '')
     {
@@ -622,6 +655,7 @@ EOF;
      * @return array
      * @version 2.0.9
      * @throws \Exception
+     * @part json
      */
     public function grabDataFromResponseByJsonPath($jsonPath)
     {
@@ -665,7 +699,7 @@ EOF;
      * $I->seeResponseJsonMatchesXpath('/store//price');
      * ?>
      * ```
-     *
+     * @part json
      * @version 2.0.9
      */
     public function seeResponseJsonMatchesXpath($xpath)
@@ -716,6 +750,7 @@ EOF;
      * ?>
      * ```
      *
+     * @part json
      * @version 2.0.9
      */
     public function seeResponseJsonMatchesJsonPath($jsonPath)
@@ -730,6 +765,7 @@ EOF;
      * Opposite to seeResponseJsonMatchesJsonPath
      *
      * @param array $jsonPath
+     * @part json
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
     {
@@ -742,6 +778,7 @@ EOF;
     /**
      * Opposite to seeResponseContainsJson
      *
+     * @part json
      * @param array $json
      */
     public function dontSeeResponseContainsJson($json = [])
@@ -758,6 +795,8 @@ EOF;
     /**
      * Checks if response is exactly the same as provided.
      *
+     * @part json
+     * @part xml
      * @param $response
      */
     public function seeResponseEquals($response)
@@ -768,21 +807,177 @@ EOF;
     /**
      * Checks response code equals to provided value.
      *
+     * @part json
+     * @part xml
      * @param $code
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->client->getInternalResponse()->getStatus());
+        $this->assertEquals($code, $this->getClient()->getInternalResponse()->getStatus());
     }
 
     /**
      * Checks that response code is not equal to provided value.
      *
+     * @part json
+     * @part xml
      * @param $code
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->client->getInternalResponse()->getStatus());
+        $this->assertNotEquals($code, $this->getClient()->getInternalResponse()->getStatus());
+    }
+
+    /**
+     * Checks whether last response was valid XML.
+     * This is done with libxml_get_last_error function.
+     *
+     * @part xml
+     */
+    public function seeResponseIsXml()
+    {
+        libxml_use_internal_errors(true);
+        $doc = simplexml_load_string($this->response);
+        $num = "";
+        $title = "";
+        if ($doc === false) {
+            $error = libxml_get_last_error();
+            $num = $error->code;
+            $title = trim($error->message);
+            libxml_clear_errors();
+        }
+        libxml_use_internal_errors(false);
+        \PHPUnit_Framework_Assert::assertNotSame(
+            false,
+            $doc,
+            "xml decoding error #$num with message \"$title\", see http://www.xmlsoft.org/html/libxml-xmlerror.html"
+        );
+    }
+
+    /**
+     * Checks wheather XML response matches XPath
+     *
+     * ```php
+     * <?php
+     * $I->seeXmlResponseMatchesXpath('//root/user[@id=1]');
+     * ```
+     * @part xml
+     * @param $xpath
+     */
+    public function seeXmlResponseMatchesXpath($xpath)
+    {
+        $structure = new XmlStructure($this->response);
+        $this->assertTrue($structure->matchesXpath($xpath), 'xpath not matched');
+    }
+
+    /**
+     * Checks wheather XML response does not match XPath
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeXmlResponseMatchesXpath('//root/user[@id=1]');
+     * ```
+     * @part xml
+     * @param $xpath
+     */
+    public function dontSeeXmlResponseMatchesXpath($xpath)
+    {
+        $structure = new XmlStructure($this->response);
+        $this->assertTrue($structure->matchesXpath($xpath), 'accidentally matched xpath');
+    }
+
+    /**
+     * Finds and returns text contents of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @param $cssOrXPath
+     * @return string
+     * @part xml
+     */
+    public function grabTextContentFromXmlElement($cssOrXPath)
+    {
+        $el = (new XmlStructure($this->response))->matchElement($cssOrXPath);
+        return $el->textContent;
+    }
+
+    /**
+     * Finds and returns attribute of element.
+     * Element is matched by either CSS or XPath
+     *
+     * @param $cssOrXPath
+     * @param $attribute
+     * @return string
+     * @part xml
+     */
+    public function grabAttributeFrom($cssOrXPath, $attribute)
+    {
+        $el = (new XmlStructure($this->response))->matchElement($cssOrXPath);
+        if (!$el->hasAttribute($attribute)) {
+            $this->fail("Attribute not found in element matched by '$cssOrXPath'");
+        }
+        return $el->getAttribute($attribute);
+    }
+
+    /**
+     * Checks XML response equals provided XML.
+     * Comparison is done by canonicalizing both xml`s.
+     *
+     * Parameters can be passed either as DOMDocument, DOMNode, XML string, or array (if no attributes).
+     *
+     * @param $xml
+     * @part xml
+     */
+    public function seeXmlResponseEquals($xml)
+    {
+        \PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString($this->response, $xml);
+    }
+
+
+    /**
+     * Checks XML response does not equal to provided XML.
+     * Comparison is done by canonicalizing both xml`s.
+     *
+     * Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+     *
+     * @param $xml
+     * @part xml
+     */
+    public function dontSeeXmlResponseEquals($xml)
+    {
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->response, $xml);
+    }
+
+    /**
+     * Checks XML response includes provided XML.
+     * Comparison is done by canonicalizing both xml`s.
+     * Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+     *
+     * Example:
+     *
+     * ``` php
+     * <?php
+     * $I->seeXmlResponseIncludes("<result>1</result>");
+     * ?>
+     * ```
+     *
+     * @param $xml
+     */
+    public function seeXmlResponseIncludes($xml)
+    {
+        $this->assertContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
+    }
+
+    /**
+     * Checks XML response does not include provided XML.
+     * Comparison is done by canonicalizing both xml`s.
+     * Parameter can be passed either as XmlBuilder, DOMDocument, DOMNode, XML string, or array (if no attributes).
+     *
+     * @param $xml
+     * @part xml
+     */
+    public function dontSeeXmlResponseIncludes($xml)
+    {
+        $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
     }
 
 }

@@ -33,3 +33,8 @@ function codecept_data_dir($appendPath = '')
 {
     return \Codeception\Configuration::dataDir() . $appendPath;
 }
+
+function codecept_relative_path($path)
+{
+    return substr($path, strlen(codecept_root_dir()));
+}

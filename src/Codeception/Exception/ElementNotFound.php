@@ -9,17 +9,17 @@ class ElementNotFound extends \PHPUnit_Framework_AssertionFailedError
         if (is_array($selector)) {
             $type = strtolower(key($selector));
             $locator = $selector[$type];
-            parent::__construct("Element with $type '$locator' was not found on page.");
+            parent::__construct("Element with $type '$locator' was not found.");
             return;
         }
         if ($selector instanceof \WebDriverBy) {
             $type = $selector->getMechanism();
             $locator = $selector->getValue();
-            parent::__construct("Element with $type '$locator' was not found on page.");
+            parent::__construct("Element with $type '$locator' was not found.");
             return;
         }
 
-        parent::__construct($message . " '$selector' was not found on page.");
+        parent::__construct($message . " '$selector' was not found.");
     }
 
 }

@@ -34,7 +34,6 @@ class Di
      * @param array $constructorArgs
      * @param string $injectMethodName Method which will be invoked after object creation; resolved dependencies will be passed to it as arguments
      * @throws InjectionException
-     * @internal param array $args constructor arguments
      * @return null|object
      */
     public function instantiate($className, $constructorArgs = null, $injectMethodName = self::DEFAULT_INJECT_METHOD_NAME)

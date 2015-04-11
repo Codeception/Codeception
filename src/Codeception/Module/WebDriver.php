@@ -1,10 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\ModuleConfigException as ModuleConfigException;
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
@@ -132,7 +133,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         $this->loadFirefoxProfile();
-        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        try {
+            $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        } catch (\WebDriverCurlException $e) {
+            throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
+        }
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $this->initialWindowSize();
     }
@@ -186,6 +191,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
+
         $filename = str_replace(['::', '\\', '/'], ['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
@@ -359,7 +365,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $urlParts = parse_url($url);
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
-            throw new TestRuntime("Wrong URL passes, host and scheme not set");
+            throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'] . '://' . $urlParts['host'];
         $this->_reconfigure(['url' => $host]);
@@ -373,9 +379,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $uriparts = parse_url($page);
 
         if ($build === false) {
-            throw new \Codeception\Exception\TestRuntime("URL '{$this->config['url']}' is malformed");
+            throw new \Codeception\Exception\TestRuntimeException("URL '{$this->config['url']}' is malformed");
         } elseif ($uriparts === false) {
-            throw new \Codeception\Exception\TestRuntime("URI '{$page}' is malformed");
+            throw new \Codeception\Exception\TestRuntimeException("URI '{$page}' is malformed");
         }
 
         foreach ($uriparts as $part => $value) {
@@ -1411,12 +1417,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * Wait for $timeout seconds.
      *
      * @param int $timeout secs
-     * @throws \Codeception\Exception\TestRuntime
+     * @throws \Codeception\Exception\TestRuntimeException
      */
     public function wait($timeout)
     {
         if ($timeout >= 1000) {
-            throw new TestRuntime(
+            throw new TestRuntimeException(
                 "
                 Waiting for more then 1000 seconds: 16.6667 mins\n
                 Please note that wait method accepts number of seconds as parameter."

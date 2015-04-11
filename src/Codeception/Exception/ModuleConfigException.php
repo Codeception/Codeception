@@ -2,7 +2,7 @@
 
 namespace Codeception\Exception;
 
-class ModuleConfig extends \Exception
+class ModuleConfigException extends \Exception
 {
     public function __construct($module, $message, \Exception $previous = null)
     {

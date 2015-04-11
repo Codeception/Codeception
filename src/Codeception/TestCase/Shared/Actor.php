@@ -4,7 +4,7 @@ namespace Codeception\TestCase\Shared;
 use Codeception\Event\StepEvent;
 use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Exception\ConfigurationException as ConfigurationException;
 use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Parser;

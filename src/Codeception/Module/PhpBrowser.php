@@ -2,7 +2,7 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Connector\Guzzle;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
@@ -118,7 +118,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     {
         $urlParts = parse_url($url);
         if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
-            throw new TestRuntime("Wrong URL passes, host and scheme not set");
+            throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'] . '://' . $urlParts['host'];
         if (isset($urlParts['port'])) {

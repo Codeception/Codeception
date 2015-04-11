@@ -2,8 +2,8 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\Module as ModuleException;
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
+use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module as BaseModule;

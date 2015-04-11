@@ -69,7 +69,7 @@ class Doctrine2 extends \Codeception\Module
         }
 
         if (!self::$em) {
-            throw new \Codeception\Exception\ModuleConfig(
+            throw new \Codeception\Exception\ModuleConfigException(
                 __CLASS__,
                 "Doctrine2 module requires EntityManager explicitly set.\n" .
                 "You can use your bootstrap file to assign the EntityManager:\n\n" .
@@ -78,7 +78,7 @@ class Doctrine2 extends \Codeception\Module
         }
 
         if (!self::$em instanceof \Doctrine\ORM\EntityManager) {
-            throw new \Codeception\Exception\ModuleConfig(
+            throw new \Codeception\Exception\ModuleConfigException(
                 __CLASS__,
                 "Entity Manager was not properly set.\n" .
                 "You can use your bootstrap file to assign the EntityManager:\n\n" .
@@ -95,7 +95,7 @@ class Doctrine2 extends \Codeception\Module
     public function _after(\Codeception\TestCase $test)
     {
         if (!self::$em) {
-            throw new \Codeception\Exception\ModuleConfig(
+            throw new \Codeception\Exception\ModuleConfigException(
                 __CLASS__,
                 "Doctrine2 module requires EntityManager explicitly set.\n" .
                 "You can use your bootstrap file to assign the EntityManager:\n\n" .

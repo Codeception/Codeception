@@ -2,6 +2,8 @@
 
 namespace Codeception\Lib\Connector;
 
+use Codeception\Exception\ConnectionException;
+use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostFile;
@@ -121,9 +123,9 @@ class Guzzle extends Client
         $uriparts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
 
         if ($build === false) {
-            throw new \Codeception\Exception\TestRuntime("URL '{$this->baseUri}' is malformed");
+            throw new \Codeception\Exception\TestRuntimeException("URL '{$this->baseUri}' is malformed");
         } elseif ($uriparts === false) {
-            throw new \Codeception\Exception\TestRuntime("URI '{$uri}' is malformed");
+            throw new \Codeception\Exception\TestRuntimeException("URI '{$uri}' is malformed");
         }
 
         foreach ($uriparts as $part => $value) {
@@ -159,12 +161,14 @@ class Guzzle extends Client
         // Let BrowserKit handle redirects
         try {
             $response = $this->client->send($guzzleRequest);
+        } catch (ConnectException $e) {
+            $url = $this->client->getBaseUrl();
+            throw new ConnectionException("Couldn't connect to $url. Please check that web server is running");
         } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                $response = $e->getResponse();
-            } else {
+            if (!$e->hasResponse()) {
                 throw $e;
             }
+            $response = $e->getResponse();
         }
         return $this->createResponse($response);
     }

@@ -1,7 +1,7 @@
 <?php
 namespace Codeception;
 
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\TestRuntimeException;
 
 class Scenario
 {
@@ -31,7 +31,7 @@ class Scenario
      *
      * @param  \Codeception\TestCase $test
      */
-    public function __construct(\Codeception\TestCase $test, $currents = array())
+    public function __construct(\Codeception\TestCase $test, $currents = [])
     {
         $this->test = $test;
         $this->currents = $currents;
@@ -164,7 +164,7 @@ class Scenario
     public function current($key)
     {
         if (!isset($this->currents[$key])) {
-            throw new TestRuntime("Current $key is not set in this scenario");
+            throw new TestRuntimeException("Current $key is not set in this scenario");
         }
         return $this->currents[$key];
     }

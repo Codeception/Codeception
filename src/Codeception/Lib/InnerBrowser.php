@@ -4,7 +4,8 @@ namespace Codeception\Lib;
 use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
@@ -55,9 +56,29 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $this->forms = [];
     }
 
+    /**
+     * @return Crawler
+     * @throws ModuleException
+     */
+    private function getCrawler()
+    {
+        if (!$this->crawler) {
+            throw new ModuleException($this, 'Crawler is null. Perhaps you forgot to call "amOnPage"?');
+        }
+        return $this->crawler;
+    }
+
+    private function getClient()
+    {
+        if ($this->client->getHistory()->isEmpty()) {
+            throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` to open it");
+        }
+        return $this->client;
+    }
+
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->client->getInternalResponse()->getContent());
+        file_put_contents($filename, $this->getClient()->getInternalResponse()->getContent());
     }
 
     /**
@@ -91,10 +112,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         }
         $anchor = $this->strictMatch(['link' => $link]);
         if (!count($anchor)) {
-            $anchor = $this->crawler->selectLink($link);
+            $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->client->click($anchor->first()->link());
+            $this->crawler = $this->getClient()->click($anchor->first()->link());
             $this->forms = [];
             $this->debugResponse();
             return;
@@ -123,7 +144,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             $tag = $node->nodeName;
             $type = $node->getAttribute('type');
             if ($tag == 'a') {
-                $this->crawler = $this->client->click($nodes->first()->link());
+                $this->crawler = $this->getClient()->click($nodes->first()->link());
                 $this->forms = [];
                 $this->debugResponse();
                 return;
@@ -154,7 +175,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $this->debugSection('Uri', $form->getUri());
         $this->debugSection($form->getMethod(), $form->getValues());
 
-        $this->crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->crawler = $this->getClient()->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
         $this->forms = [];
     }
 
@@ -180,7 +201,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function seeLink($text, $url = null)
     {
-        $links = $this->crawler->selectLink($text);
+        $links = $this->getCrawler()->selectLink($text);
         if ($url) {
             $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
@@ -189,16 +210,20 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function dontSeeLink($text, $url = null)
     {
-        $links = $this->crawler->selectLink($text);
+        $links = $this->getCrawler()->selectLink($text);
         if ($url) {
             $links = $links->filterXPath(sprintf('.//a[contains(@href, %s)]', Crawler::xpathLiteral($url)));
         }
         $this->assertDomNotContains($links, 'a');
     }
 
+    /**
+     * @return string
+     * @throws ModuleException
+     */
     public function _getCurrentUri()
     {
-        $url = $this->client->getHistory()->current()->getUri();
+        $url = $this->getClient()->getHistory()->current()->getUri();
         $parts = parse_url($url);
         if (!$parts) {
             $this->fail("URL couldn't be parsed");
@@ -261,13 +286,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function seeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->crawler->filter($checkbox);
+        $checkboxes = $this->getCrawler()->filter($checkbox);
         $this->assertDomContains($checkboxes->filter('input[checked=checked]'), 'checkbox');
     }
 
     public function dontSeeCheckboxIsChecked($checkbox)
     {
-        $checkboxes = $this->crawler->filter($checkbox);
+        $checkboxes = $this->getCrawler()->filter($checkbox);
         \PHPUnit_Framework_Assert::assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
     }
 
@@ -386,7 +411,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
-        $currentUrl = $this->client->getHistory()->current()->getUri();
+        $currentUrl = $this->getClient()->getHistory()->current()->getUri();
 
         if (empty($action) || $action === '#') {
             return $currentUrl;
@@ -394,12 +419,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
         $build = parse_url($currentUrl);
         if ($build === false) {
-            throw new TestRuntime("URL '$currentUrl' is malformed");
+            throw new TestRuntimeException("URL '$currentUrl' is malformed");
         }
 
         $uriParts = parse_url($action);
         if ($uriParts === false) {
-            throw new TestRuntime("URI '$action' is malformed");
+            throw new TestRuntimeException("URI '$action' is malformed");
         }
 
         foreach ($uriParts as $part => $value) {
@@ -656,7 +681,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function getResponseStatusCode()
     {
         // depending on Symfony version
-        $response = $this->client->getInternalResponse();
+        $response = $this->getClient()->getInternalResponse();
         if (method_exists($response, 'getStatus')) {
             return $response->getStatus();
         }
@@ -678,25 +703,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         }
 
         if (Locator::isCSS($selector)) {
-            return $this->crawler->filter($selector);
+            return $this->getCrawler()->filter($selector);
         }
         if (Locator::isXPath($selector)) {
-            return $this->crawler->filterXPath($selector);
+            return $this->getCrawler()->filterXPath($selector);
         }
         throw new MalformedLocator($selector, 'XPath or CSS');
     }
 
     /**
      * @param array $by
-     * @throws TestRuntime
+     * @throws TestRuntimeException
      * @return Crawler
      */
     protected function strictMatch(array $by)
     {
-        if (!$this->crawler) {
-            throw new TestRuntime('Crawler is null. Perhaps you forgot to call "amOnPage"?');
-        }
-
         $type = key($by);
         $locator = $by[$type];
         switch ($type) {
@@ -713,7 +734,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             case 'class':
                 return $this->filterByCSS(".$locator");
             default:
-                throw new TestRuntime("Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name");
+                throw new TestRuntimeException("Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name");
         }
     }
 
@@ -795,7 +816,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function setCookie($name, $val, array $params = [])
     {
-        $cookies = $this->client->getCookieJar();
+        $cookies = $this->getClient()->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
         extract($params);
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure));
@@ -806,7 +827,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $cookies = $this->client->getCookieJar()->get($name, $params['path'], $params['domain']);
+        $cookies = $this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
         }
@@ -816,21 +837,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     public function seeCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNotNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->debugSection('Cookies', $this->getClient()->getCookieJar()->all());
+        $this->assertNotNull($this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
     public function dontSeeCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->debugSection('Cookies', $this->getClient()->getCookieJar()->all());
+        $this->assertNull($this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
     public function resetCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
+        $this->getClient()->getCookieJar()->expire($name, $params['path'], $params['domain']);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
@@ -920,7 +941,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function seeInTitle($title)
     {
-        $nodes = $this->crawler->filter('title');
+        $nodes = $this->getCrawler()->filter('title');
         if (!$nodes->count()) {
             throw new ElementNotFound("<title>", "Tag");
         }
@@ -929,7 +950,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function dontSeeInTitle($title)
     {
-        $nodes = $this->crawler->filter('title');
+        $nodes = $this->getCrawler()->filter('title');
         if (!$nodes->count()) {
             $this->assertTrue(true);
             return;
@@ -952,13 +973,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThat($this->getClient()->getInternalResponse()->getContent(), $constraint, $message);
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThatItsNot($this->getClient()->getInternalResponse()->getContent(), $constraint, $message);
     }
 
     /**
@@ -991,7 +1012,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (!Locator::isCSS($locator)) {
             throw new MalformedLocator($locator, 'css');
         }
-        return $this->crawler->filter($locator);
+        return $this->getCrawler()->filter($locator);
     }
 
     /**
@@ -1003,6 +1024,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (!Locator::isXPath($locator)) {
             throw new MalformedLocator($locator, 'xpath');
         }
-        return $this->crawler->filterXPath($locator);
+        return $this->getCrawler()->filterXPath($locator);
     }
 }

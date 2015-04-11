@@ -70,8 +70,8 @@ namespace Codeception\Module;
  */
 
 use Codeception\Configuration as Configuration;
-use Codeception\Exception\Module as ModuleException;
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
+use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Lib\Driver\Db as Driver;
 
 class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
@@ -124,8 +124,8 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
                   __CLASS__,
-                  "\nFile with dump doesn't exist.
-                    Please, check path for sql file: " . $this->config['dump']
+                  "\nFile with dump doesn't exist.\n" .
+                  "Please, check path for sql file: " . $this->config['dump']
                 );
             }
             $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);

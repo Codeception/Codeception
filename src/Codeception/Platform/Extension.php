@@ -2,7 +2,7 @@
 namespace Codeception\Platform;
 
 use Codeception\Configuration as Config;
-use Codeception\Exception\ModuleRequire;
+use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
 use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -64,7 +64,7 @@ class Extension implements EventSubscriberInterface
     public function getModule($name)
     {
         if (!isset(\Codeception\SuiteManager::$modules[$name])) {
-            throw new ModuleRequire($name, "module is not enabled");
+            throw new ModuleRequireException($name, "module is not enabled");
         }
         return \Codeception\SuiteManager::$modules[$name];
     }

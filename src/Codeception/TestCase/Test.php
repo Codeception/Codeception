@@ -78,7 +78,7 @@ class Test extends TestCase implements
      * @param $module
      *
      * @return \Codeception\Module
-     * @throws \Codeception\Exception\TestRuntime
+     * @throws \Codeception\Exception\TestRuntimeException
      */
     public function getModule($module)
     {

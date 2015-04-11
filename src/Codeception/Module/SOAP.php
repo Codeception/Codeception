@@ -32,10 +32,11 @@ namespace Codeception\Module;
  *
  */
 
-use Codeception\Exception\ModuleRequire;
+use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Util\Soap as SoapUtils;
+use Codeception\Util\XmlStructure;
 
 class SOAP extends \Codeception\Module
 {
@@ -70,6 +71,11 @@ EOF;
     public $xmlResponse = null;
 
     /**
+     * @var XmlStructure
+     */
+    protected $xmlStructure;
+
+    /**
      * @var InnerBrowser
      */
     protected $connectionModule;
@@ -97,7 +103,7 @@ EOF;
     private function getClient()
     {
         if (!$this->client) {
-            throw new ModuleRequire($this, "Connection client is not available.");
+            throw new ModuleRequireException($this, "Connection client is not available.");
         }
         return $this->client;
     }
@@ -192,6 +198,7 @@ EOF;
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
+        $this->xmlStructure = new XmlStructure($this->xmlResponse);
     }
 
     /**
@@ -300,22 +307,18 @@ EOF;
     {
         $xml = SoapUtils::toXml($xml);
         $this->debugSection("Structure", $xml->saveXML());
-        $root = $xml->firstChild;
+        $this->assertTrue((bool)$this->xmlValidator->matchXmlStructure($xml), "this structure is in response");
+    }
 
-        $this->debugSection("Structure Root", $root->nodeName);
-
-        $els = $this->xmlResponse->getElementsByTagName($root->nodeName);
-
-        if (empty($els)) {
-            $this->fail("Element {$root->nodeName} not found in response");
-        }
-
-        $matches = false;
-        foreach ($els as $node) {
-            $matches |= $this->structureMatches($root, $node);
-        }
-        $this->assertTrue((bool)$matches, "this structure is in response");
-
+    /**
+     * Opposite to `seeSoapResponseContainsStructure`
+     * @param $xml
+     */
+    public function dontSeeSoapResponseContainsStructure($xml)
+    {
+        $xml = SoapUtils::toXml($xml);
+        $this->debugSection("Structure", $xml->saveXML());
+        $this->assertFalse((bool)$this->xmlValidator->matchXmlStructure($xml), "this structure is in response");
     }
 
     /**
@@ -331,12 +334,7 @@ EOF;
      */
     public function seeSoapResponseContainsXPath($xpath)
     {
-        $path = new \DOMXPath($this->xmlResponse);
-        $res = $path->query($xpath);
-        if ($res === false) {
-            $this->fail("XPath selector is malformed");
-        }
-        $this->assertGreaterThan(0, $res->length);
+        $this->assertTrue($this->xmlValidator->matchesXpath($xpath));
     }
 
     /**
@@ -352,12 +350,7 @@ EOF;
      */
     public function dontSeeSoapResponseContainsXPath($xpath)
     {
-        $path = new \DOMXPath($this->xmlResponse);
-        $res = $path->query($xpath);
-        if ($res === false) {
-            $this->fail("XPath selector is malformed");
-        }
-        $this->assertEquals(0, $res->length);
+        $this->assertFalse($this->xmlValidator->matchesXpath($xpath));
     }
 
 
@@ -368,7 +361,7 @@ EOF;
      */
     public function seeResponseCodeIs($code)
     {
-        \PHPUnit_Framework_Assert::assertEquals($code, $this->client->getInternalResponse()->getStatus(), "soap response code matches expected");
+        $this->assertEquals($code, $this->client->getInternalResponse()->getStatus(), "soap response code matches expected");
     }
 
     /**
@@ -381,7 +374,7 @@ EOF;
      */
     public function grabTextContentFrom($cssOrXPath)
     {
-        $el = $this->matchElement($cssOrXPath);
+        $el = $this->xmlValidator->matchElement($cssOrXPath);
         return $el->textContent;
     }
 
@@ -396,53 +389,11 @@ EOF;
      */
     public function grabAttributeFrom($cssOrXPath, $attribute)
     {
-        $el = $this->matchElement($cssOrXPath);
+        $el = $this->xmlValidator->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
             $this->fail("Attribute not found in element matched by '$cssOrXPath'");
         }
         return $el->getAttribute($attribute);
-    }
-
-    /**
-     * @param $cssOrXPath
-     * @return \DOMElement
-     */
-    protected function matchElement($cssOrXPath)
-    {
-        $xpath = new \DOMXpath($this->xmlResponse);
-        try {
-            $selector = \Symfony\Component\CssSelector\CssSelector::toXPath($cssOrXPath);
-            $els = $xpath->query($selector);
-            if ($els) {
-                return $els->item(0);
-            }
-        } catch (\Symfony\Component\CssSelector\Exception\ParseException $e) {
-        }
-        $els = $xpath->query($cssOrXPath);
-        if ($els) {
-            return $els->item(0);
-        }
-        $this->fail("No node matched CSS or XPath '$cssOrXPath'");
-    }
-
-
-    protected function structureMatches($schema, $xml)
-    {
-        foreach ($schema->childNodes as $node1) {
-            $matched = false;
-            foreach ($xml->childNodes as $node2) {
-                if ($node1->nodeName == $node2->nodeName) {
-                    $matched = $this->structureMatches($node1, $node2);
-                    if ($matched) {
-                        break;
-                    }
-                }
-            }
-            if (!$matched) {
-                return false;
-            }
-        }
-        return true;
     }
 
     protected function getSchema()
@@ -452,8 +403,7 @@ EOF;
 
     protected function canonicalize($xml)
     {
-        $xml = SoapUtils::toXml($xml)->C14N();
-        return $xml;
+        return SoapUtils::toXml($xml)->C14N();
     }
 
     /**

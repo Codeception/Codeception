@@ -2,7 +2,7 @@
 
 namespace Codeception;
 
-use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Exception\ConfigurationException as ConfigurationException;
 use Codeception\Util\Autoload;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -111,7 +111,7 @@ class Configuration
      *
      * @param null $configFile
      * @return array
-     * @throws Exception\Configuration
+     * @throws Exception\ConfigurationException
      */
     public static function config($configFile = null)
     {
@@ -407,7 +407,7 @@ class Configuration
      * Use it in Helpers or Groups to save result or temporary files.
      *
      * @return string
-     * @throws Exception\Configuration
+     * @throws Exception\ConfigurationException
      */
     public static function outputDir()
     {

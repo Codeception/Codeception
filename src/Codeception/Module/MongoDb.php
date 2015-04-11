@@ -75,7 +75,7 @@ class MongoDb extends \Codeception\Module
         if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
 
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
-                throw new \Codeception\Exception\ModuleConfig(
+                throw new \Codeception\Exception\ModuleConfigException(
                     __CLASS__, "
                     File with dump doesn't exist.\n
                     Please, check path for dump file: " . $this->config['dump']
@@ -94,7 +94,7 @@ class MongoDb extends \Codeception\Module
         try {
             $this->driver = MongoDbDriver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\MongoConnectionException $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage() . ' while creating Mongo connection');
+            throw new \Codeception\Exception\ModuleException(__CLASS__, $e->getMessage() . ' while creating Mongo connection');
         }
 
         // starting with loading dump
@@ -122,13 +122,13 @@ class MongoDb extends \Codeception\Module
     {
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
+            throw new \Codeception\Exception\ModuleConfigException(__CLASS__, "No connection to database. Remove this module from config if you don't need database repopulation");
         }
         try {
             $this->driver->cleanup();
 
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new \Codeception\Exception\ModuleException(__CLASS__, $e->getMessage());
         }
     }
 
@@ -140,7 +140,7 @@ class MongoDb extends \Codeception\Module
         try {
             $this->driver->load($this->dumpFile);
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new \Codeception\Exception\ModuleException(__CLASS__, $e->getMessage());
         }
     }
 

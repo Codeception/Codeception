@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\InnerBrowser;
 use Codeception\TestCase;
 
@@ -56,7 +56,7 @@ class Silex extends InnerBrowser
     public function _initialize()
     {
         if (!file_exists(Configuration::projectDir() . $this->config['app'])) {
-            throw new ModuleConfig(__CLASS__, "Bootstrap file {$this->config['app']} not found");
+            throw new ModuleConfigException(__CLASS__, "Bootstrap file {$this->config['app']} not found");
         }
     }
 
@@ -70,7 +70,7 @@ class Silex extends InnerBrowser
         }
 
         if (!isset($this->app)) {
-            throw new ModuleConfig(__CLASS__, "\$app instance was not received from bootstrap file");
+            throw new ModuleConfigException(__CLASS__, "\$app instance was not received from bootstrap file");
         }
         // some silex apps (like bolt) may rely on global $app variable
         $GLOBALS['app'] = $this->app;

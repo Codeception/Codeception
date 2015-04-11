@@ -50,6 +50,10 @@ class PHPUnit_Util_Filter
             return true;
         }
 
+        if (strpos($className, 'Codeception\TestCase\\') === 0) {
+            return true;
+        }
+
         return false;
     }
 
@@ -58,7 +62,6 @@ class PHPUnit_Util_Filter
         if (!isset($step['file'])) {
             return false;
         }
-
         if (strpos($step['file'], 'codecept.phar/') !== false) {
             return true;
         }

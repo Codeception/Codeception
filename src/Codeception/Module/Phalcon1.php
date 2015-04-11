@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\LIb\Connector\PhalconMemorySession;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
@@ -72,7 +72,7 @@ class Phalcon1 extends Framework implements ActiveRecord
     public function _initialize()
     {
         if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['bootstrap'])) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 __CLASS__,
                 "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n" .
                 "Please create the bootstrap file that returns Application object\n" .

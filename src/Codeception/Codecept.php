@@ -1,7 +1,7 @@
 <?php
 namespace Codeception;
 
-use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Exception\ConfigurationException as ConfigurationException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

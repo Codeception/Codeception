@@ -19,10 +19,28 @@ abstract class Step
 
     public $executed = false;
 
+    protected $line = null;
+
+    protected $failed = false;
+
     public function __construct($action, array $arguments)
     {
         $this->action = $action;
         $this->arguments = $arguments;
+        $this->saveLineNumber();
+    }
+
+    protected function saveLineNumber()
+    {
+        if (!function_exists('xdebug_get_function_stack')) {
+            return;
+        }
+
+        $stack = xdebug_get_function_stack();
+        if (count($stack) < 4) {
+            return;
+        }
+        $this->line = $stack[count($stack)-3]['line'];
     }
 
     public function getName()
@@ -34,6 +52,17 @@ abstract class Step
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function getLineNumber()
+    {
+        return $this->line;
+
+    }
+
+    public function hasFailed()
+    {
+        return $this->failed;
     }
 
     public function getArguments($asString = false)
@@ -74,7 +103,7 @@ abstract class Step
 
     public function __toString()
     {
-        return "I " . $this->getHumanizedAction();
+        return "\$I->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
     }
 
     public function getHumanizedAction()
@@ -123,6 +152,12 @@ abstract class Step
             throw new \RuntimeException("Action '{$this->action}' can't be called");
         }
 
-        return call_user_func_array([$activeModule, $this->action], $this->arguments);
+        try {
+            $res = call_user_func_array([$activeModule, $this->action], $this->arguments);
+        } catch (\Exception $e) {
+            $this->failed = true;
+            throw $e;
+        }
+        return $res;
     }
 }

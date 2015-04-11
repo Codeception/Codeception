@@ -111,7 +111,7 @@ class ZF1 extends \Codeception\Lib\Framework
         try {
             $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\Module(__CLASS__, $e->getMessage());
+            throw new \Codeception\Exception\ModuleException(__CLASS__, $e->getMessage());
         }
         $this->bootstrap->bootstrap();
         $this->client->setBootstrap($this->bootstrap);

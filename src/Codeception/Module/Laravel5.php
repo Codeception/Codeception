@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
@@ -85,7 +85,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * Before hook.
      *
      * @param \Codeception\TestCase $test
-     * @throws ModuleConfig
+     * @throws ModuleConfigException
      */
     public function _before(\Codeception\TestCase $test)
     {
@@ -150,7 +150,7 @@ class Laravel5 extends Framework implements ActiveRecord
     /**
      * Initialize the Laravel framework.
      *
-     * @throws ModuleConfig
+     * @throws ModuleConfigException
      */
     protected function initializeLaravel()
     {
@@ -164,7 +164,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * Boot the Laravel application object.
      *
      * @return \Illuminate\Foundation\Application
-     * @throws \Codeception\Exception\ModuleConfig
+     * @throws \Codeception\Exception\ModuleConfigException
      */
     protected function bootApplication()
     {
@@ -177,7 +177,7 @@ class Laravel5 extends Framework implements ActiveRecord
         $bootstrapFile = $projectDir . $this->config['bootstrap'];
 
         if (!file_exists($bootstrapFile)) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 $this, "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
             );
         }

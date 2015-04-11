@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Driver\AmazonSQS;
 use Codeception\Lib\Driver\Beanstalk;
 use Codeception\Lib\Driver\Iron;
@@ -116,7 +116,7 @@ class Queue extends \Codeception\Module
 
     /**
      * @return \Codeception\Lib\Interfaces\Queue
-     * @throws ModuleConfig
+     * @throws ModuleConfigException
      */
     protected function createQueueDriver()
     {
@@ -133,7 +133,7 @@ class Queue extends \Codeception\Module
             case 'beanstalkq':
                 return new Beanstalk();
             default:
-                throw new ModuleConfig(
+                throw new ModuleConfigException(
                     __CLASS__, "Unknown queue type {$this->config}; Supported queue types are: aws, iron, beanstalk"
                 );
         }

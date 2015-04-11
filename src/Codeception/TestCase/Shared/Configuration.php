@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\TestCase\Shared;
 
-use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\Exception\ConfigurationException as ConfigurationException;
 use Codeception\Step;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 

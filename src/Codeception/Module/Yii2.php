@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Yii;
@@ -47,7 +47,7 @@ class Yii2 extends Framework implements ActiveRecord
     public function _initialize()
     {
         if (!is_file(\Codeception\Configuration::projectDir() . $this->config['configFile'])) {
-            throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
+            throw new ModuleConfigException(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
     }
 

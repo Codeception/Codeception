@@ -2,7 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Actor;
-use Codeception\Exception\TestRuntime;
+use Codeception\Exception\TestRuntimeException;
 
 class Friend
 {
@@ -21,7 +21,7 @@ class Friend
         });
 
         if (empty($this->multiSessionModules)) {
-            throw new TestRuntime("No multisession modules used. Can't instantiate friend");
+            throw new TestRuntimeException("No multisession modules used. Can't instantiate friend");
         }
     }
 

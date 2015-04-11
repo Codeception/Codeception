@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class ModuleConflict extends \Exception
+class ModuleConflictException extends \Exception
 {
     public function __construct($module, $conflicted)
     {

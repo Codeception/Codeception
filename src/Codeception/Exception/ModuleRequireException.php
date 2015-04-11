@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class ModuleRequire extends \Exception
+class ModuleRequireException extends \Exception
 {
 
     public function __construct($module, $message)

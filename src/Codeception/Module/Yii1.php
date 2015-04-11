@@ -2,7 +2,7 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Yii;
 
 /**
@@ -89,7 +89,7 @@ class Yii1 extends \Codeception\Lib\Framework
     public function _initialize()
     {
         if (!file_exists($this->config['appPath'])) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 __CLASS__,
                 "Couldn't load application config file {$this->config['appPath']}\n" .
                 "Please provide application bootstrap file configured for testing"
@@ -103,7 +103,7 @@ class Yii1 extends \Codeception\Lib\Framework
             $this->_appConfig = $this->appSettings['config'];
         } else {
             if (!file_exists($this->appSettings['config'])) {
-                throw new ModuleConfig(
+                throw new ModuleConfigException(
                     __CLASS__,
                     "Couldn't load configuration file from Yii app file: {$this->appSettings['config']}\n" .
                     "Please provide valid 'config' parameter"
@@ -119,7 +119,7 @@ class Yii1 extends \Codeception\Lib\Framework
         $_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
 
         if (!function_exists('launch_codeception_yii_bridge')) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 __CLASS__,
                 "Codeception-Yii Bridge is not launched. In order to run tests you need to install https://github.com/Codeception/YiiBridge" .
                 "Implement function 'launch_codeception_yii_bridge' to load all Codeception overrides"

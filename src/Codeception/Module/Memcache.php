@@ -44,7 +44,7 @@ class Memcache extends \Codeception\Module
             $this->memcache = new \Memcached;
             $this->memcache->addServer($this->config['host'], $this->config['port']);
         } else {
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, 'Memcache classes not loaded');
+            throw new \Codeception\Exception\ModuleConfigException(__CLASS__, 'Memcache classes not loaded');
         }
     }
 

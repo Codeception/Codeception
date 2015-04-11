@@ -53,7 +53,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
 
         if (!self::$dbh) {
-            throw new \Codeception\Exception\ModuleConfig(
+            throw new \Codeception\Exception\ModuleConfigException(
                 __CLASS__,
                 "Transaction module requires PDO instance explicitly set.\n" .
                 "You can use your bootstrap file to assign the dbh:\n\n" .
@@ -70,7 +70,7 @@ class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
 
         if (!self::$dbh) {
-            throw new \Codeception\Exception\ModuleConfig(
+            throw new \Codeception\Exception\ModuleConfigException(
                 __CLASS__,
                 "Transaction module requires PDO instance explicitly set.\n" .
                 "You can use your bootstrap file to assign the dbh:\n\n" .

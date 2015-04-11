@@ -43,7 +43,7 @@ class Logger extends Extension
     public function __construct()
     {
         if (!class_exists('\Monolog\Logger')) {
-            throw new \Codeception\Exception\Configuration("Logger extension requires Monolog library to be installed");
+            throw new \Codeception\Exception\ConfigurationException("Logger extension requires Monolog library to be installed");
         }
 
         $this->path = $this->getLogDir();

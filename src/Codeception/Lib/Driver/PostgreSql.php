@@ -86,7 +86,7 @@ class PostgreSql extends Db
                 'pgsql'
             )
             ) {
-                throw new \Codeception\Exception\Module('\Codeception\Module\Db', "To run 'COPY' commands 'pgsql' extension should be installed");
+                throw new \Codeception\Exception\ModuleException('\Codeception\Module\Db', "To run 'COPY' commands 'pgsql' extension should be installed");
             }
             $constring = str_replace(';', ' ', substr($this->dsn, 6));
             $constring .= ' user=' . $this->user;

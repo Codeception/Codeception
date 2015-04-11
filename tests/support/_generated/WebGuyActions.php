@@ -1830,7 +1830,7 @@ trait WebGuyActions
      * Wait for $timeout seconds.
      *
      * @param int $timeout secs
-     * @throws \Codeception\Exception\TestRuntime
+     * @throws \Codeception\Exception\TestRuntimeException
      * @see \Codeception\Module\WebDriver::wait()
      */
     public function wait($timeout) {

@@ -87,7 +87,7 @@ abstract class Module
     {
         $fields = array_keys($this->config);
         if (array_intersect($this->requiredFields, $fields) != $this->requiredFields) {
-            throw new Exception\ModuleConfig(
+            throw new Exception\ModuleConfigException(
                 get_class($this),
                 "\nOptions: " . implode(', ', $this->requiredFields) . " are required\n" .
                 "Please, update the configuration and set all the required fields\n\n"
@@ -97,11 +97,13 @@ abstract class Module
 
     public function _getName()
     {
-        $module = get_class($this);
-        if (preg_match('@\\\\([\w]+)$@', $module, $matches)) {
-            $module = $matches[1];
+        $moduleName = '\\'.get_class($this);
+
+        if (strpos($moduleName, ModuleContainer::MODULE_NAMESPACE) === 0) {
+            return substr($moduleName, strlen(ModuleContainer::MODULE_NAMESPACE));
         }
-        return $module;
+
+        return $moduleName;
     }
 
     public function _hasRequiredFields()
@@ -180,7 +182,7 @@ abstract class Module
     protected function getModule($name)
     {
         if (!$this->hasModule($name)) {
-            throw new Exception\Module(__CLASS__, "Module $name couldn't be connected");
+            throw new Exception\ModuleException(__CLASS__, "Module $name couldn't be connected");
         }
         return $this->moduleContainer->getModule($name);
     }

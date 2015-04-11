@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\Module;
+use Codeception\Exception\ModuleException;
 use Codeception\TestCase;
 
 /**
@@ -64,5 +64,5 @@ class Sequence extends \Codeception\Module
 if (!function_exists('sq')) {
     require_once __DIR__ . '/../Util/sq.php';
 } else {
-    throw new Module('Codeception\Module\Sequence', "function 'sq' already defiend");
+    throw new ModuleException('Codeception\Module\Sequence', "function 'sq' already defiend");
 }

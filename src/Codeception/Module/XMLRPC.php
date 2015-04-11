@@ -2,8 +2,8 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig as ModuleConfigException;
-use Codeception\Exception\ModuleRequire as ModuleRequireException;
+use Codeception\Exception\ModuleConfigException as ModuleConfigException;
+use Codeception\Exception\ModuleRequireException as ModuleRequireException;
 
 /**
  * Module for testing XMLRPC WebService.

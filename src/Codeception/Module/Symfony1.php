@@ -43,7 +43,7 @@ class Symfony1 extends Module
     public function _initialize()
     {
         if (!file_exists('config/ProjectConfiguration.class.php')) {
-            throw new \Codeception\Exception\Module('Symfony1', 'config/ProjectConfiguration.class.php not found. This file is required for running symfony1');
+            throw new \Codeception\Exception\ModuleException('Symfony1', 'config/ProjectConfiguration.class.php not found. This file is required for running symfony1');
         }
         require_once('config/ProjectConfiguration.class.php');
         $conf = \ProjectConfiguration::getApplicationConfiguration($this->config['app'], 'test', true);
