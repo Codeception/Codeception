@@ -376,7 +376,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $model
+     * @param $tableName
      * @param array $attributes
      * @return mixed
      */
