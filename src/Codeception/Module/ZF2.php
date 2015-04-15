@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\DoctrineProvider;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
 use Zend\Mvc\Application;
@@ -30,7 +31,7 @@ use Zend\View\Helper\Placeholder;
  * * client - BrowserKit client
  *
  */
-class ZF2 extends \Codeception\Lib\Framework
+class ZF2 extends \Codeception\Lib\Framework implements DoctrineProvider
 {
     protected $config = [
         'config' => 'tests/application.config.php',
@@ -51,6 +52,8 @@ class ZF2 extends \Codeception\Lib\Framework
      */
     public $client;
 
+    protected $applicationConfig;
+
     protected $queries = 0;
     protected $time = 0;
 
@@ -59,16 +62,17 @@ class ZF2 extends \Codeception\Lib\Framework
         require \Codeception\Configuration::projectDir() . 'init_autoloader.php';
 
         $this->client = new \Codeception\Lib\Connector\ZF2();
-    }
 
-    public function _before(\Codeception\TestCase $test)
-    {
-        $applicationConfig = require \Codeception\Configuration::projectDir() . $this->config['config'];
+        $this->applicationConfig = require \Codeception\Configuration::projectDir() . $this->config['config'];
         if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
         Console::overrideIsConsole(false);
-        $this->application = Application::init($applicationConfig);
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
+        $this->application = Application::init($this->applicationConfig);
         $events = $this->application->getEventManager();
         $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
 
@@ -96,5 +100,12 @@ class ZF2 extends \Codeception\Lib\Framework
         }
         $this->queries = 0;
         $this->time = 0;
+    }
+
+    public function _getEntityManager()
+    {
+        $serviceLocator = Application::init($this->applicationConfig)->getServiceManager();
+        return $serviceLocator->get('Doctrine\ORM\EntityManager');
+
     }
 }

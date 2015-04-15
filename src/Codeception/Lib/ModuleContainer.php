@@ -161,6 +161,9 @@ class ModuleContainer
     {
         $message = '';
         $dependency = $module->_depends();
+        if (empty($dependency)) {
+            return;
+        }
         if (is_array($dependency)) {
             $message = reset($dependency);
             $dependency = key($dependency);

@@ -3,6 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
+use Codeception\Lib\Interfaces\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
@@ -64,7 +65,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends \Codeception\Lib\Framework
+class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -104,6 +105,17 @@ class Symfony2 extends \Codeception\Lib\Framework
         $this->container = $this->kernel->getContainer();
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
+    }
+
+    public function _getEntityManager()
+    {
+        $this->kernel->boot();
+        if (!$this->kernel->getContainer()->has('doctrine')) {
+            return null;
+        }
+        $this->client->persistentServices[] = 'doctrine.orm.entity_manager';
+        $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
+        return $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     /**
