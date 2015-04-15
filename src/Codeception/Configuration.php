@@ -369,7 +369,6 @@ class Configuration
      */
     public static function modules(&$settings)
     {
-
         return $settings['modules']['enabled'];
     }
 

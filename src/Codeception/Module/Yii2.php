@@ -4,6 +4,7 @@ namespace Codeception\Module;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\Interfaces\PartedModule;
 use Yii;
 
 /**
@@ -32,7 +33,7 @@ use Yii;
  * Stability: **stable**
  *
  */
-class Yii2 extends Framework implements ActiveRecord
+class Yii2 extends Framework implements ActiveRecord, PartedModule
 {
     /**
      * Application config file must be set.
@@ -78,8 +79,12 @@ class Yii2 extends Framework implements ActiveRecord
             Yii::$app->session->destroy();
         }
 
-
         parent::_after($test);
+    }
+
+    public function _parts()
+    {
+        return ['orm'];
     }
 
     /**
@@ -94,6 +99,7 @@ class Yii2 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function haveRecord($model, $attributes = [])
     {
@@ -117,6 +123,7 @@ class Yii2 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part orm
      */
     public function seeRecord($model, $attributes = [])
     {
@@ -136,6 +143,7 @@ class Yii2 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part orm
      */
     public function dontSeeRecord($model, $attributes = [])
     {
@@ -156,6 +164,7 @@ class Yii2 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function grabRecord($model, $attributes = [])
     {

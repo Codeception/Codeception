@@ -7,7 +7,9 @@ use Codeception\Exception\ModuleConflictException as ModuleConflictException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Module;
+use Codeception\Util\Annotation;
 
 class ModuleContainer
 {
@@ -144,6 +146,12 @@ class ModuleContainer
                 continue;
             }
 
+            if ($module instanceof PartedModule and isset($config['part'])) {
+                if (!$this->moduleActionBelongsToPart($module, $method->name, $config['part'])) {
+                    continue;
+                }
+            }
+
             $this->actions[$method->name] = $name;
         }
         return $module;
@@ -188,4 +196,16 @@ class ModuleContainer
             }
         }
     }
+
+    protected function moduleActionBelongsToPart($module, $action, $part)
+    {
+        if (!is_array($part)) {
+            $part = [strtolower($part)];
+        }
+        $part = array_map('strtolower', $part);
+        $parts = Annotation::forMethod($module, $action)->fetchAll('part');
+        $usedParts = array_intersect($parts, $part);
+        return !empty($usedParts);
+    }
+
 }

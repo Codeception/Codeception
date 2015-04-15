@@ -110,7 +110,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateModuleWithoutRequiredFields()
     {
-        $this->setExpectedException('\Codeception\Exception\ModuleConfig');
+        $this->setExpectedException('\Codeception\Exception\ModuleConfigException');
         $this->moduleContainer->create('Codeception\Lib\StubModule', ['secondField' => 'none']);
     }
 
@@ -160,7 +160,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testConflictsByModuleName()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -169,7 +169,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testConflictsByClass()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule2');
         $this->moduleContainer->create('Cli');
         $this->moduleContainer->validateConflicts();
@@ -177,7 +177,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testConflictsByInterface()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleConflict');
+        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
         $this->moduleContainer->create('Codeception\Lib\ConflictedModule3');
         $this->moduleContainer->create('Symfony2');
         $this->moduleContainer->validateConflicts();
@@ -185,7 +185,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
 
     public function testModuleDependenciesFail()
     {
-        $this->setExpectedException('Codeception\Exception\ModuleRequire');
+        $this->setExpectedException('Codeception\Exception\ModuleRequireException');
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
     }
 
@@ -199,8 +199,43 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
+        $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
     }
-    
+
+    public function testModuleParts1()
+    {
+        $config = ['modules' => [
+            'enabled' => ['\Codeception\Lib\PartedModule'],
+            'config' => [
+                '\Codeception\Lib\PartedModule' => [
+                    'part' => 'one'
+                ]
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+        $actions = $this->moduleContainer->getActions();
+        $this->assertArrayHasKey('partOne', $actions);
+        $this->assertArrayNotHasKey('partTwo', $actions);
+    }
+
+    public function testModuleParts2()
+    {
+        $config = ['modules' => [
+            'enabled' => ['\Codeception\Lib\PartedModule'],
+            'config' => [
+                '\Codeception\Lib\PartedModule' => [
+                    'part' => ['Two']
+                ]
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+        $actions = $this->moduleContainer->getActions();
+        $this->assertArrayHasKey('partTwo', $actions);
+        $this->assertArrayNotHasKey('partOne', $actions);
+    }
+
 }
 
 class StubModule extends \Codeception\Module
@@ -255,5 +290,29 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
 
     public function _inject()
     {
+    }
+}
+
+class PartedModule extends \Codeception\Module implements \Codeception\Lib\Interfaces\PartedModule
+{
+    public function _parts()
+    {
+        return ['one'];
+    }
+
+    /**
+     * @part one
+     */
+    public function partOne()
+    {
+
+    }
+
+    /**
+     * @part two
+     */
+    public function partTwo()
+    {
+
     }
 }

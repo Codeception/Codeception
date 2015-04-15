@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -38,7 +39,7 @@ use Illuminate\Http\Request;
  * * client - `BrowserKit` client
  *
  */
-class Laravel5 extends Framework implements ActiveRecord
+class Laravel5 extends Framework implements ActiveRecord, PartedModule
 {
 
     /**
@@ -123,6 +124,11 @@ class Laravel5 extends Framework implements ActiveRecord
         if ($this->app['db']) {
             $this->app['db']->disconnect();
         }
+    }
+
+    public function _parts()
+    {
+        return ['orm'];
     }
 
     /**
@@ -486,6 +492,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function haveRecord($model, $attributes = [])
     {
@@ -505,6 +512,7 @@ class Laravel5 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part orm
      */
     public function seeRecord($model, $attributes = [])
     {
@@ -525,6 +533,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * ```
      *
      * @param $model
+     * @part orm
      * @param array $attributes
      */
     public function dontSeeRecord($model, $attributes = [])
@@ -548,6 +557,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function grabRecord($model, $attributes = [])
     {
@@ -558,6 +568,7 @@ class Laravel5 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     protected function findRecord($model, $attributes = [])
     {

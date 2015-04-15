@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\LIb\Connector\PhalconMemorySession;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Step;
 
 /**
@@ -55,7 +56,7 @@ use Codeception\Step;
  *
  *
  */
-class Phalcon1 extends Framework implements ActiveRecord
+class Phalcon1 extends Framework implements ActiveRecord, PartedModule
 {
     protected $config = [
         'bootstrap'  => 'app/config/bootstrap.php',
@@ -161,6 +162,11 @@ class Phalcon1 extends Framework implements ActiveRecord
         $_REQUEST = [];
     }
 
+    public function _parts()
+    {
+        return ['orm'];
+    }
+
     /**
      * Sets value to session. Use for authorization.
      *
@@ -203,6 +209,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function haveRecord($model, $attributes = [])
     {
@@ -227,6 +234,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part orm
      */
     public function seeRecord($model, $attributes = [])
     {
@@ -246,6 +254,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
+     * @part orm
      */
     public function dontSeeRecord($model, $attributes = [])
     {
@@ -266,6 +275,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
+     * @part orm
      */
     public function grabRecord($model, $attributes = [])
     {

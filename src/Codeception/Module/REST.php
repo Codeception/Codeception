@@ -6,6 +6,7 @@ use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\DependsOnModule;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Util\JsonArray;
 use Codeception\Util\XmlStructure;
 use Symfony\Component\BrowserKit\Cookie;
@@ -51,7 +52,7 @@ use Codeception\Util\Soap as XmlUtils;
  *
  *
  */
-class REST extends \Codeception\Module implements DependsOnModule
+class REST extends \Codeception\Module implements DependsOnModule, PartedModule
 {
     protected $config = [
         'url'           => '',
@@ -109,6 +110,11 @@ EOF;
     public function _depends()
     {
         return ['Codeception\Lib\InnerBrowser' => $this->dependencyMessage];
+    }
+
+    public function _parts()
+    {
+        return ['xml', 'json'];
     }
 
     public function _inject(InnerBrowser $connection)

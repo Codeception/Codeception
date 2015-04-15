@@ -6,6 +6,7 @@ use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Auth\UserInterface;
@@ -45,7 +46,7 @@ use Illuminate\Support\MessageBag;
  * * client - `BrowserKit` client
  *
  */
-class Laravel4 extends Framework implements ActiveRecord
+class Laravel4 extends Framework implements ActiveRecord, PartedModule
 {
     /**
      * @var \Illuminate\Foundation\Application
@@ -78,6 +79,11 @@ class Laravel4 extends Framework implements ActiveRecord
         $this->client = new LaravelConnector($app);
         $this->revertErrorHandler();
 
+    }
+
+    public function _parts()
+    {
+        return ['framework', 'orm'];
     }
 
     protected function revertErrorHandler()
@@ -383,7 +389,7 @@ class Laravel4 extends Framework implements ActiveRecord
      * @param $model
      * @param array $attributes
      * @return mixed
-     * @part ORM
+     * @part orm
      * @part framework
      */
     public function haveRecord($model, $attributes = [])
@@ -404,7 +410,7 @@ class Laravel4 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
-     * @part ORM
+     * @part orm
      * @part framework
      */
     public function seeRecord($model, $attributes = [])
@@ -427,7 +433,7 @@ class Laravel4 extends Framework implements ActiveRecord
      *
      * @param $model
      * @param array $attributes
-     * @part ORM
+     * @part orm
      * @part framework
      */
     public function dontSeeRecord($model, $attributes = [])
