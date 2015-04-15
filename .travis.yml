@@ -55,14 +55,14 @@ before_script:
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 & > /dev/null
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
+  - sleep 5
   - php -S localhost:8000 -t tests/data/app &
   - php -S localhost:8010 -t tests/data &
   # Phalcon
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   # Laravel 4
-  - "mysql -e 'create database `l4-module`;'"
-  - sleep 5
+  - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
   # Laravel 5
   - touch frameworks-l5/storage/testing.sqlite
