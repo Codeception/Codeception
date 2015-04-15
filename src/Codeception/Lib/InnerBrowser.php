@@ -772,6 +772,20 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         return $nodes->first()->attr($attribute);
     }
 
+    public function grabMultiple($cssOrXpath, $attribute = null)
+    {
+        $result = [];
+        $nodes = $this->match($cssOrXpath);
+        foreach ($nodes as $node) {
+            if ($attribute) {
+                $result[] = $node->attr($attribute);
+                continue;
+            }
+            $result[] = $node->text();
+        }
+        return $result;
+    }
+
     /**
      * @param $field
      *

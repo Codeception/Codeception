@@ -984,6 +984,17 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return $el->getAttribute('value');
     }
 
+    public function grabMultiple($cssOrXpath, $attribute = null)
+    {
+        $els = $this->match($this->webDriver, $cssOrXpath);
+        return array_map(function (\WebDriverElement $e) use ($attribute) {
+            if ($attribute) {
+                return $e->getAttribute($attribute);
+            }
+            return $e->getText();
+        }, $els);
+    }
+
 
     protected function filterByAttributes($els, array $attributes)
     {
