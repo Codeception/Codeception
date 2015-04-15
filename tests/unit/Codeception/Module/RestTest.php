@@ -84,6 +84,19 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->grabDataFromJsonResponse('address.street');
     }
 
+    public function testGrabDataFromResponseByJsonPath()
+    {
+        $this->module->sendGET('/rest/user/');
+        // simple assoc array
+        $this->assertEquals(array('davert@mail.ua'), $this->module->grabDataFromResponseByJsonPath('$.email'));
+        // nested assoc array
+        $this->assertEquals(array('Kyiv'), $this->module->grabDataFromResponseByJsonPath('$.address.city'));
+        // nested index array
+        $this->assertEquals(array('DavertMik'), $this->module->grabDataFromResponseByJsonPath('$.aliases[0]'));
+        // empty if data not found
+        $this->assertEquals(array(), $this->module->grabDataFromResponseByJsonPath('$.address.street'));
+    }
+
     public function testValidJson()
     {
         $this->module->response = '{"xxx": "yyy"}';

@@ -844,6 +844,19 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('kill_all', $form['action']);
     }
 
+    public function testSubmitFormWithFillField()
+    {
+        $this->module->amOnPage('/form/complex');
+        $this->module->fillField('name', 'Kilgore Trout');
+        $this->module->fillField('description', 'Is a fish');
+        $this->module->submitForm('form', [
+            'description' => 'Is from Iliyum, NY'
+        ]);
+        $form = data::get('form');
+        $this->assertEquals('Kilgore Trout', $form['name']);
+        $this->assertEquals('Is from Iliyum, NY', $form['description']);
+    }
+
     public function testSubmitFormWithoutButton() {
         $this->module->amOnPage('/form/empty');
         $this->module->submitForm('form', array(
@@ -1169,7 +1182,15 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertContains('test3', $data['items'][1]);
         $this->assertContains('test2', $data['captions']);
         $this->assertContains('davert', $data['users']);
-
     }
-
+    
+    public function testSubmitAdjacentForms()
+    {
+        $this->module->amOnPage('/form/submit_adjacentforms');
+        $this->module->submitForm('#form-2', []);
+        $data = data::get('form');
+        $this->assertTrue(isset($data['second-field']));
+        $this->assertFalse(isset($data['first-field']));
+        $this->assertEquals('Killgore Trout', $data['second-field']);
+    }
 }
