@@ -101,14 +101,14 @@ abstract class Step
         return trim($classname, "\\");
     }
 
-    public function __toString()
+    public function getPhpCode()
     {
         return "\$I->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
     }
 
-    public function getHumanizedAction()
+    public function __toString()
     {
-        return $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
+        return 'I ' . $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
     }
 
     public function getHtmlAction()

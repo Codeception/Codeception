@@ -11,6 +11,11 @@ class Comment extends \Codeception\Step
         return $this->getAction();
     }
 
+    public function getHumanizedAction()
+    {
+        return $this->getAction();
+    }
+
     public function getHtmlAction()
     {
         return '<strong>' . $this->getAction() . '</strong>';

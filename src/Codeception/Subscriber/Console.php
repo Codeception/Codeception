@@ -200,7 +200,7 @@ class Console implements EventSubscriberInterface
         if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
         }
-        $this->output->writeln("* I " . $e->getStep()->getHumanizedAction());
+        $this->output->writeln("* " . $e->getStep()->__toString());
     }
 
     public function afterStep(StepEvent $e)
@@ -374,7 +374,7 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("\nScenario Steps:\n");
 
         foreach ($trace as $step) {
-            $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". $step");
+            $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". ".$step->getPhpCode());
 
             if ($step->hasFailed()) {
                 $message->append(' ')->style('bold');
@@ -382,7 +382,7 @@ class Console implements EventSubscriberInterface
 
             $line = $step->getLineNumber();
             if ($line) {
-                $message->append('<info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
+                $message->append(' <info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
             }
 
             $i--;
