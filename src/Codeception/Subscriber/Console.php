@@ -71,7 +71,7 @@ class Console implements EventSubscriberInterface
         $this->message("%s Tests (%d) ")
             ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
-            ->width(array_sum($this->columns), '-')
+            ->widthWithTerminalCorrection(array_sum($this->columns), '-')
             ->prepend("\n")
             ->writeln();
 
@@ -201,7 +201,7 @@ class Console implements EventSubscriberInterface
 
     public function afterSuite(SuiteEvent $e)
     {
-        $this->message()->width(array_sum($this->columns), '-')->writeln();
+        $this->message()->widthWithTerminalCorrection(array_sum($this->columns), '-')->writeln();
     }
 
     public function printFail(FailEvent $e)
@@ -447,11 +447,11 @@ class Console implements EventSubscriberInterface
             return;
         }
         if ($this->output->isInteractive()) {
-            $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
+            $this->getTestMessage($test)->prepend("\x0D")->widthWithTerminalCorrection($this->columns[0])->write();
             return;
         } 
         if ($this->message) {
-            $this->message('')->width($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
+            $this->message('')->widthWithTerminalCorrection($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
         }
     }
 
