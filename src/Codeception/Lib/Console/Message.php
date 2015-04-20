@@ -109,6 +109,20 @@ class Message
         return strlen($this->message);
     }
 
+    public function widthWithTerminalCorrection($width, $char = ' ')
+    {
+        $cols = 0;
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            $cols = intval(`command -v tput >> /dev/null && tput cols`);
+        }
+        if ($cols > 0) {
+            $const = ($char == ' ') ? 6 : 1;
+            $width = ($cols <= $width) ? $cols - $const : $width;
+            $width = ($width < $const) ? $const : $width;
+        }
+        return $this->width($width, $char);
+    }
+
     public function __toString()
     {
         return $this->message;

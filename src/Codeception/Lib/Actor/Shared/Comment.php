@@ -18,18 +18,19 @@ trait Comment
         return $this->comment('I am going to ' . $argumentation);
     }
 
-    public function am($role) {
+    public function am($role)
+    {
+        $role = trim($role);
+
+        if (stripos('aeiou', $role[0]) !== false) {
+            return $this->comment('As an ' . $role);
+        }
+
         return $this->comment('As a ' . $role);
     }
 
     public function lookForwardTo($achieveValue)
     {
         return $this->comment('So that I ' . $achieveValue);
-    }
-
-    public function comment($description)
-    {
-        $this->scenario->comment($description);
-        return $this;
     }
 }

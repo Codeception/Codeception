@@ -21,6 +21,7 @@ services:
 install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - composer global require "fxp/composer-asset-plugin:1.0.0"
+  - composer self-update
   - composer install
   # Queue (Beanstalkd)
   - sudo apt-get update -qq
@@ -57,7 +58,7 @@ before_script:
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
   # Laravel 4
-  - touch app/database/database.sqlite
+  - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
   # Laravel 5
   - touch frameworks-l5/storage/testing.sqlite

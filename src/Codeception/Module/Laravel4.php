@@ -376,15 +376,15 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $model
+     * @param $tableName
      * @param array $attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($tableName, $attributes = array())
     {
-        $id = $this->kernel['db']->table($model)->insertGetId($attributes);
+        $id = $this->kernel['db']->table($tableName)->insertGetId($attributes);
         if (!$id) {
-            $this->fail("Couldnt insert record into table $model");
+            $this->fail("Couldn't insert record into table $tableName");
         }
         return $id;
     }
@@ -396,16 +396,16 @@ class Laravel4 extends Framework implements ActiveRecord
      * $I->seeRecord('users', array('name' => 'davert'));
      * ```
      *
-     * @param $model
+     * @param $tableName
      * @param array $attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($tableName, $attributes = array())
     {
-        $record = $this->findRecord($model, $attributes);
+        $record = $this->findRecord($tableName, $attributes);
         if (!$record) {
-            $this->fail("Couldn't find $model with " . json_encode($attributes));
+            $this->fail("Couldn't find $tableName with " . json_encode($attributes));
         }
-        $this->debugSection($model, json_encode($record));
+        $this->debugSection($tableName, json_encode($record));
     }
 
     /**
@@ -417,15 +417,15 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $model
+     * @param $tableName
      * @param array $attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($tableName, $attributes = array())
     {
-        $record = $this->findRecord($model, $attributes);
-        $this->debugSection($model, json_encode($record));
+        $record = $this->findRecord($tableName, $attributes);
+        $this->debugSection($tableName, json_encode($record));
         if ($record) {
-            $this->fail("Unexpectedly managed to find $model with " . json_encode($attributes));
+            $this->fail("Unexpectedly managed to find $tableName with " . json_encode($attributes));
         }
     }
 
@@ -438,18 +438,23 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $model
+     * @param $tableName
      * @param array $attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($tableName, $attributes = array())
     {
-        return $this->findRecord($model, $attributes);
+        return $this->findRecord($tableName, $attributes);
     }
 
-    protected function findRecord($model, $attributes = array())
+    /**
+     * @param $tableName
+     * @param array $attributes
+     * @return mixed
+     */
+    protected function findRecord($tableName, $attributes = array())
     {
-        $query = $this->kernel['db']->table($model);
+        $query = $this->kernel['db']->table($tableName);
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
