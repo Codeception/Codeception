@@ -33,4 +33,10 @@ trait Comment
     {
         return $this->comment('So that I ' . $achieveValue);
     }
+
+    public function comment($description)
+    {
+        $this->scenario->comment($description);
+        return $this;
+    }
 }
