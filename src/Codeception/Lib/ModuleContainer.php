@@ -69,7 +69,7 @@ class ModuleContainer
             return $this->instantiate($moduleName, $moduleClass, $config);
         }
 
-        throw new ConfigurationException($moduleName . ' could not be found and loaded');
+        throw new ConfigurationException("Module $moduleName could not be found and loaded");
     }
 
     public function hasModule($module)
@@ -205,7 +205,7 @@ class ModuleContainer
         if (!is_array($part)) {
             $part = [strtolower($part)];
         }
-        $part = array_map('strtolower', $part);
+        $part = array_map('strtoloower', $part);
         $parts = Annotation::forMethod($module, $action)->fetchAll('part');
         $usedParts = array_intersect($parts, $part);
         return !empty($usedParts);
@@ -232,7 +232,7 @@ class ModuleContainer
             if ($enabledModuleName !== $module) {
                 continue;
             }
-            $config = Configuration::mergeConfigs($config, $enabledModuleConfig);
+            $config = Configuration::mergeConfigs($enabledModuleConfig, $config);
         }
         return $config;
     }
