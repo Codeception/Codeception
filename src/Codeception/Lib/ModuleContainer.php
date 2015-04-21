@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException as ConfigurationException;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Exception\ModuleConflictException as ModuleConflictException;
@@ -41,9 +42,7 @@ class ModuleContainer
     public function create($moduleName, $active = true)
     {
         $this->active[$moduleName] = $active;
-        $config = isset($this->config['modules']['config'][$moduleName])
-            ? $this->config['modules']['config'][$moduleName]
-            : [];
+        $config = $this->getModuleConfig($moduleName);
 
         // skip config validation on dependent module
         if (empty($config) and !$active) {
@@ -168,12 +167,13 @@ class ModuleContainer
             $message = reset($dependency);
             $dependency = key($dependency);
         }
-        if (!isset($this->config['modules']['depends'][$name])) {
+        $config = $this->getModuleConfig($name);
+        if (!isset($config['depends'])) {
             throw new ModuleRequireException($module,
                 "\nThis module depends on $dependency\n" .
                 "\n \n$message");
         }
-        $dependentModule = $this->create($this->config['modules']['depends'][$name], false);
+        $dependentModule = $this->create($config['depends'], false);
         if (!method_exists($module, '_inject')) {
             throw new ModuleException($module, 'Module requires method _inject to be defined to accept dependencies');
         }
@@ -210,5 +210,32 @@ class ModuleContainer
         $usedParts = array_intersect($parts, $part);
         return !empty($usedParts);
     }
+
+    protected function getModuleConfig($module)
+    {
+        // get config for all modules
+        $config = isset($this->config['modules']['config'][$module])
+            ? $this->config['modules']['config'][$module]
+            : [];
+
+        if (!isset($this->config['modules']['enabled'])) {
+            return $config;
+        }
+
+        if (!is_array($this->config['modules']['enabled'])) {
+            return $config;
+        }
+
+
+        // get config for enabled modules
+        foreach ($this->config['modules']['enabled'] as $enabledModuleName => $enabledModuleConfig) {
+            if ($enabledModuleName !== $module) {
+                continue;
+            }
+            $config = Configuration::mergeConfigs($config, $enabledModuleConfig);
+        }
+        return $config;
+    }
+
 
 }
