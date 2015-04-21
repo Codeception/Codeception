@@ -53,9 +53,8 @@ namespace Codeception\Module;
  * ### Example
  *
  *     modules:
- *        enabled: [Db]
- *        config:
- *           Db:
+ *        enabled:
+ *           - Db:
  *              dsn: 'mysql:host=localhost;dbname=testdb'
  *              user: 'root'
  *              password: ''

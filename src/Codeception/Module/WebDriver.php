@@ -60,9 +60,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * ### Example (`acceptance.suite.yml`)
  *
  *     modules:
- *        enabled: [WebDriver]
- *        config:
- *           WebDriver:
+ *        enabled:
+ *           - WebDriver:
  *              url: 'http://localhost/'
  *              browser: firefox
  *              window_size: 1024x768

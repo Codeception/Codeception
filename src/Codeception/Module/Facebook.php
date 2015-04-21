@@ -34,17 +34,15 @@ use Codeception\Module as BaseModule;
  * ### Config example
  *
  *     modules:
- *         enabled: [Facebook]
- *         config:
- *             Facebook:
+ *         enabled:
+ *             - Facebook:
+ *                 depends: PhpBrowser
  *                 app_id: 412345678901234
  *                 secret: ccb79c1b0fdff54e4f7c928bf233aea5
  *                 test_user:
  *                     name: FacebookGuy
  *                     locale: uk_UA
  *                     permissions: [email, publish_stream]
- *         depends:
- *             Facebook: PhpBrowser
  *
  * ###  Test example:
  *

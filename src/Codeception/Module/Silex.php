@@ -39,9 +39,8 @@ use Codeception\TestCase;
  * ### Example (`functional.suite.yml`)
  *
  *     modules:
- *        enabled: [Silex]
- *        config:
- *           Silex:
+ *        enabled:
+ *           - Silex:
  *              app: 'app/bootstrap.php'
  *
  * Class Silex

@@ -40,9 +40,8 @@ use Codeception\Step;
  * <pre>
  * class_name: TestGuy
  * modules:
- *     enabled: [FileSystem, TestHelper, Phalcon1]
- *     config:
- *         Phalcon1
+ *     enabled:
+ *         - Phalcon1:
  *             bootstrap: 'app/config/bootstrap.php'
  *             cleanup: true
  *             savepoints: true

@@ -216,9 +216,10 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
-        $this->output->write($e->getCount() . ") ");
 
-        if ($e->getTest() instanceof ScenarioDriven) {
+        $this->getTestMessage($failedTest)->prepend($e->getCount() . ") ")->write();
+
+        if ($failedTest instanceof ScenarioDriven) {
             $this->printScenarioFail($failedTest, $fail);
             return;
         }
