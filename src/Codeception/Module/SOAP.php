@@ -32,6 +32,7 @@ namespace Codeception\Module;
  *
  */
 
+use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
@@ -73,7 +74,7 @@ EOF;
     /**
      * @var XmlStructure
      */
-    protected $xmlStructure;
+    protected $xmlStructure = null;
 
     /**
      * @var InnerBrowser
@@ -85,6 +86,7 @@ EOF;
         $this->client = &$this->connectionModule->client;
         $this->buildRequest();
         $this->xmlResponse = null;
+        $this->xmlStructure = null;
     }
 
     public function _depends()
@@ -108,7 +110,22 @@ EOF;
         return $this->client;
     }
 
-
+    private function getXmlResponse()
+    {
+        if (!$this->xmlResponse) {
+            throw new ModuleException($this, "No XML response, use `\$I->sendSoapRequest` to receive it");
+        }
+        return $this->xmlResponse;
+    }
+    
+    private function getXmlStructure()
+    {
+        if (!$this->xmlStructure) {
+            $this->xmlStructure = new XmlStructure($this->getXmlResponse());
+        }
+        return $this->xmlStructure;
+    }
+    
     /**
      * Prepare SOAP header.
      * Receives header name and parameters as array.
@@ -198,7 +215,6 @@ EOF;
 
         $this->debugSection("Response", $response);
         $this->xmlResponse = SoapUtils::toXml($response);
-        $this->xmlStructure = new XmlStructure($this->xmlResponse);
     }
 
     /**
@@ -224,7 +240,7 @@ EOF;
     public function seeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        $this->assertEquals($this->xmlResponse->C14N(), $xml->C14N());
+        $this->assertEquals($this->getXmlResponse()->C14N(), $xml->C14N());
     }
 
     /**
@@ -250,7 +266,7 @@ EOF;
     public function seeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        $this->assertContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
+        $this->assertContains($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
     }
 
 
@@ -265,7 +281,7 @@ EOF;
     public function dontSeeSoapResponseEquals($xml)
     {
         $xml = SoapUtils::toXml($xml);
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->xmlResponse->C14N(), $xml->C14N());
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->getXmlResponse()->C14N(), $xml->C14N());
     }
 
 
@@ -279,7 +295,7 @@ EOF;
     public function dontSeeSoapResponseIncludes($xml)
     {
         $xml = $this->canonicalize($xml);
-        $this->assertNotContains($xml, $this->xmlResponse->C14N(), "found in XML Response");
+        $this->assertNotContains($xml, $this->getXmlResponse()->C14N(), "found in XML Response");
     }
 
     /**
@@ -307,7 +323,7 @@ EOF;
     {
         $xml = SoapUtils::toXml($xml);
         $this->debugSection("Structure", $xml->saveXML());
-        $this->assertTrue((bool)$this->xmlValidator->matchXmlStructure($xml), "this structure is in response");
+        $this->assertTrue((bool)$this->getXmlStructure()->matchXmlStructure($xml), "this structure is in response");
     }
 
     /**
@@ -318,7 +334,7 @@ EOF;
     {
         $xml = SoapUtils::toXml($xml);
         $this->debugSection("Structure", $xml->saveXML());
-        $this->assertFalse((bool)$this->xmlValidator->matchXmlStructure($xml), "this structure is in response");
+        $this->assertFalse((bool)$this->getXmlStructure()->matchXmlStructure($xml), "this structure is in response");
     }
 
     /**
@@ -334,7 +350,7 @@ EOF;
      */
     public function seeSoapResponseContainsXPath($xpath)
     {
-        $this->assertTrue($this->xmlValidator->matchesXpath($xpath));
+        $this->assertTrue($this->getXmlStructure()->matchesXpath($xpath));
     }
 
     /**
@@ -350,7 +366,7 @@ EOF;
      */
     public function dontSeeSoapResponseContainsXPath($xpath)
     {
-        $this->assertFalse($this->xmlValidator->matchesXpath($xpath));
+        $this->assertFalse($this->getXmlStructure()->matchesXpath($xpath));
     }
 
 
@@ -374,7 +390,7 @@ EOF;
      */
     public function grabTextContentFrom($cssOrXPath)
     {
-        $el = $this->xmlValidator->matchElement($cssOrXPath);
+        $el = $this->getXmlStructure()->matchElement($cssOrXPath);
         return $el->textContent;
     }
 
@@ -389,7 +405,7 @@ EOF;
      */
     public function grabAttributeFrom($cssOrXPath, $attribute)
     {
-        $el = $this->xmlValidator->matchElement($cssOrXPath);
+        $el = $this->getXmlStructure()->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
             $this->fail("Attribute not found in element matched by '$cssOrXPath'");
         }

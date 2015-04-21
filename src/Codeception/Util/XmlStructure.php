@@ -4,7 +4,7 @@ namespace Codeception\Util;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
 use Symfony\Component\CssSelector\CssSelector;
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\CssSelector\Exception\ParseException;
 use Codeception\Util\Soap as XmlUtils;
 
 class XmlStructure
