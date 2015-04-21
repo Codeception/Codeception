@@ -19,12 +19,10 @@ Configure modules in `api.suite.yml`:
 ``` yaml
 class_name: ApiTester
 modules:
-    enabled: [PhpBrowser, REST, ApiHelper]
     config:
-		PhpBrowser:
-			url: http://serviceapp/
-		REST:
+		- REST:
 		    url: http://serviceapp/api/v1/
+		    depends: PhpBrowser
 ```
 
 The REST module will automatically connect to `PhpBrowser`. In case you provide it with Symfony2, Laravel4, Zend, or other framework module, it will connect to them as well. Don't forget to run the `build` command once you finished editing configuration.
@@ -78,11 +76,9 @@ Let's configure `SOAP` module to be used with `PhpBrowser`:
 ``` yaml
 class_name: ApiTester
 modules:
-    enabled: [PhpBrowser, SOAP, ApiHelper]
-    config:
-		PhpBrowser:
-			url: http://serviceapp/
-		SOAP:
+    enabled:
+		- SOAP:
+		    depends: PhpBrowser
 		    endpoint: http://serviceapp/api/v1/
 ```
 

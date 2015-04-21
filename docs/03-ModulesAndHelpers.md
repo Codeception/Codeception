@@ -273,13 +273,10 @@ The host and port parameter can be redefined in the suite config. Values are set
 ```yaml
 modules:
     enabled:
-        - WebDriver
-        - Db
-    config:
-        WebDriver:
+        - WebDriver:
             url: 'http://mysite.com/'
             browser: 'firefox'
-        Db:
+        - Db:
             cleanup: false
             repopulate: false
 ```

@@ -58,12 +58,10 @@ Before we start we need a local copy of the site running on your host. We need t
 class_name: AcceptanceTester
 modules:
     enabled:
-        - PhpBrowser
+        - PhpBrowser:
+            url: [your site's url]
         - AcceptanceHelper
         - Db
-    config:
-        PhpBrowser:
-            url: [your site's url]
 ```
 
 We should start by creating a 'Cept' file in the __tests/acceptance__ directory. Let's call it __SigninCept.php__. We will write the first lines into it.
@@ -378,12 +376,10 @@ Modify your `acceptance.suite.yml` file:
 class_name: AcceptanceTester
 modules:
     enabled:
-        - WebDriver
-        - AcceptanceHelper
-    config:
-        WebDriver:
+        - WebDriver:
             url: 'http://localhost/myapp/'
             browser: firefox            
+        - AcceptanceHelper
 ```
 
 In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/) and get it running (Alternatively you may use [PhantomJS](http://phantomjs.org/) headless browser in `ghostdriver` mode).
