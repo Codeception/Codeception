@@ -68,7 +68,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         return $this->crawler;
     }
 
-    private function getClient()
+    private function getRunningClient()
     {
         if ($this->client->getHistory()->isEmpty()) {
             throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` to open it");
@@ -78,7 +78,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->getClient()->getInternalResponse()->getContent());
+        file_put_contents($filename, $this->getRunningClient()->getInternalResponse()->getContent());
     }
 
     /**
@@ -115,7 +115,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->getClient()->click($anchor->first()->link());
+            $this->crawler = $this->getRunningClient()->click($anchor->first()->link());
             $this->forms = [];
             $this->debugResponse();
             return;
@@ -144,7 +144,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             $tag = $node->nodeName;
             $type = $node->getAttribute('type');
             if ($tag == 'a') {
-                $this->crawler = $this->getClient()->click($nodes->first()->link());
+                $this->crawler = $this->getRunningClient()->click($nodes->first()->link());
                 $this->forms = [];
                 $this->debugResponse();
                 return;
@@ -175,7 +175,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $this->debugSection('Uri', $form->getUri());
         $this->debugSection($form->getMethod(), $form->getValues());
 
-        $this->crawler = $this->getClient()->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
+        $this->crawler = $this->getRunningClient()->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
         $this->forms = [];
     }
 
@@ -223,7 +223,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
      */
     public function _getCurrentUri()
     {
-        $url = $this->getClient()->getHistory()->current()->getUri();
+        $url = $this->getRunningClient()->getHistory()->current()->getUri();
         $parts = parse_url($url);
         if (!$parts) {
             $this->fail("URL couldn't be parsed");
@@ -411,7 +411,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function getFormUrl($form)
     {
         $action = $form->attr('action');
-        $currentUrl = $this->getClient()->getHistory()->current()->getUri();
+        $currentUrl = $this->getRunningClient()->getHistory()->current()->getUri();
 
         if (empty($action) || $action === '#') {
             return $currentUrl;
@@ -681,7 +681,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function getResponseStatusCode()
     {
         // depending on Symfony version
-        $response = $this->getClient()->getInternalResponse();
+        $response = $this->getRunningClient()->getInternalResponse();
         if (method_exists($response, 'getStatus')) {
             return $response->getStatus();
         }
@@ -830,7 +830,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function setCookie($name, $val, array $params = [])
     {
-        $cookies = $this->getClient()->getCookieJar();
+        $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
         extract($params);
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure));
@@ -841,7 +841,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $cookies = $this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']);
+        $cookies = $this->getRunningClient()->getCookieJar()->get($name, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
         }
@@ -851,21 +851,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     public function seeCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->getClient()->getCookieJar()->all());
-        $this->assertNotNull($this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->assertNotNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
     public function dontSeeCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->getClient()->getCookieJar()->all());
-        $this->assertNull($this->getClient()->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->assertNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
     }
 
     public function resetCookie($name, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->getClient()->getCookieJar()->expire($name, $params['path'], $params['domain']);
+        $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
@@ -987,13 +987,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThat($this->getClient()->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThat($this->getRunningClient()->getInternalResponse()->getContent(), $constraint, $message);
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->getClient()->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThatItsNot($this->getRunningClient()->getInternalResponse()->getContent(), $constraint, $message);
     }
 
     /**

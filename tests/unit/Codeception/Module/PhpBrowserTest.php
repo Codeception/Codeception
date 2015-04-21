@@ -58,6 +58,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
 
 	public function testSetMultipleCookies() {
+        $this->module->amOnPage('/');
         $cookie_name_1  = 'test_cookie';
         $cookie_value_1 = 'this is a test';
         $this->module->setCookie($cookie_name_1, $cookie_value_1);
@@ -262,7 +263,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testFillFieldWithoutPage()
     {
-        $this->setExpectedException("\\Codeception\\Exception\\TestRuntime");
+        $this->setExpectedException("\\Codeception\\Exception\\ModuleException");
         $this->module->fillField('#name', 'Nothing special');
     }
 }

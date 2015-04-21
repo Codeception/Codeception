@@ -11,6 +11,7 @@ require_once 'TestsForWeb.php';
 
 abstract class TestsForBrowsers extends TestsForWeb
 {
+   
     public function testAmOnSubdomain()
     {
         $this->module->_reconfigure(array('url' => 'http://google.com'));
@@ -49,5 +50,11 @@ abstract class TestsForBrowsers extends TestsForWeb
         $this->module->amOnPage('relative_siteroot');
         $this->module->click('Click me');
         $this->module->dontSeeInCurrentUrl('form/form/');
+    }
+
+    public function testOpenPageException()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $this->module->see('Hello');
     }
 }
