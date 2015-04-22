@@ -216,13 +216,15 @@ class Console implements EventSubscriberInterface
     {
         $failedTest = $e->getTest();
         $fail = $e->getFail();
+        
+        $this->output->write($e->getCount() . ") ");
 
-        $this->getTestMessage($failedTest)->prepend($e->getCount() . ") ")->write();
 
         if ($failedTest instanceof ScenarioDriven) {
             $this->printScenarioFail($failedTest, $fail);
             return;
         }
+        $this->getTestMessage($failedTest)->write();
 
         $this->printException($fail);
         $this->printExceptionTrace($fail);
@@ -372,18 +374,18 @@ class Console implements EventSubscriberInterface
 
         if (!$length) return;
 
-        $this->output->writeln("\nScenario Steps:\n");
+        $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
             $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". ".$step->getPhpCode());
 
             if ($step->hasFailed()) {
-                $message->append(' ')->style('bold');
+                $message->append('')->style('bold');
             }
 
             $line = $step->getLineNumber();
             if ($line) {
-                $message->append(' <info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
+                $message->append(' at <info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
             }
 
             $i--;
