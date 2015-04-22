@@ -288,7 +288,7 @@ class DependencyModule extends \Codeception\Module implements DependsOnModule
         return ['Codeception\Lib\ConflictedModule' => 'Error message'];
     }
 
-    public function _inject()
+    public function _inject(ConflictedModule $module)
     {
     }
 }
