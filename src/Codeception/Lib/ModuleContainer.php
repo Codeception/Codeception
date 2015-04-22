@@ -205,7 +205,7 @@ class ModuleContainer
         if (!is_array($part)) {
             $part = [strtolower($part)];
         }
-        $part = array_map('strtoloower', $part);
+        $part = array_map('strtolower', $part);
         $parts = Annotation::forMethod($module, $action)->fetchAll('part');
         $usedParts = array_intersect($parts, $part);
         return !empty($usedParts);
