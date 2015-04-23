@@ -2,6 +2,9 @@
 
 #### 2.0.13
 
+* added `--no-rebuild` option to disable automatic actor classes rebuilds *2015-04-24*
+* suppressed warnings on failed actor classes auto-rebuilds
+
 #### 2.0.12
 
 * [Laravel5] Fix for undefined method `Symfony\Component\HttpFoundation\Request::route()` by @janhenkgerritsen
