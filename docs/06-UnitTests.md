@@ -177,7 +177,8 @@ function testSavingUser()
 ?>
 ```
 
-Database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
+To enable the database functionality in the unit tests please make sure the `Db` module is part of the enabled module list in the unit.suite.yml configuration file. 
+The database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
 If it's not your required behavior, please change the settings of `Db` module for the current suite.
 
 ### Accessing Module
