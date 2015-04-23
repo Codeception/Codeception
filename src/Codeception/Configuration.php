@@ -413,7 +413,11 @@ class Configuration
         if (!self::$logDir) {
             throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
         }
-        $dir = self::$dir . DIRECTORY_SEPARATOR . self::$logDir . DIRECTORY_SEPARATOR;
+
+        $dir = self::$logDir . DIRECTORY_SEPARATOR;
+        if(strcmp(self::$logDir[0], "/") !== 0){
+            $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
+        }
 
         if (!is_writable($dir)) {
             @mkdir($dir);
