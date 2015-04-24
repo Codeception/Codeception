@@ -2,6 +2,7 @@
 
 #### 2.0.13
 
+* Updated to PHPUnit 4.6
 * [Db] fixed regression introduced in 2.0.11. `haveInDatabase` works in PostgreSQL on tables with 'id' as primary key. Fix by @akireikin #1846 #1761
 * added `--no-rebuild` option to disable automatic actor classes rebuilds *2015-04-24*
 * suppressed warnings on failed actor classes auto-rebuilds
