@@ -130,4 +130,15 @@ class PostgreSql extends Db
         $name = array_map(function($data) { return '"' . $data . '"'; }, $name);
         return implode('.', $name);
     }
+    
+    /**
+     * @param string $tableName
+     *
+     * @return string
+     */
+    public function getPrimaryColumn($tableName)
+    {
+        // @TODO: Implement this for PostgreSQL later
+        return 'id';
+    }
 }
