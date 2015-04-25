@@ -47,12 +47,13 @@ class Codecept
         'coverage-text' => false,
         'groups'        => null,
         'excludeGroups' => null,
-        'filter'        => null,
-        'env'           => null,
-        'fail-fast'     => false,
-        'verbosity'     => 1,
-        'interactive'   => true
-    ];
+        'filter' => null,
+        'env' => null,
+        'fail-fast' => false,
+        'verbosity' => 1,
+        'interactive' => true,
+        'no-rebuild' => false
+    );
 
     /**
      * @var array
@@ -127,9 +128,11 @@ class Codecept
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
-        $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
 
         // optional
+        if (!$this->options['no-rebuild']) {
+            $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
+        }
         if (!$this->options['silent']) {
             $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
         }

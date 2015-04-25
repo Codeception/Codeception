@@ -12,6 +12,8 @@ class Asserts extends Module
     use \Codeception\Util\Shared\Asserts {
         assertEquals as public;
         assertNotEquals as public;
+        assertSame as public;
+        assertNotSame as public;
         assertGreaterThan as public;
         assertGreaterThen as public;
         assertGreaterThanOrEqual as public;

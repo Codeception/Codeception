@@ -39,7 +39,14 @@ class ZF2 extends Client
     {
         $zendRequest = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
+        $zendHeaders  = $zendRequest->getHeaders();
 
+        if (!$zendHeaders->has('Content-Type')) {
+            $server = $request->getServer();
+            if (isset($server['CONTENT_TYPE'])) {
+                $zendHeaders->addHeaderLine('Content-Type', $server['CONTENT_TYPE']);}
+        }
+        
         $zendResponse->setStatusCode(200);
 
         $uri = new HttpUri($request->getUri());

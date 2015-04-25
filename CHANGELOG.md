@@ -1,5 +1,38 @@
 # Changelog
 
+#### 2.0.13
+
+* Updated to PHPUnit 4.6
+* [Db] fixed regression introduced in 2.0.11. `haveInDatabase` works in PostgreSQL on tables with 'id' as primary key. Fix by @akireikin #1846 #1761
+* added `--no-rebuild` option to disable automatic actor classes rebuilds *2015-04-24*
+* suppressed warnings on failed actor classes auto-rebuilds
+* enable group listener for grouping with annotation by @litpuvn Fixes #1830
+* unix terminals output improved by calculating screen size. Done by @DexterHD See #1858
+* [Yii2] Remove line to activate request parsers by @m8rge #1843
+* [PhpBrowser][Frameworks] Various `fillField`/`submitForm` improvements by @zbateson See #1840. Fixes #1828, #1689
+* Allow following symlinks when searching for tests by @nechutny #1862
+
+#### 2.0.12
+
+* [Laravel5] Fix for undefined method `Symfony\Component\HttpFoundation\Request::route()` by @janhenkgerritsen
+* [Yii2] Fix https support and verbose output added by @TriAnMan See #1770
+* [Yii2] `haveRecord` to insert insert unsafe attributes by @nkovacs. Fixes #1775
+* [Asserts] `assertSame` and `assertNotSame` added by @hidechae *2015-04-03*
+* [Laravel5] Add `packages` option for application packages by @jonathantorres  #1782
+* [PhpBrowser][WebDriver][Frameworks] `seeInFormFields` method added for checking multiple form field values. See #1795 *2015-04-03*
+* [ZF2] Fixed setting Content-Type header by @Gorp See #1796 *2015-04-03*
+* [Yii2] Pass body request into yii2 request, allowing to send Xml payload by @m8rge. See #1806
+* Fixed conditional assertions firing TEST_AFTER event by @zbateson. Issues #1647 #1354 and #1111 *2015-04-03*
+* Fixing mocking Laravel models by removing `__mocked` property in classes created with Stub by @EVODelavega See #1785 *2015-04-03*
+* [WebDriver] `submitForm` allows array parameter values by @zbateson *2015-04-03*
+* [SOAP] Added `framework_collect_buffer` option to disable buffering output by @Noles *2015-04-03*
+* [Laravel4] added  to run artisan commands by @bgetsug *2015-04-03*
+* [AMQP] add a routing key to a push to exchange by @jistok *2015-04-03*
+* Interactive console updated to work with namespaces by @jistok *2015-04-03*
+* [PhpBrowser] added deleteHeader method by @zbateson *2015-04-03*
+* Disabling loading of bootstrap files by setting `bootstrap: false` in globall settings or inside suite config. Fixes #1813 *2015-04-03*
+
+
 #### 2.0.11
 
 * Updated to PHPUnit 4.5 *2015-02-23*

@@ -80,8 +80,9 @@ class Console extends Command
         $this->suite = $suiteManager->getSuite();
 
         $scenario = new Scenario($this->test);
-        $actor = $settings['class_name'];
-        $I = new $actor($scenario);
+        if (isset($config["namespace"])) $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
+        $actor      = $settings['class_name'];
+        $I        = new $actor($scenario);
 
         $this->listenToSignals();
 

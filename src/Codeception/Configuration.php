@@ -84,7 +84,7 @@ class Configuration
         'settings'   => [
             'colors'     => false,
             'log'        => false, // deprecated
-            'bootstrap'  => '_bootstrap.php',
+            'bootstrap'  => false,
             'strict_xml' => false
         ],
         'coverage'   => []

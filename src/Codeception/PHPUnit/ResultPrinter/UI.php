@@ -16,7 +16,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null)
     {
-        parent::__construct($out, $options['verbosity'] > 1, $options['colors']);
+        parent::__construct($out, $options['verbosity'] > 1, $options['colors'] ? 'always' : 'never');
         $this->dispatcher = $dispatcher;
     }
 

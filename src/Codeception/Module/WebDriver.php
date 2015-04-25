@@ -658,28 +658,39 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function seeInField($field, $value)
     {
-        $this->assert($this->proceedSeeInField($field, $value));
+        $els = $this->findFields($field);
+        $this->assert($this->proceedSeeInField($els, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $this->assertNot($this->proceedSeeInField($field, $value));
-    }
-
-    protected function proceedSeeInField($field, $value)
-    {
         $els = $this->findFields($field);
-        if (reset($els)->getTagName() === 'select') {
-            $select = new \WebDriverSelect(reset($els));
-            $els = $select->getAllSelectedOptions();
+        $this->assertNot($this->proceedSeeInField($els, $value));
+    }
+    
+    public function seeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, false);
+    }
+    
+    public function dontSeeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, true);
+    }
+    
+    protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
+    {
+        $form = $this->match($this->webDriver, $formSelector);
+        if (empty($form)) {
+            throw new ElementNotFound($formSelector, "Form via CSS or XPath");
         }
-
+        
         $currentValues = [];
         if (is_bool($value)) {
             $currentValues = [false];
         }
 
-        foreach ($els as $el) {
+        foreach ($elements as $el) {
             if ($el->getTagName() === 'textarea') {
                 $currentValues[] = $el->getText();
             } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
@@ -1195,6 +1206,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->debug($this->_getCurrentUri());
     }
 
+    protected function getSubmissionFormFieldName($name)
+    {
+        if (substr($name, -2) === '[]') {
+            return substr($name, 0, -2);
+        }
+        return $name;
+    }
+
     /**
      * Submits the given form on the page, optionally with the given form values.
      * Give the form fields values as an array. Note that hidden fields can't be accessed.
@@ -1251,40 +1270,56 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param $params
      * @param $button
      */
-    public function submitForm($selector, $params, $button = null)
+    public function submitForm($selector, array $params, $button = null)
     {
         $form = $this->match($this->webDriver, $selector);
         if (empty($form)) {
             throw new ElementNotFound($selector, "Form via CSS or XPath");
         }
         $form = reset($form);
-        /** @var $form \WebDriverElement  * */
-        foreach ($params as $param => $value) {
-            $els = $form->findElements(\WebDriverBy::name($param));
-            if (empty($els)) {
-                throw new ElementNotFound($param);
+        
+        $defaults = [];
+        $fields = $form->findElements(\WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]'));
+        foreach ($fields as $field) {
+            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
+            if (!isset($params[$fieldName])) {
+                continue;
             }
-            $el = reset($els);
-            if ($el->getTagName() == 'textarea') {
-                $this->fillField($el, $value);
-            }
-            if ($el->getTagName() == 'select') {
-                $this->selectOption($el, $value);
-            }
-            if ($el->getTagName() == 'input') {
-                $type = $el->getAttribute('type');
-                if ($type == 'text' or $type == 'password') {
-                    $this->fillField($el, $value);
-                }
-                if ($type == 'radio' or $type == 'checkbox') {
-                    foreach ($els as $radio) {
-                        if ($radio->getAttribute('value') == $value) {
-                            $this->checkOption($radio);
+            $value = $params[$fieldName];
+            if (is_array($value) && $field->getTagName() !== 'select') {
+                if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                    $found = false;
+                    foreach ($value as $index => $val) {
+                        if (!is_bool($val) && $val === $field->getAttribute('value')) {
+                            array_splice($params[$fieldName], $index, 1);
+                            $value = $val;
+                            $found = true;
+                            break;
                         }
                     }
+                    if (!$found && !empty($value) && is_bool(reset($value))) {
+                        $value = array_pop($params[$fieldName]);
+                    }
+                } else {
+                    $value = array_pop($params[$fieldName]);
                 }
             }
+            
+            if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                if ($value === true || $value === $field->getAttribute('value')) {
+                    $this->checkOption($field);
+                } else {
+                    $this->uncheckOption($field);
+                }
+            } elseif ($field->getAttribute('type') === 'button' || $field->getAttribute('type') === 'submit') {
+                continue;
+            } elseif ($field->getTagName() === 'select') {
+                $this->selectOption($field, $value);
+            } else {
+                $this->fillField($field, $value);
+            }
         }
+        
         $this->debugSection(
             'Uri',
             $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri()
@@ -1415,7 +1450,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param int $timeout seconds
      * @param null $selector
      * @throws \Exception
-     * @internal param string $element
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {

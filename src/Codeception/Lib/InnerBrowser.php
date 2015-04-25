@@ -16,10 +16,12 @@ use Codeception\TestCase;
 use Codeception\Util\Locator;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
+use DOMElement;
 
 class InnerBrowser extends Module implements Web, PageSourceSaver
 {
@@ -124,8 +126,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $buttonText = str_replace('"', "'", $link);
         $button = $this->crawler->selectButton($buttonText);
         if (count($button)) {
-            $this->submitFormWithButton($button);
-            $this->debugResponse();
+            $this->proceedSubmitForm(
+                $button->parents()->filter('form')->first(),
+                [$button->attr('name') => $button->attr('value')]
+            );
             return;
         }
 
@@ -135,7 +139,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function clickByLocator($link)
     {
         $nodes = $this->match($link);
-
         if (!$nodes->count()) {
             throw new ElementNotFound($link, 'Link or Button by name or CSS or XPath');
         }
@@ -143,40 +146,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         foreach ($nodes as $node) {
             $tag = $node->nodeName;
             $type = $node->getAttribute('type');
-            if ($tag == 'a') {
+            if ($tag === 'a') {
                 $this->crawler = $this->getRunningClient()->click($nodes->first()->link());
                 $this->forms = [];
                 $this->debugResponse();
-                return;
-            } elseif (
-                ($tag == 'input' && in_array($type, ['submit', 'image'])) ||
-                ($tag == 'button' && $type == 'submit')
-            ) {
-                $this->submitFormWithButton($nodes->first());
-                $this->debugResponse();
-                return;
+                break;
+            } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
+                $this->proceedSubmitForm(
+                    $nodes->parents()->filter('form')->first(),
+                    [$nodes->first()->attr('name') => $nodes->first()->attr('value')]
+                );
+                break;
             }
         }
-
-    }
-
-    protected function submitFormWithButton($button)
-    {
-        $form = $this->getFormFor($button);
-
-        // Only now do we know which submit button was pressed.
-        // Add it to the form object.
-        $buttonNode = $button->getNode(0);
-        if ($buttonNode->getAttribute("name")) {
-            $f = new InputFormField($buttonNode);
-            $form->set($f);
-        }
-
-        $this->debugSection('Uri', $form->getUri());
-        $this->debugSection($form->getMethod(), $form->getValues());
-
-        $this->crawler = $this->getRunningClient()->request($form->getMethod(), $form->getUri(), $form->getPhpValues(), $form->getPhpFiles());
-        $this->forms = [];
     }
 
     public function see($text, $selector = null)
@@ -298,47 +280,79 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     public function seeInField($field, $value)
     {
-        $this->assert($this->proceedSeeInField($field, $value));
+        $crawler = $this->getFieldsByLabelOrCss($field);
+        $this->assert($this->proceedSeeInField($crawler, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $this->assertNot($this->proceedSeeInField($field, $value));
+        $crawler = $this->getFieldsByLabelOrCss($field);
+        $this->assertNot($this->proceedSeeInField($crawler, $value));
+    }
+    
+    public function seeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, false);
+    }
+    
+    public function dontSeeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, true);
+    }
+    
+    protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
+    {
+        $form = $this->match($formSelector)->first();
+        if ($form->count() === 0) {
+            throw new ElementNotFound($formSelector, 'Form');
+        }
+        foreach ($params as $name => $values) {
+            $field = $form->filterXPath(sprintf('.//*[@name=%s]', Crawler::xpathLiteral($name)));
+            if ($field->count() === 0) {
+                throw new ElementNotFound(
+                    sprintf('//*[@name=%s]', Crawler::xpathLiteral($name)),
+                    'Form'
+                );
+            }
+            if (!is_array($values)) {
+                $values = [$values];
+            }
+            foreach ($values as $value) {
+                $ret = $this->proceedSeeInField($field, $value);
+                if ($assertNot) {
+                    $this->assertNot($ret);
+                } else {
+                    $this->assert($ret);
+                }
+            }
+        }
     }
 
-    protected function proceedSeeInField($field, $value)
+    protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $fields = $this->getFieldsByLabelOrCss($field);
-
-        $currentValues = [];
-        if ($fields->filter('textarea')->count() !== 0) {
-            $currentValues = $fields->filter('textarea')->extract(['_text']);
-        } elseif ($fields->filter('select')->count() !== 0) {
-            $currentValues = $fields->filter('select option:selected')->extract(['value']);
-        } elseif ($fields->filter('input[type=radio],input[type=checkbox]')->count() !== 0) {
-            if (is_bool($value)) {
-                $currentValues = [$fields->filter('input:checked')->count() > 0];
-            } else {
-                $currentValues = $fields->filter('input:checked')->extract(['value']);
-            }
-        } else {
-            $currentValues = $fields->extract(['value']);
+        $form = $this->getFormFor($fields);
+        $currentValues = $this->getFormValuesFor($form);
+        $strField = $this->getSubmissionFormFieldName($fields->attr('name'));
+        
+        $testValues = (isset($currentValues[$strField])) ? $currentValues[$strField] : '';
+        if (!is_array($testValues)) {
+            $testValues = [$testValues];
         }
-
-        $strField = $field;
-        if (is_array($field)) {
-            $ident = reset($field);
-            $strField = key($field) . '=>' . $ident;
-        }
-
         return [
             'Contains',
             $value,
-            $currentValues,
-            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+            $testValues,
+            "Failed testing for '$value' in $strField's value: " . var_export($currentValues)
         ];
     }
 
+    /**
+     * Strips out one pair of trailing square brackets from a field's
+     * name.
+     *
+     * @param string $name the field name
+     * @return string the name after stripping trailing square brackets
+     */
     protected function getSubmissionFormFieldName($name)
     {
         if (substr($name, -2) === '[]') {
@@ -347,136 +361,249 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         return $name;
     }
 
-    public function submitForm($selector, $params, $button = null)
+    /**
+     * Replaces boolean values in $params with the corresponding field's
+     * value for checkbox form fields.
+     *
+     * The function loops over all input checkbox fields, checking if a
+     * corresponding key is set in $params.  If it is, and the value is
+     * boolean or an array containing booleans, the value(s) are
+     * replaced in the array with the real value of the checkbox, and
+     * the array is returned.
+     *
+     * @param Crawler $form the form to find checkbox elements
+     * @param array $params the parameters to be submitted
+     * @return array the $params array after replacing bool values
+     */
+    protected function setCheckboxBoolValues(Crawler $form, array $params)
     {
-        $form = $this->match($selector)->first();
-
-        if (!count($form)) {
-            throw new ElementNotFound($selector, 'Form');
-        }
-
-        $defaults = [];
-        /** @var  \Symfony\Component\DomCrawler\Crawler|\DOMElement[] $fields */
-        $fields = $form->filter('input:enabled,textarea:enabled,select:enabled,button:enabled,input[type=hidden]');
-        foreach ($fields as $field) {
-            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
-            if (($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') && !$field->hasAttribute('checked')) {
+        $checkboxes = $form->filter('input[type=checkbox]');
+        $chFoundByName = [];
+        foreach ($checkboxes as $box) {
+            $fieldName = $this->getSubmissionFormFieldName($box->getAttribute('name'));
+            $pos = (!isset($chFoundByName[$fieldName])) ? 0 : $chFoundByName[$fieldName];
+            $skip = (!isset($params[$fieldName]))
+                || (!is_array($params[$fieldName]) && !is_bool($params[$fieldName]))
+                || ($pos >= count($params[$fieldName])
+                || (is_array($params[$fieldName]) && !is_bool($params[$fieldName][$pos])));
+            if ($skip) {
                 continue;
-            } elseif ($field->getAttribute('type') === 'button') {
-                continue;
-            } elseif (($field->getAttribute('type') === 'submit' || $field->tagName === 'button') && $field->getAttribute('name') !== $button) {
-                continue;
-            } elseif ($field->tagName === 'select') {
-                $values = [];
-                $select = new Crawler($field);
-                $options = $select->filter('option:enabled:selected');
-                foreach ($options as $option) {
-                    $values[] = $option->getAttribute('value');
-                    if (!$field->hasAttribute('multiple')) {
-                        break;
-                    }
-                }
-                if (count($values) > 1) {
-                    $defaults[$fieldName] = $values;
-                } elseif (count($values) === 1) {
-                    $defaults[$fieldName] = reset($values);
-                }
-                continue;
-            } elseif (!empty($field->nodeValue)) {
-                $defaults[$fieldName] = $field->nodeValue;
             }
-            $defaults[$fieldName] = $field->getAttribute('value');
+            $values = $params[$fieldName];
+            if ($values === true) {
+                $params[$fieldName] = $box->getAttribute('value');
+                $chFoundByName[$fieldName] = $pos + 1;
+            } elseif ($values[$pos] === true) {
+                $params[$fieldName][$pos] = $box->getAttribute('value');
+                $chFoundByName[$fieldName] = $pos + 1;
+            } elseif (is_array($values)) {
+                array_splice($params[$fieldName], $pos, 1);
+            } else {
+                unset($params[$fieldName]);
+            }
+        }
+        return $params;
+    }
+
+    /**
+     * Submits the form currently selected in the passed Crawler, after
+     * setting any values passed in $params and setting the value of the
+     * passed button name.
+     *
+     * @param Crawler $frmCrawl the form to submit
+     * @param array $params additional parameter values to set on the
+     *        form
+     * @param string $button the name of a submit button in the form
+     */
+    protected function proceedSubmitForm(Crawler $frmCrawl, array $params, $button = null)
+    {
+        $form = $this->getFormFor($frmCrawl);
+        $defaults = $this->getFormValuesFor($form);
+        $merged = array_merge($defaults, $params);
+        $requestParams = $this->setCheckboxBoolValues($frmCrawl, $merged);
+
+        if (!empty($button)) {
+            $btnCrawl = $frmCrawl->filterXPath(sprintf('//*[not(@disabled) and @type="submit" and @name=%s]', Crawler::xpathLiteral($button)));
+            if (count($btnCrawl)) {
+                $requestParams[$button] = $btnCrawl->attr('value');
+            }
         }
 
-        $requestParams = array_merge($defaults, $params);
-        
-        $method = $form->attr('method') ? $form->attr('method') : 'GET';
         $query = '';
-        if (strtoupper($method) == 'GET') {
+        if (strcasecmp($form->getMethod(), 'GET') === 0) {
             $query = '?' . http_build_query($requestParams);
         }
-        $this->debugSection('Uri', $this->getFormUrl($form));
-        $this->debugSection('Method', $method);
+        $this->debugSection('Uri', $this->getFormUrl($frmCrawl));
+        $this->debugSection('Method', $form->getMethod());
         $this->debugSection('Parameters', $requestParams);
 
-        $this->crawler = $this->client->request($method, $this->getFormUrl($form) . $query, $requestParams);
+        $this->crawler = $this->client->request(
+            $form->getMethod(),
+            $this->getFormUrl($frmCrawl) . $query,
+            $requestParams,
+            $form->getPhpFiles()
+        );
         $this->debugResponse();
     }
 
-    /**
-     * @param \Symfony\Component\DomCrawler\Crawler $form
-     *
-     * @return string
-     */
-    protected function getFormUrl($form)
+    public function submitForm($selector, array $params, $button = null)
     {
-        $action = $form->attr('action');
-        $currentUrl = $this->getRunningClient()->getHistory()->current()->getUri();
-
-        if (empty($action) || $action === '#') {
-            return $currentUrl;
+        $form = $this->match($selector)->first();
+        if (!count($form)) {
+            throw new ElementNotFound($selector, 'Form');
         }
-
-        $build = parse_url($currentUrl);
-        if ($build === false) {
-            throw new TestRuntimeException("URL '$currentUrl' is malformed");
-        }
-
-        $uriParts = parse_url($action);
-        if ($uriParts === false) {
-            throw new TestRuntimeException("URI '$action' is malformed");
-        }
-
-        foreach ($uriParts as $part => $value) {
-            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
-                // if it ends with a slash, relative paths are below it
-                if (preg_match('~/$~', $build[$part])) {
-                    $build[$part] = $build[$part] . $value;
-                    continue;
-                }
-                // remove double slashes
-                $dir = rtrim(dirname($build[$part]), '\\/');
-
-                $build[$part] = $dir . '/' . $value;;
-                continue;
-            }
-            $build[$part] = $value;
-        }
-        return \GuzzleHttp\Url::buildUrl($build);
+        $this->proceedSubmitForm($form, $params, $button);
     }
 
     /**
-     * @param \Symfony\Component\DomCrawler\Crawler $node
+     * Merges the passed $add argument onto $base.
      *
-     * @return \Symfony\Component\DomCrawler\Form|\Symfony\Component\DomCrawler\Field\ChoiceFormField[]|\Symfony\Component\DomCrawler\Field\FileFormField[]
+     * If a relative URL is passed as the 'path' part of the $add url
+     * array, the relative URL is mapped using the base 'path' part as
+     * its base.
+     *
+     * @param array $base the base URL
+     * @param array $add the URL to merge
+     * @return array the merged array
      */
-    protected function getFormFor($node)
+    private function mergeUrls(array $base, array $add)
     {
-        $form = $node->parents()->filter('form')->first();
+        if (!empty($add['path']) && strpos($add['path'], '/') !== 0 && !empty($base['path'])) {
+            // if it ends with a slash, relative paths are below it
+            if (preg_match('~/$~', $base['path'])) {
+                $add['path'] = $base['path'] . $add['path'];
+            } else {
+                // remove double slashes
+                $dir = rtrim(dirname($base['path']), '\\/');
+                $add['path'] = $dir . '/' . $add['path'];
+            }
+        }
+        return array_merge($base, $add);
+    }
+
+    /**
+     * Returns an absolute URL for the passed URI with the current URL
+     * as the base path.
+     *
+     * @param string $uri the absolute or relative URI
+     * @return string the absolute URL
+     * @throws Codeception\Exception\TestRuntime if either the current
+     *         URL or the passed URI can't be parsed
+     */
+    protected function getAbsoluteUrlFor($uri)
+    {
+        $currentUrl = $this->getRunningClient()->getHistory()->current()->getUri();
+        if (empty($uri) || $uri === '#') {
+            return $currentUrl;
+        }
+        $build = parse_url($currentUrl);
+        $uriParts = parse_url($uri);
+        if ($build === false) {
+            throw new TestRuntimeException("URL '$currentUrl' is malformed");
+        } elseif ($uriParts === false) {
+            throw new TestRuntimeException("URI '$uri' is malformed");
+        }
+
+        $abs = $this->mergeUrls($build, $uriParts);
+        return \GuzzleHttp\Url::buildUrl($abs);
+    }
+
+    /**
+     * Returns the form action's absolute URL.
+     * 
+     * @param \Symfony\Component\DomCrawler\Crawler $form
+     * @return string
+     * @throws Codeception\Exception\TestRuntime if either the current
+     *         URL or the URI of the form's action can't be parsed
+     */
+    protected function getFormUrl(Crawler $form)
+    {
+        $action = $form->attr('action');
+        return $this->getAbsoluteUrlFor($action);
+    }
+
+    /**
+     * Returns a crawler Form object for the form pointed to by the
+     * passed Crawler.
+     *
+     * The returned form is an independent Crawler created to take care
+     * of the following issues currently experienced by Crawler's form
+     * object:
+     *  - input fields disabled at a higher level (e.g. by a surrounding
+     *    fieldset) still return values
+     *  - Codeception expects an empty value to match an unselected
+     *    select box.
+     *
+     * The function clones the crawler's node and creates a new crawler
+     * because it destroys or adds to the DOM for the form to achieve
+     * the desired functionality.  Other functions simply querying the
+     * DOM wouldn't expect them.
+     *
+     * @param Crawler $form the form
+     * @param string $action the form's absolute URL action
+     */
+    private function getFormFromCrawler(Crawler $form, $action)
+    {
+        $cloned = new Crawler(clone($form->getNode(0)), $action);
+        $shouldDisable = $cloned->filter('input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled])');
+        foreach ($shouldDisable as $field) {
+            $field->parentNode->removeChild($field);
+        }
+        $selectNonMulti = $cloned->filterXPath('//select[not(@multiple) and not(option[@value=""])]');
+        $opt = new DOMElement('option');
+        foreach ($selectNonMulti as $field) {
+            $node = $field->insertBefore($opt, $field->firstChild);
+            $node->setAttribute('value', '');
+        }
+        return $cloned->form();
+    }
+
+    /**
+     * Returns the DomCrawler\Form object for the form pointed to by
+     * $node or its closes form parent.
+     * 
+     * @param \Symfony\Component\DomCrawler\Crawler $node
+     * @return \Symfony\Component\DomCrawler\Form
+     */
+    protected function getFormFor(Crawler $node)
+    {
+        if (strcasecmp($node->first()->getNode(0)->tagName, 'form') === 0) {
+            $form = $node->first();
+        } else {
+            $form = $node->parents()->filter('form')->first();
+        }
         if (!$form) {
-            $this->fail('The selected node does not have a form ancestor.');
+            $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
         $action = $this->getFormUrl($form);
-
-        if (isset($this->forms[$action])) {
-            return $this->forms[$action];
+        if (!isset($this->forms[$action])) {
+            $this->forms[$action] = $this->getFormFromCrawler($form, $action);
         }
-
-        $formSubmits = $form->filter('*[type=submit]');
-
-        // Inject a submit button if there isn't one.
-        if ($formSubmits->count() == 0) {
-            $autoSubmit = new \DOMElement('input');
-            $form->rewind();
-            $autoSubmit = $form->current()->appendChild($autoSubmit);
-            $autoSubmit->setAttribute('type', 'submit'); // for forms with no submits
-            $autoSubmit->setAttribute('name', 'codeception_added_auto_submit');
-        }
-
-        // Retrieve the store the Form object.
-        $this->forms[$action] = $form->form();
-
         return $this->forms[$action];
+    }
+    
+    /**
+     * Returns an array of name => value pairs for the passed form.
+     *
+     * The function calls getPhpValues on the passed form object, then
+     * resets numeric array indexes for array field names without array
+     * keys specified (i.e. 'fieldname[]' but not 'fieldname[keyname]')
+     * as expected by setCheckboxBoolValues.
+     *
+     * @param \Symfony\Component\DomCrawler\Form the form
+     * @return array an array of name => value pairs
+     */
+    protected function getFormValuesFor(Form $form)
+    {
+        $values = $form->getPhpValues();
+        $fields = $form->all();
+        foreach ($fields as $field) {
+            $name = $this->getSubmissionFormFieldName($field->getName());
+            if (!empty($values[$name]) && substr($field->getName(), -2) === '[]') {
+                $values[$name] = array_values($values[$name]);
+            }
+        }
+        return $values;
     }
 
     public function fillField($field, $value)
@@ -543,10 +670,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     {
         $field = $this->getFieldByLabelOrCss($select);
         $form = $this->getFormFor($field);
-        $fieldName = $field->attr('name');
-        if ($field->attr('multiple')) {
-            $fieldName = str_replace('[]', '', $fieldName);
-        }
+        $fieldName = $this->getSubmissionFormFieldName($field->attr('name'));
 
         if (is_array($option)) {
             $options = [];
@@ -588,7 +712,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         // If the name is an array than we compare objects to find right checkbox
         $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
         $formField->untick();
-
     }
 
     public function attachFile($field, $filename)
@@ -1008,7 +1131,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             return $form[$name];
         }
         $name = substr($name, 0, -2);
-        /** @var $item \Symfony\Component\DomCrawler\Field\FileFormField */
+        /** @var $item \Symfony\Component\DomCrawler\Field\FormField */
         foreach ($form[$name] as $item) {
             if ($item == $dynamicField) {
                 return $item;

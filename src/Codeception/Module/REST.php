@@ -432,6 +432,8 @@ EOF;
 
     protected function execute($method = 'GET', $url, $parameters = [], $files = [])
     {
+        $this->debugSection("Request headers", $this->headers);
+
         foreach ($this->headers as $header => $val) {
             $header = str_replace('-', '_', strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
@@ -643,7 +645,7 @@ EOF;
      * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
      *
-     * This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+     * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
      *
      * Example:
      *
@@ -719,7 +721,7 @@ EOF;
      * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * This assertion allows you to check the structure of response json.
      *
-     * This method **require [`flow/jsonpath`](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
+     * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
      *
      * ```json
      *   { "store": {

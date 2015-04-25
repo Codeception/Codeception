@@ -54,7 +54,12 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function _before(\Codeception\TestCase $test)
     {
         $this->client = new \Codeception\Lib\Connector\Yii2();
-        $this->client->configFile = \Codeception\Configuration::projectDir() . $this->config['configFile'];
+        $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
+        $mainConfig = \Codeception\Configuration::config();
+        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
+            $this->client->setServerParameter('HTTP_HOST', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
+            $this->client->setServerParameter('HTTPS', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https');
+        }
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
@@ -104,7 +109,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     {
         /** @var $record \yii\db\ActiveRecord  * */
         $record = $this->getModelRecord($model);
-        $record->setAttributes($attributes);
+        $record->setAttributes($attributes, false);
         $res = $record->save(false);
         if (!$res) {
             $this->fail("Record $model was not saved");
@@ -190,22 +195,19 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         return $record;
     }
 
-
     /**
-     *  Converting $page to valid Yii2 url
-     *  Allows input like:
-     *  $I->amOnPage(['site/view','page'=>'about']);
-     *  $I->amOnPage('index-test.php?site/index');
-     *  $I->amOnPage('http://localhost/index-test.php?site/index');
+     * Converting $page to valid Yii2 url
+     * Allows input like:
+     * $I->amOnPage(['site/view','page'=>'about']);
+     * $I->amOnPage('index-test.php?site/index');
+     * $I->amOnPage('http://localhost/index-test.php?site/index');
+     * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
      */
     public function amOnPage($page)
     {
-
         if (is_array($page)) {
             $page = \Yii::$app->getUrlManager()->createUrl($page);
         }
-
         parent::amOnPage($page);
     }
-
 }

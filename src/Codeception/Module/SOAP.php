@@ -54,7 +54,7 @@ Framework modules can be used as well for functional testing of SOAP API.
 EOF;
 
 
-    protected $config = ['schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/'];
+    protected $config = ['schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/', 'framework_collect_buffer' => true];
     protected $requiredFields = ['endpoint'];
     /**
      * @var \Symfony\Component\BrowserKit\Client
@@ -207,7 +207,7 @@ EOF;
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
-        if ($this->isFunctional) {
+        if ($this->isFunctional && $this->config['framework_collect_buffer']) {
             $response = $this->processInternalRequest($action, $req);
         } else {
             $response = $this->processExternalRequest($action, $req);

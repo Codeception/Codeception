@@ -122,12 +122,31 @@ Checks that variable is not NULL
  * `param string` $message
 
 
+### assertNotSame
+ 
+Checks that two variables are not same
+
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
+
+
 ### assertNull
  
 Checks that variable is NULL
 
  * `param`        $actual
  * `param string` $message
+
+
+### assertSame
+ 
+Checks that two variables are same
+
+ * `param`        $expected
+ * `param`        $actual
+ * `param string` $message
+
 
 
 ### assertTrue

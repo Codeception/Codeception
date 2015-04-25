@@ -54,7 +54,6 @@ class Yii2 extends Client
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
-            $_POST[Yii::$app->getRequest()->methodParam] = $request->getMethod();
         }
 
         $uri = $request->getUri();
@@ -83,8 +82,10 @@ class Yii2 extends Client
 
         ob_start();
 
+        $yiiRequest = $app->getRequest();
+        $yiiRequest->setRawBody($request->getContent());
         try {
-            $app->handleRequest($app->getRequest())->send();
+            $app->handleRequest($yiiRequest)->send();
         } catch (\Exception $e) {
             if ($e instanceof HttpException) {
                 // we shouldn't discard existing output as PHPUnit preform output level verification since PHPUnit 4.2.

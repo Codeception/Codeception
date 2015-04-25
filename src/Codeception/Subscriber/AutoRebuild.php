@@ -22,10 +22,10 @@ class AutoRebuild implements EventSubscriberInterface
         $modules = $e->getSuite()->getModules();
 
         $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR . $settings['class_name'] . 'Actions.php';
-
-        // load actor class to see hash
+        
+        // load guy class to see hash
         $handle = @fopen($actorFile, "r");
-        if ($handle) {
+        if ($handle and is_writable($actorFile)) {
             $line = @fgets($handle);
             if (preg_match('~\[STAMP\] ([a-f0-9]*)~', $line, $matches)) {
                 $hash = $matches[1];

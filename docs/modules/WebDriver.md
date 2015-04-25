@@ -361,6 +361,49 @@ $I->dontSeeInField(['name' => 'search'], 'Search');
  * `param` $value
 
 
+### dontSeeInFormFields
+ 
+Checks if the array of form parameters (name => value) are not set on the form matched with
+the passed selector.
+
+``` php
+<?php
+$I->dontSeeInFormFields('form[name=myform]', [
+     'input1' => 'non-existent value',
+     'input2' => 'other non-existent value',
+]);
+?>
+```
+
+To check that an element hasn't been assigned any one of many values, an array can be passed
+as the value:
+
+``` php
+<?php
+$I->dontSeeInFormFields('.form-class', [
+     'fieldName' => [
+         'This value shouldn\'t be set',
+         'And this value shouldn\'t be set',
+     ],
+]);
+?>
+```
+
+Additionally, checkbox values can be checked with a boolean.
+
+``` php
+<?php
+$I->dontSeeInFormFields('#form-id', [
+     'checkbox1' => true,        // fails if checked
+     'checkbox2' => false,       // fails if unchecked
+]);
+?>
+```
+
+ * `param` $formSelector
+ * `param` $params
+
+
 ### dontSeeInPageSource
  
 Checks that the page source doesn't contain the given string.
@@ -819,6 +862,69 @@ $I->seeInField(['name' => 'search'], 'Search');
  * `param` $value
 
 
+### seeInFormFields
+ 
+Checks if the array of form parameters (name => value) are set on the form matched with the
+passed selector.
+
+``` php
+<?php
+$I->seeInFormFields('form[name=myform]', [
+     'input1' => 'value',
+     'input2' => 'other value',
+]);
+?>
+```
+
+For multi-select elements, or to check values of multiple elements with the same name, an
+array may be passed:
+
+``` php
+<?php
+$I->seeInFormFields('.form-class', [
+     'multiselect' => [
+         'value1',
+         'value2',
+     ],
+     'checkbox[]' => [
+         'a checked value',
+         'another checked value',
+     ],
+]);
+?>
+```
+
+Additionally, checkbox values can be checked with a boolean.
+
+``` php
+<?php
+$I->seeInFormFields('#form-id', [
+     'checkbox1' => true,        // passes if checked
+     'checkbox2' => false,       // passes if unchecked
+]);
+?>
+```
+
+Pair this with submitForm for quick testing magic.
+
+``` php
+<?php
+$form = [
+     'field1' => 'value',
+     'field2' => 'another value',
+     'checkbox1' => true,
+     // ...
+];
+$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+// $I->amOnPage('/path/to/form-page') may be needed
+$I->seeInFormFields('//form[@id=my-form]', $form);
+?>
+```
+
+ * `param` $formSelector
+ * `param` $params
+
+
 ### seeInPageSource
  
 Checks that the page source contains the given string.
@@ -1192,6 +1298,5 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param int` $timeout seconds
  * `param null` $selector
  \Exception
- * `internal param string` $element
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>
