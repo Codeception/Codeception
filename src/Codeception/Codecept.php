@@ -47,12 +47,12 @@ class Codecept
         'coverage-text' => false,
         'groups'        => null,
         'excludeGroups' => null,
-        'filter' => null,
-        'env' => null,
-        'fail-fast' => false,
-        'verbosity' => 1,
-        'interactive' => true,
-        'no-rebuild' => false
+        'filter'        => null,
+        'env'           => null,
+        'fail-fast'     => false,
+        'verbosity'     => 1,
+        'interactive'   => true,
+        'no-rebuild'    => false
     ];
 
     /**
