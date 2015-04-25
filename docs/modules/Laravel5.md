@@ -374,7 +374,7 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $model
+ * `param` $tableName
  * `param array` $attributes
 
 
@@ -454,7 +454,7 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 ?>
 ```
 
- * `param` $model
+ * `param` $tableName
  * `param array` $attributes
 
 
@@ -516,7 +516,7 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 ?>
 ```
 
- * `param` $model
+ * `param` $tableName
  * `param array` $attributes
 
 
@@ -891,7 +891,7 @@ Checks that record exists in database.
 $I->seeRecord('users', array('name' => 'davert'));
 ```
 
- * `param` $model
+ * `param` $tableName
  * `param array` $attributes
 
 
