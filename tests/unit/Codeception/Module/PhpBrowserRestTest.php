@@ -145,14 +145,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('john', $request->getParameters());
     }
 
-    public function testUrlIsFull()
-    {
-        $this->module->sendGET('/api/v1/users');
-        /** @var $request \Symfony\Component\BrowserKit\Request  **/
-        $request = $this->module->client->getRequest();
-        $this->assertEquals('http://localhost:8010/api/v1/users',$request->getUri());
-    }
-
     /**
      * @Issue https://github.com/Codeception/Codeception/issues/1650
      */
