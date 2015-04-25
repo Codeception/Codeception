@@ -5,6 +5,7 @@ use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocator;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
+use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
@@ -228,9 +229,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function _getCurrentUri()
     {
         $url = $this->webDriver->getCurrentURL();
+
+        if ($url == 'about:blank') {
+            throw new ModuleException($this, "Current url is blank, no page was opened");
+        }
         $parts = parse_url($url);
         if (!$parts) {
-            $this->fail("URL couldn't be parsed");
+            throw new ModuleException($this, "URL $url couldn't be parsed");
         }
         $uri = "";
         if (isset($parts['path'])) {
@@ -572,7 +577,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
         if (!$url) {
-            return $this->assertNodesContain($text, $nodes, 'a');
+            $this->assertNodesContain($text, $nodes, 'a');
+            return;
         }
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
@@ -1662,6 +1668,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     /**
      * @param $page
      * @param $selector
+     * @param bool $throwMalformed
      * @return array
      */
     protected function match($page, $selector, $throwMalformed = true)
