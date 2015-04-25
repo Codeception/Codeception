@@ -53,7 +53,7 @@ class Codecept
         'verbosity' => 1,
         'interactive' => true,
         'no-rebuild' => false
-    );
+    ];
 
     /**
      * @var array

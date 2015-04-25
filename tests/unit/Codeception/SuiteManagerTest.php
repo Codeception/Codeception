@@ -18,7 +18,8 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     protected $runner;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
         $settings = \Codeception\Configuration::$defaultSuiteSettings;
         $settings['class_name'] = 'CodeGuy';
@@ -47,8 +48,6 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFewTests() {
         $file = \Codeception\Configuration::dataDir().'SimpleCest.php';
-
-
 
         $this->suiteman->loadTests($file);
         $this->assertEquals(2, $this->suiteman->getSuite()->count());
@@ -80,8 +79,6 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $this->suiteman->getSuite()->count());
     }
 
-
-}
     public function testGroupEventsAreFired()
     {
         $events = [];
