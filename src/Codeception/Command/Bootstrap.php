@@ -163,13 +163,11 @@ class Bootstrap extends Command
         $suiteConfig = [
             'class_name' => $actor . $this->actorSuffix,
             'modules'    => [
-                'enabled' => ['PhpBrowser', "\\{$this->namespace}Helper\\$actor"],
-                'config'  => [
-                    'PhpBrowser' => [
-                        'url' => 'http://localhost/myapp/'
-                    ],
+                'enabled' => [
+                    'PhpBrowser' =>
+                         ['url' => 'http://localhost/myapp/']
+                    , "\\{$this->namespace}Helper\\$actor"]
                 ]
-            ],
         ];
 
         $str = "# Codeception Test Suite Configuration\n\n";

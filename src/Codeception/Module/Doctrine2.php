@@ -48,19 +48,18 @@ class Doctrine2 extends \Codeception\Module implements DependsOnModule
 Provide connection_callback function to establish database connection and get Entity Manager:
 ```
 modules:
-    enabled: [Doctrine2]
-    config:
-        Doctrine2:
-            connection_callback: [My\ConnectionClass, getEntityManager]
+    enabled:
+        - Doctrine2:
+              connection_callback: [My\ConnectionClass, getEntityManager]
 ```
 
 Or set a dependent module, which can be either Symfony2 or ZF2 to get EM from service locator:
 
 ```
 modules:
-    enabled: [Doctrine2]
-    depends:
-        Doctrine2: Symfony2
+    enabled:
+        - Doctrine2:
+            depends: Symfony2
 ```
 EOF;
 

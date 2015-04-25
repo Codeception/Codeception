@@ -26,6 +26,12 @@ use Illuminate\Http\Request;
  * * Stability: **dev**
  * * Contact: janhenkgerritsen@gmail.com
  *
+ * ## Example
+ *
+ *     modules:
+ *         enabled:
+ *             - Laravel5
+ *
  * ## Config
  *
  * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.

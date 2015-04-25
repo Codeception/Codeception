@@ -50,12 +50,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
  *
  *     modules:
- *        enabled: [Symfony2]
- *        config:
- *           Symfony2:
- *              app_path: 'app/front'
- *              var_path: 'var'
- *              environment: 'local_test'
+ *        enabled:
+ *           - Symfony2:
+ *               app_path: 'app/front'
+ *               var_path: 'var'
+ *               environment: 'local_test'
  *
  *
  * ## Public Properties

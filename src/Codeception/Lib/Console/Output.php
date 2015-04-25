@@ -34,7 +34,8 @@ class Output extends ConsoleOutput
         $formatter->setStyle('ok', new OutputFormatterStyle('white', 'magenta'));
         $formatter->setStyle('error', new OutputFormatterStyle('white', 'red'));
         $formatter->setStyle('debug', new OutputFormatterStyle('cyan'));
-        $formatter->setStyle('info', new OutputFormatterStyle('yellow'));
+        $formatter->setStyle('comment', new OutputFormatterStyle('yellow'));
+        $formatter->setStyle('info', new OutputFormatterStyle('green'));
 
         $this->formatHelper = new FormatterHelper();
 

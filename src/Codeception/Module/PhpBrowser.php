@@ -41,9 +41,8 @@ use GuzzleHttp\Client;
  * ### Example (`acceptance.suite.yml`)
  *
  *     modules:
- *        enabled: [PhpBrowser]
- *        config:
- *           PhpBrowser:
+ *        enabled:
+ *           - PhpBrowser:
  *              url: 'http://localhost'
  *              auth: ['admin', '123345']
  *              curl:

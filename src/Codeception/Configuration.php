@@ -362,14 +362,15 @@ class Configuration
 
     /**
      * Return instances of enabled modules according suite config.
-     * Requires Guy class if it exists.
      *
      * @param array $settings suite settings
      * @return array|\Codeception\Module[]
      */
-    public static function modules(&$settings)
+    public static function modules($settings)
     {
-        return $settings['modules']['enabled'];
+        return array_map(function ($m, $key) {
+            return is_array($m) ? $key : $m;
+        }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']));
     }
 
     public static function isExtensionEnabled($extensionName)

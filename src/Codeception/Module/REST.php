@@ -37,12 +37,10 @@ use Codeception\Util\Soap as XmlUtils;
  * ### Example
  *
  *     modules:
- *        enabled: [PhpBrowser, REST]
- *        config:
- *           PhpBrowser:
- * url: http://serviceapp/
- *           REST:
- *              url: 'http://serviceapp/api/v1/'
+ *        enabled:
+ *            - REST:
+ *                depends: PhpBrowser
+ *                url: 'http://serviceapp/api/v1/'
  *
  * ## Public Properties
  *
@@ -60,14 +58,14 @@ class REST extends \Codeception\Module implements DependsOnModule, PartedModule
     ];
 
     protected $dependencyMessage = <<<EOF
-Example using PhpBrowser as backend for REST module.
+Example configuring PhpBrowser as backend for REST module.
 --
 modules:
-    enabled: [REST, ApiHelper]
-    depends:
-        REST: PhpBrowser
+    enabled: REST:
+        depends: PhpBrowser
+        url: http://localhost/api/
 --
-Framework modules can be used as well for functional testing of API.
+Framework modules can be used for testing of API as well.
 EOF;
 
     /**

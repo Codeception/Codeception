@@ -111,7 +111,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testCreateModuleWithoutRequiredFields()
     {
         $this->setExpectedException('\Codeception\Exception\ModuleConfigException');
-        $this->moduleContainer->create('Codeception\Lib\StubModule', ['secondField' => 'none']);
+        $this->moduleContainer->create('Codeception\Lib\StubModule');
     }
 
     /**
@@ -193,8 +193,10 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ['modules' => [
             'enabled' => ['Codeception\Lib\DependencyModule'],
-            'depends' => [
-                'Codeception\Lib\DependencyModule' => 'Codeception\Lib\ConflictedModule'
+            'config' => [
+                'Codeception\Lib\DependencyModule' => [
+                    'depends' => 'Codeception\Lib\ConflictedModule'
+                ]
             ]
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
@@ -234,6 +236,53 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $actions = $this->moduleContainer->getActions();
         $this->assertArrayHasKey('partTwo', $actions);
         $this->assertArrayNotHasKey('partOne', $actions);
+    }
+
+    public function testShortConfigParts()
+    {
+        $config = ['modules' => [
+            'enabled' => ['\Codeception\Lib\PartedModule' => [
+                'part' => 'one'
+            ]],
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('\Codeception\Lib\PartedModule');
+        $actions = $this->moduleContainer->getActions();
+        $this->assertArrayHasKey('partOne', $actions);
+        $this->assertArrayNotHasKey('partTwo', $actions);
+
+
+    }
+
+    public function testShortConfigFormat()
+    {
+        $config = ['modules' =>
+            ['enabled' => [
+                'Codeception\Lib\StubModule' => [
+                    'firstField' => 'firstValue',
+                    'secondField' => 'secondValue',
+                ]
+            ]
+        ]];
+
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $module = $this->moduleContainer->create('Codeception\Lib\StubModule');
+
+        $this->assertEquals('firstValue', $module->_getFirstField());
+        $this->assertEquals('secondValue', $module->_getSecondField());
+
+    }
+
+    public function testShortConfigDependencies()
+    {
+        $config = ['modules' => [
+            'enabled' => ['Codeception\Lib\DependencyModule' => [
+                'depends' => 'Codeception\Lib\ConflictedModule'
+            ]],
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Codeception\Lib\DependencyModule');
+        $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
     }
 
 }

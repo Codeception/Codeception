@@ -21,9 +21,8 @@ use Yii;
  * <pre>
  * class_name: TestGuy
  * modules:
- *     enabled: [Yii2, TestHelper]
- *     config:
- *         Yii2:
+ *     enabled:
+ *         - Yii2:
  *             configFile: '/path/to/config.php'
  * </pre>
  *

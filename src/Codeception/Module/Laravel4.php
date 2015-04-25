@@ -25,11 +25,17 @@ use Illuminate\Support\MessageBag;
  *
  * <https://github.com/Codeception/sample-l4-app>
  *
+ * ## Example
+ *
+ *     modules:
+ *         enabled:
+ *             - Laravel4
+ *
  * ## Status
  *
- * * Maintainer: **Davert**
- * * Stability: **stable**
- * * Contact: davert.codeception@mailican.com
+ * * Maintainer: **Jan-Henk Gerritsen**
+ * * Stability: **dev**
+ * * Contact: janhenkgerritsen@gmail.com
  *
  * ## Config
  *
