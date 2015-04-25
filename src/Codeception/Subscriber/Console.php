@@ -13,6 +13,7 @@ use Codeception\Lib\Suite;
 use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
+use SebastianBergmann\Comparator\ComparisonFailure;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -219,7 +220,6 @@ class Console implements EventSubscriberInterface
         
         $this->output->write($e->getCount() . ") ");
 
-
         if ($failedTest instanceof ScenarioDriven) {
             $this->printScenarioFail($failedTest, $fail);
             return;
@@ -249,7 +249,12 @@ class Console implements EventSubscriberInterface
             $message->prepend("[$class] ")->block("error");
         }
         if ($isFailure and $cause) {
-            $message->prepend("<error>  $cause  </error>: ");
+            $message->prepend("<error> Step </error> $cause\n<error> Fail </error> ");
+        }
+        if ($e instanceof \PHPUnit_Framework_ExpectationFailedException) {
+            if ($e->getComparisonFailure()) {
+                $message->append(trim($e->getComparisonFailure()->getDiff()));
+            }
         }
         $message->writeln();
 
