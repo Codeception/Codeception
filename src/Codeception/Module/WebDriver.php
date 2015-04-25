@@ -578,7 +578,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
         if (!$url) {
-            return $this->assertNodesContain($text, $nodes, 'a');
+            $this->assertNodesContain($text, $nodes, 'a');
+            return;
         }
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
@@ -1668,6 +1669,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     /**
      * @param $page
      * @param $selector
+     * @param bool $throwMalformed
      * @return array
      */
     protected function match($page, $selector, $throwMalformed = true)
