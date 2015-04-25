@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.0.14
+
+* fixed stderr tput messages in PHPStorm console *2015-04-26*
+
 #### 2.0.13
 
 * Updated to PHPUnit 4.6

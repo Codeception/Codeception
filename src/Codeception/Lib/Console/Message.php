@@ -112,8 +112,8 @@ class Message
     public function widthWithTerminalCorrection($width, $char = ' ')
     {
         $cols = 0;
-        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-            $cols = intval(`command -v tput >> /dev/null && tput cols`);
+        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') and (php_sapi_name() == "cli") and (getenv('TERM'))) {
+            $cols = intval(`command -v tput >> /dev/null 2>&1 && tput cols`);
         }
         if ($cols > 0) {
             $const = ($char == ' ') ? 6 : 1;
