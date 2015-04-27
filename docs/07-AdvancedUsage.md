@@ -67,31 +67,29 @@ Also you can define `_failed` method in Cest class which will be called if test 
 
 ## Dependency Injection
 
-Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of special `_inject()` method, and Codeception will automatically create respective objects and invoke this method, passing all dependencies as arguments. This can be useful when working with Helpers, for example:
+Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of special `_inject()` method, and Codeception will automatically create respective objects and invoke this method, passing all dependencies as arguments. This may be useful when working with Helpers, for example:
 
 ```php
 <?php
-use \AcceptanceTester;
-
 class SignUpCest
 {
     /**
-     * @var SignUpHelper
+     * @var Helper\SignUp
      */
     protected $signUp;
 
     /**
-     * @var NavBarHelper
+     * @var Helper\NavBarHelper
      */
     protected $navBar;
  
-    protected function _inject(SignUpHelper $signUp, NavBarHelper $navBar)
+    protected function _inject(\Helper\SignUp $signUp, \Helper\NavBar $navBar)
     {
         $this->signUp = $signUp;
         $this->navBar = $navBar;
     }
     
-    public function signUp(AcceptanceTester $I)
+    public function signUp(\AcceptanceTester $I)
     {
         $I->wantTo('sign up');
  
@@ -108,13 +106,10 @@ class SignUpCest
 ?>
 ```
 
-Just make sure that all Helpers can be autoloaded.
-
 Example of Test class:
 
-```
+```php
 <?php
-
 class MathTest extends \Codeception\TestCase\Test
 {
    /**
@@ -123,11 +118,11 @@ class MathTest extends \Codeception\TestCase\Test
     protected $tester;
 
     /**
-     * @var \MathHelper
+     * @var Helper\Math
      */
     protected $math;
 
-    protected function _inject(\MathHelper $math)
+    protected function _inject(\Helper\Math $math)
     {
         $this->math = $math;
     }
@@ -141,7 +136,27 @@ class MathTest extends \Codeception\TestCase\Test
 ?>
 ```
 
-It is usually preferable to make `_inject()` method `protected` or `private` for not to confuse it with `public` test methods. `_inject()` will be invoked just once right after creation of TestCase object (either Cest or Test).
+However, Dependency Injection is not limited for this. It allows you to **inject any class**, which can be constructed with arguments known to Codeception.
+
+In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to speicfy the type of arguments, so Codeception could guess which objects are expected to receive. `_inject()` will be invoked just once right after creation of TestCase object (either Cest or Test). Dependency Injection will also work in similar manner for Helper and Actor classes.
+
+Each test of Cest class can declare its own dependencies and receive them from method arguments:
+
+```php
+<?php
+class UserCest
+{
+    function updateUser(\Helper\User $u, \AcceptanceTester $I, \Page\User $userPage)
+    {
+        $user = $u->createDummyUser();
+        $userPage->login($user->getName(), $user->getPassword());
+        $userPage->updateProfile(['name' => 'Bill']);
+        $I->see('Profile was saved');
+        $I->see('Profile of Bill','h1');
+    }
+}
+?>
+```
 
 Moreover, Codeception can resolve dependencies recursively (when `A` depends on `B`, and `B` depends on `C` etc.) and handle parameters of primitive types with default values (like `$param = 'default'`). Of course, you are not allowed to have *cyclic dependencies*.
 
@@ -189,365 +204,6 @@ class ModeratorCest {
 
 You can also use `@before` and `@after` for included functions. But you can't have multiple annotations of the same kind for single method - one method can have only one `@before` and only one `@after` annotation.
 
-### Depends Annotation
-
-With `@depends` annotation you can specify a test that should be passed before the current one. If that test fails, the current test will be skipped.
-You should pass a method name of a test you are relying on.
-
-```php
-<?php
-class ModeratorCest {
-
-    public function login(AcceptanceTester $I)
-    {
-        // logs moderator in
-    }
-
-    /**
-     * @depends login
-     */
-    public function banUser(AcceptanceTester $I)
-    {
-        // bans user
-    }
-}
-?>
-```
-
-Hint: `@depends` can be combined with `@before`.
-
-## Interactive Console
-
-Interactive console was added to try Codeception commands before executing them inside a test. 
-
-![console](http://img267.imageshack.us/img267/204/003nk.png)
-
-You can run the console with the following command:
-
-``` bash
-$ php codecept.phar console suitename
-```
-
-Now you can execute all commands of appropriate Actor class and see results immediately. This is especially useful when used with `WebDriver` module. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
-
-And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. It will be easy to convince to automate this steps and introduce acceptance testing to the project.
-
-## Running from different folders
-
-If you have several projects with Codeception tests, you can use single `codecept.phar` file to run all of your tests.
-You can pass `-c` option to any Codeception command, excluding `bootstrap`, to execute Codeception in another directory.
-
-```bash
-$ php codecept.phar run -c ~/projects/ecommerce/
-$ php codecept.phar run -c ~/projects/drupal/
-$ php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
-```
-
-To create a project in directory different from the current one, just provide its path as a parameter.
-
-```bash
-$ php codecept.phar bootstrap ~/projects/drupal/
-```
-
-Basically `-c` option allows you to specify not only the path, but a config file to be used. Thus, you can have several `codeception.yml` files for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
-
-## Groups
-
-There are several ways to execute bunch of tests. You can run tests from specific directory:
-
-```bash
-$ php codecept.phar run tests/acceptance/admin
-```
-
-Or execute one (or several) specific groups of tests:
-
-```bash
-$ php codecept.phar run -g admin -g editor
-```
-
-In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
-
-```php
-<?php
-$scenario->group('admin');
-$scenario->group('editor');
-// or
-$scenario->group(array('admin', 'editor'))
-// or
-$scenario->groups(array('admin', 'editor'))
-
-$I = new AcceptanceTester($scenario);
-$I->wantToTest('admin area');
-?>
-```
-
-For Tests and Cests you can use `@group` annotation to add a test to the group.
-
-```php
-<?php
-/**
- * @group admin
- */
-public function testAdminUser()
-{
-    $this->assertEquals('admin', User::find(1)->role);
-}
-?>
-```
-Same annotation can be used in Cest classes.
-
-### Group Files
-
-Groups can be defined in global or suite configuration file.
-Tests for groups can be specified as array or as path to file containing list of groups.
-
-```yaml
-groups:
-  # add 2 tests to db group
-  db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
-
-  # add list of tests to slow group
-  slow: tests/_data/slow  
-```
-
-For instance, you can create a file with the list of the most slow tests, and run them inside their own group.
-Group file is a plain text file with test names on separate lines:
-
-```bash
-tests/unit/DbTest.php
-tests/unit/UserTest.php:create
-tests/unit/UserTest.php:update
-```
-
-You can create group files manually or generate them from 3rd party applications. 
-For example, you may write a script that updates the slow group by taking the slowest tests from xml report.
-
-You can even specify patterns for loading multiple group files by single definition:
-
-```yaml
-groups:
-  p*: tests/_data/p*
-```
-
-This will load all found `p*` files in `tests/_data` as groups.
-
-## Refactoring
-
-As the test base grows, tests will require refactoring to share common variables and behaviors. The classical example is a `login` action which may be called for every test of your test suite. It would be wise to write it once and use it in all tests.
-
-It's pretty obvious that for such cases you can use your own PHP classes to define such methods.
-
-```php
-<?php
-class TestCommons
-{
-    public static $username = 'john';
-    public static $password = 'coltrane';
-
-    public static function logMeIn($I)
-    {
-        $I->amOnPage('/login');
-        $I->fillField('username', self::$username);
-        $I->fillField('password', self::$password);
-        $I->click('Enter');
-    }
-}
-?>
-```
-
-Then this file can be required in `_bootstrap.php` file:
-
-```php
-<?php
-// bootstrap
-require_once '/path/to/test/commons/TestCommons.php';
-?>
-```
-
-and used in your scenarios:
-
-```php
-<?php
-$I = new AcceptanceTester($scenario);
-TestCommons::logMeIn($I);
-?>
-```
-
-If you caught the idea, let's learn some built-in features for structuring your test code. We will discover implementation of `PageObject` and `StepObject` patterns in Codeception.
-
-## PageObjects
-
-[PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects) is widely used by test automation engineers. The PageObject pattern represents a web page as a class and the DOM elements on that page as its properties, and some basic interactions as its methods.
-PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests but rather move them into PageObject classes.
-
-Codeception can generate a PageObject class for you with command:
-
-```bash
-$ php codecept.phar generate:pageobject Login
-```
-
-This will create a `LoginPage` class in `tests/_pages`. The basic PageObject is nothing more then empty class with a few stubs.
-It is expected you will get it populated with UI locators of a page it represents and then those locators will be used on a page.
-Locators are represented with public static properties:
-
-```php
-<?php
-class LoginPage
-{
-    public static $URL = '/login';
-
-    public static $usernameField = '#mainForm #username';
-    public static $passwordField = '#mainForm input[name=password]';
-    public static $loginButton = '#mainForm input[type=submit]';
-}
-?>
-```
-
-And this is how this page object can be used in a test:
-
-```php
-<?php
-$I = new AcceptanceTester($scenario);
-$I->wantTo('login to site');
-$I->amOnPage(LoginPage::$URL);
-$I->fillField(LoginPage::$usernameField, 'bill evans');
-$I->fillField(LoginPage::$passwordField, 'debby');
-$I->click(LoginPage::$loginButton);
-$I->see('Welcome, bill');
-?>
-```
-As you see, you can freely change markup of your login page, and all the tests interacting with this page will have their locators updated according to properties of LoginPage class.
-
-But let's move further. A PageObject concept also defines that methods for the page interaction should also be stored in a PageObject class.
-This can't be done in `LoginPage` class we just generated. Because this class is accessible across all test suites, we do not know which Actor class will be used for interaction. Thus, we will need to generate another page object. In this case we will explicitly define the suite to be used:
-
-```bash
-$ php codecept.phar generate:pageobject acceptance UserLogin
-```
-
-*We called this class UserLogin for not to get into conflict with Login class we created before.*
-
-This generated `UserLoginPage` class looks almost the same way as LoginPage class we had before with one difference. It now stores passed instance of Actor class. An AcceptanceTester can be accessed via `AcceptanceTester` property of that class. Let's define a `login` method in this class.
-
-```php
-<?php
-class UserLoginPage
-{
-    // include url of current page
-    public static $URL = '/login';
-
-    /**
-     * @var AcceptanceTester
-     */
-    protected $AcceptanceTester;
-
-    public function __construct(AcceptanceTester $I)
-    {
-        $this->AcceptanceTester = $I;
-    }
-
-    public static function of(AcceptanceTester $I)
-    {
-        return new static($I);
-    }
-
-    public function login($name, $password)
-    {
-        $I = $this->AcceptanceTester;
-
-        $I->amOnPage(self::$URL);
-        $I->fillField(LoginPage::$usernameField, $name);
-        $I->fillField(LoginPage::$passwordField, $password);
-        $I->click(LoginPage::$loginButton);
-
-        return $this;
-    }    
-}
-?>
-```
-
-And here is an example of how this PageObject can be used in a test.
-
-```php
-<?php
-$I = new AcceptanceTester($scenario);
-UserLoginPage::of($I)->login('bill evans', 'debby');
-?>
-```
-
-Probably we should merge the `UserLoginPage` and `LoginPage` classes as they do play the same role. But `LoginPage` can be used both in functional and acceptance tests, when `UserLoginPage` only in tests with `AcceptanceTester`. So it's up to you to use global page objects or local per suite page objects. If you feel like your functional tests have much in common with acceptance tests, you should store locators in global PageObject class and use StepObjects as an alternative to behavioral PageObjects.
-
-## StepObjects
-
-StepObjects pattern came from BDD frameworks. StepObject class contains a bunch of common actions that may be used widely in different tests.
-The `login` method we used above can be a good example of such method. Similarly actions for creating/updating/deleting resources should be moved to StepObject too. Let's create a StepObject class and see what it looks like.
-
-Lets create `Member` Steps class, generator will prompt you for methods to include, so let's add `login` to it.
-
-```bash
-$ php codecept.phar generate:stepobject acceptance Member
-```
-
-You will be asked to enter action names, but it's optional. Enter one at a time, and press Enter. After specifying all needed actions, leave empty line to go on to StepObject creation.
-
-```bash
-$ php codecept.phar generate:stepobject acceptance Member
-Add action to StepObject class (ENTER to exit): login
-Add action to StepObject class (ENTER to exit):
-StepObject was created in <you path>/tests/acceptance/_steps/MemberSteps.php
-```
-
-It will generate class in `tests/acceptance/_steps/MemberSteps.php` similar to this:
-
-```php
-<?php
-namespace AcceptanceTester;
-
-class MemberSteps extends \AcceptanceTester
-{
-    public function login()
-    {
-        $I = $this;
-
-    }
-}
-?>
-```
-
-As you see, this class is very simple. It extends `AcceptanceTester` class, thus, all methods and properties of `AcceptanceTester` are available for usage in it.
-
-`login` method can be implemented like this:
-
-```php
-<?php
-namespace AcceptanceTester;
-
-class MemberSteps extends \AcceptanceTester
-{
-    public function login($name, $password)
-    {
-        $I = $this;
-        $I->amOnPage(\LoginPage::$URL);
-        $I->fillField(\LoginPage::$usernameField, $name);
-        $I->fillField(\LoginPage::$passwordField, $password);
-        $I->click(\LoginPage::$loginButton);
-    }
-}
-?>
-```
-
-In tests you can use a StepObject by instantiating `MemberSteps` class instead of `AcceptanceTester`.
-
-```php
-<?php
-$I = new AcceptanceTester\MemberSteps($scenario);
-$I->login('bill evans', 'debby');
-?>
-```
-
-As you see, StepObject class looks much simpler and readable then classical PageObject. 
-As an alternative to StepObject we could use methods of `AcceptanceHelper` class. In a helper we do not have access to `$I` object itself, thus it's better to use Helpers to implement new actions, and StepObjects to combine common scenarios.
-
 ## Environments
 
 For cases where you need to run tests with different configurations you can define different config environments.
@@ -562,7 +218,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver
-        - AcceptanceHelper
+        - \Helper\Acceptance
     config:
         WebDriver:
             url: 'http://127.0.0.1:8000/'
@@ -660,7 +316,7 @@ For Cept you should use `$scenario->env()`:
 $scenario->env('firefox');
 $scenario->env('phantom');
 // or
-$scenario->env(array('phantom', 'firefox'));
+$scenario->env(['phantom', 'firefox']);
 ?>
 ```
 
@@ -676,8 +332,149 @@ $scenario->env('dev,phantom');
 This way you can easily control what tests will be executed for which environments.
 
 
+### Depends Annotation
+
+With `@depends` annotation you can specify a test that should be passed before the current one. If that test fails, the current test will be skipped.
+You should pass a method name of a test you are relying on.
+
+```php
+<?php
+class ModeratorCest {
+
+    public function login(AcceptanceTester $I)
+    {
+        // logs moderator in
+    }
+
+    /**
+     * @depends login
+     */
+    public function banUser(AcceptanceTester $I)
+    {
+        // bans user
+    }
+}
+?>
+```
+
+Hint: `@depends` can be combined with `@before`.
+
+## Interactive Console
+
+Interactive console was added to try Codeception commands before executing them inside a test. 
+
+![console](http://img267.imageshack.us/img267/204/003nk.png)
+
+You can run the console with the following command:
+
+``` bash
+$ php codecept.phar console suitename
+```
+
+Now you can execute all commands of appropriate Actor class and see results immediately. This is especially useful when used with `WebDriver` module. It always takes too long to launch Selenium and browser for tests. But with console you can try different selectors, and different commands, and then write a test that would pass for sure when executed.
+
+And a special hint: show your boss how you can nicely manipulate web pages with console and Selenium. It will be easy to convince to automate this steps and introduce acceptance testing to the project.
+
+## Running from different folders
+
+If you have several projects with Codeception tests, you can use single `codecept.phar` file to run all of your tests.
+You can pass `-c` option to any Codeception command, excluding `bootstrap`, to execute Codeception in another directory.
+
+```bash
+$ php codecept.phar run -c ~/projects/ecommerce/
+$ php codecept.phar run -c ~/projects/drupal/
+$ php codecept.phar generate:cept acceptance CreateArticle -c ~/projects/drupal/
+```
+
+To create a project in directory different from the current one, just provide its path as a parameter.
+
+```bash
+$ php codecept.phar bootstrap ~/projects/drupal/
+```
+
+Basically `-c` option allows you to specify not only the path, but a config file to be used. Thus, you can have several `codeception.yml` files for your test suite. You may use it to specify different environments and settings. Just pass a filename into `-c` parameter to execute tests with specific config settings.
+
+## Groups
+
+There are several ways to execute bunch of tests. You can run tests from specific directory:
+
+```bash
+$ php codecept.phar run tests/acceptance/admin
+```
+
+Or execute one (or several) specific groups of tests:
+
+```bash
+$ php codecept.phar run -g admin -g editor
+```
+
+In this case all tests that belongs to groups `admin` and `editor` will be executed. Concept of groups was taken from PHPUnit and in classical PHPUnit tests they behave just in the same way. To add Cept to the group - use `$scenario` variable:
+
+```php
+<?php
+$scenario->group('admin');
+$scenario->group('editor');
+// or
+$scenario->group(['admin', 'editor']);
+// or
+$scenario->groups(['admin', 'editor'])
+
+$I = new AcceptanceTester($scenario);
+$I->wantToTest('admin area');
+?>
+```
+
+For Tests and Cests you can use `@group` annotation to add a test to the group.
+
+```php
+<?php
+/**
+ * @group admin
+ */
+public function testAdminUser()
+{
+    $this->assertEquals('admin', User::find(1)->role);
+}
+?>
+```
+Same annotation can be used in Cest classes.
+
+### Group Files
+
+Groups can be defined in global or suite configuration file.
+Tests for groups can be specified as array or as path to file containing list of groups.
+
+```yaml
+groups:
+  # add 2 tests to db group
+  db: [tests/unit/PersistTest.php, tests/unit/DataTest.php]
+
+  # add list of tests to slow group
+  slow: tests/_data/slow  
+```
+
+For instance, you can create a file with the list of the most slow tests, and run them inside their own group.
+Group file is a plain text file with test names on separate lines:
+
+```bash
+tests/unit/DbTest.php
+tests/unit/UserTest.php:create
+tests/unit/UserTest.php:update
+```
+
+You can create group files manually or generate them from 3rd party applications. 
+For example, you may write a script that updates the slow group by taking the slowest tests from xml report.
+
+You can even specify patterns for loading multiple group files by single definition:
+
+```yaml
+groups:
+  p*: tests/_data/p*
+```
+
+This will load all found `p*` files in `tests/_data` as groups.
+
+
 ## Conclusion
 
-Codeception is a framework which may look simple at first glance. But it allows you to build powerful tests with single API, refactor them, and write them faster using interactive console. Codeception tests can be easily organized in groups or Cest classes, locators can be stored in PageObjects and common steps can be combined in StepObjects.
-
-Probably it has too much features for one framework. But nevertheless Codeception follows the KISS principle: it's easy to start, easy to learn, and easy to extend.
+Codeception is a framework which may look simple at first glance. But it allows you to build powerful tests with single API, refactor them, and write them faster using interactive console. Codeception tests can be easily organized in groups or Cest classes.

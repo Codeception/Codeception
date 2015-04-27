@@ -52,46 +52,6 @@ This will launch test suites for all 3 applications and merge the reports from a
 
 If your applications uses same helpers, follow the next section of this chapter.
 
-## Autoload Helper classes
-
-There is global `_bootstrap.php` file. This file is included at the very beginning of execution. We recommend to use it to initialize autoloaders and constants. It is especially useful if you want to include `Module` or `Helper` classes that are not stored in `tests/_helpers` directory, or those which are organized in namespaces.
-
-```php
-<?php
-require_once __DIR__.'/../lib/tests/helpers/MyHelper.php';
-?>
-```
-
-Alternatively you can use Composer's autoloader. Codeception has its autoloader too, and it's [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) compatible:
-
-```php
-<?php
-Codeception\Util\Autoload::addNamespace('', __DIR__.'/../lib/tests/helpers');
-?>
-```
-
-Now all classes in global namespace will be additionally searched in `__DIR__.'/../lib/tests/helpers'`. You can declare to load helpers from namespaces with specified prefixes too:
-
-```php
-<?php
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
-?>
-```
-
-That will point autoloader to load class named `MyApp\Test\MyHelper` from `__DIR__.'/../lib/tests/helpers/MyHelper.php'`, and `MyApp\Test\User\MyHelper` will be loaded from `__DIR__.'/../lib/tests/helpers/User/MyHelper.php'`.
-
-Autoloader can also be used to specify base directories for your `PageObject` and `Controller` classes.
-
-Example of `tests/_bootstrap.php` file:
-
-``` php
-<?php
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/pageobjects');
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/controller');
-?>
-```
-
 ## Extension classes
 
 <div class="alert">This section requires advanced PHP skills and some knowlegde of Codeception and PHPUnit internals.</div>

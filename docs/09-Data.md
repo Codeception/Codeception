@@ -43,10 +43,12 @@ In `tests/functional.suite.yml`:
 
 ```yaml
 modules:
-	enabled: [Db, Doctrine2, FunctionalHelper]
-	config:
-		Db:
-			cleanup: false
+	  enabled: 
+        - Db:
+          cleanup: false      
+        - Doctrine2:
+            depends: Symfony2
+        - \Helper\Functional
 ```
 
 Still, the `Db` module will perform database population from a dump before each test. Use `populate: false` to disable it.
@@ -60,10 +62,11 @@ To use the `Db` module for population and `Dbh` for cleanups, use this config:
 
 ```yaml
 modules:
-	enabled: [Db, Dbh, FunctionalHelper]
-	config:
-		Db:
-			cleanup: false
+  	enabled: 
+        - Db:
+            cleanup: false
+        - Dbh
+        - \Helper\Functional
 ```
 
 Please, note that `Dbh` module should go after the `Db`. That allows the `Dbh` module to override actions.
@@ -105,7 +108,10 @@ If you want to create special database record for one test, you can use [`haveIn
 ```php
 <?php 
 $I = new FunctionalTester($scenario);
-$I->haveInDatabase('posts', array('title' => 'Top 10 Testing Frameworks', 'body' => '1. Codeception'));
+$I->haveInDatabase('posts', [
+  'title' => 'Top 10 Testing Frameworks', 
+  'body' => '1. Codeception'
+]);
 $I->amOnPage('/posts');
 $I->see('Top 10 Testing Frameworks');
 ?>
