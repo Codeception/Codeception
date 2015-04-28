@@ -74,7 +74,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
-            ),
+            ],
             (array) $config
         );
 
