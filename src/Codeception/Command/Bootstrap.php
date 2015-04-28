@@ -144,7 +144,7 @@ class Bootstrap extends Command
         $str  = "# Codeception Test Suite Configuration\n\n";
         $str .= "# suite for functional (integration) tests.\n";
         $str .= "# emulate web requests and make application process them.\n";
-        $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel4) to use it.\n\n";
+        $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it.\n\n";
         $str .= Yaml::dump($suiteConfig, 2);
         $this->createSuite('functional', $actor, $str);
     }
