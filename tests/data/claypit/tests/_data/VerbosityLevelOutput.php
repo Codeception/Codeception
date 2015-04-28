@@ -12,6 +12,8 @@ class VerbosityLevelOutput extends Extension
 
     public function printResult(PrintResultEvent $e)
     {
+        $this->writeln("Modules used: " . implode(', ', $this->getCurrentModuleNames()));
+
         if ($this->options['verbosity'] <= 1) {
             $this->writeln('Low verbosity');
         } else if ($this->options['verbosity'] == 2) {

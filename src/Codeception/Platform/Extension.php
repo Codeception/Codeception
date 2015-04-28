@@ -2,19 +2,20 @@
 namespace Codeception\Platform;
 
 use Codeception\Configuration as Config;
+use Codeception\Event\SuiteEvent;
+use Codeception\Events;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Console\Output;
-use Codeception\Subscriber\Shared\StaticEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class Extension implements EventSubscriberInterface
+abstract class Extension implements EventSubscriberInterface
 {
-    use StaticEvents;
 
     protected $config = [];
     protected $options;
     protected $output;
     protected $globalConfig;
+    private $modules = [];
 
     function __construct($config, $options)
     {
@@ -25,6 +26,24 @@ class Extension implements EventSubscriberInterface
     }
 
     static $events = [];
+
+    static function getSubscribedEvents()
+    {
+        if (isset(static::$events[Events::SUITE_INIT])) {
+            if (!is_array(static::$events)) {
+                static::$events[Events::SUITE_INIT] = [[static::$events[Events::SUITE_INIT]]];
+            }
+            static::$events[Events::SUITE_INIT][] = ['receiveModuleContainer'];
+        } else {
+            static::$events[Events::SUITE_INIT] = 'receiveModuleContainer';
+        }
+        return static::$events;
+    }
+
+    public function receiveModuleContainer(SuiteEvent $e)
+    {
+        $this->modules = $e->getSuite()->getModules();
+    }
 
     /**
      * Pass config variables that should be injected into global config.
@@ -61,12 +80,22 @@ class Extension implements EventSubscriberInterface
         }
     }
 
+    public function hasModule($name)
+    {
+        return isset($this->modules[$name]);
+    }
+
+    public function getCurrentModuleNames()
+    {
+        return array_keys($this->modules);
+    }
+
     public function getModule($name)
     {
-        if (!isset(\Codeception\SuiteManager::$modules[$name])) {
+        if (!$this->hasModule($name)) {
             throw new ModuleRequireException($name, "module is not enabled");
         }
-        return \Codeception\SuiteManager::$modules[$name];
+        return $this->modules[$name];
     }
 
     public function getTestsDir()
