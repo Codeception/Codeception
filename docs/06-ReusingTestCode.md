@@ -1,4 +1,4 @@
-# Resuing Test Code
+# Reusing Test Code
 
 Codeception uses modularity to create a comfortable testing environment for every test suite you write. 
 Modules allow you to choose the actions and assertions that can be performed in tests.
