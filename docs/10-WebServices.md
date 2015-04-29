@@ -25,7 +25,7 @@ modules:
 				    depends: PhpBrowser
 ```
 
-The REST module will connect to `PhpBrowser` according to this configuration. Depending on web service we may deal with XML or JSON responses. Codeception handles well both data formats, however If you don't need one of them, you can explicitly specify JSON or XML parts of module will be used:
+The REST module will connect to `PhpBrowser` according to this configuration. Depending on web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
 
 ``` yaml
 class_name: ApiTester
@@ -55,7 +55,7 @@ Once we configured new testing suite, we can create the first sample test:
 $ php codecept.phar generate:cept api CreateUser
 ```
 
-It will be called `CreateUserCept.php`. We can use it to test creation of user via REST API.
+It will be called `CreateUserCept.php`. We can use it to test creation of a user via the REST API.
 
 ```php
 <?php
@@ -72,13 +72,13 @@ $I->seeResponseContains('{"result":"ok"}');
 
 ### Testing JSON Responses
 
-The latest line checked that the response contained provided string. However we shoudn't rely on it, as dpending on content formatting we can receive different results with the same data. What we actually need it to check that response can be parsed and it contains some of values we expect. In case of JSON we can use `seeResponseContainsJson` method
+The latest line checked that the response contained the provided string. However we shouldn't rely on it, as depending on content formatting we can receive different results with the same data. What we actually need is to check that the response can be parsed and it contains some of the values we expect. In the case of JSON we can use `seeResponseContainsJson` method
 
 ``` php
 <?php
 // matches {"result":"ok"}'
 $I->seeResponseContainsJson(['result' => 'ok']);
-// it can match tree-like strcutcures as well
+// it can match tree-like structures as well
 $I->seeResponseContainsJson([
 	'user' => [
 			'name' => 'davert',
@@ -89,7 +89,7 @@ $I->seeResponseContainsJson([
 ?>
 ```
 
-You may want to perform even more complex assertions on response. This can be done with writing your own methods in [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) classes. To access the latest JSON response you will need to get `response` property of `REST` module. Let's demonstrate it with `seeResponseIsHtml` method:
+You may want to perform even more complex assertions on a response. This can be done by writing your own methods in [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) classes. To access the latest JSON response you will need to get the `response` property of the `REST` module. Let's demonstrate it with `seeResponseIsHtml` method:
 
 ```php
 <?php
@@ -109,9 +109,9 @@ The same way you can receive request parameters and headers.
 
 ### Validate JSON structures
 
-It is pretty common for API tests to not only validate the received data but to check the structure of the response. Response data is not something constant, and may change on each request, however the JSON/XML structure should kept the same for an API version. In order to check response structure REST module have some useful methods. 
+It is pretty common for API tests to not only validate the received data but to check the structure of the response. Response data is not usually considered to be consistent, and may change on each request, however the JSON/XML structure should be kept the same for an API version. In order to check response structure the REST module has some useful methods. 
 
-If we expect JSON response to be received we can check its structure with [JSONPath](http://goessner.net/articles/JsonPath/). It looks and sounds like XPath but is designed to work with JSON data, however we can convert JSON into XML and use XPath to validate the structure. Both approaches are valid and can be used in REST module:
+If we expect a JSON response to be received we can check its structure with [JSONPath](http://goessner.net/articles/JsonPath/). It looks and sounds like XPath but is designed to work with JSON data, however we can convert JSON into XML and use XPath to validate the structure. Both approaches are valid and can be used in the REST module:
 
 ```php
 <?php
@@ -148,7 +148,7 @@ $I->seeXmlResponseIncludes(XmlUtils::toXml(
 ?>
 ```
 
-We are using XmlUtils class which allows us to build XML structures in a clean manner. `toXml` method may accept string, array and returns \DOMDocument instance. If your XML contains attributes and so can't be represented as PHP array you can create XML using [XmlBulder](http://codeception.com/docs/reference/XmlBuilder) class. We will take a look at it a bit more in next section. 
+We are using XmlUtils class which allows us to build XML structures in a clean manner. The `toXml` method may accept a string or array and returns \DOMDocument instance. If your XML contains attributes and so can't be represented as a PHP array you can create XML using the [XmlBulder](http://codeception.com/docs/reference/XmlBuilder) class. We will take a look at it a bit more in next section. 
 
 <div class="alert alert-info">
 Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
@@ -157,7 +157,7 @@ Use `\Codeception\Util\Xml::build()` to create XmlBuilder instance.
 
 ## SOAP
 
-SOAP web services are usually more complex. You will need PHP [configured with SOAP support](http://php.net/manual/en/soap.installation.php). Good knowledge of XML is required too. `SOAP` module uses specially formatted POST request to connect to WSDL web services. Codeception uses `PhpBrowser` or one of framework modules to perform interactions. If you choose using a framework module, SOAP will automatically connect to the underliying framework. That may improve the speed of a test execution and will provide you with more detailed stack traces.
+SOAP web services are usually more complex. You will need PHP [configured with SOAP support](http://php.net/manual/en/soap.installation.php). Good knowledge of XML is required too. `SOAP` module uses specially formatted POST request to connect to WSDL web services. Codeception uses `PhpBrowser` or one of framework modules to perform interactions. If you choose using a framework module, SOAP will automatically connect to the underlying framework. That may improve the speed of a test execution and will provide you with more detailed stack traces.
 
 Let's configure `SOAP` module to be used with `PhpBrowser`:
 
@@ -219,7 +219,7 @@ $I->seeSoapResponseContainsXPath('//result/user/name[@id=1]');
 ```
 
 In case you don't want to write long XML strings, consider using [XmlBuilder](http://codeception.com/docs/reference/XmlBuilder) class. It will help you to build complex XMLs in jQuery-like style.
-In the next example we will use `XmlBuilder` instead of regular XMLs.
+In the next example we will use `XmlBuilder` instead of regular XML.
 
 ```php
 <?php

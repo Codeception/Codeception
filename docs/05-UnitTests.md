@@ -189,7 +189,7 @@ If it's not your required behavior, please change the settings of `Db` module fo
 ### Interacting with the Framework
 
 Probably you should not access your database directly if your project already uses ORM for database interactions.
-Why not to use that ORM inside tests? Let's try to write a test using Laravel's ORM Eloquent, for this we need configured Laravel5 module. We won't need its web interaction methods like `amOnPage` or `see`, so let's enable only ORM part of it:
+Why not use the ORM directly inside your tests? Let's try to write a test using Laravel's ORM Eloquent, for this we need configured Laravel5 module. We won't need its web interaction methods like `amOnPage` or `see`, so let's enable only ORM part of it:
 
 ```yaml
 class_name: UnitTester
@@ -260,8 +260,8 @@ function testUserNameCanBeChanged()
 ```
 
 In both examples you should not be worried about the data persistance between tests. 
-Doctrine2 module as well as Laravel4 module will clean up created data in the end of a test. 
-This is done by wrapping a test into transaction and rolling it back afterwards. 
+Doctrine2 module as well as Laravel4 module will clean up created data at the end of a test. 
+This is done by wrapping a test in a transaction and rolling it back afterwards. 
 
 ### Accessing Module
 
@@ -285,7 +285,7 @@ $container = $this->getModule('Symfony2')->container;
 ?>
 ```
 
-The same can be done for all public properties of enabled module. Accessible properties are listed in module reference
+The same can be done for all public properties of an enabled module. Accessible properties are listed in the module reference
 
 ### Cest
 
@@ -333,8 +333,8 @@ modules:
 
 <div class="alert alert-info">
 It may look like Cest format is too simple for writing tests. It doesn't provide assertion methods,
-methods to create mocks and stubs or even accessing module with `getModule`, as we did in example above.
-However Cest format is better in separating concerns. Test code does not interefere with support code, provided by `UnitTester` object. All additional actions you may need in your unit/intergation tests you can implement in `Helper\Unit` class. This is a recommended approach, and allows keeping tests verbose and clean. 
+methods to create mocks and stubs or even accessing the module with `getModule`, as we did in example above.
+However Cest format is better at separating concerns. Test code does not interefere with support code, provided by `UnitTester` object. All additional actions you may need in your unit/intergation tests you can implement in `Helper\Unit` class. This is the recommended approach, and allows keeping tests verbose and clean. 
 </div>
 
 

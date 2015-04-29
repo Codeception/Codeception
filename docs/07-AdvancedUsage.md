@@ -67,7 +67,7 @@ Also you can define `_failed` method in Cest class which will be called if test 
 
 ## Dependency Injection
 
-Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of special `_inject()` method, and Codeception will automatically create respective objects and invoke this method, passing all dependencies as arguments. This may be useful when working with Helpers, for example:
+Codeception supports simple dependency injection for Cest and \Codeception\TestCase\Test classes. It means that you can specify which classes you need as parameters of the special `_inject()` method, and Codeception will automatically create the respective objects and invoke this method, passing all dependencies as arguments. This may be useful when working with Helpers, for example:
 
 ```php
 <?php
@@ -136,9 +136,9 @@ class MathTest extends \Codeception\TestCase\Test
 ?>
 ```
 
-However, Dependency Injection is not limited for this. It allows you to **inject any class**, which can be constructed with arguments known to Codeception.
+However, Dependency Injection is not limited to this. It allows you to **inject any class**, which can be constructed with arguments known to Codeception.
 
-In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to speicfy the type of arguments, so Codeception could guess which objects are expected to receive. `_inject()` will be invoked just once right after creation of TestCase object (either Cest or Test). Dependency Injection will also work in similar manner for Helper and Actor classes.
+In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to speicfy the type of arguments, so Codeception can guess which objects are expected to be received. The `_inject()` will be invoked just once right after creation of the TestCase object (either Cest or Test). Dependency Injection will also work in a similar manner for Helper and Actor classes.
 
 Each test of Cest class can declare its own dependencies and receive them from method arguments:
 
@@ -287,7 +287,7 @@ $ php codecept.phar run acceptance --env dev,phantom --env dev,chrome --env dev,
 Configuration is merged in the given order. This way you can easily create multiple combinations of your environment configurations.
 
 Depending on environment you may choose which tests are to be executed.
-For example, you might need some tests to be executed only in Firefox, and few tests only in Chrome.
+For example, you might need some tests to be executed only in Firefox, and a few tests only in Chrome.
 
 Desired environments can be specified with `@env` annotation for tests in Test and Cest formats:
 
@@ -329,7 +329,7 @@ $scenario->env('dev,phantom');
 ?>
 ```
 
-This way you can easily control what tests will be executed for which environments.
+This way you can easily control which tests will be executed for each environments.
 
 
 ### Depends Annotation
@@ -477,4 +477,4 @@ This will load all found `p*` files in `tests/_data` as groups.
 
 ## Conclusion
 
-Codeception is a framework which may look simple at first glance. But it allows you to build powerful tests with single API, refactor them, and write them faster using interactive console. Codeception tests can be easily organized in groups or Cest classes.
+Codeception is a framework which may look simple at first glance. But it allows you to build powerful tests with a single API, refactor them, and write them faster using the interactive console. Codeception tests can be easily organized in groups or Cest classes.
