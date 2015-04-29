@@ -207,10 +207,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
             $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
         }
         $this->debugSection($model, json_encode($record));
-        
-        $reflectedProperty =   new \ReflectionProperty(get_class($record), 'id');
-        $reflectedProperty->setAccessible(true);
-        return $reflectedProperty->getValue($record);
+
+        return $this->getModelIdentity($record);
     }
 
     /**
@@ -267,6 +265,14 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         return $this->findRecord($model, $attributes);
     }
 
+    /**
+     * Allows to query the first record that match the specified conditions
+     *
+     * @param string $model Model name
+     * @param array $attributes Model attributes
+     *
+     * @return \Phalcon\Mvc\Model
+     */
     protected function findRecord($model, $attributes = array())
     {
         $this->getModelRecord($model);
@@ -279,6 +285,13 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         return call_user_func_array(array($model, 'findFirst'), array($query));
     }
 
+    /**
+     * Get Model Record
+     *
+     * @param $model
+     *
+     * @return \Phalcon\Mvc\Model
+     */
     protected function getModelRecord($model)
     {
         if (!class_exists($model)) {
@@ -286,8 +299,37 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         }
         $record = new $model;
         if (!$record instanceof \Phalcon\Mvc\Model) {
-            throw new \RuntimeException("Model $model is not instance of \Phalcon\Mvc\Model");
+            throw new \RuntimeException(sprintf('Model %s is not instance of \Phalcon\Mvc\Model', $model));
         }
         return $record;
+    }
+
+    /**
+     * Get identity.
+     *
+     * @param \Phalcon\Mvc\Model $model
+     * @return int|array|null|\Phalcon\Mvc\Model\Resultset
+     */
+    protected function getModelIdentity(\Phalcon\Mvc\Model $model)
+    {
+        if (property_exists($model, 'id')) {
+            return $model->id;
+        }
+
+        if (!$this->di->has('modelsMetadata')) {
+            return null;
+        }
+
+        $primaryKeys = $this->di->get('modelsMetadata')->getPrimaryKeyAttributes($model);
+
+        switch (count($primaryKeys)) {
+            case 0:
+                return null;
+            case 1:
+                return $model->{$primaryKeys[0]};
+            default:
+                return array_intersect_key(get_object_vars($model), array_flip($primaryKeys));
+        }
+
     }
 }
