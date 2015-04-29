@@ -13,7 +13,6 @@ use Codeception\Lib\Suite;
 use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
-use SebastianBergmann\Comparator\ComparisonFailure;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

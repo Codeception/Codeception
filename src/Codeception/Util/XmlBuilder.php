@@ -5,6 +5,7 @@ namespace Codeception\Util;
  * That's a pretty simple yet powerful class to build XML structures in jQuery-like style. With no XML line actually written!
  * Uses DOM extension to manipulate XML data.
  *
+ *
  * ```php
  * <?php
  * $xml = new \Codeception\Util\XmlBuilder();
