@@ -47,6 +47,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
+        $this->module->see('A wise man said: "debug!"');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
