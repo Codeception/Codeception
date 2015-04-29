@@ -2,9 +2,18 @@
 
 namespace Codeception\Module;
 
+use Phalcon\Di;
+use Phalcon\DiInterface;
+use Phalcon\Di\Injectable;
+use Phalcon\Mvc\Model as PhalconModel;
+use Codeception\TestCase;
+use Codeception\Configuration;
+use Codeception\Util\Connector\Phalcon1 as Phalcon1Connector;
 use Codeception\Exception\ModuleConfig;
 use Codeception\Step;
 use Codeception\Util\Connector\PhalconMemorySession;
+use Codeception\Util\Framework;
+use Codeception\Util\ActiveRecordInterface;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
@@ -54,7 +63,7 @@ use Codeception\Util\Connector\PhalconMemorySession;
  *
  *
  */
-class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\ActiveRecordInterface
+class Phalcon1 extends Framework implements ActiveRecordInterface
 {
     protected $config = array(
         'bootstrap' => 'app/config/bootstrap.php',
@@ -62,17 +71,29 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         'savepoints' => true,
     );
 
+    /**
+     * Phalcon bootstrap file path
+     * @var null
+     */
+    protected $bootstrapFile = null;
 
     /**
-     * @var \Phalcon\DiInterface
+     * Dependency injection container
+     * @var DiInterface
      */
-    public $di;
+    public $di = null;
+
+    /**
+     * Phalcon2 Connector
+     * @var Phalcon1Connector
+     */
+    public $client;
 
     public function _initialize()
     {
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['bootstrap'])) {
+        if (!file_exists($this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'])) {
             throw new ModuleConfig(__CLASS__,
-                "Bootstrap file does not exists in ".$this->config['bootstrap']."\n".
+                "Bootstrap file does not exists in ".$this->bootstrapFile."\n".
                 "Please create the bootstrap file that return Application object\n".
                 "And specify path to it with 'bootstrap' config\n\n".
                 "Sample bootstrap: \n\n<?php\n".
@@ -83,22 +104,20 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
                 'return new \Phalcon\Mvc\Application($di);'
             );
         }
-        $this->client = new \Codeception\Util\Connector\Phalcon1();
+        $this->client = new Phalcon1Connector();
 
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
-        $bootstrap = \Codeception\Configuration::projectDir() . $this->config['bootstrap'];
-
-        $application = require $bootstrap;
-        if (!$application instanceof \Phalcon\DI\Injectable) {
+        $application = require $this->bootstrapFile;
+        if (!$application instanceof Injectable) {
             throw new \Exception('Bootstrap must return \Phalcon\DI\Injectable object');
         }
 
         $this->di = $application->getDi();
-        \Phalcon\DI::reset();
-        \Phalcon\DI::setDefault($this->di);
+        Di::reset();
+        Di::setDefault($this->di);
 
         if (isset($this->di['session'])) {
             $this->di['session'] = new PhalconMemorySession();
@@ -115,8 +134,10 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
             $this->di['db']->begin();
         }
 
+        // localize
+        $bootstrap = $this->bootstrapFile;
         $this->client->setApplication(function () use ($bootstrap) {
-            $currentDi = \Phalcon\DI::getDefault();
+            $currentDi = Di::getDefault();
             $application = require $bootstrap;
             $di = $application->getDi();
             if (isset($currentDi['db'])) {
@@ -132,7 +153,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
         });
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->config['cleanup'] && isset($this->di['db'])) {
             while ($this->di['db']->isUnderTransaction()) {
@@ -146,7 +167,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
             }
         }
         $this->di = null;
-        \Phalcon\DI::reset();
+        Di::reset();
 
         $_SESSION = array();
         $_FILES = array();
@@ -159,8 +180,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
     /**
      * Sets value to session. Use for authorization.
      *
-     * @param $key
-     * @param $val
+     * @param string $key
+     * @param mixed $val
      */
     public function haveInSession($key, $val)
     {
@@ -172,8 +193,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * Checks that session contains value.
      * If value is `null` checks that session has key.
      *
-     * @param $key
-     * @param null $value
+     * @param string $key
+     * @param mixed $value
      */
     public function seeInSession($key, $value = null)
     {
@@ -195,8 +216,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * ?>
      * ```
      *
-     * @param $model
-     * @param array $attributes
+     * @param string $model Model name
+     * @param array $attributes Model attributes
      * @return mixed
      */
     public function haveRecord($model, $attributes = array())
@@ -219,8 +240,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * $I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
-     * @param $model
-     * @param array $attributes
+     * @param string $model Model name
+     * @param array $attributes Model attributes
      */
     public function seeRecord($model, $attributes = array())
     {
@@ -239,8 +260,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * $I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
-     * @param $model
-     * @param array $attributes
+     * @param string $model Model name
+     * @param array $attributes Model attributes
      */
     public function dontSeeRecord($model, $attributes = array())
     {
@@ -259,8 +280,8 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * $category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
-     * @param $model
-     * @param array $attributes
+     * @param string $model Model name
+     * @param array $attributes Model attributes
      * @return mixed
      */
     public function grabRecord($model, $attributes = array())
@@ -301,7 +322,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
             throw new \RuntimeException("Model $model does not exist");
         }
         $record = new $model;
-        if (!$record instanceof \Phalcon\Mvc\Model) {
+        if (!$record instanceof PhalconModel) {
             throw new \RuntimeException(sprintf('Model %s is not instance of \Phalcon\Mvc\Model', $model));
         }
         return $record;
@@ -313,7 +334,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * @param \Phalcon\Mvc\Model $model
      * @return mixed
      */
-    protected function getModelIdentity(\Phalcon\Mvc\Model $model)
+    protected function getModelIdentity(PhalconModel $model)
     {
         if (property_exists($model, 'id')) {
             return $model->id;
