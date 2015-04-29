@@ -40,7 +40,7 @@ use Codeception\Util\Connector\PhalconMemorySession;
  * modules:
  *     enabled: [FileSystem, TestHelper, Phalcon1]
  *     config:
- *         Phalcon1
+ *         Phalcon1:
  *             bootstrap: 'app/config/bootstrap.php'
  *             cleanup: true
  *             savepoints: true
@@ -215,6 +215,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * Checks that record exists in database.
      *
      * ``` php
+     * <?php
      * $I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
@@ -234,6 +235,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * Checks that record does not exist in database.
      *
      * ``` php
+     * <?php
      * $I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
@@ -253,6 +255,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * Retrieves record from database
      *
      * ``` php
+     * <?php
      * $category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
      * ```
      *
@@ -308,7 +311,7 @@ class Phalcon1 extends \Codeception\Util\Framework implements \Codeception\Util\
      * Get identity.
      *
      * @param \Phalcon\Mvc\Model $model
-     * @return int|array|null|\Phalcon\Mvc\Model\Resultset
+     * @return mixed
      */
     protected function getModelIdentity(\Phalcon\Mvc\Model $model)
     {
