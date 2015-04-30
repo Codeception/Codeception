@@ -684,12 +684,40 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (empty($form)) {
             throw new ElementNotFound($formSelector, "Form via CSS or XPath");
         }
-        
+        $form = reset($form);
+        foreach ($params as $name => $values) {
+            $els = $form->findElements(\WebDriverBy::name($name));
+            if (empty($els)) {
+                throw new ElementNotFound($name);
+            }
+            if (!is_array($values)) {
+                $values = [$values];
+            }
+            foreach ($values as $value) {
+                $ret = $this->proceedSeeInField($els, $value);
+                if ($assertNot) {
+                    $this->assertNot($ret);
+                } else {
+                    $this->assert($ret);
+                }
+            }
+        }
+    }
+    protected function proceedSeeInField(array $elements, $value)
+    {
+        $strField = reset($elements)->getAttribute('name');
+        if (reset($elements)->getTagName() === 'select') {
+            $el = reset($elements);
+            $elements = $el->findElements(\WebDriverBy::xpath('.//option[@selected]'));
+            if (empty($value) && empty($elements)) {
+                return ['True', true];
+            }
+        }
+
         $currentValues = [];
         if (is_bool($value)) {
             $currentValues = [false];
         }
-
         foreach ($elements as $el) {
             if ($el->getTagName() === 'textarea') {
                 $currentValues[] = $el->getText();
@@ -707,12 +735,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
         }
 
-        $strField = $field;
-        if (is_array($field)) {
-            $ident = reset($field);
-            $strField = key($field) . '=>' . $ident;
-        }
-
         return [
             'Contains',
             $value,
@@ -720,6 +742,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
         ];
     }
+
 
     public function selectOption($select, $option)
     {
