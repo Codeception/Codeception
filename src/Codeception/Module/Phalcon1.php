@@ -60,8 +60,6 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  *
  * Maintainer: **cujo**
  * Stability: **alfa**
- *
- *
  */
 class Phalcon1 extends Framework implements ActiveRecord
 {
@@ -93,8 +91,8 @@ class Phalcon1 extends Framework implements ActiveRecord
     {
         if (!file_exists($this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'])) {
             throw new ModuleConfig(__CLASS__,
-                "Bootstrap file does not exists in ".$this->bootstrapFile."\n".
-                "Please create the bootstrap file that return Application object\n".
+                "Bootstrap file does not exist in ".$this->bootstrapFile."\n".
+                "Please create the bootstrap file that returns Application object\n".
                 "And specify path to it with 'bootstrap' config\n\n".
                 "Sample bootstrap: \n\n<?php\n".
                 '$config = include __DIR__ . "/config.php";'."\n".
