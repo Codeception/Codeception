@@ -46,8 +46,9 @@
     },
 
     "autoload":{
-        "psr-0":{
-            "Codeception":"src"
+        "psr-4":{
+            "Codeception\\": "src",
+            "Codeception\\Extension\\": "ext"
         }
     },
     "extra": {

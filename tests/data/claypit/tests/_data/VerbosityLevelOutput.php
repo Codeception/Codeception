@@ -2,13 +2,13 @@
 
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
-use Codeception\Platform\Extension;
+use Codeception\Extension;
 
 class VerbosityLevelOutput extends Extension
 {
-    public static $events = array(
+    public static $events = [
         Events::RESULT_PRINT_AFTER => 'printResult',
-    );
+    ];
 
     public function printResult(PrintResultEvent $e)
     {

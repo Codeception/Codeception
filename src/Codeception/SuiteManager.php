@@ -7,6 +7,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Lib\TestLoader;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -150,11 +151,19 @@ class SuiteManager
 
 
     /**
-     * @return null|\PHPUnit_Framework_TestSuite
+     * @return \Codeception\Lib\Suite
      */
     public function getSuite()
     {
         return $this->suite;
+    }
+
+    /**
+     * @return ModuleContainer
+     */
+    public function getModuleContainer()
+    {
+        return $this->moduleContainer;
     }
 
     protected function getActor()

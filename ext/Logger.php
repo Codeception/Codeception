@@ -1,11 +1,12 @@
 <?php
-namespace Codeception\Platform;
+namespace Codeception\Extension;
 
 use Codeception\Event\FailEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Extension;
 use Monolog\Handler\RotatingFileHandler;
 
 /**

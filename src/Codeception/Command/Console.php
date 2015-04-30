@@ -8,6 +8,8 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\Di;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
 use Codeception\TestCase\Cept;
@@ -31,6 +33,7 @@ class Console extends Command
     protected $codecept;
     protected $suite;
     protected $output;
+    protected $actions = [];
 
     protected function configure()
     {
@@ -69,15 +72,19 @@ class Console extends Command
         $this->codecept = new Codecept($options);
         $dispatcher = $this->codecept->getDispatcher();
 
-        $this->test = (new Cept())
-            ->configDispatcher($dispatcher)
-            ->configName('')
-            ->config('file', '')
-            ->initConfig();
-
         $suiteManager = new SuiteManager($dispatcher, $suiteName, $settings);
         $suiteManager->initialize();
         $this->suite = $suiteManager->getSuite();
+        $moduleContainer = $suiteManager->getModuleContainer();
+
+        $this->actions = array_keys($moduleContainer->getActions());
+
+        $this->test = (new Cept())
+            ->configDispatcher($dispatcher)
+            ->configModules($moduleContainer)
+            ->configName('')
+            ->config('file', '')
+            ->initConfig();
 
         $scenario = new Scenario($this->test);
         if (isset($config["namespace"])) $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
@@ -117,11 +124,11 @@ class Console extends Command
 
         do {
             $question = new Question("<comment>\$I-></comment>");
-            $question->setAutocompleterValues(array_keys(SuiteManager::$actions));
+            $question->setAutocompleterValues($this->actions);
 
             $command = $dialog->ask($input, $output, $question);
             if ($command == 'actions') {
-                $output->writeln("<info>" . implode(' ', array_keys(SuiteManager::$actions)));
+                $output->writeln("<info>" . implode(' ', $this->actions));
                 continue;
             };
             if ($command == 'exit') {
