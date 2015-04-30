@@ -76,7 +76,7 @@ class Bootstrap extends Command
         }
 
         $output->writeln(
-            "<fg=white;bg=magenta>Initializing Codeception in " . $realpath . "</fg=white;bg=magenta>\n"
+            "<fg=white;bg=magenta> Initializing Codeception in " . $realpath . " </fg=white;bg=magenta>\n"
         );
 
         $this->createGlobalConfig();
@@ -94,6 +94,7 @@ class Bootstrap extends Command
             $output->writeln("tests/acceptance created           <- acceptance tests");
             $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
         }
+        $output->writeln(" --- ");
         $this->ignoreFolderContent('tests/_output');
 
         file_put_contents('tests/_bootstrap.php', "<?php\n// This is global bootstrap for autoloading\n");
