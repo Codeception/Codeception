@@ -52,9 +52,9 @@ This will launch test suites for all 3 applications and merge the reports from a
 
 If your applications uses same helpers, follow the next section of this chapter.
 
-## Extension classes
+## Extension
 
-<div class="alert">This section requires advanced PHP skills and some knowlegde of Codeception and PHPUnit internals.</div>
+<div class="alert">This section requires advanced PHP skills and some knowledge of Codeception and PHPUnit internals.</div>
 
 Codeception has limited capabilities to extend its core features.
 Extensions are not supposed to override current functionality, but are pretty useful if you are experienced developer and you want to hook into testing flow.
@@ -86,11 +86,11 @@ Here are the events and event classes. The events are listed in order they happe
 
 There may be a confusion between `test.start`/`test.before` and `test.after`/`test.end`. Start/end events are triggered by PHPUnit itself. But before/after events are triggered by Codeception. Thus, when you have classical PHPUnit test (extended from `PHPUnit_Framework_TestCase`), before/after events won't be triggered for them. On `test.before` event you can mark test as skipped or incomplete, which is not possible in `test.start`. You can learn more from [Codeception internal event listeners](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Subscriber).
 
-The extension class itself is inherited from `Codeception\Platform\Extension`.
+The extension class itself is inherited from `Codeception\Extension`.
 
 ``` php
 <?php
-class MyCustomExtension extends \Codeception\Platform\Extension
+class MyCustomExtension extends \Codeception\Extension
 {
     // list events to listen to
     public static $events = array(
@@ -122,17 +122,14 @@ Extensions have some basic methods you can use:
 * `write` - prints to screen
 * `writeln` - prints to screen with line end char at the end
 * `getModule` - allows you to access a module
+* `hasModule` - checks if module is enabled
+* `getModuleNames` - list all enabled modules
 * `_reconfigure` - can be implemented instead of overriding constructor. 
 
 ### Enabling Extension
 
-Once you've implemented a simple extension class, you should include it in `tests/_bootstrap.php` file:
-
-``` php
-<?php
-include_once '/path/to/my/MyCustomExtension.php';
-?>
-```
+Once you've implemented a simple extension class, you can require it in `tests/_bootstrap.php`, 
+load with Composer's autoloader defined in `composer.json`, or store class inside `tests/_support`dir.
 
 Then you can enable it in `codeception.yml`:
 
@@ -161,9 +158,9 @@ Passed configuration is accessible via `config` property: `$this->config['param'
 
 Check out a very basic extension [Notifier](https://github.com/Codeception/Notifier).
 
-## Group Classes
+## Group Objects
 
-Group Classes are extensions listening to events of a tests belonging to a specific group.
+Group Objects are extensions listening to events of a tests belonging to a specific group.
 When a test is added to a group:
 
 ```php
@@ -182,11 +179,13 @@ This test will trigger events:
 * `test.fail.admin`
 * `test.after.admin`
 
-A group class is built to listen to these events. It is pretty useful when additional setup is required for some of your tests. Let's say you want to load fixtures for tests that belong to `admin` group:
+A group object is built to listen to these events. It is pretty useful when additional setup is required for some of your tests. Let's say you want to load fixtures for tests that belong to `admin` group:
 
 ```php
 <?php
-class AdminGroup extends \Codeception\Platform\Group
+namespace Group;
+
+class Admin extends \Codeception\GroupObject
 {
     public static $group = 'admin';
 
@@ -210,13 +209,13 @@ class AdminGroup extends \Codeception\Platform\Group
 ```
 
 A group class can be created with `php codecept.phar generate:group groupname` command.
-Group class will be stored in `tests/_groups` directory.
+Group class will be stored in `tests/_support/Group` directory.
 
 A group class can be enabled just like you enable extension class. In file `codeception.yml`:
 
 ``` yaml
 extensions:
-    enabled: [AdminGroup]    
+    enabled: [Group\Admin]    
 ```
 
 Now Admin group class will listen to all events of tests that belong to the `admin` group.
