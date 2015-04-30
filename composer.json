@@ -47,7 +47,7 @@
 
     "autoload":{
         "psr-4":{
-            "Codeception\\": "src",
+            "Codeception\\": "src\\Codeception",
             "Codeception\\Extension\\": "ext"
         }
     },
