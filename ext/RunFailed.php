@@ -1,8 +1,9 @@
 <?php
-namespace Codeception\Platform;
+namespace Codeception\Extension;
 
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
+use Codeception\Extension;
 use Codeception\TestCase;
 
 /**

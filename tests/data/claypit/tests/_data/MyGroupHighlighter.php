@@ -1,9 +1,8 @@
 <?php
-
 use Codeception\Event\TestEvent;
-use Codeception\Platform\Group;
+use Codeception\GroupObject;
 
-class MyGroupHighlighter extends Group
+class MyGroupHighlighter extends GroupObject
 {
     static $group = 'notorun';
 

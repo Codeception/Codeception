@@ -1,10 +1,8 @@
 <?php
-namespace Codeception;
+namespace Codeception\Lib;
 
-use Codeception\Lib\Parser;
 use Codeception\TestCase\Cept;
 use Codeception\TestCase\Cest;
-use Codeception\Util\Annotation;
 use Symfony\Component\Finder\Finder;
 
 /**

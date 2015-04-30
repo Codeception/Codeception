@@ -1,8 +1,9 @@
 <?php
-namespace Codeception\Platform;
+namespace Codeception\Extension;
 
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Extension;
 
 class SimpleOutput extends Extension
 {

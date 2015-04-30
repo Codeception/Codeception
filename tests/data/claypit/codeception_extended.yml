@@ -9,8 +9,8 @@ settings:
     log: false
 extensions:
     enabled:
-      - Codeception\Platform\SimpleOutput
-      - Codeception\Platform\RunFailed
+      - Codeception\Extension\SimpleOutput
+      - Codeception\Extension\RunFailed
       - VerbosityLevelOutput
 modules:
     config:
