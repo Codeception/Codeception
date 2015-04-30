@@ -117,15 +117,15 @@ class Phalcon1 extends Framework implements ActiveRecord
         Di::reset();
         Di::setDefault($this->di);
 
-        if (isset($this->di['session'])) {
+        if ($this->di->has('session')) {
             $this->di['session'] = new PhalconMemorySession();
         }
 
-        if (isset($this->di['cookies'])) {
+        if ($this->di->has('cookies')) {
             $this->di['cookies']->useEncryption(false);
         }
 
-        if ($this->config['cleanup'] && isset($this->di['db'])) {
+        if ($this->config['cleanup'] && $this->di->has('db')) {
             if ($this->config['savepoints']) {
                 $this->di['db']->setNestedTransactionsWithSavepoints(true);
             }
@@ -138,13 +138,13 @@ class Phalcon1 extends Framework implements ActiveRecord
             $currentDi = Di::getDefault();
             $application = require $bootstrap;
             $di = $application->getDi();
-            if (isset($currentDi['db'])) {
+            if ($currentDi->has('db')) {
                 $di['db'] = $currentDi['db'];
             }
-            if (isset($currentDi['session'])) {
+            if ($currentDi->has('session')) {
                 $di['session'] = $currentDi['session'];
             }
-            if (isset($di['cookies'])) {
+            if ($di->has('cookies')) {
                 $di['cookies']->useEncryption(false);
             }
             return $application;
@@ -153,7 +153,7 @@ class Phalcon1 extends Framework implements ActiveRecord
 
     public function _after(TestCase $test)
     {
-        if ($this->config['cleanup'] && isset($this->di['db'])) {
+        if ($this->config['cleanup'] && $this->di->has('db')) {
             while ($this->di['db']->isUnderTransaction()) {
                 $level = $this->di['db']->getTransactionLevel();
                 try {
