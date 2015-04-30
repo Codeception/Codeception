@@ -84,7 +84,7 @@ class Phalcon1 extends Framework implements ActiveRecordInterface
     public $di = null;
 
     /**
-     * Phalcon2 Connector
+     * Phalcon1 Connector
      * @var Phalcon1Connector
      */
     public $client;
