@@ -167,9 +167,9 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testHeadersByConfig()
     {
-        $this->mockResponse();
         $this->module->_setConfig(['headers' => ['xxx' => 'yyyy']]);
         $this->module->_initialize();
+        $this->mockResponse();
         $this->module->amOnPage('/form1');
         $this->assertArrayHasKey('xxx', $this->module->guzzle->getDefaultOption('headers'));
         $this->assertEquals('yyyy', $this->module->guzzle->getDefaultOption('headers/xxx'));
