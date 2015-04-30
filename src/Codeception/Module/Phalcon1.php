@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use RuntimeException;
 use Phalcon\Di;
 use Phalcon\DiInterface;
 use Phalcon\Di\Injectable;
@@ -87,6 +88,11 @@ class Phalcon1 extends Framework implements ActiveRecord
      */
     public $client;
 
+    /**
+     * HOOK: used after configuration is loaded
+     *
+     * @throws ModuleConfig
+     */
     public function _initialize()
     {
         if (!file_exists($this->bootstrapFile = Configuration::projectDir() . $this->config['bootstrap'])) {
@@ -102,15 +108,21 @@ class Phalcon1 extends Framework implements ActiveRecord
                 'return new \Phalcon\Mvc\Application($di);'
             );
         }
-        $this->client = new Phalcon1Connector();
 
+        $this->client = new Phalcon1Connector();
     }
 
+    /**
+     * HOOK: before scenario
+     *
+     * @param TestCase $test
+     * @throws \RuntimeException
+     */
     public function _before(TestCase $test)
     {
         $application = require $this->bootstrapFile;
         if (!$application instanceof Injectable) {
-            throw new \Exception('Bootstrap must return \Phalcon\DI\Injectable object');
+            throw new RuntimeException('Bootstrap must return \Phalcon\Di\Injectable object');
         }
 
         $this->di = $application->getDi();
@@ -151,6 +163,11 @@ class Phalcon1 extends Framework implements ActiveRecord
         });
     }
 
+    /**
+     * HOOK: after scenario
+     *
+     * @param TestCase $test
+     */
     public function _after(TestCase $test)
     {
         if ($this->config['cleanup'] && $this->di->has('db')) {
@@ -313,15 +330,16 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param $model
      *
      * @return \Phalcon\Mvc\Model
+     * @throws \RuntimeException
      */
     protected function getModelRecord($model)
     {
         if (!class_exists($model)) {
-            throw new \RuntimeException("Model $model does not exist");
+            throw new RuntimeException("Model $model does not exist");
         }
         $record = new $model;
         if (!$record instanceof PhalconModel) {
-            throw new \RuntimeException(sprintf('Model %s is not instance of \Phalcon\Mvc\Model', $model));
+            throw new RuntimeException(sprintf('Model %s is not instance of \Phalcon\Mvc\Model', $model));
         }
         return $record;
     }
