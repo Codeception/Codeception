@@ -150,11 +150,19 @@ class SuiteManager
 
 
     /**
-     * @return null|\PHPUnit_Framework_TestSuite
+     * @return \Codeception\Lib\Suite
      */
     public function getSuite()
     {
         return $this->suite;
+    }
+
+    /**
+     * @return ModuleContainer
+     */
+    public function getModuleContainer()
+    {
+        return $this->moduleContainer;
     }
 
     protected function getActor()
