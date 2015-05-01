@@ -2,6 +2,10 @@
 
 #### 2.0.14
 
+* [Laravel4] Partial rewrite of module *2015-05-01*
+  * Added `getApplication()` method
+  * Added `seeFormHasErrors()`, `seeFormErrorMessages(array $bindings)` and `seeFormErrorMessage($key, $errorMessage)` methods
+  * Deprecated `seeSessionHasErrors()` and `seeSessionErrorMessage(array $bindings)` methods.
 * fixed stderr tput messages in PHPStorm console *2015-04-26*
 
 #### 2.0.13
