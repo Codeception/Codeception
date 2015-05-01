@@ -67,7 +67,9 @@ The actual `setUp` and `tearDown` were implemented by parent class `\Codeception
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [UnitHelper, Asserts]
+    enabled: 
+        - Asserts
+        - \Helper\Unit
 ```
 
 ### Classical Unit Testing
@@ -154,7 +156,10 @@ As in scenario-driven functional or acceptance tests you can access Actor class 
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Db, UnitHelper]
+    enabled: 
+        - Asserts
+        - Db
+        - \Helper\Unit
 ```
 
 To access UnitTester methods you can use `UnitTester` property in a test.
@@ -181,22 +186,106 @@ To enable the database functionality in the unit tests please make sure the `Db`
 The database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
 If it's not your required behavior, please change the settings of `Db` module for the current suite.
 
+### Interacting with the Framework
+
+Probably you should not access your database directly if your project already uses ORM for database interactions.
+Why not use the ORM directly inside your tests? Let's try to write a test using Laravel's ORM Eloquent, for this we need configured Laravel5 module. We won't need its web interaction methods like `amOnPage` or `see`, so let's enable only ORM part of it:
+
+```yaml
+class_name: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - Laravel5:
+            part: ORM
+        - \Helper\Unit
+```
+
+We included Laravel5 module as we did for functional testing. Let's see how we can use it for integration tests:
+
+```php
+<?php
+function testUserNameCanBeChanged()
+{
+    // create a user from framework, user will be deleted after the test
+    $id = $this->tester->haveRecord('users', ['name' => 'miles']);
+    // access model
+    $user = User::find($id);
+    $user->setName('bill');
+    $user->save();
+    $this->assertEquals('bill', $user->getName());
+    // verify data was saved using framework methods
+    $this->tester->seeRecord('users', ['name' => 'bill']);
+    $this->tester->dontSeeRecord('users', ['name' => 'miles']);
+}
+?>
+```
+
+The very similar approach can be used to all frameworks that have ORM implementing ActiveRecord pattern.
+These are Yii2 and Phalcon, they have methods `haveRecord`, `seeRecord`, `dontSeeRecord` working in the same manner. They also should be included with specifying `part: ORM` in order to not use functional testing actions.
+
+In case you are using Symfony2 with Doctrine you may not enable Symfony2 itself but use only Doctrine2 only:
+
+```yaml
+class_name: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - Doctrine2:
+            depends: Symfony2
+        - \Helper\Unit
+```
+
+In this case you can use methods from Doctrine2 module, while Doctrine itself uses Symfony2 module to establish connection to database. In this case a test may look like:
+
+```php
+<?php
+function testUserNameCanBeChanged()
+{
+    // create a user from framework, user will be deleted after the test
+    $id = $this->tester->haveInRepository('Acme\DemoBundle\Entity\User', ['name' => 'miles']);
+    // get entity manager by accessing module
+    $em = $this->getModule('Doctrine2')->em;
+    // get real user
+    $user = $em->find('Acme\DemoBundle\Entity\User', $id);
+    $user->setName('bill');
+    $em->persist($user);
+    $em->flush();
+    $this->assertEquals('bill', $user->getName());
+    // verify data was saved using framework methods
+    $this->tester->seeInRepository('Acme\DemoBundle\Entity\User', ['name' => 'bill']);
+    $this->tester->dontSeeInRepository('Acme\DemoBundle\Entity\User', ['name' => 'miles']);
+}
+?>
+```
+
+In both examples you should not be worried about the data persistance between tests. 
+Doctrine2 module as well as Laravel4 module will clean up created data at the end of a test. 
+This is done by wrapping a test in a transaction and rolling it back afterwards. 
+
 ### Accessing Module
 
 Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the UnitTester class for this purpose, using module directly grants you access to all public properties of that module.
 
-For example, if you use `Symfony2` module, here is the way you can access Symfony container:
+We already demonstrated this case in previous code piece where we accessed Entity Manager from a Doctrine2 module
 
 ```php
 <?php
-/**
- * @var Symfony\Component\DependencyInjection\Container
- */
+/** @var Doctrine\ORM\EntityManager */
+$em = $this->getModule('Doctrine2')->em;
+?>
+```
+
+If you use `Symfony2` module, here is the way you can access Symfony container:
+
+```php
+<?php
+/** @var Symfony\Component\DependencyInjection\Container */
 $container = $this->getModule('Symfony2')->container;
 ?>
 ```
 
-All public variables are listed in references for corresponding modules.
+The same can be done for all public properties of an enabled module. Accessible properties are listed in the module reference
 
 ### Cest
 
@@ -234,10 +323,20 @@ For unit testing you may include `Asserts` module, that adds regular assertions 
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Asserts, Db, UnitHelper]
+    enabled: 
+        - Asserts
+        - Db
+        - \Helper\Unit
 ```
 
 [Learn more about Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes).
+
+<div class="alert alert-info">
+It may look like Cest format is too simple for writing tests. It doesn't provide assertion methods,
+methods to create mocks and stubs or even accessing the module with `getModule`, as we did in example above.
+However Cest format is better at separating concerns. Test code does not interefere with support code, provided by `UnitTester` object. All additional actions you may need in your unit/intergation tests you can implement in `Helper\Unit` class. This is the recommended approach, and allows keeping tests verbose and clean. 
+</div>
+
 
 ### Stubs
 

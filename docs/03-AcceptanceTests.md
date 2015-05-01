@@ -38,7 +38,7 @@ Such transformations can be done by command:
 $ php codecept.phar generate:scenarios
 ```
 
-Generated scenarios will be stored in your ___data__ directory in text files.
+Generated scenarios will be stored in your ___output__ directory in text files.
 
 **This scenario can be performed either by a simple PHP Browser or by a browser with Selenium WebDriver**. We will start writing our first acceptance tests with a PhpBrowser.
 
@@ -52,16 +52,15 @@ Common PhpBrowser drawbacks:
 * you can't fill fields that are not inside a form
 * you can't work with JavaScript interactions: modal windows, datepickers, etc.
 
-Before we start we need a local copy of the site running on your host. We need to specify the `url` parameter in the acceptance suite config (tests/acceptance.suite.yml).
+Before we start we need a local copy of the site running on your host. We need to specify the `url` parameter in the acceptance suite config (`tests/acceptance.suite.yml`).
 
 ``` yaml
 class_name: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: [your site's url]
-        - AcceptanceHelper
-        - Db
+            url: {{your site url}}
+        - \Helper\Acceptance
 ```
 
 We should start by creating a 'Cept' file in the __tests/acceptance__ directory. Let's call it __SigninCept.php__. We will write the first lines into it.
@@ -94,7 +93,7 @@ $I->lookForwardTo('get money when the bank is closed');
 
 After we have described the story background, let's start writing a scenario.
 
-The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PhpBrowser` and `Db` modules. We will briefly describe them here:
+The `$I` object is used to write all interactions. The methods of the `$I` object are taken from the `PhpBrowser` module. We will briefly describe it here:
 
 ```php
 <?php
@@ -102,7 +101,7 @@ $I->amOnPage('/login');
 ?>
 ```
 
-We assume that all `am` commands should describe the starting environment. The `amOnPage` command sets the starting point of a test to the __/login__ page.
+We assume that all `am` actions should describe the starting environment. The `amOnPage` action sets the starting point of a test to the __/login__ page.
 
 With the `PhpBrowser` you can click the links and fill the forms. That will probably be the majority of your actions.
 
@@ -220,19 +219,6 @@ $I->submitForm('#update_form', array('user' => array(
      'gender' => 'm',
 	 'submitButton' => 'Update'
 )));
-?>
-```
-
-#### AJAX Emulation
-
-As we know, PHP browser can't process JavaScript. Still, all the ajax calls can be easily emulated by sending the proper requests to the server.
-
-Consider using these methods for ajax interactions.
-
-```php
-<?php
-$I->sendAjaxGetRequest('/refresh');
-$I->sendAjaxPostRequest('/update', array('name' => 'Miles', 'email' => 'Davis'));
 ?>
 ```
 
@@ -366,7 +352,7 @@ $user_id = $I->grabFromCurrentUrl('~$/user/(\d+)/~');
 ## Selenium WebDriver
 
 A nice feature of Codeception is that most scenarios can be easily ported between the testing backends.
-Your PhpBrowser tests we wrote previously can be executed inside a real browser (or even PhantomJS) with Selenium WebDriver.
+Your PhpBrowser tests we wrote previously can be executed inside a real browser (or PhantomJS) with Selenium WebDriver.
 
 The only thing we need to change is to reconfigure and rebuild the AcceptanceTester class, to use **WebDriver** instead of PhpBrowser.
 
@@ -377,9 +363,9 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
-            url: 'http://localhost/myapp/'
+            url: {{your site url}}
             browser: firefox            
-        - AcceptanceHelper
+        - \Helper\Acceptance
 ```
 
 In order to run Selenium tests you need to [download Selenium Server](http://seleniumhq.org/download/) and get it running (Alternatively you may use [PhantomJS](http://phantomjs.org/) headless browser in `ghostdriver` mode).
@@ -450,6 +436,8 @@ modules:
             dump: tests/_data/dump.sql
 ```
 
+After we configured Db module we should have it enabled in `acceptance.suite.yml` config.
+
 ### Debugging
 
 Codeception modules can print valuable information while running. Just execute tests with the `--debug` option to see running details. For any custom output use `codecept_debug` function.
@@ -460,8 +448,9 @@ codecept_debug($I->grabTextFrom('#name'));
 ?>
 ```
 
+On each fail, the snapshot of the last shown page will be stored in the __tests/_output__ directory. PhpBrowser will store HTML code and WebDriver will save the screenshot of a page.
 
-On each fail, the snapshot of the last shown page will be stored in the __tests/_log__ directory. PhpBrowser will store HTML code and WebDriver will save the screenshot of a page.
+Sometimes you may want to inspect a web page opened by a running test. For such cases you may use [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module.
 
 ## Conclusion
 
