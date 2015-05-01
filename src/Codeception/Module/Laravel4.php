@@ -156,6 +156,8 @@ class Laravel4 extends Framework implements ActiveRecord
     private function initializeLaravel()
     {
         $this->app = $this->bootApplication();
+        $this->app['config']['session.driver'] = $this->getConfiguredSessionDriver();
+
         $this->client = new LaravelConnector($this->app);
         $this->client->followRedirects(true);
     }
@@ -194,6 +196,36 @@ class Laravel4 extends Framework implements ActiveRecord
         $app = require $startFile;
 
         return $app;
+    }
+
+    /**
+     * Get the configured session driver.
+     * Laravel 4 forces the array session driver if the application is run from the console.
+     * This happens in \Illuminate\Session\SessionServiceProvider::setupDefaultDriver() method.
+     * This method is used to retrieve the correct session driver that is configured in the config files.
+     *
+     * @return string
+     */
+    private function getConfiguredSessionDriver()
+    {
+        $configDir = $this->app['path'] . DIRECTORY_SEPARATOR . 'config';
+        $configFiles = array(
+            $configDir . DIRECTORY_SEPARATOR . $this->config['environment'] . DIRECTORY_SEPARATOR . 'session.php',
+            $configDir . DIRECTORY_SEPARATOR . 'session.php',
+
+        );
+
+        foreach ($configFiles as $configFile) {
+            if (file_exists($configFile)) {
+                $sessionConfig = require $configFile;
+
+                if (is_array($sessionConfig) && isset($sessionConfig['driver'])) {
+                    return $sessionConfig['driver'];
+                }
+            }
+        }
+
+        return $this->app['config']['session.driver'];
     }
 
     /**
