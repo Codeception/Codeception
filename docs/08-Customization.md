@@ -59,7 +59,26 @@ If your applications uses same helpers, follow the next section of this chapter.
 Codeception has limited capabilities to extend its core features.
 Extensions are not supposed to override current functionality, but are pretty useful if you are experienced developer and you want to hook into testing flow.
 
-Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
+By default, one `RunFailed` Extension is already enabled in your global `codeception.yml`. 
+It allows you to rerun failed tests with `-g failed` option:
+   
+```
+php codecept.phar run -g failed
+```
+
+Codeception comes with bundled extensions located in `ext` directory. For instance, you can enable Logger extension to log test exection with Monolog 
+
+```yaml
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed # default extension
+        - Codeception\Extension\Logger # enabled extension
+    config:
+        Codeception\Extension\Logger:
+            max_files: 5 # logger configuration
+```
+
+But what are extensions, anyway? Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
 
 Here are the events and event classes. The events are listed in order they happen during execution. Each event has a corresponding class, which is passed to listener, and contains specific objects.
 
@@ -136,7 +155,6 @@ Then you can enable it in `codeception.yml`:
 ```yaml
 extensions:
     enabled: [MyCustomExtension]
-
 ```
 
 ### Configuring Extension
