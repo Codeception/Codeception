@@ -2,6 +2,7 @@
 
 #### 2.0.14
 
+* [Laravel4] Fixed issue with session configuration *2015-05-01*
 * [Laravel4] Partial rewrite of module *2015-05-01*
   * Added `getApplication()` method
   * Added `seeFormHasErrors()`, `seeFormErrorMessages(array $bindings)` and `seeFormErrorMessage($key, $errorMessage)` methods
