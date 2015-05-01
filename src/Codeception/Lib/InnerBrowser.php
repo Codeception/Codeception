@@ -1068,13 +1068,21 @@ class InnerBrowser extends Module implements Web
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThat(
+            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            $constraint,
+            $message
+        );
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThatItsNot(
+            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            $constraint,
+            $message
+        );
     }
 
     /**

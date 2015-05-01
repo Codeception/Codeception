@@ -127,6 +127,10 @@ class SuiteManager
 
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
+
+        if (!empty($groups) && $test instanceof TestCase\Interfaces\ScenarioDriven && null !== $test->getScenario()) {
+            $test->getScenario()->group($groups);
+        }
     }
     
     protected function createSuite($name)

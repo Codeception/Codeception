@@ -103,6 +103,7 @@ class Run extends Command
                  new InputOption('skip-group', 'sg', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Skip selected groups'),
                  new InputOption('env', '', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Run tests in selected environments.'),
                  new InputOption('fail-fast', 'f', InputOption::VALUE_NONE, 'Stop after first failure'),
+                 new InputOption('no-rebuild', '', InputOption::VALUE_NONE, 'Do not rebuild actor classes on start'),
              )
         );
 

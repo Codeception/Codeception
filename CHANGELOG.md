@@ -1,5 +1,20 @@
 # Changelog
 
+#### 2.0.14
+
+* fixed stderr tput messages in PHPStorm console *2015-04-26*
+
+#### 2.0.13
+
+* Updated to PHPUnit 4.6
+* [Db] fixed regression introduced in 2.0.11. `haveInDatabase` works in PostgreSQL on tables with 'id' as primary key. Fix by @akireikin #1846 #1761
+* added `--no-rebuild` option to disable automatic actor classes rebuilds *2015-04-24*
+* suppressed warnings on failed actor classes auto-rebuilds
+* enable group listener for grouping with annotation by @litpuvn Fixes #1830
+* unix terminals output improved by calculating screen size. Done by @DexterHD See #1858
+* [Yii2] Remove line to activate request parsers by @m8rge #1843
+* [PhpBrowser][Frameworks] Various `fillField`/`submitForm` improvements by @zbateson See #1840. Fixes #1828, #1689
+* Allow following symlinks when searching for tests by @nechutny #1862
 
 #### 2.0.12
 

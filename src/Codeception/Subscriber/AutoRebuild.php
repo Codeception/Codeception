@@ -21,9 +21,9 @@ class AutoRebuild implements EventSubscriberInterface
         $guyFile = $settings['path'] . $settings['class_name'] . '.php';
 
         // load guy class to see hash
-        $handle = fopen($guyFile, "r");
-        if ($handle) {
-            $line = fgets($handle);
+        $handle = @fopen($guyFile, "r");
+        if ($handle and is_writable($guyFile)) {
+            $line = @fgets($handle);
             if (preg_match('~\[STAMP\] ([a-f0-9]*)~', $line, $matches)) {
                 $hash = $matches[1];
                 $currentHash = Actor::genHash(SuiteManager::$actions, $settings);
@@ -32,13 +32,13 @@ class AutoRebuild implements EventSubscriberInterface
                 if ($hash != $currentHash) {
                     codecept_debug("Rebuilding {$settings['class_name']}...");
                     $guyGenerator = new Actor($settings);
-                    fclose($handle);
+                    @fclose($handle);
                     $generated = $guyGenerator->produce();
-                    file_put_contents($guyFile, $generated);
+                    @file_put_contents($guyFile, $generated);
                     return;
                 }
             }
-            fclose($handle);
+            @fclose($handle);
         }
     }
 }

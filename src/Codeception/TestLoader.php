@@ -109,7 +109,7 @@ class TestLoader {
 
     public function loadTests()
     {
-        $finder = Finder::create()->files()->sortByName()->in($this->path);
+        $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
 
         foreach (self::$formats as $format) {
             $formatFinder = clone($finder);

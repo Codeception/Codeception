@@ -1,4 +1,6 @@
 <?php
+if (!defined('PHPUNIT_TESTSUITE')) define('PHPUNIT_TESTSUITE', true);
+
 class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -11,22 +13,31 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     protected $dispatcher;
 
+    /**
+     * @var \Codeception\PHPUnit\Runner
+     */
+    protected $runner;
+
     public function setUp() {
         $this->dispatcher = new Symfony\Component\EventDispatcher\EventDispatcher;
-        $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', \Codeception\Configuration::$defaultSuiteSettings);
+        $settings = \Codeception\Configuration::$defaultSuiteSettings;
+        $settings['class_name'] = 'CodeGuy';
+        $this->suiteman = new \Codeception\SuiteManager($this->dispatcher, 'suite', $settings);
+        
+        $printer = \Codeception\Util\Stub::makeEmpty('PHPUnit_TextUI_ResultPrinter');
+        $this->runner = new \Codeception\PHPUnit\Runner;
+        $this->runner->setPrinter($printer);
     }
 
     /**
      * @group core
      */
     public function testRun() {
-        $events = array();
+        $events = [];
         $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = $e->getName(); });
         $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $runner = new \Codeception\PHPUnit\Runner;
-        $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($this->dispatcher));
-        $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, array('colors' => false, 'steps' => true, 'debug' => false));
-        $this->assertEquals($events, array('suite.before', 'suite.after'));
+        $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
+        $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
 
     /**
@@ -57,4 +68,20 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $newSuiteMan->loadTests($file);
         $this->assertEquals(3, $newSuiteMan->getSuite()->count());
     }
+
+    public function testGroupEventsAreFired()
+    {
+        $events = [];
+        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $this->dispatcher->addListener('test.before.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $this->dispatcher->addListener('test.after.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
+
+        $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
+        $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
+        $this->assertContains('test.before', $events);
+        $this->assertContains('test.before.admin', $events);
+        $this->assertContains('test.after.admin', $events);
+    }
+
 }
