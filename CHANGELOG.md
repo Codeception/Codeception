@@ -14,11 +14,12 @@
 * `shuffle` added to settings. Randomizes order of running tests. See #1504
 * Console output improved: scenario stack traces contain files and lines of fail.
 * Module parts. Actions of modules can be loaded partially in order to disable actions which are not used in current tests. For instance, disable web actions of framework modules in unit testsing.
-* Group classes renamed to GroupObjects
 * [WebDriver] session snapshot implemented, allows to store cookies and load them, i.e., to keep user session between testss.
 * [WebDriver][PhpBrowser][Frameworks] Malformed XPath locators wil throw an exception #1441
 * `MODULE_INIT` event is fired before initializing modules #1370
 * Graceful tests termination using `pcntl_signal`. See #1286
+* Group classes renamed to GroupObjects; Base GroupObject class renamed to `Codeception\GroupObject`
+* Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
 
 
 #### 2.0.14
