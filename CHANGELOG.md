@@ -4,15 +4,15 @@
 
 * **PSR-4**: all support classes moved to `tests/_support` by default. Actors, Helpers, PageObjects, StepObjects, GroupObjects to follow PSR-4 naming style. Autoloader implemented by @splinter89.
 * **Dependency Injection**: support classes can be injected into tests. Support classes can be injected into each other too. This happens by implementing method `_inject` and explicitly specifying class names as parameters. Implemented by @splinter89.
-* Actor classes can be extended, generated parts were moved to special traits in `_generated` namespace. Each *Tester class can be updated with custom methods.
-* Module config is simplified. Modules can be configured in `enabled` section of suite config.
-* Conflicts: module can define conflicts with each other by implementing `_conflicts` method
-* Dependencies: module can explicitly define dependencies and expect their injection by implementing `_inject` and `_depends` methods and relying on dependency injection container.
-* Current modules, environment, and test name can be received in scenario. Example: `$scenario->current('env')` returns current environment name. Fixes #1251
-* Environment Matrix: environments can be merged. Environment configs can be created in `tests/_envs`, environment generator added. By @davertmik and @sjableka See #1747
-* Custom Printers: XML, JSON, TAP, Report printers can be redefined in configuration. See #1425
+* **Actor classes can be extended**, their generated parts were moved to special traits in `_generated` namespace. Each *Tester class can be updated with custom methods.
+* **Module config simplified**: Modules can be configured in `enabled` section of suite config.
+* **Conflicts**: module can define conflicts with each other by implementing `_conflicts` method
+* **Dependencies**: module can explicitly define dependencies and expect their injection by implementing `_inject` and `_depends` methods and relying on dependency injection container.
+* **Current** modules, environment, and test name can be received in scenario. Example: `$scenario->current('env')` returns current environment name. Fixes #1251
+* **Environment Matrix**: environments can be merged. Environment configs can be created in `tests/_envs`, environment generator added. Implemented by By @sjableka. See #1747
+* **Custom Printers**: XML, JSON, TAP, Report printers can be redefined in configuration. See #1425
 * `shuffle` added to settings. Randomizes order of running tests. See #1504
-* Console output improved: scenario strack traces contain files and lines of fail.
+* Console output improved: scenario stack traces contain files and lines of fail.
 * Module parts. Actions of modules can be loaded partially in order to disable actions which are not used in current tests. For instance, disable web actions of framework modules in unit testsing.
 * Group classes renamed to GroupObjects
 * [WebDriver] session snapshot implemented, allows to store cookies and load them, i.e., to keep user session between testss.
