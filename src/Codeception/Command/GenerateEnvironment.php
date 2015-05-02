@@ -9,6 +9,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Generates empty environment configuration file into envs dir:
+ *
+ *  * `codecept g:env firefox`
+ *
+ * Required to have `envs` path to be specifed in `codeception.yml`
+ */
 class GenerateEnvironment extends Command
 {
     use Shared\FileSystem;
