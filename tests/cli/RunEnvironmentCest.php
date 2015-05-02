@@ -95,4 +95,12 @@ class RunEnvironmentCest
         $I->executeCommand('run messages MessageCest.php:multipleEnvRequired -vv --env env2,env1');
         $I->seeInShellOutput('Multiple env given');
     }
+
+    public function generateEnvConfig(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('g:env firefox');
+        $I->seeInShellOutput('firefox config was created');
+        $I->seeFileFound('tests/_envs/firefox.yml');
+    }
 }

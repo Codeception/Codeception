@@ -3,6 +3,7 @@ paths:
     log: tests/log
     data: tests/data
     support: tests/support
+    envs: tests/envs
 settings:
     shuffle: true
     bootstrap: _bootstrap.php

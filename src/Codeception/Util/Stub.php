@@ -208,7 +208,7 @@ class Stub
      */
     public static function makeEmpty($class, $params = [], $testCase = false)
     {
-        $class   = self::getClassname($class);
+        $class = self::getClassname($class);
         $reflection = new \ReflectionClass($class);
 
         $methods = get_class_methods($class);
@@ -279,7 +279,7 @@ class Stub
      */
     public static function construct($class, $constructorParams = [], $params = [], $testCase = false)
     {
-        $class     = self::getClassname($class);
+        $class = self::getClassname($class);
         $reflection = new \ReflectionClass($class);
 
         $callables = self::getMethodsToReplace($reflection, $params);
@@ -330,7 +330,7 @@ class Stub
      */
     public static function constructEmpty($class, $constructorParams = [], $params = [], $testCase = false)
     {
-        $class   = self::getClassname($class);
+        $class = self::getClassname($class);
         $reflection = new \ReflectionClass($class);
 
         $methods = get_class_methods($class);
@@ -378,8 +378,8 @@ class Stub
      *
      * @param                                 $class
      * @param                                 $method
-     * @param array                           $constructorParams
-     * @param array                           $params
+     * @param array $constructorParams
+     * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
      * @return object

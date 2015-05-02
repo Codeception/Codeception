@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Creates empty Group file - extension which handles all group events.
+ * Creates empty GroupObject - extension which handles all group events.
  *
  * * `codecept g:group Admin`
  */

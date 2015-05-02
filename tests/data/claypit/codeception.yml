@@ -3,6 +3,7 @@ paths:
     log: tests/_output
     data: tests/_data
     helpers: tests/_support
+    envs: tests/_envs
 settings:
     bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite

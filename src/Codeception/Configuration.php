@@ -62,11 +62,10 @@ class Configuration
      * @var array Default config
      */
     public static $defaultConfig = [
-        'actor'      => 'Guy',
+        'actor'      => 'Guy', ## codeception 1.x compatility
         'namespace'  => '',
         'include'    => [],
         'paths'      => [
-            'envs' => 'tests/_envs',
         ],
         'modules'    => [],
         'extensions' => [
@@ -178,8 +177,11 @@ class Configuration
 
         self::$dataDir = $config['paths']['data'];
         self::$supportDir = $config['paths']['support'];
-        self::$envsDir = $config['paths']['envs'];
         self::$testsDir = $config['paths']['tests'];
+
+        if (isset($config['paths']['envs'])) {
+            self::$envsDir = $config['paths']['envs'];
+        }
 
         self::loadBootstrap($config['settings']['bootstrap']);
         self::autoloadHelpers();
@@ -242,29 +244,28 @@ class Configuration
         }
 
         if (!in_array($suite, self::$suites)) {
-            throw new \Exception("Suite $suite was not loaded");
+            throw new ConfigurationException("Suite $suite was not loaded");
         }
 
+        // load global config
         $globalConf = $config['settings'];
-
         foreach (['modules', 'coverage', 'namespace', 'groups', 'env'] as $key) {
             if (isset($config[$key])) {
                 $globalConf[$key] = $config[$key];
             }
         }
-
-        $path = $config['paths']['tests'];
-
-        $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
-        $suiteDistconf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
-        $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
-
         $settings = self::mergeConfigs(self::$defaultSuiteSettings, $globalConf);
-        $settings = self::mergeConfigs($settings, $envConf);
-        $settings = self::mergeConfigs($settings, $suiteDistconf);
-        $settings = self::mergeConfigs($settings, $suiteConf);
 
-        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
+        // load suite config
+        $settings = self::loadSuiteConfig($suite, $config['paths']['tests'], $settings);
+
+        // load from environment configs
+        if (isset($config['paths']['envs'])) {
+            $envConf = self::loadEnvConfigs(self::$dir . DIRECTORY_SEPARATOR . $config['paths']['envs']);
+            $settings = self::mergeConfigs($settings, $envConf);
+        }
+
+        $settings['path'] = self::$dir . DIRECTORY_SEPARATOR . $config['paths']['tests'] . DIRECTORY_SEPARATOR . $suite . DIRECTORY_SEPARATOR;
 
         return $settings;
     }
@@ -282,35 +283,35 @@ class Configuration
         }
         if (!is_dir($path)) {
             self::$envConfig[$path] = [];
-        } else {
-            $envFiles = Finder::create()
-                ->files()
-                ->name('*{.dist}.yml')
-                ->in($path)
-                ->depth('< 1');
-
-            $envs = [];
-            /** @var SplFileInfo $envFile */
-            foreach ($envFiles as $envFile) {
-                preg_match('~^(.*?)(\.dist)?\.yml$~', $envFile->getFilename(), $matches);
-                $envs[] = $matches[1];
-            }
-
-            $envConfig = [];
-            foreach ($envs as $env) {
-                $envConfig[$env] = [];
-                $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . '.dist.yml', null);
-                if ($envConf !== null) {
-                    $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
-                }
-                $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . '.yml', null);
-                if ($envConf !== null) {
-                    $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
-                }
-            }
-
-            self::$envConfig[$path] = ['env' => $envConfig];
+            return self::$envConfig[$path];
         }
+
+        $envFiles = Finder::create()
+            ->files()
+            ->name('*{.dist}.yml')
+            ->in($path)
+            ->depth('< 1');
+
+        $envs = [];
+        /** @var SplFileInfo $envFile */
+        foreach ($envFiles as $envFile) {
+            preg_match('~^(.*?)(\.dist)?\.yml$~', $envFile->getFilename(), $matches);
+            $envs[] = $matches[1];
+        }
+
+        $envConfig = [];
+        foreach ($envs as $env) {
+            $envConfig[$env] = [];
+            foreach (['.dist.yml', '.yml'] as $suffix) {
+                $envConf = self::getConfFromFile($path . DIRECTORY_SEPARATOR . $env . $suffix, null);
+                if ($envConf === null) {
+                    continue;
+                }
+                $envConfig[$env] = self::mergeConfigs($envConfig[$env], $envConf);
+            }
+        }
+
+        self::$envConfig[$path] = ['env' => $envConfig];
         return self::$envConfig[$path];
     }
 
@@ -469,6 +470,9 @@ class Configuration
      */
     public static function envsDir()
     {
+        if (!self::$envsDir) {
+            return null;
+        }
         return self::$dir . DIRECTORY_SEPARATOR . self::$envsDir . DIRECTORY_SEPARATOR;
     }
 
@@ -519,6 +523,23 @@ class Configuration
         }
 
         return $res;
+    }
+
+    /**
+     * Loads config from *.dist.suite.yml and *.suite.yml
+     *
+     * @param $suite
+     * @param $path
+     * @param $settings
+     * @return array
+     */
+    protected static function loadSuiteConfig($suite, $path, $settings)
+    {
+        $suiteDistconf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
+        $settings = self::mergeConfigs($settings, $suiteDistconf);
+        $settings = self::mergeConfigs($settings, $suiteConf);
+        return $settings;
     }
 
 }
