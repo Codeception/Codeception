@@ -58,6 +58,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $this->forms = [];
     }
 
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\Web';
+    }
+
     /**
      * @return Crawler
      * @throws ModuleException

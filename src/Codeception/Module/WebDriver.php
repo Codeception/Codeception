@@ -142,6 +142,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->initialWindowSize();
     }
 
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\Web';
+    }
+
     public function _before(\Codeception\TestCase $test)
     {
         if (!isset($this->webDriver)) {
