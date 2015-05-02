@@ -52,54 +52,33 @@ This will launch test suites for all 3 applications and merge the reports from a
 
 If your applications uses same helpers, follow the next section of this chapter.
 
-## Autoload Helper classes
+## Extension
 
-There is global `_bootstrap.php` file. This file is included at the very beginning of execution. We recommend to use it to initialize autoloaders and constants. It is especially useful if you want to include `Module` or `Helper` classes that are not stored in `tests/_helpers` directory, or those which are organized in namespaces.
-
-```php
-<?php
-require_once __DIR__.'/../lib/tests/helpers/MyHelper.php';
-?>
-```
-
-Alternatively you can use Composer's autoloader. Codeception has its autoloader too, and it's [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) compatible:
-
-```php
-<?php
-Codeception\Util\Autoload::addNamespace('', __DIR__.'/../lib/tests/helpers');
-?>
-```
-
-Now all classes in global namespace will be additionally searched in `__DIR__.'/../lib/tests/helpers'`. You can declare to load helpers from namespaces with specified prefixes too:
-
-```php
-<?php
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
-?>
-```
-
-That will point autoloader to load class named `MyApp\Test\MyHelper` from `__DIR__.'/../lib/tests/helpers/MyHelper.php'`, and `MyApp\Test\User\MyHelper` will be loaded from `__DIR__.'/../lib/tests/helpers/User/MyHelper.php'`.
-
-Autoloader can also be used to specify base directories for your `PageObject` and `Controller` classes.
-
-Example of `tests/_bootstrap.php` file:
-
-``` php
-<?php
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/../lib/tests/helpers');
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/pageobjects');
-Codeception\Util\Autoload::addNamespace('MyApp\\Test', __DIR__.'/controller');
-?>
-```
-
-## Extension classes
-
-<div class="alert">This section requires advanced PHP skills and some knowlegde of Codeception and PHPUnit internals.</div>
+<div class="alert">This section requires advanced PHP skills and some knowledge of Codeception and PHPUnit internals.</div>
 
 Codeception has limited capabilities to extend its core features.
 Extensions are not supposed to override current functionality, but are pretty useful if you are experienced developer and you want to hook into testing flow.
 
-Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
+By default, one `RunFailed` Extension is already enabled in your global `codeception.yml`. 
+It allows you to rerun failed tests with `-g failed` option:
+   
+```
+php codecept.phar run -g failed
+```
+
+Codeception comes with bundled extensions located in `ext` directory. For instance, you can enable Logger extension to log test exection with Monolog 
+
+```yaml
+extensions:
+    enabled:
+        - Codeception\Extension\RunFailed # default extension
+        - Codeception\Extension\Logger # enabled extension
+    config:
+        Codeception\Extension\Logger:
+            max_files: 5 # logger configuration
+```
+
+But what are extensions, anyway? Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
 
 Here are the events and event classes. The events are listed in order they happen during execution. Each event has a corresponding class, which is passed to listener, and contains specific objects.
 
@@ -126,11 +105,11 @@ Here are the events and event classes. The events are listed in order they happe
 
 There may be a confusion between `test.start`/`test.before` and `test.after`/`test.end`. Start/end events are triggered by PHPUnit itself. But before/after events are triggered by Codeception. Thus, when you have classical PHPUnit test (extended from `PHPUnit_Framework_TestCase`), before/after events won't be triggered for them. On `test.before` event you can mark test as skipped or incomplete, which is not possible in `test.start`. You can learn more from [Codeception internal event listeners](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Subscriber).
 
-The extension class itself is inherited from `Codeception\Platform\Extension`.
+The extension class itself is inherited from `Codeception\Extension`.
 
 ``` php
 <?php
-class MyCustomExtension extends \Codeception\Platform\Extension
+class MyCustomExtension extends \Codeception\Extension
 {
     // list events to listen to
     public static $events = array(
@@ -162,24 +141,20 @@ Extensions have some basic methods you can use:
 * `write` - prints to screen
 * `writeln` - prints to screen with line end char at the end
 * `getModule` - allows you to access a module
+* `hasModule` - checks if module is enabled
+* `getModuleNames` - list all enabled modules
 * `_reconfigure` - can be implemented instead of overriding constructor. 
 
 ### Enabling Extension
 
-Once you've implemented a simple extension class, you should include it in `tests/_bootstrap.php` file:
-
-``` php
-<?php
-include_once '/path/to/my/MyCustomExtension.php';
-?>
-```
+Once you've implemented a simple extension class, you can require it in `tests/_bootstrap.php`, 
+load with Composer's autoloader defined in `composer.json`, or store class inside `tests/_support`dir.
 
 Then you can enable it in `codeception.yml`:
 
 ```yaml
 extensions:
     enabled: [MyCustomExtension]
-
 ```
 
 ### Configuring Extension
@@ -201,9 +176,9 @@ Passed configuration is accessible via `config` property: `$this->config['param'
 
 Check out a very basic extension [Notifier](https://github.com/Codeception/Notifier).
 
-## Group Classes
+## Group Objects
 
-Group Classes are extensions listening to events of a tests belonging to a specific group.
+Group Objects are extensions listening to events of a tests belonging to a specific group.
 When a test is added to a group:
 
 ```php
@@ -222,11 +197,13 @@ This test will trigger events:
 * `test.fail.admin`
 * `test.after.admin`
 
-A group class is built to listen to these events. It is pretty useful when additional setup is required for some of your tests. Let's say you want to load fixtures for tests that belong to `admin` group:
+A group object is built to listen to these events. It is pretty useful when additional setup is required for some of your tests. Let's say you want to load fixtures for tests that belong to `admin` group:
 
 ```php
 <?php
-class AdminGroup extends \Codeception\Platform\Group
+namespace Group;
+
+class Admin extends \Codeception\GroupObject
 {
     public static $group = 'admin';
 
@@ -250,13 +227,13 @@ class AdminGroup extends \Codeception\Platform\Group
 ```
 
 A group class can be created with `php codecept.phar generate:group groupname` command.
-Group class will be stored in `tests/_groups` directory.
+Group class will be stored in `tests/_support/Group` directory.
 
 A group class can be enabled just like you enable extension class. In file `codeception.yml`:
 
 ``` yaml
 extensions:
-    enabled: [AdminGroup]    
+    enabled: [Group\Admin]    
 ```
 
 Now Admin group class will listen to all events of tests that belong to the `admin` group.
