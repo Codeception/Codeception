@@ -252,7 +252,13 @@ paths:
     envs: tests/_envs
 ```
 
-Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`)
+Names of these files are used as environments names (e.g. `chrome.yml` or `chrome.dist.yml` for environment named `chrome`). 
+You can generate a new file with environment configuration using `generate:environment` command:
+
+```bash
+$ php codecept.phar g:env chrome
+```
+
 and in there you can just specify options that you wish to override:
 
 ```yaml
