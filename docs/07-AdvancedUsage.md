@@ -337,6 +337,23 @@ $scenario->env('dev,phantom');
 
 This way you can easily control which tests will be executed for each environments.
 
+### Current values
+
+Sometimes you may need to change test behavior in realtime. For instance, behavior of the same test may differ in Firefox and in Chromium.
+In runtime we can receive current environment name, test name, or list of enabled modules by calling `$scenario->current()` method.
+    
+```php
+<?php
+// retrieve current environment
+$scenario->current('env'); 
+
+// list of all enabled modules
+$scenario->current('modules'); 
+
+// test name
+$scenario->current('name');
+?>
+```
 
 ### Depends Annotation
 
