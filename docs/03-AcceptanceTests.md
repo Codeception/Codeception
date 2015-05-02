@@ -398,6 +398,37 @@ In this case we are waiting for agree button to appear and then clicking it. If 
 
 See Codeception's [WebDriver module documentation](http://codeception.com/docs/modules/WebDriver) for the full reference.
 
+### Session Snapshots
+
+It's often needed to persist user session between tests.
+If you need to authorize user for each test you can do so by filling Login form in the beginning of each test. 
+Running those steps take time, and in case of Selenium tests (which are slow by themselves) can be this time can be significant. 
+Codeception allows you to share cookies between tests, so once logged in user could stay authorized for other tests.
+
+In demonstration purposes let's write a support function `test_login` and use it in test: 
+
+``` php
+<?php
+function test_login($I)
+{
+     // if snapshot exists - skipping login
+     if ($I->loadSessionSnapshot('login')) return;
+     // logging in
+     $I->amOnPage('/login');
+     $I->fillField('name', 'jon');
+     $I->fillField('password', '123345');
+     $I->click('Login');
+     // saving snapshot
+     $I->saveSessionSnapshot('login');
+}
+// in test:
+$I = new AcceptanceTester($scenario);
+test_login($I);
+?>
+```
+
+Instead of writing `test_login` function shown above it is recommended to implement it inside `AcceptanceTester` class.   
+
 ### Multi Session Testing 
 
 Codeception allows you to execute actions in concurrent sessions. The most obvious case for it is testing realtime messaging between users on site. In order to do it you will need to launch two browser windows at the same time for the same test. Codeception has very smart concept for doing this. It is called **Friends**.
