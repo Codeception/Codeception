@@ -52,6 +52,10 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * * kernel - `Illuminate\Foundation\Application` instance
  * * client - `BrowserKit` client
  *
+ * ## Parts
+ *
+ * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ *
  */
 class Laravel4 extends Framework implements ActiveRecord, PartedModule
 {

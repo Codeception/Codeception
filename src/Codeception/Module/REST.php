@@ -49,6 +49,11 @@ use Codeception\Util\Soap as XmlUtils;
  * * response - last response (string)
  *
  *
+ * ## Parts
+ *
+ * * Json - actions for validating Json responses (no Xml responses)
+ * * Xml - actions for validating XML responses (no Json responses)
+ *
  */
 class REST extends \Codeception\Module implements DependsOnModule, PartedModule
 {

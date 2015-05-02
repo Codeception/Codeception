@@ -48,6 +48,10 @@ use Codeception\Step;
  * </pre>
  *
  *
+ * ## Parts
+ *
+ * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ *
  * ## Status
  *
  * Maintainer: **cujo**

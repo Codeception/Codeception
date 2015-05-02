@@ -26,6 +26,11 @@ use Yii;
  *             configFile: '/path/to/config.php'
  * </pre>
  *
+ * ## Parts
+ *
+ * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ *
+ *
  * ## Status
  *
  * Maintainer: **qiangxue**

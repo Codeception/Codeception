@@ -45,6 +45,10 @@ use Illuminate\Http\Request;
  * * app - `Illuminate\Foundation\Application` instance
  * * client - `BrowserKit` client
  *
+ * ## Parts
+ *
+ * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ *
  */
 class Laravel5 extends Framework implements ActiveRecord, PartedModule
 {
