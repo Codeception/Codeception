@@ -28,9 +28,9 @@ To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> pac
 ### Config example
 
     modules:
-        enabled: [Facebook]
-        config:
-            Facebook:
+        enabled:
+            - Facebook:
+                depends: PhpBrowser
                 app_id: 412345678901234
                 secret: ccb79c1b0fdff54e4f7c928bf233aea5
                 test_user:

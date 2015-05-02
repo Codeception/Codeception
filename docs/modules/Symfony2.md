@@ -26,7 +26,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
 ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
-    modules: 
+    modules:
        enabled: [Symfony2]
        config:
           Symfony2:
@@ -43,12 +43,11 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
 
     modules:
-       enabled: [Symfony2]
-       config:
-          Symfony2:
-             app_path: 'app/front'
-             var_path: 'var'
-             environment: 'local_test'
+       enabled:
+          - Symfony2:
+              app_path: 'app/front'
+              var_path: 'var'
+              environment: 'local_test'
 
 
 ## Public Properties
@@ -406,6 +405,10 @@ $uri = $I->grabFromCurrentUrl();
  * `internal param` $url
 
 
+### grabMultiple
+__not documented__
+
+
 ### grabServiceFromContainer
  
 Grabs a service from Symfony DIC container.
@@ -577,7 +580,7 @@ $I->seeInCurrentUrl('/users/');
 
 ### seeInField
  
-Checks that the given input field or textarea contains the given value. 
+Checks that the given input field or textarea contains the given value.
 For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
 
 ``` php
@@ -699,9 +702,9 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 ?>
 ```
  * `param` $selector
- * `param mixed` $expected:
+ * `param mixed` $expected :
 - string: strict number
-- array: range of numbers [0,10]  
+- array: range of numbers [0,10]
 
 
 ### seeOptionIsSelected

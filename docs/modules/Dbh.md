@@ -38,7 +38,7 @@ This module despite of it's stability may act unstable because of transactions i
 
 ### Example
 
-    modules: 
+    modules:
        enabled: [Dbh]
        config:
           Dbh:

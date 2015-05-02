@@ -31,9 +31,8 @@ To use this module with Composer you need <em>"videlalvaro/php-amqplib": "*"</em
 ### Example
 
     modules:
-        enabled: [AMQP]
-        config:
-            AMQP:
+        enabled:
+            - AMQP:
                 host: 'localhost'
                 port: '5672'
                 username: 'guest'

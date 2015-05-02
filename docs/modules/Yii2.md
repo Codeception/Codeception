@@ -16,9 +16,8 @@ You can use this module by setting params in your functional.suite.yml:
 <pre>
 class_name: TestGuy
 modules:
-    enabled: [Yii2, TestHelper]
-    config:
-        Yii2:
+    enabled:
+        - Yii2:
             configFile: '/path/to/config.php'
 </pre>
 
@@ -321,6 +320,7 @@ $I->dontSeeRecord('app\models\User', array('name' => 'davert'));
 
  * `param` $model
  * `param array` $attributes
+@part orm
 
 
 ### fillField
@@ -382,6 +382,10 @@ $uri = $I->grabFromCurrentUrl();
  * `internal param` $url
 
 
+### grabMultiple
+__not documented__
+
+
 ### grabRecord
  
 Retrieves record from database
@@ -392,6 +396,7 @@ $category = $I->grabRecord('app\models\User', array('name' => 'davert'));
 
  * `param` $model
  * `param array` $attributes
+@part orm
 
 
 ### grabTextFrom
@@ -430,6 +435,7 @@ $user_id = $I->haveRecord('app\models\User', array('name' => 'Davert'));
 
  * `param` $model
  * `param array` $attributes
+@part orm
 
 
 ### resetCookie
@@ -558,7 +564,7 @@ $I->seeInCurrentUrl('/users/');
 
 ### seeInField
  
-Checks that the given input field or textarea contains the given value. 
+Checks that the given input field or textarea contains the given value.
 For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
 
 ``` php
@@ -680,9 +686,9 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 ?>
 ```
  * `param` $selector
- * `param mixed` $expected:
+ * `param mixed` $expected :
 - string: strict number
-- array: range of numbers [0,10]  
+- array: range of numbers [0,10]
 
 
 ### seeOptionIsSelected
@@ -715,6 +721,7 @@ $I->seeRecord('app\models\User', array('name' => 'davert'));
 
  * `param` $model
  * `param array` $attributes
+@part orm
 
 
 ### seeResponseCodeIs

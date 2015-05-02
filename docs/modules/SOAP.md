@@ -33,6 +33,12 @@ If you use PHP SoapServer with framework, try to block call to this method in te
 
 
 
+### dontSeeSoapResponseContainsStructure
+ 
+Opposite to `seeSoapResponseContainsStructure`
+ * `param` $xml
+
+
 ### dontSeeSoapResponseContainsXPath
  
 Checks XML response doesn't contain XPath locator

@@ -25,6 +25,7 @@ use Symfony\Component\Console\Application,
  $app->add(new Codeception\Command\GenerateGroup('generate:group'));
  $app->add(new Codeception\Command\GeneratePageObject('generate:pageobject'));
  $app->add(new Codeception\Command\GenerateStepObject('generate:stepobject'));
+ $app->add(new Codeception\Command\GenerateEnvironment('generate:environment'));
 
  // add only if within a phar archive.
  if ('phar:' === substr(__FILE__, 0, 5)) {

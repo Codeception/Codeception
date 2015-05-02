@@ -22,7 +22,7 @@ Try to execute test commands in run-time. You may try commands before writing th
 
 ## GenerateGroup
 
-Creates empty Group file - extension which handles all group events.
+Creates empty GroupObject - extension which handles all group events.
 
 * `codecept g:group Admin`
 
@@ -68,7 +68,7 @@ Options:
  --group (-g)          Groups of tests to be executed (multiple values allowed)
  --skip (-s)           Skip selected suites (multiple values allowed)
  --skip-group (-sg)    Skip selected groups (multiple values allowed)
- --env                 Run tests in selected environments. (multiple values allowed)
+ --env                 Run tests in selected environments. (multiple values allowed, environments can be merged with ',')
  --fail-fast (-f)      Stop after first failure
  --help (-h)           Display this help message.
  --quiet (-q)          Do not output any message.
@@ -125,17 +125,24 @@ Creates empty Helper class.
 
 Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
 
-By default it will create 3 suites **acceptance**, **functional**, and **unit**. To customize run this command with `--customize` option.
-
-For Codeception 1.x compatible setup run bootstrap in `--compat` option.
+By default it will create 3 suites **acceptance**, **functional**, and **unit**.
 
 * `codecept bootstrap` - creates `tests` dir and `codeception.yml` in current dir.
-* `codecept bootstrap --customize` - set manually actors and suite names during setup
-* `codecept bootstrap --compat` - prepare Codeception 1.x setup with Guy classes.
+* `codecept bootstrap --empty` - creates `tests` dir without suites
 * `codecept bootstrap --namespace Frontend` - creates tests, and use `Frontend` namespace for actor classes and helpers.
 * `codecept bootstrap --actor Wizard` - sets actor as Wizard, to have `TestWizard` actor in tests.
 * `codecept bootstrap path/to/the/project` - provide different path to a project, where tests should be placed
 
+
+
+
+## GenerateEnvironment
+
+Generates empty environment configuration file into envs dir:
+
+ * `codecept g:env firefox`
+
+Required to have `envs` path to be specifed in `codeception.yml`
 
 
 
