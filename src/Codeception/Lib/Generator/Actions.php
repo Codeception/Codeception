@@ -22,7 +22,12 @@ namespace {{namespace}}_generated;
 
 trait {{name}}Actions
 {
-   {{methods}}
+    /**
+     * @return \Codeception\Scenario
+     */
+    abstract protected function getScenario();
+
+    {{methods}}
 }
 EOF;
 
@@ -36,7 +41,7 @@ EOF;
      * @see \{{module}}::{{method}}()
      */
     public function {{action}}({{params}}) {
-        return \$this->scenario->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
+        return \$this->getScenario()->runStep(new \Codeception\Step\{{step}}('{{method}}', func_get_args()));
     }
 EOF;
 
