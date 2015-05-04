@@ -62,7 +62,7 @@ class WebDriverTest extends TestsForBrowsers
             return true;
         }
         $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4455'
+            'Requires Selenium2 Server running on port 4444'
         );
         return false;
     }
