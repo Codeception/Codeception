@@ -96,11 +96,20 @@ class Facebook
      */
     private function executeFacebookRequest(FacebookSession $session, $method, $endpoint, array $parameters = [])
     {
-        return (new FacebookRequest(
+        if (is_callable($this->logCallback)) {
+            call_user_func($this->logCallback, 'Facebook API request', func_get_args());
+        }
+        $response = (new FacebookRequest(
             $session,
             $method,
             $endpoint,
             $parameters
         ))->execute();
+
+        if (is_callable($this->logCallback)) {
+            call_user_func($this->logCallback, 'Facebook API response', $response->getRawResponse());
+        }
+
+        return $response;
     }
 }
