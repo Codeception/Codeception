@@ -287,15 +287,19 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $route
+     * @param $routeName
      * @param array $params
      */
-    public function amOnRoute($route, $params = [])
+    public function amOnRoute($routeName, $params = [])
     {
-        $domain = $this->app['router']->getRoutes()->getByName($route)->domain();
-        $absolute = ! is_null($domain);
+        $route = $this->app['router']->getRoutes()->getByName($routeName);
 
-        $url = $this->app['url']->route($route, $params, $absolute);
+        if (! $route) {
+            $this->fail("Route with name '$routeName' does not exist");
+        }
+
+        $absolute = ! is_null($route->domain());
+        $url = $this->app['url']->route($routeName, $params, $absolute);
         $this->amOnPage($url);
     }
 
@@ -313,9 +317,13 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public function amOnAction($action, $params = [])
     {
-        $domain = $this->app['router']->getRoutes()->getByAction($action)->domain();
-        $absolute = ! is_null($domain);
+        $route = $this->app['router']->getRoutes()->getByAction($action);
 
+        if (! $route) {
+            $this->fail("Action '$action' does not exists");
+        }
+
+        $absolute = ! is_null($route->domain());
         $url = $this->app['url']->action($action, $params, $absolute);
         $this->amOnPage($url);
     }
