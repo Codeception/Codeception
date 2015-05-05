@@ -120,7 +120,8 @@ class Facebook extends BaseModule implements DependsOnModule
     {
         if (!array_key_exists('test_user', $this->config)) {
             $this->config['test_user'] = [
-                'permissions' => []
+                'permissions' => [],
+                'name' => 'Codeception Testuser'
             ];
         } elseif (!array_key_exists('permissions', $this->config['test_user'])) {
             $this->config['test_user']['permissions'] = [];
