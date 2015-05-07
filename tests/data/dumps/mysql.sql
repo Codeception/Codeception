@@ -70,5 +70,4 @@ CREATE TABLE `order` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
-
-
+insert  into `order`(`id`,`name`,`status`) values (1,'main', 'open');
