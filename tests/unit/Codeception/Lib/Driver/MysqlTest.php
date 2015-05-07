@@ -74,5 +74,13 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->mysql->cleanup();
     }
 
+    public function testDeleteFromTableUsingReservedWordAsPrimaryKey()
+    {
+        $this->mysql->load($this->sql);
+        $this->mysql->deleteQuery('table_with_reserved_primary_key', 1, 'unique');
+        $res = $this->mysql->getDbh()->query("select name from `table_with_reserved_primary_key` where `unique` = 1");
+        $this->assertEquals(0, $res->rowCount());
+        $this->mysql->cleanup();
+    }
 
 }
