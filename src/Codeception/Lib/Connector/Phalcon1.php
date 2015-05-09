@@ -75,14 +75,14 @@ class Phalcon1 extends Client
         }
 
         if (!$application instanceof Application && !$application instanceof MicroApplication) {
-            throw new RuntimeException('Unsupported application class');
+            throw new RuntimeException('Unsupported application class.');
         }
 
         $_COOKIE                   = $request->getCookies();
         $_FILES                    = $this->remapFiles($request->getFiles());
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
-        if (strtoupper($request->getMethod()) == 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
@@ -93,7 +93,7 @@ class Phalcon1 extends Client
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), [], array('getRawBody' => $request->getContent()));
+        $di['request'] = Stub::construct($di->get('request'), array(), array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();
 
@@ -148,7 +148,7 @@ class PhalconMemorySession extends SessionAdapter implements SessionInterface
         $this->isStarted = true;
     }
 
-    public function get($index, $defaultValue = null)
+    public function get($index, $defaultValue = null, $remove = null)
     {
         return isset($this->data[$index]) ? $this->data[$index] : $defaultValue;
     }
