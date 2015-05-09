@@ -19,6 +19,13 @@ abstract class Actor
         $this->scenario = $scenario;
     }
 
+    /**
+     * @return \Codeception\Scenario
+     */
+    protected function getScenario()
+    {
+        return $this->scenario;
+    }
 
     public function wantToTest($text)
     {
