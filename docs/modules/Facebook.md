@@ -7,7 +7,7 @@ Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
 
 <div class="alert alert-info">
-To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> package.
+To use this module with Composer you need <em>"facebook/php-sdk-v4": "~4.0"</em> package.
 </div>
 
 ## Status
@@ -87,9 +87,9 @@ Returns the test user email.
 @return string
 
 
-### grabFacebookTestUserFirstName
+### grabFacebookTestUserName
  
-Returns the test user first name.
+Returns the test user name.
 
 @return string
 

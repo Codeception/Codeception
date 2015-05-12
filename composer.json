@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
-        "facebook/php-sdk": "~3.2",
+        "facebook/php-sdk-v4": "~4.0",
         "videlalvaro/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
         "pda/pheanstalk": "~2.0",
