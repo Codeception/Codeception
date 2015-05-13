@@ -148,9 +148,9 @@ class Configuration
            throw new ConfigurationException('Helpers path is not defined by key "paths: helpers"');
         }
 
-        self::$dataDir = $config['paths']['data'];
-        self::$helpersDir = $config['paths']['helpers'];
-        self::$testsDir = $config['paths']['tests'];
+        self::$dataDir = self::adjustDirSeparators($config['paths']['data']);
+        self::$helpersDir = self::adjustDirSeparators($config['paths']['helpers']);
+        self::$testsDir = self::adjustDirSeparators($config['paths']['tests']);
 
         self::loadBootstrap($config['settings']['bootstrap']);
         self::autoloadHelpers();
@@ -492,6 +492,11 @@ class Configuration
         }
 
         return $res;
+    }
+
+    private function adjustDirSeparators($path)
+    {
+        return str_replace(['/','\\'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $path);
     }
 
 }
