@@ -3,7 +3,6 @@
 	<title>Test results</title>
 	<meta charset='utf-8'>
 	<link href='http://fonts.googleapis.com/css?family=Varela+Round&v2' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	 <style>
 		 .layout {
@@ -48,6 +47,14 @@
 
          .scenarioRow>td>p {
              padding: 5px;
+         }
+
+         .scenarioStepsTable .error {
+             padding: 10px;
+             background: #ecf0f1;
+             border: 2px solid #e74c3c;
+             border-radius: 0px;
+             color:  #e74c3c;
          }
 
          .scenarioStepsTable.substeps td {
@@ -172,11 +179,11 @@
 
  <body>
    <ul id="toolbar-filter">
-     <li> <a href="#" title="Show all" onClick="showAllScenarios()"><i class="fa fa-plus-square-o"></i></a></li>
-     <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><i class="fa fa-check"></i> {successfulScenarios}</a></li>
-     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><i class="fa fa-exclamation-triangle"></i> {failedScenarios}</a></li>
-     <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><i class="fa fa-square-o"></i> {skippedScenarios}</a></li>
-     <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><i class="fa fa-info"></i> {incompleteScenarios}</a></li>
+     <li> <a href="#" title="Show all" onClick="showAllScenarios()">◯</a></li>
+     <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><strong>✔</strong> {successfulScenarios}</a></li>
+     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> {failedScenarios}</a></li>
+     <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><strong>S</strong> {skippedScenarios}</a></li>
+     <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> {incompleteScenarios}</a></li>
    </ul>
  <div class="layout">
  {header}

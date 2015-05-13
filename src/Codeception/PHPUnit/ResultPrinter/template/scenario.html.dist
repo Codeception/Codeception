@@ -6,8 +6,13 @@
    <tr class="scenarioRow {scenarioStatus}">
     <td>
      <table border="0" width="100%" class="{scenarioStatus} scenarioStepsTable" id="stepContainer{id}">
+
+
 {steps}
+         {failure}
+
      </table>
     </td>
    </tr>
+
 

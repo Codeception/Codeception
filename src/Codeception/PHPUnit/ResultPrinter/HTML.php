@@ -30,6 +30,8 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
      */
     protected $timeTaken = 0;
 
+    protected $failures = [];
+
     /**
      * Constructor.
      *
@@ -73,7 +75,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
             case \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE: $scenarioStatus = 'scenarioFailed'; break;
             case \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED: $scenarioStatus = 'scenarioSkipped'; break;
             case \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE: $scenarioStatus = 'scenarioIncomplete'; break;
-            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR: $scenarioStatus = 'scenarioError'; break;
+            case \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR: $scenarioStatus = 'scenarioFailed'; break;
             default: $scenarioStatus = 'scenarioSuccess';
         }
 
@@ -90,22 +92,29 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
                 continue;
             }
             if ($step->getMetaStep() != $metaStep) {
-                $stepsBuffer .= $this->renderSubsteps($step, $subStepsBuffer);
+                $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
                 $subStepsBuffer = '';
-                continue;
             }
             $metaStep = $step->getMetaStep();
             $stepsBuffer .= $this->renderStep($step);
         }
 
-        if ($subStepsBuffer) {
-            $lastStep = end($steps);
-            $stepsBuffer .= $this->renderSubsteps($lastStep, $subStepsBuffer);
+        if ($subStepsBuffer and $metaStep) {
+            $stepsBuffer .= $this->renderSubsteps($metaStep, $subStepsBuffer);
         }
 
         $scenarioTemplate = new \Text_Template(
             $this->templatePath . 'scenario.html'
         );
+
+        $failure = '';
+        if (isset($this->failures[$name])) {
+            $failTemplate = new \Text_Template(
+                $this->templatePath . 'fail.html'
+            );
+            $failTemplate->setVar(['fail' => nl2br($this->failures[$name])]);
+            $failure = $failTemplate->render();
+        }
 
         $scenarioTemplate->setVar(
             [
@@ -113,6 +122,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
                 'name'           => ucfirst($name),
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
+                'failure'        => $failure,
                 'time'           => round($time, 2)
             ]
         );
@@ -174,6 +184,33 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     }
 
     /**
+     * An error occurred.
+     *
+     * @param \PHPUnit_Framework_Test $test
+     * @param \Exception $e
+     * @param float $time
+     */
+    public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
+    {
+        $this->failures[$test->toString()] = $e->getMessage();
+        parent::addError($test, $e, $time);
+    }
+
+    /**
+     * A failure occurred.
+     *
+     * @param PHPUnit_Framework_Test                 $test
+     * @param PHPUnit_Framework_AssertionFailedError $e
+     * @param float                                  $time
+     */
+    public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
+    {
+        $this->failures[$test->toString()] = $e->getMessage();
+        parent::addFailure($test, $e, $time);
+    }
+
+
+    /**
      * @param $step
      * @return string
      */
@@ -185,14 +222,14 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     }
 
     /**
-     * @param $step
+     * @param $metaStep
      * @param $substepsBuffer
      * @return string
      */
-    protected function renderSubsteps(Step $step, $substepsBuffer)
+    protected function renderSubsteps(Step\Meta $metaStep, $substepsBuffer)
     {
         $metaTemplate = new \Text_Template($this->templatePath . 'substeps.html');
-        $metaTemplate->setVar(['metaStep' => $step->getMetaStep(), 'steps' => $substepsBuffer, 'id' => uniqid()]);
+        $metaTemplate->setVar(['metaStep' => $metaStep, 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
     }
 

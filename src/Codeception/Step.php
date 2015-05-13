@@ -30,7 +30,6 @@ abstract class Step
      */
     protected $metaStep = null;
 
-
     protected $failed = false;
 
     public function __construct($action, array $arguments)
@@ -195,6 +194,9 @@ abstract class Step
     }
 
     /**
+     * If steps are combined into one method they can be reproduced as meta-step.
+     * We are using stack trace to analyze if steps were called from test, if not - they were called from meta-step.
+     *
      * @param $step
      * @param $stack
      */

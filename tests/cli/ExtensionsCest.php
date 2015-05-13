@@ -9,7 +9,7 @@ class ExtensionsCest
         $I->wantTo('use alternative formatter delivered through extensions');
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run tests/dummy/FileExistsCept.php -c codeception_extended.yml');
-        $I->dontSeeInShellOutput("Trying to check config");
+        $I->dontSeeInShellOutput("Check config");
         $I->seeInShellOutput('[+] check config');
         $I->seeInShellOutput('Modules used: Filesystem, DumbHelper');
     }

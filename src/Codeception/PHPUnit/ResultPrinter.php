@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\PHPUnit;
 
+use Codeception\TestCase\Interfaces\ScenarioDriven;
+
 class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
 {
 
@@ -13,17 +15,13 @@ class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
         $steps = [];
-        if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED) {
+        $success = ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_PASSED);
+        if ($success) {
             $this->successful++;
-            $success = true;
-            if ($test instanceof \Codeception\TestCase) {
-                $steps = $test->getScenario()->getSteps();
-            }
-        } else {
-            $success = false;
-            if ($test instanceof \Codeception\TestCase) {
-                $steps = $test->getTrace();
-            }
+        }
+
+        if ($test instanceof ScenarioDriven) {
+            $steps = $test->getScenario()->getSteps();
         }
 
         $this->onTest($test->toString(), $success, $steps, $time);

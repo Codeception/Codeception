@@ -381,9 +381,9 @@ class Console implements EventSubscriberInterface
      * @param $failedTest
      * @param $fail
      */
-    public function printScenarioTrace($failedTest)
+    public function printScenarioTrace(ScenarioDriven $failedTest)
     {
-        $trace = array_reverse($failedTest->getTrace());
+        $trace = array_reverse($failedTest->getScenario()->getSteps());
         $length = $i = count($trace);
 
         if (!$length) return;
@@ -391,7 +391,6 @@ class Console implements EventSubscriberInterface
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
-
 
             $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". ".$step->getPhpCode());
 

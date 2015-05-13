@@ -78,7 +78,6 @@ trait Actor
 
     public function runStep(Step $step)
     {
-        $this->trace[] = $step;
         $this->fire(Events::STEP_BEFORE, new StepEvent($this, $step));
         try {
             $result = $step->run($this->moduleContainer);
@@ -96,11 +95,6 @@ trait Actor
     public function getFeature()
     {
         return $this->scenario->getFeature();
-    }
-
-    public function getTrace()
-    {
-        return $this->trace;
     }
 
     public function configActor($actor)
