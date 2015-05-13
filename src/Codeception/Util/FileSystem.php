@@ -47,15 +47,18 @@ class FileSystem
             return unlink($dir);
         }
 
+        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+            exec("rd /s /q $dir");
+            return true;
+        }
+
         foreach (scandir($dir) as $item) {
             if ($item === '.' || $item === '..') {
                 continue;
             }
 
             if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
-                if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
-                    chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
-                }
+                chmod($dir . DIRECTORY_SEPARATOR . $item, 0777);
                 if (!self::deleteDir($dir . DIRECTORY_SEPARATOR . $item)) {
                     return false;
                 }
