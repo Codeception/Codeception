@@ -27,6 +27,6 @@ install:
   - php composer.phar install --prefer-dist -n --no-ansi --dev
 
 test_script:
-  - php codecept run cli  --no-ansi -n --skip-group coverage
-  - php codecept run unit -g core  --no-ansi -n
-  - php codecept run tests/unit/Codeception/Module/FrameworksTest.php --no-ansi -n
+  - php codecept run cli --no-colors -n --skip-group coverage
+  - php codecept run unit -g core --no-colors -n
+  - php codecept run tests/unit/Codeception/Module/FrameworksTest.php --no-colors -n
