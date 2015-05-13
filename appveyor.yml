@@ -10,15 +10,18 @@ cache:
   - vendor -> composer.json
 
 install:
-  - cinst OpenSSL.Light
+  - cinst -y OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
-  - cinst php
+  - cinst -y curl
+  - SET PATH=C:\Program Files\curl;%PATH%
+  - cinst -y php
   - cd c:\tools\php
   - copy php.ini-production php.ini
   - echo extension_dir=ext >> php.ini
   - echo extension=php_openssl.dll >> php.ini
   - echo date.timezone="UTC" >> php.ini
   - echo extension=php_mbstring.dll >> php.ini
+  - echo extension=php_curl.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd C:\projects\codeception
   - php -r "readfile('http://getcomposer.org/installer');" | php
