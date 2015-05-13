@@ -317,7 +317,7 @@ class Console implements EventSubscriberInterface
         static $limit = 10;
 
         if ($this->rawStackTrace) {
-            $this->message($e->getTraceAsString())->writeln();
+            $this->message(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false))->writeln();
             return;
         }
 

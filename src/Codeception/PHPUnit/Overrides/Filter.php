@@ -2,7 +2,7 @@
 
 class PHPUnit_Util_Filter
 {
-    public static function getFilteredStackTrace(Exception $e, $asString = true)
+    public static function getFilteredStackTrace(Exception $e, $asString = true, $filter = true)
     {
         $stackTrace = $asString ? '' : [];
 
@@ -13,10 +13,10 @@ class PHPUnit_Util_Filter
 
         foreach ($trace as $step) {
 
-            if (self::classIsFiltered($step)) {
+            if (self::classIsFiltered($step) and $filter) {
                 continue;
             }
-            if (self::fileIsFiltered($step)) {
+            if (self::fileIsFiltered($step) and $filter) {
                 continue;
             }
 
