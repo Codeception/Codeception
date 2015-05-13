@@ -3,34 +3,49 @@
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;
-use Symfony\Component\BrowserKit\Request,
-    Symfony\Component\BrowserKit\Response,
-    Symfony\Component\BrowserKit\Cookie,
-    Symfony\Component\BrowserKit\Client,
-    Codeception\Util\Stub,
-    Phalcon\DI;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\BrowserKit\Client;
+use Codeception\Util\Stub;
+use Phalcon\Di;
+use Phalcon\Mvc\Application;
+use Phalcon\Mvc\Micro As MicroApplication;
+use Phalcon\Session\Adapter as SessionAdapter;
+use Phalcon\Session\AdapterInterface as SessionInterface;
+use ReflectionProperty;
+use RuntimeException;
+use Closure;
 
 class Phalcon1 extends Client
 {
-    use Shared\PhpSuperGlobalsConverter;
+    use PhpSuperGlobalsConverter;
 
+    /**
+     * Phalcon Application
+     * @var mixed
+     */
     private $application;
 
     /**
-     * Set application by Phalcon\DI\Injectable, Closure or bootstrap file path
+     * Set Phalcon Application by \Phalcon\DI\Injectable, Closure or bootstrap file path
      *
-     * @param mixed application
+     * @param mixed $application
      */
     public function setApplication($application)
     {
         $this->application = $application;
     }
 
+    /**
+     * Get Phalcon Application
+     *
+     * @return mixed
+     */
     public function getApplication()
     {
         $application = $this->application;
 
-        if ($application instanceof \Closure) {
+        if ($application instanceof Closure) {
             return $application();
         } elseif (is_string($application)) {
             return require $application;
@@ -40,32 +55,34 @@ class Phalcon1 extends Client
     }
 
     /**
+     * Makes a request.
      *
      * @param \Symfony\Component\BrowserKit\Request $request
      *
      * @return \Symfony\Component\BrowserKit\Response
+     * @throws \RuntimeException
      */
     public function doRequest($request)
     {
         $application = $this->getApplication();
         $di          = $application->getDI();
-        DI::reset();
-        DI::setDefault($di);
+        Di::reset();
+        Di::setDefault($di);
 
         $_SERVER = array();
         foreach ($request->getServer() as $key => $value) {
             $_SERVER[strtoupper(str_replace('-', '_', $key))] = $value;
         }
 
-        if (!$application instanceof \Phalcon\MVC\Application && !$application instanceof \Phalcon\MVC\Micro) {
-            throw new \Exception('Unsupported application class');
+        if (!$application instanceof Application && !$application instanceof MicroApplication) {
+            throw new RuntimeException('Unsupported application class.');
         }
 
         $_COOKIE                   = $request->getCookies();
         $_FILES                    = $this->remapFiles($request->getFiles());
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
-        if (strtoupper($request->getMethod()) == 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
@@ -76,31 +93,31 @@ class Phalcon1 extends Client
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), [], array('getRawBody' => $request->getContent()));
+        $di['request'] = Stub::construct($di->get('request'), array(), array('getRawBody' => $request->getContent()));
 
         $response = $application->handle();
 
         $headers = $response->getHeaders();
         $status  = (int)$headers->get('Status');
 
-        $headersProperty = new \ReflectionProperty($headers, '_headers');
+        $headersProperty = new ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);
         $headers = $headersProperty->getValue($headers);
         if (!is_array($headers)) {
             $headers = array();
         }
 
-        $cookiesProperty = new \ReflectionProperty($di['cookies'], '_cookies');
+        $cookiesProperty = new ReflectionProperty($di['cookies'], '_cookies');
         $cookiesProperty->setAccessible(true);
         $cookies = $cookiesProperty->getValue($di['cookies']);
         if (is_array($cookies)) {
-            $restoredProperty = new \ReflectionProperty('\Phalcon\Http\Cookie', '_restored');
+            $restoredProperty = new ReflectionProperty('\Phalcon\Http\Cookie', '_restored');
             $restoredProperty->setAccessible(true);
-            $valueProperty = new \ReflectionProperty('\Phalcon\Http\Cookie', '_value');
+            $valueProperty = new ReflectionProperty('\Phalcon\Http\Cookie', '_value');
             $valueProperty->setAccessible(true);
             foreach ($cookies as $name => $cookie) {
                 if (!$restoredProperty->getValue($cookie)) {
-                    $clientCookie            = new Cookie(
+                    $clientCookie = new Cookie(
                         $name,
                         $valueProperty->getValue($cookie),
                         $cookie->getExpiration(),
@@ -121,7 +138,7 @@ class Phalcon1 extends Client
     }
 }
 
-class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\Session\AdapterInterface
+class PhalconMemorySession extends SessionAdapter implements SessionInterface
 {
     private $isStarted = false;
     private $data = array();
@@ -131,7 +148,7 @@ class PhalconMemorySession extends \Phalcon\Session\Adapter implements \Phalcon\
         $this->isStarted = true;
     }
 
-    public function get($index, $defaultValue = null)
+    public function get($index, $defaultValue = null, $remove = null)
     {
         return isset($this->data[$index]) ? $this->data[$index] : $defaultValue;
     }

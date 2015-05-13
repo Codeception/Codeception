@@ -102,9 +102,13 @@ class InnerBrowser extends Module implements Web
         $buttonText = str_replace('"',"'", $link);
         $button = $this->crawler->selectButton($buttonText);
         if (count($button)) {
+            $buttonValue = [];
+            if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
+                $buttonValue = [$button->attr('name') => $button->attr('value')];
+            }
             $this->proceedSubmitForm(
                 $button->parents()->filter('form')->first(),
-                [$button->attr('name') => $button->attr('value')]
+                $buttonValue
             );
             return;
         }
@@ -128,9 +132,13 @@ class InnerBrowser extends Module implements Web
                 $this->debugResponse();
                 break;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
+                $buttonValue = [];
+                if (strval($nodes->first()->attr('name')) !== '' && $nodes->first()->attr('value') !== null) {
+                    $buttonValue = [$nodes->first()->attr('name') => $nodes->first()->attr('value')];
+                }
                 $this->proceedSubmitForm(
                     $nodes->parents()->filter('form')->first(),
-                    [$nodes->first()->attr('name') => $nodes->first()->attr('value')]
+                    $buttonValue
                 );
                 break;
             }
@@ -401,17 +409,19 @@ class InnerBrowser extends Module implements Web
             }
         }
 
-        $query = '';
+        $urlparts = parse_url($this->getFormUrl($frmCrawl));
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
-            $query = '?' . http_build_query($requestParams);
+            $urlparts = $this->mergeUrls($urlparts, ['query' => http_build_query($requestParams)]);
         }
-        $this->debugSection('Uri', $this->getFormUrl($frmCrawl));
+        $url = \GuzzleHttp\Url::buildUrl($urlparts);
+        
+        $this->debugSection('Uri', $url);
         $this->debugSection('Method', $form->getMethod());
         $this->debugSection('Parameters', $requestParams);
 
         $this->crawler = $this->client->request(
             $form->getMethod(),
-            $this->getFormUrl($frmCrawl) . $query,
+            $url,
             $requestParams,
             $form->getPhpFiles()
         );
@@ -1072,13 +1082,21 @@ class InnerBrowser extends Module implements Web
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThat($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThat(
+            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            $constraint,
+            $message
+        );
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->client->getInternalResponse()->getContent(), $constraint,$message);
+        $this->assertThatItsNot(
+            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            $constraint,
+            $message
+        );
     }
 
     /**

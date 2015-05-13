@@ -47,6 +47,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
+        $this->module->see('A wise man said: "debug!"');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
@@ -807,6 +808,22 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     public function testExample5WithSubmitForm()
     {
         $this->module->amOnPage('/form/example5');
+        $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+    
+    public function testExample5WithParams()
+    {
+        $this->module->amOnPage('/form/example5?a=b');
+        $this->module->fillField('username', 'John');
+        $this->module->fillField('password', '1234');
+        $this->module->click('Login');
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+
+    public function testExample5WithSubmitFormAndParams()
+    {
+        $this->module->amOnPage('/form/example5?a=b');
         $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
         $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
     }
