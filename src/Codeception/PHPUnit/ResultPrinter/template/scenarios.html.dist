@@ -3,7 +3,7 @@
 	<title>Test results</title>
 	<meta charset='utf-8'>
 	<link href='http://fonts.googleapis.com/css?family=Varela+Round&v2' rel='stylesheet' type='text/css'>
-
+     <meta name="viewport" content="width=device-width, initial-scale=1">
 	 <style>
 		 .layout {
 		 margin: 0 auto;
@@ -35,6 +35,12 @@
 		 background: linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
 
 		 }
+
+         @media (max-width: 1200px) {
+           #toolbar-filter {
+             display: none !important;
+           }
+         }
 
          .scenarioStepsTable .nostyle {
              background: none;
