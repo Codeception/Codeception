@@ -6,6 +6,9 @@ branches:
   except:
     - gh-pages
 
+cache:
+  - vendor -> composer.json
+
 install:
   - cinst OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
@@ -15,6 +18,7 @@ install:
   - echo extension_dir=ext >> php.ini
   - echo extension=php_openssl.dll >> php.ini
   - echo date.timezone="UTC" >> php.ini
+  - echo extension=php_mbstring.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd C:\projects\codeception
   - php -r "readfile('http://getcomposer.org/installer');" | php
@@ -23,3 +27,4 @@ install:
 test_script:
   - php codecept run cli
   - php codecept run unit -g core
+  - php codecept run tests/unit/Codeception/Module/FrameworksTest.php
