@@ -68,14 +68,4 @@ class TestCaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $assertions);
     }
 
-    /**
-     * @group core
-     */
-    public function testRunStepAddsTrace() {
-        $step = new \Codeception\Step\Action('seeEquals', array(5,5));
-        $this->testcase->runStep($step);
-        $this->assertContains($step, $this->testcase->getTrace());
-    }
-
-
 }
