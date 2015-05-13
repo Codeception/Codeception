@@ -1,7 +1,6 @@
 build: false
 shallow_clone: true
 platform: 'x86'
-clone_folder: C:\projects\codeception
 branches:
   except:
     - gh-pages
@@ -23,11 +22,11 @@ install:
   - echo extension=php_mbstring.dll >> php.ini
   - echo extension=php_curl.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
-  - cd C:\projects\codeception
+  - cd %APPVEYOR_BUILD_FOLDER%
   - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --prefer-dist --no-interaction --dev
+  - php composer.phar install --prefer-dist -n --no-ansi --dev
 
 test_script:
-  - php codecept run cli
-  - php codecept run unit -g core
-  - php codecept run tests/unit/Codeception/Module/FrameworksTest.php
+  - php codecept run cli  --no-ansi -n --skip-group coverage
+  - php codecept run unit -g core  --no-ansi -n
+  - php codecept run tests/unit/Codeception/Module/FrameworksTest.php --no-ansi -n
