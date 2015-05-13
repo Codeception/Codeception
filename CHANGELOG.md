@@ -2,6 +2,7 @@
 
 #### 2.0.14
 
+* [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * fixed stderr tput messages in PHPStorm console *2015-04-26*
 
 #### 2.0.13
