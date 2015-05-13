@@ -20,8 +20,12 @@ class CliGuy extends \Codeception\Actor
 {
     use _generated\CliGuyActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * @param $file
+     */
+    function seeInSupportDir($file)
+    {
+        $this->seeFileFound($file,'tests/support');
+    }
 
 }

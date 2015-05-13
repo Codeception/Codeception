@@ -1,4 +1,4 @@
       <tr>
-       <td class="stepName">I {action}</td>
+       <td class="stepName">{action}</td>
       </tr>
 

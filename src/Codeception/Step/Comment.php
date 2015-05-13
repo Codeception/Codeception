@@ -16,10 +16,16 @@ class Comment extends \Codeception\Step
         return $this->getAction();
     }
 
-    public function getHtmlAction()
+    public function getHtml()
     {
         return '<strong>' . $this->getAction() . '</strong>';
     }
+
+    public function getPhpCode()
+    {
+        return '// ' . $this->getAction();
+    }
+
 
     public function run(ModuleContainer $container = null)
     {

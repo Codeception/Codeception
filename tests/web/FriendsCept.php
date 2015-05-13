@@ -7,4 +7,4 @@ $jon->does(function (WebGuy $I) {
    $I->amOnPage('/');
    $I->seeInCurrentUrl('/');
 });
-$I->seeInCurrentUrl('/info');
+$I->seeInCurrentUrl('/infxo');

@@ -3,24 +3,24 @@
 	<title>Test results</title>
 	<meta charset='utf-8'>
 	<link href='http://fonts.googleapis.com/css?family=Varela+Round&v2' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	 <style>
 		 .layout {
 		 margin: 0 auto;
-		 width: 960px;
+		 max-width: 1000px;
 
 		 }
-		 body { font-family: arial, serif; margin: 0; padding: 0; background: #333; }
-		 h1,h2,h3 { font-family: arial, serif; color: white; }
+		 body { font-family: arial, serif; margin: 0; padding: 0; background: #ecf0f1; font-size: 20px; }
+		 h1,h2,h3 { font-family: arial, serif; color: #7f8c8d; }
 		 h1 { font-size: 2.5em; }
 		 h2 { font-size: 1.3em; }
          h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0; }
 
-		 table { border: none; margin: 0; padding: 0; }
+		 table { border: none; margin: 0; padding: 0; font-size: 0.9em;}
 		 .scenarioStepsTable .stepName { padding: 5px; }
 
 		 .scenarioStepsTable td {
-		 font-size: 80%;
 		 border: 1px solid #ccc;
 		 font-family: 'Varela Round', arial;
 		 -webkit-border-radius: 5px;
@@ -37,40 +37,32 @@
 
 		 }
 
+         .scenarioStepsTable .nostyle {
+             background: none;
+             border: none;
+         }
+
 		 p {
 		    cursor: pointer;
-		 padding: 5px;
-
-		 -webkit-border-radius: 5px;
-		 -moz-border-radius: 5px;
-		 border-radius: 5px;
-
 		 }
+
+         .scenarioRow>td>p {
+             padding: 5px;
+         }
+
+         .scenarioStepsTable.substeps td {
+             background: #bdc3c7;
+         }
 
 		 .header { font-size: large; font-weight: bold; }
 		 p.scenarioSuccess {
-		 background: rgb(157,213,58); /* Old browsers */
-		 background: -moz-linear-gradient(top, rgba(157,213,58,1) 0%, rgba(161,213,79,1) 50%, rgba(124,188,10,1) 100%); /* FF3.6+ */
-		 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(157,213,58,1)), color-stop(50%,rgba(161,213,79,1)), color-stop(100%,rgba(124,188,10,1))); /* Chrome,Safari4+ */
-		 background: -webkit-linear-gradient(top, rgba(157,213,58,1) 0%,rgba(161,213,79,1) 50%,rgba(124,188,10,1) 100%); /* Chrome10+,Safari5.1+ */
-		 background: -o-linear-gradient(top, rgba(157,213,58,1) 0%,rgba(161,213,79,1) 50%,rgba(124,188,10,1) 100%); /* Opera11.10+ */
-		 background: -ms-linear-gradient(top, rgba(157,213,58,1) 0%,rgba(161,213,79,1) 50%,rgba(124,188,10,1) 100%); /* IE10+ */
-		 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9dd53a', endColorstr='#7cbc0a',GradientType=0 ); /* IE6-9 */
-		 background: linear-gradient(top, rgba(157,213,58,1) 0%,rgba(161,213,79,1) 50%,rgba(124,188,10,1) 100%); /* W3C */
-
+    		 background: rgb(157,213,58); /* Old browsers */
 		 }
 
 
 		 .scenario { color: black; }
-		 p.scenarioFailed { color: black;
-		 background: rgb(204,0,0); /* Old browsers */
-		 background: -moz-linear-gradient(top, rgba(204,0,0,1) 0%, rgba(119,0,0,1) 100%); /* FF3.6+ */
-		 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(204,0,0,1)), color-stop(100%,rgba(119,0,0,1))); /* Chrome,Safari4+ */
-		 background: -webkit-linear-gradient(top, rgba(204,0,0,1) 0%,rgba(119,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
-		 background: -o-linear-gradient(top, rgba(204,0,0,1) 0%,rgba(119,0,0,1) 100%); /* Opera11.10+ */
-		 background: -ms-linear-gradient(top, rgba(204,0,0,1) 0%,rgba(119,0,0,1) 100%); /* IE10+ */
-		 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc0000', endColorstr='#770000',GradientType=0 ); /* IE6-9 */
-		 background: linear-gradient(top, rgba(204,0,0,1) 0%,rgba(119,0,0,1) 100%); /* W3C */
+		 p.scenarioFailed, p.scenarioError { color: black;
+		   background: #e74c3c
 		 }
 
 
@@ -90,28 +82,29 @@
 		 padding: 20px;
 		 }
 		 ul#toolbar-filter {
-			display: inline;
+            display: block;
+            position: fixed;
+            top: 20px;
+            left: 0px;
+            padding: 0px;
 		 }
 		 ul#toolbar-filter li {
-			display: inline;
-		  float: right;
+		    list-style: none;
+		    text-align: center;
 			padding: 20px;
-			width: 120px;
-			color: black;
-			background-color: #9DD53A;
+			background-color: #3498db;
+		 }
+		 ul#toolbar-filter li a, ul#toolbar-filter li a:hover, ul#toolbar-filter li a:visited {
+		    color: #34495e;
+		    text-decoration: none;
 		 }
 		 ul#toolbar-filter li.disabled {
-			background-color: gray;
-		 }
-		 ul#toolbar-filter li:hover {
-			background-color: white;
-		 }
-		 ul#toolbar-filter li.disabled:hover {
-			background-color: #333;
+			background-color: #bdc3c7;
 		 }
 	 </style>
 
   <script type="text/javascript">
+  var showAll = true;
   function showHide(nodeId, linkObj)
   {
     var subObj = document.getElementById('stepContainer' + nodeId);
@@ -136,49 +129,58 @@
     for(var z = 0; z < trs.length; z++) {
       trs[z].style.display = '';
     }
+    showAll = true;
   }
 
-  function toogleScenarios(name, linkObj) {
-    if (linkObj.className == '') {
-      document.getElementById('toolbar-filter').children[0].className = 'disabled';
-      linkObj.className = 'disabled';
-    } else {
-      var toolbar = document.getElementById('toolbar-filter');
-      toolbar.children[0].className = '';
-      linkObj.className = '';
-      for (var i = 1; i < toolbar.children.length; i++) {
-        if (toolbar.children[i].classList.contains('disabled')) {
-           showAll = false;
-           toolbar.children[0].className = 'disabled';
+  function toggleScenarios(name, linkObj) {
+    var links = document.getElementById('toolbar-filter').children;
+    var rows = document.getElementsByClassName('scenarioRow');
+    if (showAll) {
+        for (var i = 0; i < links.length; i++) {
+            links[i].className = 'disabled';
         }
-      }
+
+        for (var i = 0; i < rows.length; i++) {
+            rows[i].style.display = 'none';
+        }
+
+    }
+    showAll = false;
+
+    if (linkObj.className == '') {
+        linkObj.className = 'disabled';
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].classList.contains(name)) {
+                rows[i].style.display = 'none';
+          }
+        }
+        return;
+    }
+    if (linkObj.className == 'disabled') {
+        linkObj.className = '';
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].classList.contains(name)) {
+                rows[i].style.display = 'table-row';
+          }
+        }
+        return;
     }
 
-    var rows = document.getElementsByClassName('scenarioRow');
-    for (var i = 0; i < rows.length; i++) {
-      var row = rows[i];
-      if (row.classList.contains(name)) {
-        if (row.style.display == '') {
-          row.style.display = 'none';
-        } else {
-          row.style.display = '';
-        }
-      }
-    }
   }
   </script>
  </head>
 
  <body>
+   <ul id="toolbar-filter">
+     <li> <a href="#" title="Show all" onClick="showAllScenarios()"><i class="fa fa-plus-square-o"></i></a></li>
+     <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><i class="fa fa-check"></i> {successfulScenarios}</a></li>
+     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><i class="fa fa-exclamation-triangle"></i> {failedScenarios}</a></li>
+     <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><i class="fa fa-square-o"></i> {skippedScenarios}</a></li>
+     <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><i class="fa fa-info"></i> {incompleteScenarios}</a></li>
+   </ul>
  <div class="layout">
  {header}
-  <ul id="toolbar-filter">
-    <li onClick="showAllScenarios()">Show all</li>
-    <li onClick="toogleScenarios('scenarioSuccess', this)">Success ({successfulScenarios})</li>
-    <li onClick="toogleScenarios('scenarioFailed', this)">Failed ({failedScenarios})</li>
-    <li onClick="toogleScenarios('scenarioSkipped', this)">Skipped ({skippedScenarios})</li>
-    <li onClick="toogleScenarios('scenarioIncomplete', this)">Incomplete ({incompleteScenarios})</li>
-  </ul>
+
 	 <table border="0" style="width: 100%;">
 		{scenarios}
    <tr>

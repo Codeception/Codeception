@@ -10,6 +10,7 @@ use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
 use Codeception\Lib\Suite;
+use Codeception\Step\Comment;
 use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
@@ -50,6 +51,7 @@ class Console implements EventSubscriberInterface
     protected $rawStackTrace = false;
     protected $traceLength = 5;
     protected $columns = [40, 5];
+    protected $metaStep = null;
 
 
     public function __construct($options)
@@ -137,6 +139,7 @@ class Console implements EventSubscriberInterface
         if (!$this->output->waitForDebugOutput) {
             $this->message()->width($this->columns[0] + $this->columns[1], '^')->writeln();
         }
+        $this->metaStep = null;
         $this->printedTest = null;
     }
 
@@ -200,7 +203,14 @@ class Console implements EventSubscriberInterface
         if (!$this->steps or !$e->getTest() instanceof ScenarioDriven) {
             return;
         }
-        $this->output->writeln("* " . $e->getStep()->__toString());
+        $metaStep = $e->getStep()->getMetaStep();
+        if ($metaStep and $this->metaStep != $metaStep) {
+            $this->output->writeln("* $metaStep");
+        }
+        $this->metaStep = $metaStep;
+        $msg = $this->message($e->getStep()->__toString());
+        $this->metaStep ? $msg->prepend('  ')->style('comment') : $msg->prepend('* ');
+        $msg->writeln();
     }
 
     public function afterStep(StepEvent $e)
@@ -381,15 +391,17 @@ class Console implements EventSubscriberInterface
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
+
+
             $message = $this->message($i)->prepend(' ')->width(strlen($length))->append(". ".$step->getPhpCode());
 
             if ($step->hasFailed()) {
                 $message->append('')->style('bold');
             }
 
-            $line = $step->getLineNumber();
-            if ($line) {
-                $message->append(' at <info>'.codecept_relative_path($failedTest->getFileName().":$line</info>"));
+            $line = $step->getLine();
+            if ($line and (!$step instanceof Comment)) {
+                $message->append(" at <info>$line</info>");
             }
 
             $i--;

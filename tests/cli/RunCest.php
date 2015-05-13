@@ -144,7 +144,7 @@ class RunCest
     public function skipSuites(\CliGuy $I)
     {
         $I->executeCommand(
-          'run --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
+          'run dummy --skip skipped --skip remote --skip remote_server --skip order --skip unit --skip powers --skip math --skip messages'
         );
         $I->seeInShellOutput("Dummy Tests");
         $I->dontSeeInShellOutput("Remote Tests");
@@ -227,6 +227,54 @@ class RunCest
         $I->expect('Exceptions are not wrapped into ExceptionWrapper');
         $I->dontSeeInShellOutput('PHPUnit_Framework_ExceptionWrapper');
         $I->seeInShellOutput('RuntimeException');
+    }
+
+    public function runTestsWithSteps(\CliGuy $I)
+    {
+        $I->executeCommand('run scenario SuccessCept --steps');
+        $I->seeInShellOutput(<<<EOF
+Scenario:
+* I am in path "."
+* I see file found "scenario.suite.yml"
+ PASSED
+EOF
+);
+    }
+
+    public function runTestWithFailedScenario(\CliGuy $I)
+    {
+        $I->executeCommand('run scenario FailedCept --steps --no-exit');
+        $I->seeInShellOutput(<<<EOF
+Fail when file is not found (FailedCept)
+Scenario:
+* I am in path "."
+* I see file found "games.zip"
+ FAIL
+EOF
+        );
+        $I->expect('to see scenario trace');
+        $I->seeInShellOutput(<<<EOF
+Scenario Steps:
+
+ 2. \$I->seeFileFound("games.zip") at tests/scenario/FailedCept.php:5
+ 1. \$I->amInPath(".") at tests/scenario/FailedCept.php:4
+
+EOF
+        );
+    }
+
+    public function runTestWithSubSteps(\CliGuy $I)
+    {
+        $I->executeCommand('run scenario SubStepsCept --steps');
+        $I->seeInShellOutput(<<<EOF
+Scenario:
+* I am in path "."
+* I see code coverage files are present
+  I see file found "c3.php"
+  I see file found "composer.json"
+  I see in this file "codeception/c3"
+EOF
+);
 
     }
 }
