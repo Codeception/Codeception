@@ -546,10 +546,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
      *
      * @param Crawler $form the form
      * @param string $action the form's absolute URL action
+     * @return Form
      */
     private function getFormFromCrawler(Crawler $form, $action)
     {
-        $cloned = new Crawler(clone($form->getNode(0)), $action);
+        $fakeDom = new \DOMDocument();
+        $fakeDom->appendChild($fakeDom->importNode($form->getNode(0), true));
+        $node = $fakeDom->documentElement;
+        $cloned = new Crawler($node, $action);
         $shouldDisable = $cloned->filter('input:disabled:not([disabled]),select option:disabled,select optgroup:disabled option:not([disabled])');
         foreach ($shouldDisable as $field) {
             $field->parentNode->removeChild($field);
