@@ -120,15 +120,18 @@ class Facebook extends BaseModule implements DependsOnModule
     {
         if (!array_key_exists('test_user', $this->config)) {
             $this->config['test_user'] = [
-                'permissions' => []
+                'permissions' => [],
+                'name' => 'Codeception Testuser'
             ];
         } elseif (!array_key_exists('permissions', $this->config['test_user'])) {
             $this->config['test_user']['permissions'] = [];
+        } elseif (!array_key_exists('name', $this->config['test_user'])) {
+            $this->config['test_user']['name'] = "codeception testuser";
         }
 
         $this->facebook = new FacebookDriver(
             [
-                'appId'  => $this->config['app_id'],
+                'app_id' => $this->config['app_id'],
                 'secret' => $this->config['secret'],
             ],
             function ($title, $message) {
@@ -160,6 +163,7 @@ class Facebook extends BaseModule implements DependsOnModule
         // make api-call for test user creation only if it's not yet created
         if (!array_key_exists('id', $this->testUser)) {
             $this->testUser = $this->facebook->createTestUser(
+                $this->config['test_user']['name'],
                 $this->config['test_user']['permissions']
             );
         }
@@ -180,8 +184,14 @@ class Facebook extends BaseModule implements DependsOnModule
         }
         // go to facebook and make login; it work only if you visit facebook.com first
         $this->phpBrowser->amOnPage('https://www.facebook.com/');
-        $this->phpBrowser->amOnPage($this->grabFacebookTestUserLoginUrl());
-        $this->phpBrowser->seeCurrentUrlMatches('~/profile.php~');
+        $this->phpBrowser->sendAjaxPostRequest(
+            'login.php',
+            [
+                'email' => $this->grabFacebookTestUserEmail(),
+                'pass' => $this->testUser['password']
+            ]
+        );
+        $this->phpBrowser->see($this->grabFacebookTestUserName());
     }
 
     /**
@@ -191,7 +201,7 @@ class Facebook extends BaseModule implements DependsOnModule
      */
     public function grabFacebookTestUserAccessToken()
     {
-        return $this->facebook->getAccessToken();
+        return $this->testUser['access_token'];
     }
 
     /**
@@ -224,29 +234,43 @@ class Facebook extends BaseModule implements DependsOnModule
         return $this->testUser['login_url'];
     }
 
+    public function grabFacebookTestUserPassword()
+    {
+        return $this->testUser['password'];
+    }
+
     /**
-     * Returns the test user first name.
+     * Returns the test user name.
      *
      * @return string
      */
-    public function grabFacebookTestUserFirstName()
+    public function grabFacebookTestUserName()
     {
         if (!array_key_exists('profile', $this->testUser)) {
-            $this->testUser['profile'] = $this->facebook->api('/me');
+            $this->testUser['profile'] = $this->facebook->getTestUserInfo($this->grabFacebookTestUserAccessToken());
         }
-        return $this->testUser['profile']['first_name'];
+        return $this->testUser['profile']['name'];
+    }
+
+    /**
+     * Please, note that you must have publish_actions permission to be able to publish to user's feed.
+     *
+     * @param array $params
+     */
+    public function postToFacebookAsTestUser($params)
+    {
+        $this->facebook->sendPostToFacebook($this->grabFacebookTestUserAccessToken(), $params);
     }
 
     /**
      *
-     * Please, note that you must have publish_stream permission to be able to publish to user's feed.
+     * Please, note that you must have publish_actions permission to be able to publish to user's feed.
      *
      * @param string $placeId Place identifier to be verified against user published posts
      */
     public function seePostOnFacebookWithAttachedPlace($placeId)
     {
-        $posts = $this->facebook->getLastPostsForTestUser();
-
+        $posts = $this->facebook->getLastPostsForTestUser($this->grabFacebookTestUserAccessToken());
         if ($posts['data']) {
             foreach ($posts['data'] as $post) {
                 if (array_key_exists('place', $post) && ($post['place']['id'] == $placeId)) {
