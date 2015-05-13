@@ -10,10 +10,10 @@ install:
   - cinst OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
   - cinst php
-  - echo extension_dir=ext >> php.ini
-  - echo extension=php_openssl.dll >> php.ini
   - cd c:\tools\php
   - copy php.ini-production php.ini
+  - echo extension_dir=ext >> php.ini
+  - echo extension=php_openssl.dll >> php.ini
   - echo date.timezone="UTC" >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd C:\projects\codeception
