@@ -7,6 +7,8 @@ branches:
     - gh-pages
 
 install:
+  - cinst OpenSSL.Light
+  - SET PATH=C:\Program Files\OpenSSL;%PATH%
   - cinst php
   - cd c:\tools\php
   - copy php.ini-production php.ini
