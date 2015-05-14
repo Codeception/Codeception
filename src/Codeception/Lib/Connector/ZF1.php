@@ -64,7 +64,12 @@ class ZF1 extends Client
         $this->front->setRequest($zendRequest)->setResponse($zendResponse);
 
         ob_start();
-        $this->bootstrap->run();
+        try {
+            $this->bootstrap->run();
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
         ob_end_clean();
 
         $this->zendRequest = $zendRequest;
