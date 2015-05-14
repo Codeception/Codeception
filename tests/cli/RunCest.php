@@ -156,18 +156,16 @@ class RunCest
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput(
-          'Trying to test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
-        );
-        $I->seeInShellOutput('Trying to test is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
-        $I->seeInShellOutput('Trying to test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput("OK");
     }
 
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
-        $I->seeInShellOutput('Running FailingTest::testMe');
+        $I->seeInShellOutput('FailingTest::testMe');
         $I->seeInShellOutput("PassingTest::testMe");
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
