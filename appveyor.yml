@@ -22,7 +22,6 @@ install:
   - cd %APPVEYOR_BUILD_FOLDER%
   - php -r "readfile('http://getcomposer.org/installer');" | php
   - php composer.phar install --prefer-dist -n --no-ansi --dev
-  - IF EXIST tests\data\sandbox  rd /s /q tests\data\sandbox
 
 test_script:
   - php codecept run cli --no-colors -n --skip-group coverage
