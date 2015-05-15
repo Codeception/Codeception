@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use PDOException;
 use RuntimeException;
 use Phalcon\Di;
 use Phalcon\DiInterface;
@@ -46,7 +47,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  *
  * You can use this module by setting params in your functional.suite.yml:
  * <pre>
- * class_name: TestGuy
+ * class_name: FunctionalTester
  * modules:
  *     enabled: [FileSystem, TestHelper, Phalcon1]
  *     config:
@@ -60,7 +61,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * ## Status
  *
  * Maintainer: **cujo**
- * Stability: **alfa**
+ * Stability: **beta**
  */
 class Phalcon1 extends Framework implements ActiveRecord
 {
@@ -125,7 +126,7 @@ class Phalcon1 extends Framework implements ActiveRecord
             throw new RuntimeException('Bootstrap must return \Phalcon\Di\Injectable object');
         }
 
-        $this->di = $application->getDi();
+        $this->di = $application->getDI();
         Di::reset();
         Di::setDefault($this->di);
 
@@ -149,7 +150,7 @@ class Phalcon1 extends Framework implements ActiveRecord
         $this->client->setApplication(function () use ($bootstrap) {
             $currentDi = Di::getDefault();
             $application = require $bootstrap;
-            $di = $application->getDi();
+            $di = $application->getDI();
             if ($currentDi->has('db')) {
                 $di['db'] = $currentDi['db'];
             }
@@ -175,7 +176,7 @@ class Phalcon1 extends Framework implements ActiveRecord
                 $level = $this->di['db']->getTransactionLevel();
                 try {
                     $this->di['db']->rollback(true);
-                } catch (\PDOException $e) {}
+                } catch (PDOException $e) {}
                 if ($level == $this->di['db']->getTransactionLevel()) {
                     break;
                 }
@@ -184,12 +185,7 @@ class Phalcon1 extends Framework implements ActiveRecord
         $this->di = null;
         Di::reset();
 
-        $_SESSION = array();
-        $_FILES = array();
-        $_GET = array();
-        $_POST = array();
-        $_COOKIE = array();
-        $_REQUEST = array();
+        $_SESSION = $_FILES = $_GET = $_POST = $_COOKIE = $_REQUEST = array();
     }
 
     /**
@@ -240,7 +236,13 @@ class Phalcon1 extends Framework implements ActiveRecord
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
         if (!$res) {
-            $this->fail("Record $model was not saved. Messages: ".implode(', ', $record->getMessages()));
+            $messages = $record->getMessages();
+            $errors = array();
+            foreach ($messages as $message) {
+                $errors[] = sprintf('[%s] %s: %s', $message->getType(), $message->getField(), $message->getMessage());
+            }
+
+            $this->fail(sprintf("Record %s was not saved. Messages: \n%s", $model, implode(PHP_EOL, $errors)));
         }
         $this->debugSection($model, json_encode($record));
 

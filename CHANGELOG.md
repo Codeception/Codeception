@@ -2,6 +2,7 @@
 
 #### 2.0.14
 
+* [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * [Laravel4] [Laravel5] Improved error message for `amOnRoute` and `amOnAction` methods if route or action does not exist *2015-05-04*
 * [Laravel4] Fixed issue with session configuration *2015-05-01*
 * [Laravel4] Partial rewrite of module *2015-05-01*
