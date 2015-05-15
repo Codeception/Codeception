@@ -25,7 +25,7 @@ namespace Codeception\Module;
  *
  * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
- * * entity_manager: '' - use the stated EntityManager.
+ * * symfony_emservice: 'doctrine.orm.entity_manager' - use the stated EntityManager (optional).
  *
  *  ### Example (`functional.suite.yml`)
  * 
@@ -39,7 +39,7 @@ namespace Codeception\Module;
 class Doctrine2 extends \Codeception\Module
 {
 
-    protected $config = array('cleanup' => true, 'auto_connect' => true, 'entity_manager' => '');
+    protected $config = array('cleanup' => true, 'auto_connect' => true, 'symfony_emservice' => 'doctrine.orm.entity_manager');
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -48,8 +48,6 @@ class Doctrine2 extends \Codeception\Module
     
     public function _before(\Codeception\TestCase $test)
     {
-        if ($this->config['entity_manager']) {
-            $this->config['entity_manager'] .= '_';
         }
         // trying to connect to Symfony2 and get event manager
         if ($this->config['auto_connect']) {
@@ -57,7 +55,7 @@ class Doctrine2 extends \Codeception\Module
                 $symfonyModule = $this->getModule('Symfony2');
                 $kernel = $symfonyModule->kernel;
                 if ($kernel->getContainer()->has('doctrine')) {
-                    self::$em = $kernel->getContainer()->get('doctrine.orm.'.$this->config['entity_manager'].'entity_manager');
+                    self::$em = $kernel->getContainer()->get($this->config['symfony_emservice']);
                     $symfonyModule->client->persistentServices[] = 'doctrine.orm.entity_manager';
                     $symfonyModule->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
                 }
