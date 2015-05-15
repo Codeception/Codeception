@@ -24,10 +24,10 @@ EOF;
     {
         $actor = $this->settings['class_name'];
         $use = '';
-		if ( ! empty( $this->settings['namespace'] ) ) {
-			$namespace = rtrim( $this->settings['namespace'], '\\' );
+        if ( ! empty( $this->settings['namespace'] ) ) {
+            $namespace = rtrim( $this->settings['namespace'], '\\' );
             $use = "use {$namespace}\\$actor;";
-		}
+        }
 
         return (new Template($this->template))
             ->place('actor', $actor)
