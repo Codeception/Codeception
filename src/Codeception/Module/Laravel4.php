@@ -6,8 +6,8 @@ use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
-use Codeception\Step;
 use Codeception\Subscriber\ErrorHandler;
+use Illuminate\Support\Facades\Facade;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
@@ -50,14 +50,9 @@ class Laravel4 extends Framework implements ActiveRecord
     public $app;
 
     /**
-     * @var \Codeception\Lib\Connector\Laravel4
-     */
-    public $client;
-
-    /**
      * @var array
      */
-    protected $config = [];
+    public $config = [];
 
     /**
      * Constructor.
@@ -87,7 +82,7 @@ class Laravel4 extends Framework implements ActiveRecord
     public function _initialize()
     {
         $this->revertErrorHandler();
-        $this->initializeLaravel();
+        $this->client = new LaravelConnector($this);
     }
 
     /**
@@ -98,8 +93,6 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public function _before(\Codeception\TestCase $test)
     {
-        $this->initializeLaravel();
-
         if ($this->config['filters']) {
             $this->haveEnabledFilters();
         }
@@ -119,23 +112,34 @@ class Laravel4 extends Framework implements ActiveRecord
         if ($this->app['db'] && $this->cleanupDatabase()) {
             $this->app['db']->rollback();
         }
+    }
 
-        if ($this->app['auth']) {
-            $this->app['auth']->logout();
-        }
+    /**
+     * Before step hook.
+     *
+     * @param \Codeception\Step $step
+     */
+    public function _beforeStep(\Codeception\Step $step)
+    {
+        parent::_beforeStep($step);
 
-        if ($this->app['cache']) {
-            $this->app['cache']->flush();
+        $session = $this->app['session.store'];
+        if (! $session->isStarted()) {
+            $session->start();
         }
+    }
 
-        if ($this->app['session']) {
-            $this->app['session']->flush();
-        }
+    /**
+     * After step hook.
+     *
+     * @param \Codeception\Step $step
+     */
+    public function _afterStep(\Codeception\Step $step)
+    {
+        parent::_beforeStep($step);
 
-        // disconnect from DB to prevent "Too many connections" issue
-        if ($this->app['db']) {
-            $this->app['db']->disconnect();
-        }
+        $this->app['session.store']->save();
+        Facade::clearResolvedInstances();
     }
 
     /**
@@ -146,86 +150,6 @@ class Laravel4 extends Framework implements ActiveRecord
     {
         $handler = new ErrorHandler();
         set_error_handler(array($handler, 'errorHandler'));
-    }
-
-    /**
-     * Initialize the Laravel Framework.
-     *
-     * @throws ModuleConfig
-     */
-    private function initializeLaravel()
-    {
-        $this->app = $this->bootApplication();
-        $this->app['config']['session.driver'] = $this->getConfiguredSessionDriver();
-
-        $this->client = new LaravelConnector($this->app);
-        $this->client->followRedirects(true);
-    }
-
-    /**
-     * Boot the Laravel application object.
-     *
-     * @return \Illuminate\Foundation\Application
-     * @throws \Codeception\Exception\ModuleConfig
-     */
-    protected function bootApplication()
-    {
-        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
-        $projectDir .= $this->config['root'];
-        require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        \Illuminate\Support\ClassLoader::register();
-
-        if (is_dir($workbench = $projectDir . 'workbench')) {
-            \Illuminate\Workbench\Starter::start($workbench);
-        }
-
-        $startFile = $projectDir . $this->config['start'];
-
-        if (! file_exists($startFile)) {
-            throw new ModuleConfig(
-                $this, "Laravel bootstrap start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
-            );
-        }
-
-        // The following two variables are used in the Illuminate/Foundation/start.php file
-        // which is included in the bootstrap start file.
-        $unitTesting = $this->config['unit'];
-        $testEnvironment = $this->config['environment'];
-
-        $app = require $startFile;
-
-        return $app;
-    }
-
-    /**
-     * Get the configured session driver.
-     * Laravel 4 forces the array session driver if the application is run from the console.
-     * This happens in \Illuminate\Session\SessionServiceProvider::setupDefaultDriver() method.
-     * This method is used to retrieve the correct session driver that is configured in the config files.
-     *
-     * @return string
-     */
-    private function getConfiguredSessionDriver()
-    {
-        $configDir = $this->app['path'] . DIRECTORY_SEPARATOR . 'config';
-        $configFiles = array(
-            $configDir . DIRECTORY_SEPARATOR . $this->config['environment'] . DIRECTORY_SEPARATOR . 'session.php',
-            $configDir . DIRECTORY_SEPARATOR . 'session.php',
-
-        );
-
-        foreach ($configFiles as $configFile) {
-            if (file_exists($configFile)) {
-                $sessionConfig = require $configFile;
-
-                if (is_array($sessionConfig) && isset($sessionConfig['driver'])) {
-                    return $sessionConfig['driver'];
-                }
-            }
-        }
-
-        return $this->app['config']['session.driver'];
     }
 
     /**
@@ -263,6 +187,14 @@ class Laravel4 extends Framework implements ActiveRecord
     }
 
     /**
+     * @param $app
+     */
+    public function setApplication($app)
+    {
+        $this->app = $app;
+    }
+
+    /**
      * Enable Laravel filters for next requests.
      */
     public function haveEnabledFilters()
@@ -287,19 +219,15 @@ class Laravel4 extends Framework implements ActiveRecord
      * ?>
      * ```
      *
-     * @param $routeName
+     * @param $route
      * @param array $params
      */
-    public function amOnRoute($routeName, $params = [])
+    public function amOnRoute($route, $params = [])
     {
-        $route = $this->app['router']->getRoutes()->getByName($routeName);
+        $domain = $this->app['router']->getRoutes()->getByName($route)->domain();
+        $absolute = ! is_null($domain);
 
-        if (! $route) {
-            $this->fail("Route with name '$routeName' does not exist");
-        }
-
-        $absolute = ! is_null($route->domain());
-        $url = $this->app['url']->route($routeName, $params, $absolute);
+        $url = $this->app['url']->route($route, $params, $absolute);
         $this->amOnPage($url);
     }
 
@@ -317,13 +245,9 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public function amOnAction($action, $params = [])
     {
-        $route = $this->app['router']->getRoutes()->getByAction($action);
+        $domain = $this->app['router']->getRoutes()->getByAction($action)->domain();
+        $absolute = ! is_null($domain);
 
-        if (! $route) {
-            $this->fail("Action '$action' does not exists");
-        }
-
-        $absolute = ! is_null($route->domain());
         $url = $this->app['url']->action($action, $params, $absolute);
         $this->amOnPage($url);
     }
@@ -441,7 +365,7 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public function seeFormHasErrors()
     {
-        $viewErrorBag = $this->app->make('view')->shared('errors');
+        $viewErrorBag = $this->app['view']->shared('errors');
         $this->assertTrue(count($viewErrorBag) > 0);
     }
 
@@ -503,7 +427,7 @@ class Laravel4 extends Framework implements ActiveRecord
     public function amLoggedAs($user, $driver = null)
     {
         if ($user instanceof \Illuminate\Auth\UserInterface) {
-            $this->app['auth']->driver($driver)->setUser($user);
+            $this->app['auth']->driver($driver)->login($user);
         } else {
             $this->app['auth']->driver($driver)->attempt($user);
         }
