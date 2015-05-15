@@ -581,13 +581,22 @@ class InnerBrowser extends Module implements Web
      */
     protected function getFormValuesFor(Form $form)
     {
-        $values = $form->getPhpValues();
         $fields = $form->all();
+        $values = [];
         foreach ($fields as $field) {
-            $name = $this->getSubmissionFormFieldName($field->getName());
-            if (!empty($values[$name]) && substr($field->getName(), -2) === '[]') {
-                $values[$name] = array_values($values[$name]);
+            if (!$field->hasValue()) {
+                continue;
             }
+            $fieldName = $field->getName();
+            if (substr($fieldName, -2) === '[]') {
+                $fieldName = substr($fieldName, 0, -2);
+                if (!isset($values[$fieldName])) {
+                    $values[$fieldName] = [];
+                }
+                $values[$fieldName][] = $field->getValue();
+                continue;
+            }
+            $values[$fieldName] = $field->getValue();
         }
         return $values;
     }
