@@ -48,7 +48,6 @@ class Doctrine2 extends \Codeception\Module
     
     public function _before(\Codeception\TestCase $test)
     {
-        }
         // trying to connect to Symfony2 and get event manager
         if ($this->config['auto_connect']) {
             if ($this->hasModule('Symfony2')) {
