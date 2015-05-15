@@ -54,6 +54,7 @@ class ZF1 extends Client
         // so we set all parameters in ZF's request here to not break apps
         // relying on $request->getPost()
         $zendRequest->setPost($request->getParameters());
+        $zendRequest->setRawBody($request->getContent());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         $zendRequest->setHeaders($request->getServer());
         $_FILES  = $this->remapFiles($request->getFiles());
