@@ -44,13 +44,7 @@ class FileSystem
         }
 
         if (!is_dir($dir) || is_link($dir)) {
-            return unlink($dir);
-        }
-
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {            
-            $dir = str_replace('/', '\\', $dir);
-            exec('rd /s /q "'.$dir.'"');
-            return true;
+            return @unlink($dir);
         }
 
         foreach (scandir($dir) as $item) {
@@ -66,7 +60,7 @@ class FileSystem
             }
         }
 
-        return rmdir($dir);
+        return @rmdir($dir);
     }
 
     /**
