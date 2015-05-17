@@ -41,8 +41,9 @@ EOF;
     public function produce()
     {
         $actor = $this->settings['class_name'];
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
-        $ns .= "use " . $this->settings['namespace'] . '\\' . $actor . ";";
+        $namespace = rtrim( $this->settings['namespace'], '\\' );
+        $ns = $this->getNamespaceHeader($namespace . '\\' . $this->name);
+        $ns .= "use {$namespace}\\{$actor};";
 
         return (new Template($this->template))
             ->place('name', $this->getShortClassName($this->name))
