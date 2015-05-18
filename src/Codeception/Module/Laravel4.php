@@ -73,6 +73,12 @@ class Laravel4 extends Framework implements ActiveRecord
             (array) $config
         );
 
+        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
+        $projectDir .= $this->config['root'];
+
+        $this->config['project_dir'] = $projectDir;
+        $this->config['start_file'] = $projectDir . $this->config['start'];
+
         parent::__construct();
     }
 
@@ -81,6 +87,8 @@ class Laravel4 extends Framework implements ActiveRecord
      */
     public function _initialize()
     {
+        $this->checkStartFileExists();
+        $this->registerAutoloaders();
         $this->revertErrorHandler();
         $this->client = new LaravelConnector($this);
     }
@@ -140,6 +148,36 @@ class Laravel4 extends Framework implements ActiveRecord
 
         $this->app['session.store']->save();
         Facade::clearResolvedInstances();
+    }
+
+    /**
+     * Make sure the Laravel start file exists.
+     *
+     * @throws ModuleConfig
+     */
+    public function checkStartFileExists()
+    {
+        $startFile = $this->config['start_file'];
+
+        if (! file_exists($startFile)) {
+            throw new ModuleConfig(
+                $this, "Laravel bootstrap start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
+            );
+        }
+    }
+
+    /**
+     * Register Laravel autoloaders.
+     */
+    protected function registerAutoloaders()
+    {
+        require $this->config['project_dir'] . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+        \Illuminate\Support\ClassLoader::register();
+
+        if (is_dir($workbench = $this->config['project_dir'] . 'workbench')) {
+            \Illuminate\Workbench\Starter::start($workbench);
+        }
     }
 
     /**
