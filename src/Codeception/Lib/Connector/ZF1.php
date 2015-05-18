@@ -57,7 +57,7 @@ class ZF1 extends Client
         // relying on $request->getPost()
         $zendRequest->setPost($request->getParameters());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
-        $zendRequest->setHeaders($this->extractHeaders($request));
+        $zendRequest->setHeaders($this->_extractHeaders($request));
         $_FILES  = $this->remapFiles($request->getFiles());
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
@@ -110,7 +110,7 @@ class ZF1 extends Client
         return $this->zendRequest;
     }
 
-    protected function extractHeaders(BrowserKitRequest $request)
+    private function _extractHeaders(BrowserKitRequest $request)
     {
         $headers = array();
         $server = $request->getServer();
