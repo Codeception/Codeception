@@ -213,7 +213,7 @@ class Laravel4 extends Framework implements ActiveRecord
     /**
      * Opens web page using route name and parameters.
      *
-     * ```php
+     * ``` php
      * <?php
      * $I->amOnRoute('posts.create');
      * ?>
@@ -234,7 +234,7 @@ class Laravel4 extends Framework implements ActiveRecord
     /**
      * Opens web page by action name
      *
-     * ```php
+     * ``` php
      * <?php
      * $I->amOnAction('PostsController@index');
      * ?>
@@ -255,7 +255,7 @@ class Laravel4 extends Framework implements ActiveRecord
     /**
      * Checks that current url matches route
      *
-     * ```php
+     * ``` php
      * <?php
      * $I->seeCurrentRouteIs('posts.index');
      * ?>
@@ -271,7 +271,7 @@ class Laravel4 extends Framework implements ActiveRecord
     /**
      * Checks that current url matches action
      *
-     * ```php
+     * ``` php
      * <?php
      * $I->seeCurrentActionIs('PostsController@index');
      * ?>
@@ -286,7 +286,14 @@ class Laravel4 extends Framework implements ActiveRecord
     }
 
     /**
-     * Assert that the session has a given list of values.
+     * Assert that a session variable exists.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInSession('key');
+     * $I->seeInSession('key', 'value');
+     * ?>
+     * ```
      *
      * @param  string|array $key
      * @param  mixed $value
@@ -308,6 +315,13 @@ class Laravel4 extends Framework implements ActiveRecord
 
     /**
      * Assert that the session has a given list of values.
+     *
+     * ``` php
+     * <?php
+     * $I->seeSessionHasValues(['key1', 'key2']);
+     * $I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
+     * ?>
+     * ```
      *
      * @param  array $bindings
      * @return void
@@ -350,6 +364,12 @@ class Laravel4 extends Framework implements ActiveRecord
     /**
      * Assert that the session has errors bound.
      *
+     * ``` php
+     * <?php
+     * $I->seeSessionHasErrors();
+     * ?>
+     * ```
+     *
      * @return bool
      * @deprecated
      */
@@ -359,7 +379,13 @@ class Laravel4 extends Framework implements ActiveRecord
     }
 
     /**
-     * Assert that the form errors are bound to the View.
+     * Assert that form errors are bound to the View.
+     *
+     * ``` php
+     * <?php
+     * $I->seeFormHasErrors();
+     * ?>
+     * ```
      *
      * @return bool
      */
@@ -511,7 +537,9 @@ class Laravel4 extends Framework implements ActiveRecord
      * Checks that record exists in database.
      *
      * ``` php
+     * <?php
      * $I->seeRecord('users', array('name' => 'davert'));
+     * ?>
      * ```
      *
      * @param $tableName
