@@ -262,7 +262,7 @@ class Console implements EventSubscriberInterface
     {
 
         static $limit = 10;
-//
+
         $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
             ? $e->getClassname()
             : get_class($e);
@@ -415,7 +415,10 @@ class Console implements EventSubscriberInterface
     protected function getTestMessage(\PHPUnit_Framework_TestCase $test, $inProgress = false)
     {
         if (!$test instanceof TestCase) {
-            return $this->message = $this->message($test->toString())
+            return $this->message = $this->message('%s::%s')
+                ->with(get_class($test), $test->getName(true))
+                ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
+                ->cut($this->columns[0] - 12)
                 ->style('focus')
                 ->prepend($inProgress ? 'Running ' : '');
         }
@@ -434,8 +437,9 @@ class Console implements EventSubscriberInterface
     protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)
     {
         if (!$this->isDetailed($test) and $this->output->isInteractive()) {
-            $this->getTestMessage($test, true)->write();
-            $this->message('... ')->append("\x0D")->write();
+            $this->getTestMessage($test, true)
+                ->append('... ')
+                ->write();
             return;
         }
         $this->getTestMessage($test)->write();

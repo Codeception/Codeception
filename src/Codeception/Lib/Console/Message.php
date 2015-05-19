@@ -12,12 +12,12 @@ class Message
     public function __construct($message, Output $output = null)
     {
         $this->message = $message;
-        $this->output  = $output;
+        $this->output = $output;
     }
 
     public function with($param)
     {
-        $args          = array_merge(array($this->message), func_get_args());
+        $args = array_merge([$this->message], func_get_args());
         $this->message = call_user_func_array('sprintf', $args);
 
         return $this;
@@ -36,6 +36,12 @@ class Message
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
         }
+        return $this;
+    }
+
+    public function cut($length)
+    {
+        $this->message = substr($this->message, 0, $length-1);
         return $this;
     }
 
@@ -112,7 +118,11 @@ class Message
     public function widthWithTerminalCorrection($width, $char = ' ')
     {
         $cols = 0;
-        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') and (php_sapi_name() == "cli") and (getenv('TERM'))) {
+        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
+            and (php_sapi_name() == "cli")
+            and (getenv('TERM'))
+            and (getenv('TERM') != 'unknown')
+        ) {
             $cols = intval(`command -v tput >> /dev/null 2>&1 && tput cols`);
         }
         if ($cols > 0) {
