@@ -2,13 +2,16 @@
 
 use \Codeception\Lib\Driver\Db;
 
+/**
+ * @group appveyor
+ */
 class MysqlTest extends \PHPUnit_Framework_TestCase
 {
-    protected $config = array(
+    protected $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',
         'user' => 'root',
         'password' => ''
-    );
+    ];
 
     protected $dbh;
 
@@ -16,6 +19,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        if (getenv('APPVEYOR')) {
+            $this->config['password'] = 'Password12!';
+        }
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/mysql.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $this->sql = explode("\n", $sql);
@@ -27,7 +33,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         }
         $this->mysql->cleanup();
     }
-
 
     public function testCleanupDatabase()
     {
@@ -45,6 +50,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->mysql->getDbh()->query("SHOW TABLES")->fetchAll());
     }
 
+    /**
+     * @group appveyor
+     */
     public function testLoadDump()
     {
         $this->mysql->load($this->sql);

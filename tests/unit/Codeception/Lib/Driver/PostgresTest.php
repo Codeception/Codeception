@@ -1,14 +1,16 @@
 <?php
-
 use \Codeception\Lib\Driver\Db;
 
-class postgresTest extends \PHPUnit_Framework_TestCase
+/**
+ * @group appveyor
+ */
+class PostgresTest extends \PHPUnit_Framework_TestCase
 {
-    protected $config = array(
+    protected $config = [
         'dsn' => 'pgsql:host=localhost;dbname=codeception_test',
         'user' => 'postgres',
         'password' => ''
-    );
+    ];
 
     protected $dbh;
 
@@ -17,6 +19,9 @@ class postgresTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         if (!function_exists('pg_connect')) return $this->markTestSkipped("Postgres extensions not loaded");
+        if (getenv('APPVEYOR')) {
+            $this->config['password'] = 'Password12!';
+        }
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/postgres.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $this->sql = explode("\n", $sql);
@@ -66,7 +71,7 @@ class postgresTest extends \PHPUnit_Framework_TestCase
     }
 
     public function testSelectWithEmptyCriteria() {
-      $emptyCriteria = array();
+      $emptyCriteria = [];
       $generatedSql = $this->postgres->select('test_column', 'test_table', $emptyCriteria);
 
       $this->assertNotContains('where', $generatedSql);
