@@ -81,7 +81,7 @@ EOF;
 
     public function _depends()
     {
-        if (!$this->config['connection_callback']) {
+        if (!$this->config['depends'] && !$this->config['connection_callback']) {
             return [];
         }
         return ['Codeception\Lib\Interfaces\DoctrineProvider' => $this->dependencyMessage];
@@ -128,15 +128,6 @@ EOF;
 
     public function _after(\Codeception\TestCase $test)
     {
-        if (!$this->em) {
-            throw new ModuleConfigException(
-                __CLASS__,
-                "Doctrine2 module requires EntityManager explicitly set.\n" .
-                "You can use your bootstrap file to assign the EntityManager:\n\n" .
-                '\Codeception\Module\Doctrine2::$em = $em'
-            );
-        }
-
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
                 $this->em->getConnection()->rollback();
