@@ -96,33 +96,14 @@ class Laravel4 extends Client
      * @return Application
      * @throws ModuleConfig
      */
-    protected function loadApplication()
+    private function loadApplication()
     {
-
-        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
-        $projectDir .= $this->module->config['root'];
-        require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        \Illuminate\Support\ClassLoader::register();
-
-        if (is_dir($workbench = $projectDir . 'workbench')) {
-            \Illuminate\Workbench\Starter::start($workbench);
-        }
-
-        $startFile = $projectDir . $this->module->config['start'];
-
-        if (! file_exists($startFile)) {
-            throw new ModuleConfig(
-                $this, "Laravel bootstrap start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
-            );
-        }
-
         // The following two variables are used in the Illuminate/Foundation/start.php file
         // which is included in the bootstrap start file.
         $unitTesting = $this->module->config['unit'];
         $testEnvironment = $this->module->config['environment'];
 
-        $app = require $startFile;
+        $app = require $this->module->config['start_file'];
         $this->setConfiguredSessionDriver($app);
 
         return $app;
