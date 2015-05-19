@@ -48,12 +48,13 @@ class GenerateCept extends Command
         $filename = $this->completeSuffix($filename, 'Cept');
         $gen = new Cept($config);
 
-        $res = $this->save($config['path'] . DIRECTORY_SEPARATOR . $filename, $gen->produce());
+        $full_path = rtrim( $config['path'], DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $filename;
+        $res = $this->save($full_path, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             return;
         }
-        $output->writeln("<info>Test was created in $filename</info>");
+        $output->writeln("<info>Test was created in $full_path</info>");
     }
 
 }
