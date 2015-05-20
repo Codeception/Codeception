@@ -169,7 +169,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 
     protected function removeInserted()
     {
-        foreach ($this->insertedIds as $insertId) {
+        foreach (array_reverse($this->insertedIds) as $insertId) {
             try {
                 $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
