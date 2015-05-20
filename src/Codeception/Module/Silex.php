@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\InnerBrowser;
+use Codeception\Lib\Framework;
 use Codeception\TestCase;
 
 /**
@@ -46,7 +46,7 @@ use Codeception\TestCase;
  * Class Silex
  * @package Codeception\Module
  */
-class Silex extends InnerBrowser
+class Silex extends Framework
 {
 
     protected $app;
@@ -96,4 +96,4 @@ class Silex extends InnerBrowser
         return $this->app[$service];
     }
 
-} 
+}
