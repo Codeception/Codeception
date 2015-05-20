@@ -982,7 +982,7 @@ class InnerBrowser extends Module implements Web
         $nodes = $this->match($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode(iconv("cp1251", "UTF8//ignore", $attributes)),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
         }
         $this->assertDomContains($nodes, $selector);
     }
@@ -992,7 +992,7 @@ class InnerBrowser extends Module implements Web
         $nodes = $this->match($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode(iconv("cp1251", "UTF8//ignore", $attributes)),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
         }
         $this->assertDomNotContains($nodes, $selector);
     }

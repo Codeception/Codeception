@@ -42,7 +42,6 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *
  * ## Configuration
  *
-<<<<<<< HEAD
  * * url *required* - Starting URL for your app.
  * * browser *required* - Browser to launch.
  * * host - Selenium server host (127.0.0.1 by default).
@@ -52,16 +51,6 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * wait - Implicit wait (default 0 seconds).
  * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
-=======
- * * url *required* - start url for your app
- * * browser *required* - browser that would be launched
- * * host  - Selenium server host (127.0.0.1 by default)
- * * port - Selenium server port (4444 by default)
- * * restart - set to false (default) to share selenium sesssion between tests, or set to true to create a new selenium session per test
- * * clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
- * * wait - set the implicit wait (0 secs) by default.
- * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
->>>>>>> c90c799cf588bade076fcee98eff0b3f30839adc
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -952,14 +941,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->findField($field);
         // in order to be compatible on different OS
-<<<<<<< HEAD
         $filePath = realpath(\Codeception\Configuration::dataDir() . $filename);
         if (!is_readable($filePath)) {
             throw new \InvalidArgumentException("file not found or not readable: $filePath");
         }
-=======
-        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
->>>>>>> c90c799cf588bade076fcee98eff0b3f30839adc
         // in order for remote upload to be enabled
         $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);

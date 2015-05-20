@@ -143,7 +143,7 @@ class LocalServer extends SuiteSubscriber
              'CodeCoverage_Config' => $this->settings['remote_config']
          ];
          $this->module->amOnPage('/');
-         $this->module->setCookie(self::COVERAGE_COOKIE, json_encode(iconv("cp1251", "UTF8//ignore", $cookie));
+         $this->module->setCookie(self::COVERAGE_COOKIE, json_encode($cookie));
      }
 
     protected function fetchErrors()

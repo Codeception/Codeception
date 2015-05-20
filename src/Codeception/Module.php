@@ -155,7 +155,7 @@ abstract class Module
     protected function debugSection($title, $message)
     {
         if (is_array($message) or is_object($message)) {
-            $message = stripslashes(json_encode(iconv("cp1251", "UTF8//ignore", $message)));
+            $message = stripslashes(json_encode($message));
         }
         $this->debug("[$title] $message");
     }
@@ -182,7 +182,7 @@ abstract class Module
     protected function scalarizeArray($array)
     {
         foreach ($array as $k => $v) {
-            if (!is_scalar($v) && $v !== null) {
+            if (!is_scalar($v)) {
                 $array[$k] = (is_array($v) || $v instanceof \ArrayAccess)
                     ? $this->scalarizeArray($v)
                     : (string)$v;
