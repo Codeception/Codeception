@@ -977,13 +977,12 @@ class InnerBrowser extends Module implements Web
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
-    public function stringifySelector($selector)
+    private function stringifySelector($selector)
     {
-      if (is_array($selector))
-      {
-          return trim(json_encode($selector), '{}');
-      }
-      return $selector;
+        if (is_array($selector)) {
+            return trim(json_encode($selector), '{}');
+        }
+        return $selector;
     }
 
     public function seeElement($selector, $attributes = array())
@@ -992,7 +991,7 @@ class InnerBrowser extends Module implements Web
         $selector = $this->stringifySelector($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes), '{}');
         }
         $this->assertDomContains($nodes, $selector);
     }
@@ -1003,7 +1002,7 @@ class InnerBrowser extends Module implements Web
         $selector = $this->stringifySelector($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes), '{}');
         }
         $this->assertDomNotContains($nodes, $selector);
     }
