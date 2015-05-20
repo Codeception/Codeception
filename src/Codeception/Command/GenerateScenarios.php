@@ -31,7 +31,6 @@ class GenerateScenarios extends Command
             new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
             new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)','text'),
-            new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
         ));
         parent::configure();
     }

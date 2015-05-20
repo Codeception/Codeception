@@ -60,8 +60,13 @@ class ApiHelper extends \Codeception\Module
 {
 	public function seeResponseIsHtml()
 	{
+<<<<<<< HEAD
 		$response = $this->getModule('REST')->response;
         \PHPUnit_Framework_Assert::assertRegex('~^<!DOCTYPE HTML(.*?)<html>.*?<\/html>~m', $response);
+=======
+		$response = trim($this->getModule('REST')->response);
+		\PHPUnit_Framework_Assert::assertRegex('~^<!DOCTYPE HTML(.*?)<html>.*?<\/html>~m', $response);
+>>>>>>> c90c799cf588bade076fcee98eff0b3f30839adc
 	}
 }
 ?>
