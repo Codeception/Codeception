@@ -1,10 +1,9 @@
 <?php
-
 function RESTServer()
 {
     // find the function/method to call
     $callback = NULL;
-    if (preg_match('/REST\/([^\/]+)/', $_SERVER['REQUEST_URI'], $m)) {
+    if (preg_match('/rest\/([^\/]+)/i', $_SERVER['REQUEST_URI'], $m)) {
         if (isset($GLOBALS['RESTmap'][$_SERVER['REQUEST_METHOD']][$m[1]])) {
             $callback = $GLOBALS['RESTmap'][$_SERVER['REQUEST_METHOD']][$m[1]];
         }
@@ -21,6 +20,11 @@ function RESTServer()
             $data = json_decode($tmp);
         }
 
-        print json_encode(call_user_func($callback, $data));
+        $response = call_user_func($callback, $data);
+        if (is_scalar($response)) {
+            print $response;
+            return;
+        }
+        print json_encode($response);
     }
 }

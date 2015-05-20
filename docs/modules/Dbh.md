@@ -1,9 +1,10 @@
 # Dbh Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/Dbh.php)**
+
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Dbh.php)**
 
 
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
-Be default it will cover all database queries into transaction and rollback it afterwards.
+By default it will cover all database queries into transaction and rollback it afterwards.
 The database should support nested transactions, in order to make cleanup work as expected.
 
 Pass PDO instance to this module from within your bootstrap file.
@@ -44,12 +45,9 @@ This module despite of it's stability may act unstable because of transactions i
              cleanup: false
 
 
-## Actions
-
 
 ### dontSeeInDatabase
-
-
+ 
 Effect is opposite to ->seeInDatabase
 
 Checks if there is no record with such column values in database.
@@ -69,18 +67,12 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.
 ```
 Fails if such user was found.
 
- * param $table
- * param array $criteria
-
-
-### getName
-
-__not documented__
+ * `param`       $table
+ * `param array` $criteria
 
 
 ### grabFromDatabase
-
-
+ 
 Fetches a single column value from a database.
 Provide table name, desired column and criteria.
 
@@ -92,16 +84,16 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 ```
 
- * version 1.1
- * param $table
- * param $column
- * param array $criteria
- * return mixed
+@version 1.1
+
+ * `param`       $table
+ * `param`       $column
+ * `param array` $criteria
+
 
 
 ### seeInDatabase
-
-
+ 
 Checks if a row with given column values exists.
 Provide table name and column values.
 
@@ -119,5 +111,7 @@ SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.
 ```
 Fails if no such user found.
 
- * param $table
- * param array $criteria
+ * `param`       $table
+ * `param array` $criteria
+
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Dbh.php">Help us to improve documentation. Edit module reference</a></div>

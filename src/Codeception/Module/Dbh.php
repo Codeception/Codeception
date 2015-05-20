@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 /**
  * This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
- * Be default it will cover all database queries into transaction and rollback it afterwards.
+ * By default it will cover all database queries into transaction and rollback it afterwards.
  * The database should support nested transactions, in order to make cleanup work as expected.
  *
  * Pass PDO instance to this module from within your bootstrap file.
@@ -45,7 +45,7 @@ namespace Codeception\Module;
  *
  */
 
-class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
+class Dbh extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 {
     public static $dbh;
 
@@ -56,7 +56,9 @@ class Dbh extends \Codeception\Module implements \Codeception\Util\DbInterface
             "You can use your bootstrap file to assign the dbh:\n\n" .
             '\Codeception\Module\Dbh::$dbh = $dbh');
 
-        self::$dbh->beginTransaction();
+        if(!self::$dbh->inTransaction()) {
+            self::$dbh->beginTransaction();
+        }
     }
 
     public function _after(\Codeception\TestCase $test) {

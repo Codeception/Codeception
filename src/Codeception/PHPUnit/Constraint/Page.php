@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\PHPUnit\Constraint;
 
-use Codeception\Util\Console\Message;
+use Codeception\Lib\Console\Message;
 
 class Page extends \PHPUnit_Framework_Constraint_StringContains
 {
@@ -19,13 +19,14 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
         $page = substr($other,0,300);
         $message = new Message($page);
         $message->style('info');
+        $message->prepend("\n--> ");
         $message->prepend($this->uriMessage());
         if (strlen($other) > 300) {
-            $debugMessage = new Message("[Content too long to display. See complete response in '_log' directory]");
+            $debugMessage = new Message("[Content too long to display. See complete response in '_output' directory]");
             $debugMessage->style('debug')->prepend("\n");
             $message->append($debugMessage);
         }
-        $message->prepend("\n-->")->append("\n--> ");
+        $message->append("\n--> ");
         return $message->getMessage() . $this->toString();
     }
 

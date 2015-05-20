@@ -1,0 +1,8 @@
+class_name: WebGuy
+modules:
+    enabled: [WebDriver, WebHelper]
+    config:
+      WebDriver:
+        url: http://localhost:8000
+        browser: firefox
+        window_size: 1200x768

@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module;
-use Codeception\Util\Framework as Framework;
+use Codeception\Lib\Framework as Framework;
 
 /**
  * Module that interacts with Symfony 1.4 applications.
@@ -69,7 +69,7 @@ class Symfony1 extends Module
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $output = \Codeception\Configuration::logDir() . DIRECTORY_SEPARATOR . basename($test->getFileName()) . '.page.debug.html';
+        $output = \Codeception\Configuration::outputDir() . DIRECTORY_SEPARATOR . basename($test->getFileName()) . '.page.debug.html';
         file_put_contents($output, $this->browser->getResponse()->getContent());
     }
 

@@ -1,18 +1,28 @@
 <?php
 namespace Codeception\Command;
 
-use Codeception\Codecept;
 use Codeception\Configuration;
+use Symfony\Component\Console\Command\Command;
 use Codeception\Exception\Configuration as ConfigurationException;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-
-class GenerateScenarios extends Base
+/**
+ * Generates user-friendly text scenarios from scenario-driven tests (Cest, Cept).
+ *
+ * * `codecept g:scenarios acceptance` - for all acceptance tests
+ * * `codecept g:scenarios acceptance --format html` - in html format
+ * * `codecept g:scenarios acceptance --path doc` - generate scenarios to `doc` dir
+ */
+class GenerateScenarios extends Command
 {
+    use Shared\FileSystem;
+    use Shared\Config;
+
     protected function configure()
     {
         $this->setDefinition(array(
@@ -21,6 +31,7 @@ class GenerateScenarios extends Base
             new InputOption('path', 'p', InputOption::VALUE_REQUIRED, 'Use specified path as destination instead of default'),
             new InputOption('single-file', '', InputOption::VALUE_NONE, 'Render all scenarios to only one file'),
             new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Specify output format: html or text (default)','text'),
+            new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use specified config instead of default'),
         ));
         parent::configure();
     }
@@ -63,25 +74,23 @@ class GenerateScenarios extends Base
         $scenarios = "";
 
         foreach ($tests as $test) {
-            if (!($test instanceof \Codeception\TestCase\Cept)) continue;
+            if (!($test instanceof ScenarioDriven)) continue;
             $feature = $test->getScenarioText($format);
 
-            $name = $test instanceof \Codeception\TestCase\Cest
-                ? $this->underscore($test->getFileName())
-                : $this->underscore(substr($test->getFileName(), 0, -8));
+            $name = $this->underscore(basename($test->getFileName(), '.php'));
 
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
                 $output->writeln("* $name rendered");
             } else {
                 $feature = $this->decorate($feature, $format);
-                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature);
+                $this->save($path . DIRECTORY_SEPARATOR . $name . $this->formatExtension($format), $feature, true);
                 $output->writeln("* $name generated");
             }
         }
 
         if ($input->getOption('single-file')) {
-            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format) . PHP_EOL);
+            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 
@@ -112,6 +121,8 @@ class GenerateScenarios extends Base
         $name = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1_\\2', $name);
         $name = preg_replace('/([a-z\d])([A-Z])/', '\\1_\\2', $name);
         $name = str_replace(array('/','\\'),array('.','.'), $name);
+        $name = preg_replace('/_Cept$/', '', $name);
+        $name = preg_replace('/_Cest$/', '', $name);
         return $name;
     }
 

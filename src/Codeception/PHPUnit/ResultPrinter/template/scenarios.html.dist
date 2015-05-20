@@ -10,14 +10,14 @@
 		 width: 960px;
 
 		 }
-		 body { font-family: arial, serif; margin: 0; padding 0; background: #333;}
-		 h1,h2,h3 { arial, serif; color: white; }
+		 body { font-family: arial, serif; margin: 0; padding: 0; background: #333; }
+		 h1,h2,h3 { font-family: arial, serif; color: white; }
 		 h1 { font-size: 2.5em; }
 		 h2 { font-size: 1.3em; }
-         h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0;}
+         h3 { font-size: 1em; color: #84BBDD; margin: 0.5em 0; }
 
-		 table {border: none; margin: 0; padding 0;}
-		 .scenarioStepsTable .stepName { padding: 5px }
+		 table { border: none; margin: 0; padding: 0; }
+		 .scenarioStepsTable .stepName { padding: 5px; }
 
 		 .scenarioStepsTable td {
 		 font-size: 80%;
@@ -89,6 +89,26 @@
 		 border-radius: 5px;
 		 padding: 20px;
 		 }
+		 ul#toolbar-filter {
+			display: inline;
+		 }
+		 ul#toolbar-filter li {
+			display: inline;
+		  float: right;
+			padding: 20px;
+			width: 120px;
+			color: black;
+			background-color: #9DD53A;
+		 }
+		 ul#toolbar-filter li.disabled {
+			background-color: gray;
+		 }
+		 ul#toolbar-filter li:hover {
+			background-color: white;
+		 }
+		 ul#toolbar-filter li.disabled:hover {
+			background-color: #333;
+		 }
 	 </style>
 
   <script type="text/javascript">
@@ -105,12 +125,60 @@
       subObj.style.display='none';
     }
   }
+
+  function showAllScenarios() {
+    var toolbar = document.getElementById('toolbar-filter');
+    for (var i = 0; i < toolbar.children.length; i++) {
+      toolbar.children[i].className = '';
+    }
+
+    var trs = document.getElementsByTagName('tr');
+    for(var z = 0; z < trs.length; z++) {
+      trs[z].style.display = '';
+    }
+  }
+
+  function toogleScenarios(name, linkObj) {
+    if (linkObj.className == '') {
+      document.getElementById('toolbar-filter').children[0].className = 'disabled';
+      linkObj.className = 'disabled';
+    } else {
+      var toolbar = document.getElementById('toolbar-filter');
+      toolbar.children[0].className = '';
+      linkObj.className = '';
+      for (var i = 1; i < toolbar.children.length; i++) {
+        if (toolbar.children[i].classList.contains('disabled')) {
+           showAll = false;
+           toolbar.children[0].className = 'disabled';
+        }
+      }
+    }
+
+    var rows = document.getElementsByClassName('scenarioRow');
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+      if (row.classList.contains(name)) {
+        if (row.style.display == '') {
+          row.style.display = 'none';
+        } else {
+          row.style.display = '';
+        }
+      }
+    }
+  }
   </script>
  </head>
 
  <body>
  <div class="layout">
  {header}
+  <ul id="toolbar-filter">
+    <li onClick="showAllScenarios()">Show all</li>
+    <li onClick="toogleScenarios('scenarioSuccess', this)">Success ({successfulScenarios})</li>
+    <li onClick="toogleScenarios('scenarioFailed', this)">Failed ({failedScenarios})</li>
+    <li onClick="toogleScenarios('scenarioSkipped', this)">Skipped ({skippedScenarios})</li>
+    <li onClick="toogleScenarios('scenarioIncomplete', this)">Incomplete ({incompleteScenarios})</li>
+  </ul>
 	 <table border="0" style="width: 100%;">
 		{scenarios}
    <tr>

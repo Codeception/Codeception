@@ -42,9 +42,9 @@ class IncludedCest {
         $I->seeInThisFile('<testsuite name="Jazz.functional" tests="1" assertions="1"');
         $I->seeInThisFile('<testsuite name="Jazz\Pianist.functional" tests="1" assertions="1"');
         $I->seeInThisFile('<testsuite name="Shire.functional" tests="1" assertions="1"');
-        $I->seeInThisFile('<testcase file="HobbitCept.php"');
-        $I->seeInThisFile('<testcase file="DemoCept.php"');
-        $I->seeInThisFile('<testcase file="PianistCept.php"');
+        $I->seeInThisFile('<testcase name="Hobbit"');
+        $I->seeInThisFile('<testcase name="Demo"');
+        $I->seeInThisFile('<testcase name="Pianist"');
     }
 
     /**
@@ -70,12 +70,26 @@ class IncludedCest {
      */
     public function runIncludedWithCoverage(\CliGuy $I)
     {
-        $I->executeCommand('run --xml --coverage');
+        $I->executeCommand('run --coverage-xml');
         $I->amInPath('_log');
         $I->seeFileFound('coverage.xml');
         $I->seeInThisFile('<class name="BillEvans" namespace="Jazz\Pianist">');
         $I->seeInThisFile('<class name="Musician" namespace="Jazz">');
         $I->seeInThisFile('<class name="Hobbit" namespace="Shire">');
+    }
+
+    /**
+     * @before moveToIncluded
+     * @param CliGuy $I
+     */
+    public function buildIncluded(\CliGuy $I)
+    {
+        $I->executeCommand('build');
+        $I->seeInShellOutput('generated successfully');
+        $I->seeInShellOutput('Jazz\\TestGuy');
+        $I->seeInShellOutput('Jazz\\Pianist\\TestGuy');
+        $I->seeInShellOutput('Shire\\TestGuy');
+
     }
 }
 

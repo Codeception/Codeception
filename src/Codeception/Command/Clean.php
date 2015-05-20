@@ -4,16 +4,25 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Util\FileSystem;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
-class Clean extends Base {
+/**
+ * Cleans `output` directory
+ *
+ * * `codecept clean`
+ * * `codecept clean -c path/to/project`
+ *
+ */
+class Clean extends Command
+{
+    use Shared\Config;
 
     public function getDescription() {
-        return 'Cleans _log directory';
+        return 'Cleans or creates _output directory';
     }
 
     protected function configure()
@@ -26,10 +35,9 @@ class Clean extends Base {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $conf = $this->getGlobalConfig($input->getOption('config'));
-
-        $output->writeln("<info>Cleaning up ".Configuration::logDir()."...</info>");
-        FileSystem::doEmptyDir(Configuration::logDir());
+        $this->getGlobalConfig($input->getOption('config'));
+        $output->writeln("<info>Cleaning up ".Configuration::outputDir()."...</info>");
+        FileSystem::doEmptyDir(Configuration::outputDir());
         $output->writeln("Done");
     }
 }

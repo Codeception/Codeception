@@ -1,11 +1,19 @@
 <?php
+
 namespace Codeception\Subscriber;
 
-use Codeception\Event\Suite;
-use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Codeception\Events;
+use Codeception\Event\SuiteEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ErrorHandler implements EventSubscriberInterface
 {
+    use Shared\StaticEvents;
+
+    static $events = [
+        Events::SUITE_BEFORE => 'handle'
+    ];
+
     /**
      * @var bool $stopped to keep shutdownHandler from possible looping.
      */
@@ -16,47 +24,51 @@ class ErrorHandler implements EventSubscriberInterface
      */
     private $errorLevel = 'E_ALL & ~E_STRICT & ~E_DEPRECATED';
 
-    public function handle(Suite $e) {
-
+    public function handle(SuiteEvent $e)
+    {
         $settings = $e->getSettings();
         if ($settings['error_level']) {
-            $this->errorLevel = eval("return {$settings['error_level']};");
+            $this->errorLevel = $settings['error_level'];
         }
-        error_reporting($this->errorLevel);
+        error_reporting(eval("return {$this->errorLevel};"));
         set_error_handler(array($this, 'errorHandler'));
         register_shutdown_function(array($this, 'shutdownHandler'));
     }
 
-    public function errorHandler($errno, $errstr, $errfile, $errline) {
-
+    public function errorHandler($errno, $errstr, $errfile, $errline)
+    {
         if (!(error_reporting() & $errno)) {
             // This error code is not included in error_reporting
             return false;
         }
 
-        if (strpos($errstr, 'Cannot modify header information')!==false)
+        if (strpos($errstr, 'Cannot modify header information') !== false) {
             return false;
-        throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+        }
+
+        throw new \PHPUnit_Framework_Exception($errstr, $errno);
     }
 
-    public function shutdownHandler() {
-        if (self::$stopped)
+    public function shutdownHandler()
+    {
+        if (self::$stopped) {
             return;
+        }
         self::$stopped = true;
-        $error = error_get_last();
-        if (!is_array($error)) return;
-        if (error_reporting() === 0) return;
+        $error         = error_get_last();
+        if (!is_array($error)) {
+            return;
+        }
+        if (error_reporting() === 0) {
+            return;
+        }
         // not fatal
-        if ($error['type'] > 1) return;
+        if ($error['type'] > 1) {
+            return;
+        }
 
         echo "\n\n\nFATAL ERROR. TESTS NOT FINISHED.\n";
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
     }
 
-    static function getSubscribedEvents()
-    {
-        return array(
-            'suite.before' => 'handle'
-        );
-    }
 }

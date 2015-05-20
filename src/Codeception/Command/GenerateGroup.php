@@ -1,43 +1,22 @@
 <?php
 namespace Codeception\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-
-
-class GenerateGroup extends Base
-{
-    protected $template = <<<EOF
-<?php
-%s
+use Codeception\Lib\Generator\Group as GroupGenerator;
 
 /**
-* Group class is Codeception Extension which is allowed to handle to all internal events.
-* This class itself can be used to listen events for test execution of one particular group.
-* It may be especially useful to create fixtures data, prepare server, etc.
-*
-* INSTALLATION:
-*
-* To use this group extension, include it to "extensions" option of global Codeception config.
-*/
-
-%s %sGroup extends \Codeception\Platform\Group
+ * Creates empty Group file - extension which handles all group events.
+ *
+ * * `codecept g:group Admin`
+ */
+class GenerateGroup extends Command
 {
-    static \$group = '%s';
-
-    public function _before(\Codeception\Event\Test \$e)
-    {
-    }
-
-    public function _after(\Codeception\Event\Test \$e)
-    {
-    }
-}
-EOF;
-
-
+    use Shared\FileSystem;
+    use Shared\Config;
 
     protected function configure()
     {
@@ -45,7 +24,10 @@ EOF;
             new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ));
-        parent::configure();
+    }
+
+    public function getDescription() {
+        return 'Generates Group subscriber';
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -54,18 +36,18 @@ EOF;
         $group = $input->getArgument('group');
 
         $class = ucfirst($group);
-        $ns = $this->getNamespaceString($config['namespace'].'\\'.$class);
-
         $path = $this->buildPath($config['paths']['tests'].'/_groups/', $class);
         $filename = $this->completeSuffix($class, 'Group');
         $filename = $path.$filename;
 
         $this->introduceAutoloader($config['paths']['tests'].DIRECTORY_SEPARATOR.$config['settings']['bootstrap'],'Group','_groups');
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $class, $group));
+
+        $gen = new GroupGenerator($config, $group);
+        $res = $this->save($filename, $gen->produce());
 
         if (!$res) {
             $output->writeln("<error>Group $filename already exists</error>");
-            exit;
+            return;
         }
         
         $output->writeln("<info>Group extension was created in $filename</info>");

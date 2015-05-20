@@ -1,8 +1,13 @@
 <?php
+
 namespace Codeception\Util;
 
-class Autoload {
-
+/**
+ * Custom autoloader to load classes by suffixes: `Helper`, `Page`, `Step`, etc.
+ *
+ */
+class Autoload
+{
     protected static $registered = false;
     protected static $map = array();
 
@@ -15,10 +20,10 @@ class Autoload {
      * ``` php
      * <?php
      * // loads UserHelper in 'helpers/UserHelper.php'
-     * Autoload::register('app\Codeception\Helper','Helper', __DIR__.'/helpers/');
-     * // loads UserHelper in 'helpers/UserHelper.php'
-     * Autoload::register('app\tests','Page', __DIR__.'/pageobjects/');
-     * Autoload::register('app\tests','Controller', __DIR__.'/controllers/');
+     * Autoload::register('app\Codeception\Helper', 'Helper', __DIR__.'/helpers/');
+     * // loads LoginPage in 'pageobjects/LoginPage.php'
+     * Autoload::register('app\tests', 'Page', __DIR__.'/pageobjects/');
+     * Autoload::register('app\tests', 'Controller', __DIR__.'/controllers/');
      * ?>
      * ```
      *
@@ -36,7 +41,7 @@ class Autoload {
     }
 
     /**
-     * Shortcut for Autoload::register for classes with empty namespaces.
+     * Shortcut for {@link self::register} for classes with empty namespaces.
      *
      * @param $suffix
      * @param $path
@@ -46,34 +51,50 @@ class Autoload {
         self::register('', $suffix, $path);
     }
 
-
+    /**
+     * @param $class
+     * @return bool
+     */
     public static function load($class)
     {
         $map = array_reverse(self::$map);
         foreach ($map as $record) {
             list($regex, $path) = $record;
-            if (!preg_match($regex, $class)) continue;
+            if (!preg_match($regex, $class)) {
+                continue;
+            }
             $className = str_replace('\\', '', substr($class, (int)strrpos($class, '\\')));
-            $file = $path.DIRECTORY_SEPARATOR.$className.'.php';
-            if (!file_exists($file)) continue;
+            $file      = $path . DIRECTORY_SEPARATOR . $className . '.php';
+            if (!file_exists($file)) {
+                continue;
+            }
             include_once $file;
             return true;
         }
+
         return false;
     }
 
-    // is public for testing purposes
+    /**
+     * *is public for testing purposes*
+     *
+     * @param $class
+     * @param $namespace
+     * @param $suffix
+     * @return bool
+     */
     public static function matches($class, $namespace, $suffix)
     {
-        return (bool) preg_match(self::regex($namespace, $suffix), $class);
+        return (bool)preg_match(self::regex($namespace, $suffix), $class);
     }
 
     protected static function regex($namespace, $suffix)
     {
-        $namespace = str_replace("\\",'\\\\', $namespace);
+        $namespace = str_replace("\\", '\\\\', $namespace);
         if ($namespace) {
             return sprintf('~\\\\?%s\\\\\w*?%s$~', $namespace, $suffix);
+        } else {
+            return sprintf('~\w*?%s$~', $suffix);
         }
-        return sprintf('~\w*?%s$~', $suffix);
     }
 }

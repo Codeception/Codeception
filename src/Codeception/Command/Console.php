@@ -1,30 +1,48 @@
 <?php
+
 namespace Codeception\Command;
 
-use Codeception\AbstractGuy;
-use Codeception\Event\Suite;
+use Codeception\Actor;
+use Codeception\Codecept;
+use Codeception\Events;
+use Codeception\Configuration;
+use Codeception\Event\SuiteEvent;
+use Codeception\Event\TestEvent;
+use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
 use Codeception\TestCase\Cept;
+use Codeception\Util\Debug;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
-class Console extends Base {
-
+/**
+ * Try to execute test commands in run-time. You may try commands before writing the test.
+ *
+ * * `codecept console acceptance` - starts acceptance suite environment. If you use WebDriver you can manipulate browser with Codeception commands.
+ */
+class Console extends Command
+{
     protected $test;
     protected $codecept;
     protected $suite;
-
+    protected $output;
 
     protected function configure()
     {
-        $this->setDefinition(array(
-            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-        ));
+        $this->setDefinition(
+             array(
+                 new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
+                 new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+                 new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
+             )
+        );
+
         parent::configure();
     }
 
@@ -35,26 +53,38 @@ class Console extends Base {
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $suiteName = $input->getArgument('suite');
+        $suiteName    = $input->getArgument('suite');
         $this->output = $output;
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $settings = \Codeception\Configuration::suiteSettings($suiteName, $config);
+        $config   = Configuration::config($input->getOption('config'));
+        $settings = Configuration::suiteSettings($suiteName, $config);
 
-        $options = $input->getOptions();
+        $options          = $input->getOptions();
         $options['debug'] = true;
-        $options['steps'] = true;
+        $options['silent'] = true;
+        $options['interactive'] = false;
+        $options['colors'] = true;
 
-        $this->codecept = new \Codeception\Codecept($options);
-        $dispatcher = $this->codecept->getDispatcher();
-        $suiteManager = new SuiteManager($dispatcher, $suiteName, $settings);
-        $this->suite = $suiteManager->getSuite();
-        $this->test = new Cept($dispatcher, array('name' => 'interactive', 'file' => 'interactive'));
+        Debug::setOutput(new Output($options));
 
-        $guy = $settings['class_name'];
+        $this->codecept = new Codecept($options);
+        $dispatcher     = $this->codecept->getDispatcher();
+
+        $this->test     = (new Cept())
+            ->configDispatcher($dispatcher)
+            ->configName('')
+            ->config('file','')
+            ->initConfig();
+
+        $suiteManager   = new SuiteManager($dispatcher, $suiteName, $settings);
+        $suiteManager->initialize();
+        $this->suite    = $suiteManager->getSuite();
+
         $scenario = new Scenario($this->test);
-        $I = new $guy($scenario);
-        
+        if (isset($config["namespace"])) $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
+        $actor      = $settings['class_name'];
+        $I        = new $actor($scenario);
+
         $this->listenToSignals();
 
         $output->writeln("<info>Interactive console started for suite $suiteName</info>");
@@ -62,43 +92,55 @@ class Console extends Base {
         $output->writeln("<info>type 'exit' to leave console</info>");
         $output->writeln("<info>type 'actions' to see all available actions for this suite</info>");
 
-        $dispatcher->dispatch('suite.before', new Suite($this->suite, $this->codecept->getResult(), $settings));
-        $dispatcher->dispatch('test.parsed', new \Codeception\Event\Test($this->test));
-        $dispatcher->dispatch('test.before', new \Codeception\Event\Test($this->test));
+        $suiteEvent = new SuiteEvent($this->suite, $this->codecept->getResult(), $settings);
+        $dispatcher->dispatch(Events::SUITE_BEFORE, $suiteEvent);
 
-        $output->writeln("\n\n\$I = new {$settings['class_name']}(\$scenario);");
+        $dispatcher->dispatch(Events::TEST_PARSED, new TestEvent($this->test));
+        $dispatcher->dispatch(Events::TEST_BEFORE, new TestEvent($this->test));
+
+        $output->writeln("\n\n<comment>\$I</comment> = new {$settings['class_name']}(\$scenario);");
         $scenario->run();
-        
-        $this->executeCommands($output, $I, $settings['bootstrap']);
-        $dispatcher->dispatch('test.after', new \Codeception\Event\Test($this->test));
-        $dispatcher->dispatch('suite.after', new Suite($this->suite));
+        $this->executeCommands($input, $output, $I, $settings['bootstrap']);
+
+        $dispatcher->dispatch(Events::TEST_AFTER, new TestEvent($this->test));
+        $dispatcher->dispatch(Events::SUITE_AFTER, new SuiteEvent($this->suite));
 
         $output->writeln("<info>Bye-bye!</info>");
     }
 
-
-    protected function executeCommands(OutputInterface $output, AbstractGuy $I, $bootstrap)
+    protected function executeCommands(InputInterface $input, OutputInterface $output, $I, $bootstrap)
     {
-        $dialog = $this->getHelperSet()->get('dialog');
+        $dialog = new QuestionHelper();
 
-        if (file_exists($bootstrap)) require $bootstrap;
+        if (file_exists($bootstrap)) {
+            require $bootstrap;
+        }
 
         do {
-            $command = $dialog->ask($output, '$I->', null, array_keys(SuiteManager::$actions));
+            $question = new Question("<comment>\$I-></comment>");
+            $question->setAutocompleterValues(array_keys(SuiteManager::$actions));
+
+            $command = $dialog->ask($input, $output, $question);
             if ($command == 'actions') {
-                $output->writeln("<info>".implode(' ',array_keys(SuiteManager::$actions)));
+                $output->writeln("<info>" . implode(' ', array_keys(SuiteManager::$actions)));
                 continue;
             };
-            if ($command == 'exit') return;
-            if ($command == '') continue;
-            try {
-                eval("\$I->$command;");
-            } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
-                $output->writeln("<error>fail</error> ".$fail->getMessage());
-            } catch (\Exception $e) {
-                $output->writeln("<error>error</error> ".$e->getMessage());
+            if ($command == 'exit') {
+                return;
             }
-
+            if ($command == '') {
+                continue;
+            }
+            try {
+                $value = eval("return \$I->$command;");
+                if ($value and !is_object($value)) {
+                    codecept_debug($value);
+                }
+            } catch (\PHPUnit_Framework_AssertionFailedError $fail) {
+                $output->writeln("<error>fail</error> " . $fail->getMessage());
+            } catch (\Exception $e) {
+                $output->writeln("<error>error</error> " . $e->getMessage());
+            }
         } while (true);
     }
 
@@ -106,9 +148,8 @@ class Console extends Base {
     {
         if (function_exists('pcntl_signal')) {
             declare(ticks = 1);
-            pcntl_signal(SIGINT,  function () {});
-            pcntl_signal(SIGTERM, function () {});
+            pcntl_signal(SIGINT, SIG_IGN);
+            pcntl_signal(SIGTERM, SIG_IGN);
         }
     }
-
 }

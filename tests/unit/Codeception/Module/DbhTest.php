@@ -1,7 +1,7 @@
 <?php
 
 use Codeception\Util\Stub;
-use Codeception\Util\Driver\Db as Driver;
+use Codeception\Lib\Driver\Db as Driver;
 
 class DbhTest extends \PHPUnit_Framework_TestCase
 {

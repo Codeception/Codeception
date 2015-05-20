@@ -1,6 +1,12 @@
 paths:
     tests: tests
     log: tests/log
+    show_uncovered: true
+    include:
+        - src/*
+        - tests/data/claypit/c3.php
+    exclude:
+        - vendor/*
     data: tests/data
     helpers: tests/helpers
 settings:
@@ -18,13 +24,13 @@ modules:
             password: 'guest'
             vhost: '/'
             queues: [queue1, queue2]
+
+extensions:
+    enabled: [Codeception\Platform\RunFailed]
+
 coverage:
     enabled: true
     include:
-        - src/*
-        - tests/data/claypit/c3.php
-    exclude:
-        - vendor/*
         - src/Codeception/Command/*
         - src/Codeception/Module/Symfony1.php
         - src/Codeception/Module/Symfony2.php

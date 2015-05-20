@@ -8,7 +8,7 @@ class WebDriverNot extends WebDriver {
         return !parent::matches($nodes);
     }
 
-    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
     {
         if (!$this->string) {
             throw new \PHPUnit_Framework_ExpectationFailedException("Element '$selector' was found", $comparisonFailure);

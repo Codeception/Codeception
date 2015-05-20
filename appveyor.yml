@@ -1,0 +1,25 @@
+build: false
+shallow_clone: true
+platform: 'x86'
+clone_folder: C:\projects\codeception
+branches:
+  except:
+    - gh-pages
+
+install:
+  - cinst OpenSSL.Light
+  - SET PATH=C:\Program Files\OpenSSL;%PATH%
+  - cinst php
+  - cd c:\tools\php
+  - copy php.ini-production php.ini
+  - echo extension_dir=ext >> php.ini
+  - echo extension=php_openssl.dll >> php.ini
+  - echo date.timezone="UTC" >> php.ini
+  - SET PATH=C:\tools\php;%PATH%
+  - cd C:\projects\codeception
+  - php -r "readfile('http://getcomposer.org/installer');" | php
+  - php composer.phar install --prefer-dist --no-interaction --dev
+
+test_script:
+  - php codecept run cli
+  - php codecept run unit -g core

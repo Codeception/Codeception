@@ -1,11 +1,13 @@
+
 # Unit Tests
 
 Codeception uses PHPUnit as a backend for running tests. Thus, any PHPUnit test can be added to Codeception test suite and then executed.
-If you ever wrote a PHPUnit test, then do it as well as you did before. Codeception will add you some cool helpers to simplify common tasks.
-If you don't have experience in writing unit tests, please read the [PHPUnit manual](http://www.phpunit.de/manual/3.6/en/index.html) to start.
-The basics of unit tests are skipped here, but instead you will get a basic knowledge on what features Codeception adds to unit tests.
+If you ever wrote a PHPUnit test then do it just as you did before. 
+Codeception adds some nice helpers to simplify common tasks.
 
-__To say it again: you don't need to install PHPUnit to run it's tests. Codeception can run them too.__
+The basics of unit tests are skipped here, instead you will get a basic knowledge of what features Codeception adds to unit tests.
+
+__To say it again: you don't need to install PHPUnit to run its tests. Codeception can run them too.__
 
 ## Creating Test
 
@@ -17,7 +19,7 @@ This can be done by this command:
 $ php codecept.phar generate:phpunit unit Example
 ```
 
-Codeception has it's addons to standard unit tests. So let's try them.
+Codeception has its addons to standard unit tests, so let's try them.
 We need another command to create Codeception-powered unit tests.
 
 ```bash
@@ -35,9 +37,9 @@ use Codeception\Util\Stub;
 class ExampleTest extends \Codeception\TestCase\Test
 {
    /**
-    * @var CodeGuy
+    * @var UnitTester
     */
-    protected $codeGuy;
+    protected $tester;
 
     // executed before each test
     protected function _before()
@@ -51,84 +53,139 @@ class ExampleTest extends \Codeception\TestCase\Test
 }
 ?>
 ```
+
 This class has predefined `_before` and `_after` methods to start with. You can use them to create a tested object before each test, and destroy it afterwards.
 
-As you see unlike in PHPUnit setUp/tearDown methods are replaced with their aliases: `_before`, `_after`.
-The actual setUp and tearDown was implemented by parent class `\Codeception\TestCase\Test` and is used to include a bootstrap file (`_bootstrap.php` by default) and set up the codeGuy class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in accordance tests, you can choose the proper modules for `CodeGuy` class in `unit.suite.yml` configuration file.
-So If you implement `setUp` and `tearDown` be sure, that you will call their parent method.
+As you see, unlike in PHPUnit, `setUp` and `tearDown` methods are replaced with their aliases: `_before`, `_after`.
+
+The actual `setUp` and `tearDown` were implemented by parent class `\Codeception\TestCase\Test` and set up the UnitTester class to have all the cool actions from Cept-files to be run as a part of unit tests. Just like in acceptance and functional tests you can choose the proper modules for `UnitTester` class in `unit.suite.yml` configuration file.
 
 
 ```yaml
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: CodeGuy
+class_name: UnitTester
 modules:
-    enabled: [Unit, CodeHelper]
+    enabled: [UnitHelper, Asserts]
 ```
 
-### Basic Testing
+### Classical Unit Testing
 
-Unit tests in Codeception written in absolutely the same way as you do it in PHPUnit:
+Unit tests in Codeception are written in absolutely the same way as it is done in PHPUnit:
 
-``` php
+```php
 <?php
-
-public function testMarkdown()
+class UserTest extends \Codeception\TestCase\Test
 {
-    $markdown = new MarkdownParser();
-    $html = $markdown->parse("**Hello world**");
-    $this->assertEquals('<strong>Hello World</strong>', $html);
-}
+    public function testValidation()
+    {
+        $user = User::create();
 
+        $user->username = null;
+        $this->assertFalse($user->validate(['username']));
+
+        $user->username = 'toolooooongnaaaaaaameeee';
+        $this->assertFalse($user->validate(['username']));
+
+        $user->username = 'davert';
+        $this->assertTrue($user->validate(['username']));           
+    }
+}
 ?>
 ```
 
-### Testing Database
+### BDD Specification Testing
 
-Probably, there is no very useful modules set up by default for CodeGuy class. That's because the CodeGuy class is mostly used for scenario-driven unit tests, described in next chapters. But that's ok, we can get a use of it by adding modules we need. For example, we can add a Db module to test updates in database.
+When writing tests you should prepare them for constant changes in your application. Tests should be easy to read and maintain. If a specification to your application is changed, your tests should be updated as well. If you don't have a convention inside your team on documenting tests, you will have issues figuring out what tests were affected by introduction of a new feature.
+
+That's why it's pretty important not just to cover your application with unit tests, but make unit tests self-explanatory. We do this for scenario-driven acceptance and functional tests, and we should do this for unit and integration tests as well.
+
+For this case we have a stand-alone project [Specify](https://github.com/Codeception/Specify) (which is included in phar package) for writing specifications inside unit tests.
+
+```php
+<?php
+class UserTest extends \Codeception\TestCase\Test
+{
+    use \Codeception\Specify;
+
+    public function testValidation()
+    {
+        $user = User::create();
+
+        $this->specify("username is required", function() {
+            $user->username = null;
+            $this->assertFalse($user->validate(['username']));
+        });
+
+        $this->specify("username is too long", function() {
+            $user->username = 'toolooooongnaaaaaaameeee';
+            $this->assertFalse($user->validate(['username']));
+        });
+
+        $this->specify("username is ok", function() {
+            $user->username = 'davert';
+            $this->assertTrue($user->validate(['username']));           
+        });     
+    }
+}
+?>        
+```
+
+Using `specify` codeblocks you can describe any piece of test. This makes tests much cleaner and understandable for everyone in your team.
+
+Code inside `specify` blocks is isolated. In the example above any change to `$this->user` (as any other object property), will not be reflected in other code blocks.
+
+Also you may add [Codeception\Verify](https://github.com/Codeception/Verify) for BDD-style assertions. This tiny library adds more readable assertions, which is quite nice, if you are always confused of which argument in `assert` calls is expected and which one is actual.
+
+```php
+<?php
+verify($user->getName())->equals('john');
+?>
+```
+
+## Using Modules
+
+As in scenario-driven functional or acceptance tests you can access Actor class methods. If you write integration tests, it may be useful to include `Db` module for database testing. 
 
 ```yaml
 # Codeception Test Suite Configuration
 
 # suite for unit (internal) tests.
-class_name: CodeGuy
+class_name: UnitTester
 modules:
-    enabled: [Unit, Db, CodeHelper]
+    enabled: [Db, UnitHelper]
 ```
 
-After running the build command
+To access UnitTester methods you can use `UnitTester` property in a test.
 
-```bash
-$ php codecept.phar build
-```
+### Testing Database
 
-A new methods will be added into CodeGuy class. Thus, you can start using database methods in your test:
+Let's see how you can do some database testing:
 
 ```php
 <?php
 function testSavingUser()
 {
-	$user = new User();
-	$user->setName('Miles');
+    $user = new User();
+    $user->setName('Miles');
     $user->setSurname('Davis');
-	$user->save();
+    $user->save();
     $this->assertEquals('Miles Davis', $user->getFullName());
-	$this->codeGuy->seeInDatabase('users',array('name' => 'Miles', 'surname' => 'Davis'));
+    $this->tester->seeInDatabase('users', array('name' => 'Miles', 'surname' => 'Davis'));
 }
 ?>
 ```
 
-Database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
-If it's not your required behavior, please change the settings of `Db` module for current suite.
+To enable the database functionality in the unit tests please make sure the `Db` module is part of the enabled module list in the unit.suite.yml configuration file. 
+The database will be cleaned and populated after each test, as it happens for acceptance and functional tests.
+If it's not your required behavior, please change the settings of `Db` module for the current suite.
 
-### Modules
+### Accessing Module
 
-*new in 1.5.2*
+Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the UnitTester class for this purpose, using module directly grants you access to all public properties of that module.
 
-Codeception allows you to access properties and methods of all modules defined for this suite. Unlike using the CodeGuy class for this purpose, using module directly grants you access to all public properties of that module.
-
-For example, if you use `Symfony2` module here is the way you can access Symfony container:
+For example, if you use `Symfony2` module, here is the way you can access Symfony container:
 
 ```php
 <?php
@@ -141,49 +198,64 @@ $container = $this->getModule('Symfony2')->container;
 
 All public variables are listed in references for corresponding modules.
 
-### Bootstrap
+### Cest
 
-The bootstrap file is located in suite directory and is named `_bootstrap` and is **included before each test** (with `setUp` method in parent class). It's widely used in acceptance and functional tests to initialize the predefined variables. In unit tests it can be used for sharing the same data among the different tests. But the main purpose of is to set up an autoloader for your project inside this class. Otherwise Codeception will not find the testing classes and fail.
+Alternatively to testcases extended from `PHPUnit_Framework_TestCase` you may use Codeception-specific Cest format. It does not require to be extended from any other class. All public methods of this class are tests.
 
-### Stubs
-
-The first line of generated class includes a Stub utility class into a test file. This means you can easily create dummy classes instead of real one. Don't waste your time on adding many parameters to constructor, just run the `Stub::make` to create a new class.
-
-Stubs are created with PHPUnit's mocking framework. Please refer to [PHPUnit Manual](http://www.phpunit.de/manual/3.6/en/test-doubles.html) if you need additional features on stubs or mocks.
-
-Full reference on stub util class can be [found here](/docs/reference/stubs).
-
-### Mix it all together!
-
-Less words, more code for better understanding.
+The example above can be rewritten in scenario-driven manner like this:
 
 ```php
 <?php
-use Codeception\Util\Stub;
-
-class ExampleTest extends \Codeception\TestCase\Test
+class UserCest
 {
-   /**
-    * @var CodeGuy
-    */
-    protected $codeGuy;
-
-    function _before()
+    public function validateUser(UnitTester $t)
     {
-        $this->user = new User();
-    }
+        $user = $t->createUser();
+        $user->username = null;
+        $t->assertFalse($user->validate(['username']); 
 
-    function testUserCanBeBanned()
-    {
-    	$this->user->setIsBanned(true);
-    	$this->user->setUpdatedBy(Stub::make('User', array('name' => 'admin')));
-    	$this->user->save();
-    	$this->codeGuy->seeInDatabase('users', array('name' => 'Miles', 'is_banned' => true));
+        $user->username = 'toolooooongnaaaaaaameeee';
+        $t->assertFalse($user->validate(['username']));
+
+        $user->username = 'davert';
+        $t->assertTrue($user->validate(['username']));
+
+        $t->seeInDatabase('users', ['name' => 'Miles', 'surname' => 'Davis']);
     }
 }
 ?>
 ```
 
+For unit testing you may include `Asserts` module, that adds regular assertions to UnitTester which you may access from `$t` variable.
+
+```yaml
+# Codeception Test Suite Configuration
+
+# suite for unit (internal) tests.
+class_name: UnitTester
+modules:
+    enabled: [Asserts, Db, UnitHelper]
+```
+
+[Learn more about Cest format](http://codeception.com/docs/07-AdvancedUsage#Cest-Classes).
+
+### Stubs
+
+Codeception provides a tiny wrapper over PHPUnit mocking framework to create stubs easily. Include `\Codeception\Util\Stub` to start creating dummy objects.
+
+In this example we instantiate object without calling a constructor and replace `getName` method to return value *john*.
+
+```php
+<?php
+$user = Stub::make('User', ['getName' => 'john']);
+$name = $user->getName(); // 'john'
+?>
+```
+
+Stubs are created with PHPUnit's mocking framework. Alternatively you can use [Mockery](https://github.com/padraic/mockery) (with [Mockery module](https://github.com/Codeception/MockeryModule)), [AspectMock](https://github.com/Codeception/AspectMock) or others.
+
+Full reference on Stub util class can be found [here](/docs/reference/Stub).
+
 ## Conclusion
 
-PHPUnit tests is a first-class citizen in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit manually, but use a Codeception to execute them. Some nice features are added to common unit tests by integrating Codeception modules. For most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain.
+PHPUnit tests are first-class citizens in test suites. Whenever you need to write and execute unit tests, you don't need to install PHPUnit, but use Codeception to execute them. Some nice features can be added to common unit tests by integrating Codeception modules. For the most of unit and integration testing PHPUnit tests are just enough. They are fast and easy to maintain.

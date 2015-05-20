@@ -24,6 +24,43 @@ class redirect {
     }
 }
 
+class redirect4 {
+    function GET() {
+        header('Location: /search?ln=test@gmail.com&sn=testnumber');
+    }
+}
+
+class redirect2 {
+    function GET() {
+        include __DIR__.'/view/redirect2.php';
+    }
+}
+
+class redirect3 {
+    function GET() {
+        header('Refresh:0;url=/info');
+    }
+}
+
+class redirect_interval {
+    function GET() {
+        include __DIR__.'/view/redirect_interval.php';
+    }
+}
+
+class redirect_self {
+    function GET() {
+        include __DIR__.'/view/redirect_self.php';
+    }
+}
+
+class redirect_header_interval {
+    function GET() {
+        include __DIR__.'/view/index.php';
+        header('Refresh:1800;url=/info');
+    }
+}
+
 class login {
 
     function GET($matches) {
@@ -56,7 +93,14 @@ class cookies {
         data::set('form', $_POST);
         include __DIR__.'/view/cookies.php';
     }
+}
 
+class cookiesHeader {
+    public function GET()
+    {
+        header("Set-Cookie: a=b;Path=/;");
+        include __DIR__.'/view/index.php';
+    }
 }
 
 class facebookController {
@@ -67,8 +111,11 @@ class facebookController {
 
 class form {
     function GET($matches) {
-        $object = strtolower($matches[1]);
-        include __DIR__.'/view/form/'.$object.'.php';
+        $url = strtolower($matches[1]);
+        if (empty($matches[1])) {
+            $url = 'index';
+        }
+        include __DIR__.'/view/form/'.$url.'.php';
     }
 
     function POST() {
@@ -95,6 +142,33 @@ class search {
         if (isset($_GET['searchQuery']) && $_GET['searchQuery'] == 'test') {
             $result = 'Success';
         }
+        data::set('params', $_GET);
         include __DIR__.'/view/search.php';
+    }
+}
+
+class httpAuth {
+    function GET() {
+        if (!isset($_SERVER['PHP_AUTH_USER'])) {
+            header('WWW-Authenticate: Basic realm="test"');
+            header('HTTP/1.0 401 Unauthorized');
+            echo 'Unauthorized';
+            return;
+        }
+        if ($_SERVER['PHP_AUTH_PW'] == 'password') {
+            echo "Welcome, " . $_SERVER['PHP_AUTH_USER'];
+            return;
+        }
+        echo "Forbidden";
+    }
+}
+
+class register {
+    function GET() {
+        include __DIR__.'/view/register.php';
+    }
+    
+    function POST() {
+        $this->GET();
     }
 }

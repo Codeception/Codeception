@@ -37,7 +37,7 @@ use Codeception\Util\Soap as SoapUtils;
 class SOAP extends \Codeception\Module
 {
 
-    protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/');
+    protected $config = array('schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/', 'framework_collect_buffer' => true);
     protected $requiredFields = array('endpoint');
     /**
      * @var \Symfony\Component\BrowserKit\Client
@@ -60,7 +60,7 @@ class SOAP extends \Codeception\Module
             if (!strpos($this->config['endpoint'], '://')) {
                 // not valid url
                 foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Util\Framework) {
+                    if ($module instanceof \Codeception\Lib\Framework) {
                         $this->client = $module->client;
                         $this->is_functional = true;
                         break;
@@ -69,7 +69,7 @@ class SOAP extends \Codeception\Module
             } else {
                 if (!$this->hasModule('PhpBrowser'))
                     throw new \Codeception\Exception\ModuleConfig(__CLASS__, "For Soap testing via HTTP please enable PhpBrowser module");
-                $this->client = $this->getModule('PhpBrowser')->session->getDriver()->getClient();
+                $this->client = $this->getModule('PhpBrowser')->client;
             }
             if (!$this->client) throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Client for SOAP requests not initialized.\nProvide either PhpBrowser module or Framework module which shares FrameworkInterface");
         }
@@ -159,7 +159,7 @@ class SOAP extends \Codeception\Module
         $xmlBody->appendChild($call);
         $this->debugSection("Request", $req = $xml->C14N());
 
-        if ($this->is_functional) {
+        if ($this->is_functional && $this->config['framework_collect_buffer']) {
             $response = $this->processInternalRequest($action, $req);
         } else {
             $response = $this->processExternalRequest($action, $req);
@@ -306,7 +306,7 @@ class SOAP extends \Codeception\Module
         $path = new \DOMXPath($this->xmlResponse);
         $res = $path->query($xpath);
         if ($res === false) $this->fail("XPath selector is malformed");
-        $this->assertGreaterThen(0, $res->length);
+        $this->assertGreaterThan(0, $res->length);
     }
 
     /**
@@ -385,7 +385,7 @@ class SOAP extends \Codeception\Module
         }
         $this->fail("No node matched CSS or XPath '$cssOrXPath'");
     }
-    
+
 
     protected function structureMatches($schema, $xml)
     {

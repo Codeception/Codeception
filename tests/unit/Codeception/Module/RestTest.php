@@ -9,12 +9,21 @@ class RestTest extends \PHPUnit_Framework_TestCase
      */
     protected $module;
 
-    public function setUp() {
-        $this->module = new \Codeception\Module\REST();
-        $connector = new \Codeception\Util\Connector\Universal();
+    public function setUp()
+    {
+
+        $connector = new \Codeception\Lib\Connector\Universal();
         $connector->setIndex(\Codeception\Configuration::dataDir().'/rest/index.php');
-        $this->module->client = $connector;
+
+        $this->module = Stub::make(
+            '\Codeception\Module\REST',
+            [
+                'getModules' => [new \Codeception\Module\PhpBrowser()]
+            ]
+        );
+        $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->module->client = $connector;
         $this->module->client->setServerParameters(array(
             'SCRIPT_FILENAME' => 'index.php',
             'SCRIPT_NAME' => 'index',
@@ -23,7 +32,21 @@ class RestTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testGet() {
+    public function testBeforeHookResetsVariables()
+    {
+        $this->module->haveHttpHeader('Origin','http://www.example.com');
+        $this->module->sendGET('/rest/user/');
+        $this->assertEquals(
+            'http://www.example.com',
+            $this->module->client->getServerParameter('HTTP_ORIGIN')
+        );
+
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+        $this->assertNull($this->module->client->getServerParameter('HTTP_ORIGIN', null));
+    }
+
+    public function testGet()
+    {
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
@@ -32,20 +55,23 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseCodeIs(404);
     }
 
-    public function testPost() {
+    public function testPost()
+    {
         $this->module->sendPOST('/rest/user/', array('name' => 'john'));
         $this->module->seeResponseContains('john');
         $this->module->seeResponseContainsJson(array('name' => 'john'));
     }
 
-    public function testPut() {
+    public function testPut()
+    {
         $this->module->sendPUT('/rest/user/', array('name' => 'laura'));
         $this->module->seeResponseContains('davert@mail.ua');
         $this->module->seeResponseContainsJson(array('name' => 'laura'));
         $this->module->dontSeeResponseContainsJson(array('name' => 'john'));
     }
 
-    public function testGrabDataFromJsonResponse() {
+    public function testGrabDataFromJsonResponse()
+    {
         $this->module->sendGET('/rest/user/');
         // simple assoc array
         $this->assertEquals('davert@mail.ua', $this->module->grabDataFromJsonResponse('email'));
@@ -56,6 +82,19 @@ class RestTest extends \PHPUnit_Framework_TestCase
         // fail if data not found
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError', 'Response does not have required data');
         $this->module->grabDataFromJsonResponse('address.street');
+    }
+
+    public function testGrabDataFromResponseByJsonPath()
+    {
+        $this->module->sendGET('/rest/user/');
+        // simple assoc array
+        $this->assertEquals(array('davert@mail.ua'), $this->module->grabDataFromResponseByJsonPath('$.email'));
+        // nested assoc array
+        $this->assertEquals(array('Kyiv'), $this->module->grabDataFromResponseByJsonPath('$.address.city'));
+        // nested index array
+        $this->assertEquals(array('DavertMik'), $this->module->grabDataFromResponseByJsonPath('$.aliases[0]'));
+        // empty if data not found
+        $this->assertEquals(array(), $this->module->grabDataFromResponseByJsonPath('$.address.street'));
     }
 
     public function testValidJson()
@@ -89,7 +128,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsXml();
     }
 
-    public function testSeeInJson()
+    public function testSeeInJsonResponse()
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
@@ -106,8 +145,9 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
+        $this->module->seeResponseContainsJson([['user' => 'John Doe', 'age' => 27]]);
+        $this->module->seeResponseContainsJson([['user' => 'Blacknoir', 'age' => 27], ['user' => 'John Doe', 'age' => 27]]);
     }
-
 
     public function testArrayJson()
     {
@@ -135,6 +175,16 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
         $this->assertJson($request->getContent());
         $this->assertEmpty($request->getParameters());
+    }
+
+    public function testApplicationJsonIncludesObjectSerialized()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendPOST('/', new JsonSerializedItem());
+        /** @var $request \Symfony\Component\BrowserKit\Request  **/
+        $request = $this->module->client->getRequest();
+        $this->assertContains('application/json', $request->getServer());
+        $this->assertJson($request->getContent());
     }
 
     public function testGetApplicationJsonNotIncludesJsonAsContent()
@@ -175,7 +225,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('no-cache', 'no-store'), $this->module->grabHttpHeader('Cache-Control', false));
 
     }
-    
+
     public function testSeeHeadersOnce()
     {
         $this->shouldFail();
@@ -187,9 +237,50 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeHttpHeaderOnce('Cache-Control');
     }
 
+    public function testArrayJsonPathAndXPath()
+    {
+        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//user');
+        $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
+        $this->module->seeResponseJsonMatchesJsonPath('$[1].tags');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].profile');
+    }
+
+    
+    public function testArrayJsonPathFails()
+    {
+        $this->shouldFail();
+        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesJsonPath('$[*].profile');
+    }
+    
+    
+    public function testStructuredJsonPathAndXPath()
+    {
+        $this->module->response = '{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }';
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//book/category');
+        $this->module->seeResponseJsonMatchesJsonPath('$..book');
+        $this->module->seeResponseJsonMatchesJsonPath('$.store.book[2].author');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$.invalid');
+        $this->module->dontSeeResponseJsonMatchesJsonPath('$.store.book.*.invalidField');
+    }
+
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
 
+
+}
+
+class JsonSerializedItem implements JsonSerializable
+{
+    public function jsonSerialize()
+    {
+        return '{"hello": "world"}';
+    }
 }

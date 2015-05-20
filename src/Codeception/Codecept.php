@@ -1,15 +1,13 @@
 <?php
 namespace Codeception;
 
-use Codeception\Configuration;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\EventDispatcher\EventDispatcher;
 use Codeception\Exception\Configuration as ConfigurationException;
 
 class Codecept
 {
-    const VERSION = "1.8.7";
+    const VERSION = "2.0.14";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -19,16 +17,6 @@ class Codecept
      * @var \PHPUnit_Framework_TestResult
      */
     protected $result;
-
-    /**
-     * @var \Codeception\CodeCoverage
-     */
-    protected $coverage;
-
-    /**
-     * @var \Monolog\Handler\StreamHandler
-     */
-    protected $logHandler;
 
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
@@ -48,47 +36,76 @@ class Codecept
         'tap' => false,
         'report' => false,
         'colors' => false,
-        'log' => false,
         'coverage' => false,
-	    'defer-flush' => false,
+        'coverage-xml' => false,
+        'coverage-html' => false,
+        'coverage-text' => false,
         'groups' => null,
         'excludeGroups' => null,
         'filter' => null,
         'env' => null,
+        'fail-fast' => false,
+        'verbosity' => 1,
+        'interactive' => true,
+        'no-rebuild' => false
     );
+
+    /**
+     * @var array
+     */
+    protected $extensions = array();
 
     public function __construct($options = array()) {
         $this->result = new \PHPUnit_Framework_TestResult;
+        $this->dispatcher = new EventDispatcher();
+
+        $baseOptions = $this->mergeOptions($options);
+
+        $this->loadExtensions($baseOptions);
 
         $this->config = Configuration::config();
+
         $this->options = $this->mergeOptions($options);
 
-
-        $this->dispatcher = new EventDispatcher();
         $this->registerSubscribers();
         $this->registerPHPUnitListeners();
 
         $printer = new PHPUnit\ResultPrinter\UI($this->dispatcher, $this->options);
-        $this->runner = new PHPUnit\Runner($this->config);
+        $this->runner = new PHPUnit\Runner($this->options);
         $this->runner->setPrinter($printer);
     }
 
-    private function mergeOptions($options) {
+    /**
+     * Merges given options with default values and current configuration
+     *
+     * @param array $options options
+     * @return array
+     * @throws ConfigurationException
+     */
+    protected function mergeOptions($options)
+    {
+        $config = Configuration::config();
+        $baseOptions = array_merge($this->options, $config['settings']);
+        return array_merge($baseOptions, $options);
+    }
 
-        foreach ($this->options as $option => $default) {
-            $value = isset($options[$option]) ? $options[$option] : $default;
-            if (!$value) {
-                $options[$option] = isset($this->config['settings'][$option])
-                    ? $this->config['settings'][$option]
-                    : $this->options[$option];
+    protected function loadExtensions($options)
+    {
+        $config = Configuration::config();
+        foreach ($config['extensions']['enabled'] as $extensionClass) {
+            if (!class_exists($extensionClass)) {
+                throw new ConfigurationException("Class `$extensionClass` is not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
             }
-        }
-        if (isset($options['no-colors']) && $options['no-colors']) $options['colors'] = false;
-        if (isset($options['report']) && $options['report']) $options['silent'] = true;
-        if (isset($options['group']) && $options['group']) $options['groups'] = $options['group'];
-        if (isset($options['skip-group']) && $options['skip-group']) $options['excludeGroups'] = $options['skip-group'];
+            $extensionConfig =  isset($config['extensions']['config'][$extensionClass])
+                ? $config['extensions']['config'][$extensionClass]
+                : [];
 
-        return $options;
+            $extension = new $extensionClass($extensionConfig, $options);
+            if (!$extension instanceof EventSubscriberInterface) {
+                throw new ConfigurationException("Class $extensionClass is not an EventListener. Please create it as Extension or Group class.");
+            }
+            $this->extensions[] = $extension;
+        }
     }
 
     protected function registerPHPUnitListeners() {
@@ -99,23 +116,31 @@ class Codecept
     public function registerSubscribers() {
         // required
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
-        $this->dispatcher->addSubscriber(new Subscriber\Cest());
-        $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterClass());
+        $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());
 
         // optional
-        if (!$this->options['silent'])  $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
-        if ($this->options['log'])      $this->dispatcher->addSubscriber(new Subscriber\Logger());
-        if ($this->options['coverage']) {
-            $this->dispatcher->addSubscriber(new Subscriber\CodeCoverage($this->options));
-            $this->dispatcher->addSubscriber(new Subscriber\RemoteCodeCoverage($this->options));
+        if (!$this->options['no-rebuild']) {
+            $this->dispatcher->addSubscriber(new Subscriber\AutoRebuild());
+        }
+        if (!$this->options['silent']) {
+            $this->dispatcher->addSubscriber(new Subscriber\Console($this->options));
+        }
+        if ($this->options['fail-fast']) {
+            $this->dispatcher->addSubscriber(new Subscriber\FailFast());
         }
 
-        // custom event listeners
-        foreach ($this->config['extensions']['enabled'] as $subscriber) {
-            if (!class_exists($subscriber)) throw new ConfigurationException("Class $subscriber not defined. Please include it in global '_bootstrap.php' file of 'tests' directory");
-            if ($subscriber instanceof EventSubscriberInterface) throw new ConfigurationException("Class $subscriber is not a EventListener. Please create it as Extension or Group class.");
-            $this->dispatcher->addSubscriber(new $subscriber($this->config, $this->options));
+        if ($this->options['coverage']) {
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Local($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\LocalServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\RemoteServer($this->options));
+            $this->dispatcher->addSubscriber(new Coverage\Subscriber\Printer($this->options));
+        }
+
+        // extensions
+        foreach ($this->extensions as $subscriber) {
+            $this->dispatcher->addSubscriber($subscriber);
         }
     }
 
@@ -125,7 +150,7 @@ class Codecept
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
         $selectedEnvironments = $this->options['env'];
-        $environments = \Codeception\Configuration::suiteEnvironments($suite);
+        $environments = Configuration::suiteEnvironments($suite);
 
         if (!$selectedEnvironments or empty($environments)) {
             $this->runSuite($settings, $suite, $test);
@@ -143,11 +168,8 @@ class Codecept
 
     public function runSuite($settings, $suite, $test = null) {
         $suiteManager = new SuiteManager($this->dispatcher, $suite, $settings);
-
-        $test
-            ? $suiteManager->loadTest($settings['path'].$test)
-            : $suiteManager->loadTests();
-
+        $suiteManager->initialize();
+        $suiteManager->loadTests($test);
         $suiteManager->run($this->runner, $this->result, $this->options);
 
         return $this->result;
@@ -164,7 +186,7 @@ class Codecept
         $printer = $this->runner->getPrinter();
         $printer->printResult($result);
 
-        $this->dispatcher->dispatch('result.print.after', new Event\PrintResult($result, $printer));
+        $this->dispatcher->dispatch(Events::RESULT_PRINT_AFTER, new Event\PrintResultEvent($result, $printer));
     }
 
     /**

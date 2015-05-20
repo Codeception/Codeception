@@ -1,10 +1,10 @@
 <?php
-
 namespace Codeception\Module;
 
 use Yii;
-use Codeception\Util\Framework;
+use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Interfaces\ActiveRecord;
 
 /**
  * This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
@@ -29,10 +29,10 @@ use Codeception\Exception\ModuleConfig;
  * ## Status
  *
  * Maintainer: **qiangxue**
- * Stability: **beta**
+ * Stability: **stable**
  *
  */
-class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
+class Yii2 extends Framework implements ActiveRecord
 {
     /**
      * Application config file must be set.
@@ -53,8 +53,13 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->client = new \Codeception\Util\Connector\Yii2();
+        $this->client = new \Codeception\Lib\Connector\Yii2();
         $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
+        $mainConfig = \Codeception\Configuration::config();
+        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
+            $this->client->setServerParameter('HTTP_HOST', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
+            $this->client->setServerParameter('HTTPS', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https');
+        }
         $this->app = $this->client->startApp();
 
         if ($this->config['cleanup'] and isset($this->app->db)) {
@@ -75,7 +80,7 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
         }
 
         if (Yii::$app) {
-            Yii::$app->session->close();
+            Yii::$app->session->destroy();
         }
 
 
@@ -99,13 +104,13 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
     {
         /** @var $record \yii\db\ActiveRecord  * */
         $record = $this->getModelRecord($model);
-        $record->setAttributes($attributes);
+        $record->setAttributes($attributes, false);
         $res = $record->save(false);
         if (!$res) {
             $this->fail("Record $model was not saved");
         }
 
-        return $record->id;
+        return $record->primaryKey;
     }
 
     /**
@@ -176,11 +181,25 @@ class Yii2 extends Framework implements \Codeception\Util\ActiveRecordInterface
             throw new \RuntimeException("Model $model does not exist");
         }
         $record = new $model;
-        if (!$record instanceof \yii\db\ActiveRecord) {
-            throw new \RuntimeException("Model $model is not instance of \\yii\\db\\ActiveRecord");
+        if (!$record instanceof \yii\db\ActiveRecordInterface) {
+            throw new \RuntimeException("Model $model is not implement interface \\yii\\db\\ActiveRecordInterface");
         }
         return $record;
     }
 
-
+    /**
+     * Converting $page to valid Yii2 url
+     * Allows input like:
+     * $I->amOnPage(['site/view','page'=>'about']);
+     * $I->amOnPage('index-test.php?site/index');
+     * $I->amOnPage('http://localhost/index-test.php?site/index');
+     * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
+     */
+    public function amOnPage($page)
+    {
+        if (is_array($page)) {
+            $page = \Yii::$app->getUrlManager()->createUrl($page);
+        }
+        parent::amOnPage($page);
+    }
 }

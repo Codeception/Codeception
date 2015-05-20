@@ -29,5 +29,11 @@
 
 <a href="/" class="sign">Sign in!</a>
 
+<div>Kill & Destroy</div>
+
+<div style="display: none" class="hidden">
+    Invisible text
+</div>
+
 </body>
 </html>

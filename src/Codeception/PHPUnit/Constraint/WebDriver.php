@@ -2,7 +2,7 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
-use Codeception\Util\Console\Message;
+use Codeception\Lib\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class WebDriver extends Page {
@@ -16,12 +16,12 @@ class WebDriver extends Page {
         {
             /** @var $node \WebDriverElement  **/
             if (!$node->isDisplayed()) continue;
-            if (parent::matches($node->getText())) return true;
+            if (parent::matches(htmlspecialchars_decode($node->getText()))) return true;
         }
         return false;
     }
 
-    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
     {
         if (!count($nodes)) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');
 

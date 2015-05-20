@@ -26,7 +26,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $sql = explode("\n", $sql);
-        $sqlite = \Codeception\Util\Driver\Db::create($this->config['dsn'], $this->config['user'], $this->config['password']);
+        $sqlite = \Codeception\Lib\Driver\Db::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         $sqlite->load($sql);
     }
 

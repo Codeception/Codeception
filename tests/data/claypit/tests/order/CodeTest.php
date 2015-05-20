@@ -1,18 +1,52 @@
 <?php
+use Codeception\Module\OrderHelper;
+
 class CodeTest extends Codeception\TestCase\Test
 {
     public function testThis()
     {
-        \Codeception\Module\OrderHelper::appendToFile('C');
+        OrderHelper::appendToFile('C');
     }
 
     public static function setUpBeforeClass()
     {
-        \Codeception\Module\OrderHelper::appendToFile('{');
+        OrderHelper::appendToFile('{');
     }
 
     public static function tearDownAfterClass()
     {
-        \Codeception\Module\OrderHelper::appendToFile('}');
+        OrderHelper::appendToFile('}');
+    }
+
+    /**
+     * @before
+     */
+    public function before()
+    {
+        OrderHelper::appendToFile('<');
+    }
+
+    /**
+     * @after
+     */
+    public function after()
+    {
+        OrderHelper::appendToFile('>');
+    }
+
+    /**
+     * @beforeClass
+     */
+    public static function beforeClass()
+    {
+        OrderHelper::appendToFile('{');
+    }
+
+    /**
+     * @afterClass
+     */
+    public static function afterClass()
+    {
+        OrderHelper::appendToFile('}');
     }
 }

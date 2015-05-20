@@ -5,7 +5,7 @@ require_once 'tests/data/app/data.php';
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
 use Codeception\SuiteManager;
-use Codeception\Util\Driver\Facebook as FacebookDriver;
+use Codeception\Lib\Driver\Facebook as FacebookDriver;
 use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
@@ -29,13 +29,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
      * @var FacebookDriver
      */
     protected $facebook;
-
-    protected function noPhpWebserver()
-    {
-        if (version_compare(PHP_VERSION, '5.4', '<')) {
-            $this->markTestSkipped('Requires PHP built-in web server, available since PHP 5.4.0.');
-        }
-    }
 
     protected function makeTest()
     {
@@ -63,6 +56,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Facebook::haveFacebookTestUserId
      * @covers Facebook::haveFacebookTestUserAccount
      * @covers Facebook::grabFacebookTestUserEmail
      * @covers Facebook::grabFacebookTestUserAccessToken
@@ -70,6 +64,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
     public function testHaveFacebookTestUserAccount()
     {
         $this->module->haveFacebookTestUserAccount(false);
+        $this->assertNotEmpty($this->module->grabFacebookTestUserId());
         $this->assertNotEmpty($this->module->grabFacebookTestUserEmail());
         $this->assertNotEmpty($this->module->grabFacebookTestUserAccessToken());
 
@@ -77,6 +72,11 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->haveFacebookTestUserAccount(true);
         $testUserEmailAfterRenew = $this->module->grabFacebookTestUserEmail();
         $this->assertNotEquals($testUserEmailBeforeRenew, $testUserEmailAfterRenew);
+
+        $testUserIdBeforeRenew = $this->module->grabFacebookTestUserId();
+        $this->module->haveFacebookTestUserAccount(true);
+        $testUserIdAfterRenew = $this->module->grabFacebookTestUserId();
+        $this->assertNotEquals($testUserIdBeforeRenew, $testUserIdAfterRenew);
     }
 
     public function testSeePostOnFacebookWithAttachedPlace()
@@ -94,9 +94,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testLoginToFacebook()
     {
+        $this->markTestSkipped();
         // preconditions: #1 php web server being run
-        $this->noPhpWebserver();
-
         $browserModule = new PhpBrowser;
         $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
         $browserModule->_initialize();

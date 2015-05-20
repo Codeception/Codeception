@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'BaseCommandRunner.php';
 
-class GeneratePageObjectTest extends BaseCommandRunner {
+class GeneratePageObjectTest extends BaseCommandRunner
+{
 
     protected function setUp()
     {
@@ -16,7 +17,8 @@ class GeneratePageObjectTest extends BaseCommandRunner {
 
     public function testBasic()
     {
-        $this->execute(array('page' => 'Login'));
+        unset($this->config['class_name']);
+        $this->execute(array('page' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::projectDir().'tests/_pages/LoginPage.php', $this->filename);
         $this->assertContains('class LoginPage', $this->content);
         $this->assertContains('public static', $this->content);
@@ -26,8 +28,9 @@ class GeneratePageObjectTest extends BaseCommandRunner {
 
     public function testNamespace()
     {
+        unset($this->config['class_name']);
         $this->config['namespace'] = 'MiddleEarth';
-        $this->execute(array('page' => 'Login'));
+        $this->execute(array('page' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::projectDir().'tests/_pages/LoginPage.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
         $this->assertContains('class LoginPage', $this->content);

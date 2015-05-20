@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="language" content="en" />
-<title>My Web Application - Login</title>
+    <title>My Web Application - Login</title>
 </head>
 <body>
 <div class="container" id="page">

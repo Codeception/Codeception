@@ -1,81 +1,73 @@
 <?php
+
 namespace Codeception\TestCase;
 
-use Codeception\Event\Fail;
-use Codeception\Event\Test as TestEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Codeception\Events;
+use Codeception\Event\TestEvent;
 use Codeception\Step;
+use Codeception\TestCase;
 
-class Cept extends \Codeception\TestCase implements ScenarioDriven
+class Cept extends TestCase implements
+    Interfaces\ScenarioDriven,
+    Interfaces\Descriptive,
+    Interfaces\Reported,
+    Interfaces\Plain,
+    Interfaces\Configurable
 {
-    private $name;
-    protected $testfile = null;
-    protected $output;
-    protected $debug;
-    protected $features = array();
-    protected $bootstrap = null;
-    protected $stopped = false;
-    protected $dispatcher;
+    use Shared\Actor;
+    use Shared\ScenarioPrint;
 
-    public function __construct(EventDispatcher $dispatcher, array $data = array(), $dataName = '')
+    public function __construct(array $data = array(), $dataName = '')
     {
         parent::__construct('testCodecept', $data, $dataName);
-        $this->dispatcher = $dispatcher;
-
-        if (!isset($data['file'])) throw new \Exception('File with test scenario not set. Use array(file => filepath) to set a scenario');
-
-        $this->name = $data['name'];
-        $this->scenario = new \Codeception\Scenario($this);
-        $this->testfile = $data['file'];
-        $this->bootstrap = isset($data['bootstrap']) ? $data['bootstrap'] : null;
     }
 
-    public function getFileName()
+    public function getSignature()
     {
-        return $this->name;
+        return ltrim(substr($this->testName, 0,-4),'\\/'); // cut ".php" in end; cut "/" in start
     }
 
     public function getName($withDataSet = true)
     {
-        return $this->name;
+        return $this->getFeature() ? $this->getFeature() : $this->testName;
     }
 
-    public function getScenarioText($format = 'text')
+    public function getFileName()
     {
-        if ($format == 'html') return $this->scenario->getHtml();
-        return $this->scenario->getText();
-    }
-
-    public function getFeature() {
-        return $this->scenario->getFeature();
+        return $this->testFile;
     }
 
     public function toString()
     {
-        return $this->scenario->getFeature() . ' (' . $this->getFileName() . ')';
+        return $this->getFeature(). " (".$this->getSignature().")";
     }
 
     public function preload()
-    {
-        $scenario = $this->scenario;
-        // preload
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
-        require $this->testfile;
+    { 
+        $this->parser->prepareToRun($this->getRawBody());
+        $this->fire(Events::TEST_PARSED, new TestEvent($this));
+    }
 
-        $this->fire('test.parsed', new TestEvent($this));
+    public function getRawBody()
+    {
+        return file_get_contents($this->testFile);
     }
 
     public function testCodecept()
     {
+        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
+
         $scenario = $this->scenario;
-
-        $this->fire('test.before', new TestEvent($this));
         $scenario->run();
-        if (file_exists($this->bootstrap)) require $this->bootstrap;
 
-        require $this->testfile;
+        /** @noinspection PhpIncludeInspection */
+        require $this->testFile;
 
-        $this->fire('test.after', new TestEvent($this));
+        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
+    public function getReportFields()
+    {
+        return ['name' => basename($this->getFileName(),'Cept.php'), 'file' => $this->getFileName(), 'feature' => $this->getFeature()];
+    }
 }

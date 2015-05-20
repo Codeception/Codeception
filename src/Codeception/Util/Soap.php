@@ -1,14 +1,16 @@
 <?php
+
 namespace Codeception\Util;
 
 class Soap
 {
-
     /**
      * @static
-     * @param DOMDocument $xml
-     * @param DOMNode $node
-     * @param array $array
+     *
+     * @param \DOMDocument $xml
+     * @param \DOMNode     $node
+     * @param array       $array
+     *
      * @return \DOMDocument
      */
     public static function arrayToXml(\DOMDocument $xml, \DOMNode $node, $array = array())
@@ -17,7 +19,7 @@ class Soap
             if (is_array($val)) {
                 self::arrayToXml($xml, $node->$el, $val);
             } else {
-                $node->appendChild($xml->createElement($el,$val));
+                $node->appendChild($xml->createElement($el, $val));
             }
         }
         return $xml;
@@ -25,7 +27,9 @@ class Soap
 
     /**
      * @static
+     *
      * @param $xml
+     *
      * @return \DOMDocument|\DOMNode
      */
     public static function toXml($xml)
@@ -33,8 +37,10 @@ class Soap
         if ($xml instanceof XmlBuilder) {
             return $xml->getDom();
         }
-        if ($xml instanceof \DOMDocument) return $xml;
-        $dom = new \DOMDocument();
+        if ($xml instanceof \DOMDocument) {
+            return $xml;
+        }
+        $dom                     = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
         if ($xml instanceof \DOMNode) {
             $xml = $dom->importNode($xml, true);
@@ -45,16 +51,19 @@ class Soap
         if (is_array($xml)) {
             return self::arrayToXml($dom, $dom, $xml);
         }
-        if (!empty($xml)) $dom->loadXML($xml);
+        if (!empty($xml)) {
+            $dom->loadXML($xml);
+        }
         return $dom;
     }
 
-    public static function request() {
+    public static function request()
+    {
         return new XmlBuilder();
     }
 
-    public static function response() {
+    public static function response()
+    {
         return new XmlBuilder();
     }
-
 }

@@ -18,14 +18,18 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
     
     protected $commandName = 'do:stuff';
 
-    protected function execute($args = array())
+    protected function execute($args = array(), $isSuite = true)
     {
         $app = new Application();
         $app->add($this->command);
 
         $default = \Codeception\Configuration::$defaultConfig;
         $default['paths']['tests'] = __DIR__;
-        $conf = \Codeception\Configuration::suiteSettings('unit', $default);
+
+        $conf = $isSuite
+            ? \Codeception\Configuration::suiteSettings('unit', $default)
+            : $default;
+
         $this->config = array_merge($conf, $this->config);
         
         $commandTester = new CommandTester($app->find($this->commandName));
@@ -60,7 +64,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
                 return array('shire');
             },
             'getApplication' => function() {
-                return new \Codeception\Maybe;
+                return new \Codeception\Util\Maybe;
             }
         ));
     }

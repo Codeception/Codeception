@@ -1,9 +1,9 @@
-   <tr>
+   <tr class="scenarioRow {scenarioStatus}">
     <td>
      <p class="{scenarioStatus}" onclick="showHide('{id}', this)">[+] {name} ({time}s)</p>
     </td>
    </tr>
-   <tr>
+   <tr class="scenarioRow {scenarioStatus}">
     <td>
      <table border="0" width="100%" class="{scenarioStatus} scenarioStepsTable" id="stepContainer{id}">
 {steps}

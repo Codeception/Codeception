@@ -18,7 +18,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: empty_table; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: empty_table; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 DROP TABLE IF EXISTS empty_table CASCADE;
 CREATE TABLE empty_table (
@@ -47,7 +47,7 @@ ALTER SEQUENCE empty_table_id_seq OWNED BY empty_table.id;
 
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 DROP TABLE IF EXISTS groups CASCADE;
@@ -79,7 +79,7 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
--- Name: permissions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: permissions; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 DROP TABLE IF EXISTS permissions CASCADE;
@@ -111,7 +111,7 @@ ALTER SEQUENCE permissions_id_seq OWNED BY permissions.id;
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 DROP TABLE IF EXISTS users CASCADE;
@@ -241,7 +241,7 @@ SELECT pg_catalog.setval('users_id_seq', 4, true);
 
 
 --
--- Name: g1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: g1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY groups
@@ -249,7 +249,7 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: p1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: p1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY permissions
@@ -257,7 +257,7 @@ ALTER TABLE ONLY permissions
 
 
 --
--- Name: u1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: u1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY users
@@ -279,6 +279,25 @@ ALTER TABLE ONLY permissions
 ALTER TABLE ONLY permissions
     ADD CONSTRAINT pg1 FOREIGN KEY (group_id) REFERENCES groups(id);
 
+
+--
+-- start test for triggers with $$ syntax
+--
+INSERT INTO users (name, email) VALUES ('This $$ should work', 'user@example.org');
+CREATE OR REPLACE FUNCTION upd_timestamp() RETURNS TRIGGER
+LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    NEW.created_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+  $$;
+
+INSERT INTO users (name, email) VALUES ('This should work as well', 'user2@example.org');
+--
+-- end test for triggers with $$ syntax
+--
 
 --
 -- PostgreSQL database dump complete

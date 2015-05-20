@@ -1,4 +1,6 @@
 <?php
+$scenario->group('core');
+
 $I = new CliGuy($scenario);
 $I->wantToTest('build command');
 $I->runShellCommand('php codecept build');

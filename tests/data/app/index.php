@@ -16,12 +16,21 @@ $urls = array(
     '/' => 'index',
     '/info' => 'info',
     '/cookies' => 'cookies',
+    '/cookies2' => 'cookiesHeader',
     '/search.*' => 'search',
     '/login' => 'login',
     '/redirect' => 'redirect',
+    '/redirect2' => 'redirect2',
+    '/redirect3' => 'redirect3',
+    '/redirect4' => 'redirect4',
+    '/redirect_interval' => 'redirect_interval',
+    '/redirect_header_interval' => 'redirect_header_interval',
+    '/redirect_self' => 'redirect_self',
     '/facebook\??.*' => 'facebookController',
-    '/form/(field|select|checkbox|file|textarea|hidden|complex|button|radio|select_multiple|empty|popup|example1|image)(#)?' => 'form',
-    '/articles\??.*' => 'articles'
+    '/form/(.*?)(#|\?.*?)?' => 'form',
+    '/articles\??.*' => 'articles',
+    '/auth' => 'httpAuth',
+    '/register' => 'register'
 );
 
 glue::stick($urls);

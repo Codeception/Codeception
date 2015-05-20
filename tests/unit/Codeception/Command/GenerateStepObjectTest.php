@@ -14,7 +14,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
 
     public function testBasic()
     {
-        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--force' => true));
+        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
 
         $generated = $this->log[0];
         $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
@@ -31,7 +31,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
     public function testNamespace()
     {
         $this->config['namespace'] = 'MiddleEarth';
-        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--force' => true));
+        $this->execute(array('suite' => 'shire', 'step' => 'Login', '--silent' => true));
         $generated = $this->log[0];
         $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
         $this->assertContains('namespace MiddleEarth\HobbitGuy;', $generated['content']);
@@ -45,7 +45,7 @@ class GenerateStepObjectTest extends BaseCommandRunner {
 
      public function testCreateInSubpath()
      {
-         $this->execute(array('suite' => 'shire', 'step' => 'user/Login', '--force' => true));
+         $this->execute(array('suite' => 'shire', 'step' => 'user/Login', '--silent' => true));
          $generated = $this->log[0];
          $this->assertEquals('tests/shire/_steps/LoginSteps.php', $generated['filename']);
          $this->assertIsValidPhp($this->content);

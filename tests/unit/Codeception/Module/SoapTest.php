@@ -17,13 +17,12 @@ class SoapTest extends \PHPUnit_Framework_TestCase
         $this->module = new \Codeception\Module\SOAP();
         $this->module->_setConfig(array('schema' => 'http://www.w3.org/2001/xml.xsd', 'endpoint' => 'http://codeception.com/api/wsdl'));
         $this->layout = \Codeception\Configuration::dataDir().'/xml/layout.xml';
-        $this->module->client = Stub::makeEmpty('\Codeception\Util\Connector\Universal');
+        $this->module->client = Stub::makeEmpty('\Codeception\Lib\Connector\Universal');
         $this->module->is_functional = true;
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cept'));
     }
     
     public function testXmlIsBuilt() {
-        $this->module->xmlRequest;
         $dom = new \DOMDocument();
         $dom->load($this->layout);
         $this->assertEqualXMLStructure($this->module->xmlRequest->documentElement, $dom->documentElement);

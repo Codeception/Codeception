@@ -1,5 +1,6 @@
 # MongoDb Module
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Module/MongoDb.php)**
+
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php)**
 
 
 Works with MongoDb database.
@@ -15,7 +16,7 @@ The DB preparation should as following:
 - clean database
 - system collection system.users should contain the user which will be authenticated while script performs DB operations
 
-Connection is done by MongoDb driver, which is stored in Codeception\Util\Driver namespace.
+Connection is done by MongoDb driver, which is stored in Codeception\Lib\Driver namespace.
 Check out the driver if you get problems loading dumps and cleaning databases.
 
 ## Status
@@ -36,12 +37,9 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 * cleanup: true - should the dump be reloaded after each test
 
 
-## Actions
-
 
 ### dontSeeInCollection
-
-
+ 
 Checks if collection doesn't contain an item.
 
 ``` php
@@ -49,18 +47,28 @@ Checks if collection doesn't contain an item.
 $I->dontSeeInCollection('users', array('name' => 'miles'));
 ```
 
- * param $collection
- * param array $criteria
+ * `param` $collection
+ * `param array` $criteria
 
 
-### getName
+### grabCollectionCount
+ 
+Grabs the documents count from a collection
 
-__not documented__
+``` php
+<?php
+$count = $I->grabCollectionCount('users');
+// or
+$count = $I->grabCollectionCount('users', array('isAdmin' => true));
+```
+
+ * `param` $collection
+ * `param array` $criteria
+@return integer
 
 
 ### grabFromCollection
-
-
+ 
 Grabs a data from collection
 
 ``` php
@@ -68,14 +76,13 @@ Grabs a data from collection
 $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
 ```
 
- * param $collection
- * param array $criteria
- * return \MongoCursor
+ * `param` $collection
+ * `param array` $criteria
+@return \MongoCursor
 
 
 ### haveInCollection
-
-
+ 
 Inserts data into collection
 
 ``` php
@@ -83,13 +90,40 @@ $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.
 $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
 ```
 
- * param $collection
- * param array $data
+ * `param` $collection
+ * `param array` $data
+
+
+### seeElementIsArray
+ 
+Asserts that an element in a collection exists and is an Array
+
+``` php
+<?php
+$I->seeElementIsArray('users', array('name' => 'John Doe') , 'data.skills');
+```
+
+ * `param String` $collection
+ * `param Array` $criteria
+ * `param String` $elementToCheck
+
+
+### seeElementIsObject
+ 
+Asserts that an element in a collection exists and is an Object
+
+``` php
+<?php
+$I->seeElementIsObject('users', array('name' => 'John Doe') , 'data');
+```
+
+ * `param String` $collection
+ * `param Array` $criteria
+ * `param String` $elementToCheck
 
 
 ### seeInCollection
-
-
+ 
 Checks if collection contains an item.
 
 ``` php
@@ -97,5 +131,22 @@ Checks if collection contains an item.
 $I->seeInCollection('users', array('name' => 'miles'));
 ```
 
- * param $collection
- * param array $criteria
+ * `param` $collection
+ * `param array` $criteria
+
+
+### seeNumElementsInCollection
+ 
+Count number of records in a collection
+
+``` php
+<?php
+$I->seeNumElementsInCollection('users', 2);
+$I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
+```
+
+ * `param` $collection
+ * `param integer` $expected
+ * `param array` $criteria
+
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

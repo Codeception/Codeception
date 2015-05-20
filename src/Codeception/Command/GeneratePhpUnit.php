@@ -2,36 +2,26 @@
 
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputDefinition;
+use Codeception\Lib\Generator\PhpUnit as PhpUnitGenerator;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 
-class GeneratePhpUnit extends Base {
-
-    protected $template  = <<<EOF
-<?php
-%s
-%s %sTest extends \PHPUnit_Framework_TestCase
+/**
+ * Generates skeleton for unit test as in classical PHPUnit.
+ *
+ * * `codecept g:phpunit unit UserTest`
+ * * `codecept g:phpunit unit User`
+ * * `codecept g:phpunit unit "App\User`
+ *
+ */
+class GeneratePhpUnit extends Command
 {
-    protected function setUp()
-    {
-    }
-
-    protected function tearDown()
-    {
-    }
-
-    // tests
-    public function testMe()
-    {
-    }
-
-}
-EOF;
+    use Shared\FileSystem;
+    use Shared\Config;
 
     protected function configure()
     {
@@ -53,19 +43,16 @@ EOF;
         $suite = $input->getArgument('suite');
         $class = $input->getArgument('class');
 
-        $suiteconf = $this->getSuiteConfig($suite, $input->getOption('config'));
+        $config = $this->getSuiteConfig($suite, $input->getOption('config'));
 
-        $classname = $this->getClassName($class);
+        $path = $this->buildPath($config['path'], $class);
 
-        $path = $this->buildPath($suiteconf['path'], $class);
-        $ns = $this->getNamespaceString($suiteconf['namespace'].'\\'.$class);
-
-        $filename = $this->completeSuffix($classname, 'Test');
+        $filename = $this->completeSuffix($this->getClassName($class), 'Test');
         $filename = $path.$filename;
 
-        $classname = $this->removeSuffix($classname, 'Test');
+        $gen = new PhpUnitGenerator($config, $class);
 
-        $res = $this->save($filename, sprintf($this->template, $ns, 'class', $classname));
+        $res = $this->save($filename, $gen->produce());
         if (!$res) {
             $output->writeln("<error>Test $filename already exists</error>");
             exit;

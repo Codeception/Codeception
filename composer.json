@@ -13,33 +13,46 @@
         }
     ],
     "minimum-stability": "stable",
+
     "require": {
-        "php": ">=5.3.19",
-        "behat/mink": "1.5.*",
-        "phpunit/phpunit": "3.7.*",
-        "facebook/webdriver": "0.4",
-        "behat/mink-goutte-driver": "1.0.*",
-        "behat/mink-selenium2-driver": "1.1.*",
-        "monolog/monolog": "*",
-        "symfony/finder": "~2.3",
-        "symfony/console": "~2.3",
-        "symfony/event-dispatcher": "~2.3",
-        "symfony/yaml": "~2.3",
-        "symfony/dom-crawler": "~2.3,!=2.3.14,!=2.3.15,!=2.4.5,!=dev-master"
+        "php": ">=5.4.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "phpunit/phpunit": "~4.6.0",
+        "facebook/webdriver": "~0.4|~0.5",
+        "guzzlehttp/guzzle": "~4.0|~5.0",
+        "symfony/finder": "~2.4",
+        "symfony/console": "~2.4",
+        "symfony/event-dispatcher": "~2.4",
+        "symfony/yaml": "~2.4",
+        "symfony/browser-kit": "~2.4",
+        "symfony/css-selector": "~2.4",
+        "symfony/dom-crawler": "~2.4,!=2.4.5"
     },
     "require-dev": {
-        "behat/mink-selenium-driver": "1.1.*",
-        "facebook/php-sdk": "3.*",
-        "behat/mink-zombie-driver": "1.1.*",
-        "videlalvaro/php-amqplib": "*"
+        "monolog/monolog": "~1.8",
+        "facebook/php-sdk": "~3.2",
+        "videlalvaro/php-amqplib": "~2.4",
+        "codeception/specify": "~0.3",
+        "pda/pheanstalk": "~2.0",
+        "flow/jsonpath": "~0.2"
     },
     "suggest": {
-        "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests"
+        "codeception/phpbuiltinserver": "Extension to start and stop PHP built-in web server for your tests",
+        "codeception/specify": "BDD-style code blocks",
+        "codeception/verify": "BDD-style assertions",
+        "monolog/monolog": "Log test steps",
+        "phpseclib/phpseclib": "Extension required to use the SFTP option in the FTP Module."
     },
 
     "autoload":{
         "psr-0":{
             "Codeception":"src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
         }
     },
     "bin":["codecept"]

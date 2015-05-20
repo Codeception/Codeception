@@ -8,9 +8,28 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require_once __DIR__ . '/../../autoload.php';
 }
 
-/** spike-fix for PHP 5.3 */
-if (! interface_exists('JsonSerializable')) {
-    interface JsonSerializable {
-        function jsonSerialize();
-    }
+// function not autoloaded in PHP, thus its a good place for them
+function codecept_debug($data)
+{
+    \Codeception\Util\Debug::debug($data);
+}
+
+function codecept_root_dir($appendPath = '')
+{
+    return \Codeception\Configuration::projectDir() . $appendPath;
+}
+
+function codecept_output_dir($appendPath = '')
+{
+    return \Codeception\Configuration::outputDir() . $appendPath;
+}
+
+function codecept_log_dir($appendPath = '')
+{
+    return \Codeception\Configuration::outputDir() . $appendPath;
+}
+
+function codecept_data_dir($appendPath = '')
+{
+    return \Codeception\Configuration::dataDir() . $appendPath;
 }

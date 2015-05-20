@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\Module as ModuleException;
-use \Codeception\Util\Driver\Redis as RedisDriver;
+use \Codeception\Lib\Driver\Redis as RedisDriver;
 
 /**
  * Works with Redis database.

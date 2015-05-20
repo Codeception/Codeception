@@ -2,7 +2,7 @@
 namespace Codeception\PHPUnit\Constraint;
 
 use Codeception\Exception\ElementNotFound;
-use Codeception\Util\Console\Message;
+use Codeception\Lib\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Crawler extends Page {
@@ -20,7 +20,7 @@ class Crawler extends Page {
         return false;
     }
 
-    protected function fail($nodes, $selector, \PHPUnit_Framework_ComparisonFailure $comparisonFailure = NULL)
+    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
     {
         /** @var $nodes DomCrawler  **/
         if (!$nodes->count()) throw new ElementNotFound($selector, 'Element located either by name, CSS or XPath');

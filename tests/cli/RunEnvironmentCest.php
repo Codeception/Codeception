@@ -26,7 +26,7 @@ class RunEnvironmentCest
     {
         $I->wantTo('execute check that env params applied');
         $I->amInPath('tests/data/sandbox');
-        $I->executeCommand('run powers PowerIsRisingCept.php --env=dev -vv');
+        $I->executeCommand('run powers PowerIsRisingCept.php --env=dev -vv --steps');
         $I->seeInShellOutput('I got the power');
         $I->seeInShellOutput("PASSED");
         $I->seeInShellOutput("OK (");
@@ -45,9 +45,9 @@ class RunEnvironmentCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env whisky');
-        $I->seeInShellOutput('Trying to red label (MageGuildCest.redLabel)');
-        $I->seeInShellOutput('Trying to black label (MageGuildCest.blackLabel)');
-        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest.powerOfTheUniverse)');
+        $I->seeInShellOutput('Trying to red label (MageGuildCest::redLabel)');
+        $I->seeInShellOutput('Trying to black label (MageGuildCest::blackLabel)');
+        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest::powerOfTheUniverse)');
         $I->seeInShellOutput('OK (3 tests, 3 assertions)');
     }
 
@@ -55,10 +55,8 @@ class RunEnvironmentCest
     {
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run powers MageGuildCest.php  --env dev');
-        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest.powerOfTheUniverse)');
+        $I->seeInShellOutput('Trying to power of the universe (MageGuildCest::powerOfTheUniverse)');
         $I->seeInShellOutput('OK (1 test, 1 assertion)');
     }
-
-
 
 }

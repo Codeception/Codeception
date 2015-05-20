@@ -16,9 +16,7 @@ class Scenario {
      * @var    string
      */
 	protected $feature;
-    protected $currentStep = 0;
     protected $running = false;
-    protected $preloadedSteps = array();
     protected $blocker = null;
     protected $groups = array();
     protected $env = array();
@@ -54,7 +52,6 @@ class Scenario {
             $this->env($e);
         }
     }
-       
 
     public function groups()
     {
@@ -71,9 +68,10 @@ class Scenario {
         return $this->env;
     }
 
-	public function setFeature($feature) {
-	    $this->feature = $feature;
-	}
+    public function setFeature($feature) 
+    {
+        $this->feature = $feature;
+    }
 
     public function skip($reason = "")
     {
@@ -90,25 +88,12 @@ class Scenario {
         $this->blocker = new \Codeception\Step\Ignore;
     }
 
-    public function runStep()
+    public function runStep(Step $step)
     {
-        if (empty($this->steps)) return;
-
-        $step = $this->lastStep();
-        if (!$step->executed) {
-            $result = $this->test->runStep($step);
-            $this->currentStep++;
-            $step->executed = true;
-            return $result;
-        }
-    }
-
-    /**
-     * @return \Codeception\Step
-     */
-    protected function lastStep()
-    {
-        return end($this->steps);
+        $this->steps[] = $step;
+        $result = $this->test->runStep($step);
+        $step->executed = true;
+        return $result;
     }
 
     public function addStep(\Codeception\Step $step)
@@ -124,8 +109,7 @@ class Scenario {
      */
     public function getSteps()
     {
-        if (!$this->running) return $this->steps;
-        return $this->preloadedSteps;
+        return $this->steps;
     }
 
 	public function getFeature() {
@@ -143,7 +127,7 @@ class Scenario {
                 $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
             }
         }
-        $text = str_replace(array('((', '))'), array('...', ''), $text);
+        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
         $text = "<h3>" . strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
         return $text;
 
@@ -152,28 +136,30 @@ class Scenario {
     public function getText()
     {
         $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(array('((', '))'), array('...', ''), $text);
-        $text = strtoupper('I want to ' . $this->getFeature()) . "\r\n\r\n" . $text;
+        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
+        $text = strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
         return $text;
 
     }
 
-	public function comment($comment) {
-		$this->addStep(new \Codeception\Step\Comment($comment,array()));
-	}
-
-    public function getCurrentStep()
+    public function comment($comment) 
     {
-        return $this->currentStep;
+        $this->runStep(new \Codeception\Step\Comment($comment,array()));
     }
-    
-    public function run() {
-        if ($this->running()) return;
-        if ($this->blocker) return $this->blocker->run();
+
+    public function run() 
+    {
+        if ($this->isBlocked()) {
+            return $this->blocker->run();
+        }
 
         $this->running = true;
-        $this->preloadedSteps = $this->steps;
         $this->steps = array();
+    }
+
+    public function isBlocked()
+    {
+        return (bool)$this->blocker;
     }
 
     public function running()
@@ -181,7 +167,8 @@ class Scenario {
         return $this->running;
     }
 
-    public function preload() {
+    public function preload() 
+    {
         return !$this->running;
     }
 

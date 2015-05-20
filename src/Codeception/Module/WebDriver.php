@@ -2,48 +2,55 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Exception\TestRuntime;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
-use Codeception\Util\WebInterface;
-use Codeception\Util\RemoteInterface;
+use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
+use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 
 /**
- * New generation Selenium2 module.
- * *Included in Codeception 1.7.0*
+ * New generation Selenium WebDriver module.
  *
- * ## Installation
+ * ## Selenium Installation
  *
- * Download [Selenium2 WebDriver](http://code.google.com/p/selenium/downloads/list?q=selenium-server-standalone-2)
- * Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
+ * 1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
+ * 2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
  *
- * ## Migration Guide (Selenium2 -> WebDriver)
  *
- * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ * ## PhantomJS Installation
  *
+ * PhantomJS is a headless alternative to Selenium Server that implements [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
+ * It allows you to run Selenium tests on a server without a GUI installed.
+ *
+ * 1. Download [PhantomJS](http://phantomjs.org/download.html)
+ * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
  *
  *
  * ## Status
  *
  * * Maintainer: **davert**
- * * Stability: **beta**
+ * * Stability: **stable**
  * * Contact: davert.codecept@mailican.com
  * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
+ *
  * ## Configuration
  *
- * * url *required* - start url for your app
- * * browser *required* - browser that would be launched
- * * host  - Selenium server host (127.0.0.1 by default)
- * * port - Selenium server port (4444 by default)
- * * restart - set to false (default) to share selenium sesssion between tests, or set to true to create a new selenium session per test
- * * clear_cookies - set to false to keep cookies, or set to true (default) to delete all cookies between cases.
- * * wait - set the implicit wait (0 secs) by default.
- * * capabilities - sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * url *required* - Starting URL for your app.
+ * * browser *required* - Browser to launch.
+ * * host - Selenium server host (127.0.0.1 by default).
+ * * port - Selenium server port (4444 by default).
+ * * restart - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
+ * * window_size - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
+ * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
+ * * wait - Implicit wait (default 0 seconds).
+ * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -53,23 +60,55 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  *           WebDriver:
  *              url: 'http://localhost/'
  *              browser: firefox
+ *              window_size: 1024x768
  *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
+ *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64' 
  *
  *
- * Class WebDriver
- * @package Codeception\Module
+ * ## Locating Elements
+ * 
+ * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
+ * 
+ * If the locator is an array, it should have a single element, with the key signifying the locator type (`id`, `name`, `css`, `xpath`, `link`, or `class`) and the value being the locator itself. This is called a "strict" locator. Examples:
+ * 
+ * * `['id' => 'foo']` matches `<div id="foo">`
+ * * `['name' => 'foo']` matches `<div name="foo">`
+ * * `['css' => 'input[type=input][value=foo]']` matches `<input type="input" value="foo">`
+ * * `['xpath' => "//input[@type='submit'][contains(@value, 'foo')]"]` matches `<input type="submit" value="foobar">`
+ * * `['link' => 'Click here']` matches `<a href="google.com">Click here</a>`
+ * * `['class' => 'foo']` matches `<div class="foo">`
+ * 
+ * Writing good locators can be tricky. The Mozilla team has written an excellent guide titled [Writing reliable locators for Selenium and WebDriver tests](https://blog.mozilla.org/webqa/2013/09/26/writing-reliable-locators-for-selenium-and-webdriver-tests/).
+ * 
+ * If you prefer, you may also pass a string for the locator. This is called a "fuzzy" locator. In this case, Codeception uses a a variety of heuristics (depending on the exact method called) to determine what element you're referring to. For example, here's the heuristic used for the `submitForm` method:
+ * 
+ * 1. Does the locator look like an ID selector (e.g. "#foo")? If so, try to find a form matching that ID.
+ * 2. If nothing found, check if locator looks like a CSS selector. If so, run it.
+ * 3. If nothing found, check if locator looks like an XPath expression. If so, run it.
+ * 4. Throw an `ElementNotFound` exception.
+ * 
+ * Be warned that fuzzy locators can be significantly slower than strict locators. If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
+ *
+ * ## Migration Guide (Selenium2 -> WebDriver)
+ *
+ * * `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+ *
+ *
+ * # Methods
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface {
+class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface
+{
 
     protected $requiredFields = array('browser', 'url');
     protected $config = array(
         'host' => '127.0.0.1',
         'port' => '4444',
         'restart' => false,
-        'clear_cookies' => true,
         'wait' => 0,
+        'clear_cookies' => true,
+        'window_size' => false,
         'capabilities' => array()
     );
 
@@ -84,11 +123,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _initialize()
     {
-        $this->wd_host =  sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
+        $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->loadFirefoxProfile();
         $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        $this->initialWindowSize();
     }
 
     public function _before(\Codeception\TestCase $test)
@@ -96,7 +137,32 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         if (!isset($this->webDriver)) {
             $this->_initialize();
         }
-        $this->test=$test;
+    }
+
+    protected function loadFirefoxProfile()
+    {
+        if (!array_key_exists('firefox_profile', $this->config['capabilities'])) {
+            return;
+        }
+
+        $firefox_profile = $this->config['capabilities']['firefox_profile'];
+        if (file_exists($firefox_profile) === false) {
+            throw new ModuleConfigException(__CLASS__, "Firefox profile does not exists under given path " . $firefox_profile);
+        }
+        // Set firefox profile as capability
+        $this->capabilities['firefox_profile'] = file_get_contents($firefox_profile);
+    }
+
+    protected function initialWindowSize()
+    {
+        if ($this->config['window_size'] == 'maximize') {
+            $this->maximizeWindow();
+            return;
+        }
+        $size = explode('x', $this->config['window_size']);
+        if (count($size) == 2) {
+            $this->resizeWindow(intval($size[0]), intval($size[1]));
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
@@ -115,8 +181,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _failed(\Codeception\TestCase $test, $fail)
     {
-        $this->_saveScreenshot(\Codeception\Configuration::logDir().basename($test->getFileName()).'.fail.png');
-        $this->debug("Screenshot was saved into 'log' dir");
+        $filename = str_replace(['::', '\\', '/'],['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
+        $this->_saveScreenshot(codecept_output_dir().$filename.'.png');
+        file_put_contents(codecept_output_dir().$filename.'.html', $this->webDriver->getPageSource());
+        $this->debug("Screenshot and HTML snapshot were saved into '_output' dir");
     }
 
     public function _afterSuite()
@@ -126,12 +194,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $this->webDriver->quit();
             unset($this->webDriver);
         }
-    }
-
-    public function _getResponseCode() {}
-
-    public function _sendRequest($url) {
-        $this->webDriver->get($this->_getUrl().'');
     }
 
     public function amOnSubdomain($subdomain)
@@ -144,8 +206,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _getUrl()
     {
-        if (!isset($this->config['url']))
-            throw new \Codeception\Exception\ModuleConfig(__CLASS__, "Module connection failure. The URL for client can't bre retrieved");
+        if (!isset($this->config['url'])) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "Module connection failure. The URL for client can't bre retrieved"
+            );
+        }
         return $this->config['url'];
     }
 
@@ -153,11 +219,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $url = $this->webDriver->getCurrentURL();
         $parts = parse_url($url);
-        if (!$parts) $this->fail("URL couldn't be parsed");
+        if (!$parts) {
+            $this->fail("URL couldn't be parsed");
+        }
         $uri = "";
-        if (isset($parts['path'])) $uri .= $parts['path'];
-        if (isset($parts['query'])) $uri .= "?".$parts['query'];
-        if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
+        if (isset($parts['path'])) {
+            $uri .= $parts['path'];
+        }
+        if (isset($parts['query'])) {
+            $uri .= "?" . $parts['query'];
+        }
+        if (isset($parts['fragment'])) {
+            $uri .= "#" . $parts['fragment'];
+        }
         return $uri;
     }
 
@@ -167,13 +241,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Makes a screenshot of current window and saves it to `tests/_log/debug`.
+     * Takes a screenshot of the current window and saves it to `tests/_output/debug`.
      *
      * ``` php
      * <?php
      * $I->amOnPage('/user/edit');
-     * $I->makeScreenshot('edit page');
-     * // saved to: tests/_log/debug/UserEdit - edit page.png
+     * $I->makeScreenshot('edit_page');
+     * // saved to: tests/_output/debug/edit_page.png
      * ?>
      * ```
      *
@@ -181,92 +255,166 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function makeScreenshot($name)
     {
-        $debugDir = \Codeception\Configuration::logDir().'debug';
-        if (!is_dir($debugDir)) mkdir($debugDir, 0777);
-        $caseName = str_replace('Cept.php', '', $this->test->getFileName());
-        $caseName = str_replace('Cept.php', '', $caseName);
-        /**
-         * This is used for Cept only
-         *
-         * To be consistent with Cest, no sub-dir would be created, '\' and '/' in $caseName would be replaced with '.'
-         */
-        $search = array('/', '\\');
-        $replace = array('.', '.');
-        $caseName = str_replace($search, $replace, $caseName);
-
-        $screenName = $debugDir . DIRECTORY_SEPARATOR . $caseName.' - '.$name.'.png';
+        $debugDir = codecept_log_dir() . 'debug';
+        if (!is_dir($debugDir)) {
+            mkdir($debugDir, 0777);
+        }
+        $screenName = $debugDir . DIRECTORY_SEPARATOR . $name . '.png';
         $this->_saveScreenshot($screenName);
         $this->debug("Screenshot saved to $screenName");
     }
 
     /**
-     * Resize current window
+     * Resize the current window.
      *
-     * Example:
      * ``` php
      * <?php
      * $I->resizeWindow(800, 600);
      *
      * ```
      *
-     * @param int    $width
-     * @param int    $height
+     * @param int $width
+     * @param int $height
      */
-    public function resizeWindow($width, $height) {
+    public function resizeWindow($width, $height)
+    {
         $this->webDriver->manage()->window()->setSize(new \WebDriverDimension($width, $height));
     }
 
-    public function seeCookie($cookie)
+    public function seeCookie($cookie, array $params = [])
     {
-        $cookies = $this->webDriver->manage()->getCookies();
-        $cookies = array_map(function($c) { return $c['name']; }, $cookies);
+        $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
+        $cookies = array_map(function ($c) { return $c['name']; }, $cookies);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
         $this->assertContains($cookie, $cookies);
     }
 
-    public function dontSeeCookie($cookie)
+    public function dontSeeCookie($cookie, array $params = [])
     {
+        $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
+        $cookies = array_map(function ($c) { return $c['name']; }, $cookies);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
-        $this->assertNull($this->webDriver->manage()->getCookieNamed($cookie));
+        $this->assertNotContains($cookie, $cookies);
     }
 
-    public function setCookie($cookie, $value)
+    public function setCookie($cookie, $value, array $params = [])
     {
-        $this->webDriver->manage()->addCookie(array('name' => $cookie, 'value' => $value));
+        $params['name'] = $cookie;
+        $params['value'] = $value;
+        $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
-    public function resetCookie($cookie)
+    public function resetCookie($cookie, array $params = [])
     {
         $this->webDriver->manage()->deleteCookieNamed($cookie);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
 
-    public function grabCookie($cookie)
+    public function grabCookie($cookie, array $params = [])
     {
-        $value = $this->webDriver->manage()->getCookieNamed($cookie);
-        if (is_array($value)) return $value['value'];
+        $params['name'] = $cookie;
+        $cookies = $this->filterCookies($this->webDriver->manage()->getCookies(), $params);
+        if (empty($cookies)) {
+            return null;
+        }
+        $cookie = reset($cookies);
+        return $cookie['value'];
+    }
+
+    protected function filterCookies($cookies, $params = [])
+    {
+        foreach (['domain' ,'path', 'name'] as $filter) {
+            if (!isset($params[$filter])) continue;
+            $cookies = array_filter($cookies, function ($item) use ($filter, $params) {
+                return $item[$filter] == $params[$filter];
+            });
+        }
+        return $cookies;
+    }
+
+    public function amOnUrl($url)
+    {
+        $urlParts = parse_url($url);
+        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
+            throw new TestRuntime("Wrong URL passes, host and scheme not set");
+        }
+        $host = $urlParts['scheme'].'://'.$urlParts['host'];
+        $this->_reconfigure(['url' => $host]);
+        $this->debugSection('Host', $host);
+        $this->webDriver->get($url);
     }
 
     public function amOnPage($page)
     {
-        $host = rtrim($this->config['url'], '/');
-        $page = ltrim($page, '/');
-        $this->webDriver->get($host . '/' . $page);
+        $build = parse_url($this->config['url']);
+        $uriparts = parse_url($page);
+        
+        if ($build === false) {
+            throw new \Codeception\Exception\TestRuntime("URL '{$this->config['url']}' is malformed");
+        } elseif ($uriparts === false) {
+            throw new \Codeception\Exception\TestRuntime("URI '{$page}' is malformed");
+        }
+        
+        foreach ($uriparts as $part => $value) {
+            if ($part === 'path' && !empty($build[$part])) {
+                $build[$part] = rtrim($build[$part], '/') . '/' . ltrim($value, '/');
+            } else {
+                $build[$part] = $value;
+            }
+        }
+        $this->webDriver->get(\GuzzleHttp\Url::buildUrl($build));
     }
 
     public function see($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageContains($text);
-        $nodes = $this->match($this->webDriver, $selector);
+        if (!$selector) {
+            return $this->assertPageContains($text);
+        }
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesContain($text, $nodes, $selector);
     }
 
     public function dontSee($text, $selector = null)
     {
-        if (!$selector) return $this->assertPageNotContains($text);
-        $nodes = $this->match($this->webDriver, $selector);
+        if (!$selector) {
+            return $this->assertPageNotContains($text);
+        }
+        $nodes = $this->matchVisible($selector);
         $this->assertNodesNotContain($text, $nodes, $selector);
+    }
+
+    /**
+     * Checks that the page source contains the given string.
+     *
+     * ```php
+     * <?php
+     * $I->seeInPageSource('<link rel="apple-touch-icon"');
+     * ```
+     *
+     * @param $text
+     */
+    public function seeInPageSource($text)
+    {
+        $this->assertThat(
+            $this->webDriver->getPageSource(),
+            new PageConstraint($text, $this->_getCurrentUri()),
+            ''
+        );
+    }
+
+    /**
+     * Checks that the page source doesn't contain the given string.
+     *
+     * @param $text
+     */
+    public function dontSeeInPageSource($text)
+    {
+        $this->assertThatItsNot(
+            $this->webDriver->getPageSource(),
+            new PageConstraint($text, $this->_getCurrentUri()),
+            ''
+        );
     }
 
     public function click($link, $context = null)
@@ -274,7 +422,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $page = $this->webDriver;
         if ($context) {
             $nodes = $this->match($this->webDriver, $context);
-            if (empty($nodes)) throw new ElementNotFound($context,'CSS or XPath');
+            if (empty($nodes)) {
+                throw new ElementNotFound($context, 'CSS or XPath');
+            }
             $page = reset($nodes);
         }
         $el = $this->findClickable($page, $link);
@@ -282,7 +432,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $els = $this->match($page, $link);
             $el = reset($els);
         }
-        if (!$el) throw new ElementNotFound($link, 'Link or Button or CSS or XPath');
+        if (!$el) {
+            throw new ElementNotFound($link, 'Link or Button or CSS or XPath');
+        }
         $el->click();
     }
 
@@ -293,6 +445,16 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findClickable($page, $link)
     {
+        if (is_array($link) or ($link instanceof \WebDriverBy)) {
+            return $this->matchFirstOrFail($page, $link);
+        }
+
+        // try to match by CSS or XPath
+        $els = $this->match($page, $link);
+        if (!empty($els)) {
+            return reset($els);
+        }
+
         $locator = Crawler::xpathLiteral(trim($link));
 
         // narrow
@@ -304,10 +466,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         );
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
+        if (count($els)) {
+            return reset($els);
+        }
 
         // wide
-
         $xpath = Locator::combine(
             ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
@@ -318,13 +481,58 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         );
 
         $els = $page->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
+        if (count($els)) {
+            return reset($els);
+        }
 
-        $els = $page->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
         return null;
     }
 
+    /**
+     * @param $selector
+     * @return \WebDriverElement[]
+     * @throws \Codeception\Exception\ElementNotFound
+     */
+    protected function findFields($selector)
+    {
+        if ($selector instanceof \WebDriverElement) {
+            return [$selector];
+        }
+        if (is_array($selector) || ($selector instanceof \WebDriverBy)) {
+            $fields = $this->match($this->webDriver, $selector);
+            if (empty($fields)) {
+                throw new ElementNotFound($selector);
+            }
+            return $fields;
+        }
+
+        $locator = Crawler::xpathLiteral(trim($selector));
+        // by text or label
+        $xpath = Locator::combine(
+            ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
+            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
+        );
+        $fields = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (!empty($fields)) {
+            return $fields;
+        }
+
+        // by name
+        $xpath = ".//*[self::input | self::textarea | self::select][@name = $locator]";
+        $fields = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
+        if (!empty($fields)) {
+            return $fields;
+        }
+
+        // try to match by CSS or XPath
+        $fields = $this->match($this->webDriver, $selector);
+        if (!empty($fields)) {
+            return $fields;
+        }
+
+        throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
+    }
+    
     /**
      * @param $selector
      * @return \WebDriverElement
@@ -332,41 +540,16 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findField($selector)
     {
-        if ($selector instanceof \WebDriverElement) return $selector;
-        $locator = Crawler::xpathLiteral(trim($selector));
-
-        // by text or label
-        $xpath = Locator::combine(
-            ".//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')][(((./@name = $locator) or ./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator)]",
-            ".//label[contains(normalize-space(string(.)), $locator)]//.//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]"
-        );
-        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
-
-        // by name
-        $xpath = ".//*[self::input | self::textarea | self::select][@name = $locator]";
-        $els = $this->webDriver->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
-
-        $els = $this->match($this->webDriver, $selector);
-        if (count($els)) return reset($els);
-
-        throw new ElementNotFound($selector, "Field by name, label, CSS or XPath");
+        $arr = $this->findFields($selector);
+        return reset($arr);
     }
 
     public function seeLink($text, $url = null)
     {
         $nodes = $this->webDriver->findElements(\WebDriverBy::partialLinkText($text));
-        if (!$url) return $this->assertNodesContain($text, $nodes, 'a');
-        $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
-                $parts = parse_url($url);
-                if (!$parts) $this->fail("Link URL of '$url' couldn't be parsed");
-                $uri = "";
-                if (isset($parts['path'])) $uri .= $parts['path'];
-                if (isset($parts['query'])) $uri .= "?".$parts['query'];
-                if (isset($parts['fragment'])) $uri .= "#".$parts['fragment'];
-                return $uri == trim($url);
-        });
+        if (!$url) {
+            return $this->assertNodesContain($text, $nodes, 'a');
+        }
         $this->assertNodesContain($text, $nodes, "a[href=$url]");
     }
 
@@ -378,10 +561,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $this->assertNodesNotContain($text, $nodes, 'a');
             return;
         }
-        $nodes = array_filter($nodes, function(\WebDriverElement $e) use ($url) {
-            return trim($e->getAttribute('href')) == trim($url);
-        });
-        $this->assertNodesNotContain($text, $nodes,  "a[href=$url]");
+        $nodes = array_filter(
+            $nodes,
+            function (\WebDriverElement $e) use ($url) {
+                return trim($e->getAttribute('href')) == trim($url);
+            }
+        );
+        $this->assertNodesNotContain($text, $nodes, "a[href=$url]");
     }
 
     public function seeInCurrentUrl($uri)
@@ -421,8 +607,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
         $matches = array();
         $res = preg_match($uri, $this->_getCurrentUri(), $matches);
-        if (!$res) $this->fail("Couldn't match $uri in ".$this->_getCurrentUri());
-        if (!isset($matches[1])) $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        if (!$res) {
+            $this->fail("Couldn't match $uri in " . $this->_getCurrentUri());
+        }
+        if (!isset($matches[1])) {
+            $this->fail("Nothing to grab. A regex parameter required. Ex: '/user/(\\d+)'");
+        }
         return $matches[1];
     }
 
@@ -438,21 +628,91 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function seeInField($field, $value)
     {
-        $el = $this->findField($field);
-        if (!$el) throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
-        $el_value = $el->getTagName() == 'textarea'
-            ? $el->getText()
-            : $el->getAttribute('value');
-        $this->assertEquals($value, $el_value);
+        $els = $this->findFields($field);
+        $this->assert($this->proceedSeeInField($els, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $el = $this->findField($field);
-        $el_value = $el->getTagName() == 'textarea'
-            ? $el->getText()
-            : $el->getAttribute('value');
-        $this->assertNotEquals($value, $el_value);
+        $els = $this->findFields($field);
+        $this->assertNot($this->proceedSeeInField($els, $value));
+    }
+    
+    public function seeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, false);
+    }
+    
+    public function dontSeeInFormFields($formSelector, array $params)
+    {
+        $this->proceedSeeInFormFields($formSelector, $params, true);
+    }
+    
+    protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
+    {
+        $form = $this->match($this->webDriver, $formSelector);
+        if (empty($form)) {
+            throw new ElementNotFound($formSelector, "Form via CSS or XPath");
+        }
+        $form = reset($form);
+        foreach ($params as $name => $values) {
+            $els = $form->findElements(\WebDriverBy::name($name));
+            if (empty($els)) {
+                throw new ElementNotFound($name);
+            }
+            if (!is_array($values)) {
+                $values = [$values];
+            }
+            foreach ($values as $value) {
+                $ret = $this->proceedSeeInField($els, $value);
+                if ($assertNot) {
+                    $this->assertNot($ret);
+                } else {
+                    $this->assert($ret);
+                }
+            }
+        }
+    }
+    
+    protected function proceedSeeInField(array $elements, $value)
+    {
+        $strField = reset($elements)->getAttribute('name');
+        if (reset($elements)->getTagName() === 'select') {
+            $el = reset($elements);
+            $elements = $el->findElements(\WebDriverBy::xpath('.//option[@selected]'));
+            if (empty($value) && empty($elements)) {
+                return ['True', true];
+            }
+        }
+        
+        $currentValues = [];
+        if (is_bool($value)) {
+            $currentValues = [false];
+        }
+
+        foreach ($elements as $el) {
+            if ($el->getTagName() === 'textarea') {
+                $currentValues[] = $el->getText();
+            } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
+                if ($el->getAttribute('checked')) {
+                    if (is_bool($value)) {
+                        $currentValues = [true];
+                        break;
+                    } else {
+                        $currentValues[] = $el->getAttribute('value');
+                    }
+                }
+            } else {
+                $currentValues[] = $el->getAttribute('value');
+            }
+        }
+        
+        return [
+            'Contains',
+            $value,
+            $currentValues,
+            "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
+        ];
     }
 
     public function selectOption($select, $option)
@@ -463,9 +723,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             $radio = null;
             foreach ($els as $el) {
                 $radio = $this->findCheckable($el, $option, true);
-                if ($radio) break;
+                if ($radio) {
+                    break;
+                }
             }
-            if (!$radio) throw new ElementNotFound($select, "Radiobutton with value or name '$option in");
+            if (!$radio) {
+                throw new ElementNotFound($select, "Radiobutton with value or name '$option in");
+            }
             $radio->click();
             return;
         }
@@ -484,43 +748,76 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 $wdSelect->selectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementException $e) {}
+            } catch (\NoSuchElementException $e) {
+            }
         }
-        if ($matched) return;
+        if ($matched) {
+            return;
+        }
         foreach ($option as $opt) {
             try {
                 $wdSelect->selectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementException $e) {}
+            } catch (\NoSuchElementException $e) {
+            }
         }
-        if ($matched) return;
+        if ($matched) {
+            return;
+        }
 
         // partially matching
         foreach ($option as $opt) {
             try {
-                $optElement = $el->findElement(\WebDriverBy::xpath('//option [contains (., "'.$opt.'")]'));
+                $optElement = $el->findElement(\WebDriverBy::xpath('//option [contains (., "' . $opt . '")]'));
                 $matched = true;
                 if (!$optElement->isSelected()) {
                     $optElement->click();
                 }
-            } catch (\NoSuchElementException $e) {}
+            } catch (\NoSuchElementException $e) {
+            }
         }
-        if ($matched) return;
+        if ($matched) {
+            return;
+        }
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
 
-    /*
-    * Unselect an option in a select box
-    *
-    */
+    public function _initializeSession()
+    {
+        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+    }
 
+    public function _loadSessionData($data)
+    {
+        $this->webDriver = $data;
+    }
+
+    public function _backupSessionData()
+    {
+        return $this->webDriver;
+    }
+
+    public function _closeSession($webdriver)
+    {
+        $webdriver->close();
+    }
+
+    /*
+     * Unselect an option in the given select box.
+     *
+     * @param $select
+     * @param $option
+     */
     public function unselectOption($select, $option)
     {
         $el = $this->findField($select);
 
         $wdSelect = new \WebDriverSelect($el);
 
-        if (!is_array($option)) $option = array($option);
+        if (!is_array($option)) {
+            $option = array($option);
+        }
 
         $matched = false;
 
@@ -528,18 +825,23 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 $wdSelect->deselectByVisibleText($opt);
                 $matched = true;
-            } catch (\NoSuchElementException $e) {}
+            } catch (\NoSuchElementException $e) {
+            }
 
             try {
                 $wdSelect->deselectByValue($opt);
                 $matched = true;
-            } catch (\NoSuchElementException $e) {}
+            } catch (\NoSuchElementException $e) {
+            }
 
         }
 
-        if ($matched) return;
+        if ($matched) {
+            return;
+        }
         throw new ElementNotFound(json_encode($option), "Option inside $select matched by name or value");
     }
+
     /**
      * @param $context
      * @param $radio_or_checkbox
@@ -548,50 +850,83 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     protected function findCheckable($context, $radio_or_checkbox, $byValue = false)
     {
-        if ($radio_or_checkbox instanceof \WebDriverElement) return $radio_or_checkbox;
+        if ($radio_or_checkbox instanceof \WebDriverElement) {
+            return $radio_or_checkbox;
+        }
+        if (is_array($radio_or_checkbox) or ($radio_or_checkbox instanceof \WebDriverBy)) {
+            return $this->matchFirstOrFail($this->webDriver, $radio_or_checkbox);
+        }
 
         $locator = Crawler::xpathLiteral($radio_or_checkbox);
-        $xpath = Locator::combine(
-            "//input[./@type = 'checkbox'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
-            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'checkbox']",
-            "//input[./@type = 'radio'][(./@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or ./@placeholder = $locator]",
-            "//label[contains(normalize-space(string(.)), $locator)]//.//input[./@type = 'radio']"
-        );
-        if ($byValue) {
+        if ($context instanceof \WebDriverElement && $context->getTagName() === 'input') {
+            $contextType = $context->getAttribute('type');
+            if (!in_array($contextType, ['checkbox', 'radio'], true)) {
+                return null;
+            }
+            $nameLiteral = Crawler::xPathLiteral($context->getAttribute('name'));
+            $typeLiteral = Crawler::xPathLiteral($contextType);
+            $inputLocatorFragment = "input[@type = $typeLiteral][@name = $nameLiteral]";
             $xpath = Locator::combine(
-                $xpath,
-                "//input[./@type = 'checkbox'][./@value = $locator]",
-                "//input[./@type = 'radio'][./@value = $locator]"
+                "ancestor::form//{$inputLocatorFragment}[(@id = ancestor::form//label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
+                "ancestor::form//label[contains(normalize-space(string(.)), $locator)]//{$inputLocatorFragment}"
             );
+            if ($byValue) {
+                $xpath = Locator::combine($xpath, "ancestor::form//{$inputLocatorFragment}[@value = $locator]");
+            }
+        } else {
+            $xpath = Locator::combine(
+                "//input[@type = 'checkbox' or @type = 'radio'][(@id = //label[contains(normalize-space(string(.)), $locator)]/@for) or @placeholder = $locator]",
+                "//label[contains(normalize-space(string(.)), $locator)]//input[@type = 'radio' or @type = 'checkbox']"
+            );
+            if ($byValue) {
+                $xpath = Locator::combine($xpath, "//input[@type = 'checkbox' or @type = 'radio'][@value = $locator]");
+            }
         }
-        /** @var $context \WebDriverElement  **/
         $els = $context->findElements(\WebDriverBy::xpath($xpath));
-        if (count($els)) return reset($els);
+        if (count($els)) {
+            return reset($els);
+        }
+        $els = $context->findElements(\WebDriverBy::xpath(str_replace('ancestor::form', '', $xpath)));
+        if (count($els)) {
+            return reset($els);
+        }
         $els = $this->match($context, $radio_or_checkbox);
-        if (count($els)) return reset($els);
+        if (count($els)) {
+            return reset($els);
+        }
         return null;
     }
 
     protected function matchCheckables($selector)
     {
         $els = $this->match($this->webDriver, $selector);
-        if (!count($els)) throw new ElementNotFound($selector, "Element containing radio by CSS or XPath");
+        if (!count($els)) {
+            throw new ElementNotFound($selector, "Element containing radio by CSS or XPath");
+        }
         return $els;
     }
 
     public function checkOption($option)
     {
         $field = $this->findCheckable($this->webDriver, $option);
-        if (!$field) throw new ElementNotFound($option, "Checkbox or Radio by Label or CSS or XPath");
-        if ($field->isSelected()) return;
+        if (!$field) {
+            throw new ElementNotFound($option, "Checkbox or Radio by Label or CSS or XPath");
+        }
+        if ($field->isSelected()) {
+            return;
+        }
         $field->click();
     }
 
     public function uncheckOption($option)
     {
         $field = $this->findCheckable($this->webDriver, $option);
-        if (!$field) throw new ElementNotFound($option, "Checkbox by Label or CSS or XPath");
-        if (!$field->isSelected()) return;
+        if (!$field) {
+            throw new ElementNotFound($option, "Checkbox by Label or CSS or XPath");
+        }
+        if (!$field->isSelected()) {
+            return;
+        }
         $field->click();
     }
 
@@ -599,25 +934,53 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     {
         $el = $this->findField($field);
         $el->clear();
-        $el->sendKeys((string) $value);
+        $el->sendKeys($value);
     }
 
     public function attachFile($field, $filename)
     {
         $el = $this->findField($field);
         // in order to be compatible on different OS
-        $filePath = realpath(\Codeception\Configuration::dataDir().$filename);
+        $filePath = realpath(\Codeception\Configuration::dataDir() . $filename);
+        if (!is_readable($filePath)) {
+            throw new \InvalidArgumentException("file not found or not readable: $filePath");
+        }
         // in order for remote upload to be enabled
         $el->setFileDetector(new \LocalFileDetector);
         $el->sendKeys($filePath);
     }
 
+    /**
+     * Grabs all visible text from the current page.
+     *
+     * @return string
+     */
+    public function getVisibleText()
+    {
+        $els = $this->webDriver->findElements(\WebDriverBy::cssSelector('body'));
+        if (count($els)) {
+            return $els[0]->getText();
+        }
+
+        return "";
+    }
+
     public function grabTextFrom($cssOrXPathOrRegex)
     {
         $els = $this->match($this->webDriver, $cssOrXPathOrRegex);
-        if (count($els)) return $els[0]->getText();
-        if (@preg_match($cssOrXPathOrRegex, $this->webDriver->getPageSource(), $matches)) return $matches[1];
+        if (count($els)) {
+            return $els[0]->getText();
+        }
+        if (@preg_match($cssOrXPathOrRegex, $this->webDriver->getPageSource(), $matches)) {
+            return $matches[1];
+        }
         throw new ElementNotFound($cssOrXPathOrRegex, 'CSS or XPath or Regex');
+    }
+
+    public function grabAttributeFrom($cssOrXpath, $attribute)
+    {
+        $el = $this->matchFirstOrFail($this->webDriver, $cssOrXpath);
+        return $el->getAttribute($attribute);
     }
 
     public function grabValueFrom($field)
@@ -631,47 +994,36 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return $el->getAttribute('value');
     }
 
-    /**
-     * Checks for a visible element on a page, matching it by CSS or XPath
-     *
-     * ``` php
-     * <?php
-     * $I->seeElement('.error');
-     * $I->seeElement('//form/input[1]');
-     * ?>
-     * ```
-     * @param $selector
-     */
-    public function seeElement($selector)
+
+    protected function filterByAttributes($els, array $attributes)
     {
-        $els = array_filter($this->match($this->webDriver, $selector), function(\WebDriverElement $el) {
-            return $el->isDisplayed();
-        });
+        foreach ($attributes as $attr => $value) {
+            $els = array_filter(
+                $els,
+                function (\WebDriverElement $el) use ($attr, $value) {
+                    return $el->getAttribute($attr) == $value;
+                }
+            );
+        }
+        return $els;
+    }
+
+    public function seeElement($selector, $attributes = array())
+    {
+        $els = $this->matchVisible($selector);
+        $els = $this->filterByAttributes($els, $attributes);
         $this->assertNotEmpty($els);
     }
 
-    /**
-     * Checks that element is invisible or not present on page.
-     *
-     * ``` php
-     * <?php
-     * $I->dontSeeElement('.error');
-     * $I->dontSeeElement('//form/input[1]');
-     * ?>
-     * ```
-     *
-     * @param $selector
-     */
-    public function dontSeeElement($selector)
+    public function dontSeeElement($selector, $attributes = array())
     {
-        $els = array_filter($this->match($this->webDriver, $selector), function(\WebDriverElement $el) {
-            return $el->isDisplayed();
-        });
+        $els = $this->matchVisible($selector);
+        $els = $this->filterByAttributes($els, $attributes);
         $this->assertEmpty($els);
     }
 
     /**
-     * Checks if element exists on a page even it is invisible.
+     * Checks that the given element exists on the page, even it is invisible.
      *
      * ``` php
      * <?php
@@ -681,20 +1033,42 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param $selector
      */
-    public function seeElementInDOM($selector)
+    public function seeElementInDOM($selector, $attributes = array())
     {
-        $this->assertNotEmpty($this->match($this->webDriver, $selector));
+        $els = $this->match($this->webDriver, $selector);
+        $els = $this->filterByAttributes($els, $attributes);
+        $this->assertNotEmpty($els);
     }
 
 
     /**
-     * Opposite to `seeElementInDOM`.
+     * Opposite of `seeElementInDOM`.
      *
      * @param $selector
      */
-    public function dontSeeElementInDOM($selector)
+    public function dontSeeElementInDOM($selector, $attributes = array())
     {
-        $this->assertEmpty($this->match($this->webDriver, $selector));
+        $els = $this->match($this->webDriver, $selector);
+        $els = $this->filterByAttributes($els, $attributes);
+        $this->assertEmpty($els);
+    }
+
+    public function seeNumberOfElements($selector, $expected)
+    {
+        $counted = count($this->match($this->webDriver, $selector));
+        if (is_array($expected)) {
+            list($floor, $ceil) = $expected;
+            $this->assertTrue(
+                $floor <= $counted && $ceil >= $counted,
+                'Number of elements counted differs from expected range'
+            );
+        } else {
+            $this->assertEquals(
+                $expected,
+                $counted,
+                'Number of elements counted differs from expected number'
+            );
+        }
     }
 
     public function seeOptionIsSelected($selector, $optionText)
@@ -705,7 +1079,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             foreach ($els as $k => $el) {
                 $els[$k] = $this->findCheckable($el, $optionText, true);
             }
-            $this->assertNotEmpty(array_filter($els, function($e) { return $e->isSelected(); }));
+            $this->assertNotEmpty(
+                array_filter(
+                    $els,
+                    function ($e) {
+                        return $e && $e->isSelected();
+                    }
+                )
+            );
             return;
         }
         $select = new \WebDriverSelect($el);
@@ -721,7 +1102,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             foreach ($els as $k => $el) {
                 $els[$k] = $this->findCheckable($el, $optionText, true);
             }
-            $this->assertEmpty(array_filter($els, function($e) { return $e->isSelected(); }));
+            $this->assertEmpty(
+                array_filter(
+                    $els,
+                    function ($e) {
+                        return $e && $e->isSelected();
+                    }
+                )
+            );
             return;
         }
         $select = new \WebDriverSelect($el);
@@ -739,9 +1127,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Accepts JavaScript native popup window created by `window.alert`|`window.confirm`|`window.prompt`.
-     * Don't confuse it with modal windows, created by [various libraries](http://jster.net/category/windows-modals-popups).
-     *
+     * Accepts the active JavaScript native popup window, as created by `window.alert`|`window.confirm`|`window.prompt`.
+     * Don't confuse popups with modal windows, as created by [various libraries](http://jster.net/category/windows-modals-popups).
      */
     public function acceptPopup()
     {
@@ -749,7 +1136,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Dismisses active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt`.
+     * Dismisses the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`.
      */
     public function cancelPopup()
     {
@@ -757,7 +1144,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Checks that active JavaScript popup created by `window.alert`|`window.confirm`|`window.prompt` contain text.
+     * Checks that the active JavaScript popup, as created by `window.alert`|`window.confirm`|`window.prompt`, contains the given string.
      *
      * @param $text
      */
@@ -767,7 +1154,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Enters text into native JavaScript prompt popup created by `window.prompt`.
+     * Enters text into a native JavaScript prompt popup, as created by `window.prompt`.
      *
      * @param $keys
      */
@@ -777,44 +1164,63 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Reloads current page
+     * Reloads the current page.
      */
-    public function reloadPage() {
+    public function reloadPage()
+    {
         $this->webDriver->navigate()->refresh();
     }
 
     /**
-     * Moves back in history
+     * Moves back in history.
      */
-    public function moveBack() {
+    public function moveBack()
+    {
         $this->webDriver->navigate()->back();
         $this->debug($this->_getCurrentUri());
     }
 
     /**
-     * Moves forward in history
+     * Moves forward in history.
      */
-    public function moveForward() {
+    public function moveForward()
+    {
         $this->webDriver->navigate()->forward();
         $this->debug($this->_getCurrentUri());
     }
 
+    protected function getSubmissionFormFieldName($name)
+    {
+        if (substr($name, -2) === '[]') {
+            return substr($name, 0, -2);
+        }
+        return $name;
+    }
+
     /**
-     * Submits a form located on page.
-     * Specify the form by it's css or xpath selector.
-     * Fill the form fields values as array. Hidden fields can't be accessed.
+     * Submits the given form on the page, optionally with the given form values.
+     * Give the form fields values as an array. Note that hidden fields can't be accessed.
      *
+     * Skipped fields will be filled by their values from the page.
+     * You don't need to click the 'Submit' button afterwards.
      * This command itself triggers the request to form's action.
      *
+     * You can optionally specify what button's value to include
+     * in the request with the last parameter as an alternative to
+     * explicitly setting its value in the second parameter, as
+     * button values are not otherwise included in the request.
+     * 
      * Examples:
      *
      * ``` php
      * <?php
      * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     * // or
+     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
      *
      * ```
      *
-     * For sample Sign Up form:
+     * For example, given this sample "Sign Up" form:
      *
      * ``` html
      * <form action="/sign_up">
@@ -822,57 +1228,108 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *     Password: <input type="password" name="user[password]" /><br/>
      *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
      *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
-     *     <input type="submit" value="Submit" />
+     *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
      * ```
-     * You can write this:
+     *
+     * You could write the following to submit it:
      *
      * ``` php
      * <?php
-     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
      *
+     * ```
+     * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
+     * 
+     * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
+     * 
+     * ```php
+     * <?php
+     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
+     * 
      * ```
      *
      * @param $selector
      * @param $params
-     * @throws \Codeception\Exception\ElementNotFound
+     * @param $button
      */
-    public function submitForm($selector, $params)
+    public function submitForm($selector, array $params, $button = null)
     {
-        $form = $this->match($this->webDriver,$selector);
-        if (empty($form)) throw new ElementNotFound($selector, "Form via CSS or XPath");
+        $form = $this->match($this->webDriver, $selector);
+        if (empty($form)) {
+            throw new ElementNotFound($selector, "Form via CSS or XPath");
+        }
         $form = reset($form);
-        /** @var $form \WebDriverElement  **/
-        foreach ($params as $param => $value) {
-            if(!is_array($value) && !is_object($value)){
-                $value=(string)$value;
+        
+        $defaults = [];
+        $fields = $form->findElements(\WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]'));
+        foreach ($fields as $field) {
+            $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
+            if (!isset($params[$fieldName])) {
+                continue;
             }
-            $els = $form->findElements(\WebDriverBy::name($param));
-            $el = reset($els);
-            if (empty($el)) throw new ElementNotFound($param);
-            if ($el->getTagName() == 'textarea') $this->fillField($el, $value);
-            if ($el->getTagName() == 'select') $this->selectOption($el, $value);
-            if ($el->getTagName() == 'input') {
-                $type = $el->getAttribute('type');
-                if ($type == 'text'  or $type == 'password') $this->fillField($el, $value);
-                if ($type == 'radio' or $type == 'checkbox') {
-                    foreach ($els as $radio) {
-                        if ($radio->getAttribute('value') == $value) $this->checkOption($radio);
+            $value = $params[$fieldName];
+            if (is_array($value) && $field->getTagName() !== 'select') {
+                if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                    $found = false;
+                    foreach ($value as $index => $val) {
+                        if (!is_bool($val) && $val === $field->getAttribute('value')) {
+                            array_splice($params[$fieldName], $index, 1);
+                            $value = $val;
+                            $found = true;
+                            break;
+                        }
                     }
+                    if (!$found && !empty($value) && is_bool(reset($value))) {
+                        $value = array_pop($params[$fieldName]);
+                    }
+                } else {
+                    $value = array_pop($params[$fieldName]);
                 }
             }
+            
+            if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
+                if ($value === true || $value === $field->getAttribute('value')) {
+                    $this->checkOption($field);
+                } else {
+                    $this->uncheckOption($field);
+                }
+            } elseif ($field->getAttribute('type') === 'button' || $field->getAttribute('type') === 'submit') {
+                continue;
+            } elseif ($field->getTagName() === 'select') {
+                $this->selectOption($field, $value);
+            } else {
+                $this->fillField($field, $value);
+            }
         }
-        $this->debugSection('Uri', $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri());
+        
+        $this->debugSection(
+            'Uri',
+            $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri()
+        );
         $this->debugSection('Method', $form->getAttribute('method') ? $form->getAttribute('method') : 'GET');
         $this->debugSection('Parameters', json_encode($params));
 
-        $form->submit();
+        $submitted = false;
+        if (!empty($button)) {
+            $els = $form->findElements(\WebDriverBy::name($button));
+            if (!empty($els)) {
+                $el = reset($els);
+                $el->click();
+                $submitted = true;
+            }
+        }
+        
+        if (!$submitted) {
+            $form->submit();
+        }
+        
         $this->debugSection('Page', $this->_getCurrentUri());
     }
 
     /**
-     * Waits for element to change or for $timeout seconds to pass. Element "change" is determined
-     * by a callback function which is called repeatedly until the return value evaluates to true.
+     * Waits up to $timeout seconds for the given element to change.
+     * Element "change" is determined by a callback function which is called repeatedly until the return value evaluates to true.
      *
      * ``` php
      * <?php
@@ -890,17 +1347,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
         $els = $this->match($this->webDriver, $element);
-        if (!count($els)) throw new ElementNotFound($element, "CSS or XPath");
+        if (!count($els)) {
+            throw new ElementNotFound($element, "CSS or XPath");
+        }
         $el = reset($els);
-        $checker = function() use ($el, $callback) {
+        $checker = function () use ($el, $callback) {
             return $callback($el);
         };
         $this->webDriver->wait($timeout)->until($checker);
     }
 
     /**
-     * Waits for element to appear on page for $timeout seconds to pass.
-     * If element not appears, timeout exception is thrown.
+     * Waits up to $timeout seconds for an element to appear on the page.
+     * If the element doesn't appear, a timeout exception is thrown.
      *
      * ``` php
      * <?php
@@ -915,18 +1374,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElement($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::id(substr($element, 1)));
-        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::cssSelector($element));
-        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::presenceOfElementLocated(\WebDriverBy::xpath($element));
-        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
-
+        $condition = \WebDriverExpectedCondition::presenceOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
-    
+
     /**
-     * Waits for element to be visible on the page for $timeout seconds to pass.
-     * If element doesn't appear, timeout exception is thrown.
+     * Waits up to $timeout seconds for the given element to be visible on the page.
+     * If element doesn't appear, a timeout exception is thrown.
      *
      * ``` php
      * <?php
@@ -941,18 +1395,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElementVisible($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::id(substr($element, 1)));
-        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::cssSelector($element));
-        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::visibilityOfElementLocated(\WebDriverBy::xpath($element));
-        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
-
+        $condition = \WebDriverExpectedCondition::visibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
-     * Waits for element to not be visible on the page for $timeout seconds to pass.
-     * If element stays visible, timeout exception is thrown.
+     * Waits up to $timeout seconds for the given element to become invisible.
+     * If element stays visible, a timeout exception is thrown.
      *
      * ``` php
      * <?php
@@ -966,19 +1415,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      */
     public function waitForElementNotVisible($element, $timeout = 10)
     {
-        $condition = null;
-        if (Locator::isID($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::id(substr($element, 1)));
-        if (!$condition and Locator::isCSS($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::cssSelector($element));
-        if (Locator::isXPath($element)) $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated(\WebDriverBy::xpath($element));
-        if (!$condition) throw new \Exception("Only CSS or XPath allowed");
-
+        $condition = \WebDriverExpectedCondition::invisibilityOfElementLocated($this->getLocator($element));
         $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
-     * Waits for text to appear on the page for a specific amount of time.
+     * Waits up to $timeout seconds for the given string to appear on the page.
      * Can also be passed a selector to search in.
-     * If text does not appear, timeout exception is thrown.
+     * If the given text doesn't appear, a timeout exception is thrown.
      *
      * ``` php
      * <?php
@@ -991,41 +1435,40 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * @param int $timeout seconds
      * @param null $selector
      * @throws \Exception
-     * @internal param string $element
      */
     public function waitForText($text, $timeout = 10, $selector = null)
     {
-        $condition = null;
         if (!$selector) {
             $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath('//body'), $text);
-        } else {
-            if (Locator::isID($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::id(substr($selector, 1)), $text);
-            if (!$condition and Locator::isCSS($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::cssSelector($selector), $text);
-            if (Locator::isXPath($selector)) $condition = \WebDriverExpectedCondition::textToBePresentInElement(\WebDriverBy::xpath($selector), $text);
-            if (!$condition) throw new \Exception("Only CSS or XPath allowed");
+            $this->webDriver->wait($timeout)->until($condition);
+            return;
         }
+
+        $condition = \WebDriverExpectedCondition::textToBePresentInElement($this->getLocator($selector), $text);
         $this->webDriver->wait($timeout)->until($condition);
     }
 
     /**
-     * Explicit wait.
+     * Wait for $timeout seconds.
      *
-     * @param $timeout int secs
+     * @param int $timeout secs
      * @throws \Codeception\Exception\TestRuntime
      */
     public function wait($timeout)
     {
         if ($timeout >= 1000) {
-            throw new TestRuntime("
+            throw new TestRuntime(
+                "
                 Waiting for more then 1000 seconds: 16.6667 mins\n
-                Please note that wait method accepts number of seconds as parameter.");
+                Please note that wait method accepts number of seconds as parameter."
+            );
         }
         sleep($timeout);
     }
 
     /**
      * Low-level API method.
-     * If Codeception commands are not enough, use Selenium WebDriver methods directly
+     * If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
      *
      * ``` php
      * $I->executeInSelenium(function(\WebDriver $webdriver) {
@@ -1033,9 +1476,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * });
      * ```
      *
-     * Use [WebDriver Session API](https://github.com/facebook/php-webdriver)
-     * Not recommended this command too be used on regular basis.
-     * If Codeception lacks important Selenium methods implement then and submit patches.
+     * This runs in the context of the [RemoteWebDriver class](https://github.com/facebook/php-webdriver/blob/master/lib/remote/RemoteWebDriver.php).
+     * Try not to use this command on a regular basis.
+     * If Codeception lacks a feature you need, please implement it and submit a patch.
      *
      * @param callable $function
      */
@@ -1045,9 +1488,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Switch to another window identified by its name.
+     * Switch to another window identified by name.
      *
-     * The window can only be identified by its name. If the $name parameter is blank it will switch to the parent window.
+     * The window can only be identified by name. If the $name parameter is blank, the parent window will be used.
      *
      * Example:
      * ``` html
@@ -1064,7 +1507,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ?>
      * ```
      *
-     * If the window has no name, the only way to access it is via the `executeInSelenium()` method like so:
+     * If the window has no name, the only way to access it is via the `executeInSelenium()` method, like so:
      *
      * ``` php
      * <?php
@@ -1078,12 +1521,13 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param string|null $name
      */
-    public function switchToWindow($name = null) {
+    public function switchToWindow($name = null)
+    {
         $this->webDriver->switchTo()->window($name);
     }
 
     /**
-     * Switch to another frame
+     * Switch to another frame on the page.
      *
      * Example:
      * ``` html
@@ -1102,18 +1546,19 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param string|null $name
      */
-    public function switchToIFrame($name = null) {
-    	if (is_null($name)) {
-    		$this->webDriver->switchTo()->defaultContent();
-    	} else {
-        	$this->webDriver->switchTo()->frame($name);	
-    	}
+    public function switchToIFrame($name = null)
+    {
+        if (is_null($name)) {
+            $this->webDriver->switchTo()->defaultContent();
+        } else {
+            $this->webDriver->switchTo()->frame($name);
+        }
     }
 
     /**
-     * Executes JavaScript and waits for it to return true or for the timeout.
+     * Executes JavaScript and waits up to $timeout seconds for it to return true.
      *
-     * In this example we will wait for all jQuery ajax requests are finished or 60 secs otherwise.
+     * In this example we will wait up to 60 seconds for all jQuery AJAX requests to finish.
      *
      * ``` php
      * <?php
@@ -1121,8 +1566,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ?>
      * ```
      *
-     * @param $script
-     * @param $timeout int seconds
+     * @param string $script
+     * @param int $timeout seconds
      */
     public function waitForJS($script, $timeout = 5)
     {
@@ -1134,7 +1579,15 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Executes custom JavaScript
+     * Executes custom JavaScript.
+     *
+     * This example uses jQuery to get a value and assigns that value to a PHP variable:
+     *
+     * ```php
+     * <?php
+     * $myVar = $I->executeJS('return $("#myField").val()');
+     * ?>
+     * ```
      *
      * @param $script
      * @return mixed
@@ -1145,7 +1598,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Maximizes current window
+     * Maximizes the current window.
      */
     public function maximizeWindow()
     {
@@ -1153,7 +1606,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Performs a simple mouse drag and drop operation.
+     * Performs a simple mouse drag-and-drop operation.
      *
      * ``` php
      * <?php
@@ -1174,16 +1627,21 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Move mouse over the first element matched by css or xPath on page
+     * Move mouse over the first element matched by the given locator.
+     * If the second and third parameters are given, then the mouse is moved to an offset of the element's top-left corner.
+     * Otherwise, the mouse is moved to the center of the element.
      *
-     * https://code.google.com/p/selenium/wiki/JsonWireProtocol#/session/:sessionId/moveto
+     * ``` php
+     * <?php
+     * $I->moveMouseOver(['css' => '.checkout'], 20, 50);
+     * ?>
+     * ```
      *
      * @param string $cssOrXPath css or xpath of the web element
      * @param int $offsetX
      * @param int $offsetY
      *
      * @throws \Codeception\Exception\ElementNotFound
-     * @return null
      */
     public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null)
     {
@@ -1192,7 +1650,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Performs contextual click with right mouse button on element matched by CSS or XPath.
+     * Performs contextual click with the right mouse button on an element.
      *
      * @param $cssOrXPath
      * @throws \Codeception\Exception\ElementNotFound
@@ -1207,7 +1665,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * Pauses test execution in debug mode.
      * To proceed test press "ENTER" in console.
      *
-     * This method is recommended to use in test development, for additional page analysis, locator searing, etc.
+     * This method is useful while writing tests, since it allows you to inspect the current page in the middle of a test case.
      */
     public function pauseExecution()
     {
@@ -1215,7 +1673,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Performs a double click on element matched by CSS or XPath.
+     * Performs a double-click on an element matched by CSS or XPath.
      *
      * @param $cssOrXPath
      * @throws \Codeception\Exception\ElementNotFound
@@ -1234,12 +1692,59 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     protected function match($page, $selector)
     {
         $nodes = array();
-        if (Locator::isID($selector)) $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
-        if (!empty($nodes)) return $nodes;
-        if (Locator::isCSS($selector)) $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
-        if (!empty($nodes)) return $nodes;
-        if (Locator::isXPath($selector)) $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        if (is_array($selector)) {
+            return $page->findElements($this->getStrictLocator($selector));
+        }
+        if ($selector instanceof \WebDriverBy) {
+            return $page->findElements($selector);
+        }
+
+        if (Locator::isID($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::id(substr($selector, 1)));
+        }
+        if (!empty($nodes)) {
+            return $nodes;
+        }
+        if (Locator::isCSS($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::cssSelector($selector));
+        }
+        if (!empty($nodes)) {
+            return $nodes;
+        }
+        if (Locator::isXPath($selector)) {
+            $nodes = $page->findElements(\WebDriverBy::xpath($selector));
+        } else {
+            codecept_debug("XPath `$selector` is malformed!");
+        }
         return $nodes;
+    }
+
+    /**
+     * @param array $by
+     * @return \WebDriverBy
+     */
+    protected function getStrictLocator(array $by)
+    {
+        $type = key($by);
+        $locator = $by[$type];
+        switch ($type) {
+            case 'id':
+                return \WebDriverBy::id($locator);
+            case 'name':
+                return \WebDriverBy::name($locator);
+            case 'css':
+                return \WebDriverBy::cssSelector($locator);
+            case 'xpath':
+                return \WebDriverBy::xpath($locator);
+            case 'link':
+                return \WebDriverBy::linkText($locator);
+            case 'class':
+                return \WebDriverBy::className($locator);
+            default:
+                throw new TestRuntime(
+                    "Locator type '$by' is not defined. Use either: xpath, css, id, link, class, name"
+                );
+        }
     }
 
     /**
@@ -1258,11 +1763,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     }
 
     /**
-     * Presses key on element found by css, xpath is focused
-     * A char and modifier (ctrl, alt, shift, meta) can be provided.
+     * Presses the given key on the given element. 
+     * To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with 
+     * the modifier as the first element and the character as the second.
      * For special keys use key constants from \WebDriverKeys class.
-     *
-     * Example:
      *
      * ``` php
      * <?php
@@ -1276,7 +1780,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      * ```
      *
      * @param $element
-     * @param $char can be char or array with modifier. You can provide several chars.
+     * @param $char Can be char or array with modifier. You can provide several chars.
      * @throws \Codeception\Exception\ElementNotFound
      */
     public function pressKey($element, $char)
@@ -1293,8 +1797,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     protected function convertKeyModifier($keys)
     {
-        if (!is_array($keys)) return $keys;
-        if (!isset($keys[1])) return $keys;
+        if (!is_array($keys)) {
+            return $keys;
+        }
+        if (!isset($keys[1])) {
+            return $keys;
+        }
         list($modifier, $key) = $keys;
 
         switch ($modifier) {
@@ -1323,17 +1831,25 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     protected function assertPageContains($needle, $message = '')
     {
-        $this->assertThat($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+        $this->assertThat(
+            htmlspecialchars_decode($this->getVisibleText()),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
-        $this->assertThatItsNot($this->webDriver->getPageSource(), new PageConstraint($needle, $this->_getCurrentUri()),$message);
+        $this->assertThatItsNot(
+            htmlspecialchars_decode($this->getVisibleText()),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
     }
 
     /**
-     * Append text to an element
-     * Can add another selection to a select box
+     * Append the given text to the given element.
+     * Can also add a selection to a select box.
      *
      * ``` php
      * <?php
@@ -1344,33 +1860,38 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
      *
      * @param string $field
      * @param string $value
+     * @throws \Codeception\Exception\ElementNotFound
      */
     public function appendField($field, $value)
     {
         $el = $this->findField($field);
 
-        switch($el->getTagName()) {
+        switch ($el->getTagName()) {
 
-             //Multiple select
+            //Multiple select
             case "select":
                 $matched = false;
                 $wdSelect = new \WebDriverSelect($el);
                 try {
                     $wdSelect->selectByVisibleText($value);
                     $matched = true;
-                } catch (\NoSuchElementException $e) {}
+                } catch (\NoSuchElementException $e) {
+                }
 
-                 try {
+                try {
                     $wdSelect->selectByValue($value);
                     $matched = true;
-                } catch (\NoSuchElementException $e) {}
-                if ($matched) return;
+                } catch (\NoSuchElementException $e) {
+                }
+                if ($matched) {
+                    return;
+                }
 
                 throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
                 break;
             case "textarea":
-                    $el->sendKeys($value);
-                    return;
+                $el->sendKeys($value);
+                return;
                 break;
             //Text, Checkbox, Radio
             case "input":
@@ -1379,8 +1900,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 if ($type == 'checkbox') {
                     //Find by value or css,id,xpath
                     $field = $this->findCheckable($this->webDriver, $value, true);
-                    if (!$field) throw new ElementNotFound($value, "Checkbox or Radio by Label or CSS or XPath");
-                    if ($field->isSelected()) return;
+                    if (!$field) {
+                        throw new ElementNotFound($value, "Checkbox or Radio by Label or CSS or XPath");
+                    }
+                    if ($field->isSelected()) {
+                        return;
+                    }
                     $field->click();
                     return;
                 } elseif ($type == 'radio') {
@@ -1395,5 +1920,45 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
 
         throw new ElementNotFound($field, "Field by name, label, CSS or XPath");
+    }
+
+    /**
+     * @param $selector
+     * @return array
+     */
+    protected function matchVisible($selector)
+    {
+        $nodes = array_filter(
+            $this->match($this->webDriver, $selector),
+            function (\WebDriverElement $el) {
+                return $el->isDisplayed();
+            }
+        );
+        return $nodes;
+    }
+
+    /**
+     * @param $selector
+     * @return \WebDriverBy
+     * @throws \Exception
+     */
+    protected function getLocator($selector)
+    {
+        if ($selector instanceof \WebDriverBy) {
+            return $selector;
+        }
+        if (is_array($selector)) {
+            return $this->getStrictLocator($selector);
+        }
+        if (Locator::isID($selector)) {
+            return \WebDriverBy::id(substr($selector, 1));
+        }
+        if (Locator::isCSS($selector)) {
+            return \WebDriverBy::cssSelector($selector);
+        }
+        if (Locator::isXPath($selector)) {
+            return \WebDriverBy::xpath($selector);
+        }
+        throw new \Exception("Only CSS or XPath allowed");
     }
 }

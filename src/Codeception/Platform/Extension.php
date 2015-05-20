@@ -1,30 +1,50 @@
 <?php
 namespace Codeception\Platform;
 
+use Codeception\Configuration as Config;
 use Codeception\Exception\ModuleRequire;
-use Codeception\Util\Console\Output;
+use Codeception\Subscriber\Shared\StaticEvents;
+use Codeception\Lib\Console\Output;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class Extension implements EventSubscriberInterface {
+class Extension implements EventSubscriberInterface
+{
+    use StaticEvents;
     
-    protected $config;
+    protected $config = array();
     protected $options;
     protected $output;
+    protected $globalConfig;
 
     function __construct($config, $options)
     {
-        if (isset($config['extensions']['config'][get_class($this)]))
-            $this->config = $config['extensions']['config'][get_class($this)];
-
+        $this->config = array_merge($this->config, $config);
         $this->options = $options;
         $this->output = new Output($options);
-        $this->_reconfigure();
+        $this->_initialize();
     }
 
     static $events = array();
 
-    public function _reconfigure()
+    /**
+     * Pass config variables that should be injected into global config.
+     *
+     * @param array $config
+     */
+    public function _reconfigure($config = array())
     {
+        if (is_array($config)) {
+            Config::append($config);
+        }
+    }
+
+    /**
+     * You can do all preperations here. No need to override constructor.
+     * Also you can skip calling `_reconfigure` if you don't need to.
+     */
+    public function _initialize()
+    {
+        $this->_reconfigure(); // hook for BC only.
     }
 
     protected function write($message)
@@ -44,9 +64,29 @@ class Extension implements EventSubscriberInterface {
         return \Codeception\SuiteManager::$modules[$name];
     }
 
-    static function getSubscribedEvents()
+    public function getTestsDir()
     {
-        return static::$events;
+        return Config::testsDir();
+    }
+
+    public function getLogDir()
+    {
+        return Config::outputDir();
+    }
+
+    public function getDataDir()
+    {
+        return Config::dataDir();
+    }
+
+    public function getRootDir()
+    {
+        return Config::projectDir();
+    }
+
+    public function getGlobalConfig()
+    {
+        return Config::config();
     }
 
 }

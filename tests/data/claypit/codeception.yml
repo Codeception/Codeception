@@ -9,6 +9,8 @@ settings:
     colors: false
     memory_limit: 1024M
     log: true
+groups:
+    failed: tests/_log/failed
 modules:
     config:
         Db:

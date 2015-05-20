@@ -3,14 +3,16 @@
 use Codeception\Util\Stub;
 
 require_once 'tests/data/app/data.php';
-require_once __DIR__ . '/TestsForMink.php';
+require_once __DIR__ . '/TestsForBrowsers.php';
 
-class WebDriverTest extends TestsForMink
+class WebDriverTest extends TestsForBrowsers
 {
     /**
      * @var \Codeception\Module\WebDriver
      */
     protected $module;
+    
+    protected $webDriver;
 
     // this is my local config
     protected $is_local = false;
@@ -26,19 +28,15 @@ class WebDriverTest extends TestsForMink
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $url = 'http://localhost:8000';
         }
-        // my local config.
-        if ($this->is_local) {
-            $url = 'http://testapp.com';
-        }
-
         $this->module->_setConfig(array('url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0));
         $this->module->_initialize();
-
         $this->module->_before($this->makeTest());
+        $this->webDriver = $this->module->webDriver;
     }
 
     public function tearDown()
     {
+        $this->module->webDriver = $this->webDriver;
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module->_after($this->makeTest());
@@ -61,7 +59,7 @@ class WebDriverTest extends TestsForMink
             return true;
         }
         $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4455'
+            'Requires Selenium2 Server running on port 4444'
         );
         return false;
     }
@@ -119,16 +117,16 @@ class WebDriverTest extends TestsForMink
     public function testScreenshot()
     {
         $this->module->amOnPage('/');
-        @unlink(\Codeception\Configuration::logDir().'testshot.png');
+        @unlink(\Codeception\Configuration::outputDir().'testshot.png');
         $testName="debugTest";
 
         $this->module->makeScreenshot($testName);
-        $this->assertFileExists(\Codeception\Configuration::logDir().'debug/ - '.$testName.'.png');
-        @unlink(\Codeception\Configuration::logDir().'debug/ - '.$testName.'.png');
+        $this->assertFileExists(\Codeception\Configuration::outputDir().'debug/'.$testName.'.png');
+        @unlink(\Codeception\Configuration::outputDir().'debug/'.$testName.'.png');
 
-        $this->module->_saveScreenshot(\Codeception\Configuration::logDir().'testshot.png');
-        $this->assertFileExists(\Codeception\Configuration::logDir().'testshot.png');
-        @unlink(\Codeception\Configuration::logDir().'testshot.png');
+        $this->module->_saveScreenshot(\Codeception\Configuration::outputDir().'testshot.png');
+        $this->assertFileExists(\Codeception\Configuration::outputDir().'testshot.png');
+        @unlink(\Codeception\Configuration::outputDir().'testshot.png');
     }
 
     public function testSubmitForm() {
@@ -362,6 +360,153 @@ class WebDriverTest extends TestsForMink
         $this->shouldFail();
         $this->module->amOnPage('/form/complex');
         $this->module->submitForm('form111', array());
+    }
+
+    public function testWebDriverByLocators()
+    {
+        $this->module->amOnPage('/login');
+        $this->module->seeElement(WebDriverBy::id('submit-label'));
+        $this->module->seeElement(WebDriverBy::name('password'));
+        $this->module->seeElement(WebDriverBy::className('optional'));
+        $this->module->seeElement(WebDriverBy::cssSelector('form.global_form_box'));
+        $this->module->seeElement(WebDriverBy::xpath(\Codeception\Util\Locator::tabIndex(4)));
+        $this->module->fillField(WebDriverBy::name('password'), '123456');
+        $this->module->amOnPage('/form/select');
+        $this->module->selectOption(WebDriverBy::name('age'), 'child');
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(WebDriverBy::name('terms'));
+        $this->module->amOnPage('/');
+        $this->module->seeElement(WebDriverBy::linkText('Test'));
+        $this->module->click(WebDriverBy::linkText('Test'));
+        $this->module->seeCurrentUrlEquals('/form/hidden');
+    }
+
+    public function testSeeVisible()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->dontSee('Invisible text');
+        $this->module->dontSee('Invisible', '.hidden');
+        $this->module->seeInPageSource('Invisible text');
+    }
+
+    public function testSeeInvisible()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/info');
+        $this->module->see('Invisible text');
+    }
+
+    public function testFailWebDriverByLocator()
+    {
+        $this->shouldFail();
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption(WebDriverBy::name('age'));
+    }
+
+    // fails in PhpBrowser :(
+    public function testSubmitUnchecked()
+    {
+        $this->module->amOnPage('/form/unchecked');
+        $this->module->seeCheckboxIsChecked('#checkbox');
+        $this->module->uncheckOption('#checkbox');
+        $this->module->click('#submit');;
+        $this->module->see('0','#notice');
+    }
+
+    public function testCreateCeptScreenshotFail()
+    {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+                'takeScreenshot' => Stub::once(function() {}),
+                'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
+        $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
+        $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testCreateCestScreenshotOnFail()
+    {
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
+        $cest = (new \Codeception\TestCase\Cest())
+            ->config('testClassInstance', new stdClass())
+            ->config('testMethod','login');
+        $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testCreateTestScreenshotOnFail()
+    {
+        $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
+        $fakeWd = Stub::make('\RemoteWebDriver', [
+            'takeScreenshot' => Stub::once(function($filename) use ($test) {
+                PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
+            }),
+            'getPageSource' => Stub::once(function() {})
+        ]);
+        $this->module->webDriver = $fakeWd;
+        $this->module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+    }
+
+    public function testWebDriverWaits()
+    {
+        $fakeWd = Stub::make('\Codeception\Module\WebDriver', ['wait' => Stub::exactly(12, function () {
+            return new \Codeception\Util\Maybe();
+        })]);
+        $this->module->webDriver = $fakeWd;
+        $this->module->waitForElement(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElement(['id' => 'user']);
+        $this->module->waitForElement(['css' => '.user']);
+        $this->module->waitForElement('//xpath');
+
+        $this->module->waitForElementVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementVisible(['id' => 'user']);
+        $this->module->waitForElementVisible(['css' => '.user']);
+        $this->module->waitForElementVisible('//xpath');
+
+        $this->module->waitForElementNotVisible(WebDriverBy::partialLinkText('yeah'));
+        $this->module->waitForElementNotVisible(['id' => 'user']);
+        $this->module->waitForElementNotVisible(['css' => '.user']);
+        $this->module->waitForElementNotVisible('//xpath');
+    }
+
+    public function testBug1467()
+    {
+        $this->module->amOnPage('/form/bug1467');
+        $this->module->selectOption('form[name=form2] input[name=first_test_radio]', 'Yes');
+        $this->module->selectOption('form[name=form2] input[name=second_test_radio]', 'No');
+        $this->module->seeOptionIsSelected('form[name=form2] input[name=first_test_radio]', 'Yes');
+        $this->module->seeOptionIsSelected('form[name=form2] input[name=second_test_radio]', 'No');
+
+        // shouldn't have touched form1 at all
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=first_test_radio]', 'No');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=first_test_radio]', 'Yes');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'No');
+        $this->module->dontSeeOptionIsSelected('form[name=form1] input[name=second_test_radio]', 'Yes');
+    }
+    /**
+     * @Issue 1598
+     */
+    public function testWaitForTextBug1598()
+    {
+        $this->module->amOnPage('/form/bug1598');
+        $this->module->waitForText('12,345', 10, '#field');
+    }
+
+    public function testBug1637()
+    {
+        $this->module->amOnPage('/form/bug1637');
+
+        // confirm that options outside a form are still selectable
+        $this->module->selectOption('input[name=first_test_radio]', 'Yes');
+
+        // confirm that it did what we expected and did not do anything else
+        $this->module->seeOptionIsSelected('input[name=first_test_radio]', 'Yes');
+        $this->module->dontSeeOptionIsSelected('input[name=first_test_radio]', 'No');
     }
 
 }
