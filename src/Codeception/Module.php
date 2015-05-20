@@ -155,7 +155,7 @@ abstract class Module
     protected function debugSection($title, $message)
     {
         if (is_array($message) or is_object($message)) {
-            $message = stripslashes(json_encode($message));
+            $message = stripslashes(json_encode(iconv("cp1251", "UTF8//ignore", $message)));
         }
         $this->debug("[$title] $message");
     }
