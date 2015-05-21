@@ -95,7 +95,7 @@ Codeception\Util\Autoload::register('MyApp\\Test', 'Controller', __DIR__.'/contr
 
 ## Extension classes
 
-<div class="alert">This section requires advanced PHP skills and some knowlegde of Codeception and PHPUnit internals.</div>
+<div class="alert">This section requires advanced PHP skills and some knowledge of Codeception and PHPUnit internals.</div>
 
 Codeception has limited capabilities to extend its core features.
 Extensions are not supposed to override current functionality, but are pretty useful if you are experienced developer and you want to hook into testing flow.
