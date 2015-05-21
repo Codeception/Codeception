@@ -273,7 +273,7 @@ $ robo parallel:run
 
 ### Step 3: Merge Results
 
-We should not rely on console output when running our tests. In case of `parallelExec` task, some text can be missed. We recommmend to save results as JUnit XML, which can be merged and plugged into Continous Integration server.
+We should not rely on console output when running our tests. In case of `parallelExec` task, some text can be missed. We recommmend to save results as JUnit XML, which can be merged and plugged into Continuous Integration server.
 
 ```php
 <?php

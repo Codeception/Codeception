@@ -188,7 +188,7 @@ Framework modules also contain additional methods to access framework internals.
 
 Take a look at the complete reference for module you are using. Most of its methods are common for all modules but some of them are unique.
 
-Also you can access framework globals inside a test or access Depenency Injection containers inside `FunctionalHelper` class.
+Also you can access framework globals inside a test or access Dependency Injection containers inside `FunctionalHelper` class.
 
 ```php
 <?php
@@ -214,8 +214,8 @@ You can learn more about accessing framework you use by checking *Public Propert
 
 By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting level. 
 In functional tests you might want to change this level depending on framework's error policy.
-The error reporting level can be set in the suite configuraion file:
-
+The error reporting level can be set in the suite configuration file:
+    
 ```yaml
 class_name: FunctionalTester
 modules:
