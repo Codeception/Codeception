@@ -70,5 +70,14 @@ CREATE TABLE `order` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
+insert  into `order`(`id`,`name`,`status`) values (1,'main', 'open');
 
 
+CREATE TABLE `table_with_reserved_primary_key` (
+  `unique` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  PRIMARY KEY (`unique`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+insert  into `table_with_reserved_primary_key`(`unique`,`name`,`status`) values (1,'main', 'open');

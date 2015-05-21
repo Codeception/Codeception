@@ -45,6 +45,7 @@ class Yii1 extends Client
         $_SERVER        = array_merge($_SERVER, $request->getServer());
         $_FILES         = $this->remapFiles($request->getFiles());
         $_REQUEST       = $this->remapRequestParameters($request->getParameters());
+        $_POST          = $_GET = array();
 
         if (strtoupper($request->getMethod()) == 'GET')
             $_GET = $_REQUEST;
