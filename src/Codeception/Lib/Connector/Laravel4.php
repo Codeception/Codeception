@@ -73,6 +73,15 @@ class Laravel4 extends Client
             $oldDb = $this->app['db'];
         }
 
+        // Store the current value for the router filters
+        // so it can be reset after reloading the application
+        $oldFiltersEnabled = null;
+        if ($router = $this->app['router']) {
+            $property = new \ReflectionProperty(get_class($router), 'filtering');
+            $property->setAccessible(true);
+            $oldFiltersEnabled = $property->getValue($router);
+        }
+
         $this->app = $this->loadApplication();
         $this->kernel = $this->getStackedClient();
         $this->app->boot();
@@ -86,6 +95,10 @@ class Laravel4 extends Client
         if ($oldDb) {
             $this->app['db'] = $oldDb;
             Model::setConnectionResolver($this->app['db']);
+        }
+
+        if (! is_null($oldFiltersEnabled)) {
+            $oldFiltersEnabled ? $this->app['router']->enableFilters() : $this->app['router']->disableFilters();
         }
 
         $this->module->setApplication($this->app);
