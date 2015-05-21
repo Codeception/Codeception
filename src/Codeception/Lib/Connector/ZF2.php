@@ -59,12 +59,12 @@ class ZF2 extends Client
             parse_str($queryString, $query);
             $zendRequest->setQuery(new Parameters($query));
         }
-
-        if ($method == HttpRequest::METHOD_POST) {
+        
+        if ($request->getContent() != null) {
+            $zendRequest->setContent($request->getContent());
+        } elseif ($method != HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
             $zendRequest->setPost(new Parameters($post));
-        } elseif ($method == HttpRequest::METHOD_PUT) {
-            $zendRequest->setContent($request->getContent());
         }
 
         $zendRequest->setMethod($method);

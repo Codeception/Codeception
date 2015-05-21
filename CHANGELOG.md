@@ -2,13 +2,15 @@
 
 #### 2.0.14
 
+* [PhpBrowser][Frameworks] Fixed working associative array form fields (like `FooBar[bar]`). Fixes regression #1923.
+* [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * [Laravel4] [Laravel5] Improved error message for `amOnRoute` and `amOnAction` methods if route or action does not exist *2015-05-04*
 * [Laravel4] Fixed issue with session configuration *2015-05-01*
 * [Laravel4] Partial rewrite of module *2015-05-01*
   * Added `getApplication()` method
   * Added `seeFormHasErrors()`, `seeFormErrorMessages(array $bindings)` and `seeFormErrorMessage($key, $errorMessage)` methods
   * Deprecated `seeSessionHasErrors()` and `seeSessionErrorMessage(array $bindings)` methods.
-* fixed stderr tput messages in PHPStorm console *2015-04-26*
+* fixed stderr output messages in PHPStorm console *2015-04-26*
 
 #### 2.0.13
 

@@ -1210,4 +1210,10 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($data['first-field']));
         $this->assertEquals('Killgore Trout', $data['second-field']);
     }
+
+    public function testArrayField()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->seeInField('input[name="FooBar[bar]"]', 'baz');
+    }
 }

@@ -165,8 +165,7 @@ class Db
 
     public function deleteQuery($table, $id, $primaryKey = 'id')
     {
-        $query = 'DELETE FROM ' . $this->getQuotedName($table)
-            . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ' . $id;
+        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ' . $id;
         $this->sqlQuery($query);
     }
 
