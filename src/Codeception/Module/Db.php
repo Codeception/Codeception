@@ -253,7 +253,6 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             // such as tables without _id_seq in PGSQL
             $lastInsertId = 0;
         }
-        $this->insertedIds[] = array('table' => $table, 'id' => $lastInsertId);
 
         $this->insertedIds[] = [
           'table'   => $table,
