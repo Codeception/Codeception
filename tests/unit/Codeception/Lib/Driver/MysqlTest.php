@@ -55,6 +55,32 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $res = $this->mysql->getDbh()->query("select * from groups where name = 'coders'");
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
+        $this->mysql->cleanup();
+    }
+
+    public function testGetPrimaryKeyOfTableUsingReservedWordAsTableName()
+    {
+        $this->mysql->load($this->sql);
+        $this->assertEquals('id', $this->mysql->getPrimaryColumn('order'));
+        $this->mysql->cleanup();
+    }
+
+    public function testDeleteFromTableUsingReservedWordAsTableName()
+    {
+        $this->mysql->load($this->sql);
+        $this->mysql->deleteQuery('order', 1);
+        $res = $this->mysql->getDbh()->query("select id from `order` where id = 1");
+        $this->assertEquals(0, $res->rowCount());
+        $this->mysql->cleanup();
+    }
+
+    public function testDeleteFromTableUsingReservedWordAsPrimaryKey()
+    {
+        $this->mysql->load($this->sql);
+        $this->mysql->deleteQuery('table_with_reserved_primary_key', 1, 'unique');
+        $res = $this->mysql->getDbh()->query("select name from `table_with_reserved_primary_key` where `unique` = 1");
+        $this->assertEquals(0, $res->rowCount());
+        $this->mysql->cleanup();
     }
 
 }

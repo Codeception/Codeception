@@ -151,7 +151,7 @@ class InnerBrowser extends Module implements Web
             $this->assertPageContains($text);
         } else {
             $nodes = $this->match($selector);
-            $this->assertDomContains($nodes, $selector, $text);
+            $this->assertDomContains($nodes, $this->stringifySelector($selector), $text);
         }
     }
 
@@ -161,7 +161,7 @@ class InnerBrowser extends Module implements Web
             $this->assertPageNotContains($text);
         } else {
             $nodes = $this->match($selector);
-            $this->assertDomNotContains($nodes, $selector, $text);
+            $this->assertDomNotContains($nodes, $this->stringifySelector($selector), $text);
         }
     }
 
@@ -432,7 +432,7 @@ class InnerBrowser extends Module implements Web
     {
         $form = $this->match($selector)->first();
         if (!count($form)) {
-            throw new ElementNotFound($selector, 'Form');
+            throw new ElementNotFound($this->stringifySelector($selector), 'Form');
         }
         $this->proceedSubmitForm($form, $params, $button);
     }
@@ -977,12 +977,21 @@ class InnerBrowser extends Module implements Web
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
+    private function stringifySelector($selector)
+    {
+        if (is_array($selector)) {
+            return trim(json_encode($selector), '{}');
+        }
+        return $selector;
+    }
+
     public function seeElement($selector, $attributes = array())
     {
         $nodes = $this->match($selector);
+        $selector = $this->stringifySelector($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes), '{}');
         }
         $this->assertDomContains($nodes, $selector);
     }
@@ -990,9 +999,10 @@ class InnerBrowser extends Module implements Web
     public function dontSeeElement($selector, $attributes = array())
     {
         $nodes = $this->match($selector);
+        $selector = $this->stringifySelector($selector);
         if (!empty($attributes)) {
             $nodes = $this->filterByAttributes($nodes, $attributes);
-            $selector .= "' with attribute(s) '" . trim(json_encode($attributes),'{}');
+            $selector .= "' with attribute(s) '" . trim(json_encode($attributes), '{}');
         }
         $this->assertDomNotContains($nodes, $selector);
     }
