@@ -13,7 +13,7 @@ use Yii;
  * <li>appPath - full path to the application, include index.php</li>
  * <li>url - full url to the index.php entry script</li>
  * </ul>
- * In your index.php you must return array with correct configuration for the application:
+ * In your index.php you must return an array with correct configuration for the application:
  *
  * For the simple created yii application index.php will be like this:
  * <pre>
