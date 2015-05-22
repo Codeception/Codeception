@@ -71,7 +71,7 @@ class Console implements EventSubscriberInterface
         $this->message("%s Tests (%d) ")
             ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
-            ->widthWithTerminalCorrection(array_sum($this->columns), '-')
+            ->width(array_sum($this->columns), '-')
             ->prepend("\n")
             ->writeln();
 
@@ -201,7 +201,7 @@ class Console implements EventSubscriberInterface
 
     public function afterSuite(SuiteEvent $e)
     {
-        $this->message()->widthWithTerminalCorrection(array_sum($this->columns), '-')->writeln();
+        $this->message()->width(array_sum($this->columns), '-')->writeln();
     }
 
     public function printFail(FailEvent $e)
@@ -405,6 +405,17 @@ class Console implements EventSubscriberInterface
             }
             $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
         }
+        $cols = $this->columns[0];
+        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
+            and (php_sapi_name() == "cli")
+            and (getenv('TERM'))
+            and (getenv('TERM') != 'unknown')
+        ) {
+            $cols = intval(`command -v tput >> /dev/null 2>&1 && tput cols`);
+        }
+        if ($cols < $this->columns[0]) {
+            $this->columns[0] = $cols-$this->columns[1];
+        }
     }
 
     /**
@@ -418,16 +429,20 @@ class Console implements EventSubscriberInterface
             return $this->message = $this->message('%s::%s')
                 ->with(get_class($test), $test->getName(true))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
-                ->cut($this->columns[0] - 12)
+                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 15 : $this->columns[0]-1)
                 ->style('focus')
                 ->prepend($inProgress ? 'Running ' : '');
         }
         $filename = $test->getSignature();
+        $filename = str_replace('with data set', "|", $filename);
 
         if ($test->getFeature()) {
-            return $this->message = $this->message("<focus>%s</focus> (%s) ")
+
+            return $this->message = $this->message($inProgress ? $test->getFeature() : ucfirst($test->getFeature()))
+                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - strlen($filename): $this->columns[0]- 4 - strlen($filename))
+                ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')
-                ->with($inProgress ? $test->getFeature() : ucfirst($test->getFeature()), $filename);
+                ->append(" ($filename)");
         }
         return $this->message = $this->message("<focus>%s</focus> ")
             ->prepend($inProgress ? 'Running ' : '')
@@ -451,11 +466,11 @@ class Console implements EventSubscriberInterface
             return;
         }
         if ($this->output->isInteractive()) {
-            $this->getTestMessage($test)->prepend("\x0D")->widthWithTerminalCorrection($this->columns[0])->write();
+            $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
             return;
         } 
         if ($this->message) {
-            $this->message('')->widthWithTerminalCorrection($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
+            $this->message('')->width($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
         }
     }
 
