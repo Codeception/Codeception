@@ -61,7 +61,7 @@ class Guzzle extends Client
      */
     public function setHeader($name, $value)
     {
-        if (empty($value)) {
+        if (strval($value) === '') {
             $this->deleteHeader($name);
         } else {
             $this->requestOptions['headers'][$name] = $value;
