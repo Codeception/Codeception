@@ -120,7 +120,7 @@ class PostgreSql extends Db
     public function lastInsertId($table)
     {
         /*We make an assumption that the sequence name for this table is based on how postgres names sequences for SERIAL columns */
-        $sequenceName = $table . '_id_seq';
+        $sequenceName = $this->getQuotedName($table . '_id_seq');
         return $this->getDbh()->lastInsertId($sequenceName);
     }
 

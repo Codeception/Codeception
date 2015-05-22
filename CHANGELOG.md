@@ -2,6 +2,13 @@
 
 #### 2.0.14
 
+* Improved output *2015-05-22*
+  * data providers print simplified
+  * output respects console size with `tput` and tries to fit area
+  * non-interactive environments for `tput` are ignored
+* [Frameworks][PhpBrowser][Symfony2] Fields are passed as PHP-array on form submission the same way as `Symfony\Component\DomCrawler\Form->getPhpValues()` does. Fixes fails of Symfony form tests  *2015-05-22*
+* [Laravel4] Fixed bug with filters. See #1810. *2015-05-21*
+* [PhpBrowser][Frameworks] Fixed working associative array form fields (like `FooBar[bar]`). Fixes regression #1923.
 * [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * [Laravel4] [Laravel5] Improved error message for `amOnRoute` and `amOnAction` methods if route or action does not exist *2015-05-04*
 * [Laravel4] Fixed issue with session configuration *2015-05-01*
@@ -9,7 +16,7 @@
   * Added `getApplication()` method
   * Added `seeFormHasErrors()`, `seeFormErrorMessages(array $bindings)` and `seeFormErrorMessage($key, $errorMessage)` methods
   * Deprecated `seeSessionHasErrors()` and `seeSessionErrorMessage(array $bindings)` methods.
-* fixed stderr tput messages in PHPStorm console *2015-04-26*
+* fixed stderr output messages in PHPStorm console *2015-04-26*
 
 #### 2.0.13
 

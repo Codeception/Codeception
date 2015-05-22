@@ -3,6 +3,8 @@ namespace Codeception\Lib\Connector;
 
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
+use GuzzleHttp\Url;
 
 class ZF1 extends Client
 {
@@ -54,8 +56,9 @@ class ZF1 extends Client
         // so we set all parameters in ZF's request here to not break apps
         // relying on $request->getPost()
         $zendRequest->setPost($request->getParameters());
+        $zendRequest->setRawBody($request->getContent());
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
-        $zendRequest->setHeaders($request->getServer());
+        $zendRequest->setHeaders($this->_extractHeaders($request));
         $_FILES  = $this->remapFiles($request->getFiles());
         $_SERVER = array_merge($_SERVER, $request->getServer());
 
@@ -63,7 +66,12 @@ class ZF1 extends Client
         $this->front->setRequest($zendRequest)->setResponse($zendResponse);
 
         ob_start();
-        $this->bootstrap->run();
+        try {
+            $this->bootstrap->run();
+        } catch (\Exception $e) {
+            ob_end_clean();
+            throw $e;
+        }
         ob_end_clean();
 
         $this->zendRequest = $zendRequest;
@@ -106,5 +114,29 @@ class ZF1 extends Client
     public function getZendRequest()
     {
         return $this->zendRequest;
+    }
+
+    private function _extractHeaders(BrowserKitRequest $request)
+    {
+        $headers = array();
+        $server = $request->getServer();
+        $uri                 = Url::fromString($request->getUri());
+        $server['HTTP_HOST'] = $uri->getHost();
+        $port                = $uri->getPort();
+        if ($port !== null && $port !== 443 && $port != 80) {
+            $server['HTTP_HOST'] .= ':' . $port;
+        }
+
+        $contentHeaders = array('Content-length' => true, 'Content-md5' => true, 'Content-type' => true);
+        foreach ($server as $header => $val) {
+            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+
+            if (strpos($header, 'Http-') === 0) {
+                $headers[substr($header, 5)] = $val;
+            } elseif (isset($contentHeaders[$header])) {
+                $headers[$header] = $val;
+            }
+        }
+        return $headers;
     }
 }
