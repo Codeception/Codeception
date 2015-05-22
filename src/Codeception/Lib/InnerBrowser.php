@@ -471,7 +471,7 @@ class InnerBrowser extends Module implements Web
      *
      * @param string $uri the absolute or relative URI
      * @return string the absolute URL
-     * @throws Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntime if either the current
      *         URL or the passed URI can't be parsed
      */
     protected function getAbsoluteUrlFor($uri)
@@ -497,7 +497,7 @@ class InnerBrowser extends Module implements Web
      * 
      * @param \Symfony\Component\DomCrawler\Crawler $form
      * @return string
-     * @throws Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntime if either the current
      *         URL or the URI of the form's action can't be parsed
      */
     protected function getFormUrl(Crawler $form)
