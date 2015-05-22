@@ -5,6 +5,10 @@ branches:
   except:
     - gh-pages
 
+services:
+- mysql56
+- postgresql93
+
 install:
   - cinst -y OpenSSL.Light
   - SET PATH=C:\Program Files\OpenSSL;%PATH%
@@ -18,7 +22,6 @@ install:
   - echo date.timezone="UTC" >> php.ini
   - echo extension=php_mbstring.dll >> php.ini
   - echo extension=php_curl.dll >> php.ini
-  - echo extension=php_pdo_sqlsrv.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
   - echo extension=php_pdo_pgsql.dll >> php.ini
   - echo extension=php_pgsql.dll >> php.ini
