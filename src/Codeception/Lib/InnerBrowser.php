@@ -941,8 +941,15 @@ class InnerBrowser extends Module implements Web
     {
         $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
-        extract($params);
-        $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure));
+
+        $expires      = isset($params['expires']) ? $params['expires'] : null;
+        $path         = isset($params['path'])    ? $params['path'] : null;
+        $domain       = isset($params['domain'])  ? $params['domain'] : '';
+        $secure       = isset($params['secure'])  ? $params['secure'] : false;
+        $httpOnly     = isset($params['httpOnly'])  ? $params['httpOnly'] : true;
+        $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
+
+        $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
