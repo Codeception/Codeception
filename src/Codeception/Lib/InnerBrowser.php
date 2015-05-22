@@ -39,7 +39,7 @@ class InnerBrowser extends Module implements Web
     /**
      * @var array|\Symfony\Component\DomCrawler\Form[]
      */
-    protected $forms = array();
+    protected $forms = [];
 
     protected $defaultCookieParameters = ['expires' => null, 'path' => '/', 'domain' => '', 'secure' => false];
 
@@ -56,7 +56,7 @@ class InnerBrowser extends Module implements Web
     {
         $this->client  = null;
         $this->crawler = null;
-        $this->forms   = array();
+        $this->forms   = [];
     }
 
     /**
@@ -235,7 +235,7 @@ class InnerBrowser extends Module implements Web
         if (!$uri) {
             return $this->_getCurrentUri();
         }
-        $matches = array();
+        $matches = [];
         $res     = preg_match($uri, $this->_getCurrentUri(), $matches);
         if (!$res) {
             $this->fail("Couldn't match $uri in " . $this->_getCurrentUri());
@@ -418,6 +418,8 @@ class InnerBrowser extends Module implements Web
         $this->debugSection('Uri', $url);
         $this->debugSection('Method', $form->getMethod());
         $this->debugSection('Parameters', $requestParams);
+
+        $requestParams= $this->getFormPhpValues($requestParams);
 
         $this->crawler = $this->client->request(
             $form->getMethod(),
@@ -668,7 +670,7 @@ class InnerBrowser extends Module implements Web
         $fieldName = $this->getSubmissionFormFieldName($field->attr('name'));
 
         if (is_array($option)) {
-            $options = array();
+            $options = [];
             foreach ($option as $opt) {
                 $options[] = $this->matchOption($field, $opt);
             }
@@ -734,7 +736,7 @@ class InnerBrowser extends Module implements Web
      * @param $uri
      * @param $params
      */
-    public function sendAjaxGetRequest($uri, $params = array())
+    public function sendAjaxGetRequest($uri, $params = [])
     {
         $this->sendAjaxRequest('GET', $uri, $params);
     }
@@ -759,7 +761,7 @@ class InnerBrowser extends Module implements Web
      * @param $uri
      * @param $params
      */
-    public function sendAjaxPostRequest($uri, $params = array())
+    public function sendAjaxPostRequest($uri, $params = [])
     {
         $this->sendAjaxRequest('POST', $uri, $params);
     }
@@ -782,9 +784,9 @@ class InnerBrowser extends Module implements Web
      * @param $uri
      * @param $params
      */
-    public function sendAjaxRequest($method, $uri, $params = array())
+    public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->client->request($method, $uri, $params, array(), array('HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'));
+        $this->client->request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
         $this->debugResponse();
     }
 
@@ -824,7 +826,6 @@ class InnerBrowser extends Module implements Web
         } catch (ParseException $e) {
         }
         if (!Locator::isXPath($selector)) {
-            codecept_debug("XPath `$selector` is malformed!");
             return new \Symfony\Component\DomCrawler\Crawler;
         }
 
@@ -917,7 +918,7 @@ class InnerBrowser extends Module implements Web
             /** @var  \Symfony\Component\DomCrawler\Crawler $select */
             $select      = $nodes->filter('select');
             $is_multiple = $select->attr('multiple');
-            $results     = array();
+            $results     = [];
             foreach ($select->children() as $option) {
                 /** @var  \DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
@@ -985,7 +986,7 @@ class InnerBrowser extends Module implements Web
         return $selector;
     }
 
-    public function seeElement($selector, $attributes = array())
+    public function seeElement($selector, $attributes = [])
     {
         $nodes = $this->match($selector);
         $selector = $this->stringifySelector($selector);
@@ -996,7 +997,7 @@ class InnerBrowser extends Module implements Web
         $this->assertDomContains($nodes, $selector);
     }
 
-    public function dontSeeElement($selector, $attributes = array())
+    public function dontSeeElement($selector, $attributes = [])
     {
         $nodes = $this->match($selector);
         $selector = $this->stringifySelector($selector);
@@ -1137,5 +1138,22 @@ class InnerBrowser extends Module implements Web
             }
         }
         return $item;
+    }
+
+    /**
+     * @param $requestParams
+     * @return array
+     */
+    protected function getFormPhpValues($requestParams)
+    {
+        foreach ($requestParams as $name => $value) {
+            $qs = http_build_query([$name => $value], '', '&');
+            if (!empty($qs)) {
+                parse_str($qs, $expandedValue);
+                $varName = substr($name, 0, strlen(key($expandedValue)));
+                $requestParams = array_replace_recursive($requestParams, [$varName => current($expandedValue)]);
+            }
+        }
+        return $requestParams;
     }
 }
