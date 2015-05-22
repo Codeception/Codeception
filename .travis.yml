@@ -44,6 +44,9 @@ install:
   # ZF1
   - git clone -q --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
   - composer install -d frameworks-zf1 --no-dev  --prefer-dist
+  # ZF2
+  - git clone -q --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
+  - composer install -d frameworks-zf2 --no-dev  --prefer-dist
 
 before_script:
   - beanstalkd -d -l 127.0.0.1 -p 11300
@@ -74,6 +77,7 @@ before_script:
   - php codecept build -c frameworks-symfony
   - php codecept build -c frameworks-l5
   - php codecept build -c frameworks-zf1
+  - php codecept build -c frameworks-zf2
 
 script:
   - php codecept run  # self tests
@@ -82,4 +86,5 @@ script:
   - php codecept run -c frameworks-l5 # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
-  - php codecept run functional -c frameworks-zf1 # ZF1 Tests (updated)
+  - php codecept run functional -c frameworks-zf1 # ZF1 Tests
+  - php codecept run functional -c frameworks-zf2 # ZF2 Tests
