@@ -41,7 +41,9 @@ install:
   # Symfony
   - git clone https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev  --prefer-dist
-
+  # ZF1
+  - git clone https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
+  - composer install -d frameworks-zf1 --no-dev  --prefer-dist
 
 before_script:
   - beanstalkd -d -l 127.0.0.1 -p 11300
@@ -71,6 +73,7 @@ before_script:
   - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
   - php codecept build -c frameworks-l5
+  - php codecept build -c frameworks-zf1
 
 script:
   - php codecept run  # self tests
@@ -79,3 +82,4 @@ script:
   - php codecept run -c frameworks-l5 # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
+  - php codecept run functional -c frameworks-zf1 # ZF1 Tests
