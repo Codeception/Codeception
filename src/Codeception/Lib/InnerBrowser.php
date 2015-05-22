@@ -971,11 +971,11 @@ class InnerBrowser extends Module implements Web
         $this->assertNotNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
-    public function dontSeeCookie($name, array $params = [])
+    public function dontSeeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->assertNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
     public function resetCookie($name, array $params = [])
