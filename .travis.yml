@@ -87,4 +87,4 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
-  - php codecept run functional -c frameworks-zf2 -vv # ZF2 Tests
+  - php codecept run functional -c frameworks-zf2 # ZF2 Tests
