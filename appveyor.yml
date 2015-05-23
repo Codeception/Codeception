@@ -38,7 +38,7 @@ install:
 
 before_test:
   - createdb codeception_test
-  - mysql -uroot -pPassword12 -e "CREATE DATABASE codeception_test"
+  - mysql -uroot -pPassword12! -e "CREATE DATABASE codeception_test"
 
 test_script:
   - php codecept run cli --no-colors -n --skip-group coverage
