@@ -157,10 +157,10 @@ class RunCest
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput(
-          'Test is triangle with data set "real triangle" (DataProvidersTest::testIsTriangle)'
+          'Test is triangle | "real triangle" (DataProvidersTest::testIsTriangle)'
         );
-        $I->seeInShellOutput('Test is triangle with data set #0 (DataProvidersTest::testIsTriangle)');
-        $I->seeInShellOutput('Test is triangle with data set #1 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest::testIsTriangle)');
         $I->seeInShellOutput("OK");
     }
 
