@@ -1021,18 +1021,18 @@ class InnerBrowser extends Module implements Web
         }
     }    
 
-    public function seeOptionIsSelected($select, $optionText)
+    public function seeOptionIsSelected($selector, $optionText)
     {
-        $selected = $this->matchSelectedOption($select);
+        $selected = $this->matchSelectedOption($selector);
         $this->assertDomContains($selected, 'selected option');
         //If element is radio then we need to check value
         $value = $selected->getNode(0)->tagName == 'option' ? $selected->text() : $selected->getNode(0)->getAttribute('value');
         $this->assertEquals($optionText, $value);
     }
 
-    public function dontSeeOptionIsSelected($select, $optionText)
+    public function dontSeeOptionIsSelected($selector, $optionText)
     {
-        $selected = $this->matchSelectedOption($select);
+        $selected = $this->matchSelectedOption($selector);
         if (!$selected->count()) {
             $this->assertEquals(0, $selected->count());
             return;
