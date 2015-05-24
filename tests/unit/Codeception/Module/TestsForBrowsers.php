@@ -22,6 +22,13 @@ abstract class TestsForBrowsers extends TestsForWeb
         $this->assertEquals('http://user.google.com', $this->module->_getUrl());
     }
 
+    public function testAmOnSecondLevelSubdomain()
+    {
+        $this->module->_reconfigure(array('url' => 'http://dev.mysite.co.uk'));
+        $this->module->amOnSubdomain('admin');
+        $this->assertEquals('http://admin.mysite.co.uk', $this->module->_getUrl());
+    }
+
     public function testOpenAbsoluteUrls()
     {
         $this->module->amOnUrl('http://localhost:8000/');
