@@ -16,7 +16,7 @@ class CliHelper extends \Codeception\Module
     }
 
     public function executeCommand($command) {
-        $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command);
+        $this->getModule('Cli')->runShellCommand('php '.\Codeception\Configuration::projectDir().'codecept '.$command.' -n');
     }
 
     public function seeDirFound($dir)
