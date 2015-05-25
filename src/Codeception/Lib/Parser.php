@@ -101,7 +101,7 @@ class Parser {
 
     public static function getClassesFromFile($file)
     {
-        include_once $file;
+        self::includeFile($file);
         $sourceCode = file_get_contents($file);
         $classes = array();
         $tokens = token_get_all($sourceCode);
@@ -137,6 +137,14 @@ class Parser {
         }
 
         return $classes;
+    }
+    
+    /*
+     * Include in different scope to prevent included file from affecting $file variable
+     */ 
+    private static function includeFile($file)
+    {
+        include_once $file;
     }
 
     /**
