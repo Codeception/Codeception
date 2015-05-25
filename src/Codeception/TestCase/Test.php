@@ -11,7 +11,8 @@ use Codeception\TestCase;
 
 class Test extends TestCase implements
     Interfaces\Descriptive,
-    Interfaces\Configurable
+    Interfaces\Configurable,
+    Interfaces\Reported
 {
     use Shared\Actor;
     use Shared\Dependencies;
@@ -83,5 +84,18 @@ class Test extends TestCase implements
         }
 
         throw new TestRuntime("Module $module is not enabled for this test suite");
+    }
+
+    /**
+     * @return array
+     */
+    public function getReportFields()
+    {
+        return [
+            'name'    => $this->getName(),
+            'class'   => get_class($this),
+            'file'    => $this->getFileName(),
+            'feature' => $this->getFeature()
+        ];
     }
 }
