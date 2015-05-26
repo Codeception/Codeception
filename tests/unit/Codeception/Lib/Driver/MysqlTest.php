@@ -49,7 +49,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanupDatabase()
     {
-        $this->assertNotEmpty(1, count(self::$mysql->getDbh()->query("SHOW TABLES")->fetchAll()));
+        $this->assertNotEmpty(self::$mysql->getDbh()->query("SHOW TABLES")->fetchAll());
         self::$mysql->cleanup();
         $this->assertEmpty(self::$mysql->getDbh()->query("SHOW TABLES")->fetchAll());
     }
