@@ -44,7 +44,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase {
         $self = $this;
         $this->command = Stub::construct($className, array($this->commandName), array(
             'save' => function($file, $output) use ($self) {
-                $self->filename = $file;
+                $self->filename = str_replace(DIRECTORY_SEPARATOR, '/', $file);
                 $self->content = $output;
                 $self->log[] = array('filename' => $file, 'content' => $output);
                 return true;
