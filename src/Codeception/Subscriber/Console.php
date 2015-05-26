@@ -434,11 +434,11 @@ class Console implements EventSubscriberInterface
                 ->prepend($inProgress ? 'Running ' : '');
         }
         $filename = $test->getSignature();
-        $filename = str_replace('with data set', "|", $filename);
+        $feature = $test->getFeature();
 
-        if ($test->getFeature()) {
-
-            return $this->message = $this->message($inProgress ? $test->getFeature() : ucfirst($test->getFeature()))
+        if ($feature) {
+            return $this->message = $this->message($inProgress ? $feature : ucfirst($feature))
+                ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
                 ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - strlen($filename): $this->columns[0]- 4 - strlen($filename))
                 ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')

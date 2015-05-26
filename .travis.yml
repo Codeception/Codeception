@@ -57,8 +57,8 @@ before_script:
   - sleep 5  
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
-  - php -S localhost:8000 -t tests/data/app &
-  - php -S localhost:8010 -t tests/data &
+  - php -S localhost:8000 -t tests/data/app  > /dev/null &
+  - php -S localhost:8010 -t tests/data  > /dev/null &
   # Phalcon
   - "mysql -e 'CREATE DATABASE forum;'"
   - cat frameworks-phalcon/schemas/forum.sql | mysql forum
@@ -82,7 +82,7 @@ before_script:
 script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
-  - php codecept run -c frameworks-laravel # Laravel4 Tests
+  - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - php codecept run -c frameworks-l5 # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "5.6" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests

@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/TestsForWeb.php';
 
+/**
+ * @group appveyor
+ */
 class FrameworksTest extends TestsForWeb
 {
     /**

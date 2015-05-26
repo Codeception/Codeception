@@ -2,6 +2,10 @@
 
 use Codeception\Util\Stub as Stub;
 
+/**
+ * Class RestTest
+ * @group appveyor
+ */
 class RestTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -24,12 +28,12 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
         $this->module->client = $connector;
-        $this->module->client->setServerParameters(array(
+        $this->module->client->setServerParameters([
             'SCRIPT_FILENAME' => 'index.php',
             'SCRIPT_NAME' => 'index',
             'SERVER_NAME' => 'localhost',
             'SERVER_PROTOCOL' => 'http'
-        ));
+        ]);
     }
 
     public function testBeforeHookResetsVariables()
@@ -50,24 +54,24 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
-        $this->module->seeResponseContainsJson(array('name' => 'davert'));
+        $this->module->seeResponseContainsJson(['name' => 'davert']);
         $this->module->seeResponseCodeIs(200);
         $this->module->dontSeeResponseCodeIs(404);
     }
 
     public function testPost()
     {
-        $this->module->sendPOST('/rest/user/', array('name' => 'john'));
+        $this->module->sendPOST('/rest/user/', ['name' => 'john']);
         $this->module->seeResponseContains('john');
-        $this->module->seeResponseContainsJson(array('name' => 'john'));
+        $this->module->seeResponseContainsJson(['name' => 'john']);
     }
 
     public function testPut()
     {
-        $this->module->sendPUT('/rest/user/', array('name' => 'laura'));
+        $this->module->sendPUT('/rest/user/', ['name' => 'laura']);
         $this->module->seeResponseContains('davert@mail.ua');
-        $this->module->seeResponseContainsJson(array('name' => 'laura'));
-        $this->module->dontSeeResponseContainsJson(array('name' => 'john'));
+        $this->module->seeResponseContainsJson(['name' => 'laura']);
+        $this->module->dontSeeResponseContainsJson(['name' => 'john']);
     }
 
     public function testGrabDataFromJsonResponse()
@@ -88,13 +92,13 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->sendGET('/rest/user/');
         // simple assoc array
-        $this->assertEquals(array('davert@mail.ua'), $this->module->grabDataFromResponseByJsonPath('$.email'));
+        $this->assertEquals(['davert@mail.ua'], $this->module->grabDataFromResponseByJsonPath('$.email'));
         // nested assoc array
-        $this->assertEquals(array('Kyiv'), $this->module->grabDataFromResponseByJsonPath('$.address.city'));
+        $this->assertEquals(['Kyiv'], $this->module->grabDataFromResponseByJsonPath('$.address.city'));
         // nested index array
-        $this->assertEquals(array('DavertMik'), $this->module->grabDataFromResponseByJsonPath('$.aliases[0]'));
+        $this->assertEquals(['DavertMik'], $this->module->grabDataFromResponseByJsonPath('$.aliases[0]'));
         // empty if data not found
-        $this->assertEquals(array(), $this->module->grabDataFromResponseByJsonPath('$.address.street'));
+        $this->assertEquals([], $this->module->grabDataFromResponseByJsonPath('$.address.street'));
     }
 
     public function testValidJson()
@@ -132,19 +136,19 @@ class RestTest extends \PHPUnit_Framework_TestCase
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
         $this->module->seeResponseIsJson();
-        $this->module->seeResponseContainsJson(array('name' => 'Davert'));
-        $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
-        $this->module->seeResponseContainsJson(array('ticket' => array('title' => 'Bug should be fixed')));
-        $this->module->seeResponseContainsJson(array('ticket' => array('user' => array('name' => 'Davert'))));
-        $this->module->seeResponseContainsJson(array('ticket' => array('labels' => null)));
+        $this->module->seeResponseContainsJson(['name' => 'Davert']);
+        $this->module->seeResponseContainsJson(['user' => ['name' => 'Davert']]);
+        $this->module->seeResponseContainsJson(['ticket' => ['title' => 'Bug should be fixed']]);
+        $this->module->seeResponseContainsJson(['ticket' => ['user' => ['name' => 'Davert']]]);
+        $this->module->seeResponseContainsJson(['ticket' => ['labels' => null]]);
     }
 
     public function testSeeInJsonCollection()
     {
         $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
         $this->module->seeResponseIsJson();
-        $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
-        $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
+        $this->module->seeResponseContainsJson(['tags' => ['web-dev', 'java']]);
+        $this->module->seeResponseContainsJson(['user' => 'John Doe', 'age' => 27]);
         $this->module->seeResponseContainsJson([['user' => 'John Doe', 'age' => 27]]);
         $this->module->seeResponseContainsJson([['user' => 'Blacknoir', 'age' => 27], ['user' => 'John Doe', 'age' => 27]]);
     }
@@ -152,22 +156,22 @@ class RestTest extends \PHPUnit_Framework_TestCase
     public function testArrayJson()
     {
         $this->module->response = '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]';
-        $this->module->seeResponseContainsJson(array('id' => 1));
+        $this->module->seeResponseContainsJson(['id' => 1]);
     }
 
     public function testDontSeeInJson()
     {
         $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}';
         $this->module->seeResponseIsJson();
-        $this->module->dontSeeResponseContainsJson(array('name' => 'Davet'));
-        $this->module->dontSeeResponseContainsJson(array('user' => array('name' => 'Davet')));
-        $this->module->dontSeeResponseContainsJson(array('user' => array('title' => 'Bug should be fixed')));
+        $this->module->dontSeeResponseContainsJson(['name' => 'Davet']);
+        $this->module->dontSeeResponseContainsJson(['user' => ['name' => 'Davet']]);
+        $this->module->dontSeeResponseContainsJson(['user' => ['title' => 'Bug should be fixed']]);
     }
 
     public function testApplicationJsonIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
-        $this->module->sendPOST('/', array('name' => 'john'));
+        $this->module->sendPOST('/', ['name' => 'john']);
         /** @var $request \Symfony\Component\BrowserKit\Request  **/
         $request = $this->module->client->getRequest();
         $this->assertContains('application/json', $request->getServer());
@@ -190,7 +194,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
     public function testGetApplicationJsonNotIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
-        $this->module->sendGET('/', array('name' => 'john'));
+        $this->module->sendGET('/', ['name' => 'john']);
         /** @var $request \Symfony\Component\BrowserKit\Request  **/
         $request = $this->module->client->getRequest();
         $this->assertNull($request->getContent());
@@ -207,10 +211,10 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeHeaders()
     {
-        $response = new \Symfony\Component\BrowserKit\Response("", 200, array(
-            'Cache-Control' => array('no-cache', 'no-store'),
+        $response = new \Symfony\Component\BrowserKit\Response("", 200, [
+            'Cache-Control' => ['no-cache', 'no-store'],
             'Content_Language' => 'en-US'
-        ));
+        ]);
         $this->module->client->mockResponse($response);
         $this->module->sendGET('/');
         $this->module->seeHttpHeader('Cache-Control');
@@ -222,16 +226,16 @@ class RestTest extends \PHPUnit_Framework_TestCase
         \Codeception\Util\Debug::debug($this->module->grabHttpHeader('Cache-Control', false));
         $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
         $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
-        $this->assertEquals(array('no-cache', 'no-store'), $this->module->grabHttpHeader('Cache-Control', false));
+        $this->assertEquals(['no-cache', 'no-store'], $this->module->grabHttpHeader('Cache-Control', false));
 
     }
 
     public function testSeeHeadersOnce()
     {
         $this->shouldFail();
-        $response = new \Symfony\Component\BrowserKit\Response("", 200, array(
-            'Cache-Control' => array('no-cache', 'no-store'),
-        ));
+        $response = new \Symfony\Component\BrowserKit\Response("", 200, [
+            'Cache-Control' => ['no-cache', 'no-store'],
+        ]);
         $this->module->client->mockResponse($response);
         $this->module->sendGET('/');
         $this->module->seeHttpHeaderOnce('Cache-Control');

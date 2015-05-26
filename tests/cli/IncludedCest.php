@@ -66,6 +66,7 @@ class IncludedCest {
 
     /**
      * @before moveToIncluded
+     * @group coverage
      * @param CliGuy $I
      */
     public function runIncludedWithCoverage(\CliGuy $I)
