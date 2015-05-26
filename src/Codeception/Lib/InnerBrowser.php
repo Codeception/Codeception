@@ -471,7 +471,7 @@ class InnerBrowser extends Module implements Web
      *
      * @param string $uri the absolute or relative URI
      * @return string the absolute URL
-     * @throws Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntime if either the current
      *         URL or the passed URI can't be parsed
      */
     protected function getAbsoluteUrlFor($uri)
@@ -497,7 +497,7 @@ class InnerBrowser extends Module implements Web
      * 
      * @param \Symfony\Component\DomCrawler\Crawler $form
      * @return string
-     * @throws Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntime if either the current
      *         URL or the URI of the form's action can't be parsed
      */
     protected function getFormUrl(Crawler $form)
@@ -941,34 +941,41 @@ class InnerBrowser extends Module implements Web
     {
         $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
-        extract($params);
-        $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure));
+
+        $expires      = isset($params['expires']) ? $params['expires'] : null;
+        $path         = isset($params['path'])    ? $params['path'] : null;
+        $domain       = isset($params['domain'])  ? $params['domain'] : '';
+        $secure       = isset($params['secure'])  ? $params['secure'] : false;
+        $httpOnly     = isset($params['httpOnly'])  ? $params['httpOnly'] : true;
+        $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
+
+        $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
     }
 
-    public function grabCookie($name, array $params = [])
+    public function grabCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $cookies = $this->client->getCookieJar()->get($name, $params['path'], $params['domain']);
+        $cookies = $this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
         }
         return $cookies->getValue();
     }
 
-    public function seeCookie($name, array $params = [])
+    public function seeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNotNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->assertNotNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
-    public function dontSeeCookie($name, array $params = [])
+    public function dontSeeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->debugSection('Cookies', $this->client->getCookieJar()->all());
-        $this->assertNull($this->client->getCookieJar()->get($name, $params['path'], $params['domain']));
+        $this->assertNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
     public function resetCookie($name, array $params = [])
