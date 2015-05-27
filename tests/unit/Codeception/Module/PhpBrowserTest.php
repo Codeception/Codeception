@@ -280,4 +280,23 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->setExpectedException("\\Codeception\\Exception\\TestRuntime");
         $this->module->fillField('#name', 'Nothing special');
     }
+    
+    public function testArrayFieldSubmitForm()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->submitForm(
+            'form',
+            [
+                'FooBar' => ['bar' => 'booze'],
+                'Food' => [
+                    'beer' => [
+                        'yum' => ['yeah' => 'crunked']
+                    ]
+                ]
+            ]
+        );
+        $data = data::get('form');
+        $this->assertEquals('booze', $data['FooBar']['bar']);
+        $this->assertEquals('crunked', $data['Food']['beer']['yum']['yeah']);
+    }
 }

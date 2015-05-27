@@ -18,7 +18,6 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
-use Symfony\Component\DomCrawler\Field\FormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use DOMElement;
@@ -308,21 +307,50 @@ class InnerBrowser extends Module implements Web
         }
     }
 
+    /**
+     * Returns an array of values for the field with the passed name.  Usually
+     * the array consists of a single value.  Used by proceedSeeInField
+     * 
+     * @param Form $form
+     * @param string $fieldName
+     * @return array
+     */
+    private function getFormFieldValues(Form $form, $fieldName)
+    {
+        $strField = $this->getSubmissionFormFieldName($fieldName);
+        $values = [];
+        if ($form->has($strField)) {
+            $fields = $form->get($strField);
+            // $form->get returns an array for fields with names ending in []
+            if (!is_array($fields)) {
+                $fields = [$fields];
+            }
+            foreach ($fields as $field) {
+                if (!$field->hasValue()) {
+                    continue;
+                }
+                // $field->getValue may return an array (multi-select for example) or a string value
+                $values = array_merge($values, (array) $field->getValue());
+            }
+        }
+        return $values;
+    }
+    
     protected function proceedSeeInField(Crawler $fields, $value)
     {
         $form = $this->getFormFor($fields);
-        $currentValues = $this->getFormValuesFor($form);
-        $strField = $this->getSubmissionFormFieldName($fields->attr('name'));
-        
-        $testValues = (isset($currentValues[$strField])) ? $currentValues[$strField] : '';
-        if (!is_array($testValues)) {
-            $testValues = [$testValues];
+        $fieldName = $fields->attr('name');
+        $testValues = $this->getFormFieldValues($form, $fieldName);
+        if (is_bool($value) && $value === true && !empty($testValues)) {
+            $value = reset($testValues);
+        } elseif (empty($testValues)) {
+            $testValues = [''];
         }
         return [
             'Contains',
             $value,
             $testValues,
-            "Failed testing for '$value' in $strField's value: " . var_export($currentValues)
+            "Failed testing for '$value' in $fieldName's value: " . var_export($testValues, true)
         ];
     }
 
@@ -583,22 +611,13 @@ class InnerBrowser extends Module implements Web
      */
     protected function getFormValuesFor(Form $form)
     {
+        $values = $form->getPhpValues();
         $fields = $form->all();
-        $values = [];
         foreach ($fields as $field) {
-            if (!$field->hasValue()) {
-                continue;
+            $name = $this->getSubmissionFormFieldName($field->getName());
+            if (!empty($values[$name]) && substr($field->getName(), -2) === '[]') {
+                $values[$name] = array_values($values[$name]);
             }
-            $fieldName = $field->getName();
-            if (substr($fieldName, -2) === '[]') {
-                $fieldName = substr($fieldName, 0, -2);
-                if (!isset($values[$fieldName])) {
-                    $values[$fieldName] = [];
-                }
-                $values[$fieldName][] = $field->getValue();
-                continue;
-            }
-            $values[$fieldName] = $field->getValue();
         }
         return $values;
     }
