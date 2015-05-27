@@ -411,7 +411,8 @@ class InnerBrowser extends Module implements Web
 
         $urlParts = parse_url($this->getFormUrl($frmCrawl));
         if ($urlParts === false) {
-            $this->fail("Url '$url' can't be parsed");
+            $this->fail("Form url can't be parsed");
+            return;
         }
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
             $urlParts = $this->mergeUrls($urlParts, ['query' => http_build_query($requestParams)]);
