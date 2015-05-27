@@ -2,14 +2,15 @@
 namespace Codeception\Lib\Generator;
 
 use Codeception\Configuration;
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Test
 {
-    use Shared\Namespaces;
+    use Namespaces;
     use Shared\Classname;
 
-    protected $template  = <<<EOF
+    protected $template = <<<EOF
 <?php
 {{namespace}}
 
@@ -50,10 +51,10 @@ EOF;
     {
         $actor = $this->settings['class_name'];
         if ($this->settings['namespace']) {
-            $actor = $this->settings['namespace'].'\\'.$actor;
+            $actor = $this->settings['namespace'] . '\\' . $actor;
         }
 
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
+        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
 
         return (new Template($this->template))
             ->place('namespace', $ns)

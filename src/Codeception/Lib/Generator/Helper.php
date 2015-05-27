@@ -3,7 +3,8 @@ namespace Codeception\Lib\Generator;
 
 use Codeception\Util\Template;
 
-class Helper {
+class Helper
+{
 
     protected $template = <<<EOF
 <?php
@@ -21,7 +22,6 @@ EOF;
 
     protected $namespace;
     protected $name;
-    protected $guy;
 
     public function __construct($name, $namespace = '')
     {
