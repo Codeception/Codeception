@@ -1,7 +1,8 @@
 <?php
+
 class DbTest extends \PHPUnit_Framework_TestCase
 {
-    protected $config = array(
+    protected static $config = array(
         'dsn' => 'sqlite:tests/data/sqlite.db',
         'user' => 'root',
         'password' => '',
@@ -12,22 +13,29 @@ class DbTest extends \PHPUnit_Framework_TestCase
      * @var \Codeception\Module\Db
      */
     protected $module = null;
+    
+    public static function setUpBeforeClass()
+    {
+        try {
+            $sqlite = \Codeception\Lib\Driver\Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+            $sqlite->cleanup();
+            
+            $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
+            $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+            $sql = explode("\n", $sql);
+            $sqlite->load($sql);
+        } catch (\Exception $e) {
+        }
+        
+    }
+
 
     public function setUp()
     {
         $this->module = new \Codeception\Module\Db();
-        $this->module->_setConfig($this->config);
+        $this->module->_setConfig(self::$config);
         $this->module->_initialize();
 //        $this->loadDump(); // enable this when you want to change fixtures
-    }
-
-    protected function loadDump()
-    {
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
-        $sql = explode("\n", $sql);
-        $sqlite = \Codeception\Lib\Driver\Db::create($this->config['dsn'], $this->config['user'], $this->config['password']);
-        $sqlite->load($sql);
     }
 
     public function testSeeInDatabase() {
