@@ -73,7 +73,6 @@ class Phalcon1 extends Framework implements ActiveRecord
 
     /**
      * Phalcon bootstrap file path
-     * @var null
      */
     protected $bootstrapFile = null;
 

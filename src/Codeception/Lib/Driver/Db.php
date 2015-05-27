@@ -14,6 +14,9 @@ class Db
      */
     protected $dsn;
 
+    protected $user;
+    protected $password;
+
     /**
      * @var string
      */

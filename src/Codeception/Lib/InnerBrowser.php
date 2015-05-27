@@ -409,11 +409,14 @@ class InnerBrowser extends Module implements Web
             }
         }
 
-        $urlparts = parse_url($this->getFormUrl($frmCrawl));
-        if (strcasecmp($form->getMethod(), 'GET') === 0) {
-            $urlparts = $this->mergeUrls($urlparts, ['query' => http_build_query($requestParams)]);
+        $urlParts = parse_url($this->getFormUrl($frmCrawl));
+        if ($urlParts === false) {
+            $this->fail("Url '$url' can't be parsed");
         }
-        $url = \GuzzleHttp\Url::buildUrl($urlparts);
+        if (strcasecmp($form->getMethod(), 'GET') === 0) {
+            $urlParts = $this->mergeUrls($urlParts, ['query' => http_build_query($requestParams)]);
+        }
+        $url = \GuzzleHttp\Url::buildUrl($urlParts);
         
         $this->debugSection('Uri', $url);
         $this->debugSection('Method', $form->getMethod());
@@ -699,6 +702,9 @@ class InnerBrowser extends Module implements Web
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
         $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
+        if (!$formField instanceof ChoiceFormField) {
+            throw new TestRuntime("Form field $name is not a checkable");
+        }
         $formField->tick();
     }
 
@@ -708,6 +714,9 @@ class InnerBrowser extends Module implements Web
         $name = $field->attr('name');
         // If the name is an array than we compare objects to find right checkbox
         $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
+        if (!$formField instanceof ChoiceFormField) {
+            throw new TestRuntime("Form field $name is not a checkable");
+        }
         $formField->untick();
     }
 
@@ -917,19 +926,19 @@ class InnerBrowser extends Module implements Web
         if ($nodes->filter('select')->count()) {
             /** @var  \Symfony\Component\DomCrawler\Crawler $select */
             $select      = $nodes->filter('select');
-            $is_multiple = $select->attr('multiple');
+            $isMultiple  = (bool)$select->attr('multiple');
             $results     = [];
             foreach ($select->children() as $option) {
                 /** @var  \DOMElement $option */
                 if ($option->getAttribute('selected') == 'selected') {
                     $val = $option->getAttribute('value');
-                    if (!$is_multiple) {
+                    if (!$isMultiple) {
                         return $val;
                     }
                     $results[] = $val;
                 }
             }
-            if (!$is_multiple) {
+            if (!$isMultiple) {
                 return null;
             }
             return $results;
@@ -1123,7 +1132,7 @@ class InnerBrowser extends Module implements Web
      * @param $name
      * @param $form
      * @param $dynamicField
-     * @return FileFormField
+     * @return FormField
      */
     protected function matchFormField($name, $form, $dynamicField)
     {
@@ -1137,7 +1146,7 @@ class InnerBrowser extends Module implements Web
                 return $item;
             }
         }
-        return $item;
+        throw new TestRuntime("None of form fields by {$name}[] were not matched");
     }
 
     /**

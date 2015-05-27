@@ -1261,7 +1261,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
         $form = reset($form);
         
-        $defaults = [];
         $fields = $form->findElements(\WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]'));
         foreach ($fields as $field) {
             $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));

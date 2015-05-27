@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class PageObject
 {
-    use Shared\Namespaces;
+    use Namespaces;
     use Shared\Classname;
 
     protected $template  = <<<EOF

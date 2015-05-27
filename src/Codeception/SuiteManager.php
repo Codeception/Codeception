@@ -40,6 +40,7 @@ class SuiteManager
     protected $path = '';
     protected $printer = null;
     protected $env = null;
+    protected $settings;
 
     public function __construct(EventDispatcher $dispatcher, $name, array $settings)
     {

@@ -38,9 +38,10 @@ use Symfony\Component\Finder\Finder;
  * ```
  *
  */
-class TestLoader {
+class TestLoader
+{
 
-    protected static $formats = array('Cest', 'Cept', 'Test');
+    protected static $formats = ['Cest', 'Cept', 'Test'];
     protected $tests = [];
     protected $path;
 
@@ -56,14 +57,15 @@ class TestLoader {
 
     protected function relativeName($file)
     {
-        return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
+        return str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
     protected function findPath($path)
     {
-        if ( ! file_exists($path)
-                && substr(strtolower($path), -strlen('.php')) !== '.php'
-                && file_exists($newPath = $path . '.php')) {
+        if (!file_exists($path)
+            && substr(strtolower($path), -strlen('.php')) !== '.php'
+            && file_exists($newPath = $path . '.php')
+        ) {
             return $newPath;
         }
 
@@ -75,11 +77,12 @@ class TestLoader {
         $path = $this->path . $this->relativeName($originalPath);
 
         if (file_exists($newPath = $this->findPath($path))
-            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))) {
+            || file_exists($newPath = $this->findPath(getcwd() . "/{$originalPath}"))
+        ) {
             $path = $newPath;
         }
 
-        if ( ! file_exists($path)) {
+        if (!file_exists($path)) {
             throw new \Exception("File or path $originalPath not found");
         }
 
@@ -92,7 +95,7 @@ class TestLoader {
 
         foreach (self::$formats as $format) {
             if (preg_match("~$format.php$~", $path)) {
-                call_user_func(array($this, "add$format"), $path);
+                call_user_func([$this, "add$format"], $path);
                 return;
             }
         }
@@ -115,7 +118,7 @@ class TestLoader {
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name("*$format.php");
             foreach ($testFiles as $test) {
-                call_user_func(array($this, "add$format"), $test->getPathname());
+                call_user_func([$this, "add$format"], $test->getPathname());
             }
         }
     }

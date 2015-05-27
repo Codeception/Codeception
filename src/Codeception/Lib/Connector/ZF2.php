@@ -55,7 +55,7 @@ class ZF2 extends Client
             $zendRequest->setQuery(new Parameters($query));
         }
         
-        if ($request->getContent() != null) {
+        if ($request->getContent() !== null) {
             $zendRequest->setContent($request->getContent());
         } elseif ($method != HttpRequest::METHOD_GET) {
             $post = $request->getParameters();

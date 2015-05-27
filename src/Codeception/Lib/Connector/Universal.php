@@ -9,6 +9,7 @@ class Universal extends Client
     use Shared\PhpSuperGlobalsConverter;
 
     protected $mockedResponse;
+    protected $index;
 
     public function setIndex($index)
     {
