@@ -318,7 +318,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function makeDir($dirname)
     {
-        $this->_makeDirectory($this->absolutizePath($dirname));
+        $this->makeDirectory($this->absolutizePath($dirname));
     }
 
     /**
@@ -346,7 +346,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function renameFile($filename, $rename)
     {
-        $this->_renameDirectory($this->absolutizePath($filename), $this->absolutizePath($rename));
+        $this->renameDirectory($this->absolutizePath($filename), $this->absolutizePath($rename));
     }
 
     /**
@@ -363,7 +363,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function renameDir($dirname, $rename)
     {
-        $this->_renameDirectory($this->absolutizePath($dirname), $this->absolutizePath($rename));
+        $this->renameDirectory($this->absolutizePath($dirname), $this->absolutizePath($rename));
     }
 
     /**
@@ -379,7 +379,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function deleteFile($filename)
     {
-        $this->_deleteFile($this->absolutizePath($filename));
+        $this->delete($this->absolutizePath($filename));
     }
 
     /**
@@ -395,7 +395,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function deleteDir($dirname)
     {
-        $this->_deleteDirectory($this->absolutizePath($dirname));
+        $this->delete($this->absolutizePath($dirname));
     }
 
     /**
@@ -411,7 +411,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function cleanDir($dirname)
     {
-        $this->_clearDirectory($this->absolutizePath($dirname));
+        $this->clearDirectory($this->absolutizePath($dirname));
     }
 
     // ----------- GRABBER METHODS BELOW HERE -----------------------//
@@ -491,7 +491,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function grabFileSize($filename)
     {
-        $fileSize = $this->_size($filename);
+        $fileSize = $this->size($filename);
         $this->debug("{$filename} has a file size of {$fileSize}");
         return $fileSize;
     }
@@ -510,7 +510,7 @@ class FTP extends \Codeception\Module\Filesystem
      */
     public function grabFileModified($filename)
     {
-        $time = $this->_modified($filename);
+        $time = $this->modified($filename);
         $this->debug("{$filename} was last modified at {$time}");
         return $time;
     }
@@ -689,7 +689,7 @@ class FTP extends \Codeception\Module\Filesystem
      *
      * @param $path
      */
-    private function _makeDirectory($path)
+    private function makeDirectory($path)
     {
         if ($this->isSFTP()) {
             $created = @$this->ftp->mkdir($path, true);
@@ -708,7 +708,7 @@ class FTP extends \Codeception\Module\Filesystem
      * @param $path
      * @param $rename
      */
-    private function _renameDirectory($path, $rename)
+    private function renameDirectory($path, $rename)
     {
         if ($this->isSFTP()) {
             $renamed = @$this->ftp->rename($path, $rename);
@@ -726,36 +726,19 @@ class FTP extends \Codeception\Module\Filesystem
      *
      * @param $filename
      */
-    private function _deleteFile($filename)
+    private function delete($filename, $isDir = flase)
     {
         if ($this->isSFTP()) {
-            $deleted = @$this->ftp->delete($filename);
+            $deleted = @$this->ftp->delete($filename, $isDir);
         } else {
-            $deleted = @ftp_delete($this->ftp, $filename);
+            $deleted = @$this->ftpDelete($filename);
         }
         if (!$deleted) {
             $this->fail("couldn't delete {$filename}");
         }
-        $this->debug("Deleted file: {$filename}");
+        $this->debug("Deleted: {$filename}");
     }
 
-    /**
-     * Delete directory on server
-     *
-     * @param $path
-     */
-    private function _deleteDirectory($path)
-    {
-        if ($this->isSFTP()) {
-            $deleted = @$this->ftp->delete($path, true);
-        } else {
-            $deleted = @$this->_ftp_delete($path);
-        }
-        if (!$deleted) {
-            $this->fail("couldn't delete directory {$path}");
-        }
-        $this->debug("Deleted directory: {$path}");
-    }
 
     /**
      * Function to recursively delete folder, used for PHP FTP build in client.
@@ -763,20 +746,20 @@ class FTP extends \Codeception\Module\Filesystem
      * @param $directory
      * @return bool
      */
-    private function _ftp_delete($directory)
+    private function ftpDelete($directory)
     {
-        # here we attempt to delete the file/directory
+        // here we attempt to delete the file/directory
         if (!(@ftp_rmdir($this->ftp, $directory) || @ftp_delete($this->ftp, $directory))) {
-            # if the attempt to delete fails, get the file listing
+            // if the attempt to delete fails, get the file listing
             $filelist = @ftp_nlist($this->ftp, $directory);
 
-            # loop through the file list and recursively delete the FILE in the list
+            // loop through the file list and recursively delete the FILE in the list
             foreach ($filelist as $file) {
-                $this->_ftp_delete($file);
+                $this->ftpDelete($file);
             }
 
-            #if the file list is empty, delete the DIRECTORY we passed
-            $this->_ftp_delete($directory);
+            // if the file list is empty, delete the DIRECTORY we passed
+            $this->ftpDelete($directory);
         }
         return true;
     }
@@ -786,11 +769,11 @@ class FTP extends \Codeception\Module\Filesystem
      *
      * @param $path
      */
-    private function _clearDirectory($path)
+    private function clearDirectory($path)
     {
         $this->debug("Clear directory: {$path}");
-        $this->_deleteDirectory($path);
-        $this->_makeDirectory($path);
+        $this->delete($path);
+        $this->makeDirectory($path);
     }
 
     /**
@@ -799,7 +782,7 @@ class FTP extends \Codeception\Module\Filesystem
      * @param $filename
      * @return bool
      */
-    private function _size($filename)
+    private function size($filename)
     {
         if ($this->isSFTP()) {
             $size = (int)@$this->ftp->size($filename);
@@ -818,7 +801,7 @@ class FTP extends \Codeception\Module\Filesystem
      * @param $filename
      * @return bool
      */
-    private function _modified($filename)
+    private function modified($filename)
     {
         if ($this->isSFTP()) {
             $info = @$this->ftp->lstat($filename);
