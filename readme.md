@@ -10,22 +10,13 @@ Powered by PHPUnit.
 
 | release |  branch  |  status  |
 | ------- | -------- | -------- |
-| **Stable** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
-| **Current** | **2.0** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.0)](http://travis-ci.org/Codeception/Codeception)
-| **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) [![Dependencies Status](https://depending.in/Codeception/Codeception.png)](http://depending.in/Codeception/Codeception)
+| **Stable** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) 
+| **Current** | **2.0** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.0)](http://travis-ci.org/Codeception/Codeception) [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.0)
+| **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) 
 
 #### Contributions
 
-##### Code
-
-**Bugfixes should be sent to to current stable branch, which is the same as major version number.**
-Breaking features and major improvements should be sent into `master`. When you send PRs to master, they will be added to release cycle only when the next stable branch is started.
-
-Check also the "tests/README.md" to learn more about the available internal Codeception tests.
-
-##### Documentation
-
-The documentation for each module is directly generated from the corresponding docblock which can be found in each module (src/Module/Codeception/*.php).
+At Codeception we are glad to receive contributions from the community. If you want to send additions or fixes to the code or the documentation please check the [Contributing guide](https://github.com/Codeception/Codeception/blob/2.0/CONTRIBUTING.md).
 
 ### At a Glance
 

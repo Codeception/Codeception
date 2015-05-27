@@ -3,7 +3,8 @@ namespace Codeception\Lib\Generator;
 
 use Codeception\Util\Template;
 
-class Cept {
+class Cept
+{
 
     protected $template = <<<EOF
 <?php {{use}}
@@ -31,5 +32,5 @@ EOF;
             ->place('use', $use)
             ->produce();
     }
-    
+
 }

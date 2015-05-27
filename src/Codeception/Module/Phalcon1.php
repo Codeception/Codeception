@@ -2,6 +2,7 @@
 
 namespace Codeception\Module;
 
+use Codeception\Exception\Module;
 use PDOException;
 use RuntimeException;
 use Phalcon\Di;
@@ -65,15 +66,14 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  */
 class Phalcon1 extends Framework implements ActiveRecord
 {
-    protected $config = array(
-        'bootstrap' => 'app/config/bootstrap.php',
-        'cleanup' => true,
+    protected $config = [
+        'bootstrap'  => 'app/config/bootstrap.php',
+        'cleanup'    => true,
         'savepoints' => true,
-    );
+    ];
 
     /**
      * Phalcon bootstrap file path
-     * @var null
      */
     protected $bootstrapFile = null;
 
@@ -118,6 +118,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * @param TestCase $test
      * @throws \RuntimeException
+     * @throws Module
      */
     public function _before(TestCase $test)
     {
@@ -127,6 +128,11 @@ class Phalcon1 extends Framework implements ActiveRecord
         }
 
         $this->di = $application->getDI();
+
+        if (!$this->di instanceof DiInterface) {
+            throw new Module(__CLASS__, 'Dependency injector container must implement DiInterface');
+        }
+
         Di::reset();
         Di::setDefault($this->di);
 
@@ -171,7 +177,7 @@ class Phalcon1 extends Framework implements ActiveRecord
      */
     public function _after(TestCase $test)
     {
-        if ($this->config['cleanup'] && $this->di->has('db')) {
+        if ($this->config['cleanup'] && isset($this->di['db'])) {
             while ($this->di['db']->isUnderTransaction()) {
                 $level = $this->di['db']->getTransactionLevel();
                 try {
@@ -185,7 +191,7 @@ class Phalcon1 extends Framework implements ActiveRecord
         $this->di = null;
         Di::reset();
 
-        $_SESSION = $_FILES = $_GET = $_POST = $_COOKIE = $_REQUEST = array();
+        $_SESSION = $_FILES = $_GET = $_POST = $_COOKIE = $_REQUEST = [];
     }
 
     /**
@@ -222,8 +228,8 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * ``` php
      * <?php
-     * $user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
-     * $I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
+     * $user_id = $I->haveRecord('Phosphorum\Models\Users', ['name' => 'Phalcon']);
+     * $I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
      * ?>
      * ```
      *
@@ -231,13 +237,13 @@ class Phalcon1 extends Framework implements ActiveRecord
      * @param array $attributes Model attributes
      * @return mixed
      */
-    public function haveRecord($model, $attributes = array())
+    public function haveRecord($model, $attributes = [])
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
         if (!$res) {
             $messages = $record->getMessages();
-            $errors = array();
+            $errors = [];
             foreach ($messages as $message) {
                 $errors[] = sprintf('[%s] %s: %s', $message->getType(), $message->getField(), $message->getMessage());
             }
@@ -254,13 +260,13 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * ``` php
      * <?php
-     * $I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * $I->seeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
      * ```
      *
      * @param string $model Model name
      * @param array $attributes Model attributes
      */
-    public function seeRecord($model, $attributes = array())
+    public function seeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         if (!$record) {
@@ -274,13 +280,13 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * ``` php
      * <?php
-     * $I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * $I->dontSeeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
      * ```
      *
      * @param string $model Model name
      * @param array $attributes Model attributes
      */
-    public function dontSeeRecord($model, $attributes = array())
+    public function dontSeeRecord($model, $attributes = [])
     {
         $record = $this->findRecord($model, $attributes);
         $this->debugSection($model, json_encode($record));
@@ -294,14 +300,14 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * ``` php
      * <?php
-     * $category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+     * $category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
      * ```
      *
      * @param string $model Model name
      * @param array $attributes Model attributes
      * @return mixed
      */
-    public function grabRecord($model, $attributes = array())
+    public function grabRecord($model, $attributes = [])
     {
         return $this->findRecord($model, $attributes);
     }
@@ -314,16 +320,16 @@ class Phalcon1 extends Framework implements ActiveRecord
      *
      * @return \Phalcon\Mvc\Model
      */
-    protected function findRecord($model, $attributes = array())
+    protected function findRecord($model, $attributes = [])
     {
         $this->getModelRecord($model);
-        $query = array();
+        $query = [];
         foreach ($attributes as $key => $value) {
             $query[] = "$key = '$value'";
         }
         $query = implode(' AND ', $query);
         $this->debugSection('Query', $query);
-        return call_user_func_array(array($model, 'findFirst'), array($query));
+        return call_user_func_array([$model, 'findFirst'], [$query]);
     }
 
     /**

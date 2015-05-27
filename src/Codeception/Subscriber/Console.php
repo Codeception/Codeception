@@ -50,7 +50,7 @@ class Console implements EventSubscriberInterface
     protected $rawStackTrace = false;
     protected $traceLength = 5;
     protected $columns = array(40, 5);
-
+    protected $output;
 
     public function __construct($options)
     {

@@ -7,7 +7,7 @@ use Codeception\Event\TestEvent;
 
 class Group extends Extension
 {
-    static $group;
+    public static $group;
 
     public function _before(TestEvent $e)
     {

@@ -166,7 +166,7 @@ class Run extends Command
         $test  = $input->getArgument('test');
 
         if (! Configuration::isEmpty() && ! $test && strpos($suite, $config['paths']['tests']) === 0) {
-            list($matches, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
+            list(, $suite, $test) = $this->matchTestFromFilename($suite, $config['paths']['tests']);
         }
 
         if ($this->options['group']) {
