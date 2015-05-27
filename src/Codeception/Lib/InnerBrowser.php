@@ -698,26 +698,32 @@ class InnerBrowser extends Module implements Web
 
     public function checkOption($option)
     {
-        $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
-        $name = $field->attr('name');
-        // If the name is an array than we compare objects to find right checkbox
-        $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
-        if (!$formField instanceof ChoiceFormField) {
-            throw new TestRuntime("Form field $name is not a checkable");
-        }
-        $formField->tick();
+        $this->proceedCheckOption($option)->tick();
     }
 
     public function uncheckOption($option)
     {
+        $this->proceedCheckOption($option)->untick();
+    }
+
+    /**
+     * @param $option
+     * @return ChoiceFormField
+     */
+    protected function proceedCheckOption($option)
+    {
         $form = $this->getFormFor($field = $this->getFieldByLabelOrCss($option));
         $name = $field->attr('name');
+
+        if ($field->getNode(0) === null) {
+            throw new TestRuntime("Form field $name is not located");
+        }
         // If the name is an array than we compare objects to find right checkbox
         $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
         if (!$formField instanceof ChoiceFormField) {
             throw new TestRuntime("Form field $name is not a checkable");
         }
-        $formField->untick();
+        return $formField;
     }
 
     public function attachFile($field, $filename)
