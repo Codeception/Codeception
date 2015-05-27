@@ -107,7 +107,6 @@ class Guzzle extends Client
         $headers = $response->getHeaders();
         $status = $response->getStatusCode();
         $matches = [];
-        $matchesMeta = null;
 
         $matchesMeta = preg_match(
             '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',

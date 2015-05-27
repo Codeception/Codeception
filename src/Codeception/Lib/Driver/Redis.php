@@ -36,7 +36,7 @@ class Redis
             return;
         }
         $msg = "Cannot open socket to {$this->host}:{$this->port}";
-        if (($errno !== 0) || $errmsg) {
+        if (($errno !== 0) || ($errmsg !== null)) {
             $msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
         }
         throw new RedisException ("$msg.");
@@ -44,7 +44,9 @@ class Redis
 
     private function debug($msg)
     {
-        if ($this->debug) echo sprintf("[Redis] %s\n", $msg);
+        if ($this->debug) {
+            codecept_debug("[Redis] %s\n", $msg);
+        }
     }
 
     private function read()
