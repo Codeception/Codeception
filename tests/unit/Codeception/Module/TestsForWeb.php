@@ -1215,5 +1215,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/form/example17');
         $this->module->seeInField('input[name="FooBar[bar]"]', 'baz');
+        $this->module->seeInField('input[name="Food[beer][yum][yeah]"]', 'mmhm');
     }
 }
