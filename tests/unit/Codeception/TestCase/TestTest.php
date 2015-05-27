@@ -14,4 +14,15 @@ class TestTest extends \Codeception\TestCase\Test
         $this->assertEquals('hey', $hey);
     }
 
+    public function testReportedInterface()
+    {
+        $this->assertInstanceOf('\\Codeception\\TestCase\\Interfaces\\Reported', $this);
+        $this->assertEquals(array(
+            'file' => __FILE__,
+            'name' => 'testReportedInterface',
+            'class' => 'TestTest',
+            'feature' => 'test reported interface',
+        ), $this->getReportFields());
+    }
+
 }

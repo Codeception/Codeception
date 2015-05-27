@@ -40,9 +40,7 @@ class SelfUpdate extends Command
     {
         $this->filename = $_SERVER['argv'][0];
 
-        $this
-            // ->setAliases(array('selfupdate'))
-            ->setDescription(sprintf(
+        $this->setDescription(sprintf(
                 'Upgrade <comment>%s</comment> to the latest version',
                 $this->filename
             ));

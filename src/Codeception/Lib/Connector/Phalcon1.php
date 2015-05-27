@@ -69,7 +69,7 @@ class Phalcon1 extends Client
         Di::reset();
         Di::setDefault($di);
 
-        $_SERVER = array();
+        $_SERVER = [];
         foreach ($request->getServer() as $key => $value) {
             $_SERVER[strtoupper(str_replace('-', '_', $key))] = $value;
         }
@@ -93,7 +93,7 @@ class Phalcon1 extends Client
         $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         $_SERVER['REMOTE_ADDR']  = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), array(), array('getRawBody' => $request->getContent()));
+        $di['request'] = Stub::construct($di->get('request'), [], ['getRawBody' => $request->getContent()]);
 
         $response = $application->handle();
 
@@ -104,7 +104,7 @@ class Phalcon1 extends Client
         $headersProperty->setAccessible(true);
         $headers = $headersProperty->getValue($headers);
         if (!is_array($headers)) {
-            $headers = array();
+            $headers = [];
         }
 
         $cookiesProperty = new ReflectionProperty($di['cookies'], '_cookies');
@@ -141,7 +141,7 @@ class Phalcon1 extends Client
 class PhalconMemorySession extends SessionAdapter implements SessionInterface
 {
     private $isStarted = false;
-    private $data = array();
+    private $data = [];
 
     public function start()
     {
@@ -181,7 +181,7 @@ class PhalconMemorySession extends SessionAdapter implements SessionInterface
     public function destroy($session_id = NULL)
     {
         $this->isStarted = false;
-        $this->data      = array();
+        $this->data      = [];
     }
 
     public function getAll()

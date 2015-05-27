@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
-class Group {
-
-    use Shared\Namespaces;
+class Group
+{
+    use Namespaces;
     use Shared\Classname;
 
     protected $template = <<<EOF
@@ -45,10 +46,10 @@ EOF;
         $this->settings = $settings;
         $this->name = $this->removeSuffix($name, 'Group');
     }
-    
+
     public function produce()
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$this->name);
+        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
         return (new Template($this->template))
             ->place('class', ucfirst($this->name))
             ->place('name', $this->name)

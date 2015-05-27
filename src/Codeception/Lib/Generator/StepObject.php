@@ -1,10 +1,12 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
-class StepObject {
-    use Shared\Namespaces;
+class StepObject
+{
+    use Namespaces;
     use Shared\Classname;
 
     protected $template = <<<EOF
@@ -35,11 +37,11 @@ EOF;
 
     public function produce()
     {
-        $actor = $this->settings['class_name'];        
-        $ns = $this->getNamespaceString($this->settings['namespace'].'\\'.$actor.'\\'.$this->name);
+        $actor = $this->settings['class_name'];
+        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $actor . '\\' . $this->name);
         $ns = ltrim($ns, '\\');
 
-        $extended = '\\'.ltrim('\\'.$this->settings['namespace'].'\\'.$actor, '\\');
+        $extended = '\\' . ltrim('\\' . $this->settings['namespace'] . '\\' . $actor, '\\');
 
         return (new Template($this->template))
             ->place('namespace', $ns)

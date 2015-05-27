@@ -22,6 +22,8 @@ namespace Codeception\Module;
 class Doctrine1 extends \Codeception\Module
 {
     protected $config = array('cleanup' => true);
+    protected $dbh;
+    protected $tables;
 
     public function _initialize() {
         $this->dbh = \Doctrine_Manager::connection()->getDbh();

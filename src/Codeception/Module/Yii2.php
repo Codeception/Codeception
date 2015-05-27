@@ -57,8 +57,8 @@ class Yii2 extends Framework implements ActiveRecord
         $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
         $mainConfig = \Codeception\Configuration::config();
         if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
-            $this->client->setServerParameter('HTTP_HOST', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
-            $this->client->setServerParameter('HTTPS', parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https');
+            $this->client->setServerParameter('HTTP_HOST', (string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
+            $this->client->setServerParameter('HTTPS', ((string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME)) === 'https');
         }
         $this->app = $this->client->startApp();
 
@@ -188,11 +188,16 @@ class Yii2 extends Framework implements ActiveRecord
     }
 
     /**
-     * Converting $page to valid Yii2 url
+     * Converting $page to valid Yii 2 URL
+     * 
      * Allows input like:
+     * 
+     * ```php
      * $I->amOnPage(['site/view','page'=>'about']);
      * $I->amOnPage('index-test.php?site/index');
      * $I->amOnPage('http://localhost/index-test.php?site/index');
+     * ```
+     * 
      * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
      */
     public function amOnPage($page)

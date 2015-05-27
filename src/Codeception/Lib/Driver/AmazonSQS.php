@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Driver;
 
+use Codeception\Exception\TestRuntime;
 use Codeception\Lib\Interfaces\Queue;
 
 class AmazonSQS implements Queue
@@ -15,10 +16,13 @@ class AmazonSQS implements Queue
      */
     public function openConnection($config)
     {
-        $this->queue = \Aws\Sqs\SqsClient::factory(array(
+        $this->queue = \Aws\Sqs\SqsClient::factory([
             'credentials' => new \Aws\Common\Credentials\Credentials($config['key'], $config['secret']),
             'region' => $config['region']
-        )) OR \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
+        ]);
+        if (!$this->queue) {
+            throw new TestRuntime('connection failed or timed-out.');
+        }
 
     }
 
@@ -30,10 +34,10 @@ class AmazonSQS implements Queue
      */
     public function addMessageToQueue($message, $queue)
     {
-        $this->queue->sendMessage(array(
+        $this->queue->sendMessage([
             'QueueUrl' => $this->getQueueURL($queue),
             'MessageBody' => $message,
-        ));
+        ]);
     }
 
     /**
@@ -43,8 +47,8 @@ class AmazonSQS implements Queue
      */
     public function getQueues()
     {
-        $queueNames = array();
-        $queues = $this->queue->listQueues(array('QueueNamePrefix' => ''))->get('QueueUrls');
+        $queueNames = [];
+        $queues = $this->queue->listQueues(['QueueNamePrefix' => ''])->get('QueueUrls');
         foreach ($queues as $queue) {
             $tokens = explode('/', $queue);
             $queueNames[] = $tokens[sizeof($tokens)-1];
@@ -61,10 +65,10 @@ class AmazonSQS implements Queue
      */
     public function getMessagesCurrentCountOnQueue($queue)
     {
-        return $this->queue->getQueueAttributes(array(
-            'QueueUrl' => $this->_getQueueURL($queue),
-            'AttributeNames' => array('ApproximateNumberOfMessages'),
-        ))->get('Attributes')['ApproximateNumberOfMessages'];
+        return $this->queue->getQueueAttributes([
+            'QueueUrl' => $this->getQueueURL($queue),
+            'AttributeNames' => ['ApproximateNumberOfMessages'],
+        ])->get('Attributes')['ApproximateNumberOfMessages'];
     }
 
     /**
@@ -76,18 +80,18 @@ class AmazonSQS implements Queue
      */
     public function getMessagesTotalCountOnQueue($queue)
     {
-        return $this->queue->getQueueAttributes(array(
-            'QueueUrl' => $this->_getQueueURL($queue),
-            'AttributeNames' => array('ApproximateNumberOfMessages'),
-        ))->get('Attributes')['ApproximateNumberOfMessages'];
+        return $this->queue->getQueueAttributes([
+            'QueueUrl' => $this->getQueueURL($queue),
+            'AttributeNames' => ['ApproximateNumberOfMessages'],
+        ])->get('Attributes')['ApproximateNumberOfMessages'];
 
     }
 
     public function clearQueue($queue)
     {
-        $queueURL = $this->_getQueueURL($queue);
+        $queueURL = $this->getQueueURL($queue);
         while (true) {
-            $res = $this->queue->receiveMessage(array('QueueUrl' => $queueURL));
+            $res = $this->queue->receiveMessage(['QueueUrl' => $queueURL]);
 
             if (!$res->getPath('Messages')) {
                 return;
@@ -96,10 +100,10 @@ class AmazonSQS implements Queue
                 $this->debug("  - delete message: ".$msg['MessageId']);
             }
             // Do something useful with $msg['Body'] here
-            $this->queue->deleteMessage(array(
+            $this->queue->deleteMessage([
                 'QueueUrl'      => $queueURL,
                 'ReceiptHandle' => $msg['ReceiptHandle']
-            ));
+            ]);
         }
     }
 
@@ -112,14 +116,13 @@ class AmazonSQS implements Queue
      */
     private function getQueueURL($queue)
     {
-        $queues = $this->queue->listQueues(array('QueueNamePrefix' => ''))->get('QueueUrls');
+        $queues = $this->queue->listQueues(['QueueNamePrefix' => ''])->get('QueueUrls');
         foreach ($queues as $queueURL) {
             $tokens = explode('/', $queueURL);
             if (strtolower($queue) == strtolower($tokens[sizeof($tokens)-1]))
                 return $queueURL;
         }
-        $this->debug('queue: [' . $queue . '] not found');
-        \PHPUnit_Framework_Assert::fail('queue [' . $queue . '] not found');
+        throw new TestRuntime('queue [' . $queue . '] not found');
     }
 
     public function getRequiredConfig()

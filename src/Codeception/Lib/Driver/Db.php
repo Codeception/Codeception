@@ -14,6 +14,9 @@ class Db
      */
     protected $dsn;
 
+    protected $user;
+    protected $password;
+
     /**
      * @var string
      */
@@ -208,7 +211,7 @@ class Db
     public function getPrimaryColumn($tableName)
     {
         if (false === isset($this->primaryColumns[$tableName])) {
-            $stmt = $this->getDbh()->query('SHOW KEYS FROM ' . $tableName . ' WHERE Key_name = "PRIMARY"');
+            $stmt = $this->getDbh()->query('SHOW KEYS FROM ' . $this->getQuotedName($tableName) . ' WHERE Key_name = "PRIMARY"');
             $columnInformation = $stmt->fetch(\PDO::FETCH_ASSOC);
 
             if (true === empty($columnInformation)) { // Need a primary key

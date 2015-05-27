@@ -159,10 +159,10 @@ class Cest extends \Codeception\TestCase implements
     {
         foreach (['actor', 'guy'] as $annotation) {
             $definedActor = Annotation::forMethod($this->testClassInstance, $this->testMethod)->fetch($annotation);
-            if (!$definedActor) {
+            if ($definedActor === null) {
                 $definedActor = Annotation::forClass($this->testClassInstance)->fetch($annotation);
             }
-            if ($definedActor) {
+            if ($definedActor !== null) {
                 $this->actor = $definedActor;
                 return $this;
             }

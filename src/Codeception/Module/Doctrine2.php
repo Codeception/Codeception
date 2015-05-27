@@ -268,7 +268,6 @@ class Doctrine2 extends \Codeception\Module
     {
         // we need to store to database...
         self::$em->flush();
-        $data = self::$em->getClassMetadata($entity);
         $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
         $this->buildAssociationQuery($qb,$entity, 's', $params);
         $this->debug($qb->getDQL());
@@ -300,7 +299,6 @@ class Doctrine2 extends \Codeception\Module
     {
         // we need to store to database...
         self::$em->flush();
-        $data = self::$em->getClassMetadata($entity);
         $qb = self::$em->getRepository($entity)->createQueryBuilder('s');
         $qb->select('s.'.$field);
         $this->buildAssociationQuery($qb,$entity, 's', $params);
