@@ -16,21 +16,16 @@ class DbTest extends \PHPUnit_Framework_TestCase
     
     public static function setUpBeforeClass()
     {
-        try {
-            $sqlite = \Codeception\Lib\Driver\Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
-            $sqlite->cleanup();
-        } catch (\Exception $e) {
-            return;
-        }
-                    
+        self::$module = new \Codeception\Module\Db();
+        self::$module->_setConfig(self::$config);
+        self::$module->_initialize();
+        
+        $sqlite = self::$module->driver;
+        $sqlite->cleanup();
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
         $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
         $sql = explode("\n", $sql);
         $sqlite->load($sql);
-        
-        self::$module = new \Codeception\Module\Db();
-        self::$module->_setConfig(self::$config);
-        self::$module->_initialize();
     }
 
     public function testSeeInDatabase()
