@@ -56,7 +56,7 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
 
     public function testCleanupDatabase()
     {
-        $this->assertEquals(1, count(self::$postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll()));
+        $this->assertNotEmpty(self::$postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
         self::$postgres->cleanup();
         $this->assertEmpty(self::$postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
     }
