@@ -30,6 +30,7 @@
 * [ZF1] Various improvements by @Naktibalda See #1924
 * [ZF2][ZF2] Improved passing request headers by @Naktibalda
 * [Phalcon1] Improved dependency injector container check by @sergeyklay #1967
+* [Yii2] Enabled logging by @TriAnMan #1539
 * Attribute `feature` added to xml reports in `Codeception\TestCase\Test` test report by @tankist. See #1964
 * Fixed #1779 by @Naktibalda
 * ...special thanks to @Naktibalda for creating demo [ZF1](https://github.com/Naktibalda/codeception-zf1-tests) and [ZF2](https://github.com/Naktibalda/codeception-zf2-tests) applications with api tests examples.
