@@ -8,7 +8,7 @@
   * non-interactive environments for `tput` are ignored
 * [Frameworks][PhpBrowser][Symfony2] Fields are passed as PHP-array on form submission the same way as `Symfony\Component\DomCrawler\Form->getPhpValues()` does. Fixes fails of Symfony form tests  *2015-05-22*
 * [Laravel4] Fixed bug with filters. See #1810. *2015-05-21*
-* [PhpBrowser][Frameworks] Fixed working associative array form fields (like `FooBar[bar]`). Fixes regression #1923.
+* [PhpBrowser][Frameworks] Fixed working associative array form fields (like `FooBar[bar]`). Fixes regression #1923 by @davertmik and @zbateson.
 * [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * [Laravel4] [Laravel5] Improved error message for `amOnRoute` and `amOnAction` methods if route or action does not exist *2015-05-04*
 * [Laravel4] Fixed issue with session configuration *2015-05-01*
@@ -17,6 +17,23 @@
   * Added `seeFormHasErrors()`, `seeFormErrorMessages(array $bindings)` and `seeFormErrorMessage($key, $errorMessage)` methods
   * Deprecated `seeSessionHasErrors()` and `seeSessionErrorMessage(array $bindings)` methods.
 * fixed stderr output messages in PHPStorm console *2015-04-26*
+* Allow following symlinks when searching for tests by @nechutny
+* Fixed `g:scenarios --single-file` missing linebreaks between scenarios by @Zifius Parially fixes #1866
+* [Frameworks][PhpBrowser] Fixed errors like `[ErrorException] Array to string conversion` when using strict locators. Fix by @neochief #1881
+* [Frameworks][PhpBrowser] Fix for URLs with query parameters not properly constructed for GET form submissions by @zbateson Fixes #1891
+* [Facebook] Updated Facebook SDK to 4.0 by @enginvardar. See #1896.
+* [DB] Quote table name in `Db::getPrimaryKeyColumn` and `Db::deleteQueryMethods` by @Naktibalda. See #1912
+* [Silex] Can be used for API functional testing. Improvement by @arduanov See #1945
+* [Doctrine2] Added new config option `symfony_em_service` to specify service name for Doctrine entity manager in Symfony DIC by @danieltuwien #1915
+* [Db] Reversed order of removing records with foreign keys created by `haveInDatabase`. Fixes #1942 by @satahippy
+* [Db] Quote names in PostgreSQL queries. Fix #1916 by @satahippy
+* [ZF1] Various improvements by @Naktibalda See #1924
+* [ZF2][ZF2] Improved passing request headers by @Naktibalda
+* [Phalcon1] Improved dependency injector container check by @sergeyklay #1967
+* [Yii2] Enabled logging by @TriAnMan #1539
+* Attribute `feature` added to xml reports in `Codeception\TestCase\Test` test report by @tankist. See #1964
+* Fixed #1779 by @Naktibalda
+* ...special thanks to @Naktibalda for creating demo [ZF1](https://github.com/Naktibalda/codeception-zf1-tests) and [ZF2](https://github.com/Naktibalda/codeception-zf2-tests) applications with api tests examples.
 
 #### 2.0.13
 

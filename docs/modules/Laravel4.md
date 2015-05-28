@@ -5,10 +5,8 @@
 
 
 This module allows you to run functional tests for Laravel 4.
-Module is very fresh and should be improved with Laravel testing capabilities.
-Please try it and leave your feedbacks. If you want to maintain it - connect Codeception team.
-
-Uses 'bootstrap/start.php' to launch.
+Please try it and leave your feedback.
+The original author of this module is Davert.
 
 ## Demo Project
 
@@ -16,9 +14,9 @@ Uses 'bootstrap/start.php' to launch.
 
 ## Status
 
-* Maintainer: **Davert**
+* Maintainer: **Jan-Henk Gerritsen**
 * Stability: **stable**
-* Contact: davert.codeception@mailican.com
+* Contact: janhenkgerritsen@gmail.com
 
 ## Config
 
@@ -31,7 +29,7 @@ Uses 'bootstrap/start.php' to launch.
 
 ## API
 
-* kernel - `Illuminate\Foundation\Application` instance
+* app - `Illuminate\Foundation\Application` instance
 * client - `BrowserKit` client
 
 
@@ -58,7 +56,7 @@ Takes either `UserInterface` instance or array of credentials.
  
 Opens web page by action name
 
-```php
+``` php
 <?php
 $I->amOnAction('PostsController@index');
 ?>
@@ -88,7 +86,7 @@ $I->amOnPage('/register');
  
 Opens web page using route name and parameters.
 
-```php
+``` php
 <?php
 $I->amOnRoute('posts.create');
 ?>
@@ -134,6 +132,13 @@ $I->checkOption('#agree');
 ```
 
  * `param` $option
+
+
+### checkStartFileExists
+ 
+Make sure the Laravel start file exists.
+
+ ModuleConfig
 
 
 ### click
@@ -406,6 +411,13 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  * `param` $value
 
 
+### getApplication
+ 
+Provides access the Laravel application object.
+
+@return \Illuminate\Foundation\Application
+
+
 ### grabAttributeFrom
  
 Grabs the value of the given attribute value from the given element.
@@ -607,7 +619,7 @@ $I->seeCookie('PHPSESSID');
  
 Checks that current url matches action
 
-```php
+``` php
 <?php
 $I->seeCurrentActionIs('PostsController@index');
 ?>
@@ -621,7 +633,7 @@ $I->seeCurrentActionIs('PostsController@index');
  
 Checks that current url matches route
 
-```php
+``` php
 <?php
 $I->seeCurrentRouteIs('posts.index');
 ?>
@@ -679,6 +691,56 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param` $selector
  * `param array` $attributes
 @return
+
+
+### seeFormErrorMessage
+ 
+Assert that specific form error message is set in the view.
+
+Useful for validation messages and generally messages array
+ e.g.
+ return `Redirect::to('register')->withErrors($validator);`
+
+Example of Usage
+
+``` php
+<?php
+$I->seeFormErrorMessage('username', 'Invalid Username');
+?>
+```
+ * `param string` $key
+ * `param string` $errorMessage
+
+
+### seeFormErrorMessages
+ 
+Assert that specific form error messages are set in the view.
+
+Useful for validation messages and generally messages array
+ e.g.
+ return `Redirect::to('register')->withErrors($validator);`
+
+Example of Usage
+
+``` php
+<?php
+$I->seeFormErrorMessages(array('username'=>'Invalid Username'));
+?>
+```
+ * `param array` $bindings
+
+
+### seeFormHasErrors
+ 
+Assert that form errors are bound to the View.
+
+``` php
+<?php
+$I->seeFormHasErrors();
+?>
+```
+
+@return bool
 
 
 ### seeInCurrentUrl
@@ -782,7 +844,14 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
 
 ### seeInSession
  
-Assert that the session has a given list of values.
+Assert that a session variable exists.
+
+``` php
+<?php
+$I->seeInSession('key');
+$I->seeInSession('key', 'value');
+?>
+```
 
  * `param`  string|array $key
  * `param`  mixed $value
@@ -860,7 +929,9 @@ Asserts that current page has 404 response status code.
 Checks that record exists in database.
 
 ``` php
+<?php
 $I->seeRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param` $tableName
@@ -892,18 +963,33 @@ $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
 ?>
 ```
  * `param array` $bindings
+@deprecated
 
 
 ### seeSessionHasErrors
  
 Assert that the session has errors bound.
 
+``` php
+<?php
+$I->seeSessionHasErrors();
+?>
+```
+
 @return bool
+@deprecated
 
 
 ### seeSessionHasValues
  
 Assert that the session has a given list of values.
+
+``` php
+<?php
+$I->seeSessionHasValues(['key1', 'key2']);
+$I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
+?>
+```
 
  * `param`  array $bindings
 @return void
@@ -984,6 +1070,11 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $method
  * `param` $uri
  * `param` $params
+
+
+### setApplication
+ 
+ * `param` $app
 
 
 ### setCookie
