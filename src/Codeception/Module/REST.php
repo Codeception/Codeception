@@ -390,7 +390,7 @@ class REST extends \Codeception\Module
                 $this->client->request($method, $url, $parameters, $files);
             } else {
                 $this->debugSection("Request", "$method $url ".json_encode($parameters));
-                $this->client->request($method, $url, array(), $files, array(), $parameters);
+                $this->client->request($method, $url, array(), $files, array(), json_encode($parameters));
             }
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
