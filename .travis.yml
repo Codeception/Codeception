@@ -9,4 +9,4 @@ install:
   - composer install --prefer-dist
 
 script:
-  - php codecept run tests/unit/Codeception/Module/DbTest.php -vv
+  - php codecept run unit -g debug
