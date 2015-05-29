@@ -3,7 +3,7 @@
 class DbTest extends \PHPUnit_Framework_TestCase
 {
     protected static $config = array(
-        'dsn' => 'sqlite:tests/data/sqlite.db',
+        'dsn' => 'sqlite:tests/data/dbtest.db',
         'user' => 'root',
         'password' => '',
         'cleanup' => false
