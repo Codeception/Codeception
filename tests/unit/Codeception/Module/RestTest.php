@@ -272,7 +272,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseJsonMatchesJsonPath('$.store.book.*.invalidField');
     }
 
-
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
@@ -285,6 +284,6 @@ class JsonSerializedItem implements JsonSerializable
 {
     public function jsonSerialize()
     {
-        return '{"hello": "world"}';
+        return array("hello" => "world");
     }
 }
