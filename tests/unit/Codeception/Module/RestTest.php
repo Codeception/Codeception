@@ -191,6 +191,48 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertJson($request->getContent());
     }
 
+    public function testApplicationJsonIncludesObjectSerializableWithJsonMediaType()
+    {
+        $name = 'john';
+        $representation = new ResourceJsonRepresentation($name);
+
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendPOST('/', $representation);
+        /** @var $request \Symfony\Component\BrowserKit\Request  * */
+        $request = $this->module->client->getRequest();
+        $this->assertContains('application/json', $request->getServer());
+        $this->assertJson($request->getContent());
+        $this->assertContains($name, $request->getContent());
+    }
+
+    public function testApplicationJsonIncludesObjectStringWithCustomMediaType()
+    {
+        $name = 'john';
+        $representation = new ResourceJsonRepresentation($name);
+
+        $this->module->haveHttpHeader('Content-Type', $representation->mediaType());
+        $this->module->sendPOST('/', $representation->__toString());
+        /** @var $request \Symfony\Component\BrowserKit\Request  * */
+        $request = $this->module->client->getRequest();
+        $this->assertContains($representation->mediaType(), $request->getServer());
+        $this->assertJson($request->getContent());
+        $this->assertContains($name, $request->getContent());
+    }
+
+    public function testApplicationJsonIncludesObjectStringSerializableWithCustomMediaType()
+    {
+        $name = 'john';
+        $representation = new ResourceJsonRepresentation($name);
+
+        $this->module->haveHttpHeader('Content-Type', $representation->mediaType());
+        $this->module->sendPOST('/', $representation);
+        /** @var $request \Symfony\Component\BrowserKit\Request  * */
+        $request = $this->module->client->getRequest();
+        $this->assertContains($representation->mediaType(), $request->getServer());
+        $this->assertJson($request->getContent());
+        $this->assertContains($name, $request->getContent());
+    }
+
     public function testGetApplicationJsonNotIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
@@ -251,7 +293,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].profile');
     }
 
-    
+
     public function testArrayJsonPathFails()
     {
         $this->shouldFail();
@@ -259,8 +301,8 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesJsonPath('$[*].profile');
     }
-    
-    
+
+
     public function testStructuredJsonPathAndXPath()
     {
         $this->module->response = '{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }';
@@ -286,5 +328,32 @@ class JsonSerializedItem implements JsonSerializable
     public function jsonSerialize()
     {
         return '{"hello": "world"}';
+    }
+}
+
+class ResourceJsonRepresentation implements JsonSerializable
+{
+    private $name;
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function mediaType()
+    {
+        return 'application/resource+json';
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'name' => $this->name
+        ];
+    }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize());
     }
 }
