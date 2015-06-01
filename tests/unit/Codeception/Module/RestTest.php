@@ -272,6 +272,15 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseJsonMatchesJsonPath('$.store.book.*.invalidField');
     }
 
+    public function testApplicationJsonSubtypeIncludesObjectSerialized()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/resource+json');
+        $this->module->sendPOST('/', new JsonSerializedItem());
+        /** @var $request \Symfony\Component\BrowserKit\Request  **/
+        $request = $this->module->client->getRequest();
+        $this->assertContains('application/resource+json', $request->getServer());
+        $this->assertJson($request->getContent());
+    }
 
     protected function shouldFail()
     {
@@ -285,6 +294,6 @@ class JsonSerializedItem implements JsonSerializable
 {
     public function jsonSerialize()
     {
-        return '{"hello": "world"}';
+        return array("hello" => "world");
     }
 }
