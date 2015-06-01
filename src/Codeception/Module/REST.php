@@ -408,9 +408,11 @@ class REST extends \Codeception\Module
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if (array_key_exists('Content-Type', $this->headers)
-            && $this->headers['Content-Type'] === 'application/json'
-            && $method != 'GET'
+        if ($method != 'GET' && array_key_exists('Content-Type', $this->headers)
+            && ($this->headers['Content-Type'] === 'application/json' 
+                || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
+                ) 
+            
         ) {
             if ($parameters instanceof \JsonSerializable) {
                 return json_encode($parameters);
