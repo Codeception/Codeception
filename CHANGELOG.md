@@ -1,13 +1,8 @@
 # Changelog
 
-#### 2.0.15
-
-* [REST] Fixed sending `JsonSerializable` object on POST by @Naktibalda and @andersonamuller. See #1988 #1994
-* [MongoDb] escaped filename shell argument for loading MongoDB by @christoph-hautzinger. #1998 *2015-06-03*
-* [Lumen] Module added by @janhenkgerritsen
-
 #### 2.1.0-beta
 
+* [Doctrine2][Symfony2] em_service config option moved to Symfony2 module *2015-06-03*
 * [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
 * **PSR-4**: all support classes moved to `tests/_support` by default. Actors, Helpers, PageObjects, StepObjects, GroupObjects to follow PSR-4 naming style. Autoloader implemented by @splinter89.
 * **Dependency Injection**: support classes can be injected into tests. Support classes can be injected into each other too. This happens by implementing method `_inject` and explicitly specifying class names as parameters. Implemented by @splinter89.
@@ -29,6 +24,11 @@
 * Group classes renamed to GroupObjects; Base GroupObject class renamed to `Codeception\GroupObject`
 * Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
 
+#### 2.0.15
+
+* [REST] Fixed sending `JsonSerializable` object on POST by @Naktibalda and @andersonamuller. See #1988 #1994
+* [MongoDb] escaped filename shell argument for loading MongoDB by @christoph-hautzinger. #1998 *2015-06-03*
+* [Lumen] Module added by @janhenkgerritsen
 
 #### 2.0.14
 

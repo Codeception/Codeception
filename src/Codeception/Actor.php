@@ -43,11 +43,6 @@ abstract class Actor
         throw new \RuntimeException("Call to undefined method $class::$method");
     }
     
-    protected function getScenario()
-    {
-        return $this->scenario;
-    }
-
     /**
      * Lazy-execution given anonymous function
      * @param $callable \Closure

@@ -168,7 +168,7 @@ class Guzzle extends Client
     protected function doRequest($request)
     {
         /** @var $request BrowserKitRequest  **/
-        $requestOptions = array(
+        $requestOptions = [
             'body' => $this->extractBody($request),
             'cookies' => $this->extractCookies($request),
             'headers' => $this->extractHeaders($request)

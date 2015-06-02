@@ -199,16 +199,6 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Revert back to the Codeception error handler,
-     * because Laravel registers it's own error handler.
-     */
-    protected function revertErrorHandler()
-    {
-        $handler = new ErrorHandler();
-        set_error_handler(array($handler, 'errorHandler'));
-    }
-
-    /**
      * Should database cleanup be performed?
      *
      * @return bool

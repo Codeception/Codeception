@@ -12,7 +12,12 @@ use Codeception\Module\CoverHelper;
 
 trait CoverGuyActions
 {
-   
+    /**
+     * @return \Codeception\Scenario
+     */
+    abstract protected function getScenario();
+
+    
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -23,7 +28,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::amInPath()
      */
     public function amInPath($path) {
-        return $this->scenario->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Condition('amInPath', func_get_args()));
     }
 
  
@@ -45,7 +50,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::openFile()
      */
     public function openFile($filename) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('openFile', func_get_args()));
     }
 
  
@@ -64,7 +69,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::deleteFile()
      */
     public function deleteFile($filename) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('deleteFile', func_get_args()));
     }
 
  
@@ -83,7 +88,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::deleteDir()
      */
     public function deleteDir($dirname) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('deleteDir', func_get_args()));
     }
 
  
@@ -103,7 +108,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::copyDir()
      */
     public function copyDir($src, $dst) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('copyDir', func_get_args()));
     }
 
  
@@ -126,7 +131,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function canSeeInThisFile($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInThisFile', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -146,7 +151,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeInThisFile()
      */
     public function seeInThisFile($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInThisFile', func_get_args()));
     }
 
  
@@ -170,7 +175,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function canSeeFileContentsEqual($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeFileContentsEqual', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -191,7 +196,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeFileContentsEqual()
      */
     public function seeFileContentsEqual($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeFileContentsEqual', func_get_args()));
     }
 
  
@@ -212,7 +217,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function cantSeeInThisFile($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInThisFile', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -230,7 +235,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::dontSeeInThisFile()
      */
     public function dontSeeInThisFile($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInThisFile', func_get_args()));
     }
 
  
@@ -241,7 +246,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::deleteThisFile()
      */
     public function deleteThisFile() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('deleteThisFile', func_get_args()));
     }
 
  
@@ -263,7 +268,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function canSeeFileFound($filename, $path = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeFileFound', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -282,7 +287,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::seeFileFound()
      */
     public function seeFileFound($filename, $path = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeFileFound', func_get_args()));
     }
 
  
@@ -297,7 +302,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::dontSeeFileFound()
      */
     public function cantSeeFileFound($filename, $path = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeFileFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeFileFound', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -309,7 +314,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::dontSeeFileFound()
      */
     public function dontSeeFileFound($filename, $path = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeFileFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeFileFound', func_get_args()));
     }
 
  
@@ -328,7 +333,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::cleanDir()
      */
     public function cleanDir($dirname) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('cleanDir', func_get_args()));
     }
 
  
@@ -342,7 +347,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Filesystem::writeToFile()
      */
     public function writeToFile($filename, $contents) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('writeToFile', func_get_args()));
     }
 
  
@@ -365,7 +370,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::runShellCommand()
      */
     public function runShellCommand($command, $failNonZero = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('runShellCommand', func_get_args()));
     }
 
  
@@ -379,7 +384,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function canSeeInShellOutput($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInShellOutput', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -390,7 +395,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::seeInShellOutput()
      */
     public function seeInShellOutput($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInShellOutput', func_get_args()));
     }
 
  
@@ -405,7 +410,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function cantSeeInShellOutput($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInShellOutput', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -417,7 +422,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::dontSeeInShellOutput()
      */
     public function dontSeeInShellOutput($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInShellOutput', func_get_args()));
     }
 
  
@@ -429,7 +434,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function canSeeShellOutputMatches($regex) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeShellOutputMatches', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -438,7 +443,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\Cli::seeShellOutputMatches()
      */
     public function seeShellOutputMatches($regex) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeShellOutputMatches', func_get_args()));
     }
 
  
@@ -449,7 +454,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\CliHelper::executeCommand()
      */
     public function executeCommand($command) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('executeCommand', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('executeCommand', func_get_args()));
     }
 
  
@@ -461,7 +466,7 @@ trait CoverGuyActions
      * @see \Codeception\Module\CliHelper::seeDirFound()
      */
     public function canSeeDirFound($dir) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeDirFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeDirFound', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -470,6 +475,6 @@ trait CoverGuyActions
      * @see \Codeception\Module\CliHelper::seeDirFound()
      */
     public function seeDirFound($dir) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeDirFound', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeDirFound', func_get_args()));
     }
 }

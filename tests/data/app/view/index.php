@@ -21,7 +21,7 @@
     <a href="info">Document-Relative Link</a>
 </div>
 
-A wise man said: <b>&quot;debug!&quot;</b>
+A wise man said: "debug!"
 
 <?php print_r($_POST); ?>
 

@@ -202,10 +202,10 @@ class RunCest
     public function runTestsWithDependencyInjections(\CliGuy $I)
     {
         $I->executeCommand('run math');
-        $I->seeInShellOutput('Trying to test addition (MathCest::testAddition)');
-        $I->seeInShellOutput('Trying to test subtraction (MathCest::testSubtraction)');
-        $I->seeInShellOutput('Trying to test square (MathCest::testSquare)');
-        $I->seeInShellOutput('Trying to test all (MathTest::testAll)');
+        $I->seeInShellOutput('Test addition (MathCest::testAddition)');
+        $I->seeInShellOutput('Test subtraction (MathCest::testSubtraction)');
+        $I->seeInShellOutput('Test square (MathCest::testSquare)');
+        $I->seeInShellOutput('Test all (MathTest::testAll)');
         $I->seeInShellOutput('OK (');
         $I->dontSeeInShellOutput('fail');
         $I->dontSeeInShellOutput('error');

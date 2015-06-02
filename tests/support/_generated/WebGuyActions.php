@@ -10,7 +10,12 @@ use Codeception\Module\WebHelper;
 
 trait WebGuyActions
 {
-   
+    /**
+     * @return \Codeception\Scenario
+     */
+    abstract protected function getScenario();
+
+    
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -35,7 +40,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::amOnSubdomain()
      */
     public function amOnSubdomain($subdomain) {
-        return $this->scenario->runStep(new \Codeception\Step\Condition('amOnSubdomain', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Condition('amOnSubdomain', func_get_args()));
     }
 
  
@@ -56,7 +61,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::makeScreenshot()
      */
     public function makeScreenshot($name) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('makeScreenshot', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('makeScreenshot', func_get_args()));
     }
 
  
@@ -76,7 +81,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::resizeWindow()
      */
     public function resizeWindow($width, $height) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('resizeWindow', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('resizeWindow', func_get_args()));
     }
 
  
@@ -99,7 +104,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCookie()
      */
     public function canSeeCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeCookie', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -119,7 +124,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCookie()
      */
     public function seeCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeCookie', func_get_args()));
     }
 
  
@@ -137,7 +142,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCookie()
      */
     public function cantSeeCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCookie', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -152,7 +157,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCookie()
      */
     public function dontSeeCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeCookie', func_get_args()));
     }
 
  
@@ -178,7 +183,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::setCookie()
      */
     public function setCookie($cookie, $value, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('setCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('setCookie', func_get_args()));
     }
 
  
@@ -195,7 +200,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::resetCookie()
      */
     public function resetCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('resetCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('resetCookie', func_get_args()));
     }
 
  
@@ -212,7 +217,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabCookie()
      */
     public function grabCookie($cookie, $params = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabCookie', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabCookie', func_get_args()));
     }
 
  
@@ -230,7 +235,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::amOnUrl()
      */
     public function amOnUrl($url) {
-        return $this->scenario->runStep(new \Codeception\Step\Condition('amOnUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Condition('amOnUrl', func_get_args()));
     }
 
  
@@ -252,7 +257,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::amOnPage()
      */
     public function amOnPage($page) {
-        return $this->scenario->runStep(new \Codeception\Step\Condition('amOnPage', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Condition('amOnPage', func_get_args()));
     }
 
  
@@ -276,7 +281,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::see()
      */
     public function canSee($text, $selector = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('see', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('see', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -297,7 +302,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::see()
      */
     public function see($text, $selector = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('see', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('see', func_get_args()));
     }
 
  
@@ -321,7 +326,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSee()
      */
     public function cantSee($text, $selector = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSee', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSee', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -342,7 +347,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSee()
      */
     public function dontSee($text, $selector = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSee', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSee', func_get_args()));
     }
 
  
@@ -361,7 +366,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInPageSource()
      */
     public function canSeeInPageSource($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInPageSource', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInPageSource', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -377,7 +382,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInPageSource()
      */
     public function seeInPageSource($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInPageSource', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInPageSource', func_get_args()));
     }
 
  
@@ -391,7 +396,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInPageSource()
      */
     public function cantSeeInPageSource($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInPageSource', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInPageSource', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -402,7 +407,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInPageSource()
      */
     public function dontSeeInPageSource($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInPageSource', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInPageSource', func_get_args()));
     }
 
  
@@ -441,7 +446,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::click()
      */
     public function click($link, $context = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('click', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('click', func_get_args()));
     }
 
  
@@ -464,7 +469,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeLink()
      */
     public function canSeeLink($text, $url = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeLink', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeLink', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -484,7 +489,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeLink()
      */
     public function seeLink($text, $url = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeLink', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeLink', func_get_args()));
     }
 
  
@@ -507,7 +512,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeLink()
      */
     public function cantSeeLink($text, $url = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeLink', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeLink', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -527,7 +532,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeLink()
      */
     public function dontSeeLink($text, $url = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeLink', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeLink', func_get_args()));
     }
 
  
@@ -550,7 +555,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInCurrentUrl()
      */
     public function canSeeInCurrentUrl($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInCurrentUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInCurrentUrl', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -570,7 +575,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInCurrentUrl()
      */
     public function seeInCurrentUrl($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInCurrentUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInCurrentUrl', func_get_args()));
     }
 
  
@@ -592,7 +597,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCurrentUrlEquals()
      */
     public function canSeeCurrentUrlEquals($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlEquals', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -611,7 +616,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCurrentUrlEquals()
      */
     public function seeCurrentUrlEquals($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCurrentUrlEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeCurrentUrlEquals', func_get_args()));
     }
 
  
@@ -632,7 +637,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCurrentUrlMatches()
      */
     public function canSeeCurrentUrlMatches($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeCurrentUrlMatches', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -650,7 +655,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCurrentUrlMatches()
      */
     public function seeCurrentUrlMatches($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCurrentUrlMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeCurrentUrlMatches', func_get_args()));
     }
 
  
@@ -670,7 +675,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInCurrentUrl()
      */
     public function cantSeeInCurrentUrl($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInCurrentUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInCurrentUrl', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -687,7 +692,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInCurrentUrl()
      */
     public function dontSeeInCurrentUrl($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInCurrentUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInCurrentUrl', func_get_args()));
     }
 
  
@@ -709,7 +714,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCurrentUrlEquals()
      */
     public function cantSeeCurrentUrlEquals($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlEquals', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -728,7 +733,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCurrentUrlEquals()
      */
     public function dontSeeCurrentUrlEquals($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlEquals', func_get_args()));
     }
 
  
@@ -749,7 +754,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCurrentUrlMatches()
      */
     public function cantSeeCurrentUrlMatches($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCurrentUrlMatches', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -767,7 +772,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCurrentUrlMatches()
      */
     public function dontSeeCurrentUrlMatches($uri) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlMatches', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeCurrentUrlMatches', func_get_args()));
     }
 
  
@@ -791,7 +796,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabFromCurrentUrl()
      */
     public function grabFromCurrentUrl($uri = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabFromCurrentUrl', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabFromCurrentUrl', func_get_args()));
     }
 
  
@@ -813,7 +818,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCheckboxIsChecked()
      */
     public function canSeeCheckboxIsChecked($checkbox) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeCheckboxIsChecked', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeCheckboxIsChecked', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -832,7 +837,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeCheckboxIsChecked()
      */
     public function seeCheckboxIsChecked($checkbox) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeCheckboxIsChecked', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeCheckboxIsChecked', func_get_args()));
     }
 
  
@@ -853,7 +858,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCheckboxIsChecked()
      */
     public function cantSeeCheckboxIsChecked($checkbox) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCheckboxIsChecked', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeCheckboxIsChecked', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -871,7 +876,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeCheckboxIsChecked()
      */
     public function dontSeeCheckboxIsChecked($checkbox) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeCheckboxIsChecked', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeCheckboxIsChecked', func_get_args()));
     }
 
  
@@ -898,7 +903,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInField()
      */
     public function canSeeInField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInField', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -922,7 +927,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInField()
      */
     public function seeInField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInField', func_get_args()));
     }
 
  
@@ -949,7 +954,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInField()
      */
     public function cantSeeInField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInField', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -973,7 +978,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInField()
      */
     public function dontSeeInField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInField', func_get_args()));
     }
 
  
@@ -1043,7 +1048,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInFormFields()
      */
     public function canSeeInFormFields($formSelector, $params) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInFormFields', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInFormFields', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1110,7 +1115,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInFormFields()
      */
     public function seeInFormFields($formSelector, $params) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInFormFields', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInFormFields', func_get_args()));
     }
 
  
@@ -1160,7 +1165,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInFormFields()
      */
     public function cantSeeInFormFields($formSelector, $params) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInFormFields', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInFormFields', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1207,7 +1212,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInFormFields()
      */
     public function dontSeeInFormFields($formSelector, $params) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInFormFields', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInFormFields', func_get_args()));
     }
 
  
@@ -1237,7 +1242,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::selectOption()
      */
     public function selectOption($select, $option) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('selectOption', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('selectOption', func_get_args()));
     }
 
  
@@ -1248,7 +1253,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::unselectOption()
      */
     public function unselectOption($select, $option) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('unselectOption', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('unselectOption', func_get_args()));
     }
 
  
@@ -1267,7 +1272,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::checkOption()
      */
     public function checkOption($option) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('checkOption', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('checkOption', func_get_args()));
     }
 
  
@@ -1286,7 +1291,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::uncheckOption()
      */
     public function uncheckOption($option) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('uncheckOption', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('uncheckOption', func_get_args()));
     }
 
  
@@ -1307,7 +1312,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::fillField()
      */
     public function fillField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('fillField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('fillField', func_get_args()));
     }
 
  
@@ -1328,7 +1333,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::attachFile()
      */
     public function attachFile($field, $filename) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('attachFile', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('attachFile', func_get_args()));
     }
 
  
@@ -1341,7 +1346,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::getVisibleText()
      */
     public function getVisibleText() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('getVisibleText', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('getVisibleText', func_get_args()));
     }
 
  
@@ -1365,7 +1370,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabTextFrom()
      */
     public function grabTextFrom($cssOrXPathOrRegex) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabTextFrom', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabTextFrom', func_get_args()));
     }
 
  
@@ -1389,7 +1394,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabAttributeFrom()
      */
     public function grabAttributeFrom($cssOrXpath, $attribute) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabAttributeFrom', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabAttributeFrom', func_get_args()));
     }
 
  
@@ -1414,7 +1419,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabValueFrom()
      */
     public function grabValueFrom($field) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabValueFrom', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabValueFrom', func_get_args()));
     }
 
  
@@ -1425,7 +1430,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::grabMultiple()
      */
     public function grabMultiple($cssOrXpath, $attribute = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('grabMultiple', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('grabMultiple', func_get_args()));
     }
 
  
@@ -1454,7 +1459,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeElement()
      */
     public function canSeeElement($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeElement', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeElement', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1480,7 +1485,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeElement()
      */
     public function seeElement($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeElement', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeElement', func_get_args()));
     }
 
  
@@ -1505,7 +1510,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeElement()
      */
     public function cantSeeElement($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeElement', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeElement', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1527,7 +1532,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeElement()
      */
     public function dontSeeElement($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeElement', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeElement', func_get_args()));
     }
 
  
@@ -1547,7 +1552,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeElementInDOM()
      */
     public function canSeeElementInDOM($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeElementInDOM', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeElementInDOM', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1564,7 +1569,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeElementInDOM()
      */
     public function seeElementInDOM($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeElementInDOM', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeElementInDOM', func_get_args()));
     }
 
  
@@ -1578,7 +1583,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeElementInDOM()
      */
     public function cantSeeElementInDOM($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeElementInDOM', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeElementInDOM', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1589,7 +1594,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeElementInDOM()
      */
     public function dontSeeElementInDOM($selector, $attributes = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeElementInDOM', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeElementInDOM', func_get_args()));
     }
 
  
@@ -1612,7 +1617,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeNumberOfElements()
      */
     public function canSeeNumberOfElements($selector, $expected) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeNumberOfElements', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeNumberOfElements', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1632,7 +1637,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeNumberOfElements()
      */
     public function seeNumberOfElements($selector, $expected) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeNumberOfElements', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeNumberOfElements', func_get_args()));
     }
 
  
@@ -1655,7 +1660,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeOptionIsSelected()
      */
     public function canSeeOptionIsSelected($selector, $optionText) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeOptionIsSelected', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeOptionIsSelected', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1675,7 +1680,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeOptionIsSelected()
      */
     public function seeOptionIsSelected($selector, $optionText) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeOptionIsSelected', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeOptionIsSelected', func_get_args()));
     }
 
  
@@ -1698,7 +1703,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeOptionIsSelected()
      */
     public function cantSeeOptionIsSelected($selector, $optionText) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeOptionIsSelected', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeOptionIsSelected', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1718,7 +1723,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeOptionIsSelected()
      */
     public function dontSeeOptionIsSelected($selector, $optionText) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeOptionIsSelected', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeOptionIsSelected', func_get_args()));
     }
 
  
@@ -1740,7 +1745,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInTitle()
      */
     public function canSeeInTitle($title) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInTitle', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInTitle', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1759,7 +1764,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInTitle()
      */
     public function seeInTitle($title) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInTitle', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInTitle', func_get_args()));
     }
 
  
@@ -1775,7 +1780,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInTitle()
      */
     public function cantSeeInTitle($title) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInTitle', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('dontSeeInTitle', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1788,7 +1793,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dontSeeInTitle()
      */
     public function dontSeeInTitle($title) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('dontSeeInTitle', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('dontSeeInTitle', func_get_args()));
     }
 
  
@@ -1800,7 +1805,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::acceptPopup()
      */
     public function acceptPopup() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('acceptPopup', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('acceptPopup', func_get_args()));
     }
 
  
@@ -1811,7 +1816,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::cancelPopup()
      */
     public function cancelPopup() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('cancelPopup', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('cancelPopup', func_get_args()));
     }
 
  
@@ -1825,7 +1830,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInPopup()
      */
     public function canSeeInPopup($text) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeInPopup', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeInPopup', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -1836,7 +1841,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::seeInPopup()
      */
     public function seeInPopup($text) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeInPopup', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeInPopup', func_get_args()));
     }
 
  
@@ -1849,7 +1854,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::typeInPopup()
      */
     public function typeInPopup($keys) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('typeInPopup', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('typeInPopup', func_get_args()));
     }
 
  
@@ -1860,7 +1865,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::reloadPage()
      */
     public function reloadPage() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('reloadPage', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('reloadPage', func_get_args()));
     }
 
  
@@ -1871,7 +1876,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::moveBack()
      */
     public function moveBack() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('moveBack', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('moveBack', func_get_args()));
     }
 
  
@@ -1882,7 +1887,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::moveForward()
      */
     public function moveForward() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('moveForward', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('moveForward', func_get_args()));
     }
 
  
@@ -1946,7 +1951,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::submitForm()
      */
     public function submitForm($selector, $params, $button = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('submitForm', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('submitForm', func_get_args()));
     }
 
  
@@ -1971,7 +1976,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForElementChange()
      */
     public function waitForElementChange($element, $callback, $timeout = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForElementChange', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForElementChange', func_get_args()));
     }
 
  
@@ -1994,7 +1999,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForElement()
      */
     public function waitForElement($element, $timeout = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForElement', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForElement', func_get_args()));
     }
 
  
@@ -2017,7 +2022,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForElementVisible()
      */
     public function waitForElementVisible($element, $timeout = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForElementVisible', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForElementVisible', func_get_args()));
     }
 
  
@@ -2039,7 +2044,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForElementNotVisible()
      */
     public function waitForElementNotVisible($element, $timeout = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForElementNotVisible', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForElementNotVisible', func_get_args()));
     }
 
  
@@ -2064,7 +2069,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForText()
      */
     public function waitForText($text, $timeout = null, $selector = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForText', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForText', func_get_args()));
     }
 
  
@@ -2078,7 +2083,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::wait()
      */
     public function wait($timeout) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('wait', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('wait', func_get_args()));
     }
 
  
@@ -2102,7 +2107,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::executeInSelenium()
      */
     public function executeInSelenium($function) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('executeInSelenium', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('executeInSelenium', func_get_args()));
     }
 
  
@@ -2144,7 +2149,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::switchToWindow()
      */
     public function switchToWindow($name = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('switchToWindow', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('switchToWindow', func_get_args()));
     }
 
  
@@ -2172,7 +2177,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::switchToIFrame()
      */
     public function switchToIFrame($name = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('switchToIFrame', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('switchToIFrame', func_get_args()));
     }
 
  
@@ -2194,7 +2199,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::waitForJS()
      */
     public function waitForJS($script, $timeout = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('waitForJS', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('waitForJS', func_get_args()));
     }
 
  
@@ -2216,7 +2221,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::executeJS()
      */
     public function executeJS($script) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('executeJS', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('executeJS', func_get_args()));
     }
 
  
@@ -2227,7 +2232,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::maximizeWindow()
      */
     public function maximizeWindow() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('maximizeWindow', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('maximizeWindow', func_get_args()));
     }
 
  
@@ -2247,7 +2252,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::dragAndDrop()
      */
     public function dragAndDrop($source, $target) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('dragAndDrop', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('dragAndDrop', func_get_args()));
     }
 
  
@@ -2272,7 +2277,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::moveMouseOver()
      */
     public function moveMouseOver($cssOrXPath, $offsetX = null, $offsetY = null) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('moveMouseOver', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('moveMouseOver', func_get_args()));
     }
 
  
@@ -2286,7 +2291,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::clickWithRightButton()
      */
     public function clickWithRightButton($cssOrXPath) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('clickWithRightButton', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('clickWithRightButton', func_get_args()));
     }
 
  
@@ -2300,7 +2305,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::pauseExecution()
      */
     public function pauseExecution() {
-        return $this->scenario->runStep(new \Codeception\Step\Action('pauseExecution', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('pauseExecution', func_get_args()));
     }
 
  
@@ -2314,7 +2319,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::doubleClick()
      */
     public function doubleClick($cssOrXPath) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('doubleClick', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('doubleClick', func_get_args()));
     }
 
  
@@ -2343,7 +2348,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::pressKey()
      */
     public function pressKey($element, $char) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('pressKey', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('pressKey', func_get_args()));
     }
 
  
@@ -2366,7 +2371,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::appendField()
      */
     public function appendField($field, $value) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('appendField', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('appendField', func_get_args()));
     }
 
  
@@ -2404,7 +2409,7 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::saveSessionSnapshot()
      */
     public function saveSessionSnapshot($name) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('saveSessionSnapshot', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('saveSessionSnapshot', func_get_args()));
     }
 
  
@@ -2419,6 +2424,6 @@ trait WebGuyActions
      * @see \Codeception\Module\WebDriver::loadSessionSnapshot()
      */
     public function loadSessionSnapshot($name) {
-        return $this->scenario->runStep(new \Codeception\Step\Action('loadSessionSnapshot', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('loadSessionSnapshot', func_get_args()));
     }
 }

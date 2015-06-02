@@ -2,6 +2,12 @@
 
 class PHPUnit_Util_Filter
 {
+    protected static $filteredClassesPattern = [
+        'Symfony\Component\Console',
+        'Codeception\Command\\',
+        'Codeception\TestCase\\',
+    ];
+
     public static function getFilteredStackTrace(Exception $e, $asString = true, $filter = true)
     {
         $stackTrace = $asString ? '' : [];
@@ -39,21 +45,13 @@ class PHPUnit_Util_Filter
         if (!isset($step['class'])) {
             return false;
         }
-
         $className = $step['class'];
 
-        if (strpos($className, 'Symfony\Component\Console') === 0) {
-            return true;
+        foreach (self::$filteredClassesPattern as $filteredClassName) {
+            if (strpos($className, $filteredClassName) === 0) {
+                return true;
+            }
         }
-
-        if (strpos($className, 'Codeception\Command\\') === 0) {
-            return true;
-        }
-
-        if (strpos($className, 'Codeception\TestCase\\') === 0) {
-            return true;
-        }
-
         return false;
     }
 
@@ -62,6 +60,7 @@ class PHPUnit_Util_Filter
         if (!isset($step['file'])) {
             return false;
         }
+
         if (strpos($step['file'], 'codecept.phar/') !== false) {
             return true;
         }

@@ -894,8 +894,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (Locator::isCSS($selector)) {
             return $this->getCrawler()->filter($selector);
         }
-        if (!Locator::isXPath($selector)) {
-            return new \Symfony\Component\DomCrawler\Crawler;
+        if (Locator::isXPath($selector)) {
+            return $this->getCrawler()->filterXPath($selector);
         }
         throw new MalformedLocator($selector, 'XPath or CSS');
     }

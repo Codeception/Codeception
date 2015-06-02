@@ -10,7 +10,12 @@ use Codeception\Module\EmulateModuleHelper;
 
 trait CodeGuyActions
 {
-   
+    /**
+     * @return \Codeception\Scenario
+     */
+    abstract protected function getScenario();
+
+    
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
@@ -19,7 +24,7 @@ trait CodeGuyActions
      * @see \Codeception\Module\EmulateModuleHelper::seeEquals()
      */
     public function canSeeEquals($expected, $actual) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeEquals', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -28,7 +33,7 @@ trait CodeGuyActions
      * @see \Codeception\Module\EmulateModuleHelper::seeEquals()
      */
     public function seeEquals($expected, $actual) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeEquals', func_get_args()));
     }
 
  
@@ -40,7 +45,7 @@ trait CodeGuyActions
      * @see \Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
      */
     public function canSeeFeaturesEquals($expected) {
-        return $this->scenario->runStep(new \Codeception\Step\ConditionalAssertion('seeFeaturesEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\ConditionalAssertion('seeFeaturesEquals', func_get_args()));
     }
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
@@ -49,6 +54,6 @@ trait CodeGuyActions
      * @see \Codeception\Module\EmulateModuleHelper::seeFeaturesEquals()
      */
     public function seeFeaturesEquals($expected) {
-        return $this->scenario->runStep(new \Codeception\Step\Assertion('seeFeaturesEquals', func_get_args()));
+        return $this->getScenario()->runStep(new \Codeception\Step\Assertion('seeFeaturesEquals', func_get_args()));
     }
 }
