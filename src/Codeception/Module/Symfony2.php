@@ -29,8 +29,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * * app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
- *
- *
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
+ * *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
  *     modules:
@@ -45,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * * app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
  * * var_path: 'var' - specify custom path to your var dir, where bootstrap cache is located.
  * * environment: 'local' - environment used for load kernel
+ * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
  *
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
@@ -76,7 +77,13 @@ class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
      */
     public $container;
 
-    public $config = ['app_path' => 'app', 'var_path' => 'app', 'environment' => 'test', 'debug' => true];
+    public $config = [
+        'app_path' => 'app',
+        'var_path' => 'app',
+        'environment' => 'test',
+        'debug' => true,
+        'em_service' => 'doctrine.orm.entity_manager'
+    ];
 
     /**
      * @var
@@ -109,12 +116,12 @@ class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
     public function _getEntityManager()
     {
         $this->kernel->boot();
-        if (!$this->kernel->getContainer()->has('doctrine')) {
+        if (!$this->kernel->getContainer()->has($this->config['em_service'])) {
             return null;
         }
-        $this->client->persistentServices[] = 'doctrine.orm.entity_manager';
+        $this->client->persistentServices[] = $this->config['em_service'];
         $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
-        return $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        return $this->kernel->getContainer()->get($this->config['em_service']);
     }
 
     /**

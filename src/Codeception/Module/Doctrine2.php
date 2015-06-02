@@ -30,7 +30,6 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
  * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
  * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
  * * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
- * * symfony_em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager (optional).
  *
  *  ### Example (`functional.suite.yml`)
  *
@@ -48,7 +47,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 class Doctrine2 extends \Codeception\Module implements DependsOnModule
 {
 
-    protected $config = ['cleanup' => true, 'connection_callback' => false, 'symfony_em_service' => 'doctrine.orm.entity_manager'];
+    protected $config = ['cleanup' => true, 'connection_callback' => false];
 
     protected $dependencyMessage = <<<EOF
 Provide connection_callback function to establish database connection and get Entity Manager:
