@@ -1,64 +1,185 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Illuminate\Foundation\Testing\Client;
-use Stack\Builder;
-use Symfony\Component\HttpKernel\TerminableInterface;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Application;
+use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Client;
 
 class Laravel4 extends Client
 {
-    protected function doRequest($request)
+
+    /**
+     * @var \Illuminate\Foundation\Application
+     */
+    private $app;
+
+    /**
+     * @var \Codeception\Module\Laravel4
+     */
+    private $module;
+
+    /**
+     * Constructor.
+     *
+     * @param \Codeception\Module\Laravel4 $module
+     */
+    public function  __construct($module)
     {
-        $headers = $request->headers;
+        $this->module = $module;
+        $this->initialize();
 
-        $this->fireBootedCallbacks();
+        parent::__construct($this->kernel);
 
-        $response = $this->getStackedKernel()->handle($request);
-        if ($this->kernel instanceof TerminableInterface) {
-            $this->kernel->terminate($request, $response);
-        }
-
-        // saving referer for redirecting back
-        if (!$this->getHistory()->isEmpty()) {
-            $headers->set('referer', $this->getHistory()->current()->getUri());
-        }
-        return $response;
-    }
-
-    protected function fireBootedCallbacks()
-    {
-        $bootedCallbacks = new \ReflectionProperty($this->kernel, 'bootedCallbacks');
-        $bootedCallbacks->setAccessible(true);
-        $callbacks = $bootedCallbacks->getValue($this->kernel);
-        foreach ($callbacks as $callback) {
-            call_user_func($callback, $this->kernel);
-        }
-
+        // Parent constructor defaults to not following redirects
+        $this->followRedirects(true);
     }
 
     /**
-     * use stacked kernel to include middlewares
-     *
-     * @return \Stack\StackedHttpKernel
+     * @param Request $request
+     * @return Response
      */
-    protected function getStackedKernel()
+    protected function doRequest($request)
     {
-        /** @see \Illuminate\Foundation\Application::getStackedClient */
-        $middlewaresProperty = new \ReflectionProperty($this->kernel, 'middlewares');
-        $middlewaresProperty->setAccessible(true);
+        $this->initialize();
 
-        $middlewares = $middlewaresProperty->getValue($this->kernel);
+        return $this->kernel->handle($request);
+    }
 
-        $stack = new Builder();
-        foreach ($middlewares as $middleware) {
-            list($class, $parameters) = array_values($middleware);
+    /**
+     * @param BrowserKitRequest $request
+     * @return Request
+     */
+    protected function filterRequest(BrowserKitRequest $request)
+    {
+        $request = parent::filterRequest($request);
 
-            array_unshift($parameters, $class);
+        return $this->addSessionCookiesToRequest($request);
+    }
 
-            call_user_func_array(array($stack, 'push'), $parameters);
+    /**
+     * Initialize the Laravel Framework.
+     *
+     * @throws ModuleConfig
+     */
+    private function initialize()
+    {
+        // Store a reference to the database object
+        // so the database connection can be reused during tests
+        $oldDb = null;
+        if ($this->app['db'] && $this->app['db']->connection()) {
+            $oldDb = $this->app['db'];
         }
 
-        return $stack->resolve($this->kernel);
+        // Store the current value for the router filters
+        // so it can be reset after reloading the application
+        $oldFiltersEnabled = null;
+        if ($router = $this->app['router']) {
+            $property = new \ReflectionProperty(get_class($router), 'filtering');
+            $property->setAccessible(true);
+            $oldFiltersEnabled = $property->getValue($router);
+        }
+
+        $this->app = $this->loadApplication();
+        $this->kernel = $this->getStackedClient();
+        $this->app->boot();
+
+        // Reset the booted flag of the Application object
+        // so the app will be booted again if it receives a new Request
+        $property = new \ReflectionProperty(get_class($this->app), 'booted');
+        $property->setAccessible(true);
+        $property->setValue($this->app, false);
+
+        if ($oldDb) {
+            $this->app['db'] = $oldDb;
+            Model::setConnectionResolver($this->app['db']);
+        }
+
+        if (! is_null($oldFiltersEnabled)) {
+            $oldFiltersEnabled ? $this->app['router']->enableFilters() : $this->app['router']->disableFilters();
+        }
+
+        $this->module->setApplication($this->app);
+    }
+
+    /**
+     * Boot the Laravel application object.
+     * @return Application
+     * @throws ModuleConfig
+     */
+    private function loadApplication()
+    {
+        // The following two variables are used in the Illuminate/Foundation/start.php file
+        // which is included in the bootstrap start file.
+        $unitTesting = $this->module->config['unit'];
+        $testEnvironment = $this->module->config['environment'];
+
+        $app = require $this->module->config['start_file'];
+        $this->setConfiguredSessionDriver($app);
+
+        return $app;
+    }
+
+    /**
+     * @param Request $request
+     * @return Request
+     */
+    private function addSessionCookiesToRequest(Request $request)
+    {
+        $session = $this->app['session'];
+        $sessionIsPersistent = ! in_array($session->getSessionConfig()['driver'], array(null, 'array'));
+
+        if ($sessionIsPersistent) {
+            $encryptedSessionId = $this->app['encrypter']->encrypt($session->getId());
+            $request->cookies->add([$session->getName() => $encryptedSessionId]);
+        }
+
+        return $request;
+    }
+
+    /**
+     * Get the configured session driver.
+     * Laravel 4 forces the array session driver if the application is run from the console.
+     * This happens in \Illuminate\Session\SessionServiceProvider::setupDefaultDriver() method.
+     * This method is used to set the correct session driver that is configured in the config files.
+     *
+     * @param Application $app
+     */
+    private function setConfiguredSessionDriver(Application $app)
+    {
+        $configDir = $app['path'] . DIRECTORY_SEPARATOR . 'config';
+        $configFiles = array(
+            $configDir . DIRECTORY_SEPARATOR . $this->module->config['environment'] . DIRECTORY_SEPARATOR . 'session.php',
+            $configDir . DIRECTORY_SEPARATOR . 'session.php',
+
+        );
+
+        foreach ($configFiles as $configFile) {
+            if (file_exists($configFile)) {
+                $sessionConfig = require $configFile;
+
+                if (is_array($sessionConfig) && isset($sessionConfig['driver'])) {
+                    $app['config']['session.driver'] = $sessionConfig['driver'];
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Use a stacked client to include middlewares.
+     *
+     * @see Illuminate\Foundation\Application::getStackedClient()
+     * @return \Stack\StackedHttpKernel
+     */
+    private function getStackedClient()
+    {
+        $method = new \ReflectionMethod(get_class($this->app), 'getStackedClient');
+        $method->setAccessible(true);
+
+        return $method->invoke($this->app);
     }
 
 }

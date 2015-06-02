@@ -39,6 +39,12 @@ class Message
         return $this;
     }
 
+    public function cut($length)
+    {
+        $this->message = substr($this->message, 0, $length-1);
+        return $this;
+    }
+
     public function write($verbose = OutputInterface::VERBOSITY_NORMAL)
     {
         if ($verbose > $this->output->getVerbosity()) {
@@ -107,20 +113,6 @@ class Message
             return mb_strlen($this->message);
         }
         return strlen($this->message);
-    }
-
-    public function widthWithTerminalCorrection($width, $char = ' ')
-    {
-        $cols = 0;
-        if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') and (php_sapi_name() == "cli") and (getenv('TERM'))) {
-            $cols = intval(`command -v tput >> /dev/null 2>&1 && tput cols`);
-        }
-        if ($cols > 0) {
-            $const = ($char == ' ') ? 6 : 1;
-            $width = ($cols <= $width) ? $cols - $const : $width;
-            $width = ($width < $const) ? $const : $width;
-        }
-        return $this->width($width, $char);
     }
 
     public function __toString()

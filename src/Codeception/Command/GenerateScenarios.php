@@ -96,7 +96,7 @@ class GenerateScenarios extends Command
         }
 
         if ($input->getOption('single-file')) {
-            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format) . PHP_EOL, true);
+            $this->save($path . $this->formatExtension($format), $this->decorate($scenarios, $format), true);
         }
     }
 

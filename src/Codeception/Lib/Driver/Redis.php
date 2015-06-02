@@ -30,13 +30,13 @@ class Redis
         if ($this->_sock) {
             return;
         }
-        if ($sock = fsockopen($this->host, $this->port, $errno, $errstr)) {
+        if ($sock = fsockopen($this->host, $this->port, $errno, $errmsg)) {
             $this->_sock = $sock;
             $this->debug('Connected');
             return;
         }
         $msg = "Cannot open socket to {$this->host}:{$this->port}";
-        if ($errno || $errmsg) {
+        if (($errno !== 0) || ($errmsg !== null)) {
             $msg .= "," . ($errno ? " error $errno" : "") . ($errmsg ? " $errmsg" : "");
         }
         throw new RedisException ("$msg.");
@@ -45,7 +45,7 @@ class Redis
     private function debug($msg)
     {
         if ($this->debug) {
-            echo sprintf("[Redis] %s\n", $msg);
+            codecept_debug("[Redis] %s\n", $msg);
         }
     }
 
@@ -63,7 +63,7 @@ class Redis
     {
         // Read the response
         $s = trim($this->read());
-        switch ($s [0]) {
+        switch ($s[0]) {
             case '-' : // Error message
                 throw new RedisException (substr($s, 1));
                 break;
@@ -78,7 +78,7 @@ class Redis
                 }
                 $buffer = '';
                 if ($i == 0) {
-                    $s = $this->read();
+                    $this->read();
                 }
                 while ($i > 0) {
                     $s = $this->read();

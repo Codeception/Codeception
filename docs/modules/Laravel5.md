@@ -61,7 +61,7 @@ an array of credentials.
  
 Opens web page by action name
 
-```php
+``` php
 <?php
 $I->amOnAction('PostsController@index');
 ?>
@@ -91,13 +91,13 @@ $I->amOnPage('/register');
  
 Opens web page using route name and parameters.
 
-```php
+``` php
 <?php
 $I->amOnRoute('posts.create');
 ?>
 ```
 
- * `param` $route
+ * `param` $routeName
  * `param array` $params
 
 
@@ -603,7 +603,7 @@ $I->seeCookie('PHPSESSID');
  
 Checks that current url matches action
 
-```php
+``` php
 <?php
 $I->seeCurrentActionIs('PostsController@index');
 ?>
@@ -617,7 +617,7 @@ $I->seeCurrentActionIs('PostsController@index');
  
 Checks that current url matches route
 
-```php
+``` php
 <?php
 $I->seeCurrentRouteIs('posts.index');
 ?>
@@ -700,8 +700,7 @@ $I->seeFormErrorMessage('username', 'Invalid Username');
  
 Assert that specific form error messages are set in the view.
 
-Useful for validation messages and generally messages array
- e.g.
+Useful for validation messages e.g.
  return `Redirect::to('register')->withErrors($validator);`
 
 Example of Usage
@@ -716,7 +715,13 @@ $I->seeFormErrorMessages(array('username'=>'Invalid Username'));
 
 ### seeFormHasErrors
  
-Assert that the form errors are bound to the View.
+Assert that form errors are bound to the View.
+
+``` php
+<?php
+$I->seeFormHasErrors();
+?>
+```
 
 @return bool
 
@@ -822,7 +827,14 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
 
 ### seeInSession
  
-Assert that the session has a given list of values.
+Assert that a session variable exists.
+
+``` php
+<?php
+$I->seeInSession('key');
+$I->seeInSession('key', 'value');
+?>
+```
 
  * `param`  string|array $key
  * `param`  mixed $value
@@ -900,7 +912,9 @@ Asserts that current page has 404 response status code.
 Checks that record exists in database.
 
 ``` php
+<?php
 $I->seeRecord('users', array('name' => 'davert'));
+?>
 ```
 
  * `param` $tableName
@@ -919,6 +933,13 @@ Checks that response code is equal to value provided.
 ### seeSessionHasValues
  
 Assert that the session has a given list of values.
+
+``` php
+<?php
+$I->seeSessionHasValues(['key1', 'key2']);
+$I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
+?>
+```
 
  * `param`  array $bindings
 @return void

@@ -2,9 +2,17 @@
 class BootstrapCest
 {
 
+    protected $bootstrapPath;
+
+    function _before(\CliGuy $I)
+    {
+        $this->bootstrapPath = 'tests/data/sandbox/boot'.uniqid();
+        @mkdir($this->bootstrapPath, 0777, true);
+        $I->amInPath($this->bootstrapPath);
+    }
+
     public function bootstrap(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox/tests/_data/');
         $I->executeCommand('bootstrap');
         $I->seeFileFound('codeception.yml');
         $this->checkFilesCreated($I);
@@ -13,7 +21,6 @@ class BootstrapCest
 
     public function bootstrapWithNamespace(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox/tests/_data/');
         $I->executeCommand('bootstrap --namespace Generated');
 
         $I->seeInShellOutput('Building Actor classes for suites');
@@ -31,9 +38,15 @@ class BootstrapCest
 
     public function bootstrapWithActor(\CliGuy $I)
     {
-        $I->amInPath('tests/data/sandbox/tests/_data/');
         $I->executeCommand('bootstrap --actor Ninja');
         $I->seeFileFound('AcceptanceNinja.php','tests/_support/');
+    }
+
+    public function bootstrapCompatibilityProject(\CliGuy $I) {
+        $I->executeCommand('bootstrap --compat');
+        $I->seeFileFound('codeception.yml');
+        $this->checkCompatFilesCreated($I);
+        $I->seeInShellOutput('Building Actor classes for suites');
     }
 
     public function bootstrapEmpty(\CliGuy $I)
@@ -42,6 +55,15 @@ class BootstrapCest
         $I->executeCommand('bootstrap --empty');
         $I->dontSeeFileFound('tests/acceptance');
         $I->dontSeeFileFound('AcceptanceTester.php','tests/acceptance');
+        $I->seeFileFound('codeception.yml');
+    }
+    
+    
+    public function bootstrapCompatibilityWithNamespace(\CliGuy $I)
+    {
+        $I->executeCommand('bootstrap --namespace Generated --compat');
+
+        $I->seeInShellOutput('Building Actor classes for suites');
         $I->seeFileFound('codeception.yml');
     }
 

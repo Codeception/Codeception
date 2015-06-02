@@ -55,7 +55,7 @@ class TestLoader
 
     protected function relativeName($file)
     {
-        return $name = str_replace([$this->path, '\\'], ['', '/'], $file);
+        return str_replace([$this->path, '\\'], ['', '/'], $file);
     }
 
     protected function findPath($path)

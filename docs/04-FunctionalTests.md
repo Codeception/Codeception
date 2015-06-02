@@ -226,8 +226,8 @@ Check also all available *Public Properties* of used modules to get full access 
 
 By default Codeception uses `E_ALL & ~E_STRICT & ~E_DEPRECATED` error reporting level. 
 In functional tests you might want to change this level depending on framework's error policy.
-The error reporting level can be set in the suite configuraion file:
-
+The error reporting level can be set in the suite configuration file:
+    
 ```yaml
 class_name: FunctionalTester
 modules:

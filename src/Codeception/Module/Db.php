@@ -168,7 +168,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 
     protected function removeInserted()
     {
-        foreach ($this->insertedIds as $insertId) {
+        foreach (array_reverse($this->insertedIds) as $insertId) {
             try {
                 $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
@@ -266,13 +266,13 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, $res, 'No matching records found');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        \PHPUnit_Framework_Assert::assertLessThan(1, $res);
+        $this->assertLessThan(1, $res);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)

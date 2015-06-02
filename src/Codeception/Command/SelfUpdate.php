@@ -42,12 +42,10 @@ class SelfUpdate extends Command
 
         $this
             // ->setAliases(array('selfupdate'))
-            ->setDescription(
-                sprintf(
-                    'Upgrade <comment>%s</comment> to the latest version',
-                    $this->filename
-                )
-            );
+            ->setDescription(sprintf(
+                'Upgrade <comment>%s</comment> to the latest version',
+                $this->filename
+            ));
 
         parent::configure();
     }

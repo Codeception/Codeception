@@ -77,7 +77,7 @@ class Yii2 extends Client
             $target->enabled = false;
         }
 
-        $this->headers = [];
+        $this->headers    = array();
         $this->statusCode = null;
 
         ob_start();

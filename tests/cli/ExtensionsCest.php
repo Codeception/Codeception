@@ -16,6 +16,7 @@ class ExtensionsCest
 
     public function reRunFailedTests(CliGuy $I)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run unit FailingTest.php -c codeception_extended.yml --no-exit');
         $I->seeInShellOutput('FAILURES');

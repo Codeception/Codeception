@@ -1,12 +1,13 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class Cest
 {
     use Shared\Classname;
-    use Shared\Namespaces;
+    use Namespaces;
 
     protected $template = <<<EOF
 <?php
@@ -42,8 +43,8 @@ EOF;
     {
         $actor = $this->settings['class_name'];
         $namespace = rtrim( $this->settings['namespace'], '\\' );
-        $ns = $this->getNamespaceHeader($namespace . '\\' . $this->name);
-        $ns .= "use {$namespace}\\{$actor};";
+        $ns = $this->getNamespaceString($namespace.'\\'.$this->name);
+        $ns .= "use ".$this->settings['namespace'].'\\'.$actor.";";
 
         return (new Template($this->template))
             ->place('name', $this->getShortClassName($this->name))

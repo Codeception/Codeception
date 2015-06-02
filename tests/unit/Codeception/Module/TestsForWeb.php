@@ -47,6 +47,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
+        $this->module->see('A wise man said: "debug!"');
 
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!', 'h1');
@@ -810,6 +811,22 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
         $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
     }
+    
+    public function testExample5WithParams()
+    {
+        $this->module->amOnPage('/form/example5?a=b');
+        $this->module->fillField('username', 'John');
+        $this->module->fillField('password', '1234');
+        $this->module->click('Login');
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
+
+    public function testExample5WithSubmitFormAndParams()
+    {
+        $this->module->amOnPage('/form/example5?a=b');
+        $this->module->submitForm('form', ['username' => 'John', 'password' => '1234']);
+        $this->module->seeCurrentUrlEquals('/form/example5?username=John&password=1234');
+    }
 
     /**
      * @Issue https://github.com/Codeception/Codeception/issues/1212
@@ -1213,5 +1230,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isset($data['second-field']));
         $this->assertFalse(isset($data['first-field']));
         $this->assertEquals('Killgore Trout', $data['second-field']);
+    }
+
+    public function testArrayField()
+    {
+        $this->module->amOnPage('/form/example17');
+        $this->module->seeInField('input[name="FooBar[bar]"]', 'baz');
+        $this->module->seeInField('input[name="Food[beer][yum][yeah]"]', 'mmhm');
     }
 }

@@ -53,7 +53,7 @@ use Codeception\TestCase;
 class Sequence extends \Codeception\Module
 {
 
-    static $hash = [];
+    public static $hash = array();
 
     public function _after(TestCase $t)
     {

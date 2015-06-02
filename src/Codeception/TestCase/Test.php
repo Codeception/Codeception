@@ -10,7 +10,8 @@ use Codeception\Util\Annotation;
 
 class Test extends TestCase implements
     Interfaces\Descriptive,
-    Interfaces\Configurable
+    Interfaces\Configurable,
+    Interfaces\Reported
 {
     use Shared\Actor;
     use Shared\Dependencies;
@@ -83,5 +84,18 @@ class Test extends TestCase implements
     public function getModule($module)
     {
         return $this->moduleContainer->getModule($module);
+    }
+
+    /**
+     * @return array
+     */
+    public function getReportFields()
+    {
+        return [
+            'name'    => $this->getName(),
+            'class'   => get_class($this),
+            'file'    => $this->getFileName(),
+            'feature' => $this->getFeature()
+        ];
     }
 }

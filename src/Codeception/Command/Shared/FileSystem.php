@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Command\Shared;
-
+use Codeception\Util\Shared\Namespaces;
 
 trait FileSystem
 {
+    use Namespaces;
 
     protected function buildPath($basePath, $testName)
     {
@@ -26,7 +27,7 @@ trait FileSystem
 
     protected function breakParts($class)
     {
-        $class = str_replace('/', '\\', $class);
+        $class      = str_replace('/', '\\', $class);
         $namespaces = explode('\\', $class);
         if (count($namespaces)) {
             $namespaces[0] = ltrim($namespaces[0], '\\');

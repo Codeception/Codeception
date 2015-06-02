@@ -28,7 +28,7 @@ namespace Codeception\Module;
 class Memcache extends \Codeception\Module
 {
     /**
-     * @var \Memcache
+     * @var \Memcache|\Memcached
      */
     public $memcache = null;
 

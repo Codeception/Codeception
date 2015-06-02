@@ -439,6 +439,10 @@ EOF;
     {
         $this->debugSection("Request headers", $this->headers);
 
+        if ($parameters instanceof \JsonSerializable) {
+            $parameters = $parameters->jsonSerialize();
+        }
+
         foreach ($this->headers as $header => $val) {
             $header = str_replace('-', '_', strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
@@ -488,9 +492,11 @@ EOF;
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if (array_key_exists('Content-Type', $this->headers)
-            && $this->headers['Content-Type'] === 'application/json'
-            && $method != 'GET'
+        if ($method != 'GET' && array_key_exists('Content-Type', $this->headers)
+            && ($this->headers['Content-Type'] === 'application/json' 
+                || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
+                ) 
+            
         ) {
             if ($parameters instanceof \JsonSerializable) {
                 return json_encode($parameters);

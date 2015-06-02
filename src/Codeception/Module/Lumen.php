@@ -1,24 +1,22 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException;
-use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
+use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
-use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Facade;
 
 /**
  *
- * This module allows you to run functional tests for Laravel 5.
+ * This module allows you to run functional tests for Lumen.
  * Please try it and leave your feedback.
- * The module is based on the Laravel 4 module by Davert.
  *
  * ## Demo project
- * <https://github.com/janhenkgerritsen/codeception-laravel5-sample>
+ * <https://github.com/janhenkgerritsen/codeception-lumen-sample>
  *
  * ## Status
  *
@@ -26,16 +24,9 @@ use Illuminate\Http\Request;
  * * Stability: **dev**
  * * Contact: janhenkgerritsen@gmail.com
  *
- * ## Example
- *
- *     modules:
- *         enabled:
- *             - Laravel5
- *
  * ## Config
  *
  * * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
- * * environment_file: `string`, default `.env` - The .env file to load for the tests.
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
@@ -45,16 +36,12 @@ use Illuminate\Http\Request;
  * * app - `Illuminate\Foundation\Application` instance
  * * client - `BrowserKit` client
  *
- * ## Parts
- *
- * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
- *
  */
-class Laravel5 extends Framework implements ActiveRecord, PartedModule
+class Lumen extends Framework implements ActiveRecord
 {
 
     /**
-     * @var \Illuminate\Foundation\Application
+     * @var \Laravel\Lumen\Application
      */
     public $app;
 
@@ -66,23 +53,21 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * Constructor.
      *
-     * @param ModuleContainer $container
      * @param $config
      */
-    public function __construct(ModuleContainer $container, $config = null)
+    public function __construct($config = null)
     {
         $this->config = array_merge(
-            [
-                'cleanup'          => true,
-                'environment_file' => '.env',
+            array(
+                'cleanup' => true,
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
-            ],
+            ),
             (array) $config
         );
 
-        parent::__construct($container);
+        parent::__construct();
     }
 
     /**
@@ -90,19 +75,18 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _initialize()
     {
-        $this->revertErrorHandler();
-        $this->initializeLaravel();
+        $this->initializeLumen();
     }
 
     /**
      * Before hook.
      *
      * @param \Codeception\TestCase $test
-     * @throws ModuleConfigException
+     * @throws ModuleConfig
      */
     public function _before(\Codeception\TestCase $test)
     {
-        $this->initializeLaravel();
+        $this->initializeLumen();
 
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
@@ -120,27 +104,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->app['db']->rollback();
         }
 
-        if ($this->app['auth']) {
-            $this->app['auth']->logout();
-        }
-
-        if ($this->app['cache']) {
-            $this->app['cache']->flush();
-        }
-
-        if ($this->app['session']) {
-            $this->app['session']->flush();
-        }
-
         // disconnect from DB to prevent "Too many connections" issue
         if ($this->app['db']) {
             $this->app['db']->disconnect();
         }
-    }
-
-    public function _parts()
-    {
-        return ['orm'];
     }
 
     /**
@@ -150,39 +117,29 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _afterStep(\Codeception\Step $step)
     {
-        \Illuminate\Support\Facades\Facade::clearResolvedInstances();
-
-        parent::_afterStep($step);
+        Facade::clearResolvedInstances();
     }
 
     /**
-     * Revert back to the Codeception error handler,
-     * becauses Laravel registers it's own error handler.
-     */
-    protected function revertErrorHandler()
-    {
-        $handler = new ErrorHandler();
-        set_error_handler([$handler, 'errorHandler']);
-    }
-
-    /**
-     * Initialize the Laravel framework.
+     * Initialize the Lumen framework.
      *
-     * @throws ModuleConfigException
+     * @throws ModuleConfig
      */
-    protected function initializeLaravel()
+    protected function initializeLumen()
     {
         $this->app = $this->bootApplication();
         $this->app->instance('request', new Request());
-        $this->client = new LaravelConnector($this->app);
+        $this->client = new LumenConnector($this->app);
         $this->client->followRedirects(true);
+
+        $this->revertErrorHandler();
     }
 
     /**
-     * Boot the Laravel application object.
+     * Boot the Lumen application object.
      *
-     * @return \Illuminate\Foundation\Application
-     * @throws \Codeception\Exception\ModuleConfigException
+     * @return \Laravel\Lumen\Application
+     * @throws \Codeception\Exception\ModuleConfig
      */
     protected function bootApplication()
     {
@@ -190,26 +147,33 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $projectDir .= $this->config['root'];
         require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        \Illuminate\Support\ClassLoader::register();
-
         $bootstrapFile = $projectDir . $this->config['bootstrap'];
 
-        if (!file_exists($bootstrapFile)) {
-            throw new ModuleConfigException(
+        if (! file_exists($bootstrapFile)) {
+            throw new ModuleConfig(
                 $this, "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
             );
         }
 
         $app = require $bootstrapFile;
-        $app->loadEnvironmentFrom($this->config['environment_file']);
 
         return $app;
     }
 
     /**
-     * Provides access the Laravel application object.
+     * Revert back to the Codeception error handler,
+     * because Laravel registers it's own error handler.
+     */
+    protected function revertErrorHandler()
+    {
+        $handler = new ErrorHandler();
+        set_error_handler(array($handler, 'errorHandler'));
+    }
+
+    /**
+     * Provides access the Lumen application object.
      *
-     * @return \Illuminate\Foundation\Application
+     * @return \Laravel\Lumen\Application
      */
     public function getApplication()
     {
@@ -219,9 +183,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * Opens web page using route name and parameters.
      *
-     * ``` php
+     * ```php
      * <?php
-     * $I->amOnRoute('posts.create');
+     * $I->amOnRoute('homepage');
      * ?>
      * ```
      *
@@ -230,118 +194,60 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function amOnRoute($routeName, $params = [])
     {
-        $route = $this->app['routes']->getByName($routeName);
+        $route = $this->getRouteByName($routeName);
 
         if (! $route) {
-            $this->fail("Route with name '$routeName' does not exist");
+            $this->fail("Could not find route with name '$routeName'");
         }
 
-        $absolute = ! is_null($route->domain());
-        $url = $this->app['url']->route($routeName, $params, $absolute);
+        $url = $this->generateUrlForRoute($route, $params);
         $this->amOnPage($url);
     }
 
     /**
-     * Opens web page by action name
+     * Get the route for a route name.
      *
-     * ``` php
-     * <?php
-     * $I->amOnAction('PostsController@index');
-     * ?>
-     * ```
-     *
-     * @param $action
-     * @param array $params
+     * @param string $routeName
+     * @return array|null
      */
-    public function amOnAction($action, $params = [])
+    private function getRouteByName($routeName)
     {
-        $namespacedAction = $this->actionWithNamespace($action);
-        $route = $this->app['routes']->getByAction($namespacedAction);
+        foreach ($this->app->getRoutes() as $route) {
+            if ($route['method'] != 'GET') {
+                return;
+            }
 
-        if (! $route) {
-            $this->fail("Action '$action' does not exists");
+            if (isset($route['action']['as']) && $route['action']['as'] == $routeName) {
+                return $route;
+            }
         }
 
-        $absolute = ! is_null($route->domain());
-        $url = $this->app['url']->action($action, $params, $absolute);
-        $this->amOnPage($url);
+        return null;
     }
 
     /**
-     * Normalize an action to full namespaced action.
+     * Generate the URL for a route specification.
+     * Replaces the route parameters from left to right with the parameters
+     * passed in the $params array.
      *
-     * @param string $action
+     * @param array $route
+     * @param array $params
      * @return string
      */
-    protected function actionWithNamespace($action)
+    private function generateUrlForRoute($route, $params)
     {
-        $rootNamespace = $this->getRootControllerNamespace();
+        $url = $route['uri'];
 
-        if ($rootNamespace && ! (strpos($action, '\\') === 0)) {
-            return $rootNamespace . '\\' . $action;
-        } else {
-            return trim($action, '\\');
+        while(count($params) > 0) {
+            $param = array_shift($params);
+            $url = preg_replace('/{.+?}/', $param, $url, 1);
         }
+
+        return $url;
     }
 
     /**
-     * Get the root controller namespace for the application.
-     *
-     * @return string
-     */
-    protected function getRootControllerNamespace()
-    {
-        $urlGenerator = $this->app['url'];
-        $reflection = new \ReflectionClass($urlGenerator);
-
-        $property = $reflection->getProperty('rootNamespace');
-        $property->setAccessible(true);
-
-        return $property->getValue($urlGenerator);
-    }
-
-    /**
-     * Checks that current url matches route
-     *
-     * ``` php
-     * <?php
-     * $I->seeCurrentRouteIs('posts.index');
-     * ?>
-     * ```
-     * @param $route
-     * @param array $params
-     */
-    public function seeCurrentRouteIs($route, $params = [])
-    {
-        $this->seeCurrentUrlEquals($this->app['url']->route($route, $params, false));
-    }
-
-    /**
-     * Checks that current url matches action
-     *
-     * ``` php
-     * <?php
-     * $I->seeCurrentActionIs('PostsController@index');
-     * ?>
-     * ```
-     *
-     * @param $action
-     * @param array $params
-     */
-    public function seeCurrentActionIs($action, $params = [])
-    {
-        $this->seeCurrentUrlEquals($this->app['url']->action($action, $params, false));
-    }
-
-    /**
-     * Assert that a session variable exists.
-     *
-     * ``` php
-     * <?php
-     * $I->seeInSession('key');
-     * $I->seeInSession('key', 'value');
-     * ?>
-     * ```
+     * Assert that the session has a given list of values.
      *
      * @param  string|array $key
      * @param  mixed $value
@@ -364,13 +270,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * Assert that the session has a given list of values.
      *
-     * ``` php
-     * <?php
-     * $I->seeSessionHasValues(['key1', 'key2']);
-     * $I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
-     * ?>
-     * ```
-     *
      * @param  array $bindings
      * @return void
      */
@@ -383,69 +282,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 $this->seeInSession($key, $value);
             }
         }
-    }
-
-    /**
-     * Assert that form errors are bound to the View.
-     *
-     * ``` php
-     * <?php
-     * $I->seeFormHasErrors();
-     * ?>
-     * ```
-     *
-     * @return bool
-     */
-    public function seeFormHasErrors()
-    {
-        $viewErrorBag = $this->app->make('view')->shared('errors');
-        $this->assertTrue(count($viewErrorBag) > 0);
-    }
-
-    /**
-     * Assert that specific form error messages are set in the view.
-     *
-     * Useful for validation messages e.g.
-     *  return `Redirect::to('register')->withErrors($validator);`
-     *
-     * Example of Usage
-     *
-     * ``` php
-     * <?php
-     * $I->seeFormErrorMessages(array('username'=>'Invalid Username'));
-     * ?>
-     * ```
-     * @param array $bindings
-     */
-    public function seeFormErrorMessages(array $bindings)
-    {
-        foreach ($bindings as $key => $value) {
-            $this->seeFormErrorMessage($key, $value);
-        }
-    }
-
-    /**
-     * Assert that specific form error message is set in the view.
-     *
-     * Useful for validation messages and generally messages array
-     *  e.g.
-     *  return `Redirect::to('register')->withErrors($validator);`
-     *
-     * Example of Usage
-     *
-     * ``` php
-     * <?php
-     * $I->seeFormErrorMessage('username', 'Invalid Username');
-     * ?>
-     * ```
-     * @param string $key
-     * @param string $errorMessage
-     */
-    public function seeFormErrorMessage($key, $errorMessage)
-    {
-        $viewErrorBag = $this->app['view']->shared('errors');
-
-        $this->assertEquals($errorMessage, $viewErrorBag->first($key));
     }
 
     /**
@@ -492,12 +328,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Return an instance of a class from the IoC Container.
-     * (http://laravel.com/docs/ioc)
      *
      * Example
      * ``` php
      * <?php
-     * // In Laravel
+     * // In Lumen
      * App::bind('foo', function($app)
      * {
      *     return new FooBar;
@@ -530,7 +365,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param $tableName
      * @param array $attributes
      * @return mixed
-     * @part orm
      */
     public function haveRecord($tableName, $attributes = array())
     {
@@ -545,14 +379,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Checks that record exists in database.
      *
      * ``` php
-     * <?php
      * $I->seeRecord('users', array('name' => 'davert'));
-     * ?>
      * ```
      *
      * @param $tableName
      * @param array $attributes
-     * @part orm
      */
     public function seeRecord($tableName, $attributes = array())
     {
@@ -596,7 +427,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param $tableName
      * @param array $attributes
      * @return mixed
-     * @part orm
      */
     public function grabRecord($tableName, $attributes = array())
     {
@@ -607,7 +437,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param $tableName
      * @param array $attributes
      * @return mixed
-     * @part orm
      */
     protected function findRecord($tableName, $attributes = array())
     {

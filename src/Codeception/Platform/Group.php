@@ -11,5 +11,4 @@ use Codeception\GroupObject;
  */
 abstract class Group extends GroupObject
 {
-
 }

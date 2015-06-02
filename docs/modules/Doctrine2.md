@@ -26,6 +26,7 @@ It can be done in bootstrap file, by setting static $em property:
 
 * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
 * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+* symfony_em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager (optional).
 * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
 
  ### Example (`functional.suite.yml`)

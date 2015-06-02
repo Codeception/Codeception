@@ -80,6 +80,13 @@ extensions:
 
 But what are extensions, anyway? Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
 
+<div class="alert">This section requires advanced PHP skills and some knowlegde of Codeception and PHPUnit internals.</div>
+
+Codeception has limited capabilities to extend its core features.
+Extensions are not supposed to override current functionality, but are pretty useful if you are experienced developer and you want to hook into testing flow.
+
+Basically speaking, Extensions are nothing more then event listeners based on [Symfony Event Dispatcher](http://symfony.com/doc/current/components/event_dispatcher/introduction.html) component.
+
 Here are the events and event classes. The events are listed in order they happen during execution. Each event has a corresponding class, which is passed to listener, and contains specific objects.
 
 ### Events

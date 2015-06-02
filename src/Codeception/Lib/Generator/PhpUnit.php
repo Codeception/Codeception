@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Lib\Generator;
 
+use Codeception\Util\Shared\Namespaces;
 use Codeception\Util\Template;
 
 class PhpUnit
 {
-    use Shared\Namespaces;
+    use Namespaces;
     use Shared\Classname;
 
     protected $template = <<<EOF
@@ -40,7 +41,7 @@ EOF;
 
     public function produce()
     {
-        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
+        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
 
         return (new Template($this->template))
             ->place('namespace', $ns)

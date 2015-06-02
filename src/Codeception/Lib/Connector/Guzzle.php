@@ -2,6 +2,7 @@
 
 namespace Codeception\Lib\Connector;
 
+use Codeception\Exception\TestRuntime as TestRuntimeException;
 use Codeception\Exception\ConnectionException;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
@@ -63,7 +64,7 @@ class Guzzle extends Client
      */
     public function setHeader($name, $value)
     {
-        if (empty($value)) {
+        if (strval($value) === '') {
             $this->deleteHeader($name);
         } else {
             $this->requestOptions['headers'][$name] = $value;
@@ -96,7 +97,6 @@ class Guzzle extends Client
     protected function createResponse(Response $response)
     {
         $contentType = $response->getHeader('Content-Type');
-        $matches = null;
 
         if (!$contentType or strpos($contentType, 'charset=') === false) {
             $body = $response->getBody(true);
@@ -108,20 +108,22 @@ class Guzzle extends Client
 
         $headers = $response->getHeaders();
         $status = $response->getStatusCode();
-        $matchesMeta = null;
-        $matchesHeader = null;
+        $matches = [];
 
-        $isMetaMatch = preg_match(
+        $matchesMeta = preg_match(
             '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
             $response->getBody(true),
-            $matchesMeta
+            $matches
         );
-        $isHeaderMatch = preg_match(
-            '~(\d*);?url=(.*)~',
-            (string)$response->getHeader('Refresh'),
-            $matchesHeader
-        );
-        $matches = ($isMetaMatch) ? $matchesMeta : $matchesHeader;
+
+        if (!$matchesMeta) {
+            // match by header
+            preg_match(
+                '~(\d*);?url=(.*)~',
+                (string)$response->getHeader('Refresh'),
+                $matches
+            );
+        }
 
         if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
             $uri = $this->getAbsoluteUri($matches[2]);
@@ -145,15 +147,15 @@ class Guzzle extends Client
     public function getAbsoluteUri($uri)
     {
         $build = parse_url($this->baseUri);
-        $uriparts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
-
+        $uriParts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
+        
         if ($build === false) {
-            throw new \Codeception\Exception\TestRuntimeException("URL '{$this->baseUri}' is malformed");
-        } elseif ($uriparts === false) {
-            throw new \Codeception\Exception\TestRuntimeException("URI '{$uri}' is malformed");
+            throw new TestRuntimeException("URL '{$this->baseUri}' is malformed");
+        } elseif ($uriParts === false) {
+            throw new TestRuntimeException("URI '{$uri}' is malformed");
         }
-
-        foreach ($uriparts as $part => $value) {
+        
+        foreach ($uriParts as $part => $value) {
             if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
                 $build[$part] = rtrim($build[$part], '/') . '/' . $value;
             } else {
@@ -165,9 +167,9 @@ class Guzzle extends Client
 
     protected function doRequest($request)
     {
-        /** @var $request BrowserKitRequest  * */
-        $requestOptions = [
-            'body'    => $this->extractBody($request),
+        /** @var $request BrowserKitRequest  **/
+        $requestOptions = array(
+            'body' => $this->extractBody($request),
             'cookies' => $this->extractCookies($request),
             'headers' => $this->extractHeaders($request)
         ];
@@ -224,10 +226,10 @@ class Guzzle extends Client
 
     protected function extractBody(BrowserKitRequest $request)
     {
-        if (in_array(strtoupper($request->getMethod()), ['GET', 'HEAD'])) {
+        if (in_array(strtoupper($request->getMethod()), array('GET','HEAD'))) {
             return null;
         }
-        if ($request->getContent() != null) {
+        if ($request->getContent() !== null) {
             return $request->getContent();
         } else {
             return $request->getParameters();

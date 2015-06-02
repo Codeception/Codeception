@@ -111,10 +111,10 @@ class MongoDb
                 $this->host . '/' . $this->dbName,
                 $this->user,
                 $this->password,
-                $dumpFile
+                escapeshellarg($dumpFile)
             );
         } else {
-            $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, $dumpFile);
+            $cmd = sprintf('mongo %s %s', $this->host . '/' . $this->dbName, escapeshellarg($dumpFile));
         }
         shell_exec($cmd);
     }

@@ -6,8 +6,11 @@ use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Zend\Http\Request as HttpRequest;
+use Zend\Http\Headers as HttpHeaders;
 use Zend\Stdlib\Parameters;
 use Zend\Uri\Http as HttpUri;
+use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
+use GuzzleHttp\Url;
 
 class ZF2 extends Client
 {
@@ -39,17 +42,9 @@ class ZF2 extends Client
     {
         $zendRequest = $this->application->getRequest();
         $zendResponse = $this->application->getResponse();
-        $zendHeaders  = $zendRequest->getHeaders();
-
-        if (!$zendHeaders->has('Content-Type')) {
-            $server = $request->getServer();
-            if (isset($server['CONTENT_TYPE'])) {
-                $zendHeaders->addHeaderLine('Content-Type', $server['CONTENT_TYPE']);}
-        }
         
         $zendResponse->setStatusCode(200);
-
-        $uri = new HttpUri($request->getUri());
+        $uri         = new HttpUri($request->getUri());
         $queryString = $uri->getQuery();
         $method = strtoupper($request->getMethod());
 
@@ -59,16 +54,19 @@ class ZF2 extends Client
             parse_str($queryString, $query);
             $zendRequest->setQuery(new Parameters($query));
         }
-
-        if ($method == HttpRequest::METHOD_POST) {
+        
+        if ($request->getContent() !== null) {
+            $zendRequest->setContent($request->getContent());
+        } elseif ($method != HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
             $zendRequest->setPost(new Parameters($post));
-        } elseif ($method == HttpRequest::METHOD_PUT) {
-            $zendRequest->setContent($request->getContent());
         }
 
         $zendRequest->setMethod($method);
         $zendRequest->setUri($uri);
+        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+        
+        $zendRequest->setHeaders($this->_extractHeaders($request));
         $this->application->run();
 
         $this->zendRequest = $zendRequest;
@@ -93,5 +91,31 @@ class ZF2 extends Client
     public function getZendRequest()
     {
         return $this->zendRequest;
+    }
+
+    private function _extractHeaders(BrowserKitRequest $request)
+    {
+        $headers = array();
+        $server = $request->getServer();
+        $uri                 = Url::fromString($request->getUri());
+        $server['HTTP_HOST'] = $uri->getHost();
+        $port                = $uri->getPort();
+        if ($port !== null && $port !== 443 && $port != 80) {
+            $server['HTTP_HOST'] .= ':' . $port;
+        }
+
+        $contentHeaders = array('Content-length' => true, 'Content-md5' => true, 'Content-type' => true);
+        foreach ($server as $header => $val) {
+            $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
+
+            if (strpos($header, 'Http-') === 0) {
+                $headers[substr($header, 5)] = $val;
+            } elseif (isset($contentHeaders[$header])) {
+                $headers[$header] = $val;
+            }
+        }
+        $zendHeaders = new HttpHeaders();
+        $zendHeaders->addHeaders($headers);
+        return $zendHeaders;
     }
 }

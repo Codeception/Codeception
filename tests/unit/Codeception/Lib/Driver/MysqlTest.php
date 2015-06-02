@@ -2,59 +2,88 @@
 
 use \Codeception\Lib\Driver\Db;
 
+/**
+ * @group appveyor
+ */
 class MysqlTest extends \PHPUnit_Framework_TestCase
 {
-    protected $config = array(
+    protected static $config = [
         'dsn' => 'mysql:host=localhost;dbname=codeception_test',
         'user' => 'root',
         'password' => ''
-    );
+    ];
 
-    protected $dbh;
-
-    protected $mysql;
+    protected static $mysql;
+    protected static $sql;
+    
+    public static function setUpBeforeClass()
+    {
+        if (getenv('APPVEYOR')) {
+            self::$config['password'] = 'Password12!';
+        }
+        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/mysql.sql');
+        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
+        self::$sql = explode("\n", $sql);
+        try {
+            self::$mysql = Db::create(self::$config['dsn'], self::$config['user'], self::$config['password']);
+            self::$mysql->cleanup();
+        } catch (\Exception $e) {
+        }
+        
+    }
 
     public function setUp()
     {
-        $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/mysql.sql');
-        $sql = preg_replace('%/\*(?:(?!\*/).)*\*/%s', "", $sql);
-        $this->sql = explode("\n", $sql);
-        try {
-            $this->mysql = Db::create($this->config['dsn'], $this->config['user'], $this->config['password']);
-        } catch (\Exception $e) {
+        if (!isset(self::$mysql)) {
             $this->markTestSkipped('Coudn\'t establish connection to database');
-            return;
         }
-        $this->mysql->cleanup();
+        self::$mysql->load(self::$sql);
     }
-
+    
+    public function tearDown()
+    {
+        if (isset(self::$mysql)) {
+            self::$mysql->cleanup();
+        }
+    }
 
     public function testCleanupDatabase()
     {
-
-        $this->mysql->getDbh()->exec("
-        CREATE TABLE `groups` (
-          `id` int(11) NOT NULL AUTO_INCREMENT,
-          `name` varchar(100) DEFAULT NULL,
-          `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1
-        ");
-        $this->assertEquals(1, count($this->mysql->getDbh()->query("SHOW TABLES")->fetchAll()));
-        $this->mysql->cleanup();
-        $this->assertEmpty($this->mysql->getDbh()->query("SHOW TABLES")->fetchAll());
+        $this->assertNotEmpty(self::$mysql->getDbh()->query("SHOW TABLES")->fetchAll());
+        self::$mysql->cleanup();
+        $this->assertEmpty(self::$mysql->getDbh()->query("SHOW TABLES")->fetchAll());
     }
 
+    /**
+     * @group appveyor
+     */
     public function testLoadDump()
     {
-        $this->mysql->load($this->sql);
-        $res = $this->mysql->getDbh()->query("select * from users where name = 'davert'");
+        $res = self::$mysql->getDbh()->query("select * from users where name = 'davert'");
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
 
-        $res = $this->mysql->getDbh()->query("select * from groups where name = 'coders'");
+        $res = self::$mysql->getDbh()->query("select * from groups where name = 'coders'");
         $this->assertNotEquals(false, $res);
         $this->assertGreaterThan(0, $res->rowCount());
     }
 
+    public function testGetPrimaryKeyOfTableUsingReservedWordAsTableName()
+    {
+        $this->assertEquals('id', self::$mysql->getPrimaryColumn('order'));
+    }
+
+    public function testDeleteFromTableUsingReservedWordAsTableName()
+    {
+        self::$mysql->deleteQuery('order', 1);
+        $res = self::$mysql->getDbh()->query("select id from `order` where id = 1");
+        $this->assertEquals(0, $res->rowCount());
+    }
+
+    public function testDeleteFromTableUsingReservedWordAsPrimaryKey()
+    {
+        self::$mysql->deleteQuery('table_with_reserved_primary_key', 1, 'unique');
+        $res = self::$mysql->getDbh()->query("select name from `table_with_reserved_primary_key` where `unique` = 1");
+        $this->assertEquals(0, $res->rowCount());
+    }
 }

@@ -14,7 +14,6 @@ class GenerateCestTest extends BaseCommandRunner {
 
     /**
      * @group command
-     * @group core
      */
     public function testBasic()
     {

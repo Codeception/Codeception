@@ -174,6 +174,7 @@ class RoboFile extends \Robo\Tasks
             ->name('*.ttf')
             ->name('*.wof')
             ->name('*.woff')
+            ->name('*.woff2')
             ->name('*.png')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
@@ -517,6 +518,8 @@ class RoboFile extends \Robo\Tasks
     {
         $this->taskCleanDir([
             'tests/log',
+            'tests/data/claypit/tests/_output',
+            'tests/data/claypit/tests/_log',
             'tests/data/claypit/tests/_output',
             'tests/data/included/_log',
             'tests/data/included/jazz/tests/_log',

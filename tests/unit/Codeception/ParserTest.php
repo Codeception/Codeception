@@ -146,4 +146,13 @@ class ParserTest extends \Codeception\TestCase\Test
         $classes = Parser::getClassesFromFile(codecept_data_dir('php55Test'));
         $this->assertEquals(['php55Test'], $classes);
     }
+    
+    /*
+     * https://github.com/Codeception/Codeception/issues/1779
+     */
+    public function testParseFileWhichUnsetsFileVariable()
+    {
+        $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
+        $this->assertEquals([], $classes);
+    }
 }
