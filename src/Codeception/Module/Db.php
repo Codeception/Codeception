@@ -138,7 +138,13 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         try {
             $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
-            throw new ModuleException(__CLASS__, $e->getMessage() . ' while creating PDO connection');
+            $message = $e->getMessage();
+            if ($message === 'could not find driver') {
+                list ($missingDriver,) = explode(':', $this->config['dsn'],2);
+                $message = "could not find $missingDriver driver";
+            }
+            
+            throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
 
         $this->dbh = $this->driver->getDbh();
