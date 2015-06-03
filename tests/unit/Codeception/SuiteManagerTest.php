@@ -34,8 +34,9 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun() {
         $events = [];
-        $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $this->dispatcher->addListener('suite.before', $eventListener);
+        $this->dispatcher->addListener('suite.after', $eventListener);
         $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
         $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
@@ -72,10 +73,11 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     public function testGroupEventsAreFired()
     {
         $events = [];
-        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.before.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.after.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $this->dispatcher->addListener('test.before', $eventListener);
+        $this->dispatcher->addListener('test.before.admin', $eventListener);
+        $this->dispatcher->addListener('test.after', $eventListener);
+        $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
