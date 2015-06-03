@@ -30,6 +30,7 @@ install:
   - echo extension=php_curl.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
   - echo extension=php_pdo_pgsql.dll >> php.ini
+  - echo extension=php_pdo_sqlite.dll >> php.ini
   - echo extension=php_pgsql.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -41,5 +42,5 @@ before_test:
   - mysql -uroot -pPassword12! -e "CREATE DATABASE codeception_test"
 
 test_script:
-  - php codecept run cli --no-colors -n --skip-group coverage
-  - php codecept run unit -g core -g appveyor --no-colors -n
+  - php codecept run unit -g core --no-colors -n -vv
+  - php codecept run unit -g appveyor --no-colors -n -vv

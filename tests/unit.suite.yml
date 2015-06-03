@@ -5,3 +5,5 @@ error_level: "E_ALL | E_STRICT"
 class_name: CodeGuy
 modules:
     enabled: [CodeHelper, EmulateModuleHelper]
+groups:
+  debug: ['tests/unit/Codeception/Module/DbTest.php', 'tests/unit/Codeception/Lib/Driver/SqliteTest.php']
