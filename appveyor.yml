@@ -30,6 +30,7 @@ install:
   - echo extension=php_curl.dll >> php.ini
   - echo extension=php_pdo_mysql.dll >> php.ini
   - echo extension=php_pdo_pgsql.dll >> php.ini
+  - echo extension=php_pdo_sqlite.dll >> php.ini
   - echo extension=php_pgsql.dll >> php.ini
   - SET PATH=C:\tools\php;%PATH%
   - cd %APPVEYOR_BUILD_FOLDER%
