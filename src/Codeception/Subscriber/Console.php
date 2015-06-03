@@ -70,7 +70,7 @@ class Console implements EventSubscriberInterface
         $this->buildResultsTable($e);
 
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
+            ->with(Multibyte::ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
             ->width(array_sum($this->columns), '-')
             ->prepend("\n")
@@ -438,7 +438,7 @@ class Console implements EventSubscriberInterface
         $feature = $test->getFeature();
 
         if ($feature) {
-            return $this->message = $this->message($inProgress ? $feature : ucfirst($feature))
+            return $this->message = $this->message($inProgress ? $feature : Multibyte::ucfirst($feature))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
                 ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - strlen($filename): $this->columns[0]- 4 - strlen($filename))
                 ->style('focus')
