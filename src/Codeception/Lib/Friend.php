@@ -4,6 +4,7 @@ use Codeception\Actor;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\Lib\Interfaces\MultiSession;
+use Codeception\Util\Multibyte;
 
 class Friend {
 
@@ -39,9 +40,9 @@ class Friend {
             $module->_loadSessionData($this->data[$name]);
         };
 
-        $this->actor->comment(strtoupper("<info>{$this->name} does</info>:"));
+        $this->actor->comment(Multibyte::strtoupper("<info>{$this->name} does</info>:"));
         $ret = $closure($this->actor);
-        $this->actor->comment(strtoupper("<info>{$this->name} finished</info>"));
+        $this->actor->comment(Multibyte::strtoupper("<info>{$this->name} finished</info>"));
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();

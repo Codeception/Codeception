@@ -13,6 +13,7 @@ use Codeception\TestCase;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
 use Codeception\Util\Debug;
+use Codeception\Util\Multibyte;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -164,7 +165,7 @@ class Console implements EventSubscriberInterface
         $this->writeFinishedTest($e->getTest());
         $message = $this->message('Skipped');
         if ($this->isDetailed($e->getTest())) {
-            $message->apply('strtoupper')->append("\n");
+            $message->apply(array('\Codeception\Util\Multibyte', 'strtoupper'))->append("\n");
         }
         $message->writeln();
     }
@@ -174,7 +175,7 @@ class Console implements EventSubscriberInterface
         $this->writeFinishedTest($e->getTest());
         $message = $this->message('Incomplete');
         if ($this->isDetailed($e->getTest())) {
-            $message->apply('strtoupper')->append("\n");
+            $message->apply(array('\Codeception\Util\Multibyte', 'strtoupper'))->append("\n");
         }
         $message->writeln();
     }
