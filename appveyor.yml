@@ -41,5 +41,5 @@ before_test:
   - mysql -uroot -pPassword12! -e "CREATE DATABASE codeception_test"
 
 test_script:
-  - php codecept run cli --no-colors -n --skip-group coverage
-  - php codecept run unit -g core -g appveyor --no-colors -n
+  - php codecept run unit -g core --no-colors -n -vv
+  - php codecept run unit -g appveyor --no-colors -n -vv
