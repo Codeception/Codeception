@@ -41,7 +41,7 @@ EOF;
 
     public function produce()
     {
-        $ns = $this->getNamespaceString($this->settings['namespace'] . '\\' . $this->name);
+        $ns = $this->getNamespaceHeader($this->settings['namespace'] . '\\' . $this->name);
 
         return (new Template($this->template))
             ->place('namespace', $ns)

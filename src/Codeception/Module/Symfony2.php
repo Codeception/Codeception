@@ -157,13 +157,13 @@ class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
     {
         $profile = $this->getProfiler();
         if (!$profile) {
-            \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without Profiler');
+            $this->fail('Emails can\'t be tested without Profiler');
         }
         if (!$profile->hasCollector('swiftmailer')) {
-            \PHPUnit_Framework_Assert::fail('Emails can\'t be tested without SwiftMailer connector');
+            $this->fail('Emails can\'t be tested without SwiftMailer connector');
         }
 
-        \PHPUnit_Framework_Assert::assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
+        $this->assertGreaterThan(0, $profile->getCollector('swiftmailer')->getMessageCount());
     }
 
     /**
