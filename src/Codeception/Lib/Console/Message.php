@@ -3,6 +3,7 @@
 namespace Codeception\Lib\Console;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Codeception\Util\Multibyte;
 
 class Message
 {
@@ -32,7 +33,7 @@ class Message
 
     public function width($length, $char = ' ')
     {
-        $message_length = strlen(strip_tags($this->message));
+        $message_length = Multibyte::strwidth(strip_tags($this->message));
         if ($message_length < $length) {
             $this->message .= str_repeat($char, $length - $message_length);
         }
@@ -41,7 +42,7 @@ class Message
 
     public function cut($length)
     {
-        $this->message = substr($this->message, 0, $length-1);
+        $this->message = Multibyte::substr($this->message, 0, $length-1);
         return $this;
     }
 
@@ -109,10 +110,7 @@ class Message
 
     public function getLength()
     {
-        if (function_exists('mb_strlen')) {
-            return mb_strlen($this->message);
-        }
-        return strlen($this->message);
+        return Multibyte::strlen($this->message);
     }
 
     public function __toString()

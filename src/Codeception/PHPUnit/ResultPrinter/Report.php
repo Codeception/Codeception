@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\PhpUnit\ResultPrinter;
+use Codeception\Util\Multibyte;
 
 class Report extends \Codeception\PHPUnit\ResultPrinter
 {
@@ -29,8 +30,8 @@ class Report extends \Codeception\PHPUnit\ResultPrinter
 			$status = 'Ok';
         }
 
-	    if (strlen($name) > 75) $name = substr($name, 0, 70);
-	    $line = $name . str_repeat('.', 75 - strlen($name));
+	    if (Multibyte::strwidth($name) > 75) $name = Multibyte::strimwidth($name, 0, 70);
+	    $line = $name . str_repeat('.', 75 - Multibyte::strwidth($name));
 	    $line .= $status;
 
 	    $this->write($line."\n");
