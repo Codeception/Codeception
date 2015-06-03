@@ -1,5 +1,6 @@
 <?php
 namespace Codeception;
+use Codeception\Util\Multibyte;
 
 abstract class Step
 {
@@ -110,7 +111,7 @@ abstract class Step
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
         $text = preg_replace('~\bdont\b~', 'don\'t', $text);
-        return strtolower($text);
+        return Multibyte::strtolower($text);
     }
 
     public function run()

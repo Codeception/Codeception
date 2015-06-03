@@ -3,6 +3,7 @@ namespace Codeception;
 
 use Codeception\Lib\Actor\Shared\Comment;
 use Codeception\Lib\Actor\Shared\Friend;
+use Codeception\Util\Multibyte;
 
 abstract class Actor
 {
@@ -27,7 +28,7 @@ abstract class Actor
 
     public function wantTo($text)
     {
-        $this->scenario->setFeature(mb_strtolower($text));
+        $this->scenario->setFeature(Multibyte::strtolower($text));
     }
 
     public function __call($method, $arguments) {
