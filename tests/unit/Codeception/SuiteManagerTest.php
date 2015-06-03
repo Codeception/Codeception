@@ -35,12 +35,12 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun() {
         $events = [];
-        $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = $e; });
-        $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = $e; });
+        $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = 'before'; });
+        $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = 'after'; });
         $runner = new \Codeception\PHPUnit\Runner;
         $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($this->dispatcher));
         $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
-        $this->assertCount(2, $events);
+        $this->assertEquals(['before', 'after'], $events);
     }
 
     /**
@@ -82,16 +82,16 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     public function testGroupEventsAreFired()
     {
         $events = [];
-        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.before.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = $e->getName(); });
-        $this->dispatcher->addListener('test.after.admin', function ($e) use (&$events) { $events[] = $e->getName(); });
+        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = 'before'; });
+        $this->dispatcher->addListener('test.before.admin', function ($e) use (&$events) { $events[] = 'before.admin'; });
+        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = 'after'; });
+        $this->dispatcher->addListener('test.after.admin', function ($e) use (&$events) { $events[] = 'after.admin'; });
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
-        $this->assertContains('test.before', $events);
-        $this->assertContains('test.before.admin', $events);
-        $this->assertContains('test.after.admin', $events);
+        $this->assertContains('before', $events);
+        $this->assertContains('before.admin', $events);
+        $this->assertContains('after.admin', $events);
     }
 
 }

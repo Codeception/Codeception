@@ -30,7 +30,7 @@ class {{actor}} extends \Codeception\Actor
 
 EOF;
 
-    protected $inheritedMethodTemplate = ' * @method void {{method}}({{params}})';
+    protected $inheritedMethodTemplate = ' * @method {{return}} {{method}}({{params}})';
 
     protected $settings;
     protected $modules;
@@ -58,11 +58,11 @@ EOF;
         return (new Template($this->template))
             ->place('hasNamespace', $namespace ? "namespace $namespace;" : '')
             ->place('actor', $this->settings['class_name'])
-            ->place('inheritedMethods', $this->prependAbstractGuyDocBlocks())
+            ->place('inheritedMethods', $this->prependAbstractActorDocBlocks())
             ->produce();
     }
 
-    protected function prependAbstractGuyDocBlocks()
+    protected function prependAbstractActorDocBlocks()
     {
         $inherited = [];
 
@@ -76,10 +76,15 @@ EOF;
             if ($method->name == '__construct') {
                 continue;
             } // skipping magic
+            $returnType = 'void';
+            if ($method->name == 'haveFriend') {
+                $returnType = '\Codeception\Lib\Friend';
+            }
             $params = $this->getParamsString($method);
             $inherited[] = (new Template($this->inheritedMethodTemplate))
                 ->place('method', $method->name)
                 ->place('params', $params)
+                ->place('return', $returnType)
                 ->produce();
         }
 
