@@ -33,8 +33,9 @@ class Laravel5 extends Client implements HttpKernelInterface, TerminableInterfac
         $this->httpKernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
         $this->httpKernel->bootstrap();
         $this->app->boot();
+        $url = preg_replace('/https?:\/\//', '', $this->app->config->get('app.url', 'localhost'));
 
-        parent::__construct($this);
+        parent::__construct($this, ['HTTP_HOST' => $url]);
     }
 
     /**
