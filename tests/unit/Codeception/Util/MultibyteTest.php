@@ -69,6 +69,27 @@ class MultibyteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataStrimwidth
+     */
+    public function testStrimwidth($string, $start, $width, $trimmarker, $expected)
+    {
+        $this->assertSame($expected, Multibyte::strimwidth($string, $start, $width, $trimmarker));
+    }
+
+    public function dataStrimwidth()
+    {
+        return array(
+            array('abcdef', 1, 3, '', 'bcd'),
+            array('abcdef', 2, 10, '', 'cdef'),
+            array('abcdef', 0, 5, '...', 'ab...'),
+            array('6月25日に限定版DVDが発売されます', 0, 7, '', '6月25日'),
+            array('6月25日に限定版DVDが発売されます', 0, 8, '', '6月25日'),
+            array('6月25日に限定版DVDが発売されます', 6, 12, '...', '限定版DVD...'),
+            array('6月25日に限定版DVDが発売されます', 6, 12, '。。。', '限定版。。。'),
+        );
+    }
+
+    /**
      * @dataProvider dataStrtolower
      */
     public function testStrtolower($string, $expected)

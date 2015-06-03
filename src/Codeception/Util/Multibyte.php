@@ -57,6 +57,25 @@ class Multibyte
     }
 
     /**
+     * strimwidth
+     *
+     * @param string  $string
+     * @param integer $start
+     * @param integer $width
+     * @param string  $trimmarker
+     * @param string  $encoding
+     * @return string
+     */
+    public static function strimwidth($string, $start, $width, $trimmarker = '', $encoding = 'UTF-8')
+    {
+        if (!function_exists('mb_strimwidth')) {
+            $length = $width - strlen($trimmarker);
+            return substr($string, $start, $length) . $trimmarker;
+        }
+        return mb_strimwidth($string, $start, $width, $trimmarker, $encoding);
+    }
+
+    /**
      * strtolower
      *
      * @param string $string
