@@ -39,6 +39,24 @@ class Multibyte
     }
 
     /**
+     * substr
+     *
+     * @param string  $string
+     * @param integer $start
+     * @param integer $length
+     * @param string  $encoding
+     * @return string
+     */
+    public static function substr($string, $start, $length = null, $encoding = 'UTF-8')
+    {
+        if (!function_exists('mb_substr')) {
+            $length = is_null($length) ? strlen($length) : $length;
+            return substr($string, $start, $length);
+        }
+        return mb_substr($string, $start, $length, $encoding);
+    }
+
+    /**
      * strtolower
      *
      * @param string $string

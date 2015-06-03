@@ -42,6 +42,33 @@ class MultibyteTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataSubstr
+     */
+    public function testSubstr($string, $start, $length, $expected)
+    {
+        $this->assertSame($expected, Multibyte::substr($string, $start, $length));
+    }
+
+    public function dataSubstr()
+    {
+        return array(
+            array('abcdef', 1, null, 'bcdef'),
+            array('abcdef', 2, null, 'cdef'),
+            array('abcdef', -2, null, 'ef'),
+            array('abcdef', -2, 1, 'e'),
+            array('abcdef', 0, -1, 'abcde'),
+            array('abcdef', 2, -1, 'cde'),
+            array('abcdef', -3, -1, 'de'),
+            array('abcdef', 0, 0, ''),
+            array('abcdef', 4, -4, ''),
+            array('6月25日に限定版DVDが発売されます', 6, null, '限定版DVDが発売されます'),
+            array('6月25日に限定版DVDが発売されます', 6, 6, '限定版DVD'),
+            array('6月25日に限定版DVDが発売されます', -10, null, 'DVDが発売されます'),
+            array('6月25日に限定版DVDが発売されます', -10, 4, 'DVDが'),
+        );
+    }
+
+    /**
      * @dataProvider dataStrtolower
      */
     public function testStrtolower($string, $expected)
