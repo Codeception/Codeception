@@ -106,17 +106,18 @@ EOF;
             throw new ModuleConfigException(
                 __CLASS__,
                 "Doctrine2 module requires EntityManager explicitly set.\n" .
-                "You can use your bootstrap file to assign the EntityManager:\n\n" .
-                '\Codeception\Module\Doctrine2::$em = $em'
+                "Please specify either `connection_callback` config option\n" .
+                "with callable which will return instance of EntityManager or\n" .
+                "pass a dependent module which are Symfony2 or ZF2\n" .
+                "to connect to Doctrine using Dependency Injection Container"
             );
         }
 
         if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Entity Manager was not properly set.\n" .
-                "You can use your bootstrap file to assign the EntityManager:\n\n" .
-                '\Codeception\Module\Doctrine2::$em = $em'
+                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n" .
+                "Use `connection_callback` or dependent framework modules to specify one"
             );
         }
 
