@@ -263,14 +263,14 @@ class Bootstrap extends Command
     protected function customize(OutputInterface $output)
     {
         $output->writeln("Welcome to Customization Wizard");
-        $dialog = $this->getHelperSet()->get('dialog');
+        $dialog = $this->getHelperSet()->get('question');
+
         /** @var $dialog DialogHelper  **/
         $output->writeln("<comment>================================</comment>");
         $output->writeln("<comment> Configuring Actor </comment>\n");
-        $this->actorSuffix = $dialog->ask($output,
-            "<question> Enter default actor name </question> Proposed: <info>Tester</info>; Formerly: Guy\n",
-            'Tester'
-        );              
+        
+        $question = new Question("<question> Enter default actor name </question> Proposed: <info>Tester</info>; Formerly: Guy\n", 'Tester');
+        $this->actorSuffix = $dialog->ask($input, $output, $question);
 
         $output->writeln("Basic Actor is set to: <info>{$this->actorSuffix}</info>");
 
