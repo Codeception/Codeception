@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Generates StepObject class. You will be asked for steps you want to implement.
@@ -47,13 +48,14 @@ class GenerateStepObject extends Command
         $filename = $this->completeSuffix($class, 'Steps');
         $filename = $path.$filename;
 
-        $dialog = $this->getHelperSet()->get('dialog');
+        $dialog = $this->getHelperSet()->get('question');
 
         $gen = new StepObjectGenerator($conf, $class);
 
         if (!$input->getOption('silent')) {
             do {
-                $action = $dialog->ask($output, "Add action to StepObject class (ENTER to exit): ", null);
+                $question = new Question('Add action to StepObject class (ENTER to exit): ', null);
+                $action = $dialog->ask($input, $output, $question);
                 if ($action) {
                     $gen->createAction($action);
                 }
