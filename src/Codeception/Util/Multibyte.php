@@ -68,6 +68,9 @@ class Multibyte
      */
     public static function strimwidth($string, $start, $width, $trimmarker = '', $encoding = 'UTF-8')
     {
+        if ($width <= 0) {
+            return '';
+        }
         if (!function_exists('mb_strimwidth')) {
             if (strlen($string) <= $width) {
                 return $string;

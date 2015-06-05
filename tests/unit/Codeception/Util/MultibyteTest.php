@@ -83,7 +83,7 @@ class MultibyteTest extends \PHPUnit_Framework_TestCase
             array('abcdef', 2, 10, '', 'cdef'),
             array('abcdef', 0, 5, '...', 'ab...'),
             array('abcdef', 0, 0, '', ''),
-            array('abcdef', 0, 0, '...', '...'),
+            array('abcdef', 0, 0, '...', ''),
             array('abcdef', 0, -1, '', ''),
             array('abcdef', 0, -1, '...', ''),
             array('6月25日に限定版DVDが発売されます', 0, 7, '', '6月25日'),
