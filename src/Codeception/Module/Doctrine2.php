@@ -47,7 +47,7 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
 class Doctrine2 extends \Codeception\Module implements DependsOnModule
 {
 
-    protected $config = ['cleanup' => true, 'connection_callback' => false];
+    protected $config = ['cleanup' => true, 'connection_callback' => false, 'depends' => null];
 
     protected $dependencyMessage = <<<EOF
 Provide connection_callback function to establish database connection and get Entity Manager:

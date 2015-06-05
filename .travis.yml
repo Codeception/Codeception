@@ -84,9 +84,9 @@ before_script:
 #  - php codecept build -c frameworks-l5
 #  - php codecept build -c frameworks-zf1
 #  - php codecept build -c frameworks-zf2
-  #- php codecept build -c frameworks-laravel
-  #- php codecept build -c frameworks-symfony
-  #- php codecept build -c frameworks-l5
+#  - php codecept build -c frameworks-laravel
+#  - php codecept build -c frameworks-symfony
+#  - php codecept build -c frameworks-l5
 
 script:
   - php codecept run  # self tests
