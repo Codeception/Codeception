@@ -142,7 +142,7 @@ class Filesystem extends \Codeception\Module
      */
     public function seeInThisFile($text)
     {
-        $this->assertContains($text, $this->file, "text $text in currently opened file");
+        $this->assertContains($text, $this->file, "No text '$text' in currently opened file");
     }
 
 
@@ -181,7 +181,7 @@ class Filesystem extends \Codeception\Module
      */
     public function dontSeeInThisFile($text)
     {
-        $this->assertNotContains($text, $this->file, "text $text in currently opened file");
+        $this->assertNotContains($text, $this->file, "Found text '$text' in currently opened file");
     }
 
     /**
@@ -218,7 +218,7 @@ class Filesystem extends \Codeception\Module
         $path = $this->absolutizePath($path);
         $this->debug($path);
         if (!file_exists($path)) {
-            \PHPUnit_Framework_Assert::fail("Directory does not exist: $path");
+            $this->fail("Directory does not exist: $path");
         }
 
         $files = Finder::create()->files()->name($filename)->in($path);
@@ -230,7 +230,6 @@ class Filesystem extends \Codeception\Module
             \PHPUnit_Framework_Assert::assertFileExists($file);
             return;
         }
-        \Codeception\Util\Debug::pause();
         $this->fail("$filename in $path");
     }
 
