@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Command;
 
+use Codeception\Configuration;
 use Codeception\Lib\Generator\Helper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,14 +38,16 @@ class GenerateHelper extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $name = ucfirst($input->getArgument('name'));
-        $config = \Codeception\Configuration::config($input->getOption('config'));
-        $file = \Codeception\Configuration::supportDir() . "Helper\\{$name}.php";
+        $config = Configuration::config($input->getOption('config'));
 
-        $res = $this->save($file, (new Helper($name, $config['namespace']))->produce());
+        $path = $this->buildPath(Configuration::supportDir() . 'Helper', $name);
+        $filename = $path . $this->getClassName($name) . '.php';
+
+        $res = $this->save($filename, (new Helper($name, $config['namespace']))->produce());
         if ($res) {
-            $output->writeln("<info>Helper $file created</info>");
+            $output->writeln("<info>Helper $filename created</info>");
         } else {
-            $output->writeln("<error>Error creating helper $file</error>");
+            $output->writeln("<error>Error creating helper $filename</error>");
         }
     }
 
