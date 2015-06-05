@@ -145,6 +145,22 @@ class MongoDb extends \Codeception\Module
      * Inserts data into collection
      *
      * ``` php
+     * <?php
+     * $I->useDatabase('db_1');
+     * ```
+     *
+     * @param $dbName
+     */
+    public function useDatabase($dbName)
+    {
+        $this->driver->setDatabase($dbName);
+    }
+
+    /**
+     * Inserts data into collection
+     *
+     * ``` php
+     * <?php
      * $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
      * $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
      * ```
