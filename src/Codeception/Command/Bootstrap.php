@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * Creates default config, tests directory and sample suites for current project. Use this command to start building a test suite.
@@ -83,7 +84,7 @@ class Bootstrap extends Command
         if ($input->getOption('compat')) {
             $this->compatibilitySetup($output);
         } elseif ($input->getOption('customize')) {
-            $this->customize($output);
+            $this->customize($input, $output);
         } else {
             $this->setup($output);
         }
@@ -260,7 +261,7 @@ class Bootstrap extends Command
         }
     }
 
-    protected function customize(OutputInterface $output)
+    protected function customize(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("Welcome to Customization Wizard");
         $dialog = $this->getHelperSet()->get('question');
@@ -282,7 +283,8 @@ class Bootstrap extends Command
         $output->writeln("\n<comment>================================</comment>");
         $output->writeln("<comment> Creating Suites </comment>\n");
 
-        while ($suite = lcfirst($dialog->ask($output, "<question> Enter suite name (and its actor name if it differs from suite)</question> Enter to finish\n"))) {
+        $question2 = new Question("<question> Enter suite name (and its actor name if it differs from suite)</question> Enter to finish\n", null);
+        while ($suite = lcfirst($dialog->ask($input, $output, $question2))) {
             $suiteInput = explode(' ', $suite);
             if (isset($suiteInput[1])) {
                 $suite = $suiteInput[0];
