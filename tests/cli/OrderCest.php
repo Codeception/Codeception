@@ -29,6 +29,15 @@ class OrderCest
         $I->seeFileContentsEqual("BIB([STFFT])");
     }
 
+    public function checkForCanCantFailsInCest(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run order CanCantFailCest.php --no-exit');
+        $I->seeFileFound('order.txt','tests/_output');
+        $I->expect('global bootstrap, initialization, beforeSuite, before, bootstrap, test, fail, fail, test, test, fail, fail, test, after, afterSuite');
+        $I->seeFileContentsEqual("BIB([TFT][TFT])");
+    }
+
     public function checkSimpleFiles(CliGuy $I)
     {
         $I->amInPath('tests/data/sandbox');
