@@ -66,11 +66,6 @@ final class Events
     const STEP_AFTER = 'step.after';
 
     /**
-     * @deprecated or what ??? can't find any usage
-     */
-    const STEP_FAIL = 'step.fail';
-
-    /**
      * The <b>TEST_FAIL</b> event occurs whenever test has failed.
      *
      * The event listener method receives a {@link Codeception\Event\FailEvent} instance.

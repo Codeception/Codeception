@@ -10,6 +10,7 @@ use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
 use Codeception\Lib\Suite;
+use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
@@ -39,6 +40,11 @@ class Console implements EventSubscriberInterface
     ];
 
     /**
+     * @var Step
+     */
+    protected $metaStep;
+
+    /**
      * @var Message
      */
     protected $message = null;
@@ -50,8 +56,9 @@ class Console implements EventSubscriberInterface
     protected $printedTest = null;
     protected $rawStackTrace = false;
     protected $traceLength = 5;
-    protected $columns = array(40, 5);
+    protected $columns = [40, 5];
     protected $output;
+    protected $fails = [];
 
     public function __construct($options)
     {
@@ -99,6 +106,7 @@ class Console implements EventSubscriberInterface
     // triggered for all tests
     public function startTest(TestEvent $e)
     {
+        $this->fails = [];
         $test = $e->getTest();
         $this->printedTest = $test;
         $this->message = null;
@@ -117,6 +125,14 @@ class Console implements EventSubscriberInterface
             $this->output->writeln("\nScenario:");
         }
 
+    }
+
+    public function afterStep(StepEvent $e)
+    {
+        $step = $e->getStep();
+        if ($step->hasFailed() and $step instanceof Step\ConditionalAssertion) {
+            $this->fails[] = $step;
+        }
     }
 
     public function afterTest(TestEvent $e)
@@ -145,7 +161,7 @@ class Console implements EventSubscriberInterface
     public function testFail(FailEvent $e)
     {
         if (!$this->steps && ($e->getFail() instanceof ConditionalAssertionFailed)) {
-            $this->message('[F]')->style('error')->prepend(' ')->write();
+//            $this->message('[F]')->style('error')->prepend(' ')->write();
             return;
         }
         if ($this->isDetailed($e->getTest())) {
@@ -210,10 +226,6 @@ class Console implements EventSubscriberInterface
         $msg = $this->message($e->getStep()->__toString());
         $this->metaStep ? $msg->prepend('  ')->style('comment') : $msg->prepend('* ');
         $msg->writeln();
-    }
-
-    public function afterStep(StepEvent $e)
-    {
     }
 
     public function afterSuite(SuiteEvent $e)
@@ -503,12 +515,27 @@ class Console implements EventSubscriberInterface
         if ($this->isDetailed($test)) {
             return;
         }
+
+        $conditionalFails = "";
+        $numFails  = count($this->fails);
+        if ($numFails == 1) {
+            $conditionalFails = "[F]";
+        } elseif ($numFails) {
+            $conditionalFails = "{$numFails}x[F]";
+        }
+        $conditionalLen = strlen($conditionalFails)+1;
+        $conditionalFails = "<error>$conditionalFails</error> ";
+
         if ($this->output->isInteractive()) {
-            $this->getTestMessage($test)->prepend("\x0D")->width($this->columns[0])->write();
+            $msg = $this->getTestMessage($test)->prepend("\x0D");
+            $msg->width($this->columns[0] - $conditionalLen)->append($conditionalFails)->write();
             return;
         }
         if ($this->message) {
-            $this->message('')->width($this->columns[0] - $this->message->apply('strip_tags')->getLength())->write();
+            $this->message('')
+                ->width($this->columns[0] - $this->message->apply('strip_tags')->getLength() - $conditionalLen)
+                ->append($conditionalFails)
+                ->write();
         }
     }
 

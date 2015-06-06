@@ -74,7 +74,10 @@ trait Actor
         return $this->scenario;
     }
 
-    protected $trace = [];
+    /**
+     * @return \PHPUnit_Framework_TestResult
+     */
+    abstract public function getTestResultObject();
 
     public function runStep(Step $step)
     {
