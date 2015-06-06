@@ -241,11 +241,19 @@ class Phalcon1 extends Framework implements ActiveRecord
     {
         $record = $this->getModelRecord($model);
         $res = $record->save($attributes);
+        $field = function($field) {
+            if (is_array($field)) {
+                return implode(', ', $field);
+            }
+
+            return $field;
+        };
+
         if (!$res) {
             $messages = $record->getMessages();
             $errors = [];
             foreach ($messages as $message) {
-                $errors[] = sprintf('[%s] %s: %s', $message->getType(), $message->getField(), $message->getMessage());
+                $errors[] = sprintf('[%s] %s: %s', $message->getType(), $field($message->getField()), $message->getMessage());
             }
 
             $this->fail(sprintf("Record %s was not saved. Messages: \n%s", $model, implode(PHP_EOL, $errors)));
