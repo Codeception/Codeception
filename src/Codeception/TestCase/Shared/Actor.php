@@ -46,6 +46,11 @@ trait Actor
      */
     protected $parser;
 
+    /**
+     * @var \PHPUnit_Framework_TestResult
+     */
+    protected $testResult;
+
 
     public function initConfig()
     {
@@ -79,14 +84,19 @@ trait Actor
      */
     abstract public function getTestResultObject();
 
+    public function prepareActorForTest()
+    {
+        $this->testResult = $this->getTestResultObject();
+    }
+
     public function runStep(Step $step)
     {
+        $result = null;
         $this->fire(Events::STEP_BEFORE, new StepEvent($this, $step));
         try {
             $result = $step->run($this->moduleContainer);
         } catch (ConditionalAssertionFailed $f) {
-            $result = $this->getTestResultObject();
-            $result->addFailure(clone($this), $f, $result->time());
+            $this->testResult->addFailure(clone($this), $f, $this->testResult->time());
         } catch (\Exception $e) {
             $this->fire(Events::STEP_AFTER, new StepEvent($this, $step));
             throw $e;

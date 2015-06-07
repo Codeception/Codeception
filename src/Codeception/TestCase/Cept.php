@@ -60,6 +60,8 @@ class Cept extends TestCase implements
         $scenario = $this->scenario;
         $scenario->stopIfBlocked();
 
+        $this->prepareActorForTest();
+
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;
 

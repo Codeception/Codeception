@@ -55,6 +55,8 @@ class Cest extends \Codeception\TestCase implements
         $this->scenario->stopIfBlocked();
         $I = $this->makeIObject();
 
+        $this->prepareActorForTest();
+
         try {
             $this->executeBefore($this->testMethod, $I);
             $this->executeTestMethod($I);
