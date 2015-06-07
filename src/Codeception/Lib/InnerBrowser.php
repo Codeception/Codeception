@@ -102,8 +102,12 @@ class InnerBrowser extends Module implements Web
         $button = $this->crawler->selectButton($buttonText);
         if (count($button)) {
             $buttonValue = [];
-            if (strval($button->attr('name')) !== '' && $button->attr('value') !== null) {
-                $buttonValue = [$button->attr('name') => $button->attr('value')];
+            if (strval($button->attr('name')) !== '') {
+                if (strpos($button->attr('name'), '[') !== false) {
+                    parse_str($button->attr('name') . '=' . $button->attr('value'), $buttonValue);
+                } elseif ($button->attr('value') !== null) {
+                    $buttonValue = [$button->attr('name') => $button->attr('value')];
+                }
             }
             $this->proceedSubmitForm(
                 $button->parents()->filter('form')->first(),
@@ -132,8 +136,12 @@ class InnerBrowser extends Module implements Web
                 break;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
                 $buttonValue = [];
-                if (strval($nodes->first()->attr('name')) !== '' && $nodes->first()->attr('value') !== null) {
-                    $buttonValue = [$nodes->first()->attr('name') => $nodes->first()->attr('value')];
+                if (strval($nodes->first()->attr('name')) !== '') {
+                    if (strpos($nodes->first()->attr('name'), '[') !== false) {
+                        parse_str($nodes->first()->attr('name') . '=' . $nodes->first()->attr('value'), $buttonValue);
+                    } elseif($nodes->first()->attr('value') !== null) {
+                        $buttonValue = [$nodes->first()->attr('name') => $nodes->first()->attr('value')];
+                    }
                 }
                 $this->proceedSubmitForm(
                     $nodes->parents()->filter('form')->first(),
@@ -427,7 +435,7 @@ class InnerBrowser extends Module implements Web
     {
         $form = $this->getFormFor($frmCrawl);
         $defaults = $this->getFormValuesFor($form);
-        $merged = array_merge($defaults, $params);
+        $merged = array_replace_recursive($defaults, $params);
         $requestParams = $this->setCheckboxBoolValues($frmCrawl, $merged);
 
         if (!empty($button)) {
