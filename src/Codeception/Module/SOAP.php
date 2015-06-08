@@ -1,6 +1,15 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleRequireException;
+use Codeception\Lib\Framework;
+use Codeception\Lib\InnerBrowser;
+use Codeception\Util\Soap as SoapUtils;
+use Codeception\Util\XmlStructure;
+
 /**
  * Module for testing SOAP WSDL web services.
  * Send requests and check if response matches the pattern.
@@ -31,17 +40,16 @@ namespace Codeception\Module;
  * * response - last soap response (DOMDocument)
  *
  */
-
-use Codeception\Exception\ModuleException;
-use Codeception\Exception\ModuleRequireException;
-use Codeception\Lib\Framework;
-use Codeception\Lib\InnerBrowser;
-use Codeception\Util\Soap as SoapUtils;
-use Codeception\Util\XmlStructure;
-
-class SOAP extends \Codeception\Module
+class SOAP extends CodeceptionModule
 {
-
+    protected $config = [
+        'schema' => "",
+        'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/',
+        'framework_collect_buffer' => true
+    ];
+    
+    protected $requiredFields = ['endpoint'];
+    
     protected $dependencyMessage = <<<EOF
 Example using PhpBrowser as backend for SOAP module.
 --
@@ -53,9 +61,6 @@ modules:
 Framework modules can be used as well for functional testing of SOAP API.
 EOF;
 
-
-    protected $config = ['schema' => "", 'schema_url' => 'http://schemas.xmlsoap.org/soap/envelope/', 'framework_collect_buffer' => true];
-    protected $requiredFields = ['endpoint'];
     /**
      * @var \Symfony\Component\BrowserKit\Client
      */
@@ -81,7 +86,7 @@ EOF;
      */
     protected $connectionModule;
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->buildRequest();
@@ -377,7 +382,11 @@ EOF;
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->client->getInternalResponse()->getStatus(), "soap response code matches expected");
+        $this->assertEquals(
+            $code,
+            $this->client->getInternalResponse()->getStatus(),
+            "soap response code matches expected"
+        );
     }
 
     /**
@@ -446,11 +455,12 @@ EOF;
         $this->getClient()->request(
             'POST',
             $this->config['endpoint'],
-            [], [],
+            [],
+            [],
             [
-                "HTTP_Content-Type"   => "text/xml; charset=UTF-8",
+                'HTTP_Content-Type' => 'text/xml; charset=UTF-8',
                 'HTTP_Content-Length' => strlen($body),
-                'HTTP_SOAPAction'     => $action
+                'HTTP_SOAPAction' => $action
             ],
             $body
         );
@@ -479,5 +489,4 @@ EOF;
         $this->processRequest($action, $body);
         return $this->client->getInternalResponse()->getContent();
     }
-
 }

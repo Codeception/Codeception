@@ -3,7 +3,6 @@ namespace Codeception\Exception;
 
 class ElementNotFound extends \PHPUnit_Framework_AssertionFailedError
 {
-
     public function __construct($selector, $message = null)
     {
         if (is_array($selector)) {
@@ -21,5 +20,4 @@ class ElementNotFound extends \PHPUnit_Framework_AssertionFailedError
 
         parent::__construct($message . " '$selector' was not found.");
     }
-
 }

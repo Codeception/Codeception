@@ -3,8 +3,12 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
+use Codeception\Configuration;
+use Codeception\TestCase;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Connector\Yii2 as Yii2Connector;
+use yii\db\ActiveRecordInterface;
 use Yii;
 
 /**
@@ -51,23 +55,38 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     public function _initialize()
     {
-        if (!is_file(\Codeception\Configuration::projectDir() . $this->config['configFile'])) {
-            throw new ModuleConfigException(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
+        if (!is_file(Configuration::projectDir() . $this->config['configFile'])) {
+            throw new ModuleConfigException(
+                __CLASS__,
+                "The application config file does not exist: {$this->config['configFile']}"
+            );
         }
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
-        $this->client = new \Codeception\Lib\Connector\Yii2();
-        $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
-        $mainConfig = \Codeception\Configuration::config();
+        $this->client = new Yii2Connector();
+        $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
+        $mainConfig = Configuration::config();
         if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
-            $this->client->setServerParameter('HTTP_HOST', (string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
-            $this->client->setServerParameter('HTTPS', ((string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME)) === 'https');
+            $this->client->setServerParameter(
+                'HTTP_HOST',
+                (string) parse_url(
+                    $mainConfig['config']['test_entry_url'],
+                    PHP_URL_HOST
+                )
+            );
+            $this->client->setServerParameter(
+                'HTTPS',
+                ((string) parse_url(
+                    $mainConfig['config']['test_entry_url'],
+                    PHP_URL_SCHEME
+                )) === 'https'
+            );
         }
         $this->app = $this->client->startApp();
 
-        if ($this->config['cleanup'] and isset($this->app->db)) {
+        if ($this->config['cleanup'] && isset($this->app->db)) {
             $this->transaction = $this->app->db->beginTransaction();
         }
     }
@@ -80,7 +99,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         $_POST = [];
         $_COOKIE = [];
         $_REQUEST = [];
-        if ($this->transaction and $this->config['cleanup']) {
+        if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
 
@@ -194,7 +213,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
             throw new \RuntimeException("Model $model does not exist");
         }
         $record = new $model;
-        if (!$record instanceof \yii\db\ActiveRecordInterface) {
+        if (!$record instanceof ActiveRecordInterface) {
             throw new \RuntimeException("Model $model is not implement interface \\yii\\db\\ActiveRecordInterface");
         }
         return $record;
@@ -216,7 +235,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     public function amOnPage($page)
     {
         if (is_array($page)) {
-            $page = \Yii::$app->getUrlManager()->createUrl($page);
+            $page = Yii::$app->getUrlManager()->createUrl($page);
         }
         parent::amOnPage($page);
     }

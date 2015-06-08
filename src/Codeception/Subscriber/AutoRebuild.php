@@ -5,7 +5,6 @@ use Codeception\Configuration;
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Codeception\Lib\Generator\Actions;
-use Codeception\SuiteManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class AutoRebuild implements EventSubscriberInterface
@@ -21,7 +20,8 @@ class AutoRebuild implements EventSubscriberInterface
         $settings = $e->getSettings();
         $modules = $e->getSuite()->getModules();
 
-        $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR . $settings['class_name'] . 'Actions.php';
+        $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR
+            . $settings['class_name'] . 'Actions.php';
         
         // load guy class to see hash
         $handle = @fopen($actorFile, "r");

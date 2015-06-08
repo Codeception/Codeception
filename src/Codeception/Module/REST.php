@@ -1,7 +1,8 @@
 <?php
-
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
@@ -55,7 +56,7 @@ use Codeception\Util\Soap as XmlUtils;
  * * Xml - actions for validating XML responses (no Json responses)
  *
  */
-class REST extends \Codeception\Module implements DependsOnModule, PartedModule
+class REST extends CodeceptionModule implements DependsOnModule, PartedModule
 {
     protected $config = [
         'url'           => '',
@@ -84,8 +85,7 @@ EOF;
     public $params = [];
     public $response = "";
 
-
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
@@ -495,8 +495,7 @@ EOF;
         if ($method != 'GET' && array_key_exists('Content-Type', $this->headers)
             && ($this->headers['Content-Type'] === 'application/json' 
                 || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
-                ) 
-            
+            )
         ) {
             if ($parameters instanceof \JsonSerializable) {
                 return json_encode($parameters);
@@ -996,5 +995,4 @@ EOF;
     {
         $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
     }
-
 }

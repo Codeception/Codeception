@@ -25,5 +25,4 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
             $this->currentTestCase->setAttribute($attr, $value);
         }
     }
-
 }

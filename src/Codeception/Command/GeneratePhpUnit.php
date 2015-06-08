@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\PhpUnit as PhpUnitGenerator;
@@ -25,14 +24,11 @@ class GeneratePhpUnit extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
-                new InputArgument('class', InputArgument::REQUIRED, 'class name'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
+            new InputArgument('class', InputArgument::REQUIRED, 'class name'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
         parent::configure();
     }
 
@@ -63,6 +59,4 @@ class GeneratePhpUnit extends Command
 
         $output->writeln("<info>Test was created in $filename</info>");
     }
-
 }
-

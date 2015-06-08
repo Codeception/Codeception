@@ -45,7 +45,7 @@ class ModuleContainer
         $config = $this->getModuleConfig($moduleName);
 
         // skip config validation on dependent module
-        if (empty($config) and !$active) {
+        if (empty($config) && !$active) {
             $config = null;
         }
 
@@ -136,7 +136,7 @@ class ModuleContainer
                 }
             } else {
                 // skip if method is inherited and inheritActions == false
-                if (!$inherit and $method->getDeclaringClass() != $class) {
+                if (!$inherit && $method->getDeclaringClass() != $class) {
                     continue;
                 }
             }
@@ -145,7 +145,7 @@ class ModuleContainer
                 continue;
             }
 
-            if ($module instanceof PartedModule and isset($config['part'])) {
+            if ($module instanceof PartedModule && isset($config['part'])) {
                 if (!$this->moduleActionBelongsToPart($module, $method->name, $config['part'])) {
                     continue;
                 }
@@ -236,6 +236,4 @@ class ModuleContainer
         }
         return $config;
     }
-
-
 }

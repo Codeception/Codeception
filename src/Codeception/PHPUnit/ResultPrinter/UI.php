@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\Event\FailEvent;

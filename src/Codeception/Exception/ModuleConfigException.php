@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Exception;
 
 class ModuleConfigException extends \Exception

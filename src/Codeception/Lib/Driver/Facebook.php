@@ -2,7 +2,6 @@
 /**
  * @author tiger
  */
-
 namespace Codeception\Lib\Driver;
 
 use Facebook\FacebookSession;

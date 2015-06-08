@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
@@ -160,5 +159,4 @@ class Filter
     {
         return $this->filter;
     }
-
 }

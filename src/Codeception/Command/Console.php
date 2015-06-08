@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Command;
 
 use Codeception\Codecept;
@@ -8,8 +7,6 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Lib\Console\Output;
-use Codeception\Lib\Di;
-use Codeception\Lib\ModuleContainer;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
 use Codeception\TestCase\Cept;
@@ -37,13 +34,11 @@ class Console extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-                new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+            new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
+        ]);
 
         parent::configure();
     }
@@ -87,9 +82,11 @@ class Console extends Command
             ->initConfig();
 
         $scenario = new Scenario($this->test);
-        if (isset($config["namespace"])) $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
-        $actor      = $settings['class_name'];
-        $I        = new $actor($scenario);
+        if (isset($config["namespace"])) {
+            $settings['class_name'] = $config["namespace"] .'\\' . $settings['class_name'];
+        }
+        $actor = $settings['class_name'];
+        $I = new $actor($scenario);
 
         $this->listenToSignals();
 
@@ -130,7 +127,7 @@ class Console extends Command
             if ($command == 'actions') {
                 $output->writeln("<info>" . implode(' ', $this->actions));
                 continue;
-            };
+            }
             if ($command == 'exit') {
                 return;
             }
@@ -139,7 +136,7 @@ class Console extends Command
             }
             try {
                 $value = eval("return \$I->$command;");
-                if ($value and !is_object($value)) {
+                if ($value && !is_object($value)) {
                     codecept_debug($value);
                 }
             } catch (\PHPUnit_Framework_AssertionFailedError $fail) {

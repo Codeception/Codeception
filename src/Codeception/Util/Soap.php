@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Util;
 
 /**
@@ -20,5 +19,4 @@ class Soap extends Xml
     {
         return new XmlBuilder();
     }
-
 }

@@ -1,9 +1,13 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\TestCase;
+use Doctrine\ORM\EntityManager;
+use Codeception\Util\Stub;
 
 /**
  * Allows integration and testing for projects with Doctrine2 ORM.
@@ -44,10 +48,14 @@ use Codeception\Lib\Interfaces\DoctrineProvider;
  * * `em` - Entity Manager
  */
 
-class Doctrine2 extends \Codeception\Module implements DependsOnModule
+class Doctrine2 extends CodeceptionModule implements DependsOnModule
 {
 
-    protected $config = ['cleanup' => true, 'connection_callback' => false, 'depends' => null];
+    protected $config = [
+        'cleanup' => true,
+        'connection_callback' => false,
+        'depends' => null
+    ];
 
     protected $dependencyMessage = <<<EOF
 Provide connection_callback function to establish database connection and get Entity Manager:
@@ -67,7 +75,6 @@ modules:
             depends: Symfony2
 ```
 EOF;
-
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -92,7 +99,7 @@ EOF;
         $this->dependentModule = $dependentModule;
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->dependentModule) {
             $this->em = $this->dependentModule->_getEntityManager();
@@ -105,19 +112,19 @@ EOF;
         if (!$this->em) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Doctrine2 module requires EntityManager explicitly set.\n" .
-                "Please specify either `connection_callback` config option\n" .
-                "with callable which will return instance of EntityManager or\n" .
-                "pass a dependent module which are Symfony2 or ZF2\n" .
-                "to connect to Doctrine using Dependency Injection Container"
+                "Doctrine2 module requires EntityManager explicitly set.\n"
+                . "Please specify either `connection_callback` config option\n"
+                . "with callable which will return instance of EntityManager or\n"
+                . "pass a dependent module which are Symfony2 or ZF2\n"
+                . "to connect to Doctrine using Dependency Injection Container"
             );
         }
 
-        if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
+        if (!$this->em instanceof EntityManager) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n" .
-                "Use `connection_callback` or dependent framework modules to specify one"
+                "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n"
+                . "Use `connection_callback` or dependent framework modules to specify one"
             );
         }
 
@@ -127,7 +134,7 @@ EOF;
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
@@ -222,13 +229,14 @@ EOF;
             $customRepositoryClassName = '\Doctrine\ORM\EntityRepository';
         }
 
-        $mock = \Codeception\Util\Stub::make(
+        $mock = Stub::make(
             $customRepositoryClassName, array_merge(
                 [
                     '_entityName' => $metadata->name,
-                    '_em'         => $em,
-                    '_class'      => $metadata
-                ], $methods
+                    '_em' => $em,
+                    '_class' => $metadata
+                ],
+                $methods
             )
         );
         $em->clear();
@@ -392,7 +400,6 @@ EOF;
                 $qb->andWhere("s.$key = :$paramname");
                 $qb->setParameter($paramname, $val);
             }
-
         }
     }
 }

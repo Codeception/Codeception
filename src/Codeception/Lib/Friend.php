@@ -75,6 +75,5 @@ class Friend
             }
         }
     }
-
 }
  

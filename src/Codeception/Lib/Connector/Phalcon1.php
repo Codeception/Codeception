@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
 use Codeception\Lib\Connector\Shared\PhpSuperGlobalsConverter;

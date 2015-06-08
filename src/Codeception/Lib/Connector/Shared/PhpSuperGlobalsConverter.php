@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector\Shared;
 
 /**
@@ -12,7 +11,6 @@ namespace Codeception\Lib\Connector\Shared;
  */
 trait PhpSuperGlobalsConverter
 {
-
     /**
      * Rearrange files array to be compatible with PHP $_FILES superglobal structure
      * @see https://bugs.php.net/bug.php?id=25589
@@ -115,5 +113,4 @@ trait PhpSuperGlobalsConverter
 
         return $output;
     }
-
 }

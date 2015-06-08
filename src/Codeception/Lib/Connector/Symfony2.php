@@ -54,6 +54,4 @@ class Symfony2 extends \Symfony\Component\HttpKernel\Client
             $this->kernel->getContainer()->set($serviceName, $service);
         }
     }
-
-
 }

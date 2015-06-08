@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleException as ModuleException;

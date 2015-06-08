@@ -1,12 +1,14 @@
 <?php
-
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\TestCase;
 use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 
 /**
  * This module interacts with message broker software that implements
@@ -54,7 +56,7 @@ use PhpAmqpLib\Message\AMQPMessage;
  * @author tiger.seo@gmail.com
  * @author davert
  */
-class AMQP extends \Codeception\Module
+class AMQP extends CodeceptionModule
 {
     protected $config = [
         'host'     => 'locahost',
@@ -87,12 +89,12 @@ class AMQP extends \Codeception\Module
 
         try {
             $this->connection = new AMQPConnection($host, $port, $username, $password, $vhost);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage() . ' while establishing connection to MQ server');
         }
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->config['cleanup']) {
             $this->cleanup();
@@ -200,8 +202,8 @@ class AMQP extends \Codeception\Module
         foreach ($this->config['queues'] as $queue) {
             try {
                 $this->connection->channel()->queue_purge($queue);
-            } catch (\PhpAmqpLib\Exception\AMQPProtocolChannelException $e) {
-                # ignore if exchange/queue doesn't exist and rethrow exception if it's something else
+            } catch (AMQPProtocolChannelException $e) {
+                // ignore if exchange/queue doesn't exist and rethrow exception if it's something else
                 if ($e->getCode() !== 404) {
                     throw $e;
                 }

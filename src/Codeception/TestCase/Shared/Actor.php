@@ -4,7 +4,7 @@ namespace Codeception\TestCase\Shared;
 use Codeception\Event\StepEvent;
 use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
-use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ConfigurationException;
 use Codeception\Lib\Di;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Parser;
@@ -12,7 +12,6 @@ use Codeception\Scenario;
 use Codeception\Step;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-
 
 trait Actor
 {
@@ -161,5 +160,4 @@ trait Actor
         $this->$property = $value;
         return $this;
     }
-
 }

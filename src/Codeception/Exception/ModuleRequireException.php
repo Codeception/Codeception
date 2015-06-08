@@ -3,7 +3,6 @@ namespace Codeception\Exception;
 
 class ModuleRequireException extends \Exception
 {
-
     public function __construct($module, $message)
     {
         if (is_object($module)) {
@@ -13,5 +12,4 @@ class ModuleRequireException extends \Exception
         parent::__construct($message);
         $this->message = $module . " module requirements are not met!\n" . $this->message;
     }
-
 }

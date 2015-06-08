@@ -44,5 +44,4 @@ trait Namespaces
         $namespaces = array_filter($namespaces, 'strlen');
         return $namespaces;
     }
-
 }

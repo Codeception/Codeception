@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Interfaces;
 
 interface Remote
