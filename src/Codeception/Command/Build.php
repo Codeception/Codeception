@@ -88,8 +88,8 @@ class Build extends Command
         }
         foreach ($suites as $suite) {
             $settings = $this->getSuiteConfig($suite, $configFile);
-            $actorBuilt = $this->buildActor($settings);
             $this->buildActions($settings);
+            $actorBuilt = $this->buildActor($settings);
             
             if ($actorBuilt) {
                 $this->output->writeln("{$settings['class_name']}.php created.");
