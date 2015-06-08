@@ -37,6 +37,4 @@ class Suite extends \PHPUnit_Framework_TestSuite
     {
         $this->baseName = $baseName;
     }
-
-
-} 
+}

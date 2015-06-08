@@ -18,20 +18,14 @@ class Report extends ResultPrinter implements ConsolePrinter
     {
         if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_FAILURE) {
             $status = "\033[41;37mFAIL\033[0m";
+        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
+            $status = 'Skipped';
+        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
+            $status = 'Incomplete';
+        } elseif ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
+            $status = 'ERROR';
         } else {
-            if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_SKIPPED) {
-                $status = 'Skipped';
-            } else {
-                if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_INCOMPLETE) {
-                    $status = 'Incomplete';
-                } else {
-                    if ($this->testStatus == \PHPUnit_Runner_BaseTestRunner::STATUS_ERROR) {
-                        $status = 'ERROR';
-                    } else {
-                        $status = 'Ok';
-                    }
-                }
-            }
+            $status = 'Ok';
         }
 
         if (strlen($name) > 75) {
@@ -53,5 +47,4 @@ class Report extends ResultPrinter implements ConsolePrinter
     {
 
     }
-
 }

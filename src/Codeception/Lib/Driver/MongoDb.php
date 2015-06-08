@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\ModuleConfigException;

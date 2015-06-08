@@ -2,6 +2,7 @@
 namespace Codeception\PHPUnit;
 
 use Codeception\Configuration;
+use Codeception\Exception\ConfigurationException;
 
 class Runner extends \PHPUnit_TextUI_TestRunner
 {
@@ -142,7 +143,7 @@ class Runner extends \PHPUnit_TextUI_TestRunner
     protected function instantiateReporter($name, $args = [])
     {
         if (!isset($this->config['reporters'][$name])) {
-            throw new \Codeception\Exception\ConfigurationException("Reporter $name not defined");
+            throw new ConfigurationException("Reporter $name not defined");
         }
         return (new \ReflectionClass($this->config['reporters'][$name]))->newInstanceArgs($args);
 
@@ -155,5 +156,4 @@ class Runner extends \PHPUnit_TextUI_TestRunner
         }
         return $this->logDir . $path;
     }
-
 }

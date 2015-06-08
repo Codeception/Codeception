@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Driver\AmazonSQS;
 use Codeception\Lib\Driver\Beanstalk;
@@ -85,9 +87,8 @@ use Codeception\Lib\Driver\Iron;
  *              'region' => 'us-west-2'
  *
  */
-class Queue extends \Codeception\Module
+class Queue extends CodeceptionModule
 {
-
     /**
      * @var \Codeception\Lib\Interfaces\Queue
      */
@@ -98,7 +99,7 @@ class Queue extends \Codeception\Module
      *
      * @param \Codeception\TestCase $test
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         $this->queueDriver->openConnection($this->config);
     }
@@ -134,7 +135,8 @@ class Queue extends \Codeception\Module
                 return new Beanstalk();
             default:
                 throw new ModuleConfigException(
-                    __CLASS__, "Unknown queue type {$this->config}; Supported queue types are: aws, iron, beanstalk"
+                    __CLASS__,
+                    "Unknown queue type {$this->config}; Supported queue types are: aws, iron, beanstalk"
                 );
         }
     }
@@ -360,5 +362,4 @@ class Queue extends \Codeception\Module
     {
         return $this->queueDriver->getMessagesTotalCountOnQueue($queue);
     }
-
 }

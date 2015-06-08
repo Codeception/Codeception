@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
@@ -70,5 +69,4 @@ class ErrorHandler implements EventSubscriberInterface
         echo "\n\n\nFATAL ERROR. TESTS NOT FINISHED.\n";
         echo sprintf("%s \nin %s:%d\n", $error['message'], $error['file'], $error['line']);
     }
-
 }

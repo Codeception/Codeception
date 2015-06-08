@@ -2,6 +2,8 @@
 
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Driver\Redis as RedisDriver;
 
@@ -32,7 +34,7 @@ use Codeception\Lib\Driver\Redis as RedisDriver;
  *
  * @author judgedim
  */
-class Redis extends \Codeception\Module
+class Redis extends CodeceptionModule
 {
     protected $config = [
         'cleanup' => true
@@ -53,10 +55,9 @@ class Redis extends \Codeception\Module
         } catch (\Exception $e) {
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
-
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->config['cleanup']) {
             $this->cleanup();
@@ -64,7 +65,7 @@ class Redis extends \Codeception\Module
         parent::_before($test);
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         parent::_after($test);
     }
@@ -85,5 +86,4 @@ class Redis extends \Codeception\Module
             throw new ModuleException(__CLASS__, $e->getMessage());
         }
     }
-
 }

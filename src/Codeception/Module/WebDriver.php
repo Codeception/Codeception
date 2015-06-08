@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
@@ -104,7 +106,13 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * # Methods
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot, ScreenshotSaver, PageSourceSaver
+class WebDriver extends CodeceptionModule implements
+    WebInterface,
+    RemoteInterface,
+    MultiSessionInterface,
+    SessionSnapshot,
+    ScreenshotSaver,
+    PageSourceSaver
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -147,7 +155,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
@@ -180,7 +188,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
@@ -194,10 +202,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _failed(\Codeception\TestCase $test, $fail)
+    public function _failed(TestCase $test, $fail)
     {
-
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
+        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
@@ -347,7 +354,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 continue;
             }
             $cookies = array_filter(
-                $cookies, function ($item) use ($filter, $params) {
+                $cookies,
+                function ($item) use ($filter, $params) {
                     return $item[$filter] == $params[$filter];
                 }
             );
@@ -358,7 +366,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function amOnUrl($url)
     {
         $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
+        if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
             throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'] . '://' . $urlParts['host'];
@@ -679,6 +687,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
         }
     }
+
     protected function proceedSeeInField(array $elements, $value)
     {
         $strField = reset($elements)->getAttribute('name');
@@ -718,7 +727,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
         ];
     }
-
 
     public function selectOption($select, $option)
     {
@@ -1108,7 +1116,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $select = new \WebDriverSelect($el);
         $this->assertNodesContain($optionText, $select->getAllSelectedOptions(), 'option');
     }
-
 
     public function dontSeeOptionIsSelected($selector, $optionText)
     {

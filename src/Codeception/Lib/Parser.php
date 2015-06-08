@@ -7,7 +7,6 @@ use Codeception\Util\Annotation;
 
 class Parser
 {
-
     protected $scenario;
     protected $code;
 
@@ -82,7 +81,8 @@ class Parser
             }
             // friend's section start
             if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
-                if (!in_array($friend = $matches[1], $friends)) {
+                $friend = $matches[1];
+                if (!in_array($friend, $friends)) {
                     continue;
                 }
                 $isFriend = true;
@@ -96,7 +96,7 @@ class Parser
             }
 
             // friend's section ends
-            if ($isFriend and strpos($line, '}') !== false) {
+            if ($isFriend && strpos($line, '}') !== false) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -193,5 +193,4 @@ class Parser
         }
         return $comments;
     }
-
 }

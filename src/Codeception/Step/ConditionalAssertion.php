@@ -1,13 +1,11 @@
 <?php
 namespace Codeception\Step;
 
-
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\ModuleContainer;
 
 class ConditionalAssertion extends Assertion
 {
-
     public function run(ModuleContainer $container = null)
     {
         try {

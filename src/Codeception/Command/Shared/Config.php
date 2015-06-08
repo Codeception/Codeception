@@ -21,5 +21,4 @@ trait Config
         Configuration::config($conf);
         return Configuration::suites();
     }
-
-} 
+}

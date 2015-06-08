@@ -12,4 +12,4 @@ interface DependsOnModule
      * @return mixed
      */
     public function _depends();
-} 
+}

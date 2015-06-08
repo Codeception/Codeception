@@ -5,7 +5,6 @@ use Codeception\Lib\Interfaces\Queue;
 
 class Iron implements Queue
 {
-
     /**
      * @var \IronMQ
      */
@@ -18,14 +17,14 @@ class Iron implements Queue
      */
     public function openConnection($config)
     {
-        $this->queue = new \IronMQ(
-            [
-                "token"      => $config['token'],
-                "project_id" => $config['project'],
-                "host"       => $config['host']
-            ]
-        ) OR \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
-
+        $this->queue = new \IronMQ([
+            "token"      => $config['token'],
+            "project_id" => $config['project'],
+            "host"       => $config['host']
+        ]);
+        if (!$this->queue) {
+            \PHPUnit_Framework_Assert::fail('connection failed or timed-out.');
+        }
     }
 
     /**

@@ -2,8 +2,11 @@
 
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfigException as ModuleConfigException;
-use Codeception\Exception\ModuleRequireException as ModuleRequireException;
+use Codeception\Module as CodeceptionModule;
+use Codeception\Lib\Framework;
+use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleRequireException;
+use Codeception\TestCase;
 
 /**
  * Module for testing XMLRPC WebService.
@@ -37,7 +40,7 @@ use Codeception\Exception\ModuleRequireException as ModuleRequireException;
  * @since 1.1.5
  * @author tiger.seo@gmail.com
  */
-class XMLRPC extends \Codeception\Module
+class XMLRPC extends CodeceptionModule
 {
     protected $config = ['url' => ""];
 
@@ -59,13 +62,13 @@ class XMLRPC extends \Codeception\Module
         parent::_initialize();
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if (!$this->client) {
             if (!strpos($this->config['url'], '://')) {
                 // not valid url
                 foreach ($this->getModules() as $module) {
-                    if ($module instanceof \Codeception\Lib\Framework) {
+                    if ($module instanceof Framework) {
                         $this->client = $module->client;
                         $this->is_functional = true;
                         break;
@@ -73,12 +76,19 @@ class XMLRPC extends \Codeception\Module
                 }
             } else {
                 if (!$this->hasModule('PhpBrowser')) {
-                    throw new ModuleConfigException(__CLASS__, "For XMLRPC testing via HTTP please enable PhpBrowser module");
+                    throw new ModuleConfigException(
+                        __CLASS__,
+                        "For XMLRPC testing via HTTP please enable PhpBrowser module"
+                    );
                 }
                 $this->client = $this->getModule('PhpBrowser')->client;
             }
             if (!$this->client) {
-                throw new ModuleConfigException(__CLASS__, "Client for XMLRPC requests not initialized.\nProvide either PhpBrowser module, or a framework module which shares FrameworkInterface");
+                throw new ModuleConfigException(
+                    __CLASS__,
+                    "Client for XMLRPC requests not initialized.\n"
+                    . "Provide either PhpBrowser module, or a framework module which shares FrameworkInterface"
+                );
             }
         }
 
@@ -150,6 +160,5 @@ class XMLRPC extends \Codeception\Module
 
         $this->response = $this->client->getInternalResponse()->getContent();
         $this->debugSection('Response', $this->response);
-
     }
 }

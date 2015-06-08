@@ -44,7 +44,7 @@ class Printer implements EventSubscriberInterface
 
     protected function absolutePath($path)
     {
-        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+        if ((strpos($path, '/') === 0) || (strpos($path, ':') === 1)) { // absolute path
             return $path;
         }
         return $this->logDir . $path;
@@ -83,7 +83,10 @@ class Printer implements EventSubscriberInterface
     protected function printConsole(\PHPUnit_Util_Printer $printer)
     {
         $writer = new \PHP_CodeCoverage_Report_Text(
-            $this->settings['low_limit'], $this->settings['high_limit'], $this->settings['show_uncovered'], false
+            $this->settings['low_limit'],
+            $this->settings['high_limit'],
+            $this->settings['show_uncovered'],
+            false
         );
         $printer->write($writer->process(self::$coverage, $this->options['colors']));
     }

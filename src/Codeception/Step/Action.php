@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Step;
 
-class Action extends \Codeception\Step
+use Codeception\Step;
+
+class Action extends Step
 {
 }

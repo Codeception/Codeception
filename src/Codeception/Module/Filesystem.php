@@ -3,6 +3,9 @@ namespace Codeception\Module;
 
 use Codeception\Util\FileSystem as Util;
 use Symfony\Component\Finder\Finder;
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
+use Codeception\Configuration;
 
 /**
  * Module for testing local filesystem.
@@ -16,16 +19,16 @@ use Symfony\Component\Finder\Finder;
  *
  * Module was developed to test Codeception itself.
  */
-class Filesystem extends \Codeception\Module
+class Filesystem extends CodeceptionModule
 {
     protected $file = null;
     protected $filepath = null;
 
     protected $path = '';
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
-        $this->path = \Codeception\Configuration::projectDir();
+        $this->path = Configuration::projectDir();
     }
 
     /**
@@ -272,6 +275,4 @@ class Filesystem extends \Codeception\Module
     {
         file_put_contents($filename, $contents);
     }
-
-
 }

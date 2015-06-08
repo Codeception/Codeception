@@ -40,5 +40,4 @@ EOF;
     {
         return '\\' . $this->namespace . 'Helper\\' . $this->name;
     }
-
 }

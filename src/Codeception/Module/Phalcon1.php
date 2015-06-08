@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Exception\Module;
@@ -13,7 +12,6 @@ use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\Phalcon1 as Phalcon1Connector;
 use Codeception\Exception\ModuleConfig;
-use Codeception\Step;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
@@ -101,18 +99,18 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      */
     public function _initialize()
     {
-        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['bootstrap'])) {
+        if (!file_exists(Configuration::projectDir() . $this->config['bootstrap'])) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n" .
-                "Please create the bootstrap file that returns Application object\n" .
-                "And specify path to it with 'bootstrap' config\n\n" .
-                "Sample bootstrap: \n\n<?php\n" .
-                '$config = include __DIR__ . "/config.php";' . "\n" .
-                'include __DIR__ . "/loader.php";' . "\n" .
-                '$di = new \Phalcon\DI\FactoryDefault();' . "\n" .
-                'include __DIR__ . "/services.php";' . "\n" .
-                'return new \Phalcon\Mvc\Application($di);'
+                "Bootstrap file does not exist in " . $this->config['bootstrap'] . "\n"
+                . "Please create the bootstrap file that returns Application object\n"
+                . "And specify path to it with 'bootstrap' config\n\n"
+                . "Sample bootstrap: \n\n<?php\n"
+                . '$config = include __DIR__ . "/config.php";' . "\n"
+                . 'include __DIR__ . "/loader.php";' . "\n"
+                . '$di = new \Phalcon\DI\FactoryDefault();' . "\n"
+                . 'include __DIR__ . "/services.php";' . "\n"
+                . 'return new \Phalcon\Mvc\Application($di);'
             );
         }
 
@@ -188,7 +186,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
                 $level = $this->di['db']->getTransactionLevel();
                 try {
                     $this->di['db']->rollback(true);
-                } catch (\PDOException $e) {
+                } catch (PDOException $e) {
                 }
                 if ($level == $this->di['db']->getTransactionLevel()) {
                     break;
@@ -349,9 +347,9 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
         foreach ($attributes as $key => $value) {
             $query[] = "$key = '$value'";
         }
-        $query = implode(' AND ', $query);
-        $this->debugSection('Query', $query);
-        return call_user_func_array([$model, 'findFirst'], [$query]);
+        $squery = implode(' AND ', $query);
+        $this->debugSection('Query', $squery);
+        return call_user_func_array([$model, 'findFirst'], [$squery]);
     }
 
     /**
@@ -400,6 +398,5 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             default:
                 return array_intersect_key(get_object_vars($model), array_flip($primaryKeys));
         }
-
     }
 }

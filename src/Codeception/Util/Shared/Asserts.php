@@ -289,6 +289,4 @@ trait Asserts
     {
         \PHPUnit_Framework_Assert::fail($message);
     }
-
-
 }
