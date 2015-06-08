@@ -10,5 +10,4 @@ interface ActiveRecord
     public function dontSeeRecord($model, $attributes = []);
 
     public function grabRecord($model, $attributes = []);
-
-} 
+}

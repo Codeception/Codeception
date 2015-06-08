@@ -6,7 +6,6 @@ use Codeception\Step;
 
 class Parser
 {
-
     protected $scenario;
     protected $code;
 
@@ -42,7 +41,7 @@ class Parser
         $matches = [];
         $code = $this->stripComments($code);
         $res = preg_match_all("~\\\$$var->.*?;~", $code, $matches);
-        if (!$res or !$var) {
+        if (!$res || !$var) {
             return;
         }
         $$var = $this->scenario;
@@ -64,7 +63,8 @@ class Parser
             }
             // friend's section start
             if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
-                if (!in_array($friend = $matches[1], $friends)) {
+                $friend = $matches[1];
+                if (!in_array($friend, $friends)) {
                     continue;
                 }
                 $isFriend = true;
@@ -78,7 +78,7 @@ class Parser
             }
 
             // friend's section ends
-            if ($isFriend and strpos($line, '}') !== false) {
+            if ($isFriend && strpos($line, '}') !== false) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -158,5 +158,4 @@ class Parser
         $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
         return $code; // remove block comment
     }
-
 }

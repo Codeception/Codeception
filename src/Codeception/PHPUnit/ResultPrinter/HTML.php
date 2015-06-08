@@ -1,9 +1,11 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
 
+use Codeception\PHPUnit\ResultPrinter as CodeceptionResultPrinter;
 use Codeception\Step;
+use Codeception\Step\Meta;
 
-class HTML extends \Codeception\PHPUnit\ResultPrinter
+class HTML extends CodeceptionResultPrinter
 {
     /**
      * @var boolean
@@ -226,12 +228,10 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
      * @param $substepsBuffer
      * @return string
      */
-    protected function renderSubsteps(Step\Meta $metaStep, $substepsBuffer)
+    protected function renderSubsteps(Meta $metaStep, $substepsBuffer)
     {
         $metaTemplate = new \Text_Template($this->templatePath . 'substeps.html');
         $metaTemplate->setVar(['metaStep' => $metaStep, 'steps' => $substepsBuffer, 'id' => uniqid()]);
         return $metaTemplate->render();
     }
-
-
 }

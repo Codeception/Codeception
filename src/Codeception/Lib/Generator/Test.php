@@ -34,7 +34,6 @@ class {{name}}Test extends \Codeception\TestCase\Test
     {
 
     }
-
 }
 EOF;
 
@@ -63,5 +62,4 @@ EOF;
             ->place('actor', lcfirst(Configuration::config()['actor']))
             ->produce();
     }
-
 }

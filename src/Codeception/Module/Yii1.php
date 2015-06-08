@@ -1,8 +1,10 @@
 <?php
-
 namespace Codeception\Module;
 
+use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
+use Codeception\TestCase;
+use Codeception\Lib\Connector\Yii1 as Yii1Connector;
 use Yii;
 
 /**
@@ -69,7 +71,7 @@ use Yii;
  *
  * @property Codeception\Lib\Connector\Yii1 $client
  */
-class Yii1 extends \Codeception\Lib\Framework
+class Yii1 extends Framework
 {
 
     /**
@@ -112,8 +114,12 @@ class Yii1 extends \Codeception\Lib\Framework
             $this->_appConfig = include($this->appSettings['config']);
         }
 
-        defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER', false);
-        defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER', false);
+        if (!defined('YII_ENABLE_EXCEPTION_HANDLER')) {
+            define('YII_ENABLE_EXCEPTION_HANDLER', false);
+        }
+        if (!defined('YII_ENABLE_ERROR_HANDLER')) {
+            define('YII_ENABLE_ERROR_HANDLER', false);
+        }
 
         $_SERVER['SCRIPT_NAME'] = parse_url($this->config['url'], PHP_URL_PATH);
         $_SERVER['SCRIPT_FILENAME'] = $this->config['appPath'];
@@ -121,8 +127,9 @@ class Yii1 extends \Codeception\Lib\Framework
         if (!function_exists('launch_codeception_yii_bridge')) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Codeception-Yii Bridge is not launched. In order to run tests you need to install https://github.com/Codeception/YiiBridge" .
-                "Implement function 'launch_codeception_yii_bridge' to load all Codeception overrides"
+                "Codeception-Yii Bridge is not launched. In order to run tests you need to install "
+                . "https://github.com/Codeception/YiiBridge Implement function 'launch_codeception_yii_bridge' to "
+                . "load all Codeception overrides"
             );
         }
         launch_codeception_yii_bridge();
@@ -137,7 +144,7 @@ class Yii1 extends \Codeception\Lib\Framework
      */
     public function _createClient()
     {
-        $this->client = new \Codeception\Lib\Connector\Yii1();
+        $this->client = new Yii1Connector();
         $this->client->appPath = $this->config['appPath'];
         $this->client->url = $this->config['url'];
         $this->client->appSettings = [
@@ -146,12 +153,12 @@ class Yii1 extends \Codeception\Lib\Framework
         ];
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         $this->_createClient();
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         $_SESSION = [];
         $_GET = [];
@@ -161,5 +168,4 @@ class Yii1 extends \Codeception\Lib\Framework
         Yii::app()->session->close();
         parent::_after($test);
     }
-
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
 use Symfony\Component\BrowserKit\Client as BrowserKitClient;
@@ -51,13 +50,9 @@ class Kohana extends BrowserKitClient
 
     protected function _initRequest()
     {
-        static $is_first_call;
-        if ($is_first_call === null) {
-            $is_first_call = true;
-        }
+        static $is_first_call = true;
         if ($is_first_call) {
             $is_first_call = false;
-
             include $this->index;
         }
     }

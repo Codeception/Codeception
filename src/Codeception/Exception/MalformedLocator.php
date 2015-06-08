@@ -7,4 +7,4 @@ class MalformedLocator extends TestRuntimeException
     {
         parent::__construct(ucfirst($type) . " locator is malformed: $locator");
     }
-} 
+}

@@ -3,10 +3,11 @@ namespace Codeception\Lib\Driver;
 
 use Codeception\Exception\TestRuntime;
 use Codeception\Lib\Interfaces\Queue;
+use Aws\Sqs\SqsClient;
+use Aws\Common\Credentials\Credentials;
 
 class AmazonSQS implements Queue
 {
-
     protected $queue;
 
     /**
@@ -16,8 +17,8 @@ class AmazonSQS implements Queue
      */
     public function openConnection($config)
     {
-        $this->queue = \Aws\Sqs\SqsClient::factory([
-            'credentials' => new \Aws\Common\Credentials\Credentials($config['key'], $config['secret']),
+        $this->queue = SqsClient::factory([
+            'credentials' => new Credentials($config['key'], $config['secret']),
             'region' => $config['region']
         ]);
         if (!$this->queue) {

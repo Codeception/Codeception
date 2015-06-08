@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Lib\Driver;
 
+use Codeception\Exception\ModuleException;
+
 class PostgreSql extends Db
 {
     protected $putline = false;
@@ -82,11 +84,11 @@ class PostgreSql extends Db
     public function sqlQuery($query)
     {
         if (strpos(trim($query), 'COPY ') === 0) {
-            if (!extension_loaded(
-                'pgsql'
-            )
-            ) {
-                throw new \Codeception\Exception\ModuleException('\Codeception\Module\Db', "To run 'COPY' commands 'pgsql' extension should be installed");
+            if (!extension_loaded('pgsql')) {
+                throw new ModuleException(
+                    '\Codeception\Module\Db',
+                    "To run 'COPY' commands 'pgsql' extension should be installed"
+                );
             }
             $constring = str_replace(';', ' ', substr($this->dsn, 6));
             $constring .= ' user=' . $this->user;
@@ -112,9 +114,9 @@ class PostgreSql extends Db
                 $params[] = "$k = ? ";
             }
         }
-        $params = implode('AND ', $params);
+        $sparams = implode('AND ', $params);
 
-        return sprintf($query, $column, $table, $params);
+        return sprintf($query, $column, $table, $sparams);
     }
 
     public function lastInsertId($table)
@@ -130,7 +132,8 @@ class PostgreSql extends Db
         $name = array_map(
             function ($data) {
                 return '"' . $data . '"';
-            }, $name
+            },
+            $name
         );
         return implode('.', $name);
     }

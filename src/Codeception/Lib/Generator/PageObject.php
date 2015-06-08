@@ -36,6 +36,7 @@ class {{class}}
 
 {{actions}}
 }
+
 EOF;
 
     protected $actionsTemplate = <<<EOF
@@ -87,5 +88,4 @@ EOF;
             ->place('pageObject', $this->name)
             ->produce();
     }
-
 }

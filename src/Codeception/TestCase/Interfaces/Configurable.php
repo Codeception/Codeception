@@ -7,7 +7,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 interface Configurable
 {
-
     public function configActor($actor);
 
     public function configDispatcher(EventDispatcher $dispatcher);
@@ -21,5 +20,4 @@ interface Configurable
     public function configEnv($env);
 
     public function initConfig();
-
 } 

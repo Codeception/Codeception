@@ -7,6 +7,11 @@ use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\ModuleContainer;
+use Codeception\TestCase;
+use Codeception\Step;
+use Codeception\Configuration;
+use Illuminate\Support\ClassLoader;
+use Illuminate\Support\Facades\Facade;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
@@ -100,7 +105,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * @param \Codeception\TestCase $test
      * @throws ModuleConfigException
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         $this->initializeLaravel();
 
@@ -114,7 +119,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      *
      * @param \Codeception\TestCase $test
      */
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
@@ -148,9 +153,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      *
      * @param \Codeception\Step $step
      */
-    public function _afterStep(\Codeception\Step $step)
+    public function _afterStep(Step $step)
     {
-        \Illuminate\Support\Facades\Facade::clearResolvedInstances();
+        Facade::clearResolvedInstances();
 
         parent::_afterStep($step);
     }
@@ -186,17 +191,19 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     protected function bootApplication()
     {
-        $projectDir = explode($this->config['packages'], \Codeception\Configuration::projectDir())[0];
+        $projectDir = explode($this->config['packages'], Configuration::projectDir())[0];
         $projectDir .= $this->config['root'];
         require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        \Illuminate\Support\ClassLoader::register();
+        ClassLoader::register();
 
         $bootstrapFile = $projectDir . $this->config['bootstrap'];
 
         if (!file_exists($bootstrapFile)) {
             throw new ModuleConfigException(
-                $this, "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
+                $this,
+                "Laravel bootstrap file not found in $bootstrapFile.\n"
+                . "Please provide a valid path to it using 'bootstrap' config param. "
             );
         }
 
@@ -444,7 +451,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function seeFormErrorMessage($key, $errorMessage)
     {
         $viewErrorBag = $this->app['view']->shared('errors');
-
         $this->assertEquals($errorMessage, $viewErrorBag->first($key));
     }
 
@@ -617,5 +623,4 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
         return $query->first();
     }
-
 }

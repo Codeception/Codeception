@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
 use Codeception\Exception\TestRuntime as TestRuntimeException;
@@ -98,7 +97,7 @@ class Guzzle extends Client
     {
         $contentType = $response->getHeader('Content-Type');
 
-        if (!$contentType or strpos($contentType, 'charset=') === false) {
+        if (!$contentType || strpos($contentType, 'charset=') === false) {
             $body = $response->getBody(true);
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
                 $contentType .= ';charset=' . $matches[1];
@@ -162,7 +161,7 @@ class Guzzle extends Client
                 $build[$part] = $value;
             }
         }
-        return \GuzzleHttp\Url::buildUrl($build);
+        return Url::buildUrl($build);
     }
 
     protected function doRequest($request)

@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Helper;
@@ -169,9 +168,10 @@ class Bootstrap extends Command
             'modules'    => [
                 'enabled' => [
                     'PhpBrowser' =>
-                         ['url' => 'http://localhost/myapp/']
-                    , "\\{$this->namespace}Helper\\$actor"]
+                        ['url' => 'http://localhost/myapp/'],
+                        "\\{$this->namespace}Helper\\$actor"
                 ]
+            ]
         ];
 
         $str = "# Codeception Test Suite Configuration\n\n";
@@ -226,7 +226,10 @@ class Bootstrap extends Command
         @mkdir($this->dataDir);
         @mkdir($this->supportDir);
         @mkdir($this->envsDir);
-        file_put_contents($this->dataDir . '/dump.sql', '/* Replace this file with actual dump of your database */');
+        file_put_contents(
+            $this->dataDir . '/dump.sql',
+            '/* Replace this file with actual dump of your database */'
+        );
     }
 
 }

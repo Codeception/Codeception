@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Exception\TestRuntimeException;
@@ -59,10 +58,31 @@ use GuzzleHttp\Client;
  */
 class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 {
-
     protected $requiredFields = ['url'];
-    protected $config = ['verify' => false, 'expect' => false, 'timeout' => 30, 'curl' => [], 'refresh_max_interval' => 10];
-    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key', 'proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
+    
+    protected $config = [
+        'verify' => false,
+        'expect' => false,
+        'timeout' => 30,
+        'curl' => [],
+        'refresh_max_interval' => 10
+    ];
+    
+    protected $guzzleConfigFields = [
+        'headers',
+        'auth',
+        'proxy',
+        'verify',
+        'cert',
+        'query',
+        'ssl_key',
+        'proxy',
+        'expect',
+        'version',
+        'cookies',
+        'timeout',
+        'connect_timeout'
+    ];
 
     /**
      * @var \Codeception\Lib\Connector\Guzzle
@@ -221,8 +241,8 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     public function _backupSession()
     {
         return [
-            'client'  => $this->client,
-            'guzzle'  => $this->guzzle,
+            'client' => $this->client,
+            'guzzle' => $this->guzzle,
             'crawler' => $this->crawler
         ];
     }

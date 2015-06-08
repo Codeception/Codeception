@@ -51,7 +51,7 @@ class LocalServer extends SuiteSubscriber
 
     protected function isEnabled()
     {
-        return $this->module and !$this->settings['remote'] and $this->settings['enabled'];
+        return $this->module && !$this->settings['remote'] && $this->settings['enabled'];
     }
 
     public function beforeSuite(SuiteEvent $e)
@@ -127,7 +127,8 @@ class LocalServer extends SuiteSubscriber
         $contents = file_get_contents($c3Url . '/c3/report/' . $action, false, $context);
 
         $okHeaders = array_filter(
-            $http_response_header, function ($h) {
+            $http_response_header,
+            function ($h) {
                 return preg_match('~^HTTP(.*?)\s200~', $h);
             }
         );
@@ -153,7 +154,8 @@ class LocalServer extends SuiteSubscriber
 
     protected function fetchErrors()
     {
-        if ($error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR)) {
+        $error = $this->module->grabCookie(self::COVERAGE_COOKIE_ERROR);
+        if (!empty($error)) {
             $this->module->resetCookie(self::COVERAGE_COOKIE_ERROR);
             throw new RemoteException($error);
         }
@@ -183,5 +185,4 @@ class LocalServer extends SuiteSubscriber
             $this->c3Access = array_replace_recursive($this->c3Access, $settings['coverage']['remote_context_options']);
         }
     }
-
 }

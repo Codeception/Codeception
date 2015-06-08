@@ -2,7 +2,6 @@
 namespace Codeception\Coverage\Subscriber;
 
 use Codeception\Configuration;
-use Codeception\Coverage\Shared\C3Collect;
 use Codeception\Event\SuiteEvent;
 use Codeception\Util\FileSystem;
 
@@ -58,5 +57,4 @@ class RemoteServer extends LocalServer
         $destFile = Configuration::outputDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->c3Request('clover'));
     }
-
 }

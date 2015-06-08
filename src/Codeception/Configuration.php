@@ -541,5 +541,4 @@ class Configuration
         $settings = self::mergeConfigs($settings, $suiteConf);
         return $settings;
     }
-
 }

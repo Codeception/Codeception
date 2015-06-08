@@ -24,14 +24,11 @@ class GeneratePageObject extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-
-                new InputArgument('suite', InputArgument::REQUIRED, 'Either suite name or page object name)'),
-                new InputArgument('page', InputArgument::OPTIONAL, 'Page name of pageobject to represent'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'Either suite name or page object name)'),
+            new InputArgument('page', InputArgument::OPTIONAL, 'Page name of pageobject to represent'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
         parent::configure();
     }
 
@@ -77,5 +74,4 @@ class GeneratePageObject extends Command
     protected function pathToPageObject($class, $suite)
     {
     }
-
 }
