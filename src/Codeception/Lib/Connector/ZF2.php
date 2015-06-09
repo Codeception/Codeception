@@ -66,7 +66,7 @@ class ZF2 extends Client
         $zendRequest->setUri($uri);
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
         
-        $zendRequest->setHeaders($this->_extractHeaders($request));
+        $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
 
         $this->zendRequest = $zendRequest;
@@ -93,7 +93,7 @@ class ZF2 extends Client
         return $this->zendRequest;
     }
 
-    private function _extractHeaders(BrowserKitRequest $request)
+    private function extractHeaders(BrowserKitRequest $request)
     {
         $headers = array();
         $server = $request->getServer();
