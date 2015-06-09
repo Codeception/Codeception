@@ -2,7 +2,7 @@
 namespace Codeception\Util;
 
 use Codeception\Exception\ElementNotFound;
-use Codeception\Exception\MalformedLocator;
+use Codeception\Exception\MalformedLocatorException;
 use Symfony\Component\CssSelector\CssSelector;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Codeception\Util\Soap as XmlUtils;
@@ -24,7 +24,7 @@ class XmlStructure
         $path = new \DOMXPath($this->xml);
         $res = $path->query($xpath);
         if ($res === false) {
-            throw new MalformedLocator($xpath);
+            throw new MalformedLocatorException($xpath);
         }
         return $res->length > 0;
     }

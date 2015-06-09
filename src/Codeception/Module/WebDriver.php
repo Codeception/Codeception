@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
-use Codeception\Exception\MalformedLocator;
+use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
@@ -18,6 +18,7 @@ use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
+use Codeception\Util\Uri;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -105,7 +106,6 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot, ScreenshotSaver, PageSourceSaver
 {
-
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
         'host'          => '127.0.0.1',
@@ -234,25 +234,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function _getCurrentUri()
     {
         $url = $this->webDriver->getCurrentURL();
-
         if ($url == 'about:blank') {
             throw new ModuleException($this, "Current url is blank, no page was opened");
         }
-        $parts = parse_url($url);
-        if (!$parts) {
-            throw new ModuleException($this, "URL $url couldn't be parsed");
-        }
-        $uri = "";
-        if (isset($parts['path'])) {
-            $uri .= $parts['path'];
-        }
-        if (isset($parts['query'])) {
-            $uri .= "?" . $parts['query'];
-        }
-        if (isset($parts['fragment'])) {
-            $uri .= "#" . $parts['fragment'];
-        }
-        return $uri;
+        return Uri::retrieveUri($url);
     }
 
     public function _saveScreenshot($filename)
@@ -384,23 +369,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function amOnPage($page)
     {
-        $build = parse_url($this->config['url']);
-        $uriParts = parse_url($page);
-
-        if ($build === false) {
-            throw new TestRuntimeException("URL '{$this->config['url']}' is malformed");
-        } elseif ($uriParts === false) {
-            throw new TestRuntimeException("URI '{$page}' is malformed");
-        }
-
-        foreach ($uriParts as $part => $value) {
-            if ($part === 'path' && !empty($build[$part])) {
-                $build[$part] = rtrim($build[$part], '/') . '/' . ltrim($value, '/');
-            } else {
-                $build[$part] = $value;
-            }
-        }
-        $this->webDriver->get(\GuzzleHttp\Url::buildUrl($build));
+        $url = Uri::appendPath($this->config['url'], $page);
+        $this->debugSection('GET', $url);
+        $this->webDriver->get($url);
     }
 
     public function see($text, $selector = null)
@@ -1823,14 +1794,14 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             try {
                 return $page->findElements($this->getStrictLocator($selector));
             } catch (\InvalidSelectorException $e) {
-                throw new MalformedLocator(key($selector) . ' => ' . reset($selector), "Strict locator");
+                throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator");
             }
         }
         if ($selector instanceof \WebDriverBy) {
             try {
                 return $page->findElements($selector);
             } catch (\InvalidSelectorException $e) {
-                throw new MalformedLocator(sprintf("WebDriverBy::%s('%s')", $selector->getMechanism(), $selector->getValue()), 'WebDriver');
+                throw new MalformedLocatorException(sprintf("WebDriverBy::%s('%s')", $selector->getMechanism(), $selector->getValue()), 'WebDriver');
             }
         }
         $isValidLocator = false;
@@ -1849,10 +1820,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 $nodes = $page->findElements(\WebDriverBy::xpath($selector));
             }
         } catch (\InvalidSelectorException $e) {
-            throw new MalformedLocator($selector);
+            throw new MalformedLocatorException($selector);
         }
         if (!$isValidLocator and $throwMalformed) {
-            throw new MalformedLocator($selector);
+            throw new MalformedLocatorException($selector);
         }
         return $nodes;
     }
@@ -1879,7 +1850,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             case 'class':
                 return \WebDriverBy::className($locator);
             default:
-                throw new MalformedLocator(
+                throw new MalformedLocatorException(
                     "$by => $locator",
                     "Strict locator can be either xpath, css, id, link, class, name: "
                 );
