@@ -127,7 +127,7 @@ class ZF1 extends Client
             $server['HTTP_HOST'] .= ':' . $port;
         }
 
-        $contentHeaders = array('Content-length' => true, 'Content-md5' => true, 'Content-type' => true);
+        $contentHeaders = array('Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true);
         foreach ($server as $header => $val) {
             $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
 
