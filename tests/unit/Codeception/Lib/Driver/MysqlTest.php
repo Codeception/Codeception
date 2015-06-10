@@ -37,7 +37,11 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         if (!isset(self::$mysql)) {
             $this->markTestSkipped('Coudn\'t establish connection to database');
         }
-        self::$mysql->load(self::$sql);
+        try {
+            self::$mysql->load(self::$sql);
+        } catch (\PDOException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
     }
     
     public function tearDown()

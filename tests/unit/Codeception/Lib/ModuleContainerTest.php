@@ -225,8 +225,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ['modules' => [
             'enabled' => ['\Codeception\Lib\PartedModule'],
-            'config' => [
-                '\Codeception\Lib\PartedModule' => [
+            'config' => ['\Codeception\Lib\PartedModule' => [
                     'part' => ['Two']
                 ]
             ]
@@ -241,9 +240,9 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testShortConfigParts()
     {
         $config = ['modules' => [
-            'enabled' => ['\Codeception\Lib\PartedModule' => [
+            'enabled' => [['\Codeception\Lib\PartedModule' => [
                 'part' => 'one'
-            ]],
+            ]]],
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('\Codeception\Lib\PartedModule');
@@ -258,10 +257,10 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     {
         $config = ['modules' =>
             ['enabled' => [
-                'Codeception\Lib\StubModule' => [
+                ['Codeception\Lib\StubModule' => [
                     'firstField' => 'firstValue',
                     'secondField' => 'secondValue',
-                ]
+                ]]
             ]
         ]];
 
@@ -276,9 +275,9 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
     public function testShortConfigDependencies()
     {
         $config = ['modules' => [
-            'enabled' => ['Codeception\Lib\DependencyModule' => [
+            'enabled' => [['Codeception\Lib\DependencyModule' => [
                 'depends' => 'Codeception\Lib\ConflictedModule'
-            ]],
+            ]]],
         ]];
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Codeception\Lib\DependencyModule');
