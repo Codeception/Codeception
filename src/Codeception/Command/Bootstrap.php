@@ -149,52 +149,55 @@ class Bootstrap extends Command
 
     protected function createFunctionalSuite($actor = 'Functional')
     {
-        $suiteConfig = [
-            'class_name' => $actor . $this->actorSuffix,
-            'modules'    => ['enabled' => ['Filesystem', "\\{$this->namespace}Helper\\$actor"]],
-        ];
+        $suiteConfig = <<<EOF
+# Codeception Test Suite Configuration
+#
+# Suite for functional (integration) tests
+# Emulate web requests and make application process them
+# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
 
-        $str = "# Codeception Test Suite Configuration\n\n";
-        $str .= "# suite for functional (integration) tests.\n";
-        $str .= "# emulate web requests and make application process them.\n";
-        $str .= "# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it.\n\n";
-        $str .= Yaml::dump($suiteConfig, 2);
-        $this->createSuite('functional', $actor, $str);
+class_name: $actor{$this->actorSuffix}
+modules:
+    enabled:
+        # add framework module here
+        - \\{$this->namespace}Helper\Functional
+EOF;
+        $this->createSuite('functional', $actor, $suiteConfig);
     }
 
     protected function createAcceptanceSuite($actor = 'Acceptance')
     {
-        $suiteConfig = [
-            'class_name' => $actor . $this->actorSuffix,
-            'modules'    => [
-                'enabled' => [
-                    'PhpBrowser' =>
-                         ['url' => 'http://localhost/myapp/']
-                    , "\\{$this->namespace}Helper\\$actor"]
-                ]
-        ];
+            $suiteConfig = <<<EOF
+# Codeception Test Suite Configuration
+#
+# Suite for acceptance tests.
+# Perform tests in browser using the WebDriver or PhpBrowser.
+# If you need both WebDriver and PHPBrowser tests - create a separate suite.
 
-        $str = "# Codeception Test Suite Configuration\n\n";
-        $str .= "# suite for acceptance tests.\n";
-        $str .= "# perform tests in browser using the WebDriver or PhpBrowser.\n";
-        $str .= "# If you need both WebDriver and PHPBrowser tests - create a separate suite.\n\n";
-
-        $str .= Yaml::dump($suiteConfig, 5);
-        $this->createSuite('acceptance', $actor, $str);
+class_name: $actor{$this->actorSuffix}
+modules:
+    enabled:
+        - PhpBrowser:
+            url: http://localhost/myapp
+        - \\{$this->namespace}Helper\Acceptance
+EOF;
+        $this->createSuite('acceptance', $actor, $suiteConfig);
     }
 
     protected function createUnitSuite($actor = 'Unit')
     {
-        $suiteConfig = [
-            'class_name' => $actor . $this->actorSuffix,
-            'modules'    => ['enabled' => ['Asserts', "\\{$this->namespace}Helper\\$actor"]],
-        ];
+        $suiteConfig = <<<EOF
+# Codeception Test Suite Configuration
+#
+# Suite for unit (internal) tests.
 
-        $str = "# Codeception Test Suite Configuration\n\n";
-        $str .= "# suite for unit (internal) tests.\n";
-        $str .= Yaml::dump($suiteConfig, 2);
-
-        $this->createSuite('unit', $actor, $str);
+class_name: $actor{$this->actorSuffix}
+modules:
+    enabled:
+        - Asserts
+        - \\{$this->namespace}Helper\Unit
+EOF;
+        $this->createSuite('unit', $actor, $suiteConfig);
     }
 
     protected function createSuite($suite, $actor, $config)

@@ -368,8 +368,8 @@ class Configuration
      */
     public static function modules($settings)
     {
-        return array_map(function ($m, $key) {
-            return is_array($m) ? $key : $m;
+        return array_map(function ($m) {
+            return is_array($m) ? key($m) : $m;
         }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']));
     }
 

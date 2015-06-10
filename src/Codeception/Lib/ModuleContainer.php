@@ -228,11 +228,15 @@ class ModuleContainer
 
 
         // get config for enabled modules
-        foreach ($this->config['modules']['enabled'] as $enabledModuleName => $enabledModuleConfig) {
+        foreach ($this->config['modules']['enabled'] as $enabledModuleConfig) {
+            if (!is_array($enabledModuleConfig)) {
+                continue;
+            }
+            $enabledModuleName = key($enabledModuleConfig);
             if ($enabledModuleName !== $module) {
                 continue;
             }
-            $config = Configuration::mergeConfigs($enabledModuleConfig, $config);
+            $config = Configuration::mergeConfigs(reset($enabledModuleConfig), $config);
         }
         return $config;
     }

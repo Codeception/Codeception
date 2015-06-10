@@ -51,21 +51,18 @@ class Doctrine2 extends \Codeception\Module implements DependsOnModule
 
     protected $dependencyMessage = <<<EOF
 Provide connection_callback function to establish database connection and get Entity Manager:
-```
+
 modules:
     enabled:
         - Doctrine2:
-              connection_callback: [My\ConnectionClass, getEntityManager]
-```
+            connection_callback: [My\ConnectionClass, getEntityManager]
 
 Or set a dependent module, which can be either Symfony2 or ZF2 to get EM from service locator:
 
-```
 modules:
     enabled:
         - Doctrine2:
             depends: Symfony2
-```
 EOF;
 
 
@@ -81,7 +78,7 @@ EOF;
 
     public function _depends()
     {
-        if (!$this->config['depends'] && !$this->config['connection_callback']) {
+        if ($this->config['connection_callback']) {
             return [];
         }
         return ['Codeception\Lib\Interfaces\DoctrineProvider' => $this->dependencyMessage];
@@ -92,7 +89,7 @@ EOF;
         $this->dependentModule = $dependentModule;
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _beforeSuite($settings = [])
     {
         if ($this->dependentModule) {
             $this->em = $this->dependentModule->_getEntityManager();
@@ -105,7 +102,7 @@ EOF;
         if (!$this->em) {
             throw new ModuleConfigException(
                 __CLASS__,
-                "Doctrine2 module requires EntityManager explicitly set.\n" .
+                "EntityManager can't be obtained.\n \n" .
                 "Please specify either `connection_callback` config option\n" .
                 "with callable which will return instance of EntityManager or\n" .
                 "pass a dependent module which are Symfony2 or ZF2\n" .
@@ -113,7 +110,8 @@ EOF;
             );
         }
 
-        if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
+
+        if (!($this->em instanceof \Doctrine\ORM\EntityManager)) {
             throw new ModuleConfigException(
                 __CLASS__,
                 "Connection object is not an instance of \\Doctrine\\ORM\\EntityManager.\n" .
@@ -129,6 +127,9 @@ EOF;
 
     public function _after(\Codeception\TestCase $test)
     {
+        if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
+            return;
+        }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
                 $this->em->getConnection()->rollback();
