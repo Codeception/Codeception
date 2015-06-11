@@ -4,6 +4,7 @@ namespace Codeception\Command;
 use Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Auto-updates phar archive from official site: 'http://codeception.com/codecept.phar' .
@@ -69,10 +70,9 @@ class SelfUpdate extends Command
                 ));
                 if (!$input->getOption('no-interaction')) {
 
-                    $dialog = $this->getHelperSet()->get('dialog');
-                    if (!$dialog->askConfirmation($output,
-                        "\n<question>Do you want to update?</question> ", false)
-                    ) {
+                    $dialog = $this->getHelperSet()->get('question');
+                    $question = new ConfirmationQuestion("\n<question>Do you want to update?</question> ", false);
+                    if (!$dialog->ask($input, $output, $question)) {
                         $output->writeln("\n<info>Bye-bye!</info>\n");
 
                         return;
