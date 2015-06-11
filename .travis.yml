@@ -45,7 +45,6 @@ install:
   - git clone -q https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5
   - composer install -d frameworks-l5 --no-dev  --prefer-dist
   # Symfony
-  - git clone -q https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - git clone -q -b 2.1 https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev  --prefer-dist
   # ZF1
