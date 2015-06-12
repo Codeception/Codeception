@@ -39,7 +39,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         }
         try {
             self::$mysql->load(self::$sql);
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             $this->markTestSkipped($e->getMessage());
         }
     }
