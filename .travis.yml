@@ -77,8 +77,7 @@ before_script:
   - touch frameworks-l5/storage/testing.sqlite
   - php frameworks-l5/artisan migrate --database=sqlite_testing --force
   # Symfony
-  - frameworks-symfony/app/console doctrine:database:create
-  - frameworks-symfony/app/console doctrine:schema:create
+  - php frameworks-symfony/app/console doctrine:fixtures:load -n --env test
   - php codecept build -c frameworks-yii-basic/tests
 #  - php codecept build -c frameworks-phalcon
 #  - php codecept build -c frameworks-laravel
