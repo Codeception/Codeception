@@ -5,7 +5,6 @@ namespace Codeception\TestCase;
 use Codeception\Events;
 use Codeception\Event\TestEvent;
 use Codeception\Util\Annotation;
-use Codeception\Util\Multibyte;
 
 class Cest extends \Codeception\TestCase implements
     Interfaces\ScenarioDriven,
@@ -152,7 +151,7 @@ class Cest extends \Codeception\TestCase implements
         $text = $this->testMethod;
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = Multibyte::strtolower($text);
+        $text = mb_strtolower($text);
         return $text;
     }
 

@@ -8,7 +8,6 @@ use Codeception\Event\TestEvent;
 use Codeception\Exception\TestRuntime;
 use Codeception\SuiteManager;
 use Codeception\TestCase;
-use Codeception\Util\Multibyte;
 
 class Test extends TestCase implements
     Interfaces\Descriptive,
@@ -59,7 +58,7 @@ class Test extends TestCase implements
         $text = $this->getName();
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        return Multibyte::strtolower($text);
+        return mb_strtolower($text);
     }
 
     public function getSignature()

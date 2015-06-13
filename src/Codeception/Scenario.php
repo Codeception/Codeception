@@ -1,6 +1,5 @@
 <?php
 namespace Codeception;
-use Codeception\Util\Multibyte;
  
 class Scenario {
     /**
@@ -129,7 +128,7 @@ class Scenario {
             }
         }
         $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
-        $text = "<h3>" . Multibyte::strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
+        $text = "<h3>" . mb_strtoupper('I want to ' . $this->getFeature()) . "</h3>" . $text;
         return $text;
 
     }
@@ -138,7 +137,7 @@ class Scenario {
     {
         $text = implode("\r\n", $this->getSteps());
         $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
-        $text = Multibyte::strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
+        $text = mb_strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
         return $text;
 
     }
