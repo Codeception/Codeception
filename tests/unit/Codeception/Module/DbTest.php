@@ -16,7 +16,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     
     public static function setUpBeforeClass()
     {
-        self::$module = new \Codeception\Module\Db();
+        self::$module = new \Codeception\Module\Db(make_container());
         self::$module->_setConfig(self::$config);
         self::$module->_initialize();
         
