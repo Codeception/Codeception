@@ -237,7 +237,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _saveScreenshot($filename)
     {
-        $this->webDriver->takeScreenshot($filename);
+        if ($this->webDriver !== null) {
+            $this->webDriver->takeScreenshot($filename);
+        } else {
+            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
+            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        }
     }
 
     /**
