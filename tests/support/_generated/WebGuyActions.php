@@ -1894,8 +1894,9 @@ trait WebGuyActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Submits the given form on the page, optionally with the given form values.
-     * Give the form fields values as an array. Note that hidden fields can't be accessed.
+     * Submits the given form on the page, optionally with the given form
+     * values.  Give the form fields values as an array. Note that hidden fields
+     * can't be accessed.
      *
      * Skipped fields will be filled by their values from the page.
      * You don't need to click the 'Submit' button afterwards.
@@ -1910,9 +1911,15 @@ trait WebGuyActions
      *
      * ``` php
      * <?php
-     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+     * $I->submitForm('#login', [
+     *     'login' => 'davert',
+     *     'password' => '123456'
+     * ]);
      * // or
-     * $I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
+     * $I->submitForm('#login', [
+     *     'login' => 'davert',
+     *     'password' => '123456'
+     * ], 'submitButtonName');
      *
      * ```
      *
@@ -1920,10 +1927,17 @@ trait WebGuyActions
      *
      * ``` html
      * <form action="/sign_up">
-     *     Login: <input type="text" name="user[login]" /><br/>
-     *     Password: <input type="password" name="user[password]" /><br/>
-     *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
-     *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+     *     Login:
+     *     <input type="text" name="user[login]" /><br/>
+     *     Password:
+     *     <input type="password" name="user[password]" /><br/>
+     *     Do you agree to out terms?
+     *     <input type="checkbox" name="user[agree]" /><br/>
+     *     Select pricing plan:
+     *     <select name="plan">
+     *         <option value="1">Free</option>
+     *         <option value="2" selected="selected">Paid</option>
+     *     </select>
      *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
      * ```
@@ -1932,19 +1946,90 @@ trait WebGuyActions
      *
      * ``` php
      * <?php
-     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
-     *
+     * $I->submitForm(
+     *     '#userForm',
+     *     [
+     *         'user[login]' => 'Davert',
+     *         'user[password]' => '123456',
+     *         'user[agree]' => true
+     *     ],
+     *     'submitButton'
+     * );
      * ```
-     * Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
-     *
-     * You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
-     *
-     * ```php
+     * Note that "2" will be the submitted value for the "plan" field, as it is
+     * the selected option.
+     * 
+     * Also note that this differs from PhpBrowser, in that
+     * ```'user' => [ 'login' => 'Davert' ]``` is not supported at the moment.
+     * Named array keys *must* be included in the name as above.
+     * 
+     * Pair this with seeInFormFields for quick testing magic.
+     * 
+     * ``` php
      * <?php
-     * $I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-     *
+     * $form = [
+     *      'field1' => 'value',
+     *      'field2' => 'another value',
+     *      'checkbox1' => true,
+     *      // ...
+     * ];
+     * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+     * // $I->amOnPage('/path/to/form-page') may be needed
+     * $I->seeInFormFields('//form[@id=my-form]', $form);
+     * ?>
      * ```
      *
+     * Parameter values must be set to arrays for multiple input fields
+     * of the same name, or multi-select combo boxes.  For checkboxes,
+     * either the string value can be used, or boolean values which will
+     * be replaced by the checkbox's value in the DOM.
+     *
+     * ``` php
+     * <?php
+     * $I->submitForm('#my-form', [
+     *      'field1' => 'value',
+     *      'checkbox' => [
+     *          'value of first checkbox',
+     *          'value of second checkbox,
+     *      ],
+     *      'otherCheckboxes' => [
+     *          true,
+     *          false,
+     *          false
+     *      ],
+     *      'multiselect' => [
+     *          'first option value',
+     *          'second option value'
+     *      ]
+     * ]);
+     * ?>
+     * ```
+     *
+     * Mixing string and boolean values for a checkbox's value is not supported
+     * and may produce unexpected results.
+     * 
+     * Field names ending in "[]" must be passed without the trailing square 
+     * bracket characters, and must contain an array for its value.  This allows
+     * submitting multiple values with the same name, consider:
+     * 
+     * ```php
+     * $I->submitForm('#my-form', [
+     *     'field[]' => 'value',
+     *     'field[]' => 'another value', // 'field[]' is already a defined key
+     * ]);
+     * ```
+     * 
+     * The solution is to pass an array value:
+     * 
+     * ```php
+     * // this way both values are submitted
+     * $I->submitForm('#my-form', [
+     *     'field' => [
+     *         'value',
+     *         'another value',
+     *     ]
+     * ]);
+     * ```
      * @param $selector
      * @param $params
      * @param $button
