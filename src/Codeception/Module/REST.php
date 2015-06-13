@@ -607,51 +607,6 @@ EOF;
     }
 
     /**
-     * Returns data from the current JSON response using specified path
-     * so that it can be used in next scenario steps.
-     *
-     * **this method is deprecated in favor of `grabDataFromResponseByJsonPath`**
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $user_id = $I->grabDataFromJsonResponse('user.user_id');
-     * $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
-     * ?>
-     * ```
-     *
-     * @deprecated please use `grabDataFromResponseByJsonPath`
-     * @param string $path
-     * @return string
-     * @part json
-     */
-    public function grabDataFromJsonResponse($path = '')
-    {
-        $data = $response = json_decode($this->response, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->debugSection('Response', $this->response);
-            $this->fail('Response is not of JSON format or is malformed');
-        }
-
-        if ($path === '') {
-            return $data;
-        }
-
-        foreach (explode('.', $path) as $key) {
-            if (!is_array($data) || !array_key_exists($key, $data)) {
-                $this->fail('Response does not have required data');
-                $this->debugSection('Response', $response);
-            }
-
-            $data = $data[$key];
-        }
-
-        return $data;
-    }
-
-    /**
      * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
      * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
