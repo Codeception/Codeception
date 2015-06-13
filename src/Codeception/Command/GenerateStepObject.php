@@ -49,6 +49,7 @@ class GenerateStepObject extends Command
 
         $path = $this->buildPath(Configuration::supportDir() . 'Step' . DIRECTORY_SEPARATOR . ucfirst($suite), $step);
 
+        $dialog = $this->getHelperSet()->get('question');
         $filename = $path . $class . '.php';
 
         $helper = $this->getHelper('question');
@@ -58,7 +59,8 @@ class GenerateStepObject extends Command
 
         if (!$input->getOption('silent')) {
             do {
-                $action = $helper->ask($input, $output, $question);
+                $question = new Question('Add action to StepObject class (ENTER to exit): ', null);
+                $action = $dialog->ask($input, $output, $question);
                 if ($action) {
                     $gen->createAction($action);
                 }

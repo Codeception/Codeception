@@ -35,12 +35,11 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun() {
         $events = [];
-        $this->dispatcher->addListener('suite.before', function ($e) use (&$events) { $events[] = 'before'; });
-        $this->dispatcher->addListener('suite.after', function ($e) use (&$events) { $events[] = 'after'; });
-        $runner = new \Codeception\PHPUnit\Runner;
-        $runner->setPrinter(new PHPUnit_TextUI_ResultPrinter($this->dispatcher));
-        $this->suiteman->run($runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
-        $this->assertEquals(['before', 'after'], $events);
+        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $this->dispatcher->addListener('suite.before', $eventListener);
+        $this->dispatcher->addListener('suite.after', $eventListener);
+        $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['colors' => false, 'steps' => true, 'debug' => false]);
+        $this->assertEquals($events, ['suite.before', 'suite.after']);
     }
 
     /**
@@ -82,10 +81,11 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
     public function testGroupEventsAreFired()
     {
         $events = [];
-        $this->dispatcher->addListener('test.before', function ($e) use (&$events) { $events[] = 'before'; });
-        $this->dispatcher->addListener('test.before.admin', function ($e) use (&$events) { $events[] = 'before.admin'; });
-        $this->dispatcher->addListener('test.after', function ($e) use (&$events) { $events[] = 'after'; });
-        $this->dispatcher->addListener('test.after.admin', function ($e) use (&$events) { $events[] = 'after.admin'; });
+        $eventListener = function ($event, $eventName) use (&$events) { $events[] = $eventName; };
+        $this->dispatcher->addListener('test.before', $eventListener);
+        $this->dispatcher->addListener('test.before.admin', $eventListener);
+        $this->dispatcher->addListener('test.after', $eventListener);
+        $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);

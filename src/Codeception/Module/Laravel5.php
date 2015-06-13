@@ -175,7 +175,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $this->app = $this->bootApplication();
         $this->app->instance('request', new Request());
         $this->client = new LaravelConnector($this->app);
-        $this->client->followRedirects(true);
     }
 
     /**
