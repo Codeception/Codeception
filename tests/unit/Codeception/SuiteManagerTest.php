@@ -89,9 +89,9 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
         $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
-        $this->assertContains('before', $events);
-        $this->assertContains('before.admin', $events);
-        $this->assertContains('after.admin', $events);
+        $this->assertContains('test.before', $events);
+        $this->assertContains('test.before.admin', $events);
+        $this->assertContains('test.after.admin', $events);
     }
 
 }
