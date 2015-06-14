@@ -355,10 +355,6 @@ class REST extends \Codeception\Module
     {
         $this->debugSection("Request headers", $this->headers);
 
-        if ($parameters instanceof \JsonSerializable) {
-            $parameters = $parameters->jsonSerialize();
-        }
-
         foreach ($this->headers as $header => $val) {
             $header = str_replace('-','_',strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
