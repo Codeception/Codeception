@@ -371,7 +371,9 @@ class REST extends \Codeception\Module
         }
 
         // allow full url to be requested
-        $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
+        if (strpos($url, '://') === false) {
+            $url = $this->config['url'] . $url;
+        }
 
         $this->params = $parameters;
         
