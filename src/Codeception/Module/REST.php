@@ -360,12 +360,12 @@ class REST extends \Codeception\Module
             $this->client->setServerParameter("HTTP_$header", $val);
 
             // Issue #1650 - Symfony BrowserKit changes HOST header to request URL
-            if (strtolower($header) == 'host') {
+            if ($header === 'HOST') {
                 $this->client->setServerParameter("HTTP_ HOST", $val);
             }
 
             // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->isFunctional and $header == 'CONTENT_TYPE') {
+            if ($this->isFunctional && $header === 'CONTENT_TYPE') {
                 $this->client->setServerParameter($header, $val);
             }
         }
