@@ -187,6 +187,17 @@ abstract class Module
         return $this->moduleContainer->getModule($name);
     }
 
+    public function _getConfig($key = null)
+    {
+        if (!$key) {
+            return $this->config;
+        }
+        if (isset($this->config[$key])) {
+            return $this->config[$key];
+        }
+        return null;
+    }
+
     protected function scalarizeArray($array)
     {
         foreach ($array as $k => $v) {

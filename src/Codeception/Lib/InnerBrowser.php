@@ -3,7 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
-use Codeception\Exception\MalformedLocator;
+use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\PageSourceSaver;
@@ -14,6 +14,7 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
+use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -21,7 +22,6 @@ use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
-use DOMElement;
 
 class InnerBrowser extends Module implements Web, PageSourceSaver
 {
@@ -218,19 +218,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
      */
     public function _getCurrentUri()
     {
-        $url = $this->getRunningClient()->getHistory()->current()->getUri();
-        $parts = parse_url($url);
-        if (!$parts) {
-            $this->fail("URL couldn't be parsed");
-        }
-        $uri = "";
-        if (isset($parts['path'])) {
-            $uri .= $parts['path'];
-        }
-        if (isset($parts['query'])) {
-            $uri .= "?" . $parts['query'];
-        }
-        return $uri;
+        return Uri::retrieveUri($this->getRunningClient()->getHistory()->current()->getUri());
     }
 
     public function seeInCurrentUrl($uri)
@@ -288,7 +276,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     public function dontSeeCheckboxIsChecked($checkbox)
     {
         $checkboxes = $this->getCrawler()->filter($checkbox);
-        \PHPUnit_Framework_Assert::assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
+        $this->assertEquals(0, $checkboxes->filter('input[checked=checked]')->count());
     }
 
     public function seeInField($field, $value)
@@ -471,16 +459,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             }
         }
 
-        $urlParts = parse_url($this->getFormUrl($frmCrawl));
-        if ($urlParts === false) {
-            $this->fail("Form url can't be parsed");
-            return;
-        }
+        $url = $this->getFormUrl($frmCrawl);
         if (strcasecmp($form->getMethod(), 'GET') === 0) {
-            $urlParts = $this->mergeUrls($urlParts, ['query' => http_build_query($requestParams)]);
+            $url = Uri::mergeUrls($url, '?' . http_build_query($requestParams));
         }
-        $url = \GuzzleHttp\Url::buildUrl($urlParts);
-        
         $this->debugSection('Uri', $url);
         $this->debugSection('Method', $form->getMethod());
         $this->debugSection('Parameters', $requestParams);
@@ -506,38 +488,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     }
 
     /**
-     * Merges the passed $add argument onto $base.
-     *
-     * If a relative URL is passed as the 'path' part of the $add url
-     * array, the relative URL is mapped using the base 'path' part as
-     * its base.
-     *
-     * @param array $base the base URL
-     * @param array $add the URL to merge
-     * @return array the merged array
-     */
-    private function mergeUrls(array $base, array $add)
-    {
-        if (!empty($add['path']) && strpos($add['path'], '/') !== 0 && !empty($base['path'])) {
-            // if it ends with a slash, relative paths are below it
-            if (preg_match('~/$~', $base['path'])) {
-                $add['path'] = $base['path'] . $add['path'];
-            } else {
-                // remove double slashes
-                $dir = rtrim(dirname($base['path']), '\\/');
-                $add['path'] = $dir . '/' . $add['path'];
-            }
-        }
-        return array_merge($base, $add);
-    }
-
-    /**
      * Returns an absolute URL for the passed URI with the current URL
      * as the base path.
      *
      * @param string $uri the absolute or relative URI
      * @return string the absolute URL
-     * @throws \Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntimeException if either the current
      *         URL or the passed URI can't be parsed
      */
     protected function getAbsoluteUrlFor($uri)
@@ -546,16 +502,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (empty($uri) || $uri === '#') {
             return $currentUrl;
         }
-        $build = parse_url($currentUrl);
-        $uriParts = parse_url($uri);
-        if ($build === false) {
-            throw new TestRuntimeException("URL '$currentUrl' is malformed");
-        } elseif ($uriParts === false) {
-            throw new TestRuntimeException("URI '$uri' is malformed");
-        }
-
-        $abs = $this->mergeUrls($build, $uriParts);
-        return \GuzzleHttp\Url::buildUrl($abs);
+        return Uri::mergeUrls($currentUrl, $uri);
     }
 
     /**
@@ -563,7 +510,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
      * 
      * @param \Symfony\Component\DomCrawler\Crawler $form
      * @return string
-     * @throws \Codeception\Exception\TestRuntime if either the current
+     * @throws \Codeception\Exception\TestRuntimeException if either the current
      *         URL or the URI of the form's action can't be parsed
      */
     protected function getFormUrl(Crawler $form)
@@ -604,7 +551,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             $field->parentNode->removeChild($field);
         }
         $selectNonMulti = $cloned->filterXPath('//select[not(@multiple) and not(option[@value=""])]');
-        $opt = new DOMElement('option');
+        $opt = new \DOMElement('option');
         foreach ($selectNonMulti as $field) {
             $node = $field->insertBefore($opt, $field->firstChild);
             $node->setAttribute('value', '');
@@ -629,7 +576,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (!$form) {
             $this->fail('The selected node is not a form and does not have a form ancestor.');
         }
-        $action = $this->getFormUrl($form);
+        $action = (string) $this->getFormUrl($form);
         if (!isset($this->forms[$action])) {
             $this->forms[$action] = $this->getFormFromCrawler($form, $action);
         }
@@ -770,12 +717,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $name = $field->attr('name');
 
         if ($field->getNode(0) === null) {
-            throw new TestRuntime("Form field $name is not located");
+            throw new TestRuntimeException("Form field $name is not located");
         }
         // If the name is an array than we compare objects to find right checkbox
         $formField = $this->matchFormField($name, $form, new ChoiceFormField($field->getNode(0)));
         if (!$formField instanceof ChoiceFormField) {
-            throw new TestRuntime("Form field $name is not a checkable");
+            throw new TestRuntimeException("Form field $name is not a checkable");
         }
         return $formField;
     }
@@ -897,7 +844,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         if (Locator::isXPath($selector)) {
             return $this->getCrawler()->filterXPath($selector);
         }
-        throw new MalformedLocator($selector, 'XPath or CSS');
+        throw new MalformedLocatorException($selector, 'XPath or CSS');
     }
 
     /**
@@ -1230,7 +1177,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function filterByCSS($locator)
     {
         if (!Locator::isCSS($locator)) {
-            throw new MalformedLocator($locator, 'css');
+            throw new MalformedLocatorException($locator, 'css');
         }
         return $this->getCrawler()->filter($locator);
     }
@@ -1242,7 +1189,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     protected function filterByXPath($locator)
     {
         if (!Locator::isXPath($locator)) {
-            throw new MalformedLocator($locator, 'xpath');
+            throw new MalformedLocatorException($locator, 'xpath');
         }
         return $this->getCrawler()->filterXPath($locator);
     }

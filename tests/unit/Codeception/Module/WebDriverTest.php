@@ -502,7 +502,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSeeElementMalformedWdLocator()
     {
-        $this->setExpectedException('Codeception\Exception\MalformedLocator');
+        $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
         $this->module->seeElement(WebDriverBy::xpath('H---EY!'));
     }
