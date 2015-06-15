@@ -69,14 +69,16 @@ namespace Codeception\Module;
  *
  */
 
+use Codeception\TestCase;
+use Codeception\Module;
 use Codeception\Lib\Driver\Db as Driver;
+use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Exception\Module as ModuleException;
 use Codeception\Exception\ModuleConfig as ModuleConfigException;
 use Codeception\Configuration as Configuration;
 
-class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
+class Db extends Module implements DbInterface
 {
-
     /**
      * @api
      * @var
@@ -157,7 +159,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         }
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
@@ -166,7 +168,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         parent::_before($test);
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         $this->populated = false;
         $this->removeInserted();
@@ -179,7 +181,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             try {
                 $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
             }
         }
         $this->insertedIds = [];
