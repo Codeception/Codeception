@@ -143,7 +143,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
                 list ($missingDriver,) = explode(':', $this->config['dsn'],2);
                 $message = "could not find $missingDriver driver";
             }
-            
+
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
 
@@ -273,13 +273,13 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, (int) $res, 'No matching records found');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertLessThan(1, $res);
+        $this->assertLessThan(1, (int) $res);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
