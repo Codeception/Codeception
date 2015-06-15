@@ -241,6 +241,17 @@ EOF
 );
     }
 
+    protected function skipIfNoXdebug($I, $s)
+    {
+        if (!extension_loaded('xdebug')) {
+            $s->skip("Xdebug not loaded");
+        }
+    }
+
+    /**
+     * @before skipIfNoXdebug
+     * @param CliGuy $I
+     */
     public function runTestWithFailedScenario(\CliGuy $I)
     {
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
@@ -263,8 +274,13 @@ EOF
         );
     }
 
+    /**
+     * @before skipIfNoXdebug
+     * @param CliGuy $I
+     */
     public function runTestWithSubSteps(\CliGuy $I)
     {
+        $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
 Scenario:
@@ -272,7 +288,7 @@ Scenario:
 * I see code coverage files are present
   I see file found "c3.php"
   I see file found "composer.json"
-  I see in this file "codeception/c3"
+  I see in this file "$file"
 EOF
 );
 

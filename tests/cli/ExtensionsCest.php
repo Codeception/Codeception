@@ -22,7 +22,7 @@ class ExtensionsCest
         $I->seeInShellOutput('FAILURES');
         $I->seeFileFound('failed','tests/_output');
         $I->seeFileContentsEqual(<<<EOF
-tests/unit/FailingTest.php:testMe
+tests{$ds}unit{$ds}FailingTest.php:testMe
 EOF
 );
         $I->executeCommand('run -g failed -c codeception_extended.yml --no-exit');
