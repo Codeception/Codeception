@@ -1,10 +1,10 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use GuzzleHttp\Psr7\Uri;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
-use GuzzleHttp\Url;
 
 class ZF1 extends Client
 {
@@ -117,9 +117,9 @@ class ZF1 extends Client
 
     private function extractHeaders(BrowserKitRequest $request)
     {
-        $headers = array();
+        $headers = [];
         $server = $request->getServer();
-        $uri                 = Url::fromString($request->getUri());
+        $uri                 = new Uri($request->getUri());
         $server['HTTP_HOST'] = $uri->getHost();
         $port                = $uri->getPort();
         if ($port !== null && $port !== 443 && $port != 80) {

@@ -5,4 +5,3 @@ $I->amInPath('tests/data/sandbox');
 $I->executeCommand('run remote_server --coverage-xml remote_server.xml');
 $I->seeFileFound('remote_server.xml','tests/_output');
 $I->seeInThisFile('coverage generated');
-
