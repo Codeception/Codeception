@@ -2,6 +2,7 @@
 
 #### 2.0.15
 
+* Fixed @before and @after hooks in Cest. _before method was executed on each call of method specified in @before annotation *2015-06-15*
 * [Laravel5] Fix for domains in `route()` helper. See #2000. *2015-06-04*
 * [REST] Fixed sending `JsonSerializable` object on POST by @Naktibalda and @andersonamuller. See #1988 #1994
 * [MongoDb] escaped filename shell argument for loading MongoDB by @christoph-hautzinger. #1998 *2015-06-03*
