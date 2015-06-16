@@ -9,6 +9,7 @@ use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\Deprecation;
 use Codeception\Lib\Suite;
 use Codeception\Step;
 use Codeception\Step\Comment;
@@ -231,6 +232,10 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width(array_sum($this->columns), '-')->writeln();
+        $deprecationMessages = Deprecation::all();
+        foreach ($deprecationMessages as $message) {
+            $this->output->deprecate($message);
+        }
     }
 
     public function printFail(FailEvent $e)

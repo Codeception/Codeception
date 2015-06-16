@@ -1,5 +1,5 @@
 <?php
-$scenario->group('notorun');
-$scenario->incomplete();
+// @group notorun
+// @incomplete
 $I = new SkipGuy($scenario);
 $I->wantTo('make it incomplete');

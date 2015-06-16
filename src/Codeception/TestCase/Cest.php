@@ -34,7 +34,6 @@ class Cest extends \Codeception\TestCase implements
         $this->scenario->setFeature($this->getSpecFromMethod());
         $code = $this->getRawBody();
         $this->parser->parseFeature($code);
-        $this->parser->parseScenarioOptions($code, 'scenario');
         $this->di->injectDependencies($this->testClassInstance);
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
@@ -96,9 +95,7 @@ class Cest extends \Codeception\TestCase implements
     {
         if (method_exists($this->testClassInstance, $context)) {
             $this->executeBeforeMethods($context, $I);
-            $contextMethod = new \ReflectionMethod($this->testClassInstance, $context);
-            $contextMethod->setAccessible(true);
-            $contextMethod->invoke($this->testClassInstance, $I);
+            $this->invoke($context, [$I, $this->scenario]);
             $this->executeAfterMethods($context, $I);
             return;
         }

@@ -241,7 +241,7 @@ EOF
 );
     }
 
-    protected function skipIfNoXdebug($I, $s)
+    protected function skipIfNoXdebug($I, \Codeception\Scenario $s)
     {
         if (!extension_loaded('xdebug')) {
             $s->skip("Xdebug not loaded");
