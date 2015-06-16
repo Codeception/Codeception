@@ -68,7 +68,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
         self::$module->_reconfigure(['reconnect' => true]);
         $this->assertNotNull(self::$module->driver, 'driver is null before test');
-        $this->assertNotNull(self::$module->dbh, 'dbh is nullbefore test');
+        $this->assertNotNull(self::$module->dbh, 'dbh is null before test');
         
         self::$module->_after($testCase1);
 
