@@ -49,6 +49,7 @@ namespace Codeception\Module;
  * * dump - path to database dump.
  * * populate: true - should the dump be loaded before test suite is started.
  * * cleanup: true - should the dump be reloaded after each test
+ * * reconnect: false - should the module reconnect to database before each test
  *
  * ### Example
  *
@@ -61,6 +62,7 @@ namespace Codeception\Module;
  *              dump: 'tests/_data/dump.sql'
  *              populate: true
  *              cleanup: false
+ *              reconnect: true
  *
  * ## Public Properties
  * * dbh - contains PDO connection.
@@ -91,9 +93,10 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
      * @var array
      */
     protected $config = [
-      'populate' => true,
-      'cleanup'  => true,
-      'dump'     => null
+      'populate'  => true,
+      'cleanup'   => true,
+      'reconnect' => false,
+      'dump'      => null
     ];
 
     /**
@@ -134,6 +137,18 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             }
         }
 
+        $this->connect();
+        
+        // starting with loading dump
+        if ($this->config['populate']) {
+            $this->cleanup();
+            $this->loadDump();
+            $this->populated = true;
+        }
+    }
+    
+    private function connect()
+    {
         try {
             $this->driver = Driver::create($this->config['dsn'], $this->config['user'], $this->config['password']);
         } catch (\PDOException $e) {
@@ -147,17 +162,19 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         }
 
         $this->dbh = $this->driver->getDbh();
-
-        // starting with loading dump
-        if ($this->config['populate']) {
-            $this->cleanup();
-            $this->loadDump();
-            $this->populated = true;
-        }
+    }
+    
+    private function disconnect()
+    {
+        $this->dbh = null;
+        $this->driver = null;
     }
 
     public function _before(\Codeception\TestCase $test)
     {
+        if ($this->config['reconnect']) {
+            $this->connect();
+        }
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
             $this->loadDump();
@@ -169,6 +186,9 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
     {
         $this->populated = false;
         $this->removeInserted();
+        if ($this->config['reconnect']) {
+            $this->disconnect();
+        }
         parent::_after($test);
     }
 
