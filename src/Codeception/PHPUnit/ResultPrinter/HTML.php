@@ -217,7 +217,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
     protected function renderStep(Step $step)
     {
         $stepTemplate = new \Text_Template($this->templatePath . 'step.html');
-        $stepTemplate->setVar(['action' => $step->getHtml()]);
+        $stepTemplate->setVar(['action' => $step->getHtml(), 'error' => $step->hasFailed() ? 'failedStep' : '']);
         return $stepTemplate->render();
     }
 
