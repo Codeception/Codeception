@@ -2,7 +2,7 @@
 
 #### 2.1.0
 
-* **Updated to Guzzle 6**
+* **Updated to Guzzle 6**. Codeception can now work both with Guzzle v5 and Guzzle v6. PhpBrowser choses right connector depending on Guzzle version installed.
 * Annotations in Cept files.
   Instead of calling `$scenario->skip()`, `$scenario->group('firefox')`, etc, it is recommended to set scenario metadata with annotations `// @skip`, `// @group firefox`.
   Annotations can be parsed from line or block comments. `$scenario->skip()` and `$scenario->incomplete()` are still valid and can be executed inside conditional statements:
