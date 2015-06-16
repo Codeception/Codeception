@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
@@ -53,9 +54,10 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * Constructor.
      *
+     * @param ModuleContainer $container
      * @param $config
      */
-    public function __construct($config = null)
+    public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
             array(
@@ -67,7 +69,7 @@ class Lumen extends Framework implements ActiveRecord
             (array) $config
         );
 
-        parent::__construct();
+        parent::__construct($container);
     }
 
     /**
