@@ -30,6 +30,12 @@ class redirect4 {
     }
 }
 
+class redirect_relative {
+    function GET() {
+        header('Location: info');
+    }
+}
+
 class redirect2 {
     function GET() {
         include __DIR__.'/view/redirect2.php';
