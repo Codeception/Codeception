@@ -508,5 +508,11 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeOptionIsSelected('input[name=first_test_radio]', 'Yes');
         $this->module->dontSeeOptionIsSelected('input[name=first_test_radio]', 'No');
     }
+    
+    public function testBug2046()
+    {
+        $this->module->webDriver = null;
+        $this->module->_saveScreenshot(\Codeception\Configuration::outputDir().'testshot.png');
+    }
 
 }

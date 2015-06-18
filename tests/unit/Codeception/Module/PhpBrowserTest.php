@@ -126,6 +126,21 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertContains('test@gmail.com', $params);
     }
 
+    public function testRelativeRedirect()
+    {
+        // test relative redirects where the effective request URI is in a
+        // subdirectory
+        $this->module->amOnPage('/relative/redirect');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/relative/info');
+
+        // also, test relative redirects where the effective request URI is not
+        // in a subdirectory
+        $this->module->amOnPage('/relative_redirect');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');

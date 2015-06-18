@@ -94,11 +94,11 @@ class Symfony2 extends \Codeception\Lib\Framework
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
     }
 
     public function _before(\Codeception\TestCase $test) {
+        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
         $this->container = $this->kernel->getContainer();
         $this->client = new Symfony2Connector($this->kernel);
