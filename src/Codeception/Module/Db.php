@@ -270,16 +270,16 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         return $lastInsertId;
     }
 
-    public function seeInDatabase($table, $criteria = [])
+    public function seeInDatabase($table, $criteria = [], $message = 'No matching records found')
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, $res, $message);
     }
 
-    public function dontSeeInDatabase($table, $criteria = [])
+    public function dontSeeInDatabase($table, $criteria = [], $message = '')
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertLessThan(1, $res);
+        $this->assertLessThan(1, $res, $message);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
