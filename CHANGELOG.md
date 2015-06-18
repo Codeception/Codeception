@@ -18,6 +18,7 @@
 * **Current** modules, environment, and test name can be received in scenario. Example: `$scenario->current('env')` returns current environment name. Fixes #1251
 * **Environment Matrix**: environments can be merged. Environment configs can be created in `tests/_envs`, environment generator added. Implemented by By @sjableka. See #1747
 * **Custom Printers**: XML, JSON, TAP, Report printers can be redefined in configuration. See #1425
+* [Db] Added `reconnect` option for long running tests, which will connect to database before the test and disconnect after. By @Naktibalda
 * Module parts. Actions of modules can be loaded partially in order to disable actions which are not used in current tests. For instance, disable web actions of framework modules in unit testsing.
 * **Kohana**, **Symfony1**, **Doctrine1** modules considered deprecated and moved to standalone packages.
 * `shuffle` added to settings. Randomizes order of running tests. See #1504
