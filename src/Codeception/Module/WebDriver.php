@@ -51,6 +51,8 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
  * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * wait - Implicit wait (default 0 seconds).
  * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
+ * * request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -109,11 +111,15 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'wait' => 0,
         'clear_cookies' => true,
         'window_size' => false,
-        'capabilities' => array()
+        'capabilities' => array(),
+        'connection_timeout' => null,
+        'request_timeout' => null
     );
 
     protected $wd_host;
     protected $capabilities;
+    protected $connection_timeout_in_ms;
+    protected $request_timeout_in_ms;
     protected $test;
 
     /**
@@ -126,8 +132,10 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->connection_timeout_in_ms = $this->config['connection_timeout'] * 1000;
+        $this->request_timeout_in_ms = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
-        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+        $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms);
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $this->initialWindowSize();
     }
