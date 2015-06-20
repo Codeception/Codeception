@@ -107,6 +107,11 @@ class JsonArray
     private function sequentialArrayIntersect($arr1, $arr2)
     {
         $ret = array();
+        
+        /**
+         * Do not match the same item of $arr2 against multiple items of $arr1
+         */
+        $matchedKeys = [];
         foreach ($arr1 as $key1 => $value1) {
             foreach ($arr2 as $key2 => $value2) {
                 $_return = $this->arrayIntersectRecursive($value1, $value2);
@@ -114,8 +119,9 @@ class JsonArray
                     $ret[$key1] = $_return;
                     continue;
                 }
-                if ($value1 === $value2) {
+                if ($value1 === $value2 && !isset($matchedKeys[$key2])) {
                     $ret[$key1] = $value1;
+                    $matchedKeys[$key2] = true;
                 }
             }
         }
