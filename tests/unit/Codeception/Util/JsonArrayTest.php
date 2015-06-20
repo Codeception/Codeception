@@ -57,7 +57,7 @@ class JsonArrayTest extends \Codeception\TestCase\Test
     /**
      * @Issue https://github.com/Codeception/Codeception/issues/2070
      */
-    public function testContainsArrayMatchesArrayWithMultipleZeroesCorrectly()
+    public function testContainsArrayComparesArrayWithMultipleZeroesCorrectly()
     {
         $jsonArray = new JsonArray(json_encode([
             'responseCode' => 0,
@@ -74,11 +74,10 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $this->assertFalse($jsonArray->containsArray($expectedArray));       
     }
     
-    public function testContainsArrayMatchesArrayWithValueRepeatedMultipleTimesCorrectly()
+    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectly()
     {
         $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
         $expectedArray = ['foo', 'foo', 'foo'];
         $this->assertFalse($jsonArray->containsArray($expectedArray));       
     }
-
 }
