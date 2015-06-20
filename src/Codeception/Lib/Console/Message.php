@@ -41,7 +41,7 @@ class Message
 
     public function cut($length)
     {
-        $this->message = substr($this->message, 0, $length-1);
+        $this->message = substr($this->message, 0, $length);
         return $this;
     }
 
