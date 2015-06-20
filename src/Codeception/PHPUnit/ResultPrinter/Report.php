@@ -29,8 +29,8 @@ class Report extends \Codeception\PHPUnit\ResultPrinter
 			$status = 'Ok';
         }
 
-	    if (strlen($name) > 75) $name = substr($name, 0, 70);
-	    $line = $name . str_repeat('.', 75 - strlen($name));
+	    if (mb_strwidth($name) > 75) $name = mb_strwidth($name, 0, 70);
+	    $line = $name . str_repeat('.', 75 - mb_strwidth($name));
 	    $line .= $status;
 
 	    $this->write($line."\n");

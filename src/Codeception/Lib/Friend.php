@@ -39,9 +39,9 @@ class Friend {
             $module->_loadSessionData($this->data[$name]);
         };
 
-        $this->actor->comment(strtoupper("<info>{$this->name} does</info>:"));
+        $this->actor->comment(mb_strtoupper("<info>{$this->name} does</info>:"));
         $ret = $closure($this->actor);
-        $this->actor->comment(strtoupper("<info>{$this->name} finished</info>"));
+        $this->actor->comment(mb_strtoupper("<info>{$this->name} finished</info>"));
 
         foreach ($this->multiSessionModules as $module) {
             $name = $module->_getName();

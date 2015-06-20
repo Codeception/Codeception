@@ -58,7 +58,7 @@ class Test extends TestCase implements
         $text = $this->getName();
         $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
         $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        return strtolower($text);
+        return mb_strtolower($text);
     }
 
     public function getSignature()

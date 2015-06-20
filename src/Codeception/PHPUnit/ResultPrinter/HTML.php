@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\PHPUnit\ResultPrinter;
+use Codeception\Util\Multibyte;
 
 class HTML extends \Codeception\PHPUnit\ResultPrinter
 {
@@ -125,7 +126,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
           $this->templatePath . 'suite.html'
         );
         
-        $suiteTemplate->setVar(array('suite' => ucfirst($suite->getName())));
+        $suiteTemplate->setVar(array('suite' => Multibyte::ucfirst($suite->getName())));
 
         $this->scenarios .= $suiteTemplate->render();
 
