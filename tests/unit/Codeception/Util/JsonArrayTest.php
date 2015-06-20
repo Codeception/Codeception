@@ -74,10 +74,19 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $this->assertFalse($jsonArray->containsArray($expectedArray));       
     }
     
-    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectly()
+    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectlyNegativeCase()
     {
         $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
         $expectedArray = ['foo', 'foo', 'foo'];
         $this->assertFalse($jsonArray->containsArray($expectedArray));       
+    }
+    
+    
+    
+    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectlyPositiveCase()
+    {
+        $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
+        $expectedArray = ['foo', 'bar', 'foo'];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));       
     }
 }

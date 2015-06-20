@@ -122,6 +122,7 @@ class JsonArray
                 if ($value1 === $value2 && !isset($matchedKeys[$key2])) {
                     $ret[$key1] = $value1;
                     $matchedKeys[$key2] = true;
+                    break;
                 }
             }
         }
