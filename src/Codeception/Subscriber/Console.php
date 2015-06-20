@@ -429,7 +429,7 @@ class Console implements EventSubscriberInterface
             return $this->message = $this->message('%s::%s')
                 ->with(get_class($test), $test->getName(true))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
-                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 15 : $this->columns[0]-1)
+                ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)
                 ->style('focus')
                 ->prepend($inProgress ? 'Running ' : '');
         }
@@ -439,7 +439,7 @@ class Console implements EventSubscriberInterface
         if ($feature) {
             return $this->message = $this->message($inProgress ? $feature : ucfirst($feature))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
-                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - strlen($filename): $this->columns[0]- 4 - strlen($filename))
+                ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 18 - strlen($filename) : $this->columns[0] - 5 - strlen($filename))
                 ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')
                 ->append(" ($filename)");
