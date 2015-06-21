@@ -19,13 +19,17 @@ class JsonArray
 
     public function __construct($jsonString)
     {
+        if (!is_string($jsonString)) {
+            throw new InvalidArgumentException('$jsonString param must be a string.')
+        }
+
         $this->jsonArray = json_decode($jsonString, true);
 
-        if (!is_string($jsonString) || JSON_ERROR_NONE !== json_last_error()) {
+        if (JSON_ERROR_NONE !== json_last_error()) {
             throw new InvalidArgumentException(
                 sprintf(
                     "Invalid json: %s. System message: %s.",
-                    is_string($jsonString) ? $jsonString : gettype($jsonString),
+                    $jsonString,
                     json_last_error_msg()
                 ),
                 json_last_error()
@@ -92,8 +96,8 @@ class JsonArray
      * @author tiger.seo@gmail.com
      * @link http://www.php.net/manual/en/function.array-intersect-assoc.php#39822
      *
-     * @param array $arr1
-     * @param array $arr2
+     * @param mixed $arr1
+     * @param mixed $arr2
      *
      * @return array|bool
      */
