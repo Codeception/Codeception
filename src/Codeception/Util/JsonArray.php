@@ -20,7 +20,7 @@ class JsonArray
     public function __construct($jsonString)
     {
         if (!is_string($jsonString)) {
-            throw new InvalidArgumentException('$jsonString param must be a string.')
+            throw new InvalidArgumentException('$jsonString param must be a string.');
         }
 
         $this->jsonArray = json_decode($jsonString, true);
