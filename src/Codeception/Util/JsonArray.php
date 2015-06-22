@@ -141,7 +141,7 @@ class JsonArray
             foreach ($arr2 as $key2 => $value2) {
                 $return = $this->arrayIntersectRecursive($value1, $value2);
                 if ($return) {
-                    $ret[$key1] = $_return;
+                    $ret[$key1] = $return;
                     continue;
                 }
 
