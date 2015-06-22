@@ -146,9 +146,10 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @Issue https://github.com/Codeception/Codeception/issues/1650
+     * @Issue https://github.com/Codeception/Codeception/issues/2075
+     * Client is undefined for the second test
      */
-    public function testDoubleGet() {
+    public function testTwoTests() {
         $cest1 = Stub::makeEmpty('\Codeception\TestCase\Cest');
         $cest2 = Stub::makeEmpty('\Codeception\TestCase\Cest');
 
@@ -158,10 +159,12 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson(array('name' => 'davert'));
         $this->module->seeResponseCodeIs(200);
         $this->module->dontSeeResponseCodeIs(404);
+        
         $this->phpBrowser->_after($cest1);
         $this->module->_after($cest1);
         $this->module->_before($cest2);
         $this->phpBrowser->_before($cest2);
+        
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
