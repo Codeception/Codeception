@@ -22,6 +22,8 @@ class Asserts extends Module
         assertLessThanOrEqual as public;
         assertContains as public;
         assertNotContains as public;
+        assertRegExp as public;
+        assertNotRegExp as public;
         assertEmpty as public;
         assertNotEmpty as public;
         assertNull as public;
