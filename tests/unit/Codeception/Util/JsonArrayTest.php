@@ -53,7 +53,40 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $this->assertEquals(['Davert'], $this->jsonArray->filterByJsonPath('$.ticket.user.name'));
         $this->assertEmpty($this->jsonArray->filterByJsonPath('$..invalid'));
     }
-
-
-
+    
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2070
+     */
+    public function testContainsArrayComparesArrayWithMultipleZeroesCorrectly()
+    {
+        $jsonArray = new JsonArray(json_encode([
+            'responseCode' => 0,
+            'message' => 'OK',
+            'data' => [9, 0, 0],
+        ]));
+        
+        $expectedArray = [
+            'responseCode' => 0,
+            'message' => 'OK',
+            'data' => [0, 0, 0],
+        ];
+        
+        $this->assertFalse($jsonArray->containsArray($expectedArray));       
+    }
+    
+    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectlyNegativeCase()
+    {
+        $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
+        $expectedArray = ['foo', 'foo', 'foo'];
+        $this->assertFalse($jsonArray->containsArray($expectedArray));       
+    }
+    
+    
+    
+    public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectlyPositiveCase()
+    {
+        $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
+        $expectedArray = ['foo', 'bar', 'foo'];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));       
+    }
 }
