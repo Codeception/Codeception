@@ -60,6 +60,22 @@ class Annotation
         return self::forClass($class)->method($method);
     }
 
+    /**
+     * Parses raw comment for annotations
+     *
+     * @param $comment
+     * @param $annotation
+     * @return array
+     */
+    public static function fetchAllFromComment($annotation, $comment)
+    {
+        if (preg_match_all(sprintf(self::$regex, $annotation), $comment, $matched)) {
+            return $matched[1];
+        }
+        return [];
+
+    }
+
     public function __construct(\ReflectionClass $class)
     {
         $this->currentReflectedItem = $this->reflectedClass = $class;

@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Scenario;
 use Codeception\Step;
+use Codeception\Util\Annotation;
 
 class Parser
 {
@@ -37,18 +38,35 @@ class Parser
         }
     }
 
-    public function parseScenarioOptions($code, $var = 'scenario')
+    public function parseScenarioOptions($code)
     {
-        $matches = [];
-        $code = $this->stripComments($code);
-        $res = preg_match_all("~\\\$$var->.*?;~", $code, $matches);
-        if (!$res or !$var) {
-            return;
+        $annotations = ['group', 'env', 'skip', 'incomplete', 'ignore'];
+        $comments = $this->matchComments($code);
+        foreach ($annotations as $annotation) {
+            $values = Annotation::fetchAllFromComment($annotation, $comments);
+            foreach ($values as $value) {
+                call_user_func([$this->scenario, $annotation], $value);
+            }
         }
-        $$var = $this->scenario;
-        foreach ($matches[0] as $line) {
-            eval($line);
+
+        // deprecated - parsing $scenario->xxx calls
+        $metaData = ['group', 'env'];
+        $phpCode = $this->stripComments($code);
+        $scenario = $this->scenario;
+        $feature = $scenario->getFeature();
+        foreach ($metaData as $call) {
+            $res = preg_match_all("~\\\$scenario->$call.*?;~", $phpCode, $matches);
+            if (!$res) {
+                continue;
+            }
+            foreach ($matches[0] as $line) {
+                // run $scenario->group or $scenario->env
+                \Codeception\Lib\Deprecation::add("$line -> \$scenario->$call() is deprecated in favor of annotation: // @$call");
+                eval($line);
+            }
+
         }
+
     }
 
     public function parseSteps($code)
@@ -157,6 +175,23 @@ class Parser
         $code = preg_replace('~\/\/.*?$~m', '', $code); // remove inline comments
         $code = preg_replace('~\/*\*.*?\*\/~ms', '', $code);
         return $code; // remove block comment
+    }
+
+    protected function matchComments($code)
+    {
+        $matches = [];
+        $comments = '';
+        $hasLineComment = preg_match_all('~\/\/(.*?)$~m', $code, $matches);
+        if ($hasLineComment) {
+            foreach ($matches[1] as $line) {
+                $comments .= $line."\n";
+            }
+        }
+        $hasBlockComment = preg_match('~\/*\*(.*?)\*\/~ms', $code, $matches);
+        if ($hasBlockComment) {
+            $comments .= $matches[1]."\n";
+        }
+        return $comments;
     }
 
 }

@@ -79,14 +79,30 @@ class Bootstrap extends Command
         $output->writeln(
             "<fg=white;bg=magenta> Initializing Codeception in " . $realpath . " </fg=white;bg=magenta>\n"
         );
-        
-        if ($input->getOption('compat')) {
-            $this->compatibilitySetup($output);
-        } elseif ($input->getOption('customize')) {
-            $this->customize($input, $output);
-        } else {
-            $this->setup($output);
+
+        $this->createGlobalConfig();
+        $output->writeln("File codeception.yml created       <- global configuration");
+
+        $this->createDirs();
+
+        if (!$input->getOption('empty')) {
+            $this->createUnitSuite();
+            $output->writeln("tests/unit created                 <- unit tests");
+            $output->writeln("tests/unit.suite.yml written       <- unit tests suite configuration");
+            $this->createFunctionalSuite();
+            $output->writeln("tests/functional created           <- functional tests");
+            $output->writeln("tests/functional.suite.yml written <- functional tests suite configuration");
+            $this->createAcceptanceSuite();
+            $output->writeln("tests/acceptance created           <- acceptance tests");
+            $output->writeln("tests/acceptance.suite.yml written <- acceptance tests suite configuration");
         }
+
+        if (file_exists('.gitignore')) {
+            file_put_contents('tests/_output/.gitignore', '');
+            file_put_contents('.gitignore', file_get_contents('.gitignore') . "\ntests/_output/*");
+            $output->writeln("tests/_output was added to .gitignore");
+        }
+
         $output->writeln(" --- ");
         $this->ignoreFolderContent('tests/_output');
 
@@ -214,6 +230,7 @@ EOF;
             file_put_contents("{$path}/.gitignore", "*\n!.gitignore");
         }
     }
+
 
     protected function createDirs()
     {

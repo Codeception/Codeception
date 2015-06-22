@@ -30,6 +30,7 @@ class Test extends TestCase implements
         $this->getScenario()->stopIfBlocked();
         $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
+        $this->prepareActorForTest();
     }
 
     /**

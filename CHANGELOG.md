@@ -2,8 +2,13 @@
 
 #### 2.1.0
 
-* [Doctrine2][Symfony2] `symfony_em_service` config option moved from Doctrine2 to Symfony2 module and renamed to `em_service` *2015-06-03*
-* [PhpBrowser][Frameworks] Fixed cloning form nodes Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined *2015-05-13*
+* **Updated to Guzzle 6**. Codeception can now work both with Guzzle v5 and Guzzle v6. PhpBrowser choses right connector depending on Guzzle version installed.
+* Annotations in Cept files.
+  Instead of calling `$scenario->skip()`, `$scenario->group('firefox')`, etc, it is recommended to set scenario metadata with annotations `// @skip`, `// @group firefox`.
+  Annotations can be parsed from line or block comments. `$scenario->skip()` and `$scenario->incomplete()` are still valid and can be executed inside conditional statements:
+  ```
+  if (!extension_loaded('xdebug')) $scenario->skip('Xdebug required')
+  ```
 * **PSR-4**: all support classes moved to `tests/_support` by default. Actors, Helpers, PageObjects, StepObjects, GroupObjects to follow PSR-4 naming style. Autoloader implemented by @splinter89.
 * **Dependency Injection**: support classes can be injected into tests. Support classes can be injected into each other too. This happens by implementing method `_inject` and explicitly specifying class names as parameters. Implemented by @splinter89.
 * **Actor classes can be extended**, their generated parts were moved to special traits in `_generated` namespace. Each *Tester class can be updated with custom methods.
@@ -13,10 +18,13 @@
 * **Current** modules, environment, and test name can be received in scenario. Example: `$scenario->current('env')` returns current environment name. Fixes #1251
 * **Environment Matrix**: environments can be merged. Environment configs can be created in `tests/_envs`, environment generator added. Implemented by By @sjableka. See #1747
 * **Custom Printers**: XML, JSON, TAP, Report printers can be redefined in configuration. See #1425
+* [Db] Added `reconnect` option for long running tests, which will connect to database before the test and disconnect after. By @Naktibalda
+* Module parts. Actions of modules can be loaded partially in order to disable actions which are not used in current tests. For instance, disable web actions of framework modules in unit testsing.
 * **Kohana**, **Symfony1**, **Doctrine1** modules considered deprecated and moved to standalone packages.
 * `shuffle` added to settings. Randomizes order of running tests. See #1504
 * Console output improved: scenario stack traces contain files and lines of fail.
-* Module parts. Actions of modules can be loaded partially in order to disable actions which are not used in current tests. For instance, disable web actions of framework modules in unit testsing.
+* [Doctrine2][Symfony2] `symfony_em_service` config option moved from Doctrine2 to Symfony2 module and renamed to `em_service` *2015-06-03*
+* [PhpBrowser][Frameworks] Fixed cloning form nodes `Codeception\Lib\InnerBrowser::getFormFromCrawler(): ID XXX already defined` *2015-05-13*
 * [WebDriver] session snapshot implemented, allows to store cookies and load them, i.e., to keep user session between testss.
 * [WebDriver][PhpBrowser][Frameworks] Malformed XPath locators wil throw an exception #1441
 * `MODULE_INIT` event is fired before initializing modules #1370
@@ -26,6 +34,7 @@
 
 #### 2.0.15
 
+* Fixed @before and @after hooks in Cest. _before method was executed on each call of method specified in @before annotation *2015-06-15*
 * [Laravel5] Fix for domains in `route()` helper. See #2000. *2015-06-04*
 * [REST] Fixed sending `JsonSerializable` object on POST by @Naktibalda and @andersonamuller. See #1988 #1994
 * [MongoDb] escaped filename shell argument for loading MongoDB by @christoph-hautzinger. #1998 *2015-06-03*

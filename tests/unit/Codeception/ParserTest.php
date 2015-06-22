@@ -39,45 +39,30 @@ class ParserTest extends \Codeception\TestCase\Test
 
     public function testScenarioOptions()
     {
-        $code = "<?php\n \$scenario->group('davert'); \$scenario->env('windows');";
+        $code = <<<EOF
+<?php
+// @group davert
+// @env windows
+
+\$I = new AcceptanceTeser(\$scenario);
+EOF;
+
         $this->parser->parseScenarioOptions($code);
         $this->assertContains('davert', $this->scenario->getGroups());
         $this->assertContains('windows', $this->scenario->getEnv());
 
     }
 
-    public function testCommentedScenarioOptions()
-    {
-        $code = "<?php\n// \$scenario->skip();";
-        $this->parser->parseScenarioOptions($code);
-        $this->assertFalse($this->scenario->isBlocked());
-    }
-
     public function testCommentedInBlockScenarioOptions()
     {
-        $code = "<?php\n/*
-         \$scenario->skip();
-         */";
+        $code = <<<EOF
+<?php
+/**
+ * @skip
+ */
+EOF;
         $this->parser->parseScenarioOptions($code);
-        $this->assertFalse($this->scenario->isBlocked());
-    }
-
-    public function testScenarioOptionsWithParam()
-    {
-        $code = "<?php\n
-         \$alalala->skip();
-         ";
-        $this->parser->parseScenarioOptions($code, 'alalala');
         $this->assertTrue($this->scenario->isBlocked());
-    }
-
-    public function testScenarioOptionsIgnoredWhenNull()
-    {
-        $code = "<?php\n
-         \$scenario->skip();
-         ";
-        $this->parser->parseScenarioOptions($code, null);
-        $this->assertFalse($this->scenario->isBlocked());
     }
 
     public function testFeatureCommented()
@@ -92,20 +77,26 @@ class ParserTest extends \Codeception\TestCase\Test
 
     }
 
-
     public function testScenarioSkipOptionsHandled()
     {
         $this->setExpectedException('PHPUnit_Framework_SkippedTestError', 'pass along');
-        $code = "<?php\n \$scenario->skip('pass along'); ";
+        $code = "<?php\n // @skip pass along";
         $this->parser->parseScenarioOptions($code);
         $this->assertTrue($this->scenario->isBlocked());
         $this->scenario->stopIfBlocked();
     }
 
+    public function testScenarioGroup()
+    {
+        $code = "<?php\n \$scenario->group('firefox'); ";
+        $this->parser->parseScenarioOptions($code);
+        $this->assertContains('firefox', $this->scenario->getGroups());
+    }
+
     public function testScenarioIncompleteOptionHandled()
     {
         $this->setExpectedException('PHPUnit_Framework_IncompleteTestError', 'not ready yet');
-        $code = "<?php\n \$scenario->incomplete('not ready yet'); ";
+        $code = "<?php\n // @incomplete not ready yet";
         $this->parser->parseScenarioOptions($code);
         $this->assertTrue($this->scenario->isBlocked());
         $this->scenario->stopIfBlocked();

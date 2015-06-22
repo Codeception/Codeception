@@ -127,18 +127,19 @@ EOF;
             $this->isFunctional = true;
         }
         if ($this->connectionModule instanceof PhpBrowser) {
-            $this->connectionModule->_setConfig(['url' => $this->config['url']]);
+            if (!$this->connectionModule->_getConfig('url')) {
+                $this->connectionModule->_setConfig(['url' => $this->config['url']]);
+            }
         }
 
     }
 
-    private function getClient()
+    private function getRunningClient()
     {
         if ($this->client->getHistory()->isEmpty()) {
             throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
         }
         return $this->client;
-
     }
 
     /**
@@ -167,12 +168,12 @@ EOF;
     {
         if ($value !== null) {
             $this->assertEquals(
-                $this->getClient()->getInternalResponse()->getHeader($name),
+                $this->getRunningClient()->getInternalResponse()->getHeader($name),
                 $value
             );
             return;
         }
-        $this->assertNotNull($this->getClient()->getInternalResponse()->getHeader($name));
+        $this->assertNotNull($this->getRunningClient()->getInternalResponse()->getHeader($name));
     }
 
     /**
@@ -188,12 +189,12 @@ EOF;
     {
         if ($value !== null) {
             $this->assertNotEquals(
-                $this->getClient()->getInternalResponse()->getHeader($name),
+                $this->getRunningClient()->getInternalResponse()->getHeader($name),
                 $value
             );
             return;
         }
-        $this->assertNull($this->getClient()->getInternalResponse()->getHeader($name));
+        $this->assertNull($this->getRunningClient()->getInternalResponse()->getHeader($name));
     }
 
     /**
@@ -213,7 +214,7 @@ EOF;
      */
     public function seeHttpHeaderOnce($name)
     {
-        $headers = $this->getClient()->getInternalResponse()->getHeader($name, false);
+        $headers = $this->getRunningClient()->getInternalResponse()->getHeader($name, false);
         $this->assertEquals(1, count($headers));
     }
 
@@ -229,7 +230,7 @@ EOF;
      */
     public function grabHttpHeader($name, $first = true)
     {
-        return $this->getClient()->getInternalResponse()->getHeader($name, $first);
+        return $this->getRunningClient()->getInternalResponse()->getHeader($name, $first);
     }
 
     /**
@@ -607,51 +608,6 @@ EOF;
     }
 
     /**
-     * Returns data from the current JSON response using specified path
-     * so that it can be used in next scenario steps.
-     *
-     * **this method is deprecated in favor of `grabDataFromResponseByJsonPath`**
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $user_id = $I->grabDataFromJsonResponse('user.user_id');
-     * $I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
-     * ?>
-     * ```
-     *
-     * @deprecated please use `grabDataFromResponseByJsonPath`
-     * @param string $path
-     * @return string
-     * @part json
-     */
-    public function grabDataFromJsonResponse($path = '')
-    {
-        $data = $response = json_decode($this->response, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->debugSection('Response', $this->response);
-            $this->fail('Response is not of JSON format or is malformed');
-        }
-
-        if ($path === '') {
-            return $data;
-        }
-
-        foreach (explode('.', $path) as $key) {
-            if (!is_array($data) || !array_key_exists($key, $data)) {
-                $this->fail('Response does not have required data');
-                $this->debugSection('Response', $response);
-            }
-
-            $data = $data[$key];
-        }
-
-        return $data;
-    }
-
-    /**
      * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
      * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
@@ -830,7 +786,7 @@ EOF;
      */
     public function seeResponseCodeIs($code)
     {
-        $this->assertEquals($code, $this->getClient()->getInternalResponse()->getStatus());
+        $this->assertEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
     }
 
     /**
@@ -842,7 +798,7 @@ EOF;
      */
     public function dontSeeResponseCodeIs($code)
     {
-        $this->assertNotEquals($code, $this->getClient()->getInternalResponse()->getStatus());
+        $this->assertNotEquals($code, $this->getRunningClient()->getInternalResponse()->getStatus());
     }
 
     /**

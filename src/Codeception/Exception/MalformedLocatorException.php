@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-class MalformedLocator extends TestRuntimeException
+class MalformedLocatorException extends TestRuntimeException
 {
     public function __construct($locator, $type = "CSS or XPath")
     {

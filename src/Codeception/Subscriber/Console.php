@@ -9,6 +9,7 @@ use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
+use Codeception\Lib\Deprecation;
 use Codeception\Lib\Suite;
 use Codeception\Step;
 use Codeception\Step\Comment;
@@ -37,6 +38,7 @@ class Console implements EventSubscriberInterface
         Events::TEST_INCOMPLETE => 'testIncomplete',
         Events::TEST_SKIPPED    => 'testSkipped',
         Events::TEST_FAIL_PRINT => 'printFail',
+        Events::RESULT_PRINT_AFTER => 'afterResult'
     ];
 
     /**
@@ -58,10 +60,12 @@ class Console implements EventSubscriberInterface
     protected $traceLength = 5;
     protected $columns = [40, 5];
     protected $output;
+    protected $options;
     protected $fails = [];
 
     public function __construct($options)
     {
+        $this->options = $options;
         $this->debug = $options['debug'] || $options['verbosity'] >= OutputInterface::VERBOSITY_VERY_VERBOSE;
         $this->steps = $this->debug || $options['steps'];
         $this->rawStackTrace = ($options['verbosity'] === OutputInterface::VERBOSITY_DEBUG);
@@ -139,6 +143,26 @@ class Console implements EventSubscriberInterface
     {
     }
 
+    public function afterResult()
+    {
+        if ($this->options['html']) {
+            $path = codecept_output_dir().$this->options['html'];
+            $this->output->writeln("- <bold>HTML</bold> report generated in <comment>file://$path</comment>");
+        }
+        if ($this->options['xml']) {
+            $path = codecept_output_dir().$this->options['xml'];
+            $this->output->writeln("- <bold>XML</bold> report generated in <comment>$path</comment>");
+        }
+        if ($this->options['tap']) {
+            $path = codecept_output_dir().$this->options['tap'];
+            $this->output->writeln("- <bold>TAP</bold> report generated in <comment>$path</comment>");
+        }
+        if ($this->options['json']) {
+            $path = codecept_output_dir().$this->options['json'];
+            $this->output->writeln("- <bold>JSON</bold> report generated in <comment>$path</comment>");
+        }
+    }
+
     public function testSuccess(TestEvent $e)
     {
         if ($this->isDetailed($e->getTest())) {
@@ -160,10 +184,6 @@ class Console implements EventSubscriberInterface
 
     public function testFail(FailEvent $e)
     {
-        if (!$this->steps && ($e->getFail() instanceof ConditionalAssertionFailed)) {
-//            $this->message('[F]')->style('error')->prepend(' ')->write();
-            return;
-        }
         if ($this->isDetailed($e->getTest())) {
             $this->message('FAIL')->center(' ')->style('error')->append("\n")->writeln();
             return;
@@ -231,6 +251,10 @@ class Console implements EventSubscriberInterface
     public function afterSuite(SuiteEvent $e)
     {
         $this->message()->width(array_sum($this->columns), '-')->writeln();
+        $deprecationMessages = Deprecation::all();
+        foreach ($deprecationMessages as $message) {
+            $this->output->deprecate($message);
+        }
     }
 
     public function printFail(FailEvent $e)

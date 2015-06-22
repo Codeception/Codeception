@@ -845,8 +845,6 @@ interface Web
      * @param $name
      * @param $val
      * @param array $params
-     * @internal param $cookie
-     * @internal param $value
      *
      * @return mixed
      */

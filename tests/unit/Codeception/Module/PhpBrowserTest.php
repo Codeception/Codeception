@@ -11,10 +11,7 @@ class PhpBrowserTest extends TestsForBrowsers
      */
     protected $module;
 
-    /**
-     * @var \GuzzleHttp\Subscriber\History
-     */
-    protected $history;
+    protected $history = [];
 
     protected function setUp() {
         $this->module = new \Codeception\Module\PhpBrowser(make_container());
@@ -23,8 +20,19 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->_initialize();
         $this->module->_cleanup();
         $this->module->_before($this->makeTest());
-        $this->history = new \GuzzleHttp\Subscriber\History();
-        $this->module->guzzle->getEmitter()->attach($this->history);
+        if (class_exists('GuzzleHttp\Url')) {
+            $this->history = new \GuzzleHttp\Subscriber\History();
+            $this->module->guzzle->getEmitter()->attach($this->history);
+        } else {
+            $this->module->guzzle->getConfig('handler')->push(\GuzzleHttp\Middleware::history($this->history));
+        }
+
+    }
+
+    private function getLastRequest()
+    {
+        $this->skipForOldGuzzle();
+        return end($this->history)['request'];
     }
     
     protected function tearDown() {
@@ -158,29 +166,21 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/form/example3?validate=yes');
     }
 
-    public function testChangeDomains()
-    {
-        $this->mockResponse();
-        $this->module->amOnSubdomain('user');
-        $this->module->amOnPage('/form1');
-        $this->assertEquals('http://user.localhost:8000/form1', $this->module->client->getHistory()->current()->getUri());
-    }
-
     public function testHeadersByConfig()
     {
+        $this->skipForOldGuzzle();
         $this->module->_setConfig(['headers' => ['xxx' => 'yyyy']]);
         $this->module->_initialize();
-        $this->mockResponse();
         $this->module->amOnPage('/form1');
-        $this->assertArrayHasKey('xxx', $this->module->guzzle->getDefaultOption('headers'));
-        $this->assertEquals('yyyy', $this->module->guzzle->getDefaultOption('headers/xxx'));
+        $this->assertArrayHasKey('xxx', $this->module->guzzle->getConfig('headers'));
     }
 
     public function testHeadersBySetHeader()
     {
+
         $this->module->setHeader('xxx', 'yyyy');
         $this->module->amOnPage('/');
-        $this->assertTrue($this->history->getLastRequest()->hasHeader('xxx'));
+        $this->assertTrue($this->getLastRequest()->hasHeader('xxx'));
     }
 
     public function testDeleteHeaders()
@@ -188,7 +188,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->setHeader('xxx', 'yyyy');
         $this->module->deleteHeader('xxx');
         $this->module->amOnPage('/');
-        $this->assertFalse($this->history->getLastRequest()->hasHeader('xxx'));
+        $this->assertFalse($this->getLastRequest()->hasHeader('xxx'));
     }
 
     public function testDeleteHeadersByEmptyValue()
@@ -196,14 +196,17 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->setHeader('xxx', 'yyyy');
         $this->module->setHeader('xxx', '');
         $this->module->amOnPage('/');
-        $this->assertFalse($this->history->getLastRequest()->hasHeader('xxx'));
+        $this->assertFalse($this->getLastRequest()->hasHeader('xxx'));
     }
 
     public function testCurlOptions()
     {
+        $this->skipForOldGuzzle();
         $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $this->module->_initialize();
-        $this->assertTrue($this->module->guzzle->getDefaultOption('config/curl/'.CURLOPT_NOBODY));
+        $config = $this->module->guzzle->getConfig('config');
+        $this->assertArrayHasKey('curl', $config);
+        $this->assertArrayHasKey('CURLOPT_NOBODY', $config['curl']);
     }
 
     public function testHttpAuth()
@@ -227,14 +230,6 @@ class PhpBrowserTest extends TestsForBrowsers
             return $res->getStatusCode();
         });
         $this->assertEquals(200, $code);
-    }
-
-    protected function mockResponse($body = "hello", $code = 200)
-    {
-        $mock = new \GuzzleHttp\Subscriber\Mock([
-            new \GuzzleHttp\Message\Response($code, [], \GuzzleHttp\Stream\Stream::factory($body))
-        ]);
-        $this->module->guzzle->getEmitter()->attach($mock);
     }
 
     /**
@@ -299,5 +294,12 @@ class PhpBrowserTest extends TestsForBrowsers
         $data = data::get('form');
         $this->assertEquals('booze', $data['FooBar']['bar']);
         $this->assertEquals('crunked', $data['Food']['beer']['yum']['yeah']);
+    }
+
+    private function skipForOldGuzzle()
+    {
+        if (class_exists('GuzzleHttp\Url')) {
+            $this->markTestSkipped("Not for Guzzle >6");
+        }
     }
 }

@@ -96,6 +96,7 @@ class Scenario
 
     public function runStep(Step $step)
     {
+        $this->stopIfBlocked();
         $this->steps[] = $step;
         $result = $this->test->runStep($step);
         $step->executed = true;

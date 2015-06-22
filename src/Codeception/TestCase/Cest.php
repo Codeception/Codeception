@@ -34,7 +34,6 @@ class Cest extends \Codeception\TestCase implements
         $this->scenario->setFeature($this->getSpecFromMethod());
         $code = $this->getRawBody();
         $this->parser->parseFeature($code);
-        $this->parser->parseScenarioOptions($code, 'scenario');
         $this->di->injectDependencies($this->testClassInstance);
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
@@ -58,13 +57,13 @@ class Cest extends \Codeception\TestCase implements
         $this->prepareActorForTest();
 
         try {
-            $this->executeBefore($this->testMethod, $I);
+            $this->executeBefore($I);
+            $this->executeBeforeMethods($this->testMethod, $I);
             $this->executeTestMethod($I);
-            $this->executeAfter($this->testMethod, $I);
+            $this->executeAfterMethods($this->testMethod, $I);
+            $this->executeAfter($I);
         } catch (\Exception $e) {
-            if (is_callable([$this->testClassInstance, '_failed'])) {
-                $this->testClassInstance->_failed($I);
-            }
+            $this->executeFailed($I);
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
@@ -72,12 +71,8 @@ class Cest extends \Codeception\TestCase implements
         $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
-    protected function executeBefore($testMethod, $I)
+    protected function executeBeforeMethods($testMethod, $I)
     {
-        if (is_callable([$this->testClassInstance, '_before'])) {
-            $this->testClassInstance->_before($I);
-        }
-
         $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['before'])) {
             foreach ($annotations['method']['before'] as $m) {
@@ -86,7 +81,7 @@ class Cest extends \Codeception\TestCase implements
         }
     }
 
-    protected function executeAfter($testMethod, $I)
+    protected function executeAfterMethods($testMethod, $I)
     {
         $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
         if (!empty($annotations['method']['after'])) {
@@ -94,18 +89,14 @@ class Cest extends \Codeception\TestCase implements
                 $this->executeContextMethod(trim($m), $I);
             }
         }
-
-        if (is_callable([$this->testClassInstance, '_after'])) {
-            $this->testClassInstance->_after($I);
-        }
     }
 
     protected function executeContextMethod($context, $I)
     {
         if (method_exists($this->testClassInstance, $context)) {
-            $this->executeBefore($context, $I);
+            $this->executeBeforeMethods($context, $I);
             $this->invoke($context, [$I, $this->scenario]);
-            $this->executeAfter($context, $I);
+            $this->executeAfterMethods($context, $I);
             return;
         }
 
@@ -137,7 +128,7 @@ class Cest extends \Codeception\TestCase implements
     protected function executeTestMethod($I)
     {
         $testMethodSignature = [$this->testClassInstance, $this->testMethod];
-        if (!is_callable($testMethodSignature)) {
+        if (! is_callable($testMethodSignature)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -210,6 +201,36 @@ class Cest extends \Codeception\TestCase implements
             'class'   => get_class($this->getTestClass()),
             'feature' => $this->getFeature()
         ];
+    }
+
+    /**
+     * @param $I
+     */
+    protected function executeBefore($I)
+    {
+        if (is_callable([$this->testClassInstance, '_before'])) {
+            $this->testClassInstance->_before($I);
+        }
+    }
+
+    /**
+     * @param $I
+     */
+    protected function executeAfter($I)
+    {
+        if (is_callable([$this->testClassInstance, '_after'])) {
+            $this->testClassInstance->_after($I);
+        }
+    }
+
+    /**
+     * @param $I
+     */
+    protected function executeFailed($I)
+    {
+        if (is_callable([$this->testClassInstance, '_failed'])) {
+            $this->testClassInstance->_failed($I);
+        }
     }
 
 }

@@ -23,5 +23,13 @@ class CoverGuy extends \Codeception\Actor
    /**
     * Define custom actions here
     */
-
+    public function seeCoverageStatsNotEmpty()
+    {
+        $this->seeInShellOutput(
+<<<EOF
+index
+  Methods:  50.00% ( 1/ 2)   Lines:  50.00% (  2/  4)
+EOF
+        );
+    }
 }
