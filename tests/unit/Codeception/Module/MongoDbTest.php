@@ -8,9 +8,7 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
      * @var array 
      */
     private $mongoConfig = array(
-        'dsn' => 'mongodb://localhost:27017/test',
-        'user' => '',
-        'password' => ''
+        'dsn' => 'mongodb://localhost:27017/test'
     );
     
     /**
