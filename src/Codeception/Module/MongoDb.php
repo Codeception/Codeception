@@ -58,7 +58,10 @@ class MongoDb extends \Codeception\Module
     protected $config = array(
         'populate' => true,
         'cleanup'  => true,
-        'dump'     => null);
+        'dump'     => null,
+        'user'     => null,
+        'password' => null
+    );
 
     protected $populated = false;
 
@@ -67,7 +70,7 @@ class MongoDb extends \Codeception\Module
      */
     public $driver;
 
-    protected $requiredFields = array('dsn', 'user', 'password');
+    protected $requiredFields = array('dsn');
 
     public function _initialize()
     {
