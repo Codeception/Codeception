@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
 use GuzzleHttp\Psr7\Uri;

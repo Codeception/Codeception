@@ -23,12 +23,10 @@ class GenerateEnvironment extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('env', InputArgument::REQUIRED, 'Environment name'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('env', InputArgument::REQUIRED, 'Environment name'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()
@@ -40,9 +38,10 @@ class GenerateEnvironment extends Command
     {
         $conf = $this->getGlobalConfig($input->getOption('config'));
         if (!Configuration::envsDir()) {
-            throw new ConfigurationException("Path for environments configuration is not set.\n".
-            "Please specify envs path in your `codeception.yml`\n \n".
-            "envs: tests/_envs"
+            throw new ConfigurationException(
+                "Path for environments configuration is not set.\n"
+                . "Please specify envs path in your `codeception.yml`\n \n"
+                . "envs: tests/_envs"
             );
         }
         $relativePath = $conf['paths']['envs'];

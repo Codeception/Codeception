@@ -26,13 +26,11 @@ class GenerateSuite extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
-                new InputArgument('actor', InputArgument::OPTIONAL, 'name of new actor class'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputArgument('actor', InputArgument::OPTIONAL, 'name of new actor class'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()
@@ -96,5 +94,4 @@ class GenerateSuite extends Command
     {
         return preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
     }
-
 }

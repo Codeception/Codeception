@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Step;
 
+use Codeception\Step as CodeceptionStep;
 use Codeception\Lib\ModuleContainer;
 
-class Executor extends \Codeception\Step
+class Executor extends CodeceptionStep
 {
 
     protected $callable = null;

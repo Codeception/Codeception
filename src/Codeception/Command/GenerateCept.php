@@ -23,13 +23,11 @@ class GenerateCept extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
-                new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be tested'),
+            new InputArgument('test', InputArgument::REQUIRED, 'test to be run'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()
@@ -56,5 +54,4 @@ class GenerateCept extends Command
         }
         $output->writeln("<info>Test was created in $full_path</info>");
     }
-
 }

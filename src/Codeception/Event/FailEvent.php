@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Event;
 
 class FailEvent extends TestEvent

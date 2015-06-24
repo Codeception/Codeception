@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Command;
 
-
 use Codeception\Configuration;
 use Codeception\Util\FileSystem;
 use Symfony\Component\Console\Command\Command;
@@ -27,11 +26,9 @@ class Clean extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
         parent::configure();
     }
 

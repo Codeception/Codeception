@@ -1,8 +1,5 @@
 <?php
-
-
 namespace Codeception\Lib\Interfaces;
-
 
 interface Queue
 {
@@ -52,5 +49,4 @@ interface Queue
     public function getRequiredConfig();
 
     public function getDefaultConfig();
-
 }

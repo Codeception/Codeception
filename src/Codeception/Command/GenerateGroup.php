@@ -21,12 +21,10 @@ class GenerateGroup extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('group', InputArgument::REQUIRED, 'Group class name'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()
@@ -55,5 +53,4 @@ class GenerateGroup extends Command
         $output->writeln("<info>Group extension was created in $filename</info>");
         $output->writeln('To use this group extension, include it to "extensions" option of global Codeception config.');
     }
-
 }

@@ -36,6 +36,7 @@ class {{class}} extends \Codeception\Platform\Group
     {
     }
 }
+
 EOF;
 
     protected $name;
@@ -47,7 +48,6 @@ EOF;
         $this->settings = $settings;
         $this->name = $name;
         $this->namespace = $this->getNamespaceString($this->settings['namespace'] . '\\Group\\' . $name);
-
     }
 
     public function produce()
@@ -60,5 +60,4 @@ EOF;
             ->place('groupName', strtolower($this->name))
             ->produce();
     }
-
 }
