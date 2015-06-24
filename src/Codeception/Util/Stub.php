@@ -496,6 +496,9 @@ class Stub
     protected static function bindParameters($mock, $params)
     {
         $reflectionClass = new \ReflectionClass($mock);
+        if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
+            $reflectionClass = $reflectionClass->getParentClass();
+        }
 
         foreach ($params as $param => $value) {
             // redefine method
