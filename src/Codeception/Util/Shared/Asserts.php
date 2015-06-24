@@ -280,6 +280,31 @@ trait Asserts
         \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
     }
 
+    
+    /**
+     * Checks if file exists
+     *  
+     * @param string $filename
+     * @param string $message
+     */
+    protected function assertFileExists($filename, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertFileExists($filename, $message);
+    }
+    
+        
+    /**
+     * Checks if file doesn't exists
+     *  
+     * @param string $filename
+     * @param string $message
+     */
+    protected function assertFileNotExists($filename, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertFileNotExists($filename, $message);
+    }
+    
+    
     /**
      * Fails the test with message.
      *
