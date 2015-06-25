@@ -437,9 +437,30 @@ class RoboFile extends \Robo\Tasks
                 $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-            $doc .= '<p>&nbsp;</p><div class="alert alert-warning">Docs are incomplete? Outdated? Or you just found a typo? <a href="https://github.com/Codeception/Codeception/tree/'.self::STABLE_BRANCH.'/docs">Help us to improve documentation. Edit it on GitHub</a></div>';
 
-            file_put_contents('docs/'.$filename, $doc);
+            $buttons = [
+                'source' => "https://github.com/Codeception/Codeception/blob/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
+            ];
+
+            // building version switcher
+            foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
+                $buttons[$branch] = "https://github.com/Codeception/Codeception/blob/$branch/docs/modules/$name.md";
+            }
+
+            $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
+            foreach ($buttons as $link => $url) {
+                if ($link == self::STABLE_BRANCH) {
+                    $link = "<strong>$link</strong>";
+                }
+                $buttonHtml.= '<a class="btn btn-default" href="'.$url.'">'.$link.'</a>';
+            }
+            $buttonHtml = '</div>'."\n\n";
+
+            $doc = $buttonHtml . $doc;
+
+            $this->taskWriteToFile('docs/'.$filename)
+                ->text($doc)
+                ->run();
         }
 
 
@@ -450,7 +471,21 @@ class RoboFile extends \Robo\Tasks
             $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
             $guides_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
-        file_put_contents('_includes/guides.html', $guides_list);
+
+        $this->taskWriteToFile('_includes/guides.html')
+            ->text($guides_list)
+            ->run();
+
+        $this->taskWriteToFile('docs/index.html')
+            ->line('---')
+            ->line('layout: doc')
+            ->line('title: Codeception Documentation')
+            ->line('---')
+            ->line('')
+            ->line("<h1>Codeception Documentation Guides</h1>")
+            ->line('')
+            ->text($guides_list)
+            ->run();
 
         /**
          * Align modules in two columns like this:
@@ -519,7 +554,6 @@ class RoboFile extends \Robo\Tasks
         $this->taskCleanDir([
             'tests/log',
             'tests/data/claypit/tests/_output',
-            'tests/data/claypit/tests/_log',
             'tests/data/claypit/tests/_output',
             'tests/data/included/_log',
             'tests/data/included/jazz/tests/_log',

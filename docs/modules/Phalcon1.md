@@ -32,7 +32,7 @@ return new \Phalcon\Mvc\Application($di);
 
 You can use this module by setting params in your functional.suite.yml:
 <pre>
-class_name: TestGuy
+class_name: FunctionalTester
 modules:
     enabled:
         - Phalcon1:
@@ -42,12 +42,14 @@ modules:
 </pre>
 
 
+## Parts
+
+* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+
 ## Status
 
 Maintainer: **cujo**
-Stability: **alfa**
-
-
+Stability: **beta**
 
 
 ### amHttpAuthenticated
@@ -343,11 +345,12 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Checks that record does not exist in database.
 
 ``` php
-$I->dontSeeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+<?php
+$I->dontSeeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
 ```
 
- * `param` $model
- * `param array` $attributes
+ * `param string` $model Model name
+ * `param array` $attributes Model attributes
 
 
 ### fillField
@@ -409,16 +412,22 @@ $uri = $I->grabFromCurrentUrl();
  * `internal param` $url
 
 
+### grabMultiple
+__not documented__
+
+
 ### grabRecord
  
 Retrieves record from database
 
 ``` php
-$category = $I->grabRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+<?php
+$category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
 ```
 
- * `param` $model
- * `param array` $attributes
+ * `param string` $model Model name
+ * `param array` $attributes Model attributes
+@part orm
 
 
 ### grabTextFrom
@@ -449,8 +458,8 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  
 Sets value to session. Use for authorization.
 
- * `param` $key
- * `param` $val
+ * `param string` $key
+ * `param mixed` $val
 
 
 ### haveRecord
@@ -459,13 +468,14 @@ Inserts record into the database.
 
 ``` php
 <?php
-$user_id = $I->haveRecord('Phosphorum\Models\Users', array('name' => 'Phalcon'));
-$I->haveRecord('Phosphorum\Models\Categories', array('name' => 'Testing')');
+$user_id = $I->haveRecord('Phosphorum\Models\Users', ['name' => 'Phalcon']);
+$I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
 ?>
 ```
 
- * `param` $model
- * `param array` $attributes
+ * `param string` $model Model name
+ * `param array` $attributes Model attributes
+@part orm
 
 
 ### resetCookie
@@ -594,7 +604,7 @@ $I->seeInCurrentUrl('/users/');
 
 ### seeInField
  
-Checks that the given input field or textarea contains the given value. 
+Checks that the given input field or textarea contains the given value.
 For fuzzy locators, fields are matched by label text, the "name" attribute, CSS, and XPath.
 
 ``` php
@@ -680,8 +690,8 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
 Checks that session contains value.
 If value is `null` checks that session has key.
 
- * `param` $key
- * `param null` $value
+ * `param string` $key
+ * `param mixed` $value
 
 
 ### seeInTitle
@@ -725,9 +735,9 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 ?>
 ```
  * `param` $selector
- * `param mixed` $expected:
+ * `param mixed` $expected :
 - string: strict number
-- array: range of numbers [0,10]  
+- array: range of numbers [0,10]
 
 
 ### seeOptionIsSelected
@@ -755,11 +765,12 @@ Asserts that current page has 404 response status code.
 Checks that record exists in database.
 
 ``` php
-$I->seeRecord('Phosphorum\Models\Categories', array('name' => 'Testing'));
+<?php
+$I->seeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
 ```
 
- * `param` $model
- * `param array` $attributes
+ * `param string` $model Model name
+ * `param array` $attributes Model attributes
 
 
 ### seeResponseCodeIs
@@ -861,15 +872,13 @@ $I->setCookie('PHPSESSID', 'el4ukv0kqbvoirg7nkp4dncpk3');
  * `param` $name
  * `param` $val
  * `param array` $params
- * `internal param` $cookie
- * `internal param` $value
 
 
 
 ### submitForm
  
-Submits the given form on the page, optionally with the given form values.
-Give the form fields values as an array.
+Submits the given form on the page, optionally with the given form
+values.  Give the form fields values as an array.
 
 Skipped fields will be filled by their values from the page.
 You don't need to click the 'Submit' button afterwards.
@@ -884,9 +893,15 @@ Examples:
 
 ``` php
 <?php
-$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'));
+$I->submitForm('#login', [
+    'login' => 'davert',
+    'password' => '123456'
+]);
 // or
-$I->submitForm('#login', array('login' => 'davert', 'password' => '123456'), 'submitButtonName');
+$I->submitForm('#login', [
+    'login' => 'davert',
+    'password' => '123456'
+], 'submitButtonName');
 
 ```
 
@@ -894,10 +909,17 @@ For example, given this sample "Sign Up" form:
 
 ``` html
 <form action="/sign_up">
-    Login: <input type="text" name="user[login]" /><br/>
-    Password: <input type="password" name="user[password]" /><br/>
-    Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
-    Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
+    Login:
+    <input type="text" name="user[login]" /><br/>
+    Password:
+    <input type="password" name="user[password]" /><br/>
+    Do you agree to out terms?
+    <input type="checkbox" name="user[agree]" /><br/>
+    Select pricing plan:
+    <select name="plan">
+        <option value="1">Free</option>
+        <option value="2" selected="selected">Paid</option>
+    </select>
     <input type="submit" name="submitButton" value="Submit" />
 </form>
 ```
@@ -906,17 +928,36 @@ You could write the following to submit it:
 
 ``` php
 <?php
-$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)), 'submitButton');
-
+$I->submitForm(
+    '#userForm',
+    [
+        'user' => [
+            'login' => 'Davert',
+            'password' => '123456',
+            'agree' => true
+        ]
+    ],
+    'submitButton'
+);
 ```
-Note that "2" will be the submitted value for the "plan" field, as it is the selected option.
+Note that "2" will be the submitted value for the "plan" field, as it is
+the selected option.
 
-You can also emulate a JavaScript submission by not specifying any buttons in the third parameter to submitForm.
+You can also emulate a JavaScript submission by not specifying any
+buttons in the third parameter to submitForm.
 
 ```php
 <?php
-$I->submitForm('#userForm', array('user' => array('login' => 'Davert', 'password' => '123456', 'agree' => true)));
-
+$I->submitForm(
+    '#userForm',
+    [
+        'user' => [
+            'login' => 'Davert',
+            'password' => '123456',
+            'agree' => true
+        ]
+    ]
+);
 ```
 
 Pair this with seeInFormFields for quick testing magic.
@@ -961,8 +1002,31 @@ $I->submitForm('#my-form', [
 ?>
 ```
 
-Mixing string and boolean values for a checkbox's value is not
-supported and may produce unexpected results.
+Mixing string and boolean values for a checkbox's value is not supported
+and may produce unexpected results.
+
+Field names ending in "[]" must be passed without the trailing square 
+bracket characters, and must contain an array for its value.  This allows
+submitting multiple values with the same name, consider:
+
+```php
+$I->submitForm('#my-form', [
+    'field[]' => 'value',
+    'field[]' => 'another value', // 'field[]' is already a defined key
+]);
+```
+
+The solution is to pass an array value:
+
+```php
+// this way both values are submitted
+$I->submitForm('#my-form', [
+    'field' => [
+        'value',
+        'another value',
+    ]
+]);
+```
 
  * `param` $selector
  * `param` $params

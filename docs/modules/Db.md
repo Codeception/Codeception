@@ -50,6 +50,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
 * dump - path to database dump.
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
+* reconnect: false - should the module reconnect to database before each test
 
 ### Example
 
@@ -62,6 +63,7 @@ Check out drivers if you get problems loading dumps and cleaning databases.
              dump: 'tests/_data/dump.sql'
              populate: true
              cleanup: false
+             reconnect: true
 
 ## Public Properties
 * dbh - contains PDO connection.
