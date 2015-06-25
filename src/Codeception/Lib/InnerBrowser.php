@@ -459,6 +459,7 @@ class InnerBrowser extends Module implements Web
             $requestParams,
             $form->getPhpFiles()
         );
+        $this->forms = [];
         $this->debugResponse();
     }
 
