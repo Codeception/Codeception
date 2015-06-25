@@ -164,7 +164,23 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->sendGET('/rest/ping/');
         $this->module->seeResponseContains('host: http://www.example.com');
     }
-
+    
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2070
+     */
+    public function testArrayOfZeroesInJsonResponse()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendGET('/rest/zeroes');
+        $this->module->dontSeeResponseContainsJson([
+            'responseCode' => 0,
+            'data' => [
+                0,
+                0,
+                0,
+            ]
+        ]);
+    }
 
     protected function shouldFail()
     {

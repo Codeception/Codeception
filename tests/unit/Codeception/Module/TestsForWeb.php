@@ -1217,4 +1217,41 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('input[name="FooBar[bar]"]', 'baz');
         $this->module->seeInField('input[name="Food[beer][yum][yeah]"]', 'mmhm');
     }
+    
+    public function testFillFieldSquareBracketNames()
+    {
+        $this->module->amOnPage('/form/names-sq-brackets');
+        $this->module->fillField('//input[@name="input_text"]', 'filling this input');
+        $this->module->fillField('//input[@name="input[text][]"]', 'filling this input');
+
+        $this->module->fillField('//textarea[@name="textarea_name"]', 'filling this textarea');
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'filling this textarea');
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'filling this textarea once again');
+
+        $this->module->fillField('//textarea[@name="textarea_name"]', 'filling this textarea');
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'filling this textarea more');
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'filling this textarea most');
+    }
+    
+    public function testSelectAndCheckOptionSquareBracketNames()
+    {
+        $this->module->amOnPage('/form/names-sq-brackets');
+        $this->module->selectOption('//input[@name="input_radio_name"]', '1');
+        $this->module->selectOption('//input[@name="input_radio_name"]', '2');
+
+        $this->module->checkOption('//input[@name="input_checkbox_name"]', '1');
+        $this->module->checkOption('//input[@name="input_checkbox_name"]', '2');
+
+        $this->module->checkOption('//input[@name="input[checkbox][name][]"]', '1');
+        $this->module->checkOption('//input[@name="input[checkbox][name][]"]', '2');
+        $this->module->checkOption('//input[@name="input[checkbox][name][]"]', '1');
+
+        $this->module->selectOption('//select[@name="select_name"]', '1');
+
+        $this->module->selectOption('//input[@name="input[radio][name][]"]', '1');
+        $this->module->selectOption('//input[@name="input[radio][name][]"]', '2');
+        $this->module->selectOption('//input[@name="input[radio][name][]"]', '1');
+
+        $this->module->selectOption('//select[@name="select[name][]"]', '1');
+    }
 }

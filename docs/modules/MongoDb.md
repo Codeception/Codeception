@@ -30,8 +30,8 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 ## Config
 
 * dsn *required* - MongoDb DSN with the db name specified at the end of the host after slash
-* user *required* - user to access database
-* password *required* - password
+* user - user to access database
+* password - password
 * dump - path to database dump
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test

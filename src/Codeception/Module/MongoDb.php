@@ -58,7 +58,10 @@ class MongoDb extends \Codeception\Module
     protected $config = array(
         'populate' => true,
         'cleanup'  => true,
-        'dump'     => null);
+        'dump'     => null,
+        'user'     => null,
+        'password' => null
+    );
 
     protected $populated = false;
 
@@ -67,7 +70,7 @@ class MongoDb extends \Codeception\Module
      */
     public $driver;
 
-    protected $requiredFields = array('dsn', 'user', 'password');
+    protected $requiredFields = array('dsn');
 
     public function _initialize()
     {
@@ -145,6 +148,22 @@ class MongoDb extends \Codeception\Module
      * Inserts data into collection
      *
      * ``` php
+     * <?php
+     * $I->useDatabase('db_1');
+     * ```
+     *
+     * @param $dbName
+     */
+    public function useDatabase($dbName)
+    {
+        $this->driver->setDatabase($dbName);
+    }
+
+    /**
+     * Inserts data into collection
+     *
+     * ``` php
+     * <?php
      * $I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
      * $user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
      * ```
