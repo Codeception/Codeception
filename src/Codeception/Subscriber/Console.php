@@ -62,6 +62,7 @@ class Console implements EventSubscriberInterface
     protected $output;
     protected $options;
     protected $fails = [];
+    protected $namespace = '';
 
     public function __construct($options)
     {
@@ -78,6 +79,11 @@ class Console implements EventSubscriberInterface
     // triggered for scenario based tests: cept, cest
     public function beforeSuite(SuiteEvent $e)
     {
+        $this->namespace = "";
+        $settings = $e->getSettings();
+        if (isset($settings['namespace'])) {
+            $this->namespace = $settings['namespace'];
+        }
         $this->buildResultsTable($e);
 
         $this->message("%s Tests (%d) ")
@@ -503,14 +509,14 @@ class Console implements EventSubscriberInterface
         if (!$test instanceof TestCase) {
             $this->message = $this
                 ->message('%s::%s')
-                ->with(get_class($test), $test->getName(true))
+                ->with($this->cutNamespace(get_class($test)), $test->getName(true))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
                 ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 15 : $this->columns[0]-1)
                 ->style('focus')
                 ->prepend($inProgress ? 'Running ' : '');
             return $this->message;
         }
-        $filename = $test->getSignature();
+        $filename = $this->cutNamespace($test->getSignature());
         $feature = $test->getFeature();
 
         if ($feature) {
@@ -529,6 +535,17 @@ class Console implements EventSubscriberInterface
             ->prepend($inProgress ? 'Running ' : '')
             ->with($filename);
         return $this->message;
+    }
+
+    private function cutNamespace($className)
+    {
+        if (!$this->namespace) {
+            return $className;
+        }
+        if (strpos($className, $this->namespace) === 0) {
+            return substr($className, strlen($this->namespace));
+        }
+        return $className;
     }
 
     protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)

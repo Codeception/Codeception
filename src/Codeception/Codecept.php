@@ -156,9 +156,6 @@ class Codecept
 
         // extensions
         foreach ($this->extensions as $subscriber) {
-            if (!class_exists($subscriber)) {
-                throw new ConfigurationException("Extension $subscriber can't be loaded");
-            }
             $this->dispatcher->addSubscriber($subscriber);
         }
     }
@@ -168,7 +165,7 @@ class Codecept
         ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
-        $selectedEnvironments = array_unique($this->options['env']);
+        $selectedEnvironments = $this->options['env'];
         $environments = Configuration::suiteEnvironments($suite);
 
         if (!$selectedEnvironments or empty($environments)) {
@@ -176,7 +173,7 @@ class Codecept
             return;
         }
 
-        foreach ($selectedEnvironments as $envList) {
+        foreach (array_unique($selectedEnvironments) as $envList) {
             $envArray = explode(',', $envList);
             $config = [];
             foreach ($envArray as $env) {
