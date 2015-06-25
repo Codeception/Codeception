@@ -26,8 +26,8 @@ class {{name}}Test extends \PHPUnit_Framework_TestCase
     public function testMe()
     {
     }
-
 }
+
 EOF;
 
     protected $settings;
@@ -48,5 +48,4 @@ EOF;
             ->place('name', $this->getShortClassName($this->name))
             ->produce();
     }
-
 }

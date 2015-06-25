@@ -1,15 +1,16 @@
 <?php
 namespace Codeception\PHPUnit\Constraint;
 
+use SebastianBergmann\Comparator\ComparisonFailure;
+
 class WebDriverNot extends WebDriver
 {
-
     protected function matches($nodes)
     {
         return !parent::matches($nodes);
     }
 
-    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = null)
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
     {
         if (!$this->string) {
             throw new \PHPUnit_Framework_ExpectationFailedException("Element '$selector' was found", $comparisonFailure);
@@ -24,7 +25,6 @@ class WebDriverNot extends WebDriver
             $output,
             $comparisonFailure
         );
-
     }
 
     public function toString()

@@ -1,13 +1,13 @@
 <?php 
 namespace Codeception\Step;
-use Codeception\Lib\ModuleContainer;
-use Codeception\Step;
 
-class Meta extends Step
+use Codeception\Lib\ModuleContainer;
+use Codeception\Step as CodeceptionStep;
+
+class Meta extends CodeceptionStep
 {
     protected function storeCallerInfo()
     {
-
     }
 
     public function run(ModuleContainer $container = null)
@@ -24,5 +24,4 @@ class Meta extends Step
     {
         $this->actor = $actor;
     }
-
 }

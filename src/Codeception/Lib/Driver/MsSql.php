@@ -9,12 +9,12 @@ class MsSql extends Db
         $this->dbh->exec("OPEN tables_cursor DECLARE @tablename sysname");
         $this->dbh->exec(
             "FETCH NEXT FROM tables_cursor INTO @tablename
-                                               WHILE (@@FETCH_STATUS <> -1)
-                                               BEGIN
-                                               EXEC ('DROP TABLE ' + @tablename)
-                                               FETCH NEXT FROM tables_cursor INTO @tablename
-                                               END
-                          "
+                WHILE (@@FETCH_STATUS <> -1)
+                BEGIN
+                EXEC ('DROP TABLE ' + @tablename)
+                FETCH NEXT FROM tables_cursor INTO @tablename
+                END
+           "
         );
         $this->dbh->exec('DEALLOCATE tables_cursor');
     }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Util;
 
 use Symfony\Component\CssSelector\CssSelector;

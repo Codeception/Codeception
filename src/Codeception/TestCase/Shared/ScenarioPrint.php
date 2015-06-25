@@ -15,5 +15,4 @@ trait ScenarioPrint
     }
 
     abstract function getRawBody();
-
-} 
+}

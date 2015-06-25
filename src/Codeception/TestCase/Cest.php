@@ -1,20 +1,27 @@
 <?php
-
 namespace Codeception\TestCase;
 
+use Codeception\TestCase as CodeceptionTestCase;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Util\Annotation;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\TestCase\Interfaces\Descriptive;
+use Codeception\TestCase\Interfaces\Reported;
+use Codeception\TestCase\Interfaces\Configurable;
+use Codeception\TestCase\Shared\Actor;
+use Codeception\TestCase\Shared\Dependencies;
+use Codeception\TestCase\Shared\ScenarioPrint;
 
-class Cest extends \Codeception\TestCase implements
-    Interfaces\ScenarioDriven,
-    Interfaces\Descriptive,
-    Interfaces\Reported,
-    Interfaces\Configurable
+class Cest extends CodeceptionTestCase implements
+    ScenarioDriven,
+    Descriptive,
+    Reported,
+    Configurable
 {
-    use Shared\Actor;
-    use Shared\Dependencies;
-    use Shared\ScenarioPrint;
+    use Actor;
+    use Dependencies;
+    use ScenarioPrint;
 
     protected $testClassInstance = null;
     protected $testMethod = null;
@@ -232,5 +239,4 @@ class Cest extends \Codeception\TestCase implements
             $this->testClassInstance->_failed($I);
         }
     }
-
 }

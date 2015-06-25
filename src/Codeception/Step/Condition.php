@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Step;
 
-class Condition extends \Codeception\Step
+use Codeception\Step as CodeceptionStep;
+
+class Condition extends CodeceptionStep
 {
 }

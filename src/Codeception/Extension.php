@@ -9,7 +9,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class Extension implements EventSubscriberInterface
 {
-
     protected $config = [];
     protected $options;
     protected $output;
@@ -121,5 +120,4 @@ abstract class Extension implements EventSubscriberInterface
     {
         return Config::config();
     }
-
 }

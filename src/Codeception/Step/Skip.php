@@ -1,9 +1,10 @@
 <?php
 namespace Codeception\Step;
 
+use Codeception\Step as CodeceptionStep;
 use Codeception\Lib\ModuleContainer;
 
-class Skip extends \Codeception\Step
+class Skip extends CodeceptionStep
 {
     public function run(ModuleContainer $container = null)
     {
@@ -14,5 +15,4 @@ class Skip extends \Codeception\Step
     {
         return $this->getAction();
     }
-
 }

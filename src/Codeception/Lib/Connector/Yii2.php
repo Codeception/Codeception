@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
 use Codeception\Util\Debug;
@@ -19,6 +18,7 @@ class Yii2 extends Client
      * @var string application config file
      */
     public $configFile;
+    
     /**
      * @var array
      */
@@ -34,7 +34,6 @@ class Yii2 extends Client
         /** @var \yii\web\Application $app */
         return Yii::createObject($config);
     }
-
 
     /**
      *

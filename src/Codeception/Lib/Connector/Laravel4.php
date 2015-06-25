@@ -181,5 +181,4 @@ class Laravel4 extends Client
 
         return $method->invoke($this->app);
     }
-
 }

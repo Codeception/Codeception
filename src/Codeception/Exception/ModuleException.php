@@ -3,7 +3,6 @@ namespace Codeception\Exception;
 
 class ModuleException extends \Exception
 {
-
     protected $module;
 
     public function __construct($module, $message)
@@ -16,5 +15,4 @@ class ModuleException extends \Exception
         parent::__construct($message);
         $this->message = "$module: {$this->message}";
     }
-
 }

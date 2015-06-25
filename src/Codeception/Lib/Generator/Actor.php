@@ -25,7 +25,6 @@ class {{actor}} extends \Codeception\Actor
    /**
     * Define custom actions here
     */
-
 }
 
 EOF;
@@ -119,5 +118,4 @@ EOF;
     {
         return array_keys($this->modules);
     }
-
 }

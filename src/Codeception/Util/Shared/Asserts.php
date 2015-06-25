@@ -166,6 +166,31 @@ trait Asserts
     }
 
     /**
+     * Checks that string match with pattern
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertRegExp($pattern, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertRegExp($pattern, $string, $message);
+    }  
+    
+    /**
+     * Checks that string not match with pattern
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param string $message
+     */
+    protected function assertNotRegExp($pattern, $string, $message = '')
+    {
+        \PHPUnit_Framework_Assert::assertNotRegExp($pattern, $string, $message);
+    }  
+        
+    
+    /**
      * Checks that variable is empty.
      *
      * @param        $actual
@@ -231,11 +256,24 @@ trait Asserts
         \PHPUnit_Framework_Assert::assertFalse($condition, $message);
     }
 
+    /**
+     * 
+     * @param        $haystack
+     * @param        $constraint
+     * @param string $message
+     */
     protected function assertThat($haystack, $constraint, $message)
     {
         \PHPUnit_Framework_Assert::assertThat($haystack, $constraint, $message);
     }
 
+    /**
+     * Checks that haystack doesn't attend
+     *  
+     * @param        $haystack
+     * @param        $constraint
+     * @param string $message
+     */
     protected function assertThatItsNot($haystack, $constraint, $message)
     {
         $constraint = new \PHPUnit_Framework_Constraint_Not($constraint);
@@ -251,6 +289,4 @@ trait Asserts
     {
         \PHPUnit_Framework_Assert::fail($message);
     }
-
-
 }

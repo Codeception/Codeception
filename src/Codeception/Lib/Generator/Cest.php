@@ -28,6 +28,7 @@ class {{name}}Cest
     {
     }
 }
+
 EOF;
 
     protected $settings;
@@ -52,5 +53,4 @@ EOF;
             ->place('actor', $actor)
             ->produce();
     }
-
 }

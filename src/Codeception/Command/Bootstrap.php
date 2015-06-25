@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Helper;
@@ -239,7 +238,10 @@ EOF;
         @mkdir($this->dataDir);
         @mkdir($this->supportDir);
         @mkdir($this->envsDir);
-        file_put_contents($this->dataDir . '/dump.sql', '/* Replace this file with actual dump of your database */');
+        file_put_contents(
+            $this->dataDir . '/dump.sql',
+            '/* Replace this file with actual dump of your database */'
+        );
     }
 
 }

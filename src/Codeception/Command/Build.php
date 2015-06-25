@@ -36,11 +36,9 @@ class Build extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,12 +46,61 @@ class Build extends Command
         $this->output = $output;
         $this->buildActorsForConfig($input->getOption('config'));
     }
+    
+    private function buildActor(array $settings)
+    {
+        $actorGenerator = new ActorGenerator($settings);
+        $this->output->writeln(
+            '<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName()
+            . "</info> includes modules: " . implode(', ', $actorGenerator->getModules())
+        );
+        
+        $content = $actorGenerator->produce();
 
+        $file = $this->buildPath(
+            Configuration::supportDir(),
+            $settings['class_name']) . $this->getClassName($settings['class_name']
+        );
+        $file .=  '.php';
+        return $this->save($file, $content);
+    }
+    
+    private function buildActions(array $settings)
+    {
+        $actionsGenerator = new ActionsGenerator($settings);
+        $this->output->writeln(
+            " -> {$settings['class_name']}Actions.php generated successfully. "
+            . $actionsGenerator->getNumMethods() . " methods added"
+        );
+        
+        $content = $actionsGenerator->produce();
+        
+        $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']);
+        $file .= $this->getClassName($settings['class_name']) . 'Actions.php';
+        return $this->save($file, $content, true);
+    }
+
+    private function buildSuiteActors($configFile)
+    {
+        $suites = $this->getSuites($configFile);
+        if (!empty($suites)) {
+            $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
+        }
+        foreach ($suites as $suite) {
+            $settings = $this->getSuiteConfig($suite, $configFile);
+            $this->buildActions($settings);
+            $actorBuilt = $this->buildActor($settings);
+            
+            if ($actorBuilt) {
+                $this->output->writeln("{$settings['class_name']}.php created.");
+            }
+        }
+    }
+    
     protected function buildActorsForConfig($configFile)
     {
         $config = $this->getGlobalConfig($configFile);
-        $suites = $this->getSuites($configFile);
-
+        
         $path = pathinfo($configFile);
         $dir = isset($path['dirname']) ? $path['dirname'] : getcwd();
 
@@ -61,30 +108,6 @@ class Build extends Command
             $this->output->writeln("<comment>Included Configuration: $subConfig</comment>");
             $this->buildActorsForConfig($dir . DIRECTORY_SEPARATOR . $subConfig);
         }
-
-        if (!empty($suites)) {
-            $this->output->writeln("<info>Building Actor classes for suites: " . implode(', ', $suites) . '</info>');
-        }
-        foreach ($suites as $suite) {
-            $settings = $this->getSuiteConfig($suite, $configFile);
-            $actionsGenerator = new ActionsGenerator($settings);
-            $contents = $actionsGenerator->produce();
-
-            $actorGenerator = new ActorGenerator($settings);
-            $file = $this->buildPath(Configuration::supportDir() . '_generated', $settings['class_name']) . $this->getClassName($settings['class_name']) . 'Actions.php';
-            $this->save($file, $contents, true);
-
-            $this->output->writeln('<info>' . Configuration::config()['namespace'] . '\\' . $actorGenerator->getActorName() . "</info> includes modules: " . implode(', ', $actorGenerator->getModules()));
-            $this->output->writeln(" -> {$settings['class_name']}Actions.php generated successfully. " . $actionsGenerator->getNumMethods() . " methods added");
-
-            $contents = $actorGenerator->produce();
-
-            $file = $this->buildPath(Configuration::supportDir(), $settings['class_name']) . $this->getClassName($settings['class_name']) . '.php';
-            if ($this->save($file, $contents)) {
-                $this->output->writeln("{$settings['class_name']}.php created.");
-            }
-
-        }
+        $this->buildSuiteActors($configFile);
     }
-
 }

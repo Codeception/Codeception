@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Console;
 
 use Symfony\Component\Console\Output\OutputInterface;
