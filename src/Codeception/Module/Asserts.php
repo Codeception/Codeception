@@ -31,6 +31,8 @@ class Asserts extends CodeceptionModule
         assertNotNull as public;
         assertTrue as public;
         assertFalse as public;
+        assertFileExists as public;
+        assertFileNotExists as public;
         fail as public;
     }
 }
