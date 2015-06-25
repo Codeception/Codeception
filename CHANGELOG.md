@@ -31,6 +31,7 @@
 * Graceful tests termination using `pcntl_signal`. See #1286
 * Group classes renamed to GroupObjects; Base GroupObject class renamed to `Codeception\GroupObject`
 * Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
+* Duplicate environment options won't cause Codeception to run environment tests twice
 
 #### 2.0.15
 
