@@ -2,6 +2,7 @@
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Helper;
+use Codeception\Util\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -78,14 +79,18 @@ class GenerateSuite extends Command
             $gen->produce()
         );
 
-        $conf = [
-            'class_name' => $actorName . $config['actor'],
-            'modules'    => [
-                'enabled' => [$gen->getHelperName()]
-            ],
-        ];
+        $conf = <<<EOF
+class_name: {{actor}}
+modules:
+    enabled:
+        - {{helper}}
+EOF;
 
-        $this->save($dir . $suite . '.suite.yml', Yaml::dump($conf, 2));
+        $this->save($dir . $suite . '.suite.yml', (new Template($conf))
+            ->place('actor', $actorName . $config['actor'])
+            ->place('helper', $gen->getHelperName())
+            ->produce()
+        );
 
         $output->writeln("<info>Suite $suite generated</info>");
     }
