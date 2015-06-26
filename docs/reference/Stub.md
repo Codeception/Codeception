@@ -23,7 +23,7 @@ $user->getName();
 
  * `return`  StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L657)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L660)
 
 #### *public static* consecutive() 
 
@@ -41,7 +41,7 @@ $user->getName(); //amy
 
  * `return`  ConsecutiveMap
 
-[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L720)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L723)
 
 #### *public static* construct($class, $constructorParams = null, $params = null, $testCase = null) 
 
@@ -198,7 +198,7 @@ $user->getName();
 
  * `return`  StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L687)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L690)
 
 #### *public static* factory($class, $num = null, $params = null) 
 
@@ -348,7 +348,7 @@ $user->someMethod();
 
  * `return`  StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L604)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L607)
 
 #### *public static* once($params = null) 
 
@@ -370,7 +370,7 @@ $this->assertEquals('Davert', $userName);
 
  * `return`  StubMarshaler
 
-[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L631)
+[See source](https://github.com/Codeception/Codeception/blob/2.0/src/Codeception/Util/Stub.php#L634)
 
 #### *public static* update($mock, array $params) 
 

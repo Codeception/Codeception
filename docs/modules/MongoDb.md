@@ -30,8 +30,8 @@ Check out the driver if you get problems loading dumps and cleaning databases.
 ## Config
 
 * dsn *required* - MongoDb DSN with the db name specified at the end of the host after slash
-* user - user to access database
-* password - password
+* user *required* - user to access database
+* password *required* - password
 * dump - path to database dump
 * populate: true - should the dump be loaded before test suite is started.
 * cleanup: true - should the dump be reloaded after each test
@@ -149,5 +149,17 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
  * `param` $collection
  * `param integer` $expected
  * `param array` $criteria
+
+
+### useDatabase
+ 
+Inserts data into collection
+
+``` php
+<?php
+$I->useDatabase('db_1');
+```
+
+ * `param` $dbName
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

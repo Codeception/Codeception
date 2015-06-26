@@ -1,31 +1,27 @@
-# Laravel4 Module
+# Lumen Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Laravel4.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Lumen.php)**
 
 
 
-This module allows you to run functional tests for Laravel 4.
+This module allows you to run functional tests for Lumen.
 Please try it and leave your feedback.
-The original author of this module is Davert.
 
-## Demo Project
-
-<https://github.com/Codeception/sample-l4-app>
+## Demo project
+<https://github.com/janhenkgerritsen/codeception-lumen-sample>
 
 ## Status
 
 * Maintainer: **Jan-Henk Gerritsen**
-* Stability: **stable**
+* Stability: **dev**
 * Contact: janhenkgerritsen@gmail.com
 
 ## Config
 
 * cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
-* unit: `boolean`, default `true` - Laravel will run in unit testing mode.
-* environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
-* start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
-* root: `string`, default ` ` - Root path of our application.
-* filters: `boolean`, default: `false` - enable or disable filters for testing.
+* bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
+* root: `string`, default `` - Root path of our application.
+* packages: `string`, default `workbench` - Root path of application packages (if any).
 
 ## API
 
@@ -45,25 +41,12 @@ Authenticates user for HTTP_AUTH
 ### amLoggedAs
  
 Set the currently logged in user for the application.
-Takes either `UserInterface` instance or array of credentials.
+Takes either an object that implements the User interface or
+an array of credentials.
 
- * `param`  \Illuminate\Auth\UserInterface|array $user
+ * `param`  \Illuminate\Contracts\Auth\User|array $user
  * `param`  string $driver
 @return void
-
-
-### amOnAction
- 
-Opens web page by action name
-
-``` php
-<?php
-$I->amOnAction('PostsController@index');
-?>
-```
-
- * `param` $action
- * `param array` $params
 
 
 ### amOnPage
@@ -86,13 +69,13 @@ $I->amOnPage('/register');
  
 Opens web page using route name and parameters.
 
-``` php
+```php
 <?php
-$I->amOnRoute('posts.create');
+$I->amOnRoute('homepage');
 ?>
 ```
 
- * `param` $route
+ * `param` $routeName
  * `param array` $params
 
 
@@ -111,16 +94,6 @@ $I->attachFile('input[@type="file"]', 'prices.xls');
  * `param` $filename
 
 
-### callArtisan
- 
-Calls an Artisan command and returns output as a string
-
- * `param string` $command       The name of the command as displayed in the artisan command list
- * `param array`  $parameters    An associative array of command arguments
-
-@return string
-
-
 ### checkOption
  
 Ticks a checkbox. For radio buttons, use the `selectOption` method instead.
@@ -132,13 +105,6 @@ $I->checkOption('#agree');
 ```
 
  * `param` $option
-
-
-### checkStartFileExists
- 
-Make sure the Laravel start file exists.
-
- ModuleConfig
 
 
 ### click
@@ -413,9 +379,9 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
 
 ### getApplication
  
-Provides access the Laravel application object.
+Provides access the Lumen application object.
 
-@return \Illuminate\Foundation\Application
+@return \Laravel\Lumen\Application
 
 
 ### grabAttributeFrom
@@ -479,12 +445,11 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 ### grabService
  
 Return an instance of a class from the IoC Container.
-(http://laravel.com/docs/ioc)
 
 Example
 ``` php
 <?php
-// In Laravel
+// In Lumen
 App::bind('foo', function($app)
 {
     return new FooBar;
@@ -522,16 +487,6 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
 @return array|mixed|null|string
-
-
-### haveDisabledFilters
- 
-Disable Laravel filters for next requests.
-
-
-### haveEnabledFilters
- 
-Enable Laravel filters for next requests.
 
 
 ### haveRecord
@@ -615,33 +570,6 @@ $I->seeCookie('PHPSESSID');
  * `param array` $params
 
 
-### seeCurrentActionIs
- 
-Checks that current url matches action
-
-``` php
-<?php
-$I->seeCurrentActionIs('PostsController@index');
-?>
-```
-
- * `param` $action
- * `param array` $params
-
-
-### seeCurrentRouteIs
- 
-Checks that current url matches route
-
-``` php
-<?php
-$I->seeCurrentRouteIs('posts.index');
-?>
-```
- * `param` $route
- * `param array` $params
-
-
 ### seeCurrentUrlEquals
  
 Checks that the current URL is equal to the given string.
@@ -691,56 +619,6 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param` $selector
  * `param array` $attributes
 @return
-
-
-### seeFormErrorMessage
- 
-Assert that specific form error message is set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeFormErrorMessage('username', 'Invalid Username');
-?>
-```
- * `param string` $key
- * `param string` $errorMessage
-
-
-### seeFormErrorMessages
- 
-Assert that specific form error messages are set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeFormErrorMessages(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
-
-
-### seeFormHasErrors
- 
-Assert that form errors are bound to the View.
-
-``` php
-<?php
-$I->seeFormHasErrors();
-?>
-```
-
-@return bool
 
 
 ### seeInCurrentUrl
@@ -844,14 +722,7 @@ $I->seeInFormFields('//form[@id=my-form]', $form);
 
 ### seeInSession
  
-Assert that a session variable exists.
-
-``` php
-<?php
-$I->seeInSession('key');
-$I->seeInSession('key', 'value');
-?>
-```
+Assert that the session has a given list of values.
 
  * `param`  string|array $key
  * `param`  mixed $value
@@ -929,9 +800,7 @@ Asserts that current page has 404 response status code.
 Checks that record exists in database.
 
 ``` php
-<?php
 $I->seeRecord('users', array('name' => 'davert'));
-?>
 ```
 
  * `param` $tableName
@@ -946,50 +815,9 @@ Checks that response code is equal to value provided.
 
 
 
-### seeSessionErrorMessage
- 
-Assert that Session has error messages
-The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
-@deprecated
-
-
-### seeSessionHasErrors
- 
-Assert that the session has errors bound.
-
-``` php
-<?php
-$I->seeSessionHasErrors();
-?>
-```
-
-@return bool
-@deprecated
-
-
 ### seeSessionHasValues
  
 Assert that the session has a given list of values.
-
-``` php
-<?php
-$I->seeSessionHasValues(['key1', 'key2']);
-$I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
-?>
-```
 
  * `param`  array $bindings
 @return void
@@ -1070,11 +898,6 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $method
  * `param` $uri
  * `param` $params
-
-
-### setApplication
- 
- * `param` $app
 
 
 ### setCookie
@@ -1266,4 +1089,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Laravel4.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Lumen.php">Help us to improve documentation. Edit module reference</a></div>
