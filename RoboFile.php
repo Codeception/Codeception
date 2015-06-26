@@ -214,6 +214,7 @@ class RoboFile extends \Robo\Tasks
         $this->buildDocsModules();
         $this->buildDocsUtils();
         $this->buildDocsCommands();
+        $this->buildDocsExtensions();
     }
 
     public function buildDocsModules()
@@ -492,6 +493,7 @@ class RoboFile extends \Robo\Tasks
             $guides_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
 
+        $this->say("Building Guides index");
         $this->taskWriteToFile('_includes/guides.html')
             ->text($guides_list)
             ->run();
@@ -534,6 +536,11 @@ class RoboFile extends \Robo\Tasks
             $reference_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/reference.html', $reference_list);
+
+        $this->say("Writing extensions docs");
+        $this->taskWriteToFile('_includes/extensions.md')
+            ->textFromFile('ext/README.md')
+            ->run();
 
         $this->publishSite();
         $this->taskExec('git add')->args('.')->run();

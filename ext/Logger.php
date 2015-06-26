@@ -17,7 +17,7 @@ use Monolog\Handler\RotatingFileHandler;
  * composer require monolog/monolog
  * ```
  *
- * Steps are loggad into `tests/_output/codeception.log`
+ * Steps are logged into `tests/_output/codeception.log`
  *
  * To enable this module add to your `codeception.yml`:
  *
