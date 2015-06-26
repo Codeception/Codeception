@@ -297,6 +297,26 @@ class RoboFile extends \Robo\Tasks
 
     }
 
+    public function buildDocsExtensions()
+    {
+        $this->say('Extensions');
+
+        $extensions = Finder::create()->files()->sortByName()->name('*.php')->in(__DIR__ . '/ext');
+
+        $extGenerator= $this->taskGenDoc('ext/README.md');
+        foreach ($extensions as $command) {
+            $commandName = basename(substr($command, 0, -4));
+            $className = '\Codeception\Extension\\' . $commandName;
+            $extGenerator->docClass($className);
+        }
+        $extGenerator
+            ->prepend("# Official Extensions\n")
+            ->processClassSignature(function ($r, $text) { return "## ".$r->getName();  })
+            ->filterMethods(function(ReflectionMethod $r) { return false; })
+            ->filterProperties(function($r) { return false; })
+            ->run();
+    }
+
     /**
      * @desc publishes generated phar to codeception.com
      */

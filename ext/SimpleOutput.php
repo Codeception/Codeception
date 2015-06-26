@@ -5,6 +5,10 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Extension;
 
+/**
+ * This extension demonstrates how you can implement console output of your own.
+ * Recommended to be used for development purposes only.
+ */
 class SimpleOutput extends Extension
 {
     public function _initialize()

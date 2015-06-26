@@ -4,14 +4,43 @@ namespace Codeception\Extension;
 use Codeception\Event\StepEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\ExtensionException;
+use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Module\WebDriver;
 use Codeception\TestCase;
 use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
 
 /**
- * Class Recorder
- * @package Codeception\Extension
+ * Saves screenshots of each step in acceptance tests and shows them as a slideshow.
+ * Activated only for suites with WebDriver module enabled.
+ *
+ *  * ![recorder](http://codeception.com/images/recorder.gif)
+ *
+ * Slideshows saves are saved into `tests/_output/record_*` directories.
+ * Open `index.html` to see the slideshow.
+ *
+ * #### Installation
+ *
+ * Add to list of enabled extensions
+ *
+ * ``` yaml
+ * extensions:
+ *     enabled: [Codeception\Extension\Recorder]
+ * ```
+ *
+ * #### Configuration
+ *
+ * * `delete_successful` (default: true) - delete records for successfully passed tests (log only failed and errored)
+ * * `module` (default: WebDriver) - which module for screenshots to use. Module should implement `Codeception\Lib\Interfaces\ScreenshotSaver` interaface. Currently only WebDriver or any its children can be used.
+ *
+ * ``` yaml
+ * extensions:
+ *     config:
+ *         Codeception\Extension\Recorder:
+ *             delete_successful: false
+ * ```
+ *
  */
 class Recorder extends \Codeception\Extension
 {
@@ -161,6 +190,9 @@ EOF;
         }
         $this->seed = time();
         $this->webDriverModule = $this->getModule($this->config['module']);
+        if (!$this->webDriverModule instanceof ScreenshotSaver) {
+            throw new ExtensionException($this, 'You should pass module which implements Codeception\Lib\Interfaces\ScreenshotSaver interface');
+        }
         $this->writeln(sprintf("⏺ <bold>Recording</bold> ⏺ step-by-step screenshots will be saved to <info>%s</info>", codecept_output_dir()));
         $this->writeln("Directory Format: <debug>record_{$this->seed}_{testname}</debug> ----");
     }
