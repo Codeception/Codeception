@@ -9,6 +9,10 @@ use Codeception\TestCase;
 use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
 
+/**
+ * Class Recorder
+ * @package Codeception\Extension
+ */
 class Recorder extends \Codeception\Extension
 {
     protected $config = [
@@ -38,8 +42,12 @@ class Recorder extends \Codeception\Extension
         .active {
             height: 100%;
         }
+        .navbar {
+            margin-bottom: 0px !important;
+        }
         .carousel-caption {
             background: rgba(0,0,0,0.8);
+            padding-bottom: 50px !important;
         }
         .carousel-caption.error {
             background: #c0392b !important;
@@ -64,14 +72,12 @@ class Recorder extends \Codeception\Extension
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
+    <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">{{test}}</a>
-
+            <a class="navbar-brand" href="#">{{feature}}
+                <small>{{test}}</small>
+            </a>
         </div>
-        </div>
-        <!-- /.container -->
     </nav>
     <header id="steps" class="carousel slide">
         <!-- Indicators -->
@@ -156,7 +162,7 @@ EOF;
         $this->seed = time();
         $this->webDriverModule = $this->getModule($this->config['module']);
         $this->writeln(sprintf("⏺ <bold>Recording</bold> ⏺ step-by-step screenshots will be saved to <info>%s</info>", codecept_output_dir()));
-        $this->writeln("Directory Format: <debug>record_{testname}_{$this->seed}</debug> ----");
+        $this->writeln("Directory Format: <debug>record_{$this->seed}_{testname}</debug> ----");
     }
 
     public function before(TestEvent $e)
@@ -165,7 +171,7 @@ EOF;
         $this->stepNum = 0;
         $this->slides = [];
         $testName = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($e->getTest()));
-        $this->dir = codecept_output_dir()."recorded_{$testName}_".$this->seed;
+        $this->dir = codecept_output_dir()."record_{$this->seed}_$testName";
         mkdir($this->dir);
     }
 
@@ -207,7 +213,8 @@ EOF;
         $html = (new Template($this->template))
             ->place('indicators', $indicatorHtml)
             ->place('slides', $slideHtml)
-            ->place('test', ucfirst($e->getTest()->getFeature()))
+            ->place('feature', ucfirst($e->getTest()->getFeature()))
+            ->place('test', TestCase::getTestSignature($e->getTest()))
             ->produce();
 
         file_put_contents($this->dir.DIRECTORY_SEPARATOR.'index.html', $html);
