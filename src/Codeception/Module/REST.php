@@ -67,9 +67,10 @@ class REST extends CodeceptionModule implements DependsOnModule, PartedModule
 Example configuring PhpBrowser as backend for REST module.
 --
 modules:
-    enabled: REST:
-        depends: PhpBrowser
-        url: http://localhost/api/
+    enabled:
+        - REST:
+            depends: PhpBrowser
+            url: http://localhost/api/
 --
 Framework modules can be used for testing of API as well.
 EOF;

@@ -54,9 +54,9 @@ class SOAP extends CodeceptionModule
 Example using PhpBrowser as backend for SOAP module.
 --
 modules:
-    enabled: [SOAP, ApiHelper]
-    depends:
-        SOAP: PhpBrowser
+    enabled:
+        - SOAP:
+            depends: PhpBrowser
 --
 Framework modules can be used as well for functional testing of SOAP API.
 EOF;
