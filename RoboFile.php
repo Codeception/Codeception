@@ -519,7 +519,6 @@ class RoboFile extends \Robo\Tasks
         $this->taskCleanDir([
             'tests/log',
             'tests/data/claypit/tests/_log',
-            'tests/data/claypit/tests/_output',
             'tests/data/included/_log',
             'tests/data/included/jazz/tests/_log',
             'tests/data/included/shire/tests/_log',
