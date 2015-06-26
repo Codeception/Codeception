@@ -30,7 +30,7 @@ extensions:
 Saves screenshots of each step in acceptance tests and shows them as a slideshow.
 Activated only for suites with WebDriver module enabled.
 
- * ![recorder](http://codeception.com/images/recorder.gif)
+ ![recorder](http://codeception.com/images/recorder.gif)
 
 Slideshows saves are saved into `tests/_output/record_*` directories.
 Open `index.html` to see the slideshow.
