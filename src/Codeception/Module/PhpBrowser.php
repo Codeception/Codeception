@@ -41,11 +41,11 @@ use GuzzleHttp\Client as GuzzleClient;
  *
  *     modules:
  *        enabled:
- *           - PhpBrowser:
- *              url: 'http://localhost'
- *              auth: ['admin', '123345']
- *              curl:
- *                  CURLOPT_RETURNTRANSFER: true
+ *            - PhpBrowser:
+ *                url: 'http://localhost'
+ *                auth: ['admin', '123345']
+ *                curl:
+ *                    CURLOPT_RETURNTRANSFER: true
  *
  * ## Public Properties
  *
@@ -122,7 +122,10 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function _before(TestCase $test)
     {
-        $this->_initialize();
+        if (!$this->client) {
+            $this->client = $this->guessGuzzleConnector();
+        }
+        $this->_initializeSession();
     }
 
     public function _getUrl()
