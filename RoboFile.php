@@ -492,6 +492,7 @@ class RoboFile extends \Robo\Tasks
             $name = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $name);
             $guides_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
+        file_put_contents('_includes/guides.html', $guides_list);
 
         $this->say("Building Guides index");
         $this->taskWriteToFile('_includes/guides.html')
@@ -580,7 +581,6 @@ class RoboFile extends \Robo\Tasks
     {
         $this->taskCleanDir([
             'tests/log',
-            'tests/data/claypit/tests/_output',
             'tests/data/claypit/tests/_output',
             'tests/data/included/_log',
             'tests/data/included/jazz/tests/_log',

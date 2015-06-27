@@ -60,6 +60,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * wait - Implicit wait (default 0 seconds).
  * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
+ * * request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -122,11 +124,15 @@ class WebDriver extends CodeceptionModule implements
         'wait'          => 0,
         'clear_cookies' => true,
         'window_size'   => false,
-        'capabilities'  => []
+        'capabilities'  => [],
+        'connection_timeout' => null,
+        'request_timeout' => null        
     ];
 
     protected $wd_host;
     protected $capabilities;
+    protected $connection_timeout_in_ms;
+    protected $request_timeout_in_ms;
     protected $test;
     protected $sessionSnapshots = [];
 
@@ -140,9 +146,11 @@ class WebDriver extends CodeceptionModule implements
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->connection_timeout_in_ms = $this->config['connection_timeout'] * 1000;
+        $this->request_timeout_in_ms = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
         try {
-            $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+            $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms);
         } catch (\WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
@@ -249,7 +257,12 @@ class WebDriver extends CodeceptionModule implements
 
     public function _saveScreenshot($filename)
     {
-        $this->webDriver->takeScreenshot($filename);
+        if ($this->webDriver !== null) {
+            $this->webDriver->takeScreenshot($filename);
+        } else {
+            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
+            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        }
     }
 
     public function _savePageSource($filename)

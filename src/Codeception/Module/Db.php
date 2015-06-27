@@ -159,7 +159,7 @@ class Db extends CodeceptionModule implements DbInterface
                 list ($missingDriver,) = explode(':', $this->config['dsn'],2);
                 $message = "could not find $missingDriver driver";
             }
-            
+
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
 
@@ -200,7 +200,7 @@ class Db extends CodeceptionModule implements DbInterface
             try {
                 $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
             }
         }
         $this->insertedIds = [];
@@ -294,13 +294,13 @@ class Db extends CodeceptionModule implements DbInterface
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, (int) $res, 'No matching records found');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertLessThan(1, $res);
+        $this->assertLessThan(1, (int) $res);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)

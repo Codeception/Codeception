@@ -441,34 +441,32 @@ EOF;
     {
         $this->debugSection("Request headers", $this->headers);
 
-        if ($parameters instanceof \JsonSerializable) {
-            $parameters = $parameters->jsonSerialize();
-        }
-
         foreach ($this->headers as $header => $val) {
             $header = str_replace('-', '_', strtoupper($header));
             $this->client->setServerParameter("HTTP_$header", $val);
 
             // Issue #1650 - Symfony BrowserKit changes HOST header to request URL
-            if (strtolower($header) == 'host') {
+            if ($header === 'HOST') {
                 $this->client->setServerParameter("HTTP_ HOST", $val);
             }
 
             // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->isFunctional and $header == 'CONTENT_TYPE') {
+            if ($this->isFunctional && $header === 'CONTENT_TYPE') {
                 $this->client->setServerParameter($header, $val);
             }
         }
 
         // allow full url to be requested
-        $url = (strpos($url, '://') === false ? $this->config['url'] : '') . $url;
+        if (strpos($url, '://') === false) {
+            $url = $this->config['url'] . $url;
+        }
 
         $this->params = $parameters;
 
         $parameters = $this->encodeApplicationJson($method, $parameters);
 
-        if (is_array($parameters) || $method == 'GET') {
-            if (!empty($parameters) && $method == 'GET') {
+        if (is_array($parameters) || $method === 'GET') {
+            if (!empty($parameters) && $method === 'GET') {
                 $url .= '?' . http_build_query($parameters);
             }
             if ($method == 'GET') {
@@ -494,7 +492,7 @@ EOF;
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if ($method != 'GET' && array_key_exists('Content-Type', $this->headers)
+        if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
             && ($this->headers['Content-Type'] === 'application/json' 
                 || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
             )
@@ -519,10 +517,11 @@ EOF;
     public function seeResponseIsJson()
     {
         json_decode($this->response);
+        $errorCode = json_last_error();
         \PHPUnit_Framework_Assert::assertEquals(
-            0,
-            $num = json_last_error(),
-            "json decoding error #$num, see http://php.net/manual/en/function.json-last-error.php"
+            JSON_ERROR_NONE,
+            $errorCode,
+            "json decoding error #$errorCode, see http://php.net/manual/en/function.json-last-error.php"
         );
     }
 

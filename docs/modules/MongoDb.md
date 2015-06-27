@@ -149,4 +149,16 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
  * `param integer` $expected
  * `param array` $criteria
 
+
+### useDatabase
+ 
+Inserts data into collection
+
+``` php
+<?php
+$I->useDatabase('db_1');
+```
+
+ * `param` $dbName
+
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

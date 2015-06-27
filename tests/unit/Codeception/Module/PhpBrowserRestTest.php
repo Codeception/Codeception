@@ -173,7 +173,23 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseCodeIs(404);
         
     }
-
+    
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2070
+     */
+    public function testArrayOfZeroesInJsonResponse()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendGET('/rest/zeroes');
+        $this->module->dontSeeResponseContainsJson([
+            'responseCode' => 0,
+            'data' => [
+                0,
+                0,
+                0,
+            ]
+        ]);
+    }
 
     protected function shouldFail()
     {
