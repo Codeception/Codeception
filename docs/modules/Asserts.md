@@ -42,6 +42,22 @@ Checks that condition is negative.
  * `param string` $message
 
 
+### assertFileExists
+ 
+Checks if file exists
+ 
+ * `param string` $filename
+ * `param string` $message
+
+
+### assertFileNotExists
+ 
+Checks if file doesn't exists
+ 
+ * `param string` $filename
+ * `param string` $message
+
+
 ### assertGreaterThan
  
 Checks that actual is greater than expected

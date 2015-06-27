@@ -34,11 +34,11 @@ If test fails stores last shown page in 'output' dir.
 
     modules:
        enabled:
-          - PhpBrowser:
-             url: 'http://localhost'
-             auth: ['admin', '123345']
-             curl:
-                 CURLOPT_RETURNTRANSFER: true
+           - PhpBrowser:
+               url: 'http://localhost'
+               auth: ['admin', '123345']
+               curl:
+                   CURLOPT_RETURNTRANSFER: true
 
 ## Public Properties
 

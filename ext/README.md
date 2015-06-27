@@ -9,7 +9,7 @@ Monolog should be installed additionally by Composer.
 composer require monolog/monolog
 ```
 
-Steps are loggad into `tests/_output/codeception.log`
+Steps are logged into `tests/_output/codeception.log`
 
 To enable this module add to your `codeception.yml`:
 

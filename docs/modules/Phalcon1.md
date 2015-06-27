@@ -3,7 +3,7 @@
 **For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Phalcon1.php)**
 
 
-This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x/2.x).
 
 ## Demo Project
 
@@ -48,7 +48,7 @@ modules:
 
 ## Status
 
-Maintainer: **cujo**
+Maintainer: **sergeyklay**
 Stability: **beta**
 
 
@@ -347,6 +347,7 @@ Checks that record does not exist in database.
 ``` php
 <?php
 $I->dontSeeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+?>
 ```
 
  * `param string` $model Model name
@@ -423,11 +424,22 @@ Retrieves record from database
 ``` php
 <?php
 $category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+?>
 ```
 
  * `param string` $model Model name
  * `param array` $attributes Model attributes
 @part orm
+
+
+### grabServiceFromDi
+ 
+Resolves the service based on its configuration from Phalcon's DI container
+Recommended to use for unit testing.
+
+ * `param string` $service    Service name
+ * `param array`  $parameters Parameters [Optional]
+
 
 
 ### grabTextFrom
@@ -767,6 +779,7 @@ Checks that record exists in database.
 ``` php
 <?php
 $I->seeRecord('Phosphorum\Models\Categories', ['name' => 'Testing']);
+?>
 ```
 
  * `param string` $model Model name
