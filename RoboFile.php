@@ -629,4 +629,52 @@ class RoboFile extends \Robo\Tasks
         $this->say("Site build succesfully");
     }
 
+    public function publishBase($branch = null, $tag = null)
+    {
+        if (!$branch) $branch = self::STABLE_BRANCH;
+        $this->say("Updating Codeception Base distribution");
+
+        $tempBranch = "tmp".uniqid();
+
+        $this->taskGitStack()
+            ->checkout("-b $tempBranch")
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->from('"codeception/codeception"')
+            ->to('"codeception/base"')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"facebook\/webdriver".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"guzzlehttp\/guzzle".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskComposerUpdate()->run();
+        $this->taskGitStack()
+            ->add('composer*')
+            ->commit('auto-update')
+            ->exec("push -f base $tempBranch:$branch")
+            ->run();
+
+        if ($tag) {
+            $this->taskGitStack()
+                ->exec("tag -d $tag")
+                ->exec("push base :refs/tags/$tag")
+                ->exec("tag $tag")
+                ->push('base', $tag)
+                ->run();
+        }
+
+        $this->taskGitStack()
+            ->checkout($branch)
+            ->exec("branch -D $tempBranch")
+            ->run();
+    }
+
 } 
