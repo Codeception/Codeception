@@ -17,7 +17,7 @@ class GenerateCeptTest extends BaseCommandRunner {
         $this->execute(array('suite' => 'shire', 'test' => 'HomeCanInclude12Dwarfs'));
         $this->assertEquals($this->filename, 'tests/shire/HomeCanInclude12DwarfsCept.php');
         $this->assertContains('$I = new HobbitGuy($scenario);', $this->content);
-        $this->assertContains('Test was created in HomeCanInclude12DwarfsCept.php', $this->output);
+        $this->assertContains('Test was created in tests/shire/HomeCanInclude12DwarfsCept.php', $this->output);
         $this->assertIsValidPhp($this->content);
     }
 
