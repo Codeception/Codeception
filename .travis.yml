@@ -28,7 +28,7 @@ install:
   - composer global require "fxp/composer-asset-plugin:1.0.0"
   - composer self-update
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0; fi' # install old guzzle
-  - composer install --prefer-dist
+  - composer install --prefer-source
   - ulimit -c unlimited || true
   # Queue (Beanstalkd)
   - sudo apt-get update -qq
@@ -41,19 +41,19 @@ install:
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
   # Laravel 4
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
-  - composer install -d frameworks-laravel --no-dev  --prefer-dist
+  - composer install -d frameworks-laravel --no-dev  --prefer-source
   # Laravel 5
   - git clone -q https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5
-  - composer install -d frameworks-l5 --no-dev  --prefer-dist
+  - composer install -d frameworks-l5 --no-dev  --prefer-source
   # Symfony
   - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
-  - composer install -d frameworks-symfony --no-dev --prefer-dist
+  - composer install -d frameworks-symfony --no-dev --prefer-source
   # ZF1
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
-  - composer install -d frameworks-zf1 --no-dev  --prefer-dist
+  - composer install -d frameworks-zf1 --no-dev  --prefer-source
   # ZF2
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
-  - composer install -d frameworks-zf2 --no-dev  --prefer-dist
+  - composer install -d frameworks-zf2 --no-dev  --prefer-source
 
 before_script:
   - beanstalkd -d -l 127.0.0.1 -p 11300
