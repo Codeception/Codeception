@@ -60,7 +60,9 @@ class Parser
             }
             foreach ($matches[0] as $line) {
                 // run $scenario->group or $scenario->env
-                \Codeception\Lib\Deprecation::add("$line -> \$scenario->$call() is deprecated in favor of annotation: // @$call");
+                \Codeception\Lib\Deprecation::add("\$scenario->$call() is deprecated in favor of annotation: // @$call",
+                    $this->scenario->getFeature()
+                );
                 eval($line);
             }
 
@@ -157,7 +159,7 @@ class Parser
 
         return $classes;
     }
-    
+
     /*
      * Include in different scope to prevent included file from affecting $file variable
      */ 

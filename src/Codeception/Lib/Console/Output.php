@@ -87,6 +87,6 @@ class Output extends ConsoleOutput
 
     public function deprecate($message)
     {
-        $this->write("<comment>DEPRECATION WARNING: $message</comment>");
+        $this->writeln("<comment>DEPRECATION: $message</comment>");
     }
 }

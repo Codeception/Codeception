@@ -951,4 +951,14 @@ EOF;
     {
         $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
     }
+
+    /**
+     * @param $path
+     * @throws ModuleException
+     * @deprecated
+     */
+    public function grabDataFromJsonResponse($path)
+    {
+        throw new ModuleException($this, "This action was deprecated in Codeception 2.0.9 and removed in 2.1. Please use `grabDataFromResponseByJsonPath` instead");
+    }
 }
