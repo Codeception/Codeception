@@ -1,7 +1,7 @@
 <?php 
 namespace Codeception\Platform;
 
-use Codeception\Extension;
+use Codeception\Extension as BaseExtension;
 
 /**
  * BC Compatibility
@@ -9,7 +9,7 @@ use Codeception\Extension;
  * Class Extension
  * @package Codeception\Platform
  */
-abstract class Extension extends Extension
+abstract class Extension extends BaseExtension
 {
 
 }
