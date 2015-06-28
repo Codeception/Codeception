@@ -351,6 +351,34 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Registers a service in the services container and resolve it. This record will be erased after the test.
+     * Recommended to use for unit testing.
+     *
+     * ``` php
+     * <?php
+     * $filter = $I->haveServiceInDi('filter', ['className' => '\Phalcon\Filter']);
+     * ?>
+     * ```
+     *
+     * @param string $name
+     * @param mixed $definition
+     * @param boolean $shared
+     *
+     * @return mixed|null
+     */
+    public function haveServiceInDi($name, $definition, $shared = false)
+    {
+        try {
+            $service = $this->di->set($name, $definition, $shared);
+            return $service->resolve();
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage());
+
+            return null;
+        }
+    }
+
+    /**
      * Allows to query the first record that match the specified conditions
      *
      * @param string $model Model name
