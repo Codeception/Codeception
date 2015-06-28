@@ -132,7 +132,6 @@ EOF;
                 $this->connectionModule->_setConfig(['url' => $this->config['url']]);
             }
         }
-
     }
 
     private function getRunningClient()

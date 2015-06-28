@@ -105,8 +105,7 @@ class Symfony2 extends Framework implements DoctrineProvider
 
     public function _before(\Codeception\TestCase $test) 
     {
-        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
-        $this->kernel->boot();
+        $this->bootKernel();
         $this->container = $this->kernel->getContainer();
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
@@ -114,13 +113,19 @@ class Symfony2 extends Framework implements DoctrineProvider
 
     public function _getEntityManager()
     {
-        $this->kernel->boot();
+        $this->bootKernel();
         if (!$this->kernel->getContainer()->has($this->config['em_service'])) {
             return null;
         }
         $this->client->persistentServices[] = $this->config['em_service'];
         $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
         return $this->kernel->getContainer()->get($this->config['em_service']);
+    }
+
+    protected function bootKernel()
+    {
+        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
+        $this->kernel->boot();
     }
 
     /**
