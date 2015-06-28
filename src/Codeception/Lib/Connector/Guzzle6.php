@@ -126,7 +126,7 @@ class Guzzle6 extends Client
         }
 
         if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
-            $uri = $this->getAbsoluteUri($matches[2]);
+            $uri = new Psr7Uri($this->getAbsoluteUri($matches[2]));
             $currentUri = new Psr7Uri($this->getHistory()->current()->getUri());
 
             if ($uri->withFragment('') != $currentUri->withFragment('')) {
@@ -148,12 +148,17 @@ class Guzzle6 extends Client
 
     public function getAbsoluteUri($uri)
     {
-        /** @var $baseUri Psr7Uri  **/
         $baseUri = $this->client->getConfig('base_uri');
         if (strpos($uri, '://') === false) {
-            return new Psr7Uri(Uri::appendPath((string)$baseUri, $uri));
+            if (strpos($uri, '/') === 0) {
+                return Uri::appendPath((string)$baseUri, $uri);
+            }
+            // relative url
+            if (!$this->getHistory()->isEmpty()) {
+                return Uri::mergeUrls((string)$this->getHistory()->current()->getUri(), $uri);
+            }
         }
-        return Psr7Uri::resolve($baseUri, $uri);
+        return Uri::mergeUrls($baseUri, $uri);
     }
 
     protected function doRequest($request)

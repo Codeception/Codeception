@@ -1,7 +1,8 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\TestRuntimeException;
+use GuzzleHttp\Psr7\Uri as Psr7Uri;
+use Codeception\Util\Uri;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostFile;
@@ -143,34 +144,17 @@ class Guzzle extends Client
 
     public function getAbsoluteUri($uri)
     {
-        if ($uri && 0 !== strpos($uri, 'http') && $uri[0] !== '/' && $this->redirect) {
-            $currentUri = $this->history->current()->getUri();
-            $path = parse_url($currentUri, PHP_URL_PATH);
-
-            if ('/' !== substr($path, -1)) {
-                $path = substr($path, 0, strrpos($path, '/') + 1);
+        $baseUri = $this->baseUri;
+        if (strpos($uri, '://') === false) {
+            if (strpos($uri, '/') === 0) {
+                return Uri::appendPath((string)$baseUri, $uri);
             }
-
-            $uri = $path.$uri;
-        }
-
-        $build = parse_url($this->baseUri);
-        $uriParts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
-        
-        if ($build === false) {
-            throw new TestRuntimeException("URL '{$this->baseUri}' is malformed");
-        } elseif ($uriParts === false) {
-            throw new TestRuntimeException("URI '{$uri}' is malformed");
-        }
-        
-        foreach ($uriParts as $part => $value) {
-            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
-                $build[$part] = rtrim($build[$part], '/') . '/' . $value;
-            } else {
-                $build[$part] = $value;
+            // relative url
+            if (!$this->getHistory()->isEmpty()) {
+                return Uri::mergeUrls((string)$this->getHistory()->current()->getUri(), $uri);
             }
         }
-        return Url::buildUrl($build);
+        return Uri::mergeUrls($baseUri, $uri);
     }
 
     protected function doRequest($request)
