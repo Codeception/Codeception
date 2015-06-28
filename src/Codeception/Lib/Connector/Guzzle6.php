@@ -172,7 +172,7 @@ class Guzzle6 extends Client
         );
 
         $options = $this->requestOptions;
-        $options['cookies'] = $this->extractCookies();
+        $options['cookies'] = $this->extractCookies($guzzleRequest->getUri()->getHost());
         $multipartData = $this->extractMultipartFormData($request);
         if (!empty($multipartData)) {
             $options['multipart'] = $multipartData;
@@ -304,7 +304,7 @@ class Guzzle6 extends Client
         return $files;
     }
     
-    protected function extractCookies()
+    protected function extractCookies($host)
     {
         $jar = [];
         $cookies = $this->getCookieJar()->all();
@@ -312,7 +312,7 @@ class Guzzle6 extends Client
             /** @var $cookie Cookie  **/
             $setCookie = SetCookie::fromString((string)$cookie);
             if (!$setCookie->getDomain()) {
-                $setCookie->setDomain('localhost');
+                $setCookie->setDomain($host);
             }
             $jar[] = $setCookie;
         }
