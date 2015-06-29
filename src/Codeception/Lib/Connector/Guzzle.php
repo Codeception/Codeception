@@ -96,7 +96,11 @@ class Guzzle extends Client
     {
         $contentType = $response->getHeader('Content-Type');
 
-        if (!$contentType || strpos($contentType, 'charset=') === false) {
+        if (!$contentType) {
+            $contentType = 'text/html';
+        }
+
+        if (strpos($contentType, 'charset=') === false) {
             $body = $response->getBody(true);
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
                 $contentType .= ';charset=' . $matches[1];

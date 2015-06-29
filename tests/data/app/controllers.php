@@ -105,7 +105,7 @@ class cookiesHeader {
     public function GET()
     {
         header("Set-Cookie: a=b;Path=/;");
-        header("Set-Cookie: c=d;Path=/;");
+        header("Set-Cookie: c=d;Path=/;", false);
         include __DIR__.'/view/index.php';
     }
 }

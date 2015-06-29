@@ -97,15 +97,19 @@ class Guzzle6 extends Client
         $headers = $response->getHeaders();
 
         $contentType = null;
-        if (isset($headers['Content-Type']) && count($headers['Content-Type']) === 1) {
+
+        if (isset($headers['Content-Type'])) {
             $contentType = reset($headers['Content-Type']);
-            if (strpos($contentType, 'charset=') === false) {
-                if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
-                    $contentType .= ';charset=' . $matches[1];
-                }
-                $headers['Content-Type'] = $contentType;
+        }
+        if (!$contentType) {
+            $contentType = 'text/html';
+        }
+
+        if (strpos($contentType, 'charset=') === false) {
+            if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
+                $contentType .= ';charset=' . $matches[1];
             }
-            $headers['Content-Type'] = $contentType;
+            $headers['Content-Type'] = [$contentType];
         }
 
         $status = $response->getStatusCode();
@@ -121,7 +125,7 @@ class Guzzle6 extends Client
             // match by header
             preg_match(
                 '~(\d*);?url=(.*)~',
-                (string) $headers['Refresh'],
+                (string) reset($headers['Refresh']),
                 $matches
             );
         }
