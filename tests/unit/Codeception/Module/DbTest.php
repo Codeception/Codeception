@@ -35,9 +35,9 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testCountInDatabase()
     {
-        self::$module->seeNumRecord(1, 'users', ['name' => 'davert']);
-        self::$module->seeNumRecord(0, 'users', ['name' => 'davert', 'email' => 'xxx@yyy.zz']);
-        self::$module->seeNumRecord(0, 'users', ['name' => 'user1']);
+        self::$module->seeNumRecords(1, 'users', ['name' => 'davert']);
+        self::$module->seeNumRecords(0, 'users', ['name' => 'davert', 'email' => 'xxx@yyy.zz']);
+        self::$module->seeNumRecords(0, 'users', ['name' => 'user1']);
     }
 
     public function testDontSeeInDatabase()

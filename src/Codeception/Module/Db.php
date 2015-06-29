@@ -302,7 +302,7 @@ class Db extends CodeceptionModule implements DbInterface
      *
      * ``` php
      * <?php
-     * $I->seeNumRecord(1, 'users', ['name' => 'davert'])
+     * $I->seeNumRecords(1, 'users', ['name' => 'davert'])
      * ?>
      * ```
      *
@@ -310,7 +310,7 @@ class Db extends CodeceptionModule implements DbInterface
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
      */
-    public function seeNumRecord($num, $table, array $criteria = [])
+    public function seeNumRecords($num, $table, array $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
         $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');

@@ -34,6 +34,7 @@
 * Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
 * Duplicate environment options won't cause Codeception to run environment tests twice
 * [Phalcon1] `haveServiceInDi` method implemented by @sergeyklay
+* [Db] `seeNumRecords` method added by @sergeyklay
 
 #### 2.0.15
 
