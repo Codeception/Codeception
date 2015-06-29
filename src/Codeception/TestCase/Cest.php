@@ -216,7 +216,7 @@ class Cest extends CodeceptionTestCase implements
     protected function executeBefore($I)
     {
         if (is_callable([$this->testClassInstance, '_before'])) {
-            $this->testClassInstance->_before($I);
+            $this->invoke('_before', [$I, $this->scenario]);
         }
     }
 
@@ -226,7 +226,7 @@ class Cest extends CodeceptionTestCase implements
     protected function executeAfter($I)
     {
         if (is_callable([$this->testClassInstance, '_after'])) {
-            $this->testClassInstance->_after($I);
+            $this->invoke('_after', [$I, $this->scenario]);
         }
     }
 
@@ -236,7 +236,7 @@ class Cest extends CodeceptionTestCase implements
     protected function executeFailed($I)
     {
         if (is_callable([$this->testClassInstance, '_failed'])) {
-            $this->testClassInstance->_failed($I);
+            $this->invoke('_failed', [$I, $this->scenario]);
         }
     }
 }
