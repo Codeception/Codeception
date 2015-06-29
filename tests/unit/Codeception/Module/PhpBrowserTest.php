@@ -3,6 +3,7 @@
 use Codeception\Util\Stub;
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForBrowsers.php';
+use GuzzleHttp\Psr7\Response;
 
 class PhpBrowserTest extends TestsForBrowsers
 {
@@ -326,10 +327,31 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('crunked', $data['Food']['beer']['yum']['yeah']);
     }
 
+    public function testCookiesForDomain()
+    {
+        $this->skipForOldGuzzle();
+
+        $mock = new \GuzzleHttp\Handler\MockHandler([
+            new Response(200, ['X-Foo' => 'Bar']),
+        ]);
+        $handler = \GuzzleHttp\HandlerStack::create($mock);
+        $handler->push(\GuzzleHttp\Middleware::history($this->history));
+        $client = new \GuzzleHttp\Client(['handler' => $handler, 'base_uri' => 'http://codeception.com']);
+        $guzzleConnector = new \Codeception\Lib\Connector\Guzzle6();
+        $guzzleConnector->setClient($client);
+        $guzzleConnector->getCookieJar()->set(new \Symfony\Component\BrowserKit\Cookie('hello', 'world'));
+        $guzzleConnector->request('GET', 'http://codeception.com/');
+        $this->assertArrayHasKey('cookies', $this->history[0]['options']);
+        /** @var $cookie GuzzleHttp\Cookie\SetCookie  **/
+        $cookies = $this->history[0]['options']['cookies']->toArray();
+        $cookie = reset($cookies);
+        $this->assertEquals('codeception.com', $cookie['Domain']);
+    }
+
     private function skipForOldGuzzle()
     {
         if (class_exists('GuzzleHttp\Url')) {
-            $this->markTestSkipped("Not for Guzzle >6");
+            $this->markTestSkipped("Not for Guzzle <6");
         }
     }
 }
