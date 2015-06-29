@@ -13,13 +13,13 @@ class DbTest extends \PHPUnit_Framework_TestCase
      * @var \Codeception\Module\Db
      */
     protected static $module;
-    
+
     public static function setUpBeforeClass()
     {
         self::$module = new \Codeception\Module\Db(make_container());
         self::$module->_setConfig(self::$config);
         self::$module->_initialize();
-        
+
         $sqlite = self::$module->driver;
         $sqlite->cleanup();
         $sql = file_get_contents(\Codeception\Configuration::dataDir() . '/dumps/sqlite.sql');
@@ -31,6 +31,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testSeeInDatabase()
     {
         self::$module->seeInDatabase('users', array('name' => 'davert'));
+    }
+
+    public function testCountInDatabase()
+    {
+        $this->assertCount(1, self::$module->countInDatabase('users', ['name' => 'davert']));
+        $this->assertCount(0, self::$module->countInDatabase('users', ['name' => 'user1']));
     }
 
     public function testDontSeeInDatabase()
@@ -60,7 +66,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         self::$module->_after(\Codeception\Util\Stub::make('\Codeception\TestCase'));
         self::$module->dontSeeInDatabase('users', array('name' => 'john'));
     }
-    
+
     public function testReconnectOption()
     {
         $testCase1 = \Codeception\Util\Stub::make('\Codeception\TestCase');
@@ -69,7 +75,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         self::$module->_reconfigure(['reconnect' => true]);
         $this->assertNotNull(self::$module->driver, 'driver is null before test');
         $this->assertNotNull(self::$module->dbh, 'dbh is null before test');
-        
+
         self::$module->_after($testCase1);
 
         $this->assertNull(self::$module->driver, 'driver is not unset by _after');

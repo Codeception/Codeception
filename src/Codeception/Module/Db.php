@@ -140,7 +140,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         $this->connect();
-        
+
         // starting with loading dump
         if ($this->config['populate']) {
             $this->cleanup();
@@ -148,7 +148,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->populated = true;
         }
     }
-    
+
     private function connect()
     {
         try {
@@ -165,7 +165,7 @@ class Db extends CodeceptionModule implements DbInterface
 
         $this->dbh = $this->driver->getDbh();
     }
-    
+
     private function disconnect()
     {
         $this->dbh = null;
@@ -293,14 +293,33 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function seeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertGreaterThan(0, (int) $res, 'No matching records found');
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertGreaterThan(0, $res, 'No matching records found');
+    }
+
+    /**
+     * Count rows in database
+     *
+     * ``` php
+     * <?php
+     * $this->assertCount(7, $I->countInDatabase('users', ['name' => 'davert']));
+     * ?>
+     * ```
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    public function countInDatabase($table, array $criteria = [])
+    {
+        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertLessThan(1, (int) $res);
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(1, $res);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
