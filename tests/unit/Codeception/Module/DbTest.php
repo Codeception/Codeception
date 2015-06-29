@@ -35,8 +35,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testCountInDatabase()
     {
-        $this->assertCount(1, self::$module->countInDatabase('users', ['name' => 'davert']));
-        $this->assertCount(0, self::$module->countInDatabase('users', ['name' => 'user1']));
+        $this->assertSame(1, self::$module->countInDatabase('users', ['name' => 'davert']));
+        $this->assertSame(0, self::$module->countInDatabase('users', ['name' => 'user1']));
     }
 
     public function testDontSeeInDatabase()

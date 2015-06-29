@@ -302,7 +302,7 @@ class Db extends CodeceptionModule implements DbInterface
      *
      * ``` php
      * <?php
-     * $this->assertCount(7, $I->countInDatabase('users', ['name' => 'davert']));
+     * $this->assertSame(7, $I->countInDatabase('users', ['name' => 'davert']));
      * ?>
      * ```
      *
