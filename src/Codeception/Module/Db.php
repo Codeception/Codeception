@@ -298,28 +298,41 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Count rows in database
+     * Asserts that found number of records in database
      *
      * ``` php
      * <?php
-     * $this->assertSame(7, $I->countInDatabase('users', ['name' => 'davert']));
+     * $I->seeNumRecord(1, 'users', ['name' => 'davert'])
      * ?>
      * ```
      *
+     * @param int    $num      Expected number
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
-     *
-     * @return int
      */
-    public function countInDatabase($table, array $criteria = [])
+    public function seeNumRecord($num, $table, array $criteria = [])
     {
-        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
         $this->assertLessThan(1, $res);
+    }
+
+    /**
+     * Count rows in database
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    protected function countInDatabase($table, array $criteria = [])
+    {
+        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
