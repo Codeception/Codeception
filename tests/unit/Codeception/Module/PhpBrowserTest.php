@@ -156,6 +156,7 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCookie('a');
         $this->assertEquals('b', $this->module->grabCookie('a'));
+        $this->module->seeCookie('c');
     }
 
     public function testUrlSlashesFormatting()
@@ -164,6 +165,20 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/somepage.php');
         $this->module->amOnPage('///somepage.php');
         $this->module->seeCurrentUrlEquals('/somepage.php');
+    }
+
+    public function testSettingContentTypeFromHtml()
+    {
+        $this->module->amOnPage('/content-iso');
+        $charset = $this->module->client->getResponse()->getHeader('Content-Type');
+        $this->assertEquals('text/html;charset=ISO-8859-1', $charset);
+    }
+
+    public function testSettingCharsetFromHtml()
+    {
+        $this->module->amOnPage('/content-cp1251');
+        $charset = $this->module->client->getResponse()->getHeader('Content-Type');
+        $this->assertEquals('text/html;charset=windows-1251', $charset);
     }
 
     /**

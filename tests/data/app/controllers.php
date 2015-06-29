@@ -105,6 +105,7 @@ class cookiesHeader {
     public function GET()
     {
         header("Set-Cookie: a=b;Path=/;");
+        header("Set-Cookie: c=d;Path=/;");
         include __DIR__.'/view/index.php';
     }
 }
@@ -176,5 +177,19 @@ class register {
     
     function POST() {
         $this->GET();
+    }
+}
+
+class contentType1 {
+    function GET() {
+        header('Content-Type:', true);
+        include __DIR__.'/view/content_type.php';
+    }
+}
+
+class contentType2 {
+    function GET() {
+        header('Content-Type:', true);
+        include __DIR__.'/view/content_type2.php';
     }
 }

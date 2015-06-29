@@ -33,7 +33,9 @@ $urls = array(
     '/form/(.*?)(#|\?.*?)?' => 'form',
     '/articles\??.*' => 'articles',
     '/auth' => 'httpAuth',
-    '/register' => 'register'
+    '/register' => 'register',
+    '/content-iso' => 'contentType1',
+    '/content-cp1251' => 'contentType2',
 );
 
 glue::stick($urls);

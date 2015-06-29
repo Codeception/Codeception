@@ -100,7 +100,10 @@ class Guzzle6 extends Client
         if (isset($headers['Content-Type'])) {
             $contentType = $headers['Content-Type'];
         }
-        if (!$contentType or strpos($contentType, 'charset=') === false) {
+        if (!$contentType) {
+            $contentType = 'text/html';
+        }
+        if (strpos($contentType, 'charset=') === false) {
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
                 $contentType .= ';charset=' . $matches[1];
             }
