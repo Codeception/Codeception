@@ -33,7 +33,7 @@
 * Group classes renamed to GroupObjects; Base GroupObject class renamed to `Codeception\GroupObject`
 * Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
 * Duplicate environment options won't cause Codeception to run environment tests twice
-* [Phalcon1] `haveServieInDi` method implemented by @sergeyklay
+* [Phalcon1] `haveServiceInDi` method implemented by @sergeyklay
 
 #### 2.0.15
 

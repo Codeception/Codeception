@@ -164,6 +164,13 @@ Element is matched by either CSS or XPath
 @part xml
 
 
+### grabDataFromJsonResponse
+ 
+ * `param` $path
+ ModuleException
+@deprecated
+
+
 ### grabDataFromResponseByJsonPath
  
 Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.

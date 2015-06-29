@@ -39,6 +39,8 @@ It allows you to run Selenium tests on a server without a GUI installed.
 * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
 * wait - Implicit wait (default 0 seconds).
 * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+* connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
+* request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
 
 ### Example (`acceptance.suite.yml`)
 

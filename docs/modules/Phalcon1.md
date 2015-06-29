@@ -490,6 +490,24 @@ $I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
 @part orm
 
 
+### haveServiceInDi
+ 
+Registers a service in the services container and resolve it. This record will be erased after the test.
+Recommended to use for unit testing.
+
+``` php
+<?php
+$filter = $I->haveServiceInDi('filter', ['className' => '\Phalcon\Filter']);
+?>
+```
+
+ * `param string` $name
+ * `param mixed` $definition
+ * `param boolean` $shared
+
+@return mixed|null
+
+
 ### resetCookie
  
 Unsets cookie with the given name.
