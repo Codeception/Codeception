@@ -94,18 +94,16 @@ class Guzzle6 extends Client
     protected function createResponse(Psr7Response $response)
     {
         $body = (string) $response->getBody();
-        $headers = $this->flattenHeaders($response->getHeaders());
+        $headers = $response->getHeaders();
 
         $contentType = null;
-        if (isset($headers['Content-Type'])) {
-            $contentType = $headers['Content-Type'];
-        }
-        if (!$contentType) {
-            $contentType = 'text/html';
-        }
-        if (strpos($contentType, 'charset=') === false) {
-            if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
-                $contentType .= ';charset=' . $matches[1];
+        if (isset($headers['Content-Type']) && count($headers['Content-Type']) === 1) {
+            $contentType = reset($headers['Content-Type']);
+            if (strpos($contentType, 'charset=') === false) {
+                if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
+                    $contentType .= ';charset=' . $matches[1];
+                }
+                $headers['Content-Type'] = $contentType;
             }
             $headers['Content-Type'] = $contentType;
         }
