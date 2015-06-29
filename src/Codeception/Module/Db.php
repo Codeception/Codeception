@@ -140,7 +140,7 @@ class Db extends CodeceptionModule implements DbInterface
         }
 
         $this->connect();
-        
+
         // starting with loading dump
         if ($this->config['populate']) {
             $this->cleanup();
@@ -148,7 +148,7 @@ class Db extends CodeceptionModule implements DbInterface
             $this->populated = true;
         }
     }
-    
+
     private function connect()
     {
         try {
@@ -165,7 +165,7 @@ class Db extends CodeceptionModule implements DbInterface
 
         $this->dbh = $this->driver->getDbh();
     }
-    
+
     private function disconnect()
     {
         $this->dbh = null;
@@ -293,14 +293,46 @@ class Db extends CodeceptionModule implements DbInterface
 
     public function seeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertGreaterThan(0, (int) $res, 'No matching records found');
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertGreaterThan(0, $res, 'No matching records found');
+    }
+
+    /**
+     * Asserts that found number of records in database
+     *
+     * ``` php
+     * <?php
+     * $I->seeNumRecord(1, 'users', ['name' => 'davert'])
+     * ?>
+     * ```
+     *
+     * @param int    $num      Expected number
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     */
+    public function seeNumRecord($num, $table, array $criteria = [])
+    {
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
-        $this->assertLessThan(1, (int) $res);
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(1, $res);
+    }
+
+    /**
+     * Count rows in database
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    protected function countInDatabase($table, array $criteria = [])
+    {
+        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)
