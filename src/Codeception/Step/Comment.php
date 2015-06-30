@@ -16,7 +16,7 @@ class Comment extends CodeceptionStep
         return $this->getAction();
     }
 
-    public function getHtml()
+    public function getHtml($highlightColor = '#732E81')
     {
         return '<strong>' . $this->getAction() . '</strong>';
     }
