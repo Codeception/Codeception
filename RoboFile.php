@@ -6,7 +6,7 @@ use \Robo\Task\Development\GenerateMarkdownDoc as Doc;
 
 class RoboFile extends \Robo\Tasks
 {
-    const STABLE_BRANCH = '2.0';
+    const STABLE_BRANCH = '2.1';
 
     public function release()
     {
