@@ -1,6 +1,6 @@
 # Db Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Db.php)**
 
 
 Works with SQL database.
@@ -155,4 +155,19 @@ Fails if no such user found.
  * `param`       $table
  * `param array` $criteria
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>
+
+### seeNumRecords
+ 
+Asserts that found number of records in database
+
+``` php
+<?php
+$I->seeNumRecords(1, 'users', ['name' => 'davert'])
+?>
+```
+
+ * `param int`    $num      Expected number
+ * `param string` $table    Table name
+ * `param array`  $criteria Search criteria [Optional]
+
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Db.php">Help us to improve documentation. Edit module reference</a></div>

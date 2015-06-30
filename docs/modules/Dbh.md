@@ -1,6 +1,6 @@
 # Dbh Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Dbh.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Dbh.php)**
 
 
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
@@ -114,4 +114,4 @@ Fails if no such user found.
  * `param`       $table
  * `param array` $criteria
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Dbh.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Dbh.php">Help us to improve documentation. Edit module reference</a></div>

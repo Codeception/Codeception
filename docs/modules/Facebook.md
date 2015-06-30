@@ -1,6 +1,6 @@
 # Facebook Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Facebook.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Facebook.php)**
 
 
 Provides testing for projects integrated with Facebook API.
@@ -142,4 +142,4 @@ Please, note that you must have publish_actions permission to be able to publish
 
  * `param string` $placeId Place identifier to be verified against user published posts
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Facebook.php">Help us to improve documentation. Edit module reference</a></div>
