@@ -151,7 +151,7 @@ trait Actor
 
     public function configDi(Di $di)
     {
-        $this->di = $di;
+        $this->di = clone($di);
         return $this;
     }
 

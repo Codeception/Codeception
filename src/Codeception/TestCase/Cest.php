@@ -62,15 +62,14 @@ class Cest extends CodeceptionTestCase implements
         $I = $this->makeIObject();
 
         $this->prepareActorForTest();
-
         try {
-            $this->executeBefore($I);
+            $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);
             $this->executeTestMethod($I);
             $this->executeAfterMethods($this->testMethod, $I);
-            $this->executeAfter($I);
+            $this->executeHook($I, 'after');
         } catch (\Exception $e) {
-            $this->executeFailed($I);
+            $this->executeHook($I, 'failed');
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
@@ -210,33 +209,11 @@ class Cest extends CodeceptionTestCase implements
         ];
     }
 
-    /**
-     * @param $I
-     */
-    protected function executeBefore($I)
+    protected function executeHook($I, $hook)
     {
-        if (is_callable([$this->testClassInstance, '_before'])) {
-            $this->invoke('_before', [$I, $this->scenario]);
+        if (is_callable([$this->testClassInstance, "_$hook"])) {
+            $this->invoke("_$hook", [$I, $this->scenario]);
         }
     }
 
-    /**
-     * @param $I
-     */
-    protected function executeAfter($I)
-    {
-        if (is_callable([$this->testClassInstance, '_after'])) {
-            $this->invoke('_after', [$I, $this->scenario]);
-        }
-    }
-
-    /**
-     * @param $I
-     */
-    protected function executeFailed($I)
-    {
-        if (is_callable([$this->testClassInstance, '_failed'])) {
-            $this->invoke('_failed', [$I, $this->scenario]);
-        }
-    }
 }
