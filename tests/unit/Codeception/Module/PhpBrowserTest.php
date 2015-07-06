@@ -110,6 +110,13 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->amOnPage('/redirect_interval');
         $this->module->seeCurrentUrlEquals('/redirect_interval');
     }
+
+    public function testHtmlRedirectWithParams()
+    {
+        $this->module->amOnPage('/redirect_params');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/search?one=1&two=2'); 
+    }
     
     public function testMetaRefresh()
     {
