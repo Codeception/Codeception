@@ -136,7 +136,7 @@ class Guzzle6 extends Client
 
             if ($uri->withFragment('') != $currentUri->withFragment('')) {
                 $status = 302;
-                $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : (string) $uri;
+                $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
             }
         }
 
