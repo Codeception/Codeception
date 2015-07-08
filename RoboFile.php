@@ -156,10 +156,19 @@ class RoboFile extends \Robo\Tasks
             ->name('*.php')
             ->name('*.tpl.dist')
             ->name('*.html.dist')
-            ->in(['src', 'ext']);
+            ->in('src');
 
         foreach ($finder as $file) {
             $pharTask->addFile('src/'.$file->getRelativePathname(), $file->getRealPath());
+        }
+
+        $finder = Finder::create()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->in('ext');
+
+        foreach ($finder as $file) {
+            $pharTask->addFile('ext/'.$file->getRelativePathname(), $file->getRealPath());
         }
 
         $finder = Finder::create()->files()
