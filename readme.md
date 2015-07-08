@@ -7,12 +7,12 @@ Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
-
 | release |  branch  |  status  |
 | ------- | -------- | -------- |
-| **Stable** | **1.8** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=1.8)](http://travis-ci.org/Codeception/Codeception) 
-| **Current** | **2.0** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.0)](http://travis-ci.org/Codeception/Codeception) [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.0)
+| **Stable** | **2.0** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.0)](http://travis-ci.org/Codeception/Codeception) [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.0)
+| **Current** | **2.1** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.1)](http://travis-ci.org/Codeception/Codeception) [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1)
 | **Edge** | **master** | [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=master)](http://travis-ci.org/Codeception/Codeception) 
+
 
 #### Contributions
 

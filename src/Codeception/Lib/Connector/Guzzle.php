@@ -170,7 +170,7 @@ class Guzzle extends Client
             'headers' => $this->extractHeaders($request)
         ];
 
-        $requestOptions = array_merge_recursive($requestOptions, $this->requestOptions);
+        $requestOptions = array_replace_recursive($requestOptions, $this->requestOptions);
 
         $guzzleRequest = $this->client->createRequest(
             $request->getMethod(),
