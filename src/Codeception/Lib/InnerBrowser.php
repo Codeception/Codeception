@@ -290,17 +290,17 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $crawler = $this->getFieldsByLabelOrCss($field);
         $this->assertNot($this->proceedSeeInField($crawler, $value));
     }
-    
+
     public function seeInFormFields($formSelector, array $params)
     {
         $this->proceedSeeInFormFields($formSelector, $params, false);
     }
-    
+
     public function dontSeeInFormFields($formSelector, array $params)
     {
         $this->proceedSeeInFormFields($formSelector, $params, true);
     }
-    
+
     protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
     {
         $form = $this->match($formSelector)->first();
@@ -332,7 +332,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     /**
      * Returns an array of values for the field with the passed name.  Usually
      * the array consists of a single value.  Used by proceedSeeInField
-     * 
+     *
      * @param Form $form
      * @param string $fieldName
      * @return array
@@ -357,7 +357,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         }
         return $values;
     }
-    
+
     protected function proceedSeeInField(Crawler $fields, $value)
     {
         $form = $this->getFormFor($fields);
@@ -508,7 +508,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
 
     /**
      * Returns the form action's absolute URL.
-     * 
+     *
      * @param \Symfony\Component\DomCrawler\Crawler $form
      * @return string
      * @throws \Codeception\Exception\TestRuntimeException if either the current
@@ -563,7 +563,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     /**
      * Returns the DomCrawler\Form object for the form pointed to by
      * $node or its closes form parent.
-     * 
+     *
      * @param \Symfony\Component\DomCrawler\Crawler $node
      * @return \Symfony\Component\DomCrawler\Form
      */
@@ -583,7 +583,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         }
         return $this->forms[$action];
     }
-    
+
     /**
      * Returns an array of name => value pairs for the passed form.
      *
@@ -613,13 +613,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $input = $this->getFieldByLabelOrCss($field);
         $form = $this->getFormFor($input);
         $name = $input->attr('name');
-        
+
         $dynamicField = $input->getNode(0)->tagName == 'textarea'
             ? new TextareaFormField($input->getNode(0))
             : new InputFormField($input->getNode(0));
         $formField = $this->matchFormField($name, $form, $dynamicField);
         $formField->setValue($value);
-        $input->getNode(0)->nodeValue = $value;
+        $input->getNode(0)->nodeValue = htmlspecialchars($value);
     }
 
     /**
@@ -674,7 +674,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
         $field = $this->getFieldByLabelOrCss($select);
         $form = $this->getFormFor($field);
         $fieldName = $this->getSubmissionFormFieldName($field->attr('name'));
-        
+
         if (is_array($option)) {
             $options = [];
             foreach ($option as $opt) {
@@ -683,11 +683,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             $form[$fieldName]->select($options);
             return;
         }
-        
+
         $dynamicField = new ChoiceFormField($field->getNode(0));
         $formField = $this->matchFormField($fieldName, $form, $dynamicField);
         $selValue = $this->matchOption($field, $option);
-        
+
         if (is_array($formField)) {
             foreach ($formField as $field) {
                 $values = $field->availableOptionValues();
@@ -700,7 +700,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
             }
             return;
         }
-        
+
         $formField->select($this->matchOption($field, $option));
     }
 
