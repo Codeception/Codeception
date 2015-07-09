@@ -1088,6 +1088,11 @@ class InnerBrowser extends Module implements Web
         }
     }    
 
+    public function grabNumberOfElements($selector)
+    {
+        return count($this->match($selector));
+    }
+
     public function seeOptionIsSelected($selector, $optionText)
     {
         $selected = $this->matchSelectedOption($selector);

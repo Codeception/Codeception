@@ -1084,6 +1084,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
+    public function grabNumberOfElements($selector)
+    {
+        return count($this->match($this->webDriver, $selector));
+    }
+
     public function seeOptionIsSelected($selector, $optionText)
     {
         $el = $this->findField($selector);
