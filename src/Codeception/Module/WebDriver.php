@@ -378,11 +378,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function amOnUrl($url)
     {
-        $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
-            throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
-        }
-        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
+        $host = Uri::retrieveHost($url);
         $this->_reconfigure(['url' => $host]);
         $this->debugSection('Host', $host);
         $this->webDriver->get($url);
