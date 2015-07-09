@@ -29,7 +29,7 @@ abstract class Extension implements EventSubscriberInterface
     static function getSubscribedEvents()
     {
         if (isset(static::$events[Events::SUITE_INIT])) {
-            if (!is_array(static::$events)) {
+            if (!is_array(static::$events[Events::SUITE_INIT])) {
                 static::$events[Events::SUITE_INIT] = [[static::$events[Events::SUITE_INIT]]];
             }
             static::$events[Events::SUITE_INIT][] = ['receiveModuleContainer'];
