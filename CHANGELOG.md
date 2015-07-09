@@ -2,6 +2,11 @@
 
 #### 2.1.1
 
+* [WebDriver] **Upgraded to facebook/webdrvier 1.0** *2015-07-11*
+  WebDriver classes were moved to `Facebook\WebDriver` namespace. Please take that into account when using WebDriver API directly.
+  Till 2.2 Codeception will keep non-namespaced aliases of WebDriver classes.
+* Module Reference now contains documentation for hidden API methods which should be used in Helper classes
+* [WebDriver][PhpBrowser][Frameworks] `_findElements($locator)` method added to use in Helper classes *2015-07-11*
 * [PhpBrowser] Fixed `amOnUrl` method to open absolute URLs.
 * [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
 
@@ -40,10 +45,6 @@
 * Duplicate environment options won't cause Codeception to run environment tests twice
 * [Phalcon1] `haveServiceInDi` method implemented by @sergeyklay
 * [Db] `seeNumRecords` method added by @sergeyklay
-
-#### 2.0.16
-* [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
-
 
 #### 2.0.15
 

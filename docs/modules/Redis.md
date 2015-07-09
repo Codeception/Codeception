@@ -1,6 +1,4 @@
-# Redis Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Redis.php)**
 
 
 Works with Redis database.

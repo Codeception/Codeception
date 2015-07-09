@@ -1,6 +1,4 @@
-# ZF1 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/ZF1.php)**
 
 
 This module allows you to run tests inside Zend Framework.
@@ -57,6 +55,42 @@ class TestHelper extends \Codeception\Module {
 
 This will make your functional tests run super-fast.
 
+
+
+### _findElements
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates element using available Codeception locator types:
+
+* XPath
+* CSS
+* Strict Locator
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+$els = $this->getModule('ZF1')->_findElements('.items');
+$els = $this->getModule('ZF1')->_findElements(['name' => 'username']);
+```
+
+WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
+PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
+
+ * `param` $locator
+ * `return` array of interactive elements
+
+
+### _savePageSource
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves page source of to a file
+
+```php
+$this->getModule('ZF1')->_savePageSource(codecept_output_dir().'page.html');
+```
+ * `param` $filename
 
 
 ### amHttpAuthenticated
@@ -431,7 +465,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  
  * `param` $field
 
-@return array|mixed|null|string
+ * `return` array|mixed|null|string
 
 
 ### resetCookie

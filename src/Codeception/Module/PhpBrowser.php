@@ -2,7 +2,6 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleException;
-use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
@@ -48,13 +47,18 @@ use GuzzleHttp\Client as GuzzleClient;
  *                curl:
  *                    CURLOPT_RETURNTRANSFER: true
  *
- * ## Public Properties
- *
- * * guzzle - contains [Guzzle](http://guzzlephp.org/) client instance: `\GuzzleHttp\Client`
- * * client - Symfony BrowserKit instance.
  *
  * All SSL certification checks are disabled by default.
  * Use Guzzle request options to configure certifications and others.
+ *
+ * ## Public API
+ *
+ * Those properties and methods are expected to be used in Helper classes:
+ *
+ * Properties:
+ *
+ * * `guzzle` - contains [Guzzle](http://guzzlephp.org/) client instance: `\GuzzleHttp\Client`
+ * * `client` - Symfony BrowserKit instance.
  *
  */
 class PhpBrowser extends InnerBrowser implements Remote, MultiSession

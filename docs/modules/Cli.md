@@ -1,6 +1,4 @@
-# Cli Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Cli.php)**
 
 
 Wrapper for basic shell commands and shell output

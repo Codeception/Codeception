@@ -1,6 +1,4 @@
-# Dbh Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Dbh.php)**
 
 
 This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
