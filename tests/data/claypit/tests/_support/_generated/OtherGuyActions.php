@@ -1096,7 +1096,7 @@ trait OtherGuyActions
      * <form action="/sign_up">
      *     Login: <input type="text" name="user[login]" /><br/>
      *     Password: <input type="password" name="user[password]" /><br/>
-     *     Do you agree to out terms? <input type="checkbox" name="user[agree]" /><br/>
+     *     Do you agree to our terms? <input type="checkbox" name="user[agree]" /><br/>
      *     Select pricing plan <select name="plan"><option value="1">Free</option><option value="2" selected="selected">Paid</option></select>
      *     <input type="submit" name="submitButton" value="Submit" />
      * </form>
