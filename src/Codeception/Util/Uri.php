@@ -43,6 +43,9 @@ class Uri
             }
             $base = $base->withPath($path);
         }
+        if (isset($parts['scheme'])) {
+            $base = $base->withScheme($parts['scheme']);
+        }
         if (isset($parts['query'])) {
             $base = $base->withQuery($parts['query']);
         }
