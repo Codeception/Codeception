@@ -378,11 +378,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function amOnUrl($url)
     {
-        $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
-            throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
-        }
-        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
+        $host = Uri::retrieveHost($url);
         $this->_reconfigure(['url' => $host]);
         $this->debugSection('Host', $host);
         $this->webDriver->get($url);
@@ -1271,7 +1267,7 @@ class WebDriver extends CodeceptionModule implements
      *     <input type="text" name="user[login]" /><br/>
      *     Password:
      *     <input type="password" name="user[password]" /><br/>
-     *     Do you agree to out terms?
+     *     Do you agree to our terms?
      *     <input type="checkbox" name="user[agree]" /><br/>
      *     Select pricing plan:
      *     <select name="plan">

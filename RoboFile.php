@@ -162,6 +162,15 @@ class RoboFile extends \Robo\Tasks
             $pharTask->addFile('src/'.$file->getRelativePathname(), $file->getRealPath());
         }
 
+        $finder = Finder::create()
+            ->ignoreVCS(true)
+            ->name('*.php')
+            ->in('ext');
+
+        foreach ($finder as $file) {
+            $pharTask->addFile('ext/'.$file->getRelativePathname(), $file->getRealPath());
+        }
+
         $finder = Finder::create()->files()
             ->ignoreVCS(true)
             ->name('*.php')
@@ -304,7 +313,7 @@ class RoboFile extends \Robo\Tasks
 
         $extensions = Finder::create()->files()->sortByName()->name('*.php')->in(__DIR__ . '/ext');
 
-        $extGenerator= $this->taskGenDoc('ext/README.md');
+        $extGenerator= $this->taskGenDoc(__DIR__.'/ext/README.md');
         foreach ($extensions as $command) {
             $commandName = basename(substr($command, 0, -4));
             $className = '\Codeception\Extension\\' . $commandName;
@@ -414,6 +423,20 @@ class RoboFile extends \Robo\Tasks
                 $newfile = 'docs/modules/' . $newfile;
                 $modules[$name] = '/docs/modules/' . $doc->getBasename();
                 $contents = str_replace('## ', '### ', $contents);
+                $buttons = ['source' => "https://github.com/Codeception/Codeception/blob/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"];
+                // building version switcher
+                foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
+                    $buttons[$branch] = "https://github.com/Codeception/Codeception/blob/$branch/docs/modules/$name.md";
+                }
+                $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
+                foreach ($buttons as $link => $url) {
+                    if ($link == self::STABLE_BRANCH) {
+                        $link = "<strong>$link</strong>";
+                    }
+                    $buttonHtml.= '<a class="btn btn-default" href="'.$url.'">'.$link.'</a>';
+                }
+                $buttonHtml .= '</div>'."\n\n";
+                $contents = $buttonHtml . $contents;
             } elseif(strpos($doc->getPathname(),'docs'.DIRECTORY_SEPARATOR.'reference') !== false) {
                 $newfile = 'docs/reference/' . $newfile;
                 $reference[$name] = '/docs/reference/' . $doc->getBasename();
@@ -437,6 +460,7 @@ class RoboFile extends \Robo\Tasks
               $title = $matches[1];
             }
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
+
             file_put_contents('package/site/' .$newfile, $contents);
         }
         chdir('package/site');
@@ -458,26 +482,6 @@ class RoboFile extends \Robo\Tasks
                 $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-
-            $buttons = [
-                'source' => "https://github.com/Codeception/Codeception/blob/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
-            ];
-
-            // building version switcher
-            foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
-                $buttons[$branch] = "https://github.com/Codeception/Codeception/blob/$branch/docs/modules/$name.md";
-            }
-
-            $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
-            foreach ($buttons as $link => $url) {
-                if ($link == self::STABLE_BRANCH) {
-                    $link = "<strong>$link</strong>";
-                }
-                $buttonHtml.= '<a class="btn btn-default" href="'.$url.'">'.$link.'</a>';
-            }
-            $buttonHtml = '</div>'."\n\n";
-
-            $doc = $buttonHtml . $doc;
 
             $this->taskWriteToFile('docs/'.$filename)
                 ->text($doc)
@@ -540,7 +544,7 @@ class RoboFile extends \Robo\Tasks
 
         $this->say("Writing extensions docs");
         $this->taskWriteToFile('_includes/extensions.md')
-            ->textFromFile('ext/README.md')
+            ->textFromFile(__DIR__.'/ext/README.md')
             ->run();
 
         $this->publishSite();

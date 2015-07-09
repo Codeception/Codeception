@@ -1,6 +1,6 @@
 # PhpBrowser Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/PhpBrowser.php)**
+**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/PhpBrowser.php)**
 
 
 Uses [Guzzle](http://guzzlephp.org/) to interact with your application over CURL.
@@ -929,7 +929,7 @@ For example, given this sample "Sign Up" form:
     <input type="text" name="user[login]" /><br/>
     Password:
     <input type="password" name="user[password]" /><br/>
-    Do you agree to out terms?
+    Do you agree to our terms?
     <input type="checkbox" name="user[agree]" /><br/>
     Select pricing plan:
     <select name="plan">
@@ -1061,4 +1061,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.0/src/Codeception/Module/PhpBrowser.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/PhpBrowser.php">Help us to improve documentation. Edit module reference</a></div>

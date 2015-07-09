@@ -7,6 +7,7 @@ use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
 use Codeception\TestCase;
+use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 
 /**
@@ -183,14 +184,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function amOnUrl($url)
     {
-        $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
-            throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
-        }
-        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
-        if (isset($urlParts['port'])) {
-            $host .= ':' . $urlParts['port'];
-        }
+        $host = Uri::retrieveUri($url);
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
         $this->debugSection('Host', $host);

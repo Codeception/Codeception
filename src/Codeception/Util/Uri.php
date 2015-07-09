@@ -23,6 +23,12 @@ class Uri
         if ($parts === false) {
             throw new \InvalidArgumentException("Invalid URI $uri");
         }
+
+        if (isset($parts['host']) and isset($parts['scheme'])) {
+            // if this is an absolute url, replace with it
+            return $uri;
+        }
+
         if (isset($parts['path'])) {
             $path = $parts['path'];
             if ($base->getPath() && (strpos($path, '/') !== 0) && !empty($path)) {
@@ -62,6 +68,18 @@ class Uri
 
     }
 
+    public static function retrieveHost($url)
+    {
+        $urlParts = parse_url($url);
+        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
+            throw new \InvalidArgumentException("Wrong URL passes, host and scheme not set");
+        }
+        $host = $urlParts['scheme'] . '://' . $urlParts['host'];
+        if (isset($urlParts['port'])) {
+            $host .= ':' . $urlParts['port'];
+        }
+        return $host;
+    }
 
     public static function appendPath($url, $path)
     {
