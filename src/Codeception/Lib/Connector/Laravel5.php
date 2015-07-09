@@ -1,15 +1,14 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Request as SyfmonyRequest;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\TerminableInterface;
 
-class Laravel5 extends Client implements HttpKernelInterface, TerminableInterface
+class Laravel5 extends Client
 {
 
     /**
@@ -18,61 +17,97 @@ class Laravel5 extends Client implements HttpKernelInterface, TerminableInterfac
     private $app;
 
     /**
-     * @var HttpKernelInterface
+     * @var \Codeception\Module\Laravel5
      */
-    private $httpKernel;
+    private $module;
 
     /**
      * Constructor.
-     *
-     * @param Application $app
+     * @param \Codeception\Module\Laravel5 $module
      */
-    public function __construct(Application $app)
+    public function __construct($module)
     {
-        $this->app = $app;
-        $this->httpKernel = $this->app->make('Illuminate\Contracts\Http\Kernel');
-        $this->httpKernel->bootstrap();
-        $this->app->boot();
+        $this->module = $module;
+        $this->initialize();
 
-        $url = $this->app->config->get('app.url', 'http://localhost');
-        $this->app->instance('request', Request::createFromBase(SyfmonyRequest::create($url)));
-
-        $components = parse_url($url);
+        $components = parse_url($this->app['config']->get('app.url', 'http://localhost'));
         $host = isset($components['host']) ? $components['host'] : 'localhost';
 
-        parent::__construct($this, ['HTTP_HOST' => $host]);
+        parent::__construct($this->app, ['HTTP_HOST' => $host]);
 
-        $this->followRedirects(true); // Parent constructor sets this to false by default
+        // Parent constructor defaults to not following redirects
+        $this->followRedirects(true);
     }
 
     /**
-     * Handle a request.
-     *
-     * @param SyfmonyRequest $request
-     * @param int $type
-     * @param bool $catch
+     * @param SymfonyRequest $request
      * @return Response
      */
-    public function handle(SyfmonyRequest $request, $type = self::MASTER_REQUEST, $catch = true)
+    protected function doRequest($request)
     {
+        $this->initialize();
+
         $request = Request::createFromBase($request);
-        $request->enableHttpMethodParameterOverride();
+        $response = $this->kernel->handle($request);
+        $this->app->make('Illuminate\Contracts\Http\Kernel')->terminate($request, $response);
 
-        $this->app->bind('request', $request);
-
-        return $this->httpKernel->handle($request);
+        return $response;
     }
 
     /**
-     * Terminates a request/response cycle.
-     *
-     * @param SyfmonyRequest $request A Request instance
-     * @param Response $response A Response instance
-     *
-     * @api
+     * Initialize the Laravel framework.
      */
-    public function terminate(SyfmonyRequest $request, Response $response)
+    private function initialize()
     {
-        $this->httpKernel->terminate(Request::createFromBase($request), $response);
+        // Store a reference to the database object
+        // so the database connection can be reused during tests
+        $oldDb = null;
+        if ($this->app['db'] && $this->app['db']->connection()) {
+            $oldDb = $this->app['db'];
+        }
+
+        // The module can login a user with the $I->amLoggedAs() method,
+        // but this is not persisted between requests. Store a reference
+        // to the logged in user to simulate this.
+        $loggedInUser = null;
+        if ($this->app['auth'] && $this->app['auth']->check()) {
+            $loggedInUser = $this->app['auth']->user();
+        }
+
+        $this->app = $this->kernel = $this->loadApplication();
+        $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
+
+        // Set the base url for the Request object
+        $url = $this->app['config']->get('app.url', 'http://localhost');
+        $this->app->instance('request', Request::createFromBase(SymfonyRequest::create($url)));
+
+        if ($oldDb) {
+            $this->app['db'] = $oldDb;
+            Model::setConnectionResolver($this->app['db']);
+        }
+
+        // If there was a user logged in restore this user.
+        // Also reload the user object from the user provider to prevent stale user data.
+        if ($loggedInUser) {
+            $refreshed = $this->app['auth']->getProvider()->retrieveById($loggedInUser->getAuthIdentifier());
+            $this->app['auth']->setUser($refreshed ?: $loggedInUser);
+        }
+
+        $this->module->setApplication($this->app);
     }
+
+    /**
+     * Boot the Laravel application object.
+     * @return Application
+     * @throws ModuleConfig
+     */
+    private function loadApplication()
+    {
+        $app = require $this->module->config['bootstrap_file'];
+        $app->loadEnvironmentFrom($this->module->config['environment_file']);
+        $app->instance('request', new Request());
+
+        return $app;
+    }
+
 }
