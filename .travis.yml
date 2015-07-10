@@ -34,7 +34,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -Werror -Wno-error=uninitialized"; phpize &> /dev/null && ./configure --silent --enable-phalcon  &> /dev/null && make --silent -j4 > /dev/null && sudo make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
   # Laravel 4
-  - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
+  - git clone -q -b codeception-2.0 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - composer install -d frameworks-laravel --no-dev  --prefer-dist
   # Laravel 5
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
