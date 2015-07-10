@@ -36,6 +36,10 @@
 * [Phalcon1] `haveServiceInDi` method implemented by @sergeyklay
 * [Db] `seeNumRecords` method added by @sergeyklay
 
+#### 2.0.16
+* [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
+
+
 #### 2.0.15
 
 * [Phalcon1] Fixed getting has more than one field by @sergeyklay #2010.
