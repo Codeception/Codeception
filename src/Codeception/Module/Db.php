@@ -143,7 +143,9 @@ class Db extends CodeceptionModule implements DbInterface
 
         // starting with loading dump
         if ($this->config['populate']) {
-            $this->cleanup();
+            if ($this->config['cleanup']) {
+                $this->cleanup();
+            }
             $this->loadDump();
             $this->populated = true;
         }
