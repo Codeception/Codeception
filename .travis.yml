@@ -42,10 +42,10 @@ install:
   - git clone -q -b codeception-2.0 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - composer install -d frameworks-laravel --no-dev  --prefer-dist
   # Laravel 5
-  - git clone -q -b codeception-2.0 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5
-  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-l5 --no-dev --prefer-dist' #skip for PHP 5.4
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.0 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-l5 --no-dev  --prefer-dist'
   # Symfony
-  - git clone -q -b 2.0 https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
+  - git clone -q https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev  --prefer-dist
   # ZF1
   - git clone -q --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
@@ -72,7 +72,7 @@ before_script:
   - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
   # Laravel 5
-  - touch frameworks-l5/storage/testing.sqlite
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || touch frameworks-l5/storage/testing.sqlite'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php frameworks-l5/artisan migrate --database=sqlite_testing --force'
   # Symfony
   - frameworks-symfony/app/console doctrine:database:create
@@ -89,7 +89,7 @@ script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
-  - [[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
