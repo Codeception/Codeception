@@ -252,6 +252,11 @@ There are plenty of useful Codeception commands:
 * `generate:phpunit` *suite* *filename* - Generates a classic PHPUnit Test
 * `generate:suite` *suite* *actor* - Generates a new suite with the given Actor class name
 * `generate:scenarios` *suite* - Generates text files containing scenarios from tests
+* `generate:helper` *filename* - Generates a sample Helper File
+* `generate:pageobject` *suite* *filename* - Generates a sample Page object
+* `generate:stepobject` *suite* *filename* - Generates a sample Step object
+* `generate:environment` *env* - Generates a sample Environment configuration
+* `generate:groupobject` *group* - Generates a sample Group Extension
 
 
 ## Conclusion

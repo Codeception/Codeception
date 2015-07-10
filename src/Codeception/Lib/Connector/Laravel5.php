@@ -109,4 +109,5 @@ class Laravel5 extends Client
 
         return $app;
     }
+
 }

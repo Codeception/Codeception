@@ -137,7 +137,7 @@ class Guzzle extends Client
                 }
                 if (!isset($partsUri[$key]) || $partsUri[$key] !== $part) {
                     $status = 302;
-                    $headers['Location'] = $uri;
+                    $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
                     break;
                 }
             }

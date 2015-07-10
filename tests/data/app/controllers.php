@@ -48,6 +48,12 @@ class redirect3 {
     }
 }
 
+class redirect_params {
+    function GET() {
+        include __DIR__.'/view/redirect_params.php';
+    }
+}
+
 class redirect_interval {
     function GET() {
         include __DIR__.'/view/redirect_interval.php';

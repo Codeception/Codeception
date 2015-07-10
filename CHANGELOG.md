@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.1.1
+* [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
+
 #### 2.1.0
 
 * [Recorder](https://github.com/Codeception/Codeception/tree/master/ext#codeceptionextensionrecorder) extension added. Shows acceptance test progress with a recorded slideshow.
