@@ -20,7 +20,7 @@ $I->seeFileFound('running.lock');
 It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
 
 Modules are attached to Actor classes in the suite config.
-For example, in `tests/functional.suite.yml` we should see:
+For example, in `tests/acceptance.suite.yml` we should see:
 
 ```yaml
 class_name: AcceptanceTester
@@ -32,7 +32,7 @@ modules:
         - Filesystem
 ```
 
-The FunctionalTester class has its methods defined in modules. But let's see what's inside `AcceptanceTester` class, which is located inside `tests/_support` directory:
+The AcceptanceTester class has its methods defined in modules. But let's see what's inside `AcceptanceTester` class, which is located inside `tests/_support` directory:
 
 ```php
 <?php
