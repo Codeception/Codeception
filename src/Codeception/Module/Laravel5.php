@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Exception\ModuleConfig;
+use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
@@ -81,7 +81,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             ],
             (array)$config
         );
-        
+
         $projectDir = explode($this->config['packages'], \Codeception\Configuration::projectDir())[0];
         $projectDir .= $this->config['root'];
 
@@ -89,6 +89,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $this->config['bootstrap_file'] = $projectDir . $this->config['bootstrap'];
 
         parent::__construct($container);
+    }
+
+    public function _parts()
+    {
+        return ['orm'];
     }
 
     /**
@@ -148,35 +153,16 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Initialize the Laravel framework.
+     * Make sure the Laravel bootstrap file exists.
      *
-     * @throws ModuleConfigException
+     * @throws ModuleConfig
      */
-    protected function initializeLaravel()
+    protected function checkBootstrapFileExists()
     {
-        $this->app = $this->bootApplication();
-        $this->app->instance('request', new Request());
-        $this->client = new LaravelConnector($this->app);
-    }
-
-    /**
-     * Boot the Laravel application object.
-     *
-     * @return \Illuminate\Foundation\Application
-     * @throws \Codeception\Exception\ModuleConfigException
-     */
-    protected function bootApplication()
-    {
-        $projectDir = explode($this->config['packages'], Configuration::projectDir())[0];
-        $projectDir .= $this->config['root'];
-        require $projectDir . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-        ClassLoader::register();
-
-        $bootstrapFile = $projectDir . $this->config['bootstrap'];
+        $bootstrapFile = $this->config['bootstrap_file'];
 
         if (!file_exists($bootstrapFile)) {
-            throw new ModuleConfig(
+            throw new ModuleConfigException(
                 $this,
                 "Laravel bootstrap file not found in $bootstrapFile.\nPlease provide a valid path to it using 'bootstrap' config param. "
             );
