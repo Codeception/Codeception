@@ -18,6 +18,11 @@ services:
   - mongodb
   - rabbitmq
 
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
 install:
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - composer global require "fxp/composer-asset-plugin:1.0.0"
@@ -34,11 +39,11 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -std=gnu90 -Wall -Werror -Wno-error=uninitialized"; phpize &> /dev/null && ./configure --silent --enable-phalcon  &> /dev/null && make --silent -j4 > /dev/null && sudo make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
   - 'git clone -q --depth=1 https://github.com/DavertMik/forum.git frameworks-phalcon'
   # Laravel 4
-  - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
+  - git clone -q -b codeception-2.0 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - composer install -d frameworks-laravel --no-dev  --prefer-dist
   # Laravel 5
-  - git clone -q https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5
-  - composer install -d frameworks-l5 --no-dev  --prefer-dist
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.0 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-l5 --no-dev  --prefer-dist'
   # Symfony
   - git clone -q https://github.com/DavertMik/SymfonyCodeceptionApp.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev  --prefer-dist
@@ -67,8 +72,8 @@ before_script:
   - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
   # Laravel 5
-  - touch frameworks-l5/storage/testing.sqlite
-  - php frameworks-l5/artisan migrate --database=sqlite_testing --force
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || touch frameworks-l5/storage/testing.sqlite'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php frameworks-l5/artisan migrate --database=sqlite_testing --force'
   # Symfony
   - frameworks-symfony/app/console doctrine:database:create
   - frameworks-symfony/app/console doctrine:schema:create
@@ -84,7 +89,7 @@ script:
   - php codecept run  # self tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
-  - php codecept run -c frameworks-l5 # Laravel5 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
