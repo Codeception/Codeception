@@ -184,7 +184,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function amOnUrl($url)
     {
-        $host = Uri::retrieveUri($url);
+        $host = Uri::retrieveHost($url);
         $this->_reconfigure(['url' => $host]);
         $page = substr($url, strlen($host));
         $this->debugSection('Host', $host);

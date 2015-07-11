@@ -1,6 +1,8 @@
 # Changelog
 
 #### 2.1.1
+
+* [PhpBrowser] Fixed `amOnUrl` method to open absolute URLs.
 * [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
 
 #### 2.1.0
