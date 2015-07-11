@@ -85,9 +85,9 @@ before_script:
   # Build
   - php codecept build -c frameworks-yii-basic/tests
 #  - php codecept build -c frameworks-phalcon
-#  - php codecept build -c frameworks-laravel
+  - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
-#  - php codecept build -c frameworks-l5
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-l5'
   - php codecept build -c frameworks-zf1
   - php codecept build -c frameworks-zf2
 
