@@ -1,0 +1,8 @@
+class_name: RestTester
+modules:
+  enabled: [REST, PhpBrowser]
+  config:
+    REST:
+      url: http://localhost:8010
+    PhpBrowser:
+      url: http://localhost:8010

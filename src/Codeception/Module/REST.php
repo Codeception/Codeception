@@ -70,7 +70,7 @@ class REST extends \Codeception\Module
     public function _before(\Codeception\TestCase $test)
     {
         $this->prepareConnection();
-        $this->client = $this->connectionModule->client;
+        $this->client =& $this->connectionModule->client;
         $this->resetVariables();
 
         if ($this->config['xdebug_remote']
