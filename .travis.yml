@@ -96,8 +96,7 @@ script:
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
+  - # '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-symfony # Symfony Tests
-#  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon'
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   - php codecept run functional -c frameworks-zf2 # ZF2 Tests
