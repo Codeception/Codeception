@@ -34,9 +34,9 @@ install:
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon 2
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.4
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon  &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/forum.git -b 2.0.0 frameworks-phalcon
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.4'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon  &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/forum.git -b 2.0.0 frameworks-phalcon'
   # Laravel 4
   - git clone -q https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - composer install -d frameworks-laravel --no-dev  --prefer-source
@@ -66,8 +66,8 @@ before_script:
   - php -S localhost:8000 -t tests/data/app >/dev/null 2>&1 &
   - php -S localhost:8010 -t tests/data >/dev/null 2>&1 &
   # Phalcon
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || mysql -e 'CREATE DATABASE forum;'
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cat frameworks-phalcon/schemas/forum.sql | mysql forum)
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || "mysql -e 'CREATE DATABASE forum;'"'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cat frameworks-phalcon/schemas/forum.sql | mysql forum)'
   # Laravel 4
   - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
@@ -79,7 +79,7 @@ before_script:
   - php frameworks-symfony/app/console doctrine:fixtures:load -n --env test
   # Build
   - php codecept build -c frameworks-yii-basic/tests
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon
+  - `[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon`
 #  - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
 #  - php codecept build -c frameworks-l5
@@ -91,7 +91,7 @@ script:
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
 #  - php codecept run -c frameworks-laravel functional # Laravel4 Tests
 #  - php codecept run -c frameworks-l5 functional,unit # Laravel5 Tests
-  - [[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon # Phalcon Tests
+  - `[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon` # Phalcon Tests
   - php codecept run functional -c frameworks-symfony # Symfony Tests
 #  - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
 #  - php codecept run -c frameworks-l5 # Laravel5 Tests
