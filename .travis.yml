@@ -92,7 +92,8 @@ before_script:
   - php codecept build -c frameworks-zf2
 
 script:
-  - php codecept run  # self tests
+  - php codecept run cli,unit,web # self tests
+  - php codecept run coverage  # self tests (run coverage tests separately
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
