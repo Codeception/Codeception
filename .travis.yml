@@ -79,7 +79,7 @@ before_script:
   - php frameworks-symfony/app/console doctrine:fixtures:load -n --env test
   # Build
   - php codecept build -c frameworks-yii-basic/tests
-  - `[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon`
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon'
 #  - php codecept build -c frameworks-laravel
   - php codecept build -c frameworks-symfony
 #  - php codecept build -c frameworks-l5
@@ -91,7 +91,7 @@ script:
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
 #  - php codecept run -c frameworks-laravel functional # Laravel4 Tests
 #  - php codecept run -c frameworks-l5 functional,unit # Laravel5 Tests
-  - `[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon` # Phalcon Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
   - php codecept run functional -c frameworks-symfony # Symfony Tests
 #  - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
 #  - php codecept run -c frameworks-l5 # Laravel5 Tests
