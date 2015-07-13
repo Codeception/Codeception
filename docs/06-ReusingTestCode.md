@@ -389,7 +389,7 @@ The order of the modules can be defined in the suite config.
 
 However, some of modules may conflict with each other. In order to avoid confusion which module is used in the first place, Framework modules, PhpBrowser, and WebDriver can't be used together. The `_conflicts` method of a module is used to specify which class or interface it conflicts with. Codeception will throw an exception if there will be a module enabled which matches the provided criteria.
 
-### Connecting Modules
+### Accessing Other Modules
 
 It's possible that you will need to access internal data or functions from other modules. For example, for your module you might need to access responses or internal actions of modules.
 
@@ -408,23 +408,20 @@ function reconnectToDatabase() {
 ?>
 ```
 
-By using the `getModule` function, you get access to all of the public methods and properties of the requested module. The dbh property was defined as public specifically to be available to other modules.
+By using the `getModule` function, you get access to all of the public methods and properties of the requested module. The `dbh` property was defined as public specifically to be available to other modules.
 
-If you want to extend functionality of a standard module you may connect to it and by using public properties and methods create your custom action or assertion:
+Modules may also contain methods that are exposed for use in helper classes. Those methods start with `_` prefix and are not available in Actor classes, so can be accessed only from modules and extensions.
 
+You should use them to write your own actions using module internals.
+   
 ```php
 <?php
 function seeNumResults($num)
 {
     // retrieving webdriver session
-    /** @var $wd \RemoteWebDriver */
-    $wd = $this->getModule('WebDriver')->webDriver;
-
-    // searching for table which contains results
-    /**@var $el \WebDriverElement */
-    $el = $wd->findElement(WebDriverBy::id('results'));
-    // asserting that #results is actually a table
-    $this->assertEquals('table', $el->getTagName());
+    /**@var $table \Facebook\WebDriver\WebDriverElement */
+    $table = $this->getModule('WebDriver')->_findElements('#result');
+    $this->assertEquals('table', $table->getTagName());
     $results = $el->findElements('tr');
 
     // asserting that table contains exactly $num rows
@@ -433,10 +430,9 @@ function seeNumResults($num)
 ?>
 ```
 
-<div class="alert alert-info">
-In this example we use API of <a href="https://github.com/facebook/php-webdriver">facebook/php-webdriver</a> library, a Selenium WebDriver client.
-</div>
-
+In this example we use API of <a href="https://github.com/facebook/php-webdriver">facebook/php-webdriver</a> library, a Selenium WebDriver client a module is build on. 
+You can also access `webDriver` property of a module to get access to `Facebook\WebDriver\RemoteWebDriver` instance for direct Selenium interaction.
+ 
 ### Hooks
 
 Each module can handle events from the running test. A module can be executed before the test starts, or after the test is finished. This can be useful for bootstrap/cleanup actions.
