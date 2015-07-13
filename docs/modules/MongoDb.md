@@ -1,6 +1,4 @@
-# MongoDb Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/MongoDb.php)**
 
 
 Works with MongoDb database.
@@ -64,7 +62,7 @@ $count = $I->grabCollectionCount('users', array('isAdmin' => true));
 
  * `param` $collection
  * `param array` $criteria
-@return integer
+ * `return` integer
 
 
 ### grabFromCollection
@@ -78,7 +76,7 @@ $cursor = $I->grabFromCollection('users', array('name' => 'miles'));
 
  * `param` $collection
  * `param array` $criteria
-@return \MongoCursor
+ * `return` \MongoCursor
 
 
 ### haveInCollection

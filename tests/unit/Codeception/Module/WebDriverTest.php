@@ -1,6 +1,9 @@
 <?php
 
 use Codeception\Util\Stub;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\WebDriverKeys;
 
 require_once 'tests/data/app/data.php';
 require_once __DIR__ . '/TestsForBrowsers.php';
@@ -27,10 +30,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->noPhpWebserver();
         $this->noSelenium();
         $this->module = new \Codeception\Module\WebDriver(make_container());
-        $url = '';
-        if (version_compare(PHP_VERSION, '5.4', '>=')) {
-            $url = 'http://localhost:8000';
-        }
+        $url = 'http://localhost:8000';
         $this->module->_setConfig(['url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0]);
         $this->module->_initialize();
         $this->module->_before($this->makeTest());
@@ -196,7 +196,7 @@ class WebDriverTest extends TestsForBrowsers
     public function testRawSelenium()
     {
         $this->module->amOnPage('/');
-        $this->module->executeInSelenium(function (\Webdriver $webdriver) {
+        $this->module->executeInSelenium(function ($webdriver) {
             $webdriver->findElement(WebDriverBy::id('link'))->click();
         });
         $this->module->seeCurrentUrlEquals('/info');
@@ -418,7 +418,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testCreateCeptScreenshotFail()
     {
-        $fakeWd = Stub::make('\RemoteWebDriver', [
+        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
                 'takeScreenshot' => Stub::once(function() {}),
                 'getPageSource' => Stub::once(function() {})
         ]);
@@ -429,7 +429,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testCreateCestScreenshotOnFail()
     {
-        $fakeWd = Stub::make('\RemoteWebDriver', [
+        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
             'takeScreenshot' => Stub::once(function($filename) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
             }),
@@ -445,7 +445,7 @@ class WebDriverTest extends TestsForBrowsers
     public function testCreateTestScreenshotOnFail()
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
-        $fakeWd = Stub::make('\RemoteWebDriver', [
+        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
             'takeScreenshot' => Stub::once(function($filename) use ($test) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
             }),

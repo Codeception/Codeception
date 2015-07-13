@@ -1,6 +1,4 @@
-# XMLRPC Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/XMLRPC.php)**
 
 
 Module for testing XMLRPC WebService.

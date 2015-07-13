@@ -1,6 +1,4 @@
-# Doctrine2 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Doctrine2.php)**
 
 
 Allows integration and testing for projects with Doctrine2 ORM.
@@ -72,7 +70,7 @@ $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
  * `param` $entity
  * `param` $field
  * `param array` $params
-@return array
+ * `return` array
 
 
 ### haveFakeRepository

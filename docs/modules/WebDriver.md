@@ -1,6 +1,4 @@
-# WebDriver Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/WebDriver.php)**
 
 
 New generation Selenium WebDriver module.
@@ -54,8 +52,6 @@ It allows you to run Selenium tests on a server without a GUI installed.
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
-
-
 ## Locating Elements
 
 Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
@@ -80,12 +76,77 @@ If you prefer, you may also pass a string for the locator. This is called a "fuz
 
 Be warned that fuzzy locators can be significantly slower than strict locators. If speed is a concern, it's recommended you stick with explicitly specifying the locator type via the array syntax.
 
-## Migration Guide (Selenium2 -> WebDriver)
+## Public Properties
 
-* `wait` method accepts seconds instead of milliseconds. All waits use second as parameter.
+* `webDriver` - instance of `\Facebook\WebDriver\Remote\RemoteWebDriver`. Can be accessed from Helper classes for complex WebDriver interactions.
+
+```php
+// inside Helper class
+$this->getModule('WebDriver')->webDriver->getKeyboard()->sendKeys('hello, webdriver');
+```
+
+## Methods
 
 
-# Methods
+### _findElements
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates element using available Codeception locator types:
+
+* XPath
+* CSS
+* Strict Locator
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+$els = $this->getModule('WebDriver')->_findElements('.items');
+$els = $this->getModule('WebDriver')->_findElements(['name' => 'username']);
+```
+
+WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
+PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
+
+ * `param` $locator
+ * `return` array of interactive elements
+
+
+### _getCurrentUri
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Uri of currently opened page.
+@return string
+
+
+
+### _getUrl
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Returns URL of a host.
+
+
+
+### _savePageSource
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves HTML source of a page to a file
+ * `param` $filename
+
+
+### _saveScreenshot
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves screenshot of current page to a file
+
+```php
+$this->getModule('WebDriver')->_saveScreenshot(codecept_output_dir().'screenshot_1.png');
+```
+ * `param` $filename
 
 
 ### acceptPopup
@@ -157,7 +218,7 @@ $I->appendField('#myTextField', 'appended');
 
  * `param string` $field
  * `param string` $value
- \Codeception\Exception\ElementNotFound
+
 
 
 ### attachFile
@@ -231,7 +292,7 @@ $I->click(['link' => 'Login']);
 Performs contextual click with the right mouse button on an element.
 
  * `param` $cssOrXPath
- \Codeception\Exception\ElementNotFound
+
 
 
 ### dontSee
@@ -456,7 +517,7 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Performs a double-click on an element matched by CSS or XPath.
 
  * `param` $cssOrXPath
- \Codeception\Exception\ElementNotFound
+
 
 
 ### dragAndDrop
@@ -479,7 +540,7 @@ Low-level API method.
 If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
 
 ``` php
-$I->executeInSelenium(function(\WebDriver $webdriver) {
+$I->executeInSelenium(function(\Facebook\WebDriver\RemoteWebDriver $webdriver) {
   $webdriver->get('http://google.com');
 });
 ```
@@ -525,7 +586,7 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  
 Grabs all visible text from the current page.
 
-@return string
+ * `return` string
 
 
 ### grabAttributeFrom
@@ -665,7 +726,7 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
  * `param int` $offsetX
  * `param int` $offsetY
 
- \Codeception\Exception\ElementNotFound
+
 
 
 ### pauseExecution
@@ -681,7 +742,7 @@ This method is useful while writing tests, since it allows you to inspect the cu
 Presses the given key on the given element.
 To specify a character and modifier (e.g. ctrl, alt, shift, meta), pass an array for $char with
 the modifier as the first element and the character as the second.
-For special keys use key constants from \WebDriverKeys class.
+For special keys use key constants from WebDriverKeys class.
 
 ``` php
 <?php
@@ -690,13 +751,13 @@ $I->pressKey('#page','a'); // => olda
 $I->pressKey('#page',array('ctrl','a'),'new'); //=> new
 $I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
 $I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
-$I->pressKey('#name', array('ctrl', 'a'), WebDriverKeys::DELETE); //=>''
+$I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DELETE); //=>''
 ?>
 ```
 
  * `param` $element
  * `param` $char Can be char or array with modifier. You can provide several chars.
- \Codeception\Exception\ElementNotFound
+
 
 
 ### reloadPage
@@ -1280,7 +1341,7 @@ If the window has no name, the only way to access it is via the `executeInSeleni
 
 ``` php
 <?php
-$I->executeInSelenium(function (\Webdriver $webdriver) {
+$I->executeInSelenium(function (\Facebook\WebDriver\RemoteWebDriver $webdriver) {
      $handles=$webdriver->getWindowHandles();
      $last_window = end($handles);
      $webdriver->switchTo()->window($last_window);
@@ -1320,7 +1381,7 @@ __not documented__
 Wait for $timeout seconds.
 
  * `param int` $timeout secs
- \Codeception\Exception\TestRuntimeException
+
 
 
 ### waitForElement
@@ -1337,7 +1398,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
- \Exception
+
 
 
 ### waitForElementChange
@@ -1347,7 +1408,8 @@ Element "change" is determined by a callback function which is called repeatedly
 
 ``` php
 <?php
-$I->waitForElementChange('#menu', function(\WebDriverElement $el) {
+use \Facebook\WebDriver\WebDriverElement
+$I->waitForElementChange('#menu', function(WebDriverElement $el) {
     return $el->isDisplayed();
 }, 100);
 ?>
@@ -1356,7 +1418,7 @@ $I->waitForElementChange('#menu', function(\WebDriverElement $el) {
  * `param` $element
  * `param \Closure` $callback
  * `param int` $timeout seconds
- \Codeception\Exception\ElementNotFound
+
 
 
 ### waitForElementNotVisible
@@ -1372,7 +1434,7 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
 
  * `param` $element
  * `param int` $timeout seconds
- \Exception
+
 
 
 ### waitForElementVisible
@@ -1389,7 +1451,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
- \Exception
+
 
 
 ### waitForJS
@@ -1424,6 +1486,6 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param string` $text
  * `param int` $timeout seconds
  * `param null` $selector
- \Exception
+
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>

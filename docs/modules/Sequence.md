@@ -1,6 +1,4 @@
-# Sequence Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Sequence.php)**
 
 
 Sequence solves data cleanup issue in alternative way.

@@ -1,6 +1,4 @@
-# FTP Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/FTP.php)**
 
 
 
@@ -186,7 +184,7 @@ $pwd = $I->grabDirectory();
 ?>
 ```
 
-@return string
+ * `return` string
 
 
 ### grabFileCount
@@ -202,7 +200,7 @@ $count = $I->grabFileCount('TEST', false); // Include . .. .thumbs.db
 
  * `param string` $path
  * `param bool` $ignore - suppress '.', '..' and '.thumbs.db'
-@return int
+ * `return` int
 
 
 ### grabFileList
@@ -218,7 +216,7 @@ $count = $I->grabFileList('TEST', false); // Include . .. .thumbs.db
 
  * `param string` $path
  * `param bool` $ignore - suppress '.', '..' and '.thumbs.db'
-@return array
+ * `return` array
 
 
 ### grabFileModified
@@ -232,7 +230,7 @@ $time = $I->grabFileModified('test.txt');
 ```
 
  * `param` $filename
-@return bool
+ * `return` bool
 
 
 ### grabFileSize
@@ -246,7 +244,7 @@ $size = $I->grabFileSize('test.txt');
 ```
 
  * `param` $filename
-@return bool
+ * `return` bool
 
 
 ### loginAs
