@@ -15,6 +15,9 @@ interface ElementLocator
      * ```php
      * $els = $this->getModule('{{MODULE_NAME}}')->_findElements('.items');
      * $els = $this->getModule('{{MODULE_NAME}}')->_findElements(['name' => 'username']);
+     *
+     * $editLinks = $this->getModule('{{MODULE_NAME}}')->_findElements(['link' => 'Edit']);
+     * // now you can iterate over $editLinks and check that all them have valid hrefs
      * ```
      *
      * WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
