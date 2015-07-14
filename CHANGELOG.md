@@ -2,13 +2,15 @@
 
 #### 2.1.1
 
-* [WebDriver] **Upgraded to facebook/webdrvier 1.0** *2015-07-11*
+* [WebDriver] **Upgraded to facebook/webdriver 1.0** *2015-07-11*
   WebDriver classes were moved to `Facebook\WebDriver` namespace. Please take that into account when using WebDriver API directly.
   Till 2.2 Codeception will keep non-namespaced aliases of WebDriver classes.
 * Module Reference now contains documentation for hidden API methods which should be used in Helper classes
 * [WebDriver][PhpBrowser][Frameworks] `_findElements($locator)` method added to use in Helper classes *2015-07-11*
+  For instsance, you can use `$this->getModule('WebDriver')->findElements('.user');` to match all elements with `user` class using WebDriver module
 * [PhpBrowser] Fixed `amOnUrl` method to open absolute URLs.
-* [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
+* [PhpBrowser][Frameworks] Fix for `fillField` using values that contain ampersands by @GawainLynch and @zbateson Issue #2132
+* [WebDriver][PhpBrowser][Frameworks] Fixed missing HTTPS when trying to access protected pages #2141
 
 #### 2.1.0
 
