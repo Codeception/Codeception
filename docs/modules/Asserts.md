@@ -1,6 +1,4 @@
-# Asserts Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Asserts.php)**
 
 
 Special module for using asserts in your tests.

@@ -1,6 +1,4 @@
-# Db Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Db.php)**
 
 
 Works with SQL database.

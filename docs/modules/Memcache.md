@@ -1,6 +1,4 @@
-# Memcache Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Memcache.php)**
 
 
 Connects to [memcached](http://www.memcached.org/) using either _Memcache_ or _Memcached_ extension.
@@ -52,7 +50,7 @@ $users_count = $I->grabValueFromMemcached('users_count');
 ```
 
  * `param` $key
-@return array|string
+ * `return` array|string
 
 
 ### seeInMemcached

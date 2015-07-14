@@ -1,6 +1,4 @@
-# REST Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/REST.php)**
 
 
 Module for testing REST WebService.
@@ -167,7 +165,7 @@ Element is matched by either CSS or XPath
 ### grabDataFromJsonResponse
  
  * `param` $path
- ModuleException
+@throws ModuleException
 @deprecated
 
 
@@ -192,7 +190,7 @@ $I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
  * `param` $jsonPath
 @return array
 @version 2.0.9
- \Exception
+@throws \Exception
 @part json
 
 

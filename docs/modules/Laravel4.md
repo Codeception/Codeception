@@ -1,6 +1,4 @@
-# Laravel4 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Laravel4.php)**
 
 
 
@@ -42,6 +40,42 @@ The original author of this module is Davert.
 
 * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
 
+
+
+### _findElements
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates element using available Codeception locator types:
+
+* XPath
+* CSS
+* Strict Locator
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+$els = $this->getModule('Laravel4')->_findElements('.items');
+$els = $this->getModule('Laravel4')->_findElements(['name' => 'username']);
+```
+
+WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
+PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
+
+ * `param` $locator
+ * `return` array of interactive elements
+
+
+### _savePageSource
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves page source of to a file
+
+```php
+$this->getModule('Laravel4')->_savePageSource(codecept_output_dir().'page.html');
+```
+ * `param` $filename
 
 
 ### amHttpAuthenticated
@@ -129,7 +163,7 @@ Calls an Artisan command and returns output as a string
  * `param string` $command       The name of the command as displayed in the artisan command list
  * `param array`  $parameters    An associative array of command arguments
 
-@return string
+ * `return` string
 
 
 ### checkOption
@@ -149,7 +183,7 @@ $I->checkOption('#agree');
  
 Make sure the Laravel start file exists.
 
- ModuleConfig
+
 
 
 ### click
@@ -428,7 +462,7 @@ $I->fillField(['name' => 'email'], 'jon@mail.com');
  
 Provides access the Laravel application object.
 
-@return \Illuminate\Foundation\Application
+ * `return` \Illuminate\Foundation\Application
 
 
 ### grabAttributeFrom
@@ -541,7 +575,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  
  * `param` $field
 
-@return array|mixed|null|string
+ * `return` array|mixed|null|string
 
 
 ### haveDisabledFilters
@@ -764,7 +798,7 @@ $I->seeFormHasErrors();
 ?>
 ```
 
-@return bool
+ * `return` bool
 
 
 ### seeInCurrentUrl
@@ -879,7 +913,7 @@ $I->seeInSession('key', 'value');
 
  * `param`  string|array $key
  * `param`  mixed $value
-@return void
+ * `return` void
 
 
 ### seeInTitle
@@ -1018,7 +1052,7 @@ $I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
 ```
 
  * `param`  array $bindings
-@return void
+ * `return` void
 
 
 ### selectOption

@@ -6,6 +6,7 @@ use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
@@ -23,7 +24,7 @@ use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
 
-class InnerBrowser extends Module implements Web, PageSourceSaver
+class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
@@ -61,6 +62,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver
     public function _conflicts()
     {
         return 'Codeception\Lib\Interfaces\Web';
+    }
+
+    public function _findElements($locator)
+    {
+        return $this->match($locator);
     }
 
     /**
