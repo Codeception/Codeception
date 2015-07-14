@@ -1009,6 +1009,11 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $params
 
 
+### setApplication
+ 
+ * `param` $app
+
+
 ### setCookie
  
 Sets a cookie with the given name and value.
