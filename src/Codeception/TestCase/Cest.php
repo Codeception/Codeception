@@ -41,6 +41,7 @@ class Cest extends CodeceptionTestCase implements
         $this->scenario->setFeature($this->getSpecFromMethod());
         $code = $this->getRawBody();
         $this->parser->parseFeature($code);
+        $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
         $this->di->injectDependencies($this->testClassInstance);
         $this->fire(Events::TEST_PARSED, new TestEvent($this));
     }
@@ -56,9 +57,6 @@ class Cest extends CodeceptionTestCase implements
 
     public function testCodecept()
     {
-        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
-
-        $this->scenario->stopIfBlocked();
         $I = $this->makeIObject();
 
         $this->prepareActorForTest();
@@ -73,8 +71,6 @@ class Cest extends CodeceptionTestCase implements
             // fails and errors are now handled by Codeception\PHPUnit\Listener
             throw $e;
         }
-
-        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
     protected function executeBeforeMethods($testMethod, $I)

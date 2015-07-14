@@ -60,17 +60,12 @@ class Cept extends CodeceptionTestCase implements
 
     public function testCodecept()
     {
-        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
-
         $scenario = $this->scenario;
-        $scenario->stopIfBlocked();
 
         $this->prepareActorForTest();
 
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;
-
-        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
     public function getEnvironment()

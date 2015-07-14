@@ -26,8 +26,6 @@ class Console implements EventSubscriberInterface
     static $events = [
         Events::SUITE_BEFORE    => 'beforeSuite',
         Events::SUITE_AFTER     => 'afterSuite',
-        Events::TEST_BEFORE     => 'before',
-        Events::TEST_AFTER      => 'afterTest',
         Events::TEST_START      => 'startTest',
         Events::TEST_END        => 'endTest',
         Events::STEP_BEFORE     => 'beforeStep',
@@ -121,14 +119,6 @@ class Console implements EventSubscriberInterface
         $this->message = null;
         $this->output->waitForDebugOutput = true;
 
-        if (!$test instanceof TestCase) {
-            $this->writeCurrentTest($test);
-        }
-    }
-
-    public function before(TestEvent $e)
-    {
-        $test = $e->getTest();
         $this->writeCurrentTest($test);
         if ($this->steps && $this->isDetailed($test)) {
             $this->output->writeln("\nScenario:");
@@ -141,10 +131,6 @@ class Console implements EventSubscriberInterface
         if ($step->hasFailed() and $step instanceof Step\ConditionalAssertion) {
             $this->fails[] = $step;
         }
-    }
-
-    public function afterTest(TestEvent $e)
-    {
     }
 
     public function afterResult()

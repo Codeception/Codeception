@@ -2,6 +2,10 @@
 use Codeception\Lib\Parser;
 use \Codeception\Util\Stub;
 
+/**
+ * @group core
+ * Class ParserTest
+ */
 class ParserTest extends \Codeception\TestCase\Test
 {
     /**

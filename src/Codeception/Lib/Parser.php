@@ -39,15 +39,9 @@ class Parser
 
     public function parseScenarioOptions($code)
     {
-        $annotations = ['group', 'env', 'skip', 'incomplete', 'ignore'];
         $comments = $this->matchComments($code);
-        foreach ($annotations as $annotation) {
-            $values = Annotation::fetchAllFromComment($annotation, $comments);
-            foreach ($values as $value) {
-                call_user_func([$this->scenario, $annotation], $value);
-            }
-        }
-
+        $this->attachMetadata($comments);
+        
         // deprecated - parsing $scenario->xxx calls
         $metaData = ['group', 'env'];
         $phpCode = $this->stripComments($code);
@@ -68,6 +62,17 @@ class Parser
 
         }
 
+    }
+
+    public function attachMetadata($comments)
+    {
+        $annotations = ['group', 'env', 'skip', 'incomplete', 'ignore'];
+        foreach ($annotations as $annotation) {
+            $values = Annotation::fetchAllFromComment($annotation, $comments);
+            foreach ($values as $value) {
+                call_user_func([$this->scenario, $annotation], $value);
+            }
+        }        
     }
 
     public function parseSteps($code)
