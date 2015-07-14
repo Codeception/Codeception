@@ -1,6 +1,9 @@
 # Changelog
 
 #### 2.0.16
+
+* [REST] Module usage should not depend on order it was declared. Fixes #2100 by @Naktibalda
+* [Db] When `populate` is enabled cleanup should happen only if enabled too #2148 by @gammamatrix
 * [Laravel5] Rewrite of module to fix open issues and other problems *2015-07-09*
 
 #### 2.0.15
