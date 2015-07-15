@@ -83,7 +83,7 @@ class GenerateScenarios extends Command
 
             $name = $this->underscore(basename($test->getFileName(), '.php'));
 
-            if (get_class($test) == 'Codeception\TestCase\Cest') {
+            if (get_class($test) == 'Codeception\TestCase\Cest' && !$input->getOption('single-file')) {
                 // Remove "test" from the beginning of the method name.
                 $testMethod = substr($test->getTestMethod(), 4);
 
