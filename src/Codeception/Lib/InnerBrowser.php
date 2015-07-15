@@ -727,9 +727,26 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         return $option;
     }
 
+    /**
+    * Checks all options matched by the variable $option
+    * @param $option
+    */
+
     public function checkOption($option)
     {
-        $this->proceedCheckOption($option)->tick();
+        $nodes = $this->match($option);
+        
+        foreach($nodes as $nodeIndex => $node){
+            if($node->hasAttribute('id')){
+                $nodeId = $node->getAttribute('id');
+                $this->proceedCheckOption('#'.$nodeId)->tick();
+                
+            }
+            elseif($node->hasAttribute('name')){
+                $nodeName = $node->getAttribute('name');
+                $this->proceedCheckOption($nodeName)->tick();
+            }       
+        }
     }
 
     public function uncheckOption($option)
