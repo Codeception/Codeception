@@ -143,7 +143,9 @@ class WebDriver extends CodeceptionModule implements
         'window_size'   => false,
         'capabilities'  => [],
         'connection_timeout' => null,
-        'request_timeout' => null        
+        'request_timeout' => null,
+	'http_proxy'	=> null,
+	'http_proxy_port' => null
     ];
 
     protected $wd_host;
@@ -152,6 +154,8 @@ class WebDriver extends CodeceptionModule implements
     protected $request_timeout_in_ms;
     protected $test;
     protected $sessionSnapshots = [];
+    protected $http_proxy;
+    protected $http_proxy_port;
 
     /**
      * @var RemoteWebDriver
@@ -167,7 +171,7 @@ class WebDriver extends CodeceptionModule implements
         $this->request_timeout_in_ms = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
         try {
-            $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms);
+            $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms, $this->http_proxy, $this->http_proxy_port);
         } catch (WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
