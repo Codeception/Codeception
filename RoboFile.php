@@ -18,6 +18,7 @@ class RoboFile extends \Robo\Tasks
         $this->publishPhar();
         $this->publishGit();
         $this->versionBump();
+        $this->publishBase();
     }
 
     public function versionBump($version = '')
@@ -264,11 +265,11 @@ class RoboFile extends \Robo\Tasks
                     };
 
                     if (!trim($text)) return $title."__not documented__\n";
-                    $text = str_replace(array('@since'), array(' * available since version'), $text);
+                    $text = str_replace(['@since'], [' * available since version'], $text);
                     $text = preg_replace('~@throws(.*?)$~', '', $text);
                     $text = str_replace("@return mixed\n", '', $text);
                     $text = preg_replace('~@return (.*?)$~', ' * `return` $1', $text);
-                    $text = str_replace(array("\n @"), array("\n * "), $text);
+                    $text = str_replace(["\n @"], ["\n * "], $text);
                     return $title . $text;
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')
@@ -426,9 +427,9 @@ class RoboFile extends \Robo\Tasks
 
         $docs = Finder::create()->files('*.md')->sortByName()->in('docs');
 
-        $modules = array();
-        $api = array();
-        $reference = array();
+        $modules = [];
+        $api = [];
+        $reference = [];
         foreach ($docs as $doc) {
             $newfile = $doc->getFilename();
             $name = substr($doc->getBasename(),0,-3);
@@ -461,13 +462,13 @@ class RoboFile extends \Robo\Tasks
 
             copy($doc->getPathname(), 'package/site/' . $newfile);
 
-            $highlight_languages = implode('|', array('php', 'html', 'bash', 'yaml', 'json', 'xml', 'sql'));
+            $highlight_languages = implode('|', ['php', 'html', 'bash', 'yaml', 'json', 'xml', 'sql']);
             $contents = preg_replace("~```\s?($highlight_languages)\b(.*?)```~ms", "{% highlight $1 %}\n$2\n{% endhighlight %}", $contents);
             $contents = str_replace('{% highlight  %}','{% highlight yaml %}', $contents);
             $contents = preg_replace("~```\s?(.*?)```~ms", "{% highlight yaml %}\n$1\n{% endhighlight %}", $contents);
             // set default language in order not to leave unparsed code inside '```'
 
-            $matches = array();
+            $matches = [];
             $title = "";
             // Extracting page h1 to re-use in <title>
             if (preg_match('/^# (.*)$/m', $contents, $matches)) {
@@ -647,6 +648,11 @@ class RoboFile extends \Robo\Tasks
         $this->say("Site build succesfully");
     }
 
+    /**
+     * Publishes Codeception base
+     * @param null $branch
+     * @param null $tag
+     */
     public function publishBase($branch = null, $tag = null)
     {
         if (!$branch) $branch = self::STABLE_BRANCH;

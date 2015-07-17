@@ -7,7 +7,7 @@
   Till 2.2 Codeception will keep non-namespaced aliases of WebDriver classes.
 * Module Reference now contains documentation for hidden API methods which should be used in Helper classes
 * Skipped and Incomplete tests won't fire `test.before` and `test.after` events. For instamce, WebDriver browser with won't be started and Db cleanups won't be executed on skipped tests.
-* Annotations `@skip` and `@incomplete` enabled in Cest files #2131
+* Annotations `skip` and `incomplete` enabled in Cest files #2131
 * [WebDriver][PhpBrowser][Frameworks] `_findElements($locator)` method added to use in Helper classes *2015-07-11*
   Now you can use `$this->getModule('WebDriver')->findElements('.user');` in Helpers to match all elements with `user` class using WebDriver module
 * [PhpBrowser] Fixed `amOnUrl` method to open absolute URLs.
