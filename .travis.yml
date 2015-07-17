@@ -31,6 +31,11 @@ cache:
     - $HOME/.composer/cache
 
 install:
+  # use hhvm-serve instead of builtin server
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export GOPATH="/home/travis/go"'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
   - composer global require "fxp/composer-asset-plugin:1.0.0"
   - composer self-update
@@ -63,13 +68,26 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
   - java -jar selenium-server-standalone-2.42.2.jar -port 4444 >/dev/null 2>&1 &
+  # create config file for hhvm
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.port = 9000" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.type = fastcgi" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.default_document = index.php" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.log.use_log_file = true" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.log.file = /tmp/hhvm-error.log" >>/tmp/hhvm.ini'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.repo.central.path = /tmp/hhvm.hhbc" >>/tmp/hhvm.ini'
+  # start hhvm
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm --config "/tmp/hhvm.ini" --mode daemon'
   - sleep 5
   # preparing databases
   - "mysql -e 'create database codeception_test;'"
   - psql -c 'create database codeception_test;' -U postgres
-  # staring demo servers
-  - php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &
-  - php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &
+  # starting demo servers
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php -S 127.0.0.1:8000 -t tests/data/app >/dev/null 2>&1 &'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php -S 127.0.0.1:8010 -t tests/data >/dev/null 2>&1 &'
+    # use hhvm-serve instead of builtin server
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data/app --listen=127.0.0.1:8000 >/dev/null 2>&1 &'
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data --listen=127.0.0.1:8010  >/dev/null 2>&1 &'
   # Phalcon
 #  - "mysql -e 'CREATE DATABASE forum;'"
 #  - cat frameworks-phalcon/schemas/forum.sql | mysql forum
