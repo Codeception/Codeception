@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.1.2
+* [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
+
 #### 2.1.1
 
 * [WebDriver] **Upgraded to facebook/webdriver 1.0** *2015-07-11*
