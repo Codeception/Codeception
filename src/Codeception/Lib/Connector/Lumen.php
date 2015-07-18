@@ -37,7 +37,7 @@ class Lumen extends Client implements HttpKernelInterface
      */
     public function handle(SymfonyRequest $request, $type = self::MASTER_REQUEST, $catch = true)
     {
-        $this->app['request'] = Request::createFromBase($request);
+        $this->app['request'] = $request = Request::createFromBase($request);
 
         $response = $this->app->handle($request);
 

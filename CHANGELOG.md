@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.0.17
+* [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
+
 #### 2.0.16
 
 * [REST] Module usage should not depend on order it was declared. Fixes #2100 by @Naktibalda
