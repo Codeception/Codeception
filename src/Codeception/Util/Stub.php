@@ -13,7 +13,7 @@ class Stub
      * ``` php
      * <?php
      * Stub::make('User');
-     * Stub::make('User', array('name' => 'davert));
+     * Stub::make('User', array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -21,7 +21,7 @@ class Stub
      *
      * ``` php
      * <?php
-     * Stub::make(new User, array('name' => 'davert));
+     * Stub::make(new User, array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -178,7 +178,7 @@ class Stub
      * ``` php
      * <?php
      * Stub::makeEmpty('User');
-     * Stub::makeEmpty('User', array('name' => 'davert));
+     * Stub::makeEmpty('User', array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -186,7 +186,7 @@ class Stub
      *
      * ``` php
      * <?php
-     * Stub::makeEmpty(new User, array('name' => 'davert));
+     * Stub::makeEmpty(new User, array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -248,7 +248,7 @@ class Stub
      * ``` php
      * <?php
      * Stub::construct('User', array('autosave' => false));
-     * Stub::construct('User', array('autosave' => false), array('name' => 'davert));
+     * Stub::construct('User', array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -256,7 +256,7 @@ class Stub
      *
      * ``` php
      * <?php
-     * Stub::construct(new User, array('autosave' => false), array('name' => 'davert));
+     * Stub::construct(new User, array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -299,7 +299,7 @@ class Stub
      * ``` php
      * <?php
      * Stub::constructEmpty('User', array('autosave' => false));
-     * Stub::constructEmpty('User', array('autosave' => false), array('name' => 'davert));
+     * Stub::constructEmpty('User', array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -307,7 +307,7 @@ class Stub
      *
      * ``` php
      * <?php
-     * Stub::constructEmpty(new User, array('autosave' => false), array('name' => 'davert));
+     * Stub::constructEmpty(new User, array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -354,7 +354,7 @@ class Stub
      * ``` php
      * <?php
      * Stub::constructEmptyExcept('User', 'save');
-     * Stub::constructEmptyExcept('User', 'save', array('autosave' => false), array('name' => 'davert));
+     * Stub::constructEmptyExcept('User', 'save', array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
@@ -362,7 +362,7 @@ class Stub
      *
      * ``` php
      * <?php
-     * Stub::constructEmptyExcept(new User, 'save', array('autosave' => false), array('name' => 'davert));
+     * Stub::constructEmptyExcept(new User, 'save', array('autosave' => false), array('name' => 'davert'));
      * ?>
      * ```
      *
