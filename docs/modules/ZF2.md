@@ -1,6 +1,4 @@
-# ZF2 Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/ZF2.php)**
 
 
 This module allows you to run tests inside Zend Framework 2.
@@ -24,6 +22,42 @@ Uses `tests/application.config.php` config file by default.
 * db - instance of `\Zend\Db\Adapter\AdapterInterface`
 * client - BrowserKit client
 
+
+
+### _findElements
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Locates element using available Codeception locator types:
+
+* XPath
+* CSS
+* Strict Locator
+
+Use it in Helpers or GroupObject or Extension classes:
+
+```php
+$els = $this->getModule('ZF2')->_findElements('.items');
+$els = $this->getModule('ZF2')->_findElements(['name' => 'username']);
+```
+
+WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
+PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` instances
+
+ * `param` $locator
+ * `return` array of interactive elements
+
+
+### _savePageSource
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Saves page source of to a file
+
+```php
+$this->getModule('ZF2')->_savePageSource(codecept_output_dir().'page.html');
+```
+ * `param` $filename
 
 
 ### amHttpAuthenticated
@@ -398,7 +432,7 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  
  * `param` $field
 
-@return array|mixed|null|string
+ * `return` array|mixed|null|string
 
 
 ### resetCookie

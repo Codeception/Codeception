@@ -82,7 +82,7 @@ class OrderCest
             afterSuite,
             afterClass,
             @afterClass');
-        $I->seeFileContentsEqual("BIB({{[<C]>)}}");
+        $I->seeFileContentsEqual("BIB({{[<C>])}}");
     }
 
     public function checkAfterBeforeClassInTests(CliGuy $I)

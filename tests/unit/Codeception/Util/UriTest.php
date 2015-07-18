@@ -27,5 +27,13 @@ class UriTest extends \Codeception\TestCase\Test
 
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/pull/2141
+     */
+    public function testMergingScheme()
+    {
+        $this->assertEquals('https://google.com/account/', Uri::mergeUrls('http://google.com/', 'https://google.com/account/'));
+    }
+
 
 }

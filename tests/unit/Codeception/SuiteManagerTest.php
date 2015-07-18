@@ -1,6 +1,10 @@
 <?php
 if (!defined('PHPUNIT_TESTSUITE')) define('PHPUNIT_TESTSUITE', true);
 
+/**
+ * @group core
+ * Class SuiteManagerTest
+ */
 class SuiteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -88,9 +92,13 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->dispatcher->addListener('test.after.admin', $eventListener);
 
         $this->suiteman->loadTests(codecept_data_dir().'SimpleAdminGroupCest.php');
-        $this->suiteman->run($this->runner, new \PHPUnit_Framework_TestResult, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
+        $result = new \PHPUnit_Framework_TestResult;
+        $listener = new \Codeception\PHPUnit\Listener($this->dispatcher);
+        $result->addListener($listener);
+        $this->suiteman->run($this->runner, $result, ['silent' => true, 'colors' => false, 'steps' => true, 'debug' => false]);
         $this->assertContains('test.before', $events);
         $this->assertContains('test.before.admin', $events);
+        $this->assertContains('test.after', $events);
         $this->assertContains('test.after.admin', $events);
     }
 

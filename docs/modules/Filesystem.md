@@ -1,6 +1,4 @@
-# Filesystem Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Filesystem.php)**
 
 
 Module for testing local filesystem.

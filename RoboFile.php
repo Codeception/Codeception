@@ -234,26 +234,40 @@ class RoboFile extends \Robo\Tasks
 
         foreach ($modules as $module) {
             $moduleName = basename(substr($module, 0, -4));
-            $className = '\Codeception\Module\\' . $moduleName;
+            $className = 'Codeception\Module\\' . $moduleName;
             $source = "https://github.com/Codeception/Codeception/tree/".self::STABLE_BRANCH."/src/Codeception/Module/$moduleName.php";
 
             $this->taskGenDoc('docs/modules/' . $moduleName . '.md')
                 ->docClass($className)
-                ->prepend("# $moduleName Module\n\n**For additional reference, please review the [source]($source)**")
                 ->append('<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="'.$source.'">Help us to improve documentation. Edit module reference</a></div>')
                 ->processClassSignature(false)
                 ->processProperty(false)
-                ->filterMethods(function(\ReflectionMethod $method) {
+                ->filterMethods(function(\ReflectionMethod $method) use ($className) {
                     if ($method->isConstructor() or $method->isDestructor()) return false;
                     if (!$method->isPublic()) return false;
-                    if (strpos($method->name, '_') === 0) return false;
+                    if (strpos($method->name, '_') === 0) {
+                        $doc = $method->getDocComment();
+                        try {
+                            $doc = $doc . $method->getPrototype()->getDocComment();
+                        } catch (\ReflectionException $e) {}
+                        if (strpos($doc, '@api') === false) {
+                            return false;
+                        }
+                    };
                     return true;
-                })->processMethod(function(\ReflectionMethod $method, $text) {
+                })->processMethod(function(\ReflectionMethod $method, $text) use ($className, $moduleName) {
                     $title = "\n### {$method->name}\n";
+                    if (strpos($method->name, '_') === 0) {
+                        $text = str_replace("@api\n", '', $text);
+                        $text = "\n*hidden API method, expected to be used from Helper classes*\n" . $text;
+                        $text = str_replace("{{MODULE_NAME}}", $moduleName, $text);
+                    };
+
                     if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(array('@since'), array(' * available since version'), $text);
-                    $text = preg_replace('~@throws(.*?)~', '', $text);
+                    $text = preg_replace('~@throws(.*?)$~', '', $text);
                     $text = str_replace("@return mixed\n", '', $text);
+                    $text = preg_replace('~@return (.*?)$~', ' * `return` $1', $text);
                     $text = str_replace(array("\n @"), array("\n * "), $text);
                     return $title . $text;
                 })->processMethodSignature(false)

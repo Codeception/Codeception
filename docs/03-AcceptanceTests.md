@@ -483,6 +483,8 @@ On each fail, the snapshot of the last shown page will be stored in the __tests/
 
 Sometimes you may want to inspect a web page opened by a running test. For such cases you may use [pauseExecution](http://codeception.com/docs/modules/WebDriver#pauseExecution) method of WebDriver module.
 
+You can also record your tests step by step and review execution flow as slideshow with the help of [Recorder extension](http://codeception.com/addons#CodeceptionExtensionRecorder). 
+
 ## Conclusion
 
 Writing acceptance tests with Codeception and PhpBrowser is a good start. You can easily test your Joomla, Drupal, WordPress sites, as well as those made with frameworks. Writing acceptance tests is like describing a tester's actions in PHP. They are quite readable and very easy to write. Don't forget to repopulate the database on each test run.

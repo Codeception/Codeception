@@ -3,6 +3,7 @@ namespace Codeception\Subscriber;
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
+use Codeception\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class BeforeAfterTest implements EventSubscriberInterface
@@ -15,6 +16,8 @@ class BeforeAfterTest implements EventSubscriberInterface
     ];
 
     protected $hooks = [];
+    protected $startedTests = [];
+    protected $unsuccessfulTests = [];
 
     public function beforeClass(SuiteEvent $e)
     {

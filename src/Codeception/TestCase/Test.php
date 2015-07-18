@@ -2,8 +2,6 @@
 namespace Codeception\TestCase;
 
 use Codeception\Configuration;
-use Codeception\Event\TestEvent;
-use Codeception\Events;
 use Codeception\TestCase as CodeceptionTestCase;
 use Codeception\Util\Annotation;
 use Codeception\TestCase\Interfaces\Descriptive;
@@ -31,8 +29,6 @@ class Test extends CodeceptionTestCase implements
             $actorProperty = lcfirst($actor);
             $this->$actorProperty = $this->$property;
         }
-        $this->getScenario()->stopIfBlocked();
-        $this->fire(Events::TEST_BEFORE, new TestEvent($this));
         $this->_before();
         $this->prepareActorForTest();
     }
@@ -47,7 +43,6 @@ class Test extends CodeceptionTestCase implements
     protected function tearDown()
     {
         $this->_after();
-        $this->fire(Events::TEST_AFTER, new TestEvent($this));
     }
 
     /**

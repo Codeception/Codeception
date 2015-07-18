@@ -5,9 +5,14 @@ namespace Codeception;
 abstract class TestCase extends \PHPUnit_Framework_TestCase implements \PHPUnit_Framework_SelfDescribing
 {
     protected $backupGlobalsBlacklist = ['app'];
+    public $_hasStarted = false;
 
     /**
      * scenario stores steps and test settings: groups, environment, etc
+     */
+
+    /**
+     * @return Scenario
      */
     abstract public function getScenario();
     abstract public function getEnvironment();

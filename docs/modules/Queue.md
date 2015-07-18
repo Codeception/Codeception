@@ -1,6 +1,4 @@
-# Queue Module
 
-**For additional reference, please review the [source](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Queue.php)**
 
 
 
@@ -174,7 +172,7 @@ Grabber method to get the current number of messages on the queue/tube (pending/
 ```
  * `param string` $queue Queue Name
 
-@return int Count
+ * `return` int Count
 
 
 ### grabQueueTotalCount
@@ -189,7 +187,7 @@ Grabber method to get the total number of messages on the queue/tube
 
  * `param` $queue Queue Name
 
-@return int Count
+ * `return` int Count
 
 
 ### grabQueues
@@ -202,7 +200,7 @@ $queues = $I->grabQueues();
 ?>
 ```
 
-@return array List of Queues/Tubes
+ * `return` array List of Queues/Tubes
 
 
 ### seeEmptyQueue
