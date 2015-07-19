@@ -286,6 +286,10 @@ EOF
 Scenario:
 * I am in path "."
 * I see code coverage files are present
+EOF
+);
+        // I split this assertion into two, because extra space is printed after "present" on HHVM
+        $I->seeInShellOutput(<<<EOF
   I see file found "c3.php"
   I see file found "composer.json"
   I see in this file "$file"
