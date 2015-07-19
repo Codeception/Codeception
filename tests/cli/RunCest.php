@@ -241,19 +241,14 @@ EOF
 );
     }
 
-    protected function skipIfNoXdebug($I, \Codeception\Scenario $s)
-    {
-        if (!extension_loaded('xdebug')) {
-            $s->skip("Xdebug not loaded");
-        }
-    }
-
     /**
-     * @before skipIfNoXdebug
      * @param CliGuy $I
      */
     public function runTestWithFailedScenario(\CliGuy $I)
     {
+        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+            $s->skip("Xdebug not loaded");
+        }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
 Fail when file is not found (FailedCept)
@@ -275,11 +270,14 @@ EOF
     }
 
     /**
-     * @before skipIfNoXdebug
      * @param CliGuy $I
      */
     public function runTestWithSubSteps(\CliGuy $I)
     {
+        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+            $s->skip("Xdebug not loaded");
+        }
+
         $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
