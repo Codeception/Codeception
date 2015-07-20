@@ -585,7 +585,8 @@ class Configuration
                                           ->name($fname)
                                           ->in($include);
         } catch (\InvalidArgumentException $_) {
-            return [];
+            throw new ConfigurationException(
+                    "Configuration file(s) could not be found in \"$include\".");
         }
         
         $pths = [];
