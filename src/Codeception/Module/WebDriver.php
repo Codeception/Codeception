@@ -1501,9 +1501,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
-        $els = $this->match($this->webDriver, $element);
-        $this->elementOrFail($element, $els);
-        $el = reset($els);
+        $el = $this->matchFirstOrFail($this->webDriver, $element);
         $checker = function () use ($el, $callback) {
             return $callback($el);
         };
