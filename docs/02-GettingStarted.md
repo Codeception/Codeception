@@ -6,7 +6,7 @@ Let's take a look at Codeception's architecture. We assume that you already [ins
 
 One of the main concepts of Codeception is representation of tests as actions of a person. We have a UnitTester, who executes functions and tests the code. We also have a FunctionalTester, a qualified tester, who tests the application as a whole, with knowledge of its internals. And an AcceptanceTester, a user that works with our application through an interface that we provide.
 
-Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**. Each module provides predefined actions for different testing purposes, and they can be combined to fit the testng environment. Codeception tries to solve 90% of possible testing issues in its modules, so you don't have reinvent the wheel. We think that you can spend more time on writing tests and less on writing support code to make those tests run. By default AcceptanceTester relies on PhpBrowser module, which is set in `tests/acceptance.suite.yml` configuration file:
+Actor classes are not written but generated from suite configuration. **Methods of actor classes are generally taken from Codeception Modules**. Each module provides predefined actions for different testing purposes, and they can be combined to fit the testing environment. Codeception tries to solve 90% of possible testing issues in its modules, so you don't have reinvent the wheel. We think that you can spend more time on writing tests and less on writing support code to make those tests run. By default AcceptanceTester relies on PhpBrowser module, which is set in `tests/acceptance.suite.yml` configuration file:
 
 ```yaml
 class_name: AcceptanceTester
