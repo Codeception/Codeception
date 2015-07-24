@@ -244,10 +244,10 @@ EOF
     /**
      * @param CliGuy $I
      */
-    public function runTestWithFailedScenario(\CliGuy $I)
+    public function runTestWithFailedScenario(\CliGuy $I, $scenario)
     {
         if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
-            $s->skip("Xdebug not loaded");
+            $scenario->skip("Xdebug not loaded");
         }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
@@ -272,10 +272,10 @@ EOF
     /**
      * @param CliGuy $I
      */
-    public function runTestWithSubSteps(\CliGuy $I)
+    public function runTestWithSubSteps(\CliGuy $I, $scenario)
     {
         if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
-            $s->skip("Xdebug not loaded");
+            $scenario->skip("Xdebug not loaded");
         }
 
         $file = "codeception".DIRECTORY_SEPARATOR."c3";
