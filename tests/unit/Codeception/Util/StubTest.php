@@ -361,6 +361,12 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('randomstuff', $tester->getRandomName());
         $this->assertEquals('ticky2', $tester->getT());
     }
+    
+    public function testStubMakeEmptyInterface()
+    {
+        $stub = Stub::makeEmpty('\Countable', ['count' => 5]);
+        $this->assertEquals(5, $stub->count());
+    }
 }
 
 class myClassWithPrivateProperties
