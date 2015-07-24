@@ -48,7 +48,7 @@ EOF;
 
     protected $name;
     protected $settings;
-    protected $modules;
+    protected $modules = [];
     protected $actions;
     protected $numMethods = 0;
 
