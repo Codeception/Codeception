@@ -294,7 +294,7 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            if (strpos($token, '--') === 0) {
+            if (strpos($token, '--') === 0 && $token !== '--') {
                 $options[] = substr($token, 2);
                 continue;
             }
