@@ -537,7 +537,7 @@ class Stub
                     } catch (\Exception $e) {
                         throw new \PHPUnit_Framework_Exception(
                             sprintf(
-                                'Could not add property %s, class %s implements __set method, and no %s property exists',
+                                'Could not add property %1$s, class %2$s implements __set method, and no %1$s property exists',
                                 $param,
                                 $reflectionClass->getName()
                             ),
