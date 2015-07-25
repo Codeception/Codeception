@@ -241,19 +241,14 @@ EOF
 );
     }
 
-    protected function skipIfNoXdebug($I, \Codeception\Scenario $s)
-    {
-        if (!extension_loaded('xdebug')) {
-            $s->skip("Xdebug not loaded");
-        }
-    }
-
     /**
-     * @before skipIfNoXdebug
      * @param CliGuy $I
      */
-    public function runTestWithFailedScenario(\CliGuy $I)
+    public function runTestWithFailedScenario(\CliGuy $I, $scenario)
     {
+        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+            $scenario->skip("Xdebug not loaded");
+        }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
 Fail when file is not found (FailedCept)
@@ -275,17 +270,24 @@ EOF
     }
 
     /**
-     * @before skipIfNoXdebug
      * @param CliGuy $I
      */
-    public function runTestWithSubSteps(\CliGuy $I)
+    public function runTestWithSubSteps(\CliGuy $I, $scenario)
     {
+        if (!extension_loaded('xdebug') && !defined('HHVM_VERSION')) {
+            $scenario->skip("Xdebug not loaded");
+        }
+
         $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
 Scenario:
 * I am in path "."
 * I see code coverage files are present
+EOF
+);
+        // I split this assertion into two, because extra space is printed after "present" on HHVM
+        $I->seeInShellOutput(<<<EOF
   I see file found "c3.php"
   I see file found "composer.json"
   I see in this file "$file"

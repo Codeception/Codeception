@@ -114,7 +114,7 @@ before_script:
 
 script:
   - php codecept run cli,unit,web # self tests
-  - php codecept run coverage  # self tests (run coverage tests separately
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run coverage'  # run coverage tests on php only
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
