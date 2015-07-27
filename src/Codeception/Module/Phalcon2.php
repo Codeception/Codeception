@@ -24,7 +24,7 @@ use Codeception\TestCase;
  *
  *     modules:
  *         enabled:
- *             - Phalcon2
+ *             - Phalcon2:
  *                 bootstrap: 'app/config/bootstrap.php'
  *                 cleanup: true
  *                 savepoints: true

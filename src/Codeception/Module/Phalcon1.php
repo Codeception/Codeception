@@ -34,7 +34,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  *
  *     modules:
  *         enabled:
- *             - Phalcon1
+ *             - Phalcon1:
  *                 bootstrap: 'app/config/bootstrap.php'
  *                 cleanup: true
  *                 savepoints: true
