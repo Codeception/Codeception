@@ -1,6 +1,7 @@
 # Changelog
 
 #### 2.1.2
+* [Laravel] Fixed issue with error handling for haveRecord() method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
 #### 2.1.1
