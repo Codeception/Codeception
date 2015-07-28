@@ -24,7 +24,7 @@ class UserModel
 
     function get($param)
     {
-        if (!isset($this->data[$param])) throw new \Exception('Key does not exists!');
+        if (!isset($this->data[$param])) throw new \Exception('Key does not exist!');
         return $this->data[$param];
     }
 

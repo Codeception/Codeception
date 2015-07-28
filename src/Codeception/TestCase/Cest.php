@@ -103,7 +103,7 @@ class Cest extends CodeceptionTestCase implements
         }
 
         throw new \LogicException(
-            "Method $context defined in annotation but does not exists in " . get_class($this->testClassInstance)
+            "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
         );
     }
 

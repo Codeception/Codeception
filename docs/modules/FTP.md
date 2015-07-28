@@ -145,7 +145,7 @@ Deletes a file
 
 ### dontSeeFileFound
  
-Checks if file does not exists in path on the remote FTP/SFTP system
+Checks if file does not exist in path on the remote FTP/SFTP system
 
  * `param` $filename
  * `param string` $path
@@ -153,7 +153,7 @@ Checks if file does not exists in path on the remote FTP/SFTP system
 
 ### dontSeeFileFoundMatches
  
-Checks if file does not exists in path on the remote FTP/SFTP system, using regular expression as filename.
+Checks if file does not exist in path on the remote FTP/SFTP system, using regular expression as filename.
 DOES NOT OPEN the file when it's exists
 
  * `param` $regex

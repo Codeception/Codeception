@@ -294,7 +294,7 @@ trait Asserts
     
         
     /**
-     * Checks if file doesn't exists
+     * Checks if file doesn't exist
      *  
      * @param string $filename
      * @param string $message

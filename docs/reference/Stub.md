@@ -247,7 +247,7 @@ Stub::make('User', array('save' => true }));
  * `param bool|\PHPUnit_Framework_TestCase` $testCase
 
  * `return`  object - mock
- * `throws`  \RuntimeException when class not exists
+ * `throws`  \RuntimeException when class does not exist
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Stub.php#L44)
 
