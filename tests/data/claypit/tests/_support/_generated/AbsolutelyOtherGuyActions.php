@@ -2190,7 +2190,7 @@ trait AbsolutelyOtherGuyActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks if file does not exists in path
+     * Checks if file does not exist in path
      *
      * @param $filename
      * @param string $path
@@ -2203,7 +2203,7 @@ trait AbsolutelyOtherGuyActions
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *
-     * Checks if file does not exists in path
+     * Checks if file does not exist in path
      *
      * @param $filename
      * @param string $path

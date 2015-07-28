@@ -39,7 +39,7 @@ class Stub
      * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
      * @return object - mock
-     * @throws \RuntimeException when class not exists
+     * @throws \RuntimeException when class does not exist
      */
     public static function make($class, $params = [], $testCase = false)
     {

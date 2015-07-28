@@ -252,7 +252,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $route = $this->app['routes']->getByAction($namespacedAction);
 
         if (!$route) {
-            $this->fail("Action '$action' does not exists");
+            $this->fail("Action '$action' does not exist");
         }
 
         $absolute = !is_null($route->domain());
