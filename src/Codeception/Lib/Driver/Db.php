@@ -150,7 +150,7 @@ class Db
     public function select($column, $table, array &$criteria)
     {
         $where  = $criteria ? "where %s" : '';
-        $query  = "select %s from `%s` $where";
+        $query  = "select %s from \"%s\" $where";
         $params = [];
         foreach ($criteria as $k => $v) {
             $k = $this->getQuotedName($k);
