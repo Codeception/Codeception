@@ -1,6 +1,11 @@
 # Changelog
 
 #### 2.1.2
+
+* [WebDriver] added support for running tests on a remote server behind a proxy with `http_proxy` and `http_proxy_port` config options by @jdq22 *2015-07-29*
+
+
+#### 2.1.2
 * [Laravel] Fixed issue with error handling for haveRecord() method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
