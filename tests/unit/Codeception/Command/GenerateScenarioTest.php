@@ -20,6 +20,7 @@ class GenerateScenarioTest extends BaseCommandRunner
 
         $this->modules = $this->moduleContainer->all();
         $this->actions = $this->moduleContainer->getActions();
+        $this->filename = null;
 
         $this->makeCommand('\Codeception\Command\GenerateScenarios');
         $this->config = array(
@@ -37,6 +38,17 @@ class GenerateScenarioTest extends BaseCommandRunner
     {
         $this->execute(array('suite' => 'dummy'));
         $this->assertEquals(codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt', $this->filename);
+        $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
+        $this->assertContains('I see file found "$codeception"', $this->content);
+        $this->assertContains('* File_Exists generated', $this->output);
+    }
+
+    public function testMultipleTestsGeneration()
+    {
+        $this->execute(['suite' => 'dummy']);
+        $fileNames = array_map(function ($f) { return $f['filename']; }, $this->log);
+        $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $fileNames);
+        $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt', $fileNames);
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $this->content);
         $this->assertContains('I see file found "$codeception"', $this->content);
         $this->assertContains('* File_Exists generated', $this->output);
