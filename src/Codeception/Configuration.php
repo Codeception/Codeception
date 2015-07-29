@@ -40,7 +40,7 @@ class Configuration
     protected static $dataDir = null;
 
     /**
-     * @var string Directory containing helpers. Helpers will be autoloaded if they have suffix "Helper".
+     * @var string Directory with test support files like Actors, Helpers, PageObjects, etc
      */
     protected static $supportDir = null;
 
