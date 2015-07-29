@@ -195,7 +195,7 @@ class WebDriver extends CodeceptionModule implements
 
         $firefox_profile = $this->config['capabilities']['firefox_profile'];
         if (file_exists($firefox_profile) === false) {
-            throw new ModuleConfigException(__CLASS__, "Firefox profile does not exists under given path " . $firefox_profile);
+            throw new ModuleConfigException(__CLASS__, "Firefox profile does not exist under given path " . $firefox_profile);
         }
         // Set firefox profile as capability
         $this->capabilities['firefox_profile'] = file_get_contents($firefox_profile);
@@ -1501,9 +1501,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
-        $els = $this->match($this->webDriver, $element);
-        $this->elementOrFail($element, $els);
-        $el = reset($els);
+        $el = $this->matchFirstOrFail($this->webDriver, $element);
         $checker = function () use ($el, $callback) {
             return $callback($el);
         };

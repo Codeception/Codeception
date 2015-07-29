@@ -136,21 +136,29 @@ class Console implements EventSubscriberInterface
     public function afterResult()
     {
         if ($this->options['html']) {
-            $path = codecept_output_dir().$this->options['html'];
+            $path = $this->absolutePath($this->options['html']);
             $this->output->writeln("- <bold>HTML</bold> report generated in <comment>file://$path</comment>");
         }
         if ($this->options['xml']) {
-            $path = codecept_output_dir().$this->options['xml'];
+            $path = $this->absolutePath($this->options['xml']);
             $this->output->writeln("- <bold>XML</bold> report generated in <comment>$path</comment>");
         }
         if ($this->options['tap']) {
-            $path = codecept_output_dir().$this->options['tap'];
+            $path = $this->absolutePath($this->options['tap']);
             $this->output->writeln("- <bold>TAP</bold> report generated in <comment>$path</comment>");
         }
         if ($this->options['json']) {
-            $path = codecept_output_dir().$this->options['json'];
+            $path = $this->absolutePath($this->options['json']);
             $this->output->writeln("- <bold>JSON</bold> report generated in <comment>$path</comment>");
         }
+    }
+
+    private function absolutePath($path)
+    {
+        if ((strpos($path, '/') === 0) or (strpos($path, ':') === 1)) { // absolute path
+            return $path;
+        }
+        return codecept_output_dir() . $path;
     }
 
     public function testSuccess(TestEvent $e)

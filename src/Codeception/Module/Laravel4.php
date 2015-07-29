@@ -586,11 +586,11 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      */
     public function haveRecord($tableName, $attributes = array())
     {
-        $id = $this->app['db']->table($tableName)->insertGetId($attributes);
-        if (!$id) {
-            $this->fail("Couldn't insert record into table $tableName");
+        try {
+            return $this->app['db']->table($tableName)->insertGetId($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Couldn't insert record into table $tableName: " . $e->getMessage());
         }
-        return $id;
     }
 
     /**

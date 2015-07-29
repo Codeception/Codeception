@@ -288,7 +288,7 @@ class Configuration
 
         $envFiles = Finder::create()
             ->files()
-            ->name('*{.dist}.yml')
+            ->name('*.yml')
             ->in($path)
             ->depth('< 1');
 
