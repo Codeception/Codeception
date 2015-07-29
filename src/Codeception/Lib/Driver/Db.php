@@ -162,7 +162,7 @@ class Db
         }
         $sparams = implode(' AND ', $params);
 
-        return sprintf($query, $column, $this->getQuotedName($table), $params);
+        return sprintf($query, $column, $this->getQuotedName($table), $sparams);
     }
 
     public function deleteQuery($table, $id, $primaryKey = 'id')
