@@ -2,7 +2,8 @@
 
 #### 2.1.2
 
-* `Extension\Recorder` generates index for all saved records. #2216
+* `Extension\Recorder` naviagate over slides with left and right arrow keys.
+* `Extension\Recorder` generates index for all saved records.
 * `Extension\Recorder` fixed for creating directories twice. Fixed #2216
 * `Extension\Logger` fixed #2216
 * Fixed injection of Helpers into Cest and Test files. See #2222
