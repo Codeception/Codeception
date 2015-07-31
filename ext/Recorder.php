@@ -197,6 +197,9 @@ EOF;
 
     public function before(TestEvent $e)
     {
+        if (!$this->webDriverModule) {
+            return;
+        }
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
