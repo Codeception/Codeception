@@ -150,6 +150,37 @@ EOF;
 <li data-target="#steps" data-slide-to="{{step}}" {{isActive}}></li>
 EOF;
 
+    protected $indexTemplate = <<<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recorder Results Index</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Recorded Tests
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Record #{{seed}}</h1>
+        <ul>
+            {{records}}
+        </ul>
+    </div>
+
+</body>
+
+</html>
+
+EOF;
+
     protected $slidesTemplate = <<<EOF
 <div class="item {{isActive}}">
     <div class="fill">
@@ -164,6 +195,7 @@ EOF;
 
     static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
+        Events::SUITE_AFTER  => 'afterSuite',
         Events::TEST_BEFORE  => 'before',
         Events::TEST_ERROR   => 'persist',
         Events::TEST_FAIL    => 'persist',
@@ -179,6 +211,7 @@ EOF;
     protected $slides = [];
     protected $stepNum = 0;
     protected $seed;
+    protected $recordedTests = [];
 
     public function beforeSuite()
     {
@@ -193,6 +226,25 @@ EOF;
         }
         $this->writeln(sprintf("⏺ <bold>Recording</bold> ⏺ step-by-step screenshots will be saved to <info>%s</info>", codecept_output_dir()));
         $this->writeln("Directory Format: <debug>record_{$this->seed}_{testname}</debug> ----");
+    }
+
+    public function afterSuite()
+    {
+        if (!$this->webDriverModule or !$this->dir) {
+            return;
+        }
+        $links = '';
+        foreach ($this->recordedTests as $link => $url) {
+            $links .= "<li><a href='$url'>$link</a></li>\n";
+        }
+        $indexHTML = (new Template($this->indexTemplate))
+            ->place('seed', $this->seed)
+            ->place('records', $links)
+            ->produce();
+
+        file_put_contents(codecept_output_dir().'records.html', $indexHTML);
+        $this->writeln("⏺ Records saved into: <info>file://" . codecept_output_dir().'records.html</info>');
+
     }
 
     public function before(TestEvent $e)
@@ -250,7 +302,10 @@ EOF;
             ->place('test', TestCase::getTestSignature($e->getTest()))
             ->produce();
 
-        file_put_contents($this->dir . DIRECTORY_SEPARATOR . 'index.html', $html);
+        $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
+        file_put_contents($indexFile, $html);
+        $testName = TestCase::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
+        $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
     }
 
     public function afterStep(StepEvent $e)

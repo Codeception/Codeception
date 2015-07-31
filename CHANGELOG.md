@@ -2,7 +2,8 @@
 
 #### 2.1.2
 
-* `Extension\Recorder` to use `uniqued` to generate random seed for folder names. #2216
+* `Extension\Recorder` generates index for all saved records. #2216
+* `Extension\Recorder` fixed for creating directories twice. Fixed #2216
 * `Extension\Logger` fixed #2216
 * Fixed injection of Helpers into Cest and Test files. See #2222
 * `Stub::makeEmpty` on interfaces works again by @Naktibalda
