@@ -178,7 +178,7 @@ class Db
 
     public function getQuotedName($name)
     {
-        return $name;
+        return '"' . str_replace('.', '"."', $name) . '"';
     }
 
     protected function sqlLine($sql)
