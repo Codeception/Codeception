@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Extension;
 
 use Codeception\Event\StepEvent;
@@ -46,8 +46,8 @@ class Recorder extends \Codeception\Extension
 {
     protected $config = [
         'delete_successful' => true,
-        'module' => 'WebDriver',
-        'template' => null
+        'module'            => 'WebDriver',
+        'template'          => null
     ];
 
     protected $template = <<<EOF
@@ -165,8 +165,8 @@ EOF;
     static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
         Events::TEST_BEFORE  => 'before',
-        Events::TEST_ERROR => 'persist',
-        Events::TEST_FAIL => 'persist',
+        Events::TEST_ERROR   => 'persist',
+        Events::TEST_FAIL    => 'persist',
         Events::TEST_SUCCESS => 'cleanup',
         Events::STEP_AFTER   => 'afterStep',
     ];
@@ -180,15 +180,13 @@ EOF;
     protected $stepNum = 0;
     protected $seed;
 
-
-
     public function beforeSuite()
     {
         $this->webDriverModule = null;
         if (!$this->hasModule($this->config['module'])) {
             return;
         }
-        $this->seed = time();
+        $this->seed = uniqid();
         $this->webDriverModule = $this->getModule($this->config['module']);
         if (!$this->webDriverModule instanceof ScreenshotSaver) {
             throw new ExtensionException($this, 'You should pass module which implements Codeception\Lib\Interfaces\ScreenshotSaver interface');
@@ -203,8 +201,8 @@ EOF;
         $this->stepNum = 0;
         $this->slides = [];
         $testName = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($e->getTest()));
-        $this->dir = codecept_output_dir()."record_{$this->seed}_$testName";
-        mkdir($this->dir);
+        $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
+        @mkdir($this->dir);
     }
 
     public function cleanup(TestEvent $e)
@@ -249,7 +247,7 @@ EOF;
             ->place('test', TestCase::getTestSignature($e->getTest()))
             ->produce();
 
-        file_put_contents($this->dir.DIRECTORY_SEPARATOR.'index.html', $html);
+        file_put_contents($this->dir . DIRECTORY_SEPARATOR . 'index.html', $html);
     }
 
     public function afterStep(StepEvent $e)
@@ -258,7 +256,7 @@ EOF;
             return;
         }
 
-        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT).'.png';
+        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT) . '.png';
         $this->webDriverModule->_saveScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();
