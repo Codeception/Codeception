@@ -205,8 +205,8 @@ class SuiteManager
         $t->configDispatcher($this->dispatcher);
         $t->configActor($this->getActor());
         $t->configEnv($this->env);
-        $t->configDi($this->di);
         $t->configModules($this->moduleContainer);
+        $t->configDi($this->di);
         $t->initConfig();
         $this->di->injectDependencies($t);
     }

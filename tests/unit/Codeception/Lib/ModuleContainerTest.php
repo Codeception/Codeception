@@ -284,6 +284,16 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->hasModule('\Codeception\Lib\DependencyModule');
     }
 
+    public function testInjectModuleIntoHelper()
+    {
+        $config = ['modules' => [
+            'enabled' => ['Codeception\Lib\HelperModule'],
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Codeception\Lib\HelperModule');
+        $this->moduleContainer->hasModule('Codeception\Lib\HelperModule');
+    }
+
 }
 
 class StubModule extends \Codeception\Module
@@ -303,6 +313,17 @@ class StubModule extends \Codeception\Module
         return $this->config['secondField'];
     }
 
+}
+
+
+
+
+class HelperModule extends \Codeception\Module
+{
+    function _inject(ConflictedModule $module)
+    {
+        $this->module = $module;
+    }
 }
 
 class ConflictedModule extends \Codeception\Module implements ConflictsWithModule

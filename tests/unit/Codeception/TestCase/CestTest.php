@@ -39,5 +39,4 @@ class CestTest extends Codeception\TestCase\Test
         );
     }
 
-
 }

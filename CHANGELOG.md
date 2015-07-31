@@ -2,9 +2,12 @@
 
 #### 2.1.2
 
+* Fixed injection of Helpers into Cest and Test files. See #2222
+* `Stub::makeEmpty` on interfaces works again by @Naktibalda
 * Command `generate:scenarios` fixed for Cest files by @mkudenko See #1962
 * [WebDriver] added support for running tests on a remote server behind a proxy with `http_proxy` and `http_proxy_port` config options by @jdq22 *2015-07-29*
 * [Laravel] Fixed issue with error handling for `haveRecord()` method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
+* [WebDriver] Fixed `waitForElementChange` fatal error by @stipsan
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
 #### 2.1.1
@@ -13,7 +16,7 @@
   WebDriver classes were moved to `Facebook\WebDriver` namespace. Please take that into account when using WebDriver API directly.
   Till 2.2 Codeception will keep non-namespaced aliases of WebDriver classes.
 * Module Reference now contains documentation for hidden API methods which should be used in Helper classes
-* Skipped and Incomplete tests won't fire `test.before` and `test.after` events. For instamce, WebDriver browser with won't be started and Db cleanups won't be executed on skipped tests.
+* Skipped and Incomplete tests won't fire `test.before` and `test.after` events. For instance, WebDriver browser won't be started and Db cleanups won't be executed on incomplete or skipped tests.
 * Annotations `skip` and `incomplete` enabled in Cest files #2131
 * [WebDriver][PhpBrowser][Frameworks] `_findElements($locator)` method added to use in Helper classes *2015-07-11*
   Now you can use `$this->getModule('WebDriver')->findElements('.user');` in Helpers to match all elements with `user` class using WebDriver module
