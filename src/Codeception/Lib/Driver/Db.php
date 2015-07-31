@@ -149,18 +149,19 @@ class Db
 
     public function select($column, $table, array &$criteria)
     {
-        $where  = $criteria ? "where %s" : '';
-        $query  = "select %s from %s $where";
+        $where = $criteria ? "where %s" : '';
+        $query = "select %s from %s $where";
         $params = [];
         foreach ($criteria as $k => $v) {
             $k = $this->getQuotedName($k);
             if ($v === null) {
-                $params[] = "$k IS ?";
+                $params[] = "$k IS NULL ";
+                unset($criteria[$k]);
             } else {
-                $params[] = "$k = ?";
+                $params[] = "$k = ? ";
             }
         }
-        $sparams = implode(' AND ', $params);
+        $sparams = implode('AND ', $params);
 
         return sprintf($query, $column, $this->getQuotedName($table), $sparams);
     }
