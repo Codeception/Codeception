@@ -67,16 +67,7 @@ class SqlSrv extends Db
     {
         return '[' . $name . ']';
     }
-    
-    public function deleteQuery($table, $id, $primaryKey = 'id')
-    {
-        $query = "delete from "
-            . $this->getQuotedName($table)
-            . " where " . $this->getQuotedName($primaryKey) . " = $id";
-        
-        $this->sqlQuery($query);
-    }
-    
+
     /**
      * Get a primary column name of a table.
      *

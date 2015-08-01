@@ -149,20 +149,20 @@ class Db
 
     public function select($column, $table, array &$criteria)
     {
-        $where  = $criteria ? "where %s" : '';
-        $query  = "select %s from `%s` $where";
+        $where = $criteria ? "where %s" : '';
+        $query = "select %s from %s $where";
         $params = [];
         foreach ($criteria as $k => $v) {
-            $k = $this->getQuotedName($k);
             if ($v === null) {
-                $params[] = "$k IS ?";
+                $params[] = $this->getQuotedName($k) . " IS NULL ";
+                unset($criteria[$k]);
             } else {
-                $params[] = "$k = ?";
+                $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
-        $sparams = implode(' AND ', $params);
+        $sparams = implode('AND ', $params);
 
-        return sprintf($query, $column, $table, $sparams);
+        return sprintf($query, $column, $this->getQuotedName($table), $sparams);
     }
 
     public function deleteQuery($table, $id, $primaryKey = 'id')
@@ -178,7 +178,7 @@ class Db
 
     public function getQuotedName($name)
     {
-        return $name;
+        return '"' . str_replace('.', '"."', $name) . '"';
     }
 
     protected function sqlLine($sql)
