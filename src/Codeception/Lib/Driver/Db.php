@@ -153,12 +153,11 @@ class Db
         $query = "select %s from %s $where";
         $params = [];
         foreach ($criteria as $k => $v) {
-            $k = $this->getQuotedName($k);
             if ($v === null) {
-                $params[] = "$k IS NULL ";
+                $params[] = $this->getQuotedName($k) . " IS NULL ";
                 unset($criteria[$k]);
             } else {
-                $params[] = "$k = ? ";
+                $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
         $sparams = implode('AND ', $params);
