@@ -59,7 +59,10 @@ class ZF2 extends Framework implements DoctrineProvider
     protected $applicationConfig;
 
     protected $queries = 0;
-    protected $time = 0;
+    protected $time = 0; 
+    protected $serviceLocator;
+    protected $entityManager;
+    
 
     public function _initialize()
     {
@@ -71,14 +74,17 @@ class ZF2 extends Framework implements DoctrineProvider
         if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
-        Console::overrideIsConsole(false);
+        Console::overrideIsConsole(false); 
+        
+        $this->application = Application::init($this->applicationConfig);  
+        $this->serviceLocator = $this->application->getServiceManager();
+        $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager'); 
     }
 
     public function _before(TestCase $test)
-    {
-        $this->application = Application::init($this->applicationConfig);
+    {               
         $events = $this->application->getEventManager();
-        $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
+        $events->detach($this->grabServiceFromContainer('SendResponseListener'));
 
         $this->client->setApplication($this->application);
         $_SERVER['REQUEST_URI'] = '';
@@ -107,9 +113,8 @@ class ZF2 extends Framework implements DoctrineProvider
     }
 
     public function _getEntityManager()
-    {
-        $serviceLocator = Application::init($this->applicationConfig)->getServiceManager();
-        return $serviceLocator->get('Doctrine\ORM\EntityManager');
+    {   
+        return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
     
     /**
@@ -126,11 +131,10 @@ class ZF2 extends Framework implements DoctrineProvider
      * @return mixed
      */
     public function grabServiceFromContainer($service)
-    {
-        $serviceLocator = Application::init($this->applicationConfig)->getServiceManager();
-        if (!$serviceLocator->has($service)) {
+    {   
+        if (!$this->serviceLocator->has($service)) {
             $this->fail("Service $service is not available in container");
         }        
-        return $serviceLocator->get($service);
-    } 
+        return $this->serviceLocator->get($service);
+    }    
 }
