@@ -3,24 +3,6 @@ namespace Codeception\Lib\Driver;
 
 class Oci extends Oracle
 {
-    public function select($column, $table, array &$criteria)
-    {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from %s $where";
-        $params = [];
-        foreach ($criteria as $k => $v) {
-            if ($v === null) {
-                $params[] = "$k IS NULL ";
-                unset($criteria[$k]);
-            } else {
-                $params[] = "$k = ? ";
-            }
-        }
-        $sparams = implode('AND ', $params);
-
-        return sprintf($query, $column, $table, $sparams);
-    }
-
     /**
      * SQL commands should ends with `//` in the dump file
      * IF you want to load triggers too.
