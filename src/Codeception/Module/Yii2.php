@@ -2,8 +2,9 @@
 namespace Codeception\Module;
 
 use Yii;
-use Codeception\Lib\Framework;
+use Codeception\Configuration;
 use Codeception\Exception\ModuleConfig;
+use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 
 /**
@@ -46,7 +47,7 @@ class Yii2 extends Framework implements ActiveRecord
 
     public function _initialize()
     {
-        if (!is_file(\Codeception\Configuration::projectDir().$this->config['configFile'])) {
+        if (!is_file(Configuration::projectDir().$this->config['configFile'])) {
             throw new ModuleConfig(__CLASS__, "The application config file does not exist: {$this->config['configFile']}");
         }
     }
@@ -54,11 +55,10 @@ class Yii2 extends Framework implements ActiveRecord
     public function _before(\Codeception\TestCase $test)
     {
         $this->client = new \Codeception\Lib\Connector\Yii2();
-        $this->client->configFile = \Codeception\Configuration::projectDir().$this->config['configFile'];
-        $mainConfig = \Codeception\Configuration::config();
-        if (isset($mainConfig['config']) && isset($mainConfig['config']['test_entry_url'])){
-            $this->client->setServerParameter('HTTP_HOST', (string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_HOST));
-            $this->client->setServerParameter('HTTPS', ((string) parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME)) === 'https');
+        $this->client->configFile = Configuration::projectDir().$this->config['configFile'];
+        $mainConfig = Configuration::config()['config'];
+        if (isset($mainConfig['test_entry_url'])){
+            $this->client->setServerParameter('HTTPS', parse_url($mainConfig['test_entry_url'], PHP_URL_SCHEME)  === 'https');
         }
         $this->app = $this->client->startApp();
 
