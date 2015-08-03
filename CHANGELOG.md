@@ -11,6 +11,7 @@
 * Fixed injection of Helpers into Cest and Test files. See #2222
 * `Stub::makeEmpty` on interfaces works again by @Naktibalda
 * Command `generate:scenarios` fixed for Cest files by @mkudenko See #1962
+* [Db] Quoted table name in Db::select, removed identical methods from child classes by @Naktibalda. See #2231
 * [WebDriver] added support for running tests on a remote server behind a proxy with `http_proxy` and `http_proxy_port` config options by @jdq22 *2015-07-29*
 * [Laravel] Fixed issue with error handling for `haveRecord()` method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
 * [WebDriver] Fixed `waitForElementChange` fatal error by @stipsan
