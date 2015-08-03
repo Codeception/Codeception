@@ -2,6 +2,7 @@
 
 #### 2.1.2
 
+* Wildcards includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications). See #2016 By @nzod
 * If a specific *ActorActions trait does not exist in `tests/_support/_generated` directory, it will be created automatically before run.
 * `Extension\Recorder` navigate over slides with left and right arrow keys.
 * `Extension\Recorder` generates index for all saved records.

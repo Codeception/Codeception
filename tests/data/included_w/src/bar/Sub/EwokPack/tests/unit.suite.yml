@@ -6,4 +6,3 @@ class_name: UnitTester
 modules:
     enabled:
         - Asserts
-        - \EwokPack\Helper\Unit

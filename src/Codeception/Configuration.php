@@ -371,9 +371,11 @@ class Configuration
      */
     public static function modules($settings)
     {
-        return array_map(function ($m) {
-            return is_array($m) ? key($m) : $m;
-        }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled']));
+        return array_map(
+            function ($m) {
+                return is_array($m) ? key($m) : $m;
+            }, $settings['modules']['enabled'], array_keys($settings['modules']['enabled'])
+        );
     }
 
     public static function isExtensionEnabled($extensionName)
@@ -415,11 +417,11 @@ class Configuration
     public static function outputDir()
     {
         if (!self::$logDir) {
-            throw new ConfigurationException("Path for logs not specified. Please, set log path in global config");
+            throw new ConfigurationException("Path for output not specified. Please, set output path in global config");
         }
 
         $dir = self::$logDir . DIRECTORY_SEPARATOR;
-        if(strcmp(self::$logDir[0], "/") !== 0){
+        if (strcmp(self::$logDir[0], "/") !== 0) {
             $dir = self::$dir . DIRECTORY_SEPARATOR . $dir;
         }
 
@@ -429,7 +431,7 @@ class Configuration
         }
 
         if (!is_writable($dir)) {
-            throw new ConfigurationException("Path for logs is not writable. Please, set appropriate access mode for log path.");
+            throw new ConfigurationException("Path for output is not writable. Please, set appropriate access mode for output path.");
         }
 
         return $dir;
@@ -510,7 +512,6 @@ class Configuration
         $res = [];
 
         foreach ($a2 as $k2 => $v2) {
-
             if (!isset($a1[$k2])) { // if no such key
                 $res[$k2] = $v2;
                 unset($a1[$k2]);
@@ -538,13 +539,13 @@ class Configuration
      */
     protected static function loadSuiteConfig($suite, $path, $settings)
     {
-        $suiteDistconf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
+        $suiteDistConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.dist.yml");
         $suiteConf = self::getConfFromFile(self::$dir . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . "$suite.suite.yml");
-        $settings = self::mergeConfigs($settings, $suiteDistconf);
+        $settings = self::mergeConfigs($settings, $suiteDistConf);
         $settings = self::mergeConfigs($settings, $suiteConf);
         return $settings;
     }
-    
+
     /**
      * Replaces wildcarded items in include array with real paths.
      *
@@ -553,47 +554,45 @@ class Configuration
      */
     protected static function expandWildcardedIncludes(array $includes)
     {
-        if (! count($includes)) {
+        if (empty($includes)) {
             return $includes;
         }
-        
-        $incs = [];
-        foreach ($includes as $inc) {
-            $incs = array_merge($incs, self::expandWildcardsFor($inc));
+        $expandedIncludes = [];
+        foreach ($includes as $include) {
+            $expandedIncludes = array_merge($expandedIncludes, self::expandWildcardsFor($include));
         }
-        
-        return $incs;
+        return $expandedIncludes;
     }
-    
+
     /**
      * Finds config files in given wildcarded include path.
      * Returns the expanded paths or the original if not a wildcard.
      *
      * @param $include
-     * @param $fname
-     * @return array 
+     * @return array
+     * @throws ConfigurationException
      */
-    protected static function expandWildcardsFor($include,
-                                                 $fname='codeception.yml')
+    protected static function expandWildcardsFor($include)
     {
         if (1 !== preg_match('/[\?\.\*]/', $include)) {
-            return [$include, ];
+            return [$include,];
         }
-        
+
         try {
-            $conf_files = Finder::create()->files()
-                                          ->name($fname)
-                                          ->in($include);
-        } catch (\InvalidArgumentException $_) {
+            $configFiles = Finder::create()->files()
+                ->name('/codeception(\.dist\.yml|\.yml)/')
+                ->in(self::$dir . DIRECTORY_SEPARATOR . $include);
+        } catch (\InvalidArgumentException $e) {
             throw new ConfigurationException(
-                    "Configuration file(s) could not be found in \"$include\".");
+                "Configuration file(s) could not be found in \"$include\"."
+            );
         }
-        
-        $pths = [];
-        foreach ($conf_files as $file) {
-            $pths[] = $file->getPath();
+
+        $paths = [];
+        foreach ($configFiles as $file) {
+            $paths[] = codecept_relative_path($file->getPath());
         }
-        
-        return $pths;
+
+        return $paths;
     }
 }
