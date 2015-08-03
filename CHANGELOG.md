@@ -2,7 +2,8 @@
 
 #### 2.1.2
 
-* `Extension\Recorder` naviagate over slides with left and right arrow keys.
+* If a specific *ActorActions trait does not exist in `tests/_support/_generated` directory, it will be created automatically before run.
+* `Extension\Recorder` navigate over slides with left and right arrow keys.
 * `Extension\Recorder` generates index for all saved records.
 * `Extension\Recorder` fixed for creating directories twice. Fixed #2216
 * `Extension\Logger` fixed #2216
