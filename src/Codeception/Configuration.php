@@ -153,6 +153,9 @@ class Configuration
 
         self::$logDir = $config['paths']['log'];
 
+        // fill up includes with wildcard expansions
+        $config['include'] = self::expandWildcardedIncludes($config['include']);
+
         // config without tests, for inclusion of other configs
         if (count($config['include']) and !isset($config['paths']['tests'])) {
             return $config;
@@ -540,5 +543,57 @@ class Configuration
         $settings = self::mergeConfigs($settings, $suiteDistconf);
         $settings = self::mergeConfigs($settings, $suiteConf);
         return $settings;
+    }
+    
+    /**
+     * Replaces wildcarded items in include array with real paths.
+     *
+     * @param $includes
+     * @return array
+     */
+    protected static function expandWildcardedIncludes(array $includes)
+    {
+        if (! count($includes)) {
+            return $includes;
+        }
+        
+        $incs = [];
+        foreach ($includes as $inc) {
+            $incs = array_merge($incs, self::expandWildcardsFor($inc));
+        }
+        
+        return $incs;
+    }
+    
+    /**
+     * Finds config files in given wildcarded include path.
+     * Returns the expanded paths or the original if not a wildcard.
+     *
+     * @param $include
+     * @param $fname
+     * @return array 
+     */
+    protected static function expandWildcardsFor($include,
+                                                 $fname='codeception.yml')
+    {
+        if (1 !== preg_match('/[\?\.\*]/', $include)) {
+            return [$include, ];
+        }
+        
+        try {
+            $conf_files = Finder::create()->files()
+                                          ->name($fname)
+                                          ->in($include);
+        } catch (\InvalidArgumentException $_) {
+            throw new ConfigurationException(
+                    "Configuration file(s) could not be found in \"$include\".");
+        }
+        
+        $pths = [];
+        foreach ($conf_files as $file) {
+            $pths[] = $file->getPath();
+        }
+        
+        return $pths;
     }
 }
