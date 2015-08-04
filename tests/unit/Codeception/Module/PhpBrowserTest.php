@@ -367,9 +367,11 @@ class PhpBrowserTest extends TestsForBrowsers
      */
     public function testEmptyValueOfCookie()
     {
-      $this->module->setCookie('u', 'value');
+      //set cookie
+      $this->module->amOnPage('/cookies2');
+
       $this->module->amOnPage('/unset-cookie');
       $this->module->seeResponseCodeIs(200);
-      $this->module->dontSeeCookie('u');
+      $this->module->dontSeeCookie('a');
     }
 }

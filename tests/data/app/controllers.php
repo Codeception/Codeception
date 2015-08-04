@@ -202,7 +202,6 @@ class contentType2 {
 
 class unsetCookie {
     function GET() {
-        //setcookie('u', '', 1, '/');
-        header('Set-Cookie: X-PP-SILOVER=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
+        header('Set-Cookie: a=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
     }
 }
