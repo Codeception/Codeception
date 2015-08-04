@@ -199,3 +199,10 @@ class contentType2 {
         include __DIR__.'/view/content_type2.php';
     }
 }
+
+class unsetCookie {
+    function GET() {
+        //setcookie('u', '', 1, '/');
+        header('Set-Cookie: X-PP-SILOVER=; Expires=Thu, 01 Jan 1970 00:00:01 GMT');
+    }
+}

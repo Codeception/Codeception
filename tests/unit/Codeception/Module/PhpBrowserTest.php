@@ -361,4 +361,15 @@ class PhpBrowserTest extends TestsForBrowsers
             $this->markTestSkipped("Not for Guzzle <6");
         }
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2234
+     */
+    public function testEmptyValueOfCookie()
+    {
+      $this->module->setCookie('u', 'value');
+      $this->module->amOnPage('/unset-cookie');
+      $this->module->seeResponseCodeIs(200);
+      $this->module->dontSeeCookie('u');
+    }
 }
