@@ -593,22 +593,28 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     /**
      * Returns an array of name => value pairs for the passed form.
      *
-     * The function calls getPhpValues on the passed form object, then
-     * resets numeric array indexes for array field names without array
-     * keys specified (i.e. 'fieldname[]' but not 'fieldname[keyname]')
-     * as expected by setCheckboxBoolValues.
+     * For form fields containing a name ending in [], an array is
+     * created out of all field values with the given name.
      *
      * @param \Symfony\Component\DomCrawler\Form the form
      * @return array an array of name => value pairs
      */
     protected function getFormValuesFor(Form $form)
     {
-        $values = $form->getPhpValues();
+        $values = [];
         $fields = $form->all();
         foreach ($fields as $field) {
-            $name = $this->getSubmissionFormFieldName($field->getName());
-            if (!empty($values[$name]) && substr($field->getName(), -2) === '[]') {
-                $values[$name] = array_values($values[$name]);
+            $fieldName = $this->getSubmissionFormFieldName($field->getName());
+            if (!$field->hasValue()) {
+                continue;
+            }
+            if (substr($field->getName(), -2) === '[]') {
+                if (!isset($values[$fieldName])) {
+                    $values[$fieldName] = [];
+                }
+                $values[$fieldName][] = $field->getValue();
+            } else {
+                $values[$fieldName] = $field->getValue();
             }
         }
         return $values;
