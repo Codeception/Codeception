@@ -479,7 +479,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $form->getMethod(),
             $url,
             $requestParams,
-            $form->getPhpFiles()
+            $form->getFiles()
         );
         $this->forms = [];
         $this->debugResponse();

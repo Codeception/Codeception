@@ -257,6 +257,10 @@ class Guzzle6 extends Client
     protected function formatMultipart($parts, $key, $value)
     {
         if (is_array($value)) {
+            if (isset($value['size']) && is_int($value['size']) && isset($value['tmp_name'])) {
+                //this function is only used to add non-file parameters, so don't add files again.
+                return $parts;
+            }
             foreach ($value as $subKey => $subValue) {
                 $parts = array_merge($this->formatMultipart([], $key."[$subKey]", $subValue), $parts);
             }
