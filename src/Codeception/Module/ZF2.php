@@ -61,8 +61,7 @@ class ZF2 extends Framework implements DoctrineProvider
     protected $queries = 0;
     protected $time = 0; 
     protected $serviceLocator;
-    protected $entityManager;
-    
+    protected $entityManager;     
 
     public function _initialize()
     {
@@ -79,10 +78,16 @@ class ZF2 extends Framework implements DoctrineProvider
         $this->application = Application::init($this->applicationConfig);  
         $this->serviceLocator = $this->application->getServiceManager();
         $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager'); 
-    }
+    }  
 
     public function _before(TestCase $test)
-    {               
+    {      
+        $this->application = Application::init($this->applicationConfig);               
+        $this->serviceLocator = $this->application->getServiceManager();
+        $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager');  
+       
+
+     
         $events = $this->application->getEventManager();
         $events->detach($this->grabServiceFromContainer('SendResponseListener'));
 
