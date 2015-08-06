@@ -13,28 +13,28 @@ use Zend\View\Helper\Placeholder\Registry;
 use Codeception\Lib\Connector\ZF2 as ZF2Connector;
 
 /**
- * This module allows you to run tests inside Zend Framework 2.
- *
- * File `init_autoloader` in project's root is required.
- * Uses `tests/application.config.php` config file by default.
- *
- * ## Status
- *
- * * Maintainer: **bladeofsteel**
- * * Stability: **alpha**
- * * Contact: https://github.com/bladeofsteel
- *
- * ## Config
- *
- * * config: relative path to config file (default: `tests/application.config.php`)
- *
- * ## API
- *
- * * application -  instance of `\Zend\Mvc\ApplicationInterface`
- * * db - instance of `\Zend\Db\Adapter\AdapterInterface`
- * * client - BrowserKit client
- *
- */
+* This module allows you to run tests inside Zend Framework 2.
+*
+* File `init_autoloader` in project's root is required.
+* Uses `tests/application.config.php` config file by default.
+*
+* ## Status
+*
+* * Maintainer: **bladeofsteel**
+* * Stability: **alpha**
+* * Contact: https://github.com/bladeofsteel
+*
+* ## Config
+*
+* * config: relative path to config file (default: `tests/application.config.php`)
+*
+* ## API
+*
+* * application -  instance of `\Zend\Mvc\ApplicationInterface`
+* * db - instance of `\Zend\Db\Adapter\AdapterInterface`
+* * client - BrowserKit client
+*
+*/
 class ZF2 extends Framework implements DoctrineProvider
 {
     protected $config = [
@@ -42,18 +42,18 @@ class ZF2 extends Framework implements DoctrineProvider
     ];
 
     /**
-     * @var \Zend\Mvc\ApplicationInterface
-     */
+    * @var \Zend\Mvc\ApplicationInterface
+    */
     public $application;
 
     /**
-     * @var \Zend\Db\Adapter\AdapterInterface
-     */
+    * @var \Zend\Db\Adapter\AdapterInterface
+    */
     public $db;
 
     /**
-     * @var \Codeception\Lib\Connector\ZF2
-     */
+    * @var \Codeception\Lib\Connector\ZF2
+    */
     public $client;
 
     protected $applicationConfig;
@@ -74,20 +74,22 @@ class ZF2 extends Framework implements DoctrineProvider
             $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
         }
         Console::overrideIsConsole(false); 
-        
+
         $this->application = Application::init($this->applicationConfig);  
         $this->serviceLocator = $this->application->getServiceManager();
-        $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager'); 
+        if($this->serviceLocator->has('Doctrine\ORM\EntityManager')) {
+            $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager');     
+        }          
     }  
 
     public function _before(TestCase $test)
     {      
         $this->application = Application::init($this->applicationConfig);               
         $this->serviceLocator = $this->application->getServiceManager();
-        $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager');  
-       
+        if($this->serviceLocator->has('Doctrine\ORM\EntityManager')) {
+            $this->entityManager =  $this->serviceLocator->get('Doctrine\ORM\EntityManager');     
+        }  
 
-     
         $events = $this->application->getEventManager();
         $events->detach($this->grabServiceFromContainer('SendResponseListener'));
 
@@ -121,20 +123,20 @@ class ZF2 extends Framework implements DoctrineProvider
     {   
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
-    
+
     /**
-     * Grabs a service from ZF2 container.
-     * Recommended to use for unit testing.
-     *
-     * ``` php
-     * <?php
-     * $em = $I->grabServiceFromContainer('Doctrine\ORM\EntityManager');
-     * ?>
-     * ```
-     *
-     * @param $service
-     * @return mixed
-     */
+    * Grabs a service from ZF2 container.
+    * Recommended to use for unit testing.
+    *
+    * ``` php
+    * <?php
+    * $em = $I->grabServiceFromContainer('Doctrine\ORM\EntityManager');
+    * ?>
+    * ```
+    *
+    * @param $service
+    * @return mixed
+    */
     public function grabServiceFromContainer($service)
     {   
         if (!$this->serviceLocator->has($service)) {
