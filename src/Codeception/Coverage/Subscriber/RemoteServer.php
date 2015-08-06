@@ -36,7 +36,7 @@ class RemoteServer extends LocalServer
 
     protected function retrieveAndPrintHtml($suite)
     {
-        $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
+        $tempFile = tempnam(sys_get_temp_dir(), 'C3') . '.tar';
         file_put_contents($tempFile, $this->c3Request('html'));
 
         $destDir = Configuration::outputDir() . $suite . '.remote.coverage';
