@@ -312,6 +312,6 @@ class Guzzle6 extends Client
             }
             $jar[] = $setCookie;
         }
-        return new CookieJar(true, $jar);
+        return new CookieJar(false, $jar);
     }
 }
