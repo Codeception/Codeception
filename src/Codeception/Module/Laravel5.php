@@ -78,6 +78,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
+                'disable_middleware' => false,
             ],
             (array)$config
         );
@@ -207,6 +208,34 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function setApplication($app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Disable middleware for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableMiddleware();
+     * ?>
+     * ```
+     */
+    public function disableMiddleware()
+    {
+        $this->config['disable_middleware'] = true;
+    }
+
+    /**
+     * Enable middleware for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->enableMiddleware();
+     * ?>
+     * ```
+     */
+    public function enableMiddleware()
+    {
+        $this->config['disable_middleware'] = false;
     }
 
     /**
