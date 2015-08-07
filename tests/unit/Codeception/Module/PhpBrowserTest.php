@@ -317,6 +317,8 @@ class PhpBrowserTest extends TestsForBrowsers
     
     public function testArrayFieldSubmitForm()
     {
+        $this->skipForOldGuzzle();
+
         $this->module->amOnPage('/form/example17');
         $this->module->submitForm(
             'form',
