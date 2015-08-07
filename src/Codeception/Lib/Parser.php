@@ -131,12 +131,13 @@ class Parser
         $sourceCode = file_get_contents($file);
         $classes = [];
         $tokens = token_get_all($sourceCode);
+        $tokenCount = count($tokens);
         $namespace = '';
 
-        for ($i = 0; $i < count($tokens); $i++) {
+        for ($i = 0; $i < $tokenCount; $i++) {
             if ($tokens[$i][0] === T_NAMESPACE) {
                 $namespace = '';
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $tokenCount; $j++) {
                     if ($tokens[$j][0] === T_STRING) {
                         $namespace .= $tokens[$j][1] . '\\';
                     } else {
