@@ -6,8 +6,8 @@
 * [Laravel5] Added `disableMiddleware()` and `enableMiddleware()` methods. By @janhenkgerritsen *2015-08-07*
 * Enhancement: Wildcards includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications). See #2016 By @nzod
 * Enhancement: If a specific *ActorActions trait does not exist in `tests/_support/_generated` directory, it will be created automatically before run.
-* `Extension\Recorder` navigate over slides with left and right arrow keys.
-* `Extension\Recorder` generates index for all saved records.
+* `Extension\Recorder` navigate over slides with left and right arrow keys, do not create screenshots for comment steps.
+* `Extension\Recorder` generates index html for all saved records.
 * `Extension\Recorder` fixed for creating directories twice. Fixed #2216
 * `Extension\Logger` fixed #2216
 * Fixed injection of Helpers into Cest and Test files. See #2222

@@ -7,6 +7,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Module\WebDriver;
+use Codeception\Step\Comment as CommentStep;
 use Codeception\TestCase;
 use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
@@ -136,7 +137,7 @@ class Recorder extends \Codeception\Extension
     <!-- Script to Activate the Carousel -->
     <script>
     $('.carousel').carousel({
-        wrap: false,
+        wrap: true,
         interval: false
     })
 
@@ -323,6 +324,9 @@ EOF;
     public function afterStep(StepEvent $e)
     {
         if (!$this->webDriverModule or !$this->dir) {
+            return;
+        }
+        if ($e->getStep() instanceof CommentStep) {
             return;
         }
 
