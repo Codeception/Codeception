@@ -85,6 +85,7 @@ class Laravel5 extends Client
         }
 
         $this->app->instance('request', Request::createFromBase($request));
+        $this->app->instance('middleware.disable', $this->module->config['disable_middleware']);
 
         // Bootstrap the application
         $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
