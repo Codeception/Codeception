@@ -537,7 +537,7 @@ class Console implements EventSubscriberInterface
             return $className;
         }
         if (strpos($className, $this->namespace) === 0) {
-            return substr($className, strlen($this->namespace));
+            return substr($className, strlen($this->namespace)+1);
         }
         return $className;
     }
