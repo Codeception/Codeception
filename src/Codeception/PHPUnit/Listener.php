@@ -91,10 +91,10 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
         $hash = spl_object_hash($test);
+        if (!in_array($hash, $this->unsuccessfulTests)) {
+            $this->fire(Events::TEST_SUCCESS, new TestEvent($test));
+        }
         if (in_array($hash, $this->startedTests) and ($test instanceof CodeceptionTestCase)) {
-            if (!in_array($hash, $this->unsuccessfulTests)) {
-                $this->fire(Events::TEST_SUCCESS, new TestEvent($test));
-            }
             $this->fire(Events::TEST_AFTER, new TestEvent($test));
         }
 
