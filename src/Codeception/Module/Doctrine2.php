@@ -7,50 +7,51 @@ use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestCase;
 use Doctrine\ORM\EntityManager;
-use Codeception\Util\Stub;
+use Doctrine\ORM\Tools\SchemaTool;
+use Codeception\Util\Stub;   
 
 /**
- * Allows integration and testing for projects with Doctrine2 ORM.
- *
- * Doctrine2 uses EntityManager to perform all database operations.
- * As the module uses active connection and active entity manager, instance of this object should be passed to this module.
- *
- * It can be done in bootstrap file, by setting static $em property:
- *
- * ``` php
- * <?php
- *
- * \Codeception\Module\Doctrine2::$em = $em
- *
- * ```
- * ## Status
- *
- * * Maintainer: **davert**
- * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
- *
- * ## Config
- *
- * * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
- * * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
- * * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
- *
- *  ### Example (`functional.suite.yml`)
- *
- *      modules:
- *         enabled: [Doctrine2]
- *         config:
- *            Doctrine2:
- *               cleanup: false
- *
- * ## Public Properties
- *
- * * `em` - Entity Manager
- */
+* Allows integration and testing for projects with Doctrine2 ORM.
+*
+* Doctrine2 uses EntityManager to perform all database operations.
+* As the module uses active connection and active entity manager, instance of this object should be passed to this module.
+*
+* It can be done in bootstrap file, by setting static $em property:
+*
+* ``` php
+* <?php
+*
+* \Codeception\Module\Doctrine2::$em = $em
+*
+* ```
+* ## Status
+*
+* * Maintainer: **davert**
+* * Stability: **stable**
+* * Contact: codecept@davert.mail.ua
+*
+* ## Config
+*
+* * auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
+* * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
+* * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
+*
+*  ### Example (`functional.suite.yml`)
+*
+*      modules:
+*         enabled: [Doctrine2]
+*         config:
+*            Doctrine2:
+*               cleanup: false
+*
+* ## Public Properties
+*
+* * `em` - Entity Manager
+*/
 
 class Doctrine2 extends CodeceptionModule implements DependsOnModule
 {
-
+    
     protected $config = [
         'cleanup' => true,
         'connection_callback' => false,
@@ -74,14 +75,25 @@ modules:
 EOF;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    * @var \Doctrine\ORM\EntityManager
+    */
     public $em = null;
 
+    private $doCommit = false;
+
     /**
-     * @var \Codeception\Lib\Interfaces\DoctrineProvider
-     */
-    private $dependentModule;
+    * @var \Codeception\Lib\Interfaces\DoctrineProvider
+    */
+    private $dependentModule; 
+
+
+    public function _initialize()
+    {
+        $this->setEntityManager();
+        $schemaTool = new SchemaTool($this->em);  
+        $schemaTool->dropDatabase();    
+        $schemaTool->createSchema($this->em->getMetadataFactory()->getAllMetadata());        
+    }    
 
     public function _depends()
     {
@@ -94,11 +106,11 @@ EOF;
     public function _inject(DoctrineProvider $dependentModule = null)
     {
         $this->dependentModule = $dependentModule;
-    }
+    }    
 
-    public function _beforeSuite($settings = [])
-    {
-        if ($this->dependentModule) {
+    private function setEntityManager()
+    {  
+        if ($this->dependentModule) {    
             $this->em = $this->dependentModule->_getEntityManager();
         } else {
             if (is_callable($this->config['connection_callback'])) {
@@ -127,10 +139,27 @@ EOF;
         }
 
         $this->em->getConnection()->connect();
+    }
+
+    public function _beforeSuite($settings = [])
+    {
+    
+    }
+
+    public function setCommit($doCommit)
+    {
+        $this->doCommit = (bool)$doCommit;
+    }
+
+    public function _before(TestCase $test)
+    {       
+        $this->setEntityManager();
+        
         if ($this->config['cleanup']) {
+            $this->doCommit = false;
             $this->em->getConnection()->beginTransaction();
         }
-    }
+    }   
 
     public function _after(TestCase $test)
     {
@@ -139,7 +168,12 @@ EOF;
         }
         if ($this->config['cleanup'] && $this->em->getConnection()->isTransactionActive()) {
             try {
-                $this->em->getConnection()->rollback();
+                if($this->doCommit) {
+                    $this->em->getConnection()->commit();    
+                }
+                else {
+                    $this->em->getConnection()->rollback();    
+                }   
             } catch (\PDOException $e) {
             }
         }
@@ -161,8 +195,8 @@ EOF;
 
 
     /**
-     * Performs $em->flush();
-     */
+    * Performs $em->flush();
+    */
     public function flushToDatabase()
     {
         $this->em->flush();
@@ -170,19 +204,19 @@ EOF;
 
 
     /**
-     * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
-     * $I->persistEntity($user, array('name' => 'Miles'));
-     * ```
-     *
-     * @param $obj
-     * @param array $values
-     */
+    * Adds entity to repository and flushes. You can redefine it's properties with the second parameter.
+    *
+    * Example:
+    *
+    * ``` php
+    * <?php
+    * $I->persistEntity(new \Entity\User, array('name' => 'Miles'));
+    * $I->persistEntity($user, array('name' => 'Miles'));
+    * ```
+    *
+    * @param $obj
+    * @param array $values
+    */
     public function persistEntity($obj, $values = [])
     {
 
@@ -200,25 +234,25 @@ EOF;
     }
 
     /**
-     * Mocks the repository.
-     *
-     * With this action you can redefine any method of any repository.
-     * Please, note: this fake repositories will be accessible through entity manager till the end of test.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     *
-     * $I->haveFakeRepository('Entity\User', array('findByUsername' => function($username) {  return null; }));
-     *
-     * ```
-     *
-     * This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
-     *
-     * @param $classname
-     * @param array $methods
-     */
+    * Mocks the repository.
+    *
+    * With this action you can redefine any method of any repository.
+    * Please, note: this fake repositories will be accessible through entity manager till the end of test.
+    *
+    * Example:
+    *
+    * ``` php
+    * <?php
+    *
+    * $I->haveFakeRepository('Entity\User', array('findByUsername' => function($username) {  return null; }));
+    *
+    * ```
+    *
+    * This creates a stub class for Entity\User repository with redefined method findByUsername, which will always return the NULL value.
+    *
+    * @param $classname
+    * @param array $methods
+    */
     public function haveFakeRepository($classname, $methods = [])
     {
         $em = $this->em;
@@ -252,15 +286,15 @@ EOF;
     }
 
     /**
-     * Persists record into repository.
-     * This method crates an entity, and sets its properties directly (via reflection).
-     * Setters of entity won't be executed, but you can create almost any entity and save it to database.
-     * Returns id using `getId` of newly created entity.
-     *
-     * ```php
-     * $I->haveInRepository('Entity\User', array('name' => 'davert'));
-     * ```
-     */
+    * Persists record into repository.
+    * This method crates an entity, and sets its properties directly (via reflection).
+    * Setters of entity won't be executed, but you can create almost any entity and save it to database.
+    * Returns id using `getId` of newly created entity.
+    *
+    * ```php
+    * $I->haveInRepository('Entity\User', array('name' => 'davert'));
+    * ```
+    */
     public function haveInRepository($entity, array $data)
     {
         $reflectedEntity = new \ReflectionClass($entity);
@@ -284,25 +318,25 @@ EOF;
     }
 
     /**
-     * Flushes changes to database executes a query defined by array.
-     * It builds query based on array of parameters.
-     * You can use entity associations to build complex queries.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $I->seeInRepository('User', array('name' => 'davert'));
-     * $I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
-     * $I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
-     * ?>
-     * ```
-     *
-     * Fails if record for given criteria can\'t be found,
-     *
-     * @param $entity
-     * @param array $params
-     */
+    * Flushes changes to database executes a query defined by array.
+    * It builds query based on array of parameters.
+    * You can use entity associations to build complex queries.
+    *
+    * Example:
+    *
+    * ``` php
+    * <?php
+    * $I->seeInRepository('User', array('name' => 'davert'));
+    * $I->seeInRepository('User', array('name' => 'davert', 'Company' => array('name' => 'Codegyre')));
+    * $I->seeInRepository('Client', array('User' => array('Company' => array('name' => 'Codegyre')));
+    * ?>
+    * ```
+    *
+    * Fails if record for given criteria can\'t be found,
+    *
+    * @param $entity
+    * @param array $params
+    */
     public function seeInRepository($entity, $params = [])
     {
         $res = $this->proceedSeeInRepository($entity, $params);
@@ -310,11 +344,11 @@ EOF;
     }
 
     /**
-     * Flushes changes to database and performs ->findOneBy() call for current repository.
-     *
-     * @param $entity
-     * @param array $params
-     */
+    * Flushes changes to database and performs ->findOneBy() call for current repository.
+    *
+    * @param $entity
+    * @param array $params
+    */
     public function dontSeeInRepository($entity, $params = [])
     {
         $res = $this->proceedSeeInRepository($entity, $params);
@@ -335,24 +369,24 @@ EOF;
     }
 
     /**
-     * Selects field value from repository.
-     * It builds query based on array of parameters.
-     * You can use entity associations to build complex queries.
-     *
-     * Example:
-     *
-     * ``` php
-     * <?php
-     * $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
-     * ?>
-     * ```
-     *
-     * @version 1.1
-     * @param $entity
-     * @param $field
-     * @param array $params
-     * @return array
-     */
+    * Selects field value from repository.
+    * It builds query based on array of parameters.
+    * You can use entity associations to build complex queries.
+    *
+    * Example:
+    *
+    * ``` php
+    * <?php
+    * $email = $I->grabFromRepository('User', 'email', array('name' => 'davert'));
+    * ?>
+    * ```
+    *
+    * @version 1.1
+    * @param $entity
+    * @param $field
+    * @param array $params
+    * @return array
+    */
     public function grabFromRepository($entity, $field, $params = [])
     {
         // we need to store to database...
@@ -366,13 +400,13 @@ EOF;
     }
 
     /**
-     * It's Fuckin Recursive!
-     *
-     * @param $qb
-     * @param $assoc
-     * @param $alias
-     * @param $params
-     */
+    * It's Fuckin Recursive!
+    *
+    * @param $qb
+    * @param $assoc
+    * @param $alias
+    * @param $params
+    */
     protected function buildAssociationQuery($qb, $assoc, $alias, $params)
     {
         $data = $this->em->getClassMetadata($assoc);
