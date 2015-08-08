@@ -198,6 +198,37 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function testFileUploadWithKeyValueArray()
+    {
+        $tmpFileName = tempnam('/tmp', 'test_');
+        file_put_contents($tmpFileName, 'test data');
+        $files = [
+            'file' => $tmpFileName,
+        ];
+        $this->module->sendPOST('/rest/file-upload', [], $files);
+        $this->module->seeResponseContainsJson([
+            'uploaded' => true,
+        ]);
+    }
+
+    public function testFileUploadWithFilesArray()
+    {
+        $tmpFileName = tempnam('/tmp', 'test_');
+        file_put_contents($tmpFileName, 'test data');
+        $files = [
+            'file' => [
+                'name' => 'file.txt',
+                'type' => 'text/plain',
+                'size' => 9,
+                'tmp_name' => $tmpFileName,
+            ]
+        ];
+        $this->module->sendPOST('/rest/file-upload', [], $files);
+        $this->module->seeResponseContainsJson([
+            'uploaded' => true,
+        ]);
+    }
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
