@@ -28,8 +28,11 @@ class PostgreSql extends Db
                 continue;
             }
 
-            if (strpos(trim($sqlLine), '$$') === 0) {
-                $dollarsOpen = !$dollarsOpen;
+            if (!preg_match('/\'.*\$\$.*\'/', $sqlLine)) { // Ignore $$ inside SQL standard string syntax such as in INSERT statements.
+                $pos = strpos($sqlLine, '$$');
+                if (($pos !== false) && ($pos >= 0)) {
+                    $dollarsOpen = !$dollarsOpen;
+                }
             }
 
             $query .= "\n" . rtrim($sqlLine);
