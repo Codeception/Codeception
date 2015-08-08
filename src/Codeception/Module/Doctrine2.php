@@ -96,7 +96,7 @@ EOF;
         $this->dependentModule = $dependentModule;
     }
 
-    public function _beforeSuite($settings = [])
+    public function _before(TestCase $e)
     {
         if ($this->dependentModule) {
             $this->em = $this->dependentModule->_getEntityManager();

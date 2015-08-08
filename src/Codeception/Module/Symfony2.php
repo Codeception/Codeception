@@ -14,7 +14,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ## Demo Project
  *
- * <https://github.com/DavertMik/SymfonyCodeceptionApp>
+ * <https://github.com/Codeception/symfony-demo>
  *
  * ## Status
  *
@@ -124,6 +124,9 @@ class Symfony2 extends Framework implements DoctrineProvider
 
     protected function bootKernel()
     {
+        if ($this->kernel) {
+            return;
+        }
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
     }

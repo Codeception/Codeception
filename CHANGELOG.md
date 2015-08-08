@@ -3,6 +3,8 @@
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**
+* [Symfony2] fixed Doctrine2 integration: Doctrine transactions will start before each test and rollback afterwards. *2015-08-08*
+* [Doctrine2] establishing connection and starting transaction is moved to `_before`. *2015-08-08*
 * [Laravel5] Added `disableMiddleware()` and `enableMiddleware()` methods. By @janhenkgerritsen *2015-08-07*
 * Enhancement: Wildcards includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications). See #2016 By @nzod
 * Enhancement: If a specific *ActorActions trait does not exist in `tests/_support/_generated` directory, it will be created automatically before run.
