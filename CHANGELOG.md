@@ -5,6 +5,9 @@
 * **Updated to PHPUnit 4.8**
 * [Symfony2] fixed Doctrine2 integration: Doctrine transactions will start before each test and rollback afterwards. *2015-08-08*
 * [Doctrine2] establishing connection and starting transaction is moved to `_before`. *2015-08-08*
+* [PhpBrowser] Removed disabled and file fields from form values. By @Naktibalda *2015-08-08*
+* [ZF2] Added grabServiceFromContainer function. By InVeX  *2015-08-08*
+* [Guzzle6] Disabled strict mode of CookieJar #2234 By @Naktibalda *2015-08-04*
 * [Laravel5] Added `disableMiddleware()` and `enableMiddleware()` methods. By @janhenkgerritsen *2015-08-07*
 * Enhancement: Wildcards includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications). See #2016 By @nzod
 * Enhancement: If a specific *ActorActions trait does not exist in `tests/_support/_generated` directory, it will be created automatically before run.
@@ -19,6 +22,7 @@
 * [Db] Quoted table name in Db::select, removed identical methods from child classes by @Naktibalda. See #2231
 * [WebDriver] added support for running tests on a remote server behind a proxy with `http_proxy` and `http_proxy_port` config options by @jdq22 *2015-07-29*
 * [Laravel] Fixed issue with error handling for `haveRecord()` method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
+* Fixed displayed XML report path #2187 by @Naktibalda *2015-07-27*
 * [WebDriver] Fixed `waitForElementChange` fatal error by @stipsan
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
