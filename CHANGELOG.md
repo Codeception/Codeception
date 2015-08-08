@@ -3,6 +3,7 @@
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**
+* [REST] Created tests for file-upload with REST module. By @Naktibalda *2015-08-08*
 * [PhpBrowser] Removed disabled and file fields from form values. By @Naktibalda *2015-08-08*
 * [ZF2] Added grabServiceFromContainer function. By InVeX  *2015-08-08*
 * [Guzzle6] Disabled strict mode of CookieJar #2234 By @Naktibalda *2015-08-04*
@@ -21,6 +22,7 @@
 * [Laravel] Fixed issue with error handling for `haveRecord()` method in Laravel modules #2217 by @janhenkgerritsen *2015-07-28*
 * Fixed displayed XML report path #2187 by @Naktibalda *2015-07-27*
 * [WebDriver] Fixed `waitForElementChange` fatal error by @stipsan
+* [Db] Enhanced dollar quoting ($$) processing in PostgreSQL driver by @YasserHassan *2015-07-20*
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
 #### 2.1.1
