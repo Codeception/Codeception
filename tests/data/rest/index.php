@@ -42,6 +42,11 @@ $GLOBALS['RESTmap']['POST'] = [
     'user' => function() {
         $name = $_POST['name'];
         return ['name' => $name];
+    },
+    'file-upload' => function() {
+        return [
+            'uploaded' => isset($_FILES['file']['tmp_name']) && file_exists($_FILES['file']['tmp_name']),
+        ];
     }
 ];
 
