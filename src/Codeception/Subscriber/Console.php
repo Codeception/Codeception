@@ -6,7 +6,6 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
 use Codeception\Lib\Deprecation;
@@ -60,6 +59,7 @@ class Console implements EventSubscriberInterface
     protected $output;
     protected $options;
     protected $fails = [];
+    protected $reports = [];
     protected $namespace = '';
 
     public function __construct($options)
@@ -71,6 +71,18 @@ class Console implements EventSubscriberInterface
         $this->output = new Output($options);
         if ($this->debug) {
             Debug::setOutput($this->output);
+        }
+
+        foreach (['html', 'xml', 'tap', 'json'] as $report) {
+            if (!$this->options[$report]) {
+                continue;
+            }
+            $path = $this->absolutePath($this->options[$report]);
+            $this->reports[] = sprintf(
+                "- <bold>%s</bold> report generated in <comment>file://%s</comment>",
+                strtoupper($report),
+                $path
+            );
         }
     }
 
@@ -135,21 +147,8 @@ class Console implements EventSubscriberInterface
 
     public function afterResult()
     {
-        if ($this->options['html']) {
-            $path = $this->absolutePath($this->options['html']);
-            $this->output->writeln("- <bold>HTML</bold> report generated in <comment>file://$path</comment>");
-        }
-        if ($this->options['xml']) {
-            $path = $this->absolutePath($this->options['xml']);
-            $this->output->writeln("- <bold>XML</bold> report generated in <comment>$path</comment>");
-        }
-        if ($this->options['tap']) {
-            $path = $this->absolutePath($this->options['tap']);
-            $this->output->writeln("- <bold>TAP</bold> report generated in <comment>$path</comment>");
-        }
-        if ($this->options['json']) {
-            $path = $this->absolutePath($this->options['json']);
-            $this->output->writeln("- <bold>JSON</bold> report generated in <comment>$path</comment>");
+        foreach ($this->reports as $message) {
+            $this->output->writeln($message);
         }
     }
 
@@ -347,10 +346,6 @@ class Console implements EventSubscriberInterface
     public function printExceptionTrace(\Exception $e)
     {
         static $limit = 10;
-
-        $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
-            ? $e->getClassname()
-            : get_class($e);
 
         if ($this->rawStackTrace) {
             $this->message(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false))->writeln();
