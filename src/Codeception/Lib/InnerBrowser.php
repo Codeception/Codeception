@@ -604,10 +604,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $values = [];
         $fields = $form->all();
         foreach ($fields as $field) {
-            $fieldName = $this->getSubmissionFormFieldName($field->getName());
-            if (!$field->hasValue()) {
+            if ($field->isDisabled() || !$field->hasValue() || $field instanceof FileFormField) {
                 continue;
             }
+            $fieldName = $this->getSubmissionFormFieldName($field->getName());
             if (substr($field->getName(), -2) === '[]') {
                 if (!isset($values[$fieldName])) {
                     $values[$fieldName] = [];
