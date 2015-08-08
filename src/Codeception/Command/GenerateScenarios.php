@@ -83,6 +83,11 @@ class GenerateScenarios extends Command
 
             $name = $this->underscore(basename($test->getFileName(), '.php'));
 
+            // create separate file for each test in Cest
+            if (get_class($test) == 'Codeception\TestCase\Cest' && !$input->getOption('single-file')) {
+                $name .= '.' . $this->underscore($test->getTestMethod());
+            }
+
             if ($input->getOption('single-file')) {
                 $scenarios .= $feature;
                 $output->writeln("* $name rendered");

@@ -1,4 +1,4 @@
-<?php 
+<?php
 namespace Codeception\Extension;
 
 use Codeception\Event\StepEvent;
@@ -7,6 +7,7 @@ use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Module\WebDriver;
+use Codeception\Step\Comment as CommentStep;
 use Codeception\TestCase;
 use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
@@ -46,8 +47,8 @@ class Recorder extends \Codeception\Extension
 {
     protected $config = [
         'delete_successful' => true,
-        'module' => 'WebDriver',
-        'template' => null
+        'module'            => 'WebDriver',
+        'template'          => null
     ];
 
     protected $template = <<<EOF
@@ -136,9 +137,21 @@ class Recorder extends \Codeception\Extension
     <!-- Script to Activate the Carousel -->
     <script>
     $('.carousel').carousel({
-        wrap: false,
+        wrap: true,
         interval: false
     })
+
+    $(document).bind('keyup', function(e) {
+      if(e.keyCode==39){
+      jQuery('a.carousel-control.right').trigger('click');
+      }
+
+      else if(e.keyCode==37){
+      jQuery('a.carousel-control.left').trigger('click');
+      }
+
+    });
+
     </script>
 
 </body>
@@ -148,6 +161,37 @@ EOF;
 
     protected $indicatorTemplate = <<<EOF
 <li data-target="#steps" data-slide-to="{{step}}" {{isActive}}></li>
+EOF;
+
+    protected $indexTemplate = <<<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recorder Results Index</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Recorded Tests
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Record #{{seed}}</h1>
+        <ul>
+            {{records}}
+        </ul>
+    </div>
+
+</body>
+
+</html>
+
 EOF;
 
     protected $slidesTemplate = <<<EOF
@@ -164,9 +208,10 @@ EOF;
 
     static $events = [
         Events::SUITE_BEFORE => 'beforeSuite',
+        Events::SUITE_AFTER  => 'afterSuite',
         Events::TEST_BEFORE  => 'before',
-        Events::TEST_ERROR => 'persist',
-        Events::TEST_FAIL => 'persist',
+        Events::TEST_ERROR   => 'persist',
+        Events::TEST_FAIL    => 'persist',
         Events::TEST_SUCCESS => 'cleanup',
         Events::STEP_AFTER   => 'afterStep',
     ];
@@ -179,8 +224,7 @@ EOF;
     protected $slides = [];
     protected $stepNum = 0;
     protected $seed;
-
-
+    protected $recordedTests = [];
 
     public function beforeSuite()
     {
@@ -188,7 +232,7 @@ EOF;
         if (!$this->hasModule($this->config['module'])) {
             return;
         }
-        $this->seed = time();
+        $this->seed = uniqid();
         $this->webDriverModule = $this->getModule($this->config['module']);
         if (!$this->webDriverModule instanceof ScreenshotSaver) {
             throw new ExtensionException($this, 'You should pass module which implements Codeception\Lib\Interfaces\ScreenshotSaver interface');
@@ -197,14 +241,36 @@ EOF;
         $this->writeln("Directory Format: <debug>record_{$this->seed}_{testname}</debug> ----");
     }
 
+    public function afterSuite()
+    {
+        if (!$this->webDriverModule or !$this->dir) {
+            return;
+        }
+        $links = '';
+        foreach ($this->recordedTests as $link => $url) {
+            $links .= "<li><a href='$url'>$link</a></li>\n";
+        }
+        $indexHTML = (new Template($this->indexTemplate))
+            ->place('seed', $this->seed)
+            ->place('records', $links)
+            ->produce();
+
+        file_put_contents(codecept_output_dir().'records.html', $indexHTML);
+        $this->writeln("⏺ Records saved into: <info>file://" . codecept_output_dir().'records.html</info>');
+
+    }
+
     public function before(TestEvent $e)
     {
+        if (!$this->webDriverModule) {
+            return;
+        }
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
         $testName = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($e->getTest()));
-        $this->dir = codecept_output_dir()."record_{$this->seed}_$testName";
-        mkdir($this->dir);
+        $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
+        @mkdir($this->dir);
     }
 
     public function cleanup(TestEvent $e)
@@ -249,7 +315,10 @@ EOF;
             ->place('test', TestCase::getTestSignature($e->getTest()))
             ->produce();
 
-        file_put_contents($this->dir.DIRECTORY_SEPARATOR.'index.html', $html);
+        $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
+        file_put_contents($indexFile, $html);
+        $testName = TestCase::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
+        $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
     }
 
     public function afterStep(StepEvent $e)
@@ -257,8 +326,11 @@ EOF;
         if (!$this->webDriverModule or !$this->dir) {
             return;
         }
+        if ($e->getStep() instanceof CommentStep) {
+            return;
+        }
 
-        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT).'.png';
+        $filename = str_pad($this->stepNum, 3, "0", STR_PAD_LEFT) . '.png';
         $this->webDriverModule->_saveScreenshot($this->dir . DIRECTORY_SEPARATOR . $filename);
         $this->stepNum++;
         $this->slides[$filename] = $e->getStep();

@@ -9,7 +9,7 @@ use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model as PhalconModel;
 use Codeception\TestCase;
 use Codeception\Configuration;
-use Codeception\Lib\Connector\Phalcon1 as Phalcon1Connector;
+use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
@@ -17,18 +17,34 @@ use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Connector\PhalconMemorySession;
 
 /**
- * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x/2.x).
+ * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+ * Please try it and leave your feedback.
  *
  * ## Demo Project
  *
  * <https://github.com/phalcon/forum>
  *
+ * ## Status
+ *
+ * * Maintainer: **Serghei Iakovlev**
+ * * Stability: **dev**
+ * * Contact: sadhooklay@gmail.com
+ *
+ * ## Example
+ *
+ *     modules:
+ *         enabled:
+ *             - Phalcon1:
+ *                 bootstrap: 'app/config/bootstrap.php'
+ *                 cleanup: true
+ *                 savepoints: true
+ *
+ * ## Config
+ *
  * The following configurations are required for this module:
- * <ul>
- * <li>boostrap - the path of the application bootstrap file</li>
- * <li>cleanup - cleanup database (using transactions)</li>
- * <li>savepoints - use savepoints to emulate nested transactions</li>
- * </ul>
+ * * boostrap: the path of the application bootstrap file</li>
+ * * cleanup: cleanup database (using transactions)</li>
+ * * savepoints: use savepoints to emulate nested transactions</li>
  *
  * The application bootstrap file must return Application object but not call its handle() method.
  *
@@ -44,26 +60,15 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * ?>
  * ```
  *
- * You can use this module by setting params in your functional.suite.yml:
- * <pre>
- * class_name: FunctionalTester
- * modules:
- *     enabled:
- *         - Phalcon1:
- *             bootstrap: 'app/config/bootstrap.php'
- *             cleanup: true
- *             savepoints: true
- * </pre>
+ * ## API
  *
+ * * di - `Phalcon\Di\Injectable` instance
+ * * client - `BrowserKit` client
  *
  * ## Parts
  *
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
- * ## Status
- *
- * Maintainer: **sergeyklay**
- * Stability: **beta**
  */
 class Phalcon1 extends Framework implements ActiveRecord, PartedModule
 {
@@ -85,8 +90,8 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     public $di = null;
 
     /**
-     * Phalcon1 Connector
-     * @var Phalcon1Connector
+     * Phalcon Connector
+     * @var PhalconConnector
      */
     public $client;
 
@@ -112,7 +117,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             );
         }
 
-        $this->client = new Phalcon1Connector();
+        $this->client = new PhalconConnector();
     }
 
     /**

@@ -45,7 +45,7 @@ class Laravel5 extends Client
      */
     protected function doRequest($request)
     {
-        $this->initialize();
+        $this->initialize($request);
 
         $request = Request::createFromBase($request);
         $response = $this->kernel->handle($request);
@@ -56,8 +56,9 @@ class Laravel5 extends Client
 
     /**
      * Initialize the Laravel framework.
+     * @param SymfonyRequest $request
      */
-    private function initialize()
+    private function initialize($request = null)
     {
         // Store a reference to the database object
         // so the database connection can be reused during tests
@@ -74,13 +75,22 @@ class Laravel5 extends Client
             $loggedInUser = $this->app['auth']->user();
         }
 
+        // Load the application object
         $this->app = $this->kernel = $this->loadApplication();
+
+        // Set the request instance for the application
+        if (is_null($request)) {
+            $appConfig = require $this->module->config['project_dir'] . 'config/app.php';
+            $request = SymfonyRequest::create($appConfig['url']);
+        }
+
+        $this->app->instance('request', Request::createFromBase($request));
+        $this->app->instance('middleware.disable', $this->module->config['disable_middleware']);
+
+        // Bootstrap the application
         $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
 
-        // Set the base url for the Request object
-        $url = $this->app['config']->get('app.url', 'http://localhost');
-        $this->app->instance('request', Request::createFromBase(SymfonyRequest::create($url)));
-
+        // Restore the old database object if available
         if ($oldDb) {
             $this->app['db'] = $oldDb;
             Model::setConnectionResolver($this->app['db']);

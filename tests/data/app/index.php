@@ -37,6 +37,7 @@ $urls = array(
     '/register' => 'register',
     '/content-iso' => 'contentType1',
     '/content-cp1251' => 'contentType2',
+    '/unset-cookie' => 'unsetCookie',
 );
 
 glue::stick($urls);

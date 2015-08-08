@@ -65,17 +65,19 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * ## Configuration
  *
- * * url *required* - Starting URL for your app.
- * * browser *required* - Browser to launch.
- * * host - Selenium server host (127.0.0.1 by default).
- * * port - Selenium server port (4444 by default).
- * * restart - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
- * * window_size - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
- * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
- * * wait - Implicit wait (default 0 seconds).
- * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
- * * connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
- * * request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
+ * * `url` *required* - Starting URL for your app.
+ * * `browser` *required* - Browser to launch.
+ * * `host` - Selenium server host (127.0.0.1 by default).
+ * * `port` - Selenium server port (4444 by default).
+ * * `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
+ * * `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
+ * * `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
+ * * `wait` - Implicit wait (default 0 seconds).
+ * * `capabilities` - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
+ * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
+ * * `http_proxy` - sets http proxy server url for testing a remote server.
+ * * `http_proxy_port` - sets http proxy server port
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -143,15 +145,19 @@ class WebDriver extends CodeceptionModule implements
         'window_size'   => false,
         'capabilities'  => [],
         'connection_timeout' => null,
-        'request_timeout' => null        
+        'request_timeout' => null,
+        'http_proxy'	=> null,
+        'http_proxy_port' => null
     ];
 
     protected $wd_host;
     protected $capabilities;
-    protected $connection_timeout_in_ms;
-    protected $request_timeout_in_ms;
+    protected $connectionTimeoutInMs;
+    protected $requestTimeoutInMs;
     protected $test;
     protected $sessionSnapshots = [];
+    protected $httpProxy;
+    protected $httpProxyPort;
 
     /**
      * @var RemoteWebDriver
@@ -163,11 +169,18 @@ class WebDriver extends CodeceptionModule implements
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
-        $this->connection_timeout_in_ms = $this->config['connection_timeout'] * 1000;
-        $this->request_timeout_in_ms = $this->config['request_timeout'] * 1000;
+        $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
+        $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
         try {
-            $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms);
+            $this->webDriver = RemoteWebDriver::create(
+                $this->wd_host,
+                $this->capabilities,
+                $this->connectionTimeoutInMs,
+                $this->requestTimeoutInMs,
+                $this->httpProxy,
+                $this->httpProxyPort
+            );
         } catch (WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
@@ -195,7 +208,7 @@ class WebDriver extends CodeceptionModule implements
 
         $firefox_profile = $this->config['capabilities']['firefox_profile'];
         if (file_exists($firefox_profile) === false) {
-            throw new ModuleConfigException(__CLASS__, "Firefox profile does not exists under given path " . $firefox_profile);
+            throw new ModuleConfigException(__CLASS__, "Firefox profile does not exist under given path " . $firefox_profile);
         }
         // Set firefox profile as capability
         $this->capabilities['firefox_profile'] = file_get_contents($firefox_profile);
@@ -1501,9 +1514,7 @@ class WebDriver extends CodeceptionModule implements
      */
     public function waitForElementChange($element, \Closure $callback, $timeout = 30)
     {
-        $els = $this->match($this->webDriver, $element);
-        $this->elementOrFail($element, $els);
-        $el = reset($els);
+        $el = $this->matchFirstOrFail($this->webDriver, $element);
         $checker = function () use ($el, $callback) {
             return $callback($el);
         };

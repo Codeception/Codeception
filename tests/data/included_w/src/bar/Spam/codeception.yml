@@ -1,0 +1,8 @@
+namespace: SpamPack
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    support: tests/_support
+

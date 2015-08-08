@@ -78,6 +78,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
+                'disable_middleware' => false,
             ],
             (array)$config
         );
@@ -210,6 +211,34 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Disable middleware for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableMiddleware();
+     * ?>
+     * ```
+     */
+    public function disableMiddleware()
+    {
+        $this->config['disable_middleware'] = true;
+    }
+
+    /**
+     * Enable middleware for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->enableMiddleware();
+     * ?>
+     * ```
+     */
+    public function enableMiddleware()
+    {
+        $this->config['disable_middleware'] = false;
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php
@@ -252,7 +281,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $route = $this->app['routes']->getByAction($namespacedAction);
 
         if (!$route) {
-            $this->fail("Action '$action' does not exists");
+            $this->fail("Action '$action' does not exist");
         }
 
         $absolute = !is_null($route->domain());
@@ -528,12 +557,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function haveRecord($tableName, $attributes = [])
     {
-        $id = $this->app['db']->table($tableName)->insertGetId($attributes);
-        if (!$id) {
-            $this->fail("Couldn't insert record into table $tableName");
+        try {
+            return $this->app['db']->table($tableName)->insertGetId($attributes);
+        } catch (\Exception $e) {
+            $this->fail("Couldn't insert record into table $tableName: " . $e->getMessage());
         }
-
-        return $id;
     }
 
     /**

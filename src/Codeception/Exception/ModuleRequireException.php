@@ -8,7 +8,7 @@ class ModuleRequireException extends \Exception
         if (is_object($module)) {
             $module = get_class($module);
         }
-        $module = str_replace('Codeception\Module\\', '', ltrim($module, '\\'));
+        $module = str_replace('Codeception\\Module\\', '', ltrim($module, '\\'));
         parent::__construct($message);
         $this->message = $module . " module requirements are not met!\n" . $this->message;
     }

@@ -13,12 +13,7 @@ class CalcHelper extends \Codeception\Module
      */
     protected $subtractor;
 
-    protected $pi;
-
-    public function __construct($pi = 3)
-    {
-        $this->pi = $pi;
-    }
+    protected $pi = 3;
 
     protected function _inject(Adder $adder, Subtractor $subtractor)
     {

@@ -101,24 +101,6 @@ class PostgreSql extends Db
         }
     }
 
-    public function select($column, $table, array &$criteria)
-    {
-        $where = $criteria ? "where %s" : '';
-        $query = 'select %s from "%s" ' . $where;
-        $params = [];
-        foreach ($criteria as $k => $v) {
-            if ($v === null) {
-                $params[] = "$k IS NULL ";
-                unset($criteria[$k]);
-            } else {
-                $params[] = "$k = ? ";
-            }
-        }
-        $sparams = implode('AND ', $params);
-
-        return sprintf($query, $column, $table, $sparams);
-    }
-
     public function lastInsertId($table)
     {
         /*We make an assumption that the sequence name for this table is based on how postgres names sequences for SERIAL columns */
@@ -137,7 +119,7 @@ class PostgreSql extends Db
         );
         return implode('.', $name);
     }
-    
+
     /**
      * @param string $tableName
      *

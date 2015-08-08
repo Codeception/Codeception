@@ -242,7 +242,7 @@ class FTP extends Filesystem
     }
 
     /**
-     * Checks if file does not exists in path on the remote FTP/SFTP system
+     * Checks if file does not exist in path on the remote FTP/SFTP system
      *
      * @param $filename
      * @param string $path
@@ -255,7 +255,7 @@ class FTP extends Filesystem
     }
 
     /**
-     * Checks if file does not exists in path on the remote FTP/SFTP system, using regular expression as filename.
+     * Checks if file does not exist in path on the remote FTP/SFTP system, using regular expression as filename.
      * DOES NOT OPEN the file when it's exists
      *
      * @param $regex

@@ -317,6 +317,8 @@ class PhpBrowserTest extends TestsForBrowsers
     
     public function testArrayFieldSubmitForm()
     {
+        $this->skipForOldGuzzle();
+
         $this->module->amOnPage('/form/example17');
         $this->module->submitForm(
             'form',
@@ -360,5 +362,18 @@ class PhpBrowserTest extends TestsForBrowsers
         if (class_exists('GuzzleHttp\Url')) {
             $this->markTestSkipped("Not for Guzzle <6");
         }
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2234
+     */
+    public function testEmptyValueOfCookie()
+    {
+      //set cookie
+      $this->module->amOnPage('/cookies2');
+
+      $this->module->amOnPage('/unset-cookie');
+      $this->module->seeResponseCodeIs(200);
+      $this->module->dontSeeCookie('a');
     }
 }

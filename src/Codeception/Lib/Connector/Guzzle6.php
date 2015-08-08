@@ -262,7 +262,7 @@ class Guzzle6 extends Client
             }
             return $parts;
         }
-        $parts[] = ['name' => $key, 'contents' => $value];
+        $parts[] = ['name' => $key, 'contents' => (string) $value];
         return $parts;
     }
 
@@ -312,6 +312,6 @@ class Guzzle6 extends Client
             }
             $jar[] = $setCookie;
         }
-        return new CookieJar(true, $jar);
+        return new CookieJar(false, $jar);
     }
 }

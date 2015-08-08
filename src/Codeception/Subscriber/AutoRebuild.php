@@ -20,28 +20,42 @@ class AutoRebuild implements EventSubscriberInterface
         $settings = $e->getSettings();
         $modules = $e->getSuite()->getModules();
 
-        $actorFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR
+        $actorActionsFile = Configuration::supportDir() . '_generated' . DIRECTORY_SEPARATOR
             . $settings['class_name'] . 'Actions.php';
+
+        if (!file_exists($actorActionsFile)) {
+            codecept_debug("Generating {$settings['class_name']}Actions...");
+            $this->generateActorActions($actorActionsFile, $settings);
+            return;
+        }
         
-        // load guy class to see hash
-        $handle = @fopen($actorFile, "r");
-        if ($handle and is_writable($actorFile)) {
+        // load actor class to see hash
+        $handle = @fopen($actorActionsFile, "r");
+        if ($handle and is_writable($actorActionsFile)) {
             $line = @fgets($handle);
             if (preg_match('~\[STAMP\] ([a-f0-9]*)~', $line, $matches)) {
                 $hash = $matches[1];
                 $currentHash = Actions::genHash($modules, $settings);
 
-                // regenerate guy class when hashes do not match
+                // regenerate actor class when hashes do not match
                 if ($hash != $currentHash) {
                     codecept_debug("Rebuilding {$settings['class_name']}...");
-                    $actionsGenerator = new Actions($settings);
                     @fclose($handle);
-                    $generated = $actionsGenerator->produce();
-                    @file_put_contents($actorFile, $generated);
+                    $this->generateActorActions($actorActionsFile, $settings);
                     return;
                 }
             }
             @fclose($handle);
         }
+    }
+
+    protected function generateActorActions($actorActionsFile, $settings)
+    {
+        if (!file_exists(Configuration::supportDir() . '_generated')) {
+            @mkdir(Configuration::supportDir() . '_generated');
+        }
+        $actionsGenerator = new Actions($settings);
+        $generated = $actionsGenerator->produce();
+        @file_put_contents($actorActionsFile, $generated);
     }
 }

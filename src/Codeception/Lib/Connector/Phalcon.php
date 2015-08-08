@@ -15,7 +15,7 @@ use ReflectionProperty;
 use RuntimeException;
 use Closure;
 
-class Phalcon1 extends Client
+class Phalcon extends Client
 {
     use PhpSuperGlobalsConverter;
 

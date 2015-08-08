@@ -11,6 +11,10 @@ tests/data/included/_log/*
 tests/data/included/jazz/tests/_log/*
 tests/data/included/jazz/pianist/tests/_log/*
 tests/data/included/shire/tests/_log/*
+tests/data/included_w/_log/*
+tests/data/included_w/src/foo/AcmePack/tests/_log/*
+tests/data/included_w/src/foo/AcmePack/tests/_support/_generated/*
+
 tests/data/claypit/c3tmp/*'
 tests/data/claypit/tests/_log/*
 tests/data/claypit/tests/_output/*

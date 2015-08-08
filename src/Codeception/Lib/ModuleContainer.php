@@ -30,6 +30,7 @@ class ModuleContainer
     public function __construct(Di $di, $config)
     {
         $this->di = $di;
+        $this->di->set($this);
         $this->config = $config;
     }
 

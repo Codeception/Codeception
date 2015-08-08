@@ -219,15 +219,16 @@ class Run extends Command
     protected function runIncludedSuites($suites, $parent_dir)
     {
         foreach ($suites as $relativePath) {
-            $current_dir = $parent_dir . DIRECTORY_SEPARATOR . $relativePath;
+            $current_dir = rtrim($parent_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
             $config = Configuration::config($current_dir);
             $suites = Configuration::suites();
-            $this->executed += $this->runSuites($suites, $this->options['skip']);
 
             $namespace = $this->currentNamespace();
             $this->output->writeln(
                 "\n<fg=white;bg=magenta>\n[$namespace]: tests from $current_dir\n</fg=white;bg=magenta>"
             );
+
+            $this->executed += $this->runSuites($suites, $this->options['skip']);
             if (!empty($config['include'])) {
                 $this->runIncludedSuites($config['include'], $current_dir);
             }
@@ -241,7 +242,7 @@ class Run extends Command
         if (!$config['namespace']) {
             throw new \RuntimeException(
                 "Can't include into runner suite without a namespace;\n"
-                . "Use 'refactor:add-namespace' command to fix it'"
+                . "Please add `namespace` section into included codeception.yml file"
             );
         }
 
@@ -294,7 +295,7 @@ class Run extends Command
         $tokens = explode(' ', $request);
         foreach ($tokens as $token) {
             $token = preg_replace('~=.*~', '', $token); // strip = from options
-            if (strpos($token, '--') === 0) {
+            if (strpos($token, '--') === 0 && $token !== '--') {
                 $options[] = substr($token, 2);
                 continue;
             }

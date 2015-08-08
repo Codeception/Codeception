@@ -80,10 +80,8 @@ class Listener implements \PHPUnit_Framework_TestListener
         try {
             $test->getScenario()->stopIfBlocked();
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
-            $this->addIncompleteTest($test, $e, 0);
             return;
         } catch (\PHPUnit_Framework_SkippedTestError $e) {
-            $this->addSkippedTest($test, $e, 0);
             return;
         }
         $this->startedTests[] = spl_object_hash($test);
