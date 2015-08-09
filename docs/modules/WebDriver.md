@@ -28,17 +28,19 @@ It allows you to run Selenium tests on a server without a GUI installed.
 
 ## Configuration
 
-* url *required* - Starting URL for your app.
-* browser *required* - Browser to launch.
-* host - Selenium server host (127.0.0.1 by default).
-* port - Selenium server port (4444 by default).
-* restart - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
-* window_size - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
-* clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
-* wait - Implicit wait (default 0 seconds).
-* capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
-* connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
-* request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
+* `url` *required* - Starting URL for your app.
+* `browser` *required* - Browser to launch.
+* `host` - Selenium server host (127.0.0.1 by default).
+* `port` - Selenium server port (4444 by default).
+* `restart` - Set to false (default) to share browser session between tests, or set to true to create a separate session for each test.
+* `window_size` - Initial window size. Set to `maximize` or a dimension in the format `640x480`.
+* `clear_cookies` - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
+* `wait` - Implicit wait (default 0 seconds).
+* `capabilities` - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+* `connection_timeout` - timeout for opening a connection to remote selenium server (30 seconds by default).
+* `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
+* `http_proxy` - sets http proxy server url for testing a remote server.
+* `http_proxy_port` - sets http proxy server port
 
 ### Example (`acceptance.suite.yml`)
 
@@ -101,8 +103,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('WebDriver')->_findElements('.items');
 $els = $this->getModule('WebDriver')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('WebDriver')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances

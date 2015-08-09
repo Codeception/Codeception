@@ -37,8 +37,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('ZF2')->_findElements('.items');
 $els = $this->getModule('ZF2')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('ZF2')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
@@ -409,6 +413,20 @@ $uri = $I->grabFromCurrentUrl();
 
 ### grabMultiple
 __not documented__
+
+
+### grabServiceFromContainer
+ 
+Grabs a service from ZF2 container.
+Recommended to use for unit testing.
+
+``` php
+<?php
+$em = $I->grabServiceFromContainer('Doctrine\ORM\EntityManager');
+?>
+```
+
+ * `param` $service
 
 
 ### grabTextFrom

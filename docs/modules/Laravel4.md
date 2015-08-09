@@ -55,8 +55,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('Laravel4')->_findElements('.items');
 $els = $this->getModule('Laravel4')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('Laravel4')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
@@ -94,7 +98,7 @@ Takes either `UserInterface` instance or array of credentials.
  * `param`  \Illuminate\Auth\UserInterface|array $user
  * `param`  string $driver
 @return void
-@part framework
+* Part: ** framework**
 
 
 ### amOnAction
@@ -440,7 +444,7 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
  * `param` $tableName
  * `param array` $attributes
 @part orm
-@part framework
+* Part: ** framework**
 
 
 ### fillField
@@ -526,7 +530,7 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
  * `param` $tableName
  * `param array` $attributes
 @part ORM
-@part framework
+* Part: ** framework**
 
 
 ### grabService
@@ -551,7 +555,7 @@ $service = $I->grabService('foo');
 ```
 
  * `param`  string $class
-@part framework
+* Part: ** framework**
 
 
 ### grabTextFrom
@@ -601,13 +605,13 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
  * `param` $tableName
  * `param array` $attributes
 @part orm
-@part framework
+* Part: ** framework**
 
 
 ### logout
  
 Logs user out
-@part framework
+* Part: ** framework**
 
 
 ### resetCookie
@@ -640,7 +644,7 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ### seeAuthentication
  
 Checks that user is authenticated
-@part framework
+* Part: ** framework**
 
 
 ### seeCheckboxIsChecked
@@ -995,7 +999,7 @@ $I->seeRecord('users', array('name' => 'davert'));
  * `param` $tableName
  * `param array` $attributes
 @part orm
-@part framework
+* Part: ** framework**
 
 
 ### seeResponseCodeIs

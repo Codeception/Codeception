@@ -54,8 +54,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('Silex')->_findElements('.items');
 $els = $this->getModule('Silex')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('Silex')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
