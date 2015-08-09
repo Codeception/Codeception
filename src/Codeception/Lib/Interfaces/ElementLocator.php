@@ -13,6 +13,7 @@ interface ElementLocator
      * Use it in Helpers or GroupObject or Extension classes:
      *
      * ```php
+     * <?php
      * $els = $this->getModule('{{MODULE_NAME}}')->_findElements('.items');
      * $els = $this->getModule('{{MODULE_NAME}}')->_findElements(['name' => 'username']);
      *
