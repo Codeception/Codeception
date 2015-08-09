@@ -3,7 +3,6 @@
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**
-* [REST] Created tests for file-upload with REST module. By @Naktibalda *2015-08-08*
 * Enhancement: **Wildcard includes enabled when testing [multiple applications](http://codeception.com/docs/08-Customization#One-Runner-for-Multiple-Applications)**. See #2016 By @nzod
 * [Symfony2] fixed Doctrine2 integration: Doctrine transactions will start before each test and rollback afterwards. *2015-08-08*
 * [Doctrine2] establishing connection and starting transaction is moved to `_before`. *2015-08-08*
@@ -26,6 +25,7 @@
 * Fixed displayed XML/HTML report path #2187 by @Naktibalda *2015-07-27*
 * [WebDriver] Fixed `waitForElementChange` fatal error by @stipsan
 * [Db] Enhanced dollar quoting ($$) processing in PostgreSQL driver by @YasserHassan *2015-07-20*
+* [REST] Created tests for file-upload with REST module. By @Naktibalda *2015-08-08*
 * [Lumen] Fixed issue where wrong request object was passed to the Lumen application by @janhenkgerritsen *2015-07-18*
 
 #### 2.1.1
