@@ -112,12 +112,12 @@ EOF;
         $this->dependentModule = $dependentModule;
     }
 
-    public function _beforeSuite()
+    public function _beforeSuite($settings = [])
     {
         $this->retrieveEntityManager();
     }
 
-    public function _before()
+    public function _before(TestCase $test)
     {
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
