@@ -1,18 +1,34 @@
 
 
 
-This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x/2.x).
+This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+Please try it and leave your feedback.
 
 ## Demo Project
 
 <https://github.com/phalcon/forum>
 
+## Status
+
+* Maintainer: **Serghei Iakovlev**
+* Stability: **dev**
+* Contact: sadhooklay@gmail.com
+
+## Example
+
+    modules:
+        enabled:
+            - Phalcon1:
+                bootstrap: 'app/config/bootstrap.php'
+                cleanup: true
+                savepoints: true
+
+## Config
+
 The following configurations are required for this module:
-<ul>
-<li>boostrap - the path of the application bootstrap file</li>
-<li>cleanup - cleanup database (using transactions)</li>
-<li>savepoints - use savepoints to emulate nested transactions</li>
-</ul>
+* boostrap: the path of the application bootstrap file</li>
+* cleanup: cleanup database (using transactions)</li>
+* savepoints: use savepoints to emulate nested transactions</li>
 
 The application bootstrap file must return Application object but not call its handle() method.
 
@@ -28,26 +44,15 @@ return new \Phalcon\Mvc\Application($di);
 ?>
 ```
 
-You can use this module by setting params in your functional.suite.yml:
-<pre>
-class_name: FunctionalTester
-modules:
-    enabled:
-        - Phalcon1:
-            bootstrap: 'app/config/bootstrap.php'
-            cleanup: true
-            savepoints: true
-</pre>
+## API
 
+* di - `Phalcon\Di\Injectable` instance
+* client - `BrowserKit` client
 
 ## Parts
 
 * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
 
-## Status
-
-Maintainer: **sergeyklay**
-Stability: **beta**
 
 
 ### _findElements
@@ -63,8 +68,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('Phalcon1')->_findElements('.items');
 $els = $this->getModule('Phalcon1')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('Phalcon1')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
@@ -463,7 +472,7 @@ $category = $I->grabRecord('Phosphorum\Models\Categories', ['name' => 'Testing']
 
  * `param string` $model Model name
  * `param array` $attributes Model attributes
-@part orm
+* Part: ** orm**
 
 
 ### grabServiceFromDi
@@ -521,7 +530,7 @@ $I->haveRecord('Phosphorum\Models\Categories', ['name' => 'Testing']');
 
  * `param string` $model Model name
  * `param array` $attributes Model attributes
-@part orm
+* Part: ** orm**
 
 
 ### haveServiceInDi

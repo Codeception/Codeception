@@ -20,9 +20,9 @@ Configure modules in `api.suite.yml`:
 class_name: ApiTester
 modules:
     enabled:
-				- REST:
-				    url: http://serviceapp/api/v1/
-				    depends: PhpBrowser
+		- REST:
+			url: http://serviceapp/api/v1/
+			depends: PhpBrowser
 ```
 
 The REST module will connect to `PhpBrowser` according to this configuration. Depending on web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
@@ -31,10 +31,10 @@ The REST module will connect to `PhpBrowser` according to this configuration. De
 class_name: ApiTester
 modules:
     enabled:
-				- REST:
-				    url: http://serviceapp/api/v1/
-				    depends: PhpBrowser
-				    part: Json
+		- REST:
+			url: http://serviceapp/api/v1/
+			depends: PhpBrowser
+			part: Json
 ```
 
 API tests can be functional and be executed using Symfony2, Laravel4, Laravel5, Zend, or any other framework module. You will need slightly update configuration for it: 
@@ -44,9 +44,9 @@ API tests can be functional and be executed using Symfony2, Laravel4, Laravel5, 
 class_name: ApiTester
 modules:
     enabled:
-				- REST:
-				    url: /api/v1/
-				    depends: Laravel5
+		- REST:
+			url: /api/v1/
+			depends: Laravel5
 ```
 
 Once we configured new testing suite, we can create the first sample test:
@@ -165,9 +165,9 @@ Let's configure `SOAP` module to be used with `PhpBrowser`:
 class_name: ApiTester
 modules:
     enabled:
-				- SOAP:
-				    depends: PhpBrowser
-				    endpoint: http://serviceapp/api/v1/
+		- SOAP:
+			depends: PhpBrowser
+			endpoint: http://serviceapp/api/v1/
 ```
 
 SOAP request may contain application specific information, like authentication or payment. This information is provided with SOAP header inside the `<soap:Header>` element of XML request. In case you need to submit such header, you can use `haveSoapHeader` action. For example, next line of code

@@ -14,7 +14,7 @@ use Symfony\Component\Finder\Finder;
  *
  * ## Demo Project
  *
- * <https://github.com/DavertMik/SymfonyCodeceptionApp>
+ * <https://github.com/Codeception/symfony-demo>
  *
  * ## Status
  *
@@ -33,12 +33,12 @@ use Symfony\Component\Finder\Finder;
  * *
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
- *     modules:
- *        enabled: [Symfony2]
- *        config:
- *           Symfony2:
- *              app_path: 'app/front'
- *              environment: 'local_test'
+ * ```
+ *    modules:
+ *        - Symfony2:
+ *            app_path: 'app/front'
+ *            environment: 'local_test'
+ * ```
  *
  * ### Symfony 3.x Directory Structure
  *
@@ -96,7 +96,15 @@ class Symfony2 extends Framework implements DoctrineProvider
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__, 'Symfony2 bootstrap file not found in ' . $cache);
+            throw new ModuleRequireException(__CLASS__,
+                "Symfony2 bootstrap file not found in $cache\n \n" .
+                "Please specify path to bootstrap file using `var_path` config option\n \n" .
+                "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
+                "modules:\n    enabled:\n" .
+                "    - Symfony2:\n" .
+                "        var_path: '../../app'\n" .
+                "        app_path: '../../app'");
+
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
@@ -124,6 +132,9 @@ class Symfony2 extends Framework implements DoctrineProvider
 
     protected function bootKernel()
     {
+        if ($this->kernel) {
+            return;
+        }
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
     }
@@ -137,11 +148,16 @@ class Symfony2 extends Framework implements DoctrineProvider
      */
     protected function getKernelClass()
     {
+        $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
+        if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
+            throw new ModuleRequireException(__CLASS__, "Can't load Kernel from $path.\nDirectory does not exists. Use `app_path` parameter to provide valid application path");
+        }
+
         $finder = new Finder();
-        $finder->name('*Kernel.php')->depth('0')->in(\Codeception\Configuration::projectDir() . $this->config['app_path']);
+        $finder->name('*Kernel.php')->depth('0')->in($path);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequireException(__CLASS__, 'AppKernel was not found. Specify directory where Kernel class for your application is located in "app_path" parameter.');
+            throw new ModuleRequireException(__CLASS__, "AppKernel was not found at $path. Specify directory where Kernel class for your application is located with `app_path` parameter.");
         }
 
         $file = current($results);

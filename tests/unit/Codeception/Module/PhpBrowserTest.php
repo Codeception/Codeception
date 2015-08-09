@@ -32,8 +32,11 @@ class PhpBrowserTest extends TestsForBrowsers
 
     private function getLastRequest()
     {
-        $this->skipForOldGuzzle();
-        return end($this->history)['request'];
+        if (is_array($this->history)) {
+            return end($this->history)['request'];
+        } else {
+            return $this->history->getLastRequest();
+        }
     }
     
     protected function tearDown() {
@@ -206,11 +209,16 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testHeadersByConfig()
     {
-        $this->skipForOldGuzzle();
         $this->module->_setConfig(['headers' => ['xxx' => 'yyyy']]);
         $this->module->_initialize();
         $this->module->amOnPage('/form1');
-        $this->assertArrayHasKey('xxx', $this->module->guzzle->getConfig('headers'));
+
+        if (method_exists($this->module->guzzle, 'getConfig')) {
+            $headers = $this->module->guzzle->getConfig('headers');
+        } else {
+            $headers = $this->module->guzzle->getDefaultOption('headers');
+        }
+        $this->assertArrayHasKey('xxx', $headers);
     }
 
     public function testHeadersBySetHeader()
@@ -239,10 +247,13 @@ class PhpBrowserTest extends TestsForBrowsers
 
     public function testCurlOptions()
     {
-        $this->skipForOldGuzzle();
         $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $this->module->_initialize();
-        $config = $this->module->guzzle->getConfig('config');
+        if (method_exists($this->module->guzzle, 'getConfig')) {
+            $config = $this->module->guzzle->getConfig('config');
+        } else {
+            $config = $this->module->guzzle->getDefaultOption('config');
+        }
         $this->assertArrayHasKey('curl', $config);
         $this->assertArrayHasKey('CURLOPT_NOBODY', $config['curl']);
     }

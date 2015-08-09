@@ -267,6 +267,7 @@ class RoboFile extends \Robo\Tasks
                     if (!trim($text)) return $title."__not documented__\n";
                     $text = str_replace(['@since'], [' * available since version'], $text);
                     $text = preg_replace('~@throws(.*?)$~', '', $text);
+                    $text = preg_replace('~@part(.*?)$~', '* Part: **$1**', $text);
                     $text = str_replace("@return mixed\n", '', $text);
                     $text = preg_replace('~@return (.*?)$~', ' * `return` $1', $text);
                     $text = str_replace(["\n @"], ["\n * "], $text);

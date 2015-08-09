@@ -2,18 +2,35 @@
 
 
 Allows integration and testing for projects with Doctrine2 ORM.
-
 Doctrine2 uses EntityManager to perform all database operations.
-As the module uses active connection and active entity manager, instance of this object should be passed to this module.
 
-It can be done in bootstrap file, by setting static $em property:
-
-``` php
-<?php
-
-\Codeception\Module\Doctrine2::$em = $em
+When using with Zend Framework 2 or Symfony2 Doctrine connection is automatically retrieved from Service Locator.
+In this case you should include either **Symfony2** or **ZF2** module and specify it as dependent for Doctrine:
 
 ```
+modules:
+    enabled:
+        - Symfony2
+        - Doctrine2:
+            depends: Symfony2
+```
+
+If you don't use any of frameworks above, you should specify a callback function to receive entity manager:
+
+```
+modules:
+    enabled:
+        - Doctrine2:
+            connection_callback: ['MyDb', 'createEntityManager']
+
+```
+
+This will use static method of `MyDb::createEntityManager()` to establish EntityManager.
+
+By default module will wrap everything into transaction for each test and rollback it afterwards. By doing this
+tests won't write anything to database, and so will run much faster and will be isolate dfrom each other.
+This behavior can be changed by specifying `cleanup: false` in config.
+
 ## Status
 
 * Maintainer: **davert**
@@ -22,7 +39,6 @@ It can be done in bootstrap file, by setting static $em property:
 
 ## Config
 
-* auto_connect: true - tries to get EntityManager through connected frameworks. If none found expects the $em values specified as described above.
 * cleanup: true - all doctrine queries will be run in transaction, which will be rolled back at the end of test.
 * connection_callback: - callable that will return an instance of EntityManager. This is a must if you run Doctrine without Zend2 or Symfony2 frameworks
 

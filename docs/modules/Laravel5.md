@@ -53,8 +53,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('Laravel5')->_findElements('.items');
 $els = $this->getModule('Laravel5')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('Laravel5')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
@@ -198,6 +202,17 @@ $I->click(['link' => 'Login']);
 
  * `param` $link
  * `param` $context
+
+
+### disableMiddleware
+ 
+Disable middleware for the next requests.
+
+``` php
+<?php
+$I->disableMiddleware();
+?>
+```
 
 
 ### dontSee
@@ -420,6 +435,18 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
+* Part: ** orm**
+
+
+### enableMiddleware
+ 
+Enable middleware for the next requests.
+
+``` php
+<?php
+$I->enableMiddleware();
+?>
+```
 
 
 ### fillField
@@ -504,7 +531,7 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
+* Part: ** orm**
 
 
 ### grabService
@@ -567,7 +594,7 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
+* Part: ** orm**
 
 
 ### logout
@@ -957,7 +984,7 @@ $I->seeRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
+* Part: ** orm**
 
 
 ### seeResponseCodeIs
@@ -1058,6 +1085,11 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $method
  * `param` $uri
  * `param` $params
+
+
+### setApplication
+ 
+ * `param` $app
 
 
 ### setCookie

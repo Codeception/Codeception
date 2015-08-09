@@ -5,7 +5,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
 ## Demo Project
 
-<https://github.com/DavertMik/SymfonyCodeceptionApp>
+<https://github.com/Codeception/symfony-demo>
 
 ## Status
 
@@ -24,12 +24,12 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 *
 ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
 
-    modules:
-       enabled: [Symfony2]
-       config:
-          Symfony2:
-             app_path: 'app/front'
-             environment: 'local_test'
+```
+   modules:
+       - Symfony2:
+           app_path: 'app/front'
+           environment: 'local_test'
+```
 
 ### Symfony 3.x Directory Structure
 
@@ -70,8 +70,12 @@ Locates element using available Codeception locator types:
 Use it in Helpers or GroupObject or Extension classes:
 
 ```php
+<?php
 $els = $this->getModule('Symfony2')->_findElements('.items');
 $els = $this->getModule('Symfony2')->_findElements(['name' => 'username']);
+
+$editLinks = $this->getModule('Symfony2')->_findElements(['link' => 'Edit']);
+// now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
 WebDriver module returns `Facebook\WebDriver\Remote\RemoteWebElement` instances
