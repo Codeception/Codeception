@@ -1176,7 +1176,7 @@ class InnerBrowser extends Module implements Web
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            html_entity_decode(strip_tags($this->client->getInternalResponse()->getContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1186,7 +1186,7 @@ class InnerBrowser extends Module implements Web
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            htmlspecialchars_decode(strip_tags($this->client->getInternalResponse()->getContent())),
+            html_entity_decode(strip_tags($this->client->getInternalResponse()->getContent()), ENT_QUOTES),
             $constraint,
             $message
         );
