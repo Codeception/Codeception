@@ -738,7 +738,7 @@ class InnerBrowser extends Module implements Web
             } else {
                 $options->getNode(0)->setAttribute('checked', 'checked');
             }
-            if ($options->first()->attr('value')) {
+            if ($options->first()->attr('value') !== false) {
                 return $options->first()->attr('value');
             }
             return $options->first()->text();
