@@ -20,7 +20,7 @@ $I->seeFileFound('running.lock');
 It can operate with different entities: the web page can be loaded with the PhpBrowser module, the database assertion uses the Db module, and file state can be checked with the Filesystem module. 
 
 Modules are attached to Actor classes in the suite config.
-For example, in `tests/functional.suite.yml` we should see:
+For example, in `tests/acceptance.suite.yml` we should see:
 
 ```yaml
 class_name: AcceptanceTester
@@ -32,7 +32,7 @@ modules:
         - Filesystem
 ```
 
-The FunctionalTester class has its methods defined in modules. But let's see what's inside `AcceptanceTester` class, which is located inside `tests/_support` directory:
+The AcceptanceTester class has its methods defined in modules. But let's see what's inside `AcceptanceTester` class, which is located inside `tests/_support` directory:
 
 ```php
 <?php
@@ -168,7 +168,7 @@ $I->loginAsAdmin();
 ?>
 ```
 
-Same as above, StepObject can be instanticated automatically by Dependency Injection Container, when used inside Cest format:
+Same as above, StepObject can be instantiated automatically by Dependency Injection Container, when used inside Cest format:
 
 ```php
 <?php
@@ -189,7 +189,7 @@ If you have complex interaction scenario you may use several step objects in one
 
 ## PageObjects
 
-For acceptance and functional testing we will need not only to have common actions to be reused accross different tests, we should have buttons, links, and form fields to be reused as well. For those cases we need to implement 
+For acceptance and functional testing we will need not only to have common actions to be reused across different tests, we should have buttons, links, and form fields to be reused as well. For those cases we need to implement
 [PageObject pattern](http://code.google.com/p/selenium/wiki/PageObjects), which is widely used by test automation engineers. The PageObject pattern represents a web page as a class and the DOM elements on that page as its properties, and some basic interactions as its methods.
 PageObjects are very important when you are developing a flexible architecture of your tests. Please do not hardcode complex CSS or XPath locators in your tests but rather move them into PageObject classes.
 
@@ -304,7 +304,7 @@ class UserCest
 ?>
 ```
 
-The dependency nijection container can construct any object that require any known class type. For instance, `Page\Login` required `AcceptanceTester`, and so it was injected into `Page\Login` constructor, and PageObject was created and passed into method arguments. You should specify explicitly the types of requried objects for Codeception to know what objects should be created for a test. Dependency Injection will be described in the next chapter. 
+The dependency injection container can construct any object that require any known class type. For instance, `Page\Login` required `AcceptanceTester`, and so it was injected into `Page\Login` constructor, and PageObject was created and passed into method arguments. You should specify explicitly the types of required objects for Codeception to know what objects should be created for a test. Dependency Injection will be described in the next chapter.
 
 ## Modules and Helpers
 
