@@ -113,13 +113,13 @@ class SuiteManager
             }
         }
 
+        if ($test instanceof ScenarioDriven) {
+            $test->preload();
+        }
         if ($test instanceof TestCase) {
             if (!$this->isCurrentEnvironment($test->getEnvironment())) {
                 return; // skip tests from other environments
             }
-        }
-        if ($test instanceof ScenarioDriven) {
-            $test->preload();
         }
 
         $groups = $this->groupManager->groupsForTest($test);
