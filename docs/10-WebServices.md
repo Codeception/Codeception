@@ -1,8 +1,8 @@
 # Testing WebServices
 
-The same way we tested a web site, Codeception allows you to test web services. They are very hard to test manually, so it's really good idea to automate web service testing. As a standards we have SOAP and REST, which are represented in corresponding modules. We will cover them in this chapter.
+The same way we tested a web site, Codeception allows you to test web services. They are very hard to test manually, so it's a really good idea to automate web service testing. We have SOAP and REST as standards, which are represented in corresponding modules, which we will cover in this chapter.
 
-You should start with creating a new test suite, which was not provided by the `bootstrap` command. We recommend to call it **api** and use the `ApiTester` class for it.
+You should start by creating a new test suite, (which was not provided by the `bootstrap` command). We recommend calling it **api** and using the `ApiTester` class for it.
 
 ```bash
 $ php codecept.phar generate:suite api
@@ -12,7 +12,7 @@ We will put all the api tests there.
 
 ## REST
 
-The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, `PUT`, `DELETE`. They allow to receive and manipulate entities from the service. Accessing WebService requires HTTP client, so for using it you need the module `PhpBrowser` or one of framework modules set up. For example, we can use the `Symfony2` module for Symfony2 applications in order to ignore web server and test web service internally.
+The REST web service is accessed via HTTP with standard methods: `GET`, `POST`, `PUT`, `DELETE`. They allow users to receive and manipulate entities from the service. Accessing a WebService requires an HTTP client, so for using it you need the module `PhpBrowser` or one of framework modules set up. For example, we can use the `Symfony2` module for Symfony2 applications in order to ignore web server and test web service internally.
 
 Configure modules in `api.suite.yml`:
 
@@ -25,7 +25,7 @@ modules:
 			depends: PhpBrowser
 ```
 
-The REST module will connect to `PhpBrowser` according to this configuration. Depending on web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
+The REST module will connect to `PhpBrowser` according to this configuration. Depending on the web service we may deal with XML or JSON responses. Codeception handles both data formats well, however If you don't need one of them, you can explicitly specify that the JSON or XML parts of the module will be used:
 
 ``` yaml
 class_name: ApiTester
@@ -49,13 +49,13 @@ modules:
 			depends: Laravel5
 ```
 
-Once we configured new testing suite, we can create the first sample test:
+Once we have configured our new testing suite, we can create the first sample test:
 
 ```bash
 $ php codecept.phar generate:cept api CreateUser
 ```
 
-It will be called `CreateUserCept.php`. We can use it to test creation of a user via the REST API.
+It will be called `CreateUserCept.php`. We can use it to test the creation of a user via the REST API.
 
 ```php
 <?php
@@ -72,7 +72,7 @@ $I->seeResponseContains('{"result":"ok"}');
 
 ### Testing JSON Responses
 
-The latest line checked that the response contained the provided string. However we shouldn't rely on it, as depending on content formatting we can receive different results with the same data. What we actually need is to check that the response can be parsed and it contains some of the values we expect. In the case of JSON we can use `seeResponseContainsJson` method
+The last line of the previous example verified that the response contained the provided string. However we shouldn't rely on it, as depending on content formatting we can receive different results with the same data. What we actually need is to check that the response can be parsed and it contains some of the values we expect. In the case of JSON we can use the `seeResponseContainsJson` method
 
 ``` php
 <?php
@@ -89,7 +89,7 @@ $I->seeResponseContainsJson([
 ?>
 ```
 
-You may want to perform even more complex assertions on a response. This can be done by writing your own methods in [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) classes. To access the latest JSON response you will need to get the `response` property of the `REST` module. Let's demonstrate it with `seeResponseIsHtml` method:
+You may want to perform even more complex assertions on a response. This can be done by writing your own methods in the [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) classes. To access the latest JSON response you will need to get the `response` property of the `REST` module. Let's demonstrate it with the `seeResponseIsHtml` method:
 
 ```php
 <?php
