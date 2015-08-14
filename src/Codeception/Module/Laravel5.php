@@ -476,8 +476,16 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Takes either an object that implements the User interface or
      * an array of credentials.
      *
+     * Example of Usage
+     *
+     * ``` php
+     * <?php
+     * $user = auth()->loginUsingId(1);
+     * $I->amLoggedAs($user);
+     * ?>
+     * ```
      * @param  \Illuminate\Contracts\Auth\User|array $user
-     * @param  string $driver
+     * @param  string|null $driver
      * @return void
      */
     public function amLoggedAs($user, $driver = null)
