@@ -3,13 +3,19 @@ namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
-use Codeception\Lib\Connector\LaravelMemorySessionHandler;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Configuration;
+use Codeception\TestCase;
+use Codeception\Step;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\ClassLoader;
+use Illuminate\Workbench\Starter;
+use Illuminate\Foundation\Application;
+use Illuminate\Auth\UserInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
@@ -80,7 +86,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
             (array) $config
         );
 
-        $projectDir = explode('workbench', \Codeception\Configuration::projectDir())[0];
+        $projectDir = explode('workbench', Configuration::projectDir())[0];
         $projectDir .= $this->config['root'];
 
         $this->config['project_dir'] = $projectDir;
@@ -117,7 +123,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      * @param \Codeception\TestCase $test
      * @throws ModuleConfig
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->config['filters']) {
             $this->haveEnabledFilters();
@@ -133,7 +139,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      *
      * @param \Codeception\TestCase $test
      */
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->app['db'] && $this->cleanupDatabase()) {
             $this->app['db']->rollback();
@@ -145,7 +151,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      *
      * @param \Codeception\Step $step
      */
-    public function _beforeStep(\Codeception\Step $step)
+    public function _beforeStep(Step $step)
     {
         parent::_beforeStep($step);
 
@@ -160,7 +166,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      *
      * @param \Codeception\Step $step
      */
-    public function _afterStep(\Codeception\Step $step)
+    public function _afterStep(Step $step)
     {
         parent::_beforeStep($step);
 
@@ -179,7 +185,9 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
 
         if (! file_exists($startFile)) {
             throw new ModuleConfig(
-                $this, "Laravel bootstrap start.php file not found in $startFile.\nPlease provide a valid path to it using 'start' config param. "
+                $this,
+                "Laravel bootstrap start.php file not found in $startFile.\n"
+                . "Please provide a valid path to it using 'start' config param. "
             );
         }
     }
@@ -191,10 +199,10 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     {
         require $this->config['project_dir'] . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-        \Illuminate\Support\ClassLoader::register();
+        ClassLoader::register();
 
         if (is_dir($workbench = $this->config['project_dir'] . 'workbench')) {
-            \Illuminate\Workbench\Starter::start($workbench);
+            Starter::start($workbench);
         }
     }
 
@@ -219,7 +227,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      */
     protected function databaseTransactionsSupported()
     {
-        return version_compare(\Illuminate\Foundation\Application::VERSION, '4.0.6', '>=');
+        return version_compare(Application::VERSION, '4.0.6', '>=');
     }
 
     /**
@@ -499,7 +507,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
      */
     public function amLoggedAs($user, $driver = null)
     {
-        if ($user instanceof \Illuminate\Auth\UserInterface) {
+        if ($user instanceof UserInterface) {
             $this->app['auth']->driver($driver)->login($user);
         } else {
             $this->app['auth']->driver($driver)->attempt($user);
@@ -683,5 +691,4 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
 
         return $output->fetch();
     }
-
 }

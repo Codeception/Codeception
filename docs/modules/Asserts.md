@@ -42,6 +42,22 @@ Checks that condition is negative.
  * `param string` $message
 
 
+### assertFileExists
+ 
+Checks if file exists
+ 
+ * `param string` $filename
+ * `param string` $message
+
+
+### assertFileNotExists
+ 
+Checks if file doesn't exists
+ 
+ * `param string` $filename
+ * `param string` $message
+
+
 ### assertGreaterThan
  
 Checks that actual is greater than expected
@@ -122,6 +138,15 @@ Checks that variable is not NULL
  * `param string` $message
 
 
+### assertNotRegExp
+ 
+Checks that string not match with pattern
+
+ * `param string` $pattern
+ * `param string` $string
+ * `param string` $message
+
+
 ### assertNotSame
  
 Checks that two variables are not same
@@ -136,6 +161,15 @@ Checks that two variables are not same
 Checks that variable is NULL
 
  * `param`        $actual
+ * `param string` $message
+
+
+### assertRegExp
+ 
+Checks that string match with pattern
+
+ * `param string` $pattern
+ * `param string` $string
  * `param string` $message
 
 

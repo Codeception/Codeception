@@ -1,6 +1,9 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module\Filesystem;
+use Codeception\TestCase;
+
 /**
  *
  * Works with SFTP/FTP servers.
@@ -85,7 +88,7 @@ namespace Codeception\Module;
  * This module extends the Filesystem module, file contents methods are inherited from this module.
  */
 
-class FTP extends \Codeception\Module\Filesystem
+class FTP extends Filesystem
 {
     /**
      * FTP/SFTP connection handler
@@ -123,7 +126,7 @@ class FTP extends \Codeception\Module\Filesystem
      *
      * @param \Codeception\TestCase $test
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         // Login using config settings
         $this->loginAs($this->config['user'], $this->config['password']);

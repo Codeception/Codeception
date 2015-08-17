@@ -5,6 +5,7 @@ use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\TestCase;
+use Symfony\Component\HttpKernel\Client;
 
 /**
  * Module for testing Silex applications like you would regularly do with Silex\WebTestCase.
@@ -75,7 +76,7 @@ class Silex extends Framework
         $GLOBALS['app'] = $this->app;
 
 
-        $this->client = new \Symfony\Component\HttpKernel\Client($this->app);
+        $this->client = new Client($this->app);
     }
 
     /**
@@ -95,5 +96,4 @@ class Silex extends Framework
     {
         return $this->app[$service];
     }
-
 }

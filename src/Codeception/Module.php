@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
@@ -7,12 +6,12 @@ use Codeception\Util\Shared\Asserts;
 
 abstract class Module
 {
+    use Asserts;
+    
     /**
      * @var ModuleContainer
      */
     protected $moduleContainer;
-
-    use Asserts;
 
     /**
      * By setting it to false module wan't inherit methods of parent class.

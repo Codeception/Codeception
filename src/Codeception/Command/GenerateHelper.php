@@ -22,12 +22,10 @@ class GenerateHelper extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('name', InputArgument::REQUIRED, 'suite to be generated'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('name', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()

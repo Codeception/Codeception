@@ -40,5 +40,4 @@ class Page extends \PHPUnit_Framework_Constraint_StringContains
         $message->prepend(" $onPage ");
         return $message;
     }
-
 }

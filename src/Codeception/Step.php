@@ -143,10 +143,9 @@ abstract class Step
         return $this->actor . ' ' . $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
     }
 
-    public function getHtml()
+    public function getHtml($highlightColor = '#732E81')
     {
-        $args = preg_replace('~\$(.*?)\s~', '$<span style="color: #3C3C89; font-weight: bold;">$1</span>', $this->getHumanizedArguments());
-        return ucfirst($this->actor) . " " . $this->humanize($this->getAction()) . ' <span style="color: #732E81;">' . $args . '</span>';
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 
     public function getHumanizedActionWithoutArguments()

@@ -34,9 +34,9 @@ class MySql extends Db
                 $params[] = "$k = ?";
             }
         }
-        $params = implode(' AND ', $params);
+        $sparams = implode(' AND ', $params);
 
-        return sprintf($query, $column, $table, $params);
+        return sprintf($query, $column, $table, $sparams);
     }
 
     public function getQuotedName($name)

@@ -16,7 +16,6 @@ class Listener implements \PHPUnit_Framework_TestListener
     /**
      * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
-
     protected $dispatcher;
 
     protected $unsuccessfulTests = [];

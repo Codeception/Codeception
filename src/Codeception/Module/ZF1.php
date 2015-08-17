@@ -1,6 +1,12 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Configuration;
+use Codeception\Lib\Framework;
+use Codeception\TestCase;
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Connector\ZF1 as ZF1Connector;
+
 /**
  * This module allows you to run tests inside Zend Framework.
  * It acts just like ControllerTestCase, but with usage of Codeception syntax.
@@ -57,13 +63,13 @@ namespace Codeception\Module;
  * This will make your functional tests run super-fast.
  *
  */
-use Codeception\Configuration as Configuration;
-
-class ZF1 extends \Codeception\Lib\Framework
+class ZF1 extends Framework
 {
     protected $config = [
-        'env'      => 'testing', 'config' => 'application/configs/application.ini',
-        'app_path' => 'application', 'lib_path' => 'library'
+        'env' => 'testing',
+        'config' => 'application/configs/application.ini',
+        'app_path' => 'application',
+        'lib_path' => 'library'
     ];
 
     /**
@@ -102,16 +108,16 @@ class ZF1 extends \Codeception\Lib\Framework
 
         require_once 'Zend/Loader/Autoloader.php';
         \Zend_Loader_Autoloader::getInstance();
-        $this->client = new \Codeception\Lib\Connector\ZF1();
+        $this->client = new ZF1Connector();
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         \Zend_Session::$_unitTestEnabled = true;
         try {
             $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
         } catch (\Exception $e) {
-            throw new \Codeception\Exception\ModuleException(__CLASS__, $e->getMessage());
+            throw new ModuleException(__CLASS__, $e->getMessage());
         }
         $this->bootstrap->bootstrap();
         $this->client->setBootstrap($this->bootstrap);
@@ -124,7 +130,7 @@ class ZF1 extends \Codeception\Lib\Framework
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         $_SESSION = [];
         $_GET = [];
@@ -161,5 +167,4 @@ class ZF1 extends \Codeception\Lib\Framework
             $this->queries = $profiler->getTotalNumQueries();
         }
     }
-
 }

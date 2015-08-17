@@ -12,7 +12,7 @@ class Symfony2 extends \Symfony\Component\HttpKernel\Client
         $services = [];
         if (self::$hasPerformedRequest) {
             $services = $this->persistServices();
-            $this->kernel->shutdown();
+            $this->kernel = clone $this->kernel;
         } else {
             self::$hasPerformedRequest = true;
         }
@@ -54,6 +54,4 @@ class Symfony2 extends \Symfony\Component\HttpKernel\Client
             $this->kernel->getContainer()->set($serviceName, $service);
         }
     }
-
-
 }

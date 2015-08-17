@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Lib\Console;
 
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,7 +40,7 @@ class Message
 
     public function cut($length)
     {
-        $this->message = substr($this->message, 0, $length-1);
+        $this->message = substr($this->message, 0, $length);
         return $this;
     }
 

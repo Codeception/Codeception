@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleException;
@@ -42,11 +41,11 @@ use GuzzleHttp\Client as GuzzleClient;
  *
  *     modules:
  *        enabled:
- *           - PhpBrowser:
- *              url: 'http://localhost'
- *              auth: ['admin', '123345']
- *              curl:
- *                  CURLOPT_RETURNTRANSFER: true
+ *            - PhpBrowser:
+ *                url: 'http://localhost'
+ *                auth: ['admin', '123345']
+ *                curl:
+ *                    CURLOPT_RETURNTRANSFER: true
  *
  * ## Public Properties
  *
@@ -76,7 +75,21 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         'cookies' => true
     ];
 
-    protected $guzzleConfigFields = ['headers', 'auth', 'proxy', 'verify', 'cert', 'query', 'ssl_key', 'proxy', 'expect', 'version', 'cookies', 'timeout', 'connect_timeout'];
+    protected $guzzleConfigFields = [
+        'headers',
+        'auth',
+        'proxy',
+        'verify',
+        'cert',
+        'query',
+        'ssl_key',
+        'proxy',
+        'expect',
+        'version',
+        'cookies',
+        'timeout',
+        'connect_timeout'
+    ];
 
     /**
      * @var \Codeception\Lib\Connector\Guzzle6
@@ -109,6 +122,9 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
 
     public function _before(TestCase $test)
     {
+        if (!$this->client) {
+            $this->client = $this->guessGuzzleConnector();
+        }
         $this->_initializeSession();
     }
 
@@ -163,11 +179,6 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     public function amHttpAuthenticated($username, $password)
     {
         $this->client->setAuth($username, $password);
-    }
-
-    public function amOnPage($page)
-    {
-        parent::amOnPage(ltrim($page, '/'));
     }
 
     public function amOnUrl($url)
@@ -255,8 +266,8 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
     public function _backupSession()
     {
         return [
-            'client'  => $this->client,
-            'guzzle'  => $this->guzzle,
+            'client' => $this->client,
+            'guzzle' => $this->guzzle,
             'crawler' => $this->crawler
         ];
     }

@@ -47,5 +47,4 @@ class Lumen extends Client implements HttpKernelInterface
 
         return $response;
     }
-
 }

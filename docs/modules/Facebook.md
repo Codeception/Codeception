@@ -7,7 +7,7 @@ Provides testing for projects integrated with Facebook API.
 Relies on Facebook's tool Test User API.
 
 <div class="alert alert-info">
-To use this module with Composer you need <em>"facebook/php-sdk-v4": "~4.0"</em> package.
+To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> package.
 </div>
 
 ## Status
@@ -87,13 +87,6 @@ Returns the test user email.
 @return string
 
 
-### grabFacebookTestUserName
- 
-Returns the test user name.
-
-@return string
-
-
 ### grabFacebookTestUserId
  
 Returns the test user id.
@@ -106,6 +99,17 @@ Returns the test user id.
 Returns URL for test user auto-login.
 
 @return string
+
+
+### grabFacebookTestUserName
+ 
+Returns the test user name.
+
+@return string
+
+
+### grabFacebookTestUserPassword
+__not documented__
 
 
 ### haveFacebookTestUserAccount
@@ -124,10 +128,17 @@ Get facebook test user be logged in on facebook.
  ModuleConfigException
 
 
+### postToFacebookAsTestUser
+ 
+Please, note that you must have publish_actions permission to be able to publish to user's feed.
+
+ * `param array` $params
+
+
 ### seePostOnFacebookWithAttachedPlace
  
 
-Please, note that you must have publish_stream permission to be able to publish to user's feed.
+Please, note that you must have publish_actions permission to be able to publish to user's feed.
 
  * `param string` $placeId Place identifier to be verified against user published posts
 

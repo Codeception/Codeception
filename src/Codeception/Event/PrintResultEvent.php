@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Event;
 
 use Symfony\Component\EventDispatcher\Event;

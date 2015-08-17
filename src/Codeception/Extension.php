@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class Extension implements EventSubscriberInterface
 {
+    public static $events = [];
 
     protected $config = [];
     protected $options;
@@ -24,7 +25,6 @@ abstract class Extension implements EventSubscriberInterface
         $this->_initialize();
     }
 
-    static $events = [];
 
     static function getSubscribedEvents()
     {
@@ -121,5 +121,4 @@ abstract class Extension implements EventSubscriberInterface
     {
         return Config::config();
     }
-
 }

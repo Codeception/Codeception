@@ -5,8 +5,11 @@ class Deprecation
 {
     protected static $messages = [];
 
-    public static function add($message)
+    public static function add($message, $location = '')
     {
+        if ($location) {
+            $message = "<focus>$location</focus> | " . $message;
+        }
         self::$messages[] = $message;
     }
 

@@ -38,7 +38,6 @@ use Symfony\Component\Finder\Finder;
  */
 class TestLoader
 {
-
     protected static $formats = ['Cest', 'Cept', 'Test'];
     protected $tests = [];
     protected $path;
@@ -209,7 +208,7 @@ class TestLoader
 
     protected function createTestFromCestMethod($cestInstance, $methodName, $file)
     {
-        if ((strpos($methodName, '_') === 0) or ($methodName == '__construct')) {
+        if ((strpos($methodName, '_') === 0) || ($methodName == '__construct')) {
             return null;
         }
         $testClass = get_class($cestInstance);
@@ -223,6 +222,4 @@ class TestLoader
         $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
         return $cest;
     }
-
-
 }

@@ -1,13 +1,13 @@
 <?php
 namespace Codeception;
 
-use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Exception\ConfigurationException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Codecept
 {
-    const VERSION = "2.1.0-rc1";
+    const VERSION = "2.1.0";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -102,7 +102,10 @@ class Codecept
         $config = Configuration::config();
         foreach ($config['extensions']['enabled'] as $extensionClass) {
             if (!class_exists($extensionClass)) {
-                throw new ConfigurationException("Class `$extensionClass` is not defined. Autoload it or include into '_bootstrap.php' file of 'tests' directory");
+                throw new ConfigurationException(
+                    "Class `$extensionClass` is not defined. Autoload it or include into "
+                    . "'_bootstrap.php' file of 'tests' directory"
+                );
             }
             $extensionConfig = isset($config['extensions']['config'][$extensionClass])
                 ? $config['extensions']['config'][$extensionClass]
@@ -110,7 +113,9 @@ class Codecept
 
             $extension = new $extensionClass($extensionConfig, $options);
             if (!$extension instanceof EventSubscriberInterface) {
-                throw new ConfigurationException("Class $extensionClass is not an EventListener. Please create it as Extension or Group class.");
+                throw new ConfigurationException(
+                    "Class $extensionClass is not an EventListener. Please create it as Extension or Group class."
+                );
             }
             $this->extensions[] = $extension;
         }
@@ -168,7 +173,7 @@ class Codecept
             return;
         }
 
-        foreach ($selectedEnvironments as $envList) {
+        foreach (array_unique($selectedEnvironments) as $envList) {
             $envArray = explode(',', $envList);
             $config = [];
             foreach ($envArray as $env) {

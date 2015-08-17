@@ -58,6 +58,5 @@ class GenerateTest extends Command
             return;
         }
         $output->writeln("<info>Test was created in $filename</info>");
-
     }
 }

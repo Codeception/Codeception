@@ -3,6 +3,8 @@ namespace Codeception;
 
 use Codeception\Lib\Actor\Shared\Comment;
 use Codeception\Lib\Actor\Shared\Friend;
+use Codeception\Scenario;
+use Codeception\Step\Executor;
 
 abstract class Actor
 {
@@ -14,7 +16,7 @@ abstract class Actor
      */
     protected $scenario;
 
-    public function __construct(\Codeception\Scenario $scenario)
+    public function __construct(Scenario $scenario)
     {
         $this->scenario = $scenario;
         $this->scenario->stopIfBlocked();
@@ -51,7 +53,7 @@ abstract class Actor
      */
     public function execute($callable)
     {
-        $this->scenario->addStep(new \Codeception\Step\Executor($callable, []));
+        $this->scenario->addStep(new Executor($callable, []));
         $callable();
         return $this;
     }

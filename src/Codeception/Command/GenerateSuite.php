@@ -2,6 +2,7 @@
 namespace Codeception\Command;
 
 use Codeception\Lib\Generator\Helper;
+use Codeception\Util\Template;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,13 +27,11 @@ class GenerateSuite extends Command
 
     protected function configure()
     {
-        $this->setDefinition(
-            [
-                new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
-                new InputArgument('actor', InputArgument::OPTIONAL, 'name of new actor class'),
-                new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-            ]
-        );
+        $this->setDefinition([
+            new InputArgument('suite', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputArgument('actor', InputArgument::OPTIONAL, 'name of new actor class'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
+        ]);
     }
 
     public function getDescription()
@@ -80,14 +79,18 @@ class GenerateSuite extends Command
             $gen->produce()
         );
 
-        $conf = [
-            'class_name' => $actorName . $config['actor'],
-            'modules'    => [
-                'enabled' => [$gen->getHelperName()]
-            ],
-        ];
+        $conf = <<<EOF
+class_name: {{actor}}
+modules:
+    enabled:
+        - {{helper}}
+EOF;
 
-        $this->save($dir . $suite . '.suite.yml', Yaml::dump($conf, 2));
+        $this->save($dir . $suite . '.suite.yml', (new Template($conf))
+            ->place('actor', $actorName . $config['actor'])
+            ->place('helper', $gen->getHelperName())
+            ->produce()
+        );
 
         $output->writeln("<info>Suite $suite generated</info>");
     }
@@ -96,5 +99,4 @@ class GenerateSuite extends Command
     {
         return preg_match('#[^A-Za-z0-9_]#', $suite) ? true : false;
     }
-
 }

@@ -94,17 +94,22 @@ class Guzzle6 extends Client
     protected function createResponse(Psr7Response $response)
     {
         $body = (string) $response->getBody();
-        $headers = $this->flattenHeaders($response->getHeaders());
+        $headers = $response->getHeaders();
 
         $contentType = null;
+
         if (isset($headers['Content-Type'])) {
-            $contentType = $headers['Content-Type'];
+            $contentType = reset($headers['Content-Type']);
         }
-        if (!$contentType or strpos($contentType, 'charset=') === false) {
+        if (!$contentType) {
+            $contentType = 'text/html';
+        }
+
+        if (strpos($contentType, 'charset=') === false) {
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
                 $contentType .= ';charset=' . $matches[1];
             }
-            $headers['Content-Type'] = $contentType;
+            $headers['Content-Type'] = [$contentType];
         }
 
         $status = $response->getStatusCode();
@@ -120,13 +125,13 @@ class Guzzle6 extends Client
             // match by header
             preg_match(
                 '~(\d*);?url=(.*)~',
-                (string) $headers['Refresh'],
+                (string) reset($headers['Refresh']),
                 $matches
             );
         }
 
         if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
-            $uri = $this->getAbsoluteUri($matches[2]);
+            $uri = new Psr7Uri($this->getAbsoluteUri($matches[2]));
             $currentUri = new Psr7Uri($this->getHistory()->current()->getUri());
 
             if ($uri->withFragment('') != $currentUri->withFragment('')) {
@@ -138,22 +143,19 @@ class Guzzle6 extends Client
         return new BrowserKitResponse($body, $status, $headers);
     }
 
-    protected function flattenHeaders($headers)
-    {
-        return array_map(function ($header) {
-            return reset($header);
-        }, $headers);
-
-    }
-
     public function getAbsoluteUri($uri)
     {
-        /** @var $baseUri Psr7Uri  **/
         $baseUri = $this->client->getConfig('base_uri');
         if (strpos($uri, '://') === false) {
-            return new Psr7Uri(Uri::appendPath((string)$baseUri, $uri));
+            if (strpos($uri, '/') === 0) {
+                return Uri::appendPath((string)$baseUri, $uri);
+            }
+            // relative url
+            if (!$this->getHistory()->isEmpty()) {
+                return Uri::mergeUrls((string)$this->getHistory()->current()->getUri(), $uri);
+            }
         }
-        return Psr7Uri::resolve($baseUri, $uri);
+        return Uri::mergeUrls($baseUri, $uri);
     }
 
     protected function doRequest($request)
@@ -165,9 +167,8 @@ class Guzzle6 extends Client
             $this->extractHeaders($request),
             $request->getContent()
         );
-
         $options = $this->requestOptions;
-        $options['cookies'] = $this->extractCookies();
+        $options['cookies'] = $this->extractCookies($guzzleRequest->getUri()->getHost());
         $multipartData = $this->extractMultipartFormData($request);
         if (!empty($multipartData)) {
             $options['multipart'] = $multipartData;
@@ -299,7 +300,7 @@ class Guzzle6 extends Client
         return $files;
     }
     
-    protected function extractCookies()
+    protected function extractCookies($host)
     {
         $jar = [];
         $cookies = $this->getCookieJar()->all();
@@ -307,7 +308,7 @@ class Guzzle6 extends Client
             /** @var $cookie Cookie  **/
             $setCookie = SetCookie::fromString((string)$cookie);
             if (!$setCookie->getDomain()) {
-                $setCookie->setDomain('localhost');
+                $setCookie->setDomain($host);
             }
             $jar[] = $setCookie;
         }

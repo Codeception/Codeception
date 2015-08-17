@@ -1,5 +1,6 @@
 <?php
 namespace Codeception\Command\Shared;
+
 use Codeception\Util\Shared\Namespaces;
 
 trait FileSystem
@@ -67,5 +68,4 @@ trait FileSystem
         file_put_contents($filename, $contents, $flags);
         return true;
     }
-
 }

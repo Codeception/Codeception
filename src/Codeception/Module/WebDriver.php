@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\TestCase;
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
@@ -58,6 +60,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * * clear_cookies - Set to false to keep cookies, or set to true (default) to delete all cookies between tests.
  * * wait - Implicit wait (default 0 seconds).
  * * capabilities - Sets Selenium2 [desired capabilities](http://code.google.com/p/selenium/wiki/DesiredCapabilities). Should be a key-value array.
+ * * connection_timeout - timeout for opening a connection to remote selenium server (30 seconds by default).
+ * * request_timeout - timeout for a request to return something from remote selenium server (30 seconds by default).
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -104,7 +108,13 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * # Methods
  */
-class WebDriver extends \Codeception\Module implements WebInterface, RemoteInterface, MultiSessionInterface, SessionSnapshot, ScreenshotSaver, PageSourceSaver
+class WebDriver extends CodeceptionModule implements
+    WebInterface,
+    RemoteInterface,
+    MultiSessionInterface,
+    SessionSnapshot,
+    ScreenshotSaver,
+    PageSourceSaver
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
@@ -114,11 +124,15 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         'wait'          => 0,
         'clear_cookies' => true,
         'window_size'   => false,
-        'capabilities'  => []
+        'capabilities'  => [],
+        'connection_timeout' => null,
+        'request_timeout' => null        
     ];
 
     protected $wd_host;
     protected $capabilities;
+    protected $connection_timeout_in_ms;
+    protected $request_timeout_in_ms;
     protected $test;
     protected $sessionSnapshots = [];
 
@@ -132,9 +146,11 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[\WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->connection_timeout_in_ms = $this->config['connection_timeout'] * 1000;
+        $this->request_timeout_in_ms = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
         try {
-            $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities);
+            $this->webDriver = \RemoteWebDriver::create($this->wd_host, $this->capabilities, $this->connection_timeout_in_ms, $this->request_timeout_in_ms);
         } catch (\WebDriverCurlException $e) {
             throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
@@ -147,7 +163,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
@@ -180,7 +196,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
@@ -194,10 +210,9 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         }
     }
 
-    public function _failed(\Codeception\TestCase $test, $fail)
+    public function _failed(TestCase $test, $fail)
     {
-
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], \Codeception\TestCase::getTestSignature($test)) . '.fail';
+        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
@@ -242,7 +257,12 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
 
     public function _saveScreenshot($filename)
     {
-        $this->webDriver->takeScreenshot($filename);
+        if ($this->webDriver !== null) {
+            $this->webDriver->takeScreenshot($filename);
+        } else {
+            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
+            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        }
     }
 
     public function _savePageSource($filename)
@@ -347,7 +367,8 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
                 continue;
             }
             $cookies = array_filter(
-                $cookies, function ($item) use ($filter, $params) {
+                $cookies,
+                function ($item) use ($filter, $params) {
                     return $item[$filter] == $params[$filter];
                 }
             );
@@ -358,7 +379,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
     public function amOnUrl($url)
     {
         $urlParts = parse_url($url);
-        if (!isset($urlParts['host']) or !isset($urlParts['scheme'])) {
+        if (!isset($urlParts['host']) || !isset($urlParts['scheme'])) {
             throw new TestRuntimeException("Wrong URL passes, host and scheme not set");
         }
         $host = $urlParts['scheme'] . '://' . $urlParts['host'];
@@ -679,6 +700,7 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             }
         }
     }
+
     protected function proceedSeeInField(array $elements, $value)
     {
         $strField = reset($elements)->getAttribute('name');
@@ -718,7 +740,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
             "Failed testing for '$value' in $strField's value: " . implode(', ', $currentValues)
         ];
     }
-
 
     public function selectOption($select, $option)
     {
@@ -1108,7 +1129,6 @@ class WebDriver extends \Codeception\Module implements WebInterface, RemoteInter
         $select = new \WebDriverSelect($el);
         $this->assertNodesContain($optionText, $select->getAllSelectedOptions(), 'option');
     }
-
 
     public function dontSeeOptionIsSelected($selector, $optionText)
     {

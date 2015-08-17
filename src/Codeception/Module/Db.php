@@ -1,6 +1,14 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
+use Codeception\Exception\ModuleConfigException;
+use Codeception\Lib\Interfaces\Db as DbInterface;
+use Codeception\Lib\Driver\Db as Driver;
+use Codeception\TestCase;
+
 /**
  * Works with SQL database.
  *
@@ -69,15 +77,8 @@ namespace Codeception\Module;
  * * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
  *
  */
-
-use Codeception\Configuration as Configuration;
-use Codeception\Exception\ModuleException as ModuleException;
-use Codeception\Exception\ModuleConfigException as ModuleConfigException;
-use Codeception\Lib\Driver\Db as Driver;
-
-class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
+class Db extends CodeceptionModule implements DbInterface
 {
-
     /**
      * @api
      * @var
@@ -125,9 +126,10 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(
-                  __CLASS__,
-                  "\nFile with dump doesn't exist.\n" .
-                  "Please, check path for sql file: " . $this->config['dump']
+                    __CLASS__,
+                    "\nFile with dump doesn't exist.\n"
+                    . "Please, check path for sql file: "
+                    . $this->config['dump']
                 );
             }
             $sql = file_get_contents(Configuration::projectDir() . $this->config['dump']);
@@ -138,7 +140,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         }
 
         $this->connect();
-        
+
         // starting with loading dump
         if ($this->config['populate']) {
             $this->cleanup();
@@ -146,7 +148,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             $this->populated = true;
         }
     }
-    
+
     private function connect()
     {
         try {
@@ -157,20 +159,20 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
                 list ($missingDriver,) = explode(':', $this->config['dsn'],2);
                 $message = "could not find $missingDriver driver";
             }
-            
+
             throw new ModuleException(__CLASS__, $message . ' while creating PDO connection');
         }
 
         $this->dbh = $this->driver->getDbh();
     }
-    
+
     private function disconnect()
     {
         $this->dbh = null;
         $this->driver = null;
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(TestCase $test)
     {
         if ($this->config['reconnect']) {
             $this->connect();
@@ -182,7 +184,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         parent::_before($test);
     }
 
-    public function _after(\Codeception\TestCase $test)
+    public function _after(TestCase $test)
     {
         $this->populated = false;
         $this->removeInserted();
@@ -198,7 +200,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
             try {
                 $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn\'t delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
             }
         }
         $this->insertedIds = [];
@@ -210,7 +212,7 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         if (!$dbh) {
             throw new ModuleConfigException(
               __CLASS__,
-              "No connection to database. Remove this module from config if you don't need database repopulation"
+              'No connection to database. Remove this module from config if you don\'t need database repopulation'
             );
         }
         try {
@@ -281,9 +283,9 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
         }
 
         $this->insertedIds[] = [
-          'table'   => $table,
-          'id'      => $lastInsertId,
-          'primary' => $this->driver->getPrimaryColumn($table)
+            'table' => $table,
+            'id' => $lastInsertId,
+            'primary' => $this->driver->getPrimaryColumn($table)
         ];
 
         return $lastInsertId;
@@ -291,14 +293,46 @@ class Db extends \Codeception\Module implements \Codeception\Lib\Interfaces\Db
 
     public function seeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
+        $res = $this->countInDatabase($table, $criteria);
         $this->assertGreaterThan(0, $res, 'No matching records found');
+    }
+
+    /**
+     * Asserts that found number of records in database
+     *
+     * ``` php
+     * <?php
+     * $I->seeNumRecords(1, 'users', ['name' => 'davert'])
+     * ?>
+     * ```
+     *
+     * @param int    $num      Expected number
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     */
+    public function seeNumRecords($num, $table, array $criteria = [])
+    {
+        $res = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
+        $res = $this->countInDatabase($table, $criteria);
         $this->assertLessThan(1, $res);
+    }
+
+    /**
+     * Count rows in database
+     *
+     * @param string $table    Table name
+     * @param array  $criteria Search criteria [Optional]
+     *
+     * @return int
+     */
+    protected function countInDatabase($table, array $criteria = [])
+    {
+        return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
     protected function proceedSeeInDatabase($table, $column, $criteria)

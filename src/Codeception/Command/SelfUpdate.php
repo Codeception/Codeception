@@ -104,7 +104,7 @@ class SelfUpdate extends Command
     }
 
     /**
-     * Checks wether the provided version is current.
+     * Checks whether the provided version is current.
      *
      * @param  string $version The version number to check.
      * @return boolean Returns True if a new version is available.
@@ -114,7 +114,8 @@ class SelfUpdate extends Command
         $tags = $this->getGithubTags(self::GITHUB);
 
         $this->liveVersion = array_reduce(
-            $tags, function ($a, $b) {
+            $tags,
+            function ($a, $b) {
                 return version_compare($a, $b, '>') ? $a : $b;
             }
         );

@@ -4,10 +4,10 @@ namespace Codeception\PHPUnit\Constraint;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Lib\Console\Message;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
+use SebastianBergmann\Comparator\ComparisonFailure;
 
 class Crawler extends Page
 {
-
     protected function matches($nodes)
     {
         /** @var $nodes DomCrawler  * */
@@ -26,7 +26,7 @@ class Crawler extends Page
         return false;
     }
 
-    protected function fail($nodes, $selector, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = null)
+    protected function fail($nodes, $selector, ComparisonFailure $comparisonFailure = null)
     {
         /** @var $nodes DomCrawler  * */
         if (!$nodes->count()) {
@@ -60,19 +60,15 @@ class Crawler extends Page
         return $desc;
     }
 
-    protected function nodesList(DOMCrawler $nodes, $contains = null)
+    protected function nodesList(DomCrawler $nodes, $contains = null)
     {
         $output = "";
         foreach ($nodes as $node) {
-            if ($contains) {
-                if (strpos($node->nodeValue, $contains) === false) {
-                    continue;
-                }
+            if ($contains && strpos($node->nodeValue, $contains) === false) {
+                continue;
             }
             $output .= "\n+ <info>" . $node->C14N() . "</info>";
         }
         return $output;
     }
-
-
 }
