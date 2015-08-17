@@ -145,7 +145,7 @@ class JsonArray
                     continue;
                 }
 
-                if ($value1 === $value2 && !isset($matchedKeys[$key2])) {
+                if ($value1 == $value2 && !isset($matchedKeys[$key2])) {
                     $ret[$key1] = $value1;
                     $matchedKeys[$key2] = true;
                     break;
@@ -173,8 +173,7 @@ class JsonArray
                 $ret[$key] = $return;
                 continue;
             }
-
-            if ($arr1[$key] === $arr2[$key]) {
+            if ($arr1[$key] == $arr2[$key]) {
                 $ret[$key] = $arr1[$key];
             }
         }
