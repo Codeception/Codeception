@@ -366,7 +366,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ```
      *
      * @param  string|array $key
-     * @param  mixed $value
+     * @param  mixed|null $value
      * @return void
      */
     public function seeInSession($key, $value = null)
@@ -381,6 +381,43 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->assertTrue($this->app['session']->has($key));
         } else {
             $this->assertEquals($value, $this->app['session']->get($key));
+        }
+    }
+
+    /**
+     * Assert that a session variable does not exist.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInSession('key');
+     * $I->dontSeeInSession('key', 'value');
+     *
+     * // eg. check session value is gone...
+     * $I->dontSeeInSession('product.id');
+     *
+     * // eg. check framework didn't silently redirect...
+     * $I->dontSeeInSession('url.intended');
+     *
+     *
+     * ?>
+     * ```
+     *
+     * @param  string|array $key
+     * @param  mixed|null $value
+     * @return void
+     */
+    public function dontSeeInSession($key, $value = null)
+    {
+        if (is_array($key)) {
+            $this->seeSessionHasValues($key);
+
+            return;
+        }
+
+        if (is_null($value)) {
+            $this->assertFalse($this->app['session']->has($key));
+        } else {
+            $this->assertNotEquals($value, $this->app['session']->get($key));
         }
     }
 
@@ -404,6 +441,31 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 $this->seeInSession($value);
             } else {
                 $this->seeInSession($key, $value);
+            }
+        }
+    }
+
+    /**
+     * Assert that the session does not have a given list of values.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeInSession(['key1', 'key2']);
+     * $I->dontSeeInSession(['key1' => 'value1', 'key2' => 'value2']);
+     *
+     * ?>
+     * ```
+     *
+     * @param  array $bindings
+     * @return void
+     */
+    public function dontSeeSessionHasValues(array $bindings)
+    {
+        foreach ($bindings as $key => $value) {
+            if (is_int($key)) {
+                $this->dontSeeInSession($value);
+            } else {
+                $this->dontSeeInSession($key, $value);
             }
         }
     }
@@ -483,7 +545,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * // provide array of credentials
      * $I->amLoggedAs(['username' => 'jane@example.com', 'password' => 'password']);
      *
-     * // provide User object
+     * // Or provide User object
      * $I->amLoggesAs( new User );
      *
      * // can be verified with $I->seeAuthentication();
