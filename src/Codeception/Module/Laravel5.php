@@ -67,7 +67,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Constructor.
      *
      * @param ModuleContainer $container
-     * @param $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $container, $config = null)
     {
@@ -366,7 +366,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ```
      *
      * @param  string|array $key
-     * @param  mixed $value
+     * @param  mixed|null $value
      * @return void
      */
     public function seeInSession($key, $value = null)
@@ -476,8 +476,21 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Takes either an object that implements the User interface or
      * an array of credentials.
      *
+     * Example of Usage
+     *
+     * ``` php
+     * <?php
+     * // provide array of credentials
+     * $I->amLoggedAs(['username' => 'jane@example.com', 'password' => 'password']);
+     *
+     * // provide User object
+     * $I->amLoggesAs( new User );
+     *
+     * // can be verified with $I->seeAuthentication();
+     * ?>
+     * ```
      * @param  \Illuminate\Contracts\Auth\User|array $user
-     * @param  string $driver
+     * @param  string|null $driver 'eloquent', 'database', or custom driver
      * @return void
      */
     public function amLoggedAs($user, $driver = null)
