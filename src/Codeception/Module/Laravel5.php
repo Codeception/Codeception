@@ -67,7 +67,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Constructor.
      *
      * @param ModuleContainer $container
-     * @param $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $container, $config = null)
     {
@@ -366,7 +366,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ```
      *
      * @param  string|array $key
-     * @param  mixed $value
+     * @param  mixed|null $value
      * @return void
      */
     public function seeInSession($key, $value = null)
