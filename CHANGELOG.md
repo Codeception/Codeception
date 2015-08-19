@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.1.3
+* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen *2015-08-29*
+
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**

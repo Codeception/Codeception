@@ -194,6 +194,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
                     break;
                 }
             }
+            $this->di['db']->close();
         }
         $this->di = null;
         Di::reset();
