@@ -426,6 +426,23 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Assert that there are no form errors bound to the View.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeFormErrors();
+     * ?>
+     * ```
+     *
+     * @return bool
+     */
+    public function dontSeeFormErrors()
+    {
+        $viewErrorBag = $this->app->make('view')->shared('errors');
+        $this->assertTrue(count($viewErrorBag) == 0);
+    }
+
+    /**
      * Assert that specific form error messages are set in the view.
      *
      * Useful for validation messages e.g.
