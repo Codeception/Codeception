@@ -39,6 +39,8 @@ use Illuminate\Support\Facades\Facade;
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
+ * * disable_middleware: `boolean`, default `false` - disable all middleware.
+ * * disable_events: `boolean`, default `false` - disable all events.
  *
  * ## API
  *
@@ -79,6 +81,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'root' => '',
                 'packages' => 'workbench',
                 'disable_middleware' => false,
+                'disable_events' => false,
             ],
             (array)$config
         );
@@ -127,6 +130,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             // Destroy existing sessions of previous tests
             $this->app['session']->migrate(true);
         }
+
+        $this->client->clearExpectedEvents();
     }
 
     /**
@@ -138,6 +143,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
+        }
+
+        if ($missedEvents = $this->client->missedEvents()) {
+            $test->fail('The following events did not fire: ' . implode(',', $missedEvents));
         }
     }
 
@@ -236,6 +245,55 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function enableMiddleware()
     {
         $this->config['disable_middleware'] = false;
+    }
+
+    /**
+     * Disable events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableEvents();
+     * ?>
+     * ```
+     */
+    public function disableEvents()
+    {
+        $this->config['disable_events'] = true;
+    }
+
+    /**
+     * Enable events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->enableEvents();
+     * ?>
+     * ```
+     */
+    public function enableEvents()
+    {
+        $this->config['disable_events'] = false;
+    }
+
+    /**
+     * Make sure events fired during the test.
+     *
+     * ``` php
+     * <?php
+     * $I->expectEvents('App\MyEvent');
+     * $I->expectEvents('App\MyEvent', 'App\MyOtherEvent');
+     * $I->expectEvents(['App\MyEvent', 'App\MyOtherEvent']);
+     * ?>
+     * ```
+     * @param $events
+     */
+    public function expectEvents($events)
+    {
+        $events = is_array($events) ? $events : func_get_args();
+
+        foreach ($events as $expectedEvent) {
+            $this->client->addExpectedEvent($expectedEvent);
+        }
     }
 
     /**

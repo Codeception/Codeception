@@ -1,7 +1,8 @@
 # Changelog
 
 #### 2.1.3
-* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen *2015-08-29*
+* [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen *2015-08-21*
+* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen *2015-08-19*
 
 #### 2.1.2
 
