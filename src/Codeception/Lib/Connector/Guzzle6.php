@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\ConnectionException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
@@ -181,9 +180,6 @@ class Guzzle6 extends Client
 
         try {
             $response = $this->client->send($guzzleRequest, $options);
-        } catch (ConnectException $e) {
-            $url = (string) $this->client->getConfig('base_uri');
-            throw new ConnectionException("Couldn't connect to $url. Please check that web server is running");
         } catch (RequestException $e) {
             if (!$e->hasResponse()) {
                 throw $e;
