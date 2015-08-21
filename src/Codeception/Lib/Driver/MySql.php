@@ -24,4 +24,26 @@ class MySql extends Db
     {
         return '`' . str_replace('.', '`.`', $name) . '`';
     }
+
+    /**
+     * @param string $tableName
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getPrimaryColumn($tableName)
+    {
+        if (false === isset($this->primaryColumns[$tableName])) {
+            $stmt = $this->getDbh()->query('SHOW KEYS FROM ' . $this->getQuotedName($tableName) . ' WHERE Key_name = "PRIMARY"');
+            $columnInformation = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+            if (true === empty($columnInformation)) { // Need a primary key
+                throw new \Exception('Table ' . $tableName . ' is not valid or doesn\'t have no primary key');
+            }
+
+            $this->primaryColumns[$tableName] = $columnInformation['Column_name'];
+        }
+
+        return $this->primaryColumns[$tableName];
+    }
 }
