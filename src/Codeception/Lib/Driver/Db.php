@@ -149,8 +149,18 @@ class Db
 
     public function select($column, $table, array &$criteria)
     {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from %s $where";
+        $where = $this->generateWhereClause($criteria);
+
+        $query = "select %s from %s %s";
+        return sprintf($query, $column, $this->getQuotedName($table), $where);
+    }
+
+    protected function generateWhereClause(array &$criteria)
+    {
+        if (empty($criteria)) {
+            return '';
+        }
+
         $params = [];
         foreach ($criteria as $k => $v) {
             if ($v === null) {
@@ -160,9 +170,8 @@ class Db
                 $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
-        $sparams = implode('AND ', $params);
 
-        return sprintf($query, $column, $this->getQuotedName($table), $sparams);
+        return 'WHERE ' . implode('AND ', $params);
     }
 
     public function deleteQuery($table, $id, $primaryKey = 'id')

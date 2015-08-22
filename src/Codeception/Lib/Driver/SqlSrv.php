@@ -48,19 +48,17 @@ class SqlSrv extends Db
         );
     }
 
-    public function select($column, $table, array &$criteria)
+    protected function generateWhereClause(array &$criteria)
     {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from " . $this->getQuotedName('%s') . " $where";
-        $params = [];
-
-        foreach ($criteria as $k => $v) {
-            $params[] = $this->getQuotedName($k) . " = ? ";
+        if (empty($criteria)) {
+            return '';
         }
 
-        $params = implode('AND ', $params);
+        $params = [];
+        foreach ($criteria as $k => $v) {
+            $params[] = $this->getQuotedName($k) . " = ? ";        }
 
-        return sprintf($query, $column, $table, $params);
+        return 'WHERE ' . implode('AND ', $params);
     }
 
     public function getQuotedName($name)
