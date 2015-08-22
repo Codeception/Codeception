@@ -180,6 +180,14 @@ class Db
         $this->executeQuery($query, [$id]);
     }
 
+    public function deleteQueryByCriteria($table, array $criteria)
+    {
+        $where = $this->generateWhereClause($criteria);
+
+        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' ' . $where;
+        $this->executeQuery($query, array_values($criteria));
+    }
+
     public function lastInsertId($table)
     {
         return $this->getDbh()->lastInsertId();
