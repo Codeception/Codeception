@@ -110,10 +110,10 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $config = [
-      'populate'  => true,
-      'cleanup'   => true,
-      'reconnect' => false,
-      'dump'      => null
+        'populate' => true,
+        'cleanup' => true,
+        'reconnect' => false,
+        'dump' => null
     ];
 
     /**
@@ -174,7 +174,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver,) = explode(':', $this->config['dsn'],2);
+                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 
@@ -229,8 +229,8 @@ class Db extends CodeceptionModule implements DbInterface
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new ModuleConfigException(
-              __CLASS__,
-              'No connection to database. Remove this module from config if you don\'t need database repopulation'
+                __CLASS__,
+                'No connection to database. Remove this module from config if you don\'t need database repopulation'
             );
         }
         try {
@@ -253,8 +253,8 @@ class Db extends CodeceptionModule implements DbInterface
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
             throw new ModuleException(
-              __CLASS__,
-              $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
+                __CLASS__,
+                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
             );
         }
     }
