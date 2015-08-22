@@ -278,19 +278,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->insert($table, $data);
         $this->debugSection('Query', $query);
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-        $i = 1;
-        foreach ($data as $val) {
-            $sth->bindValue($i, $val);
-            $i++;
-        }
-        $res = $sth->execute();
-        if (!$res) {
-            $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
-        }
+        $this->driver->executeQuery($query, array_values($data));
 
         try {
             $lastInsertId = (int)$this->driver->lastInsertId($table);
@@ -358,12 +346,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->select($column, $table, $criteria);
         $this->debugSection('Query', $query, json_encode($criteria));
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-
-        $sth->execute(array_values($criteria));
+        $sth = $this->driver->executeQuery($query, array_values($criteria));
 
         return $sth->fetchColumn();
     }

@@ -176,8 +176,8 @@ class Db
 
     public function deleteQuery($table, $id, $primaryKey = 'id')
     {
-        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ' . $id;
-        $this->sqlQuery($query);
+        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ?';
+        $this->executeQuery($query, [$id]);
     }
 
     public function lastInsertId($table)
@@ -203,6 +203,17 @@ class Db
     protected function sqlQuery($query)
     {
         $this->dbh->exec($query);
+    }
+
+    public function executeQuery($query, array $params)
+    {
+        $sth = $this->dbh->prepare($query);
+        if (!$sth) {
+            $this->fail("Query '$query' can't be prepared.");
+        }
+
+        $sth->execute($params);
+        return $sth;
     }
 
     /**
