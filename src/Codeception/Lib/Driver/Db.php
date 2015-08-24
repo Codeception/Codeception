@@ -171,6 +171,9 @@ class Db
         return 'WHERE ' . implode('AND ', $params);
     }
 
+    /**
+     * @deprecated use deleteQueryByCriteria instead
+     */
     public function deleteQuery($table, $id, $primaryKey = 'id')
     {
         $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ?';
@@ -226,6 +229,7 @@ class Db
      *
      * @return string
      * @throws \Exception
+     * @deprecated use getPrimaryKey instead
      */
     public function getPrimaryColumn($tableName)
     {
