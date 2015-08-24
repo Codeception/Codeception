@@ -300,7 +300,7 @@ class Db extends CodeceptionModule implements DbInterface
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, $res, 'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
@@ -312,20 +312,20 @@ class Db extends CodeceptionModule implements DbInterface
      * ?>
      * ```
      *
-     * @param int    $num      Expected number
+     * @param int    $expectedNumber      Expected number
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
      */
-    public function seeNumRecords($num, $table, array $criteria = [])
+    public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
+        $actualNumber = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($expectedNumber, $actualNumber, 'The number of found rows (' . $actualNumber. ') does not match expected number ' . $expectedNumber . ' for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertLessThan(1, $res);
+        $count = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(1, $count, 'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
