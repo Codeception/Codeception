@@ -129,7 +129,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * @var array
      */
-    protected $insertedIds = [];
+    protected $insertedRows = [];
 
     /**
      * @var array
@@ -214,14 +214,14 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function removeInserted()
     {
-        foreach (array_reverse($this->insertedIds) as $insertId) {
+        foreach (array_reverse($this->insertedRows) as $row) {
             try {
-                $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
+                $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
-        $this->insertedIds = [];
+        $this->insertedRows = [];
     }
 
     protected function cleanup()
@@ -288,13 +288,35 @@ class Db extends CodeceptionModule implements DbInterface
             $lastInsertId = 0;
         }
 
-        $this->insertedIds[] = [
-            'table' => $table,
-            'id' => $lastInsertId,
-            'primary' => $this->driver->getPrimaryColumn($table)
-        ];
+        $this->addInsertedRow($table, $data, $lastInsertId);
 
         return $lastInsertId;
+    }
+
+    private function addInsertedRow($table, array $row, $id)
+    {
+        $primaryKey = $this->driver->getPrimaryKey($table);
+        $primary = [];
+        if ($primaryKey) {
+            if ($id && count($primaryKey) === 1) {
+                $primary [$primaryKey[0]] = $id;
+            } else {
+                foreach ($primaryKey as $column) {
+                    if (isset($row[$column])) {
+                        $primary[$column] = $row[$column];
+                    } else {
+                        throw new \InvalidArgumentException('Primary key field ' . $column . ' is not set for table ' . $table);
+                    }
+                }
+            }
+        } else {
+            $primary = $row;
+        }
+
+        $this->insertedRows[] = [
+            'table' => $table,
+            'primary' => $primary,
+        ];
     }
 
     public function seeInDatabase($table, $criteria = [])

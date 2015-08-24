@@ -68,6 +68,32 @@ class DbTest extends \PHPUnit_Framework_TestCase
         self::$module->dontSeeInDatabase('users', ['name' => 'john']);
     }
 
+    public function testHaveInDatabaseWithCompositePrimaryKey()
+    {
+        self::$module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        $insertQuery = 'INSERT INTO composite_pk (group_id, id, status) VALUES(?, ?, ?)';
+        //this test checks that module does not delete columns by partial primary key
+        self::$module->driver->executeQuery($insertQuery, [1, 2, 'test']);
+        self::$module->driver->executeQuery($insertQuery, [2, 1, 'test2']);
+        $testData = ['id' => 2, 'group_id' => 2, 'status' => 'test3'];
+        self::$module->haveInDatabase('composite_pk', $testData);
+        self::$module->seeInDatabase('composite_pk', $testData);
+        self::$module->_after(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        self::$module->dontSeeInDatabase('composite_pk', $testData);
+        self::$module->seeInDatabase('composite_pk', ['group_id' => 1, 'id' => 2, 'status' => 'test']);
+        self::$module->seeInDatabase('composite_pk', ['group_id' => 2, 'id' => 1, 'status' => 'test2']);
+    }
+
+    public function testHaveInDatabaseWithoutPrimaryKey()
+    {
+        self::$module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        $testData = ['status' => 'test'];
+        self::$module->haveInDatabase('no_pk', $testData);
+        self::$module->seeInDatabase('no_pk', $testData);
+        self::$module->_after(\Codeception\Util\Stub::make('\Codeception\TestCase'));
+        self::$module->dontSeeInDatabase('no_pk', $testData);
+    }
+
     public function testReconnectOption()
     {
         $testCase1 = \Codeception\Util\Stub::make('\Codeception\TestCase');
