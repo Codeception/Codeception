@@ -2,12 +2,12 @@
 
 class DbTest extends \PHPUnit_Framework_TestCase
 {
-    protected static $config = array(
+    protected static $config = [
         'dsn' => 'sqlite:tests/data/dbtest.db',
         'user' => 'root',
         'password' => '',
         'cleanup' => false
-    );
+    ];
 
     /**
      * @var \Codeception\Module\Db
@@ -30,7 +30,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInDatabase()
     {
-        self::$module->seeInDatabase('users', array('name' => 'davert'));
+        self::$module->seeInDatabase('users', ['name' => 'davert']);
     }
 
     public function testCountInDatabase()
@@ -42,7 +42,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testDontSeeInDatabase()
     {
-        self::$module->dontSeeInDatabase('users', array('name' => 'user1'));
+        self::$module->dontSeeInDatabase('users', ['name' => 'user1']);
     }
 
     public function testDontSeeInDatabaseWithEmptyTable()
@@ -52,20 +52,20 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testGrabFromDatabase()
     {
-        $email = self::$module->grabFromDatabase('users', 'email', array('name' => 'davert'));
+        $email = self::$module->grabFromDatabase('users', 'email', ['name' => 'davert']);
         $this->assertEquals('davert@mail.ua', $email);
     }
 
     public function testHaveAndSeeInDatabase()
     {
         self::$module->_before(\Codeception\Util\Stub::make('\Codeception\TestCase'));
-        $user_id = self::$module->haveInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
-        $group_id = self::$module->haveInDatabase('groups', array('name' => 'john', 'enabled' => false));
+        $user_id = self::$module->haveInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
+        $group_id = self::$module->haveInDatabase('groups', ['name' => 'john', 'enabled' => false]);
         $this->assertInternalType('integer', $user_id);
-        self::$module->seeInDatabase('users', array('name' => 'john', 'email' => 'john@jon.com'));
-        self::$module->dontSeeInDatabase('users', array('name' => 'john', 'email' => null));
+        self::$module->seeInDatabase('users', ['name' => 'john', 'email' => 'john@jon.com']);
+        self::$module->dontSeeInDatabase('users', ['name' => 'john', 'email' => null]);
         self::$module->_after(\Codeception\Util\Stub::make('\Codeception\TestCase'));
-        self::$module->dontSeeInDatabase('users', array('name' => 'john'));
+        self::$module->dontSeeInDatabase('users', ['name' => 'john']);
     }
 
     public function testReconnectOption()
