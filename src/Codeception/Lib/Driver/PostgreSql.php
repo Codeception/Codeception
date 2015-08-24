@@ -126,11 +126,27 @@ class PostgreSql extends Db
     /**
      * @param string $tableName
      *
-     * @return string
+     * @return array[string]
      */
-    public function getPrimaryColumn($tableName)
+    public function getPrimaryKey($tableName)
     {
-        // @TODO: Implement this for PostgreSQL later
-        return 'id';
+        if (!isset($this->primaryKeys[$tableName])) {
+            $primaryKey = [];
+            $query = 'SELECT a.attname
+                FROM   pg_index i
+                JOIN   pg_attribute a ON a.attrelid = i.indrelid
+                                     AND a.attnum = ANY(i.indkey)
+                WHERE  i.indrelid = ?::regclass
+                AND    i.indisprimary';
+            $stmt = $this->executeQuery($query, [$tableName]);
+            $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($columns as $column) {
+                $primaryKey []= $column['attname'];
+            }
+            $this->primaryKeys[$tableName] = $primaryKey;
+        }
+
+        return $this->primaryKeys[$tableName];
     }
 }

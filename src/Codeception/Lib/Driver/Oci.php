@@ -67,4 +67,32 @@ class Oci extends Db
             }
         }
     }
+
+    /**
+     * @param string $tableName
+     *
+     * @return array[string]
+     */
+    public function getPrimaryKey($tableName)
+    {
+        if (!isset($this->primaryKeys[$tableName])) {
+            $primaryKey = [];
+            $query = "SELECT cols.column_name
+                FROM all_constraints cons, all_cons_columns cols
+                WHERE cols.table_name = ?
+                AND cons.constraint_type = 'P'
+                AND cons.constraint_name = cols.constraint_name
+                AND cons.owner = cols.owner
+                ORDER BY cols.table_name, cols.position";
+            $stmt = $this->executeQuery($query, [$tableName]);
+            $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($columns as $column) {
+                $primaryKey []= $column['column_name'];
+            }
+            $this->primaryKeys[$tableName] = $primaryKey;
+        }
+
+        return $this->primaryKeys[$tableName];
+    }
 }

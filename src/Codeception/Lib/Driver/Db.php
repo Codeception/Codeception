@@ -26,7 +26,7 @@ class Db
      *
      * @var array
      */
-    protected $primaryColumns = [];
+    protected $primaryKeys = [];
 
     public static function connect($dsn, $user, $password)
     {
@@ -214,7 +214,7 @@ class Db
     {
         $sth = $this->dbh->prepare($query);
         if (!$sth) {
-            $this->fail("Query '$query' can't be prepared.");
+            throw new \Exception("Query '$query' can't be prepared.");
         }
 
         $sth->execute($params);
@@ -225,10 +225,28 @@ class Db
      * @param string $tableName
      *
      * @return string
+     * @throws \Exception
      */
     public function getPrimaryColumn($tableName)
     {
-        return 'id';
+        $primaryKey = $this->getPrimaryKey($tableName);
+        if (empty($primaryKey)) {
+            return null;
+        } elseif (count($primaryKey) > 1) {
+            throw new \Exception('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
+        }
+
+        return $primaryKey[0];
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return array[string]
+     */
+    public function getPrimaryKey($tableName)
+    {
+        return [];
     }
 
     /**
@@ -236,8 +254,8 @@ class Db
      */
     protected function flushPrimaryColumnCache()
     {
-        $this->primaryColumns = [];
+        $this->primaryKeys = [];
 
-        return empty($this->primaryColumns);
+        return empty($this->primaryKeys);
     }
 }
