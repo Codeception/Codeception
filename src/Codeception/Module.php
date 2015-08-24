@@ -200,7 +200,7 @@ abstract class Module
     protected function scalarizeArray($array)
     {
         foreach ($array as $k => $v) {
-            if (!is_scalar($v)) {
+            if (!is_null($v) && !is_scalar($v)) {
                 $array[$k] = (is_array($v) || $v instanceof \ArrayAccess)
                     ? $this->scalarizeArray($v)
                     : (string)$v;
