@@ -110,10 +110,10 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $config = [
-      'populate'  => true,
-      'cleanup'   => true,
-      'reconnect' => false,
-      'dump'      => null
+        'populate' => true,
+        'cleanup' => true,
+        'reconnect' => false,
+        'dump' => null
     ];
 
     /**
@@ -129,7 +129,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * @var array
      */
-    protected $insertedIds = [];
+    protected $insertedRows = [];
 
     /**
      * @var array
@@ -174,7 +174,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver,) = explode(':', $this->config['dsn'],2);
+                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 
@@ -214,14 +214,14 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function removeInserted()
     {
-        foreach (array_reverse($this->insertedIds) as $insertId) {
+        foreach (array_reverse($this->insertedRows) as $row) {
             try {
-                $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
+                $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
-        $this->insertedIds = [];
+        $this->insertedRows = [];
     }
 
     protected function cleanup()
@@ -229,8 +229,8 @@ class Db extends CodeceptionModule implements DbInterface
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new ModuleConfigException(
-              __CLASS__,
-              'No connection to database. Remove this module from config if you don\'t need database repopulation'
+                __CLASS__,
+                'No connection to database. Remove this module from config if you don\'t need database repopulation'
             );
         }
         try {
@@ -253,8 +253,8 @@ class Db extends CodeceptionModule implements DbInterface
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
             throw new ModuleException(
-              __CLASS__,
-              $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
+                __CLASS__,
+                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
             );
         }
     }
@@ -278,19 +278,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->insert($table, $data);
         $this->debugSection('Query', $query);
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-        $i = 1;
-        foreach ($data as $val) {
-            $sth->bindValue($i, $val);
-            $i++;
-        }
-        $res = $sth->execute();
-        if (!$res) {
-            $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
-        }
+        $this->driver->executeQuery($query, array_values($data));
 
         try {
             $lastInsertId = (int)$this->driver->lastInsertId($table);
@@ -300,19 +288,41 @@ class Db extends CodeceptionModule implements DbInterface
             $lastInsertId = 0;
         }
 
-        $this->insertedIds[] = [
-            'table' => $table,
-            'id' => $lastInsertId,
-            'primary' => $this->driver->getPrimaryColumn($table)
-        ];
+        $this->addInsertedRow($table, $data, $lastInsertId);
 
         return $lastInsertId;
+    }
+
+    private function addInsertedRow($table, array $row, $id)
+    {
+        $primaryKey = $this->driver->getPrimaryKey($table);
+        $primary = [];
+        if ($primaryKey) {
+            if ($id && count($primaryKey) === 1) {
+                $primary [$primaryKey[0]] = $id;
+            } else {
+                foreach ($primaryKey as $column) {
+                    if (isset($row[$column])) {
+                        $primary[$column] = $row[$column];
+                    } else {
+                        throw new \InvalidArgumentException('Primary key field ' . $column . ' is not set for table ' . $table);
+                    }
+                }
+            }
+        } else {
+            $primary = $row;
+        }
+
+        $this->insertedRows[] = [
+            'table' => $table,
+            'primary' => $primary,
+        ];
     }
 
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, $res, 'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
@@ -324,20 +334,20 @@ class Db extends CodeceptionModule implements DbInterface
      * ?>
      * ```
      *
-     * @param int    $num      Expected number
+     * @param int    $expectedNumber      Expected number
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
      */
-    public function seeNumRecords($num, $table, array $criteria = [])
+    public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
+        $actualNumber = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($expectedNumber, $actualNumber, 'The number of found rows (' . $actualNumber. ') does not match expected number ' . $expectedNumber . ' for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertLessThan(1, $res);
+        $count = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(1, $count, 'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
@@ -358,12 +368,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->select($column, $table, $criteria);
         $this->debugSection('Query', $query, json_encode($criteria));
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-
-        $sth->execute(array_values($criteria));
+        $sth = $this->driver->executeQuery($query, array_values($criteria));
 
         return $sth->fetchColumn();
     }

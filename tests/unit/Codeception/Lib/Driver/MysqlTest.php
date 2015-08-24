@@ -70,9 +70,33 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertGreaterThan(0, $res->rowCount());
     }
 
-    public function testGetPrimaryKeyOfTableUsingReservedWordAsTableName()
+    public function testGetSingleColumnPrimaryKey()
+    {
+        $this->assertEquals(['id'], $this->mysql->getPrimaryKey('order'));
+    }
+
+    public function testGetCompositePrimaryKey()
+    {
+        $this->assertEquals(['group_id', 'id'], $this->mysql->getPrimaryKey('composite_pk'));
+    }
+
+    public function testGetEmptyArrayIfTableHasNoPrimaryKey()
+    {
+        $this->assertEquals([], $this->mysql->getPrimaryKey('no_pk'));
+    }
+
+    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
     {
         $this->assertEquals('id', $this->mysql->getPrimaryColumn('order'));
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead
+     */
+    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
+    {
+        $this->mysql->getPrimaryColumn('composite_pk');
     }
 
     public function testDeleteFromTableUsingReservedWordAsTableName()

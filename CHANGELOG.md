@@ -3,6 +3,9 @@
 #### 2.1.3
 * [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen *2015-08-21*
 * [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen *2015-08-19*
+* [Db] Deleted Oracle driver (it existed by mistake, the real driver is Oci). By @Naktibalda *2015-08-22*
+* [Db] Implemented getPrimaryKey method for Sqlite, Mysql, Postgresql, Oracle and MsSql. By @Naktibalda *2015-08-24*
+* [Db] Implemented support for composite primary keys and tables without primary keys. By @Naktibalda *2015-08-24*
 
 #### 2.1.2
 
