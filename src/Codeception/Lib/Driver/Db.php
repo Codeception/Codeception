@@ -43,7 +43,7 @@ class Db
      * @param $user
      * @param $password
      *
-     * @return Db|MsSql|MySql|Oracle|PostgreSql|Sqlite
+     * @return Db|SqlSrv|MySql|Oci|PostgreSql|Sqlite
      */
     public static function create($dsn, $user, $password)
     {
@@ -57,7 +57,6 @@ class Db
             case 'pgsql':
                 return new PostgreSql($dsn, $user, $password);
             case 'mssql':
-                return new MsSql($dsn, $user, $password);
             case 'sqlsrv':
                 return new SqlSrv($dsn, $user, $password);
             case 'oci':
