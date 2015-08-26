@@ -298,6 +298,8 @@ class PhpBrowserTest extends TestsForBrowsers
     
     public function testArrayFieldSubmitForm()
     {
+        $this->markTestSkipped("Not for Guzzle <6");
+        
         $this->module->amOnPage('/form/example17');
         $this->module->submitForm(
             'form',
