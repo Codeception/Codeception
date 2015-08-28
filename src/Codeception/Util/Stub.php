@@ -497,8 +497,12 @@ class Stub
     {
         $reflectionClass = new \ReflectionClass($mock);
         if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
-            $reflectionClass = $reflectionClass->getParentClass();
+            $parentClass = $reflectionClass->getParentClass();
+            if ($parentClass !== FALSE) {
+                $reflectionClass = $reflectionClass->getParentClass();
+            }
         }
+        
 
         foreach ($params as $param => $value) {
             // redefine method
