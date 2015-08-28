@@ -35,6 +35,7 @@ use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverSelect;
+use GuzzleHttp\Cookie\SetCookie;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -2139,11 +2140,26 @@ class WebDriver extends CodeceptionModule implements
         throw new \InvalidArgumentException("Only CSS or XPath allowed");
     }
 
+    /**
+     * @param string $name
+     */
     public function saveSessionSnapshot($name)
     {
-        $this->sessionSnapshots[$name] = $this->webDriver->manage()->getCookies();
+        $this->sessionSnapshots[$name] = [];
+
+        foreach ($this->webDriver->manage()->getCookies() as $cookie) {
+            if ($this->cookieDomainMatchesConfigUrl($cookie)) {
+                $this->sessionSnapshots[$name][] = $cookie;
+            }
+        }
+
+        $this->debugSection('Snapshot', "Saved \"$name\" session snapshot");
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function loadSessionSnapshot($name)
     {
         if (!isset($this->sessionSnapshots[$name])) {
@@ -2152,7 +2168,25 @@ class WebDriver extends CodeceptionModule implements
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }
-        $this->debugSection('Snapshot', "$name session restored");
+        $this->debugSection('Snapshot', "Restored \"$name\" session snapshot");
         return true;
+    }
+
+    /**
+     * Check if the cookie domain matches the config URL.
+     *
+     * @param array $cookie
+     * @return bool
+     */
+    private function cookieDomainMatchesConfigUrl(array $cookie)
+    {
+        if (!array_key_exists('domain', $cookie)) {
+            return true;
+        }
+
+        $setCookie = new SetCookie();
+        $setCookie->setDomain($cookie['domain']);
+
+        return $setCookie->matchesDomain(parse_url($this->config['url'], PHP_URL_HOST));
     }
 }
