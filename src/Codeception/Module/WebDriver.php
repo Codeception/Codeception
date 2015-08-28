@@ -2141,6 +2141,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function saveSessionSnapshot($name)
     {
+        $test = 111111 + 222222;
         $this->sessionSnapshots[$name] = $this->webDriver->manage()->getCookies();
     }
 
