@@ -617,13 +617,13 @@ EOF;
      * ``` php
      * <?php
      * // match the first `user.id` in json
-     * $firstUser = $I->grabDataFromJsonResponse('$..users[0].id');
-     * $I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
+     * $firstUserId = $I->grabDataFromResponseByJsonPath('$..users[0].id');
+     * $I->sendPUT('/user', array('id' => $firstUserId[0], 'name' => 'davert'));
      * ?>
      * ```
      *
-     * @param $jsonPath
-     * @return array
+     * @param string $jsonPath
+     * @return array Array of matching items
      * @version 2.0.9
      * @throws \Exception
      * @part json
@@ -952,6 +952,8 @@ EOF;
     }
 
     /**
+     * Deprecated since 2.0.9 and removed since 2.1.0
+     *
      * @param $path
      * @throws ModuleException
      * @deprecated
