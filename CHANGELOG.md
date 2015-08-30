@@ -1,11 +1,15 @@
 # Changelog
 
 #### 2.1.3
-* [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen *2015-08-21*
-* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen *2015-08-19*
-* [Db] Deleted Oracle driver (it existed by mistake, the real driver is Oci). By @Naktibalda *2015-08-22*
-* [Db] Implemented getPrimaryKey method for Sqlite, Mysql, Postgresql, Oracle and MsSql. By @Naktibalda *2015-08-24*
-* [Db] Implemented support for composite primary keys and tables without primary keys. By @Naktibalda *2015-08-24*
+* [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen
+* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen
+* [Db] Deleted Oracle driver (it existed by mistake, the real driver is Oci). By @Naktibalda
+* [Db] Implemented getPrimaryKey method for Sqlite, Mysql, Postgresql, Oracle and MsSql. By @Naktibalda
+* [Db] Implemented support for composite primary keys and tables without primary keys. By @Naktibalda
+* Fixed the scalarizeArray to be aware of NULL fields #2264. By @fbidu
+* [Soap] Fixed SOAP module #2296. By @relaxart
+* Fixed a bug where blank lines in a groups file would run every test in the project #2297. By @imjoehaines
+* [WebDriver] seeNumberOfElements should only count visible elements #2303. By @sascha-egerer
 
 #### 2.1.2
 
