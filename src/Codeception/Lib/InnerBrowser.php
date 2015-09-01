@@ -108,7 +108,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function amOnPage($page)
     {
-        $this->crawler = $this->client->request('GET', $page);
+        $this->crawler = $this->clientRequest('GET', $page);
         $this->forms = [];
         $this->debugResponse();
     }
@@ -475,7 +475,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $requestParams= $this->getFormPhpValues($requestParams);
 
-        $this->crawler = $this->client->request(
+        $this->crawler = $this->clientRequest(
             $form->getMethod(),
             $url,
             $requestParams,
@@ -839,7 +839,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->client->request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
         $this->debugResponse();
     }
 
@@ -1254,5 +1254,18 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        $this->client->followRedirects(false);
+        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
+        if ($locationHeader) {
+            $this->debugResponse();
+            $this->debugSection('Redirecting to', $locationHeader);
+            $result = $this->client->followRedirect();
+        }
+        return $result;
     }
 }
