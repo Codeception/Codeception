@@ -1273,10 +1273,24 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if ($locationHeader) {
             $this->debugResponse();
             if (is_string($locationHeader)) {
-                $this->debugSection('Redirecting to', $locationHeader);
+                $redirectingTo = $locationHeader;
+            } elseif ($locationHeader instanceof \GuzzleHttp\Psr7\Uri) {
+                $currentUri = $this->client->getRequest()->getUri();
+                if (is_string($currentUri)) {
+                    $currentUri = new \GuzzleHttp\Psr7\Uri($currentUri);
+                }
+                if ($locationHeader->getScheme() !== $currentUri->getScheme()
+                    || $locationHeader->getHost() !== $currentUri->getHost()
+                    || $locationHeader->getPort() !== $currentUri->getPort()) {
+                    $redirectingTo = (string)$locationHeader;
+                } else {
+                    $redirectingTo = Uri::retrieveUri($locationHeader);
+                }
             } else {
-                $this->debugSection('Redirecting to', (string)$locationHeader);
+                $redirectingTo = (string)$locationHeader;
             }
+            $this->debugSection('Redirecting to', $redirectingTo);
+
             $result = $this->client->followRedirect();
             return $this->redirectIfNecessary($result);
         }
