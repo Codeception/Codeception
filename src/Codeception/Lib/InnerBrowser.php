@@ -1260,11 +1260,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        return $this->redirectIfNecessary($result);
+    }
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    protected function redirectIfNecessary($result)
+    {
         $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
         if ($locationHeader) {
             $this->debugResponse();
             $this->debugSection('Redirecting to', $locationHeader);
             $result = $this->client->followRedirect();
+            return $this->redirectIfNecessary($result);
         }
         return $result;
     }
