@@ -845,8 +845,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function debugResponse()
     {
-        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
         $this->debugSection('Headers', $this->client->getInternalResponse()->getHeaders());
     }
