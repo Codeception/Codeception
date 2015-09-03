@@ -19,7 +19,8 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
 
 ### Symfony 2.x
 
-* app_path: 'app' - specify custom path to your app dir, where bootstrap cache and kernel interface is located.
+* app_path: 'app' - specify custom path to your app dir, where the kernel interface is located.
+* var_path: 'var' - specify custom path to your var dir, where the bootstrap cache is located.
 * environment: 'local' - environment used for load kernel
 * debug: true - turn on/off debug mode
 
@@ -31,6 +32,7 @@ This module uses Symfony2 Crawler and HttpKernel to emulate requests and test re
        config:
           Symfony2:
              app_path: 'app/front'
+             var_path: 'app'
              environment: 'local_test'
 
 ### Symfony 3.x Directory Structure
