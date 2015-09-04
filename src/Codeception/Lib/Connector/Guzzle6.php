@@ -112,30 +112,32 @@ class Guzzle6 extends Client
         }
 
         $status = $response->getStatusCode();
-        $matches = [];
+        if ($status < 300 || $status >= 400) {
+            $matches = [];
 
-        $matchesMeta = preg_match(
-            '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
-            $body,
-            $matches
-        );
-
-        if (!$matchesMeta && isset($headers['Refresh'])) {
-            // match by header
-            preg_match(
-                '~(\d*);?url=(.*)~',
-                (string) reset($headers['Refresh']),
+            $matchesMeta = preg_match(
+                '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
+                $body,
                 $matches
             );
-        }
 
-        if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
-            $uri = new Psr7Uri($this->getAbsoluteUri($matches[2]));
-            $currentUri = new Psr7Uri($this->getHistory()->current()->getUri());
+            if (!$matchesMeta && isset($headers['Refresh'])) {
+                // match by header
+                preg_match(
+                    '~(\d*);?url=(.*)~',
+                    (string) reset($headers['Refresh']),
+                    $matches
+                );
+            }
 
-            if ($uri->withFragment('') != $currentUri->withFragment('')) {
-                $status = 302;
-                $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
+            if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
+                $uri = new Psr7Uri($this->getAbsoluteUri($matches[2]));
+                $currentUri = new Psr7Uri($this->getHistory()->current()->getUri());
+
+                if ($uri->withFragment('') != $currentUri->withFragment('')) {
+                    $status = 302;
+                    $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
+                }
             }
         }
 
@@ -287,7 +289,7 @@ class Guzzle6 extends Client
                 }
             } else {
                 $files[] = [
-                    'name' => $name, 
+                    'name' => $name,
                     'contents' => fopen($info, 'r')
                 ];
             }
@@ -295,7 +297,7 @@ class Guzzle6 extends Client
 
         return $files;
     }
-    
+
     protected function extractCookies($host)
     {
         $jar = [];
