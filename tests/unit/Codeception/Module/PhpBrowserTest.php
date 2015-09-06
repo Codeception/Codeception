@@ -168,6 +168,14 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testDisabledRedirects()
+    {
+        $this->module->client->followRedirects(false);
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(301);
+        $this->module->seeCurrentUrlEquals('/redirect_twice');
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');
