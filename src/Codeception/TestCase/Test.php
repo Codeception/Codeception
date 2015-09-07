@@ -19,8 +19,12 @@ class Test extends TestCase implements
     protected function setUp()
     {
         $actor = $this->actor;
-        if ($actor) {
+     if ($actor) {
             $property = lcfirst(Configuration::config()['actor']);
+            if (class_exists($actor) === false && strrpos($actor, '\\') !== false) {
+                $actor = str_replace('\\\\', '\\', $actor);
+            }
+
             $this->$property = new $actor($this->scenario);
 
             // BC compatibility hook
