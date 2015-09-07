@@ -16,6 +16,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
+use Codeception\Util\PropertyAccess;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -108,7 +109,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function amOnPage($page)
     {
-        $this->crawler = $this->client->request('GET', $page);
+        $this->crawler = $this->clientRequest('GET', $page);
         $this->forms = [];
         $this->debugResponse();
     }
@@ -475,7 +476,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $requestParams= $this->getFormPhpValues($requestParams);
 
-        $this->crawler = $this->client->request(
+        $this->crawler = $this->clientRequest(
             $form->getMethod(),
             $url,
             $requestParams,
@@ -839,14 +840,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->client->request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
         $this->debugResponse();
     }
 
     protected function debugResponse()
     {
-        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
         $this->debugSection('Headers', $this->client->getInternalResponse()->getHeaders());
     }
@@ -1254,5 +1255,56 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        }
+        $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+        $this->client->followRedirects(false);
+        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        return $this->redirectIfNecessary($result, $maxRedirects, 0);
+    }
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    protected function redirectIfNecessary($result, $maxRedirects, $redirectCount)
+    {
+        $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
+        if ($locationHeader) {
+            $this->debugResponse();
+
+            if ($redirectCount == $maxRedirects) {
+                throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $maxRedirects));
+            }
+
+            if (is_string($locationHeader)) {
+                $redirectingTo = $locationHeader;
+            } elseif ($locationHeader instanceof \GuzzleHttp\Psr7\Uri) {
+                $currentUri = $this->client->getRequest()->getUri();
+                if (is_string($currentUri)) {
+                    $currentUri = new \GuzzleHttp\Psr7\Uri($currentUri);
+                }
+                if ($locationHeader->getScheme() !== $currentUri->getScheme()
+                    || $locationHeader->getHost() !== $currentUri->getHost()
+                    || $locationHeader->getPort() !== $currentUri->getPort()) {
+                    $redirectingTo = (string)$locationHeader;
+                } else {
+                    $redirectingTo = Uri::retrieveUri($locationHeader);
+                }
+            } else {
+                $redirectingTo = (string)$locationHeader;
+            }
+            $this->debugSection('Redirecting to', $redirectingTo);
+
+            $result = $this->client->followRedirect();
+            return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
+        }
+        $this->client->followRedirects(true);
+        return $result;
     }
 }

@@ -161,6 +161,40 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->seeCurrentUrlEquals('/info');
     }
 
+    public function testChainedRedirects()
+    {
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testDisabledRedirects()
+    {
+        $this->module->client->followRedirects(false);
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(302);
+        $this->module->seeCurrentUrlEquals('/redirect_twice');
+    }
+
+    public function testRedirectLimitReached()
+    {
+        $this->module->client->setMaxRedirects(1);
+        try {
+            $this->module->amOnPage('/redirect_twice');
+            $this->assertTrue(false, 'redirect limit is not respected');
+        } catch (\LogicException $e) {
+            $this->assertEquals('The maximum number (1) of redirections was reached.', $e->getMessage(), 'redirect limit is respected');
+        }
+    }
+
+    public function testRedirectLimitNotReached()
+    {
+        $this->module->client->setMaxRedirects(2);
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');

@@ -29,6 +29,7 @@ $urls = array(
     '/redirect_self' => 'redirect_self',
     '/relative_redirect' => 'redirect_relative',
     '/relative/redirect' => 'redirect_relative',
+    '/redirect_twice' => 'redirect_twice',
     '/relative/info' => 'info',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
