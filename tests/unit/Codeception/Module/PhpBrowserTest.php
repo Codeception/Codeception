@@ -172,7 +172,7 @@ class PhpBrowserTest extends TestsForBrowsers
     {
         $this->module->client->followRedirects(false);
         $this->module->amOnPage('/redirect_twice');
-        $this->module->seeResponseCodeIs(301);
+        $this->module->seeResponseCodeIs(302);
         $this->module->seeCurrentUrlEquals('/redirect_twice');
     }
 

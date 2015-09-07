@@ -16,6 +16,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
+use Codeception\Util\PropertyAccess;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
@@ -1258,6 +1259,9 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        }
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
         return $this->redirectIfNecessary($result);
@@ -1294,6 +1298,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $result = $this->client->followRedirect();
             return $this->redirectIfNecessary($result);
         }
+        $this->client->followRedirects(true);
         return $result;
     }
 }
