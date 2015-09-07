@@ -2167,6 +2167,9 @@ class WebDriver extends CodeceptionModule implements
 
         foreach ($this->webDriver->manage()->getCookies() as $cookie) {
             if ($this->cookieDomainMatchesConfigUrl($cookie)) {
+                // strip the domain since it matches the config url and may cause problems with the selenium webdriver
+                unset($cookie['domain']);
+
                 $this->sessionSnapshots[$name][] = $cookie;
             }
         }
