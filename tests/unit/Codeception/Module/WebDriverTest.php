@@ -541,6 +541,8 @@ class WebDriverTest extends TestsForBrowsers
     {
         $fakeWdOptions = Stub::make('\Facebook\WebDriver\WebDriverOptions', [
             'getCookies' => Stub::atLeastOnce(function() {
+                $sameCookieDomain = parse_url($this->module->_getUrl(), PHP_URL_HOST);
+
                 return [
                     [
                         'name' => 'PHPSESSID',
@@ -548,11 +550,23 @@ class WebDriverTest extends TestsForBrowsers
                         'path' => '/',
                     ],
                     [
+                        'name' => 'SameDomain',
+                        'value' => '654321',
+                        'path' => '/',
+                        'domain' => $sameCookieDomain,
+                    ],
+                    [
+                        'name' => 'SameDomainWildcard',
+                        'value' => '291784',
+                        'path' => '/',
+                        'domain' => '.'.$sameCookieDomain,
+                    ],
+                    [
                         'name' => '3rdParty',
                         'value' => '_value_',
                         'path' => '/',
                         'domain' => '.3rd-party.net',
-                    ]
+                    ],
                 ];
             }),
         ]);
@@ -569,6 +583,8 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->webDriver = $fakeWd;
 
         $this->module->seeCookie('PHPSESSID');
+        $this->module->seeCookie('SameDomain');
+        $this->module->seeCookie('SameDomainWildcard');
         $this->module->seeCookie('3rdParty');
         $this->module->saveSessionSnapshot('login');
 
@@ -577,9 +593,13 @@ class WebDriverTest extends TestsForBrowsers
 
         $this->webDriver->manage()->deleteAllCookies();
         $this->module->dontSeeCookie('PHPSESSID');
+        $this->module->dontSeeCookie('SameDomain');
+        $this->module->dontSeeCookie('SameDomainWildcard');
         $this->module->dontSeeCookie('3rdParty');
         $this->module->loadSessionSnapshot('login');
         $this->module->seeCookie('PHPSESSID');
+        $this->module->seeCookie('SameDomain');
+        $this->module->seeCookie('SameDomainWildcard');
         $this->module->dontSeeCookie('3rdParty');
     }
 }
