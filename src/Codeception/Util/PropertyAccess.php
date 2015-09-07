@@ -4,9 +4,12 @@ namespace Codeception\Util;
 
 class PropertyAccess
 {
-    public static function readPrivateProperty($object, $property)
+    public static function readPrivateProperty($object, $property, $class = null)
     {
-        $property = new \ReflectionProperty($object, $property);
+        if ($class === null) {
+            $class = $object;
+        }
+        $property = new \ReflectionProperty($class, $property);
         $property->setAccessible(true);
         return $property->getValue($object);
     }
