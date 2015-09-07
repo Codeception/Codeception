@@ -1262,20 +1262,26 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
             return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
         }
+        $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-        return $this->redirectIfNecessary($result);
+        return $this->redirectIfNecessary($result, $maxRedirects, 0);
     }
 
     /**
      * @param $result
      * @return mixed
      */
-    protected function redirectIfNecessary($result)
+    protected function redirectIfNecessary($result, $maxRedirects, $redirectCount)
     {
         $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
         if ($locationHeader) {
             $this->debugResponse();
+
+            if ($redirectCount == $maxRedirects) {
+                throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $maxRedirects));
+            }
+
             if (is_string($locationHeader)) {
                 $redirectingTo = $locationHeader;
             } elseif ($locationHeader instanceof \GuzzleHttp\Psr7\Uri) {
@@ -1296,7 +1302,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->debugSection('Redirecting to', $redirectingTo);
 
             $result = $this->client->followRedirect();
-            return $this->redirectIfNecessary($result);
+            return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
         }
         $this->client->followRedirects(true);
         return $result;
