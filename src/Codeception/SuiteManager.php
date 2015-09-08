@@ -170,7 +170,7 @@ class SuiteManager
     protected function getActor()
     {
         return $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
             : $this->settings['class_name'];
     }
 
