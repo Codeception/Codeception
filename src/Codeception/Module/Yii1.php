@@ -145,6 +145,7 @@ class Yii1 extends Framework
     public function _createClient()
     {
         $this->client = new Yii1Connector();
+        $this->client->setServerParameter("HTTP_HOST", parse_url($this->config['url'], PHP_URL_HOST));
         $this->client->appPath = $this->config['appPath'];
         $this->client->url = $this->config['url'];
         $this->client->appSettings = [
