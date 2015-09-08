@@ -15,15 +15,15 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
-use Codeception\Util\Uri;
 use Codeception\Util\PropertyAccess;
+use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
+use Symfony\Component\DomCrawler\Form;
 
 class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator
 {
@@ -68,6 +68,33 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function _findElements($locator)
     {
         return $this->match($locator);
+    }
+
+    /**
+     * Send custom request to a backend using method, uri, parameters, etc.
+     * Use it in Helpers to create special request actions, like accessing API, sending complex forms, etc.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function createUserByApi($name) {
+     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     * }
+     * ?>
+     * ```
+     *
+     * @api
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     * @return mixed|Crawler
+     */
+    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    {
+        return $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
     }
 
     /**

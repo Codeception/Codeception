@@ -1,6 +1,8 @@
 # Changelog
 
 #### 2.1.3
+
+* [PhpBrowser][Frameworks] added hidden `_request()` method to send requests to backend from Helper classes.
 * [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen
 * [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen
 * [Db] Deleted Oracle driver (it existed by mistake, the real driver is Oci). By @Naktibalda
