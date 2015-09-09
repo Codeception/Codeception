@@ -171,6 +171,13 @@ class Symfony2 extends Framework implements DoctrineProvider
     /**
      * Opens web page using route name and parameters.
      *
+     * ``` php
+     * <?php
+     * $I->amOnRoute('posts.create');
+     * $I->amOnRoute('posts.show', array('id' => 34));
+     * ?>
+     * ```
+     *
      * @param $routeName
      * @param array $params
      */
@@ -188,8 +195,16 @@ class Symfony2 extends Framework implements DoctrineProvider
         $url = $router->generate($routeName, $params);
         $this->amOnPage($url);
     }
+
     /**
      * Checks that current url matches route.
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * $I->seeCurrentRouteIs('posts.show', array('id' => 8));
+     * ?>
+     * ```
      *
      * @param $routeName
      * @param array $params
