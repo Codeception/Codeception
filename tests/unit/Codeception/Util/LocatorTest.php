@@ -1,6 +1,7 @@
 <?php
 
 use Codeception\Util\Locator;
+use Facebook\WebDriver\WebDriverBy;
 
 class LocatorTest extends PHPUnit_Framework_TestCase
 {
@@ -52,4 +53,15 @@ class LocatorTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(Locator::isID('hello'));
     }
 
+    public function testHumanReadableString()
+    {
+       $this->assertEquals("'string selector'", Locator::humanReadableString("string selector"));
+       $this->assertEquals("css '.something'", Locator::humanReadableString(['css' => '.something']));
+       $this->assertEquals("css selector '.something'", Locator::humanReadableString(WebDriverBy::cssSelector('.something')));
+
+       try {
+          Locator::humanReadableString(null);
+          $this->fail("Expected exception when calling humanReadableString() with invalid selector");
+       } catch (\InvalidArgumentException $e) {}
+    }
 }
