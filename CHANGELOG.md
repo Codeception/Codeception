@@ -2,6 +2,8 @@
 
 #### 2.1.3
 
+* Warning is displayed once using unconfigured environment.
+* Fixed loading environment configurations for Cept files by @splinter89
 * Fixed bootstrap with namespaces to inject namespaced actor classes properly.
 * [PhpBrowser][Frameworks] added hidden `_request()` method to send requests to backend from Helper classes.
 * [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen

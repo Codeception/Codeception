@@ -177,13 +177,13 @@ class Scenario
 
     public function preload()
     {
-        \Codeception\Lib\Deprecation::add("Scenario is never preloaded. Please remove \$scenario->preload() call.", $this->getFeature());
+        \Codeception\Lib\Notification::deprecate("Scenario is never preloaded. Please remove \$scenario->preload() call.", $this->getFeature());
         return false;
     }
 
     public function running()
     {
-        \Codeception\Lib\Deprecation::add("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
+        \Codeception\Lib\Notification::deprecate("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
         return true;
     }
 
