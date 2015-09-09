@@ -34,10 +34,10 @@ class Report extends ResultPrinter implements ConsolePrinter
             }
         }
 
-        if (strlen($name) > 75) {
-            $name = substr($name, 0, 70);
+        if (mb_strwidth($name) > 75) {
+            $name = mb_substr($name, 0, 70);
         }
-        $line = $name . str_repeat('.', 75 - strlen($name));
+        $line = $name . str_repeat('.', 75 - mb_strwidth($name));
         $line .= $status;
 
         $this->write($line . "\n");

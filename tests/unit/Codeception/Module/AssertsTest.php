@@ -8,6 +8,8 @@ class AssertsTest extends PHPUnit_Framework_TestCase
         $module->assertContains(1,[1,2]);
         $module->assertSame(1,1);
         $module->assertNotSame(1,true);
+        $module->assertRegExp('/^[\d]$/','1');
+        $module->assertNotRegExp('/^[a-z]$/','1');
     }
 
 }

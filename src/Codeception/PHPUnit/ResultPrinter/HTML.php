@@ -2,6 +2,7 @@
 namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\Step;
+use Codeception\Util\Multibyte;
 
 class HTML extends \Codeception\PHPUnit\ResultPrinter
 {
@@ -119,7 +120,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
         $scenarioTemplate->setVar(
             [
                 'id'             => ++$this->id,
-                'name'           => ucfirst($name),
+                'name'           => Multibyte::ucfirst($name),
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'failure'        => $failure,
@@ -136,7 +137,7 @@ class HTML extends \Codeception\PHPUnit\ResultPrinter
             $this->templatePath . 'suite.html'
         );
 
-        $suiteTemplate->setVar(['suite' => ucfirst($suite->getName())]);
+        $suiteTemplate->setVar(['suite' => Multibyte::ucfirst($suite->getName())]);
 
         $this->scenarios .= $suiteTemplate->render();
 

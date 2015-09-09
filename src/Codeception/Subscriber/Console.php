@@ -16,6 +16,7 @@ use Codeception\Step\Comment;
 use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
+use Codeception\Util\Multibyte;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -81,7 +82,7 @@ class Console implements EventSubscriberInterface
         $this->buildResultsTable($e);
 
         $this->message("%s Tests (%d) ")
-            ->with(ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
+            ->with(Multibyte::ucfirst($e->getSuite()->getName()), count($e->getSuite()->tests()))
             ->style('bold')
             ->width(array_sum($this->columns), '-')
             ->prepend("\n")
@@ -210,7 +211,7 @@ class Console implements EventSubscriberInterface
         $this->writeFinishedTest($e->getTest());
         $message = $this->message('Skipped');
         if ($this->isDetailed($e->getTest())) {
-            $message->apply('strtoupper')->append("\n");
+            $message->apply('mb_strtoupper')->append("\n");
         }
         $message->writeln();
     }
@@ -220,7 +221,7 @@ class Console implements EventSubscriberInterface
         $this->writeFinishedTest($e->getTest());
         $message = $this->message('Incomplete');
         if ($this->isDetailed($e->getTest())) {
-            $message->apply('strtoupper')->append("\n");
+            $message->apply('mb_strtoupper')->append("\n");
         }
         $message->writeln();
     }
@@ -461,14 +462,14 @@ class Console implements EventSubscriberInterface
             if ($test instanceof TestCase) {
                 $this->columns[0] = max(
                     $this->columns[0],
-                    20 + strlen($test->getFeature()) + strlen($test->getFileName())
+                    20 + mb_strwidth($test->getFeature()) + mb_strwidth($test->getFileName())
                 );
                 continue;
             }
             if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
                 $test = $test->testAt(0);
                 $output_length = $test instanceof \Codeception\TestCase
-                    ? strlen($test->getFeature()) + strlen($test->getFileName())
+                    ? mb_strwidth($test->getFeature()) + mb_strwidth($test->getFileName())
                     : $test->toString();
 
                 $this->columns[0] = max(
@@ -477,7 +478,7 @@ class Console implements EventSubscriberInterface
                 );
                 continue;
             }
-            $this->columns[0] = max($this->columns[0], 10 + strlen($test->toString()));
+            $this->columns[0] = max($this->columns[0], 10 + mb_strwidth($test->toString()));
         }
         $cols = $this->columns[0];
         if ((strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')
@@ -511,9 +512,9 @@ class Console implements EventSubscriberInterface
         $feature = $test->getFeature();
 
         if ($feature) {
-            return $this->message = $this->message($inProgress ? $feature : ucfirst($feature))
+            return $this->message = $this->message($inProgress ? $feature : Multibyte::ucfirst($feature))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
-                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - strlen($filename): $this->columns[0]- 4 - strlen($filename))
+                ->cut($inProgress ? $this->columns[0]+$this->columns[1] - 17 - mb_strwidth($filename): $this->columns[0]- 4 - mb_strwidth($filename))
                 ->style('focus')
                 ->prepend($inProgress ? 'Trying to ' : '')
                 ->append(" ($filename)");
