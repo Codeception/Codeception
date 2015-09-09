@@ -121,7 +121,7 @@ class SuiteManager
         }
         if ($test instanceof TestCase) {
             $this->checkEnvironmentExists($test);
-            if ($this->env && $this->isExecutedForCurrentEnvironment($test)) {
+            if (!$this->isExecutedInCurrentEnvironment($test)) {
                 return; // skip tests from other environments
             }
         }
@@ -184,6 +184,10 @@ class SuiteManager
         if (empty($envs)) {
             return;
         }
+        if (!isset($this->settings['env'])) {
+            Notification::warning("Environments are not configured", TestCase::getTestFullName($test));
+            return;
+        }
         $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $test->getEnvironment()));
         foreach ($listedEnvironments as $env) {
@@ -193,7 +197,7 @@ class SuiteManager
         }
     }
 
-    protected function isExecutedForCurrentEnvironment(\Codeception\TestCase $test)
+    protected function isExecutedInCurrentEnvironment(\Codeception\TestCase $test)
     {
         $envs = $test->getEnvironment();
         if (empty($envs)) {
