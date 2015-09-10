@@ -254,7 +254,7 @@ class Login
      */
     protected $tester;
 
-    public function __construct(AcceptanceTester $I)
+    public function __construct(\AcceptanceTester $I)
     {
         $this->tester = $I;
     }
