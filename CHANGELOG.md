@@ -2,6 +2,7 @@
 
 #### 2.1.3
 
+* Fixed issue with trailing slashes in `seeCurrentUrlEquals` and `dontSeeCurrentUrlEquals` methods #2324. By @janhenkgerritsen
 * Warning is displayed once using unconfigured environment.
 * Fixed loading environment configurations for Cept files by @splinter89
 * Fixed bootstrap with namespaces to inject namespaced actor classes properly.

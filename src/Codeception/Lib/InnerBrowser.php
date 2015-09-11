@@ -267,12 +267,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeCurrentUrlEquals($uri)
     {
-        $this->assertEquals($uri, $this->_getCurrentUri());
+        $this->assertEquals(rtrim($uri, '/'), rtrim($this->_getCurrentUri(), '/'));
     }
 
     public function dontSeeCurrentUrlEquals($uri)
     {
-        $this->assertNotEquals($uri, $this->_getCurrentUri());
+        $this->assertNotEquals(rtrim($uri, '/'), rtrim($this->_getCurrentUri(), '/'));
     }
 
     public function seeCurrentUrlMatches($uri)
