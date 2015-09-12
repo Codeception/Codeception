@@ -169,6 +169,61 @@ class Symfony2 extends Framework implements DoctrineProvider
     }
 
     /**
+     * Opens web page using route name and parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnRoute('posts.create');
+     * $I->amOnRoute('posts.show', array('id' => 34));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function amOnRoute($routeName, array $params = [])
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+        $router = $this->kernel->getContainer()->get('router');
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+
+        $url = $router->generate($routeName, $params);
+        $this->amOnPage($url);
+    }
+
+    /**
+     * Checks that current url matches route.
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * $I->seeCurrentRouteIs('posts.show', array('id' => 8));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function seeCurrentRouteIs($routeName, array $params = [])
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+        $router = $this->kernel->getContainer()->get('router');
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+
+        $this->seeCurrentUrlEquals($router->generate($routeName, $params));
+    }
+
+    /**
      * Checks if any email were sent by last request
      *
      * @throws \LogicException
