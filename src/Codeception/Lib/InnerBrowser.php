@@ -1286,6 +1286,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
+        if ($method !== 'GET' && $content === null && !empty($parameters) && $this instanceof Framework) {
+            $content = http_build_query($parameters);
+        }
+
         if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
             return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
         }
