@@ -271,7 +271,11 @@ class Symfony2 extends Framework implements DoctrineProvider
             return null;
         }
         $profiler = $this->kernel->getContainer()->get('profiler');
-        return $profiler->loadProfileFromResponse($this->client->getResponse());
+        $response = $this->client->getResponse();
+        if (null === $response) {
+            $this->fail("You must perform a request before using this method.");
+        }
+        return $profiler->loadProfileFromResponse($response);
     }
 
     protected function debugResponse()

@@ -2,6 +2,7 @@
 
 #### 2.1.3
 
+* [Symfony2] Fixed issue when accesing profiler when no request has been performed #652.
 * Fixed issue with trailing slashes in `seeCurrentUrlEquals` and `dontSeeCurrentUrlEquals` methods #2324. By @janhenkgerritsen
 * Warning is displayed once using unconfigured environment.
 * Fixed loading environment configurations for Cept files by @splinter89
