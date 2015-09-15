@@ -18,6 +18,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\PropertyAccess;
 use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
@@ -156,7 +157,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->getRunningClient()->click($anchor->first()->link());
+            $this->crawler = $this->clientClick($anchor->first()->link());
             $this->forms = [];
             $this->debugResponse();
             return;
@@ -190,7 +191,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $tag = $node->nodeName;
             $type = $node->getAttribute('type');
             if ($tag === 'a') {
-                $this->crawler = $this->getRunningClient()->click($nodes->first()->link());
+                $this->crawler = $this->clientClick($nodes->first()->link());
                 $this->forms = [];
                 $this->debugResponse();
                 break;
@@ -1337,5 +1338,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
         $this->client->followRedirects(true);
         return $result;
+    }
+
+    /**
+     * Clicks on a given link.
+     *
+     * @param Link $link A Link instance
+     *
+     * @return Crawler
+     */
+    public function clientClick(Link $link)
+    {
+        if ($link instanceof Form) {
+            return $this->proceedSubmitForm($link);
+        }
+
+        return $this->clientRequest($link->getMethod(), $link->getUri());
     }
 }
