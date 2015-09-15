@@ -39,6 +39,7 @@ $urls = array(
     '/content-iso' => 'contentType1',
     '/content-cp1251' => 'contentType2',
     '/unset-cookie' => 'unsetCookie',
+    '/external_url' => 'external_url',
 );
 
 glue::stick($urls);

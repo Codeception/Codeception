@@ -79,6 +79,13 @@ class redirect_header_interval {
     }
 }
 
+class external_url {
+    function GET() {
+        include __DIR__ . '/view/external_url.php';
+    }
+}
+
+
 class login {
 
     function GET($matches) {

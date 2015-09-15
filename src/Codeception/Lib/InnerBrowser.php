@@ -3,6 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
@@ -1287,8 +1288,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
     {
-        if ($method !== 'GET' && $content === null && !empty($parameters) && $this instanceof Framework) {
-            $content = http_build_query($parameters);
+        if ($this instanceof Framework) {
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+            }
         }
 
         if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {

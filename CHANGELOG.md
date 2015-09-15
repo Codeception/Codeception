@@ -17,6 +17,8 @@
 * [Soap] Fixed SOAP module #2296. By @relaxart
 * Fixed a bug where blank lines in a groups file would run every test in the project #2297. By @imjoehaines
 * [WebDriver] seeNumberOfElements should only count visible elements #2303. By @sascha-egerer
+* [Functional] Verbose output for redirects. By @Naktibalda
+* [Functional] Throw Codeception\Exception\ExternalUrlException when framework module tries to open an external URL #2328. By @Naktibalda
 
 #### 2.1.2
 
