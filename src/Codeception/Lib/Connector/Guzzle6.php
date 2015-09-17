@@ -126,6 +126,11 @@ class Guzzle6 extends Client
         }
 
         if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
+            $baseUriPath = $this->client->getConfig('base_uri')->getPath();
+            if (!empty($baseUriPath) && strpos($matches[2], $baseUriPath) === 0) {
+                $matches[2] = substr($matches[2], strlen($baseUriPath));
+            }
+
             $uri = $this->getAbsoluteUri($matches[2]);
             $currentUri = new Psr7Uri($this->getHistory()->current()->getUri());
 
