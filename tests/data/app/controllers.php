@@ -61,6 +61,12 @@ class redirect_header_interval {
     }
 }
 
+class redirect_base_uri_has_path {
+    function GET() {
+        header('Refresh:0;url=/somepath/info');
+    }
+}
+
 class login {
 
     function GET($matches) {

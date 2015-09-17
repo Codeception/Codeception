@@ -135,6 +135,19 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertContains('test@gmail.com', $params);
     }
 
+    public function testRedirectBaseUriHasPath()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['url'] .= '/somepath'; // append path to the base url
+        $this->module->_reconfigure($config);
+
+        $this->module->amOnPage('/redirect_base_uri_has_path');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/somepath/info');
+        $this->module->see('Lots of valuable data here');
+    }
+
     public function testSetCookieByHeader()
     {
         $this->module->amOnPage('/cookies2');
