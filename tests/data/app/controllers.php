@@ -79,6 +79,18 @@ class redirect_header_interval {
     }
 }
 
+class redirect_base_uri_has_path {
+    function GET() {
+        header('Refresh:0;url=/somepath/info');
+    }
+}
+
+class redirect_base_uri_has_path_302 {
+    function GET() {
+        header('Location: /somepath/info', true, 302);
+    }
+}
+
 class external_url {
     function GET() {
         include __DIR__ . '/view/external_url.php';
@@ -193,7 +205,7 @@ class register {
     function GET() {
         include __DIR__.'/view/register.php';
     }
-    
+
     function POST() {
         $this->GET();
     }
