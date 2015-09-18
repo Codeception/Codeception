@@ -293,7 +293,7 @@ class Configuration
             ->files()
             ->name('*.yml')
             ->in($path)
-            ->depth('< 1');
+            ->depth('< 2');
 
         $envs = [];
         /** @var SplFileInfo $envFile */
