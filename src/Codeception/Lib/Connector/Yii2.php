@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -10,7 +11,7 @@ use yii\base\ExitException;
 use yii\web\HttpException;
 use yii\web\Response as YiiResponse;
 
-class Yii2 extends Client
+class Yii2 extends Client implements SupportsDomainRouting
 {
     use Shared\PhpSuperGlobalsConverter;
 

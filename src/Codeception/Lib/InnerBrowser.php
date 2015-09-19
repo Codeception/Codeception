@@ -9,6 +9,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -1293,7 +1294,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $content = http_build_query($parameters);
             }
 
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
                 throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
             }
         }

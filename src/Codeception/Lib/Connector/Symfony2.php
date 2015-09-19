@@ -1,7 +1,9 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-class Symfony2 extends \Symfony\Component\HttpKernel\Client
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
+
+class Symfony2 extends \Symfony\Component\HttpKernel\Client implements SupportsDomainRouting
 {
     
     /**

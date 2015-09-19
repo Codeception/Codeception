@@ -1,11 +1,12 @@
 <?php
 namespace Codeception\Lib\Connector;
 
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Response;
 use Yii;
 
-class Yii1 extends Client
+class Yii1 extends Client implements SupportsDomainRouting
 {
     use Shared\PhpSuperGlobalsConverter;
     /**
