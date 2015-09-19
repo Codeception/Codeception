@@ -1354,7 +1354,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      *
      * @return Crawler
      */
-    public function clientClick(Link $link)
+    protected function clientClick(Link $link)
     {
         if ($link instanceof Form) {
             return $this->proceedSubmitForm($link);
