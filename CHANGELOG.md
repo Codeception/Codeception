@@ -2,6 +2,7 @@
 
 #### 2.1.3
 
+* [REST] Added matching data types by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType. See #2391
 * [Symfony2] Fixed issue when accessing profiler when no request has been performed #652.
 * [Symfony2] Added amOnRoute and seeCurrentRouteIs methods to Symfony2 module, by @raistlin
 * [ZF1] Added amOnRoute and seeCurrentRouteIs methods to ZF1 module, by @Naktibalda

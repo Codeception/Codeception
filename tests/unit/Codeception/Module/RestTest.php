@@ -206,7 +206,6 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeHttpHeader('Content-Language','en-RU');
         $this->module->dontSeeHttpHeader('Content-Language1');
         $this->module->seeHttpHeaderOnce('Content-Language');
-        \Codeception\Util\Debug::debug($this->module->grabHttpHeader('Cache-Control', false));
         $this->assertEquals('en-US', $this->module->grabHttpHeader('Content-Language'));
         $this->assertEquals('no-cache', $this->module->grabHttpHeader('Cache-Control'));
         $this->assertEquals(['no-cache', 'no-store'], $this->module->grabHttpHeader('Cache-Control', false));
@@ -265,11 +264,26 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->assertJson($request->getContent());
     }
 
+    public function testJsonTypeMatches()
+    {
+        $this->module->response = '{"xxx": "yyy", "user_id": 1}';
+        $this->module->seeResponseMatchesJsonType(['xxx' => 'string', 'user_id' => 'integer:<10']);
+        $this->module->dontSeeResponseMatchesJsonType(['xxx' => 'integer', 'user_id' => 'integer:<10']);
+    }
+
+    public function testJsonTypeMatchesWithJsonPath()
+    {
+        $this->module->response = '{"users": [{ "name": "davert"}, {"id": 1}]}';
+        $this->module->seeResponseMatchesJsonType(['name' => 'string'], '$.users[0]');
+        $this->module->seeResponseMatchesJsonType(['id' => 'integer'], '$.users[1]');
+        $this->module->dontSeeResponseMatchesJsonType(['id' => 'integer'], '$.users[0]');
+    }
+
+
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
     }
-
 
 }
 
