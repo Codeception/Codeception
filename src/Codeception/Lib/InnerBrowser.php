@@ -1313,24 +1313,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $maxRedirects));
             }
 
-            if (is_string($locationHeader)) {
-                $redirectingTo = $locationHeader;
-            } elseif ($locationHeader instanceof \GuzzleHttp\Psr7\Uri) {
-                $currentUri = $this->client->getRequest()->getUri();
-                if (is_string($currentUri)) {
-                    $currentUri = new \GuzzleHttp\Psr7\Uri($currentUri);
-                }
-                if ($locationHeader->getScheme() !== $currentUri->getScheme()
-                    || $locationHeader->getHost() !== $currentUri->getHost()
-                    || $locationHeader->getPort() !== $currentUri->getPort()) {
-                    $redirectingTo = (string)$locationHeader;
-                } else {
-                    $redirectingTo = Uri::retrieveUri($locationHeader);
-                }
-            } else {
-                $redirectingTo = (string)$locationHeader;
-            }
-            $this->debugSection('Redirecting to', $redirectingTo);
+            $this->debugSection('Redirecting to', $locationHeader);
 
             $result = $this->client->followRedirect();
             return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
