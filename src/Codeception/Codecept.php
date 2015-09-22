@@ -187,7 +187,10 @@ class Codecept
             if (empty($config)) {
                 continue;
             }
-            $suiteToRun = "{$suite}-{$envList}";
+            $suiteToRun = $suite;
+            if (!empty($envList)) {
+                $suiteToRun .= ' (' . implode(', ', $envArray) . ')';
+            }
             $this->runSuite($config, $suiteToRun, $test);
         }
     }
