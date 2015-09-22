@@ -692,4 +692,17 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
 
         return $output->fetch();
     }
+
+    /**
+     * Returns a list of recognized domain names
+     *
+     * @todo not implemented
+     * @return array
+     */
+    public function getInternalDomains()
+    {
+        return [
+            'localhost',
+        ];
+    }
 }

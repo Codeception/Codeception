@@ -169,4 +169,17 @@ class Yii1 extends Framework implements SupportsDomainRouting
         Yii::app()->session->close();
         parent::_after($test);
     }
+
+    /**
+     * Returns a list of recognized domain names
+     *
+     * @todo not implemented
+     * @return array
+     */
+    public function getInternalDomains()
+    {
+        return [
+            'localhost',
+        ];
+    }
 }

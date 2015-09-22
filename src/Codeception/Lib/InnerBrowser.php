@@ -1294,8 +1294,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $content = http_build_query($parameters);
             }
 
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
-                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+                if ($this instanceof SupportsDomainRouting) {
+                    $hostname = parse_url($uri, PHP_URL_HOST);
+                    if (!in_array($hostname, $this->getInternalDomains())) {
+                        throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                    }
+                } else {
+                    throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                }
             }
         }
 

@@ -229,4 +229,17 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule, SupportsDoma
         }
         parent::amOnPage($page);
     }
+
+    /**
+     * Returns a list of recognized domain names
+     *
+     * @todo not implemented
+     * @return array
+     */
+    public function getInternalDomains()
+    {
+        return [
+            'localhost',
+        ];
+    }
 }
