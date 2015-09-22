@@ -11,7 +11,7 @@ use yii\base\ExitException;
 use yii\web\HttpException;
 use yii\web\Response as YiiResponse;
 
-class Yii2 extends Client implements SupportsDomainRouting
+class Yii2 extends Client
 {
     use Shared\PhpSuperGlobalsConverter;
 
