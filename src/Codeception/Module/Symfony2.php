@@ -65,7 +65,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider
+class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRouting
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
