@@ -131,31 +131,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         return (string)$this->getRunningClient()->getInternalResponse()->getContent();
     }
 
-    protected function clientRequest($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
-    {
-        if ($this instanceof Framework) {
-            if ($method !== 'GET' && $content === null && !empty($parameters)) {
-                $content = http_build_query($parameters);
-            }
-
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
-                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
-            }
-        }
-
-        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse($uri);
-            return $result;
-        } else {
-            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
-            $this->client->followRedirects(false);
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse($uri);
-            return $this->redirectIfNecessary($result, $maxRedirects, 0);
-        }
-    }
-
     /**
      * Opens a page with arbitrary request parameters.
      * Useful for testing multi-step forms on a specific step.
@@ -1384,6 +1359,34 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if ($this instanceof Framework) {
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+                if ($this instanceof SupportsDomainRouting) {
+                    $hostname = parse_url($uri, PHP_URL_HOST);
+                    if (!in_array($hostname, $this->getInternalDomains())) {
+                        throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                    }
+                } else {
+                    throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                }
+            }
+        }
+
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        }
+        $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+        $this->client->followRedirects(false);
+        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        return $this->redirectIfNecessary($result, $maxRedirects, 0);
     }
 
     /**

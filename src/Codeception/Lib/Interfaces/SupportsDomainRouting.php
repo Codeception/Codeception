@@ -9,4 +9,8 @@ namespace Codeception\Lib\Interfaces;
  */
 interface SupportsDomainRouting
 {
+    /**
+     * @return array a list of recognized domain names
+     */
+    public function getInternalDomains();
 }

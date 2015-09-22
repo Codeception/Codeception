@@ -882,4 +882,18 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
 
         return factory($model, $name, $times);
     }
+
+    /**
+     * Returns a list of recognized domain names
+     *
+     * @todo not implemented
+     * @return array
+     */
+    public function getInternalDomains()
+    {
+        return [
+            'localhost',
+        ];
+    }
+
 }
