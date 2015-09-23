@@ -6,7 +6,7 @@ use Codeception\TestCase\Interfaces\Reported;
 
 class JUnit extends \PHPUnit_Util_Log_JUnit
 {
-    protected $strictAttributes = ['file', 'name', 'class'];
+    protected $strictAttributes = ['file', 'name', 'classname'];
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
@@ -19,7 +19,7 @@ class JUnit extends \PHPUnit_Util_Log_JUnit
         $isStrict = Configuration::config()['settings']['strict_xml'];
 
         foreach ($test->getReportFields() as $attr => $value) {
-            if ($isStrict and !in_array($attr, $this->strictAttributes)) {
+            if ($isStrict and !in_array($attr, $this->strictAttributes, true)) {
                 continue;
             }
             $this->currentTestCase->setAttribute($attr, $value);
