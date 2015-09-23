@@ -3,7 +3,6 @@ namespace Codeception\TestCase\Interfaces;
 
 interface ScenarioDriven
 {
-
     public function getFeature();
 
     /**

@@ -1,10 +1,11 @@
 <?php 
 namespace Codeception\Subscriber;
-declare(ticks = 1);
 
 use Codeception\Event\SuiteEvent;
 use Codeception\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+declare(ticks = 1);
 
 class GracefulTermination implements EventSubscriberInterface
 {
@@ -32,7 +33,9 @@ class GracefulTermination implements EventSubscriberInterface
             $this->suiteEvent->getResult()->stopOnError(true);
             $this->suiteEvent->getResult()->stopOnFailure(true);
         }
-        throw new \RuntimeException("\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n");
+        throw new \RuntimeException(
+            "\n\n---------------------------\nTESTS EXECUTION TERMINATED\n---------------------------\n"
+        );
     }
 
     public static function getSubscribedEvents()
@@ -42,5 +45,4 @@ class GracefulTermination implements EventSubscriberInterface
         }
         return [Events::SUITE_BEFORE => 'handleSuite'];
     }
-
 }

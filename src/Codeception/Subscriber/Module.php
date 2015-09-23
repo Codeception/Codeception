@@ -92,5 +92,4 @@ class Module implements EventSubscriberInterface
             $module->_afterStep($e->getStep(), $e->getTest());
         }
     }
-
 }

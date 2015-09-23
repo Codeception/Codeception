@@ -2,7 +2,6 @@
 namespace Codeception\Coverage\Subscriber;
 
 use Codeception\Configuration;
-use Codeception\Coverage\Shared\C3Collect;
 use Codeception\Event\SuiteEvent;
 use Codeception\Util\FileSystem;
 
@@ -37,6 +36,8 @@ class RemoteServer extends LocalServer
 
     protected function retrieveAndPrintHtml($suite)
     {
+        $suite = $this->replaceSuiteNamespace($suite);
+
         $tempFile = str_replace('.', '', tempnam(sys_get_temp_dir(), 'C3')) . '.tar';
         file_put_contents($tempFile, $this->c3Request('html'));
 
@@ -55,8 +56,23 @@ class RemoteServer extends LocalServer
 
     protected function retrieveAndPrintXml($suite)
     {
+        $suite = $this->replaceSuiteNamespace($suite);
+
         $destFile = Configuration::outputDir() . $suite . '.remote.coverage.xml';
         file_put_contents($destFile, $this->c3Request('clover'));
     }
 
+    /**
+     * @param string $suite
+     *
+     * @return string
+     */
+    protected function replaceSuiteNamespace($suite)
+    {
+        if (strpos($suite, '\\')) {
+            $suite = str_replace('\\', '.', $suite);
+        }
+
+        return $suite;
+    }
 }

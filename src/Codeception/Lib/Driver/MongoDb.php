@@ -13,6 +13,7 @@ class MongoDb
     private $host;
     private $user;
     private $password;
+    private $client;
 
     public static function connect($dsn, $user, $password)
     {
@@ -59,8 +60,8 @@ class MongoDb
         }
 
         try {
-            $m = new \MongoClient($dsn, $options);
-            $this->dbh = $m->selectDB($this->dbName);
+            $this->client = new \MongoClient($dsn, $options);
+            $this->dbh    = $this->client->selectDB($this->dbName);
         } catch (\MongoConnectionException $e) {
             throw new ModuleException($this, sprintf('Failed to open Mongo connection: %s', $e->getMessage()));
         }
@@ -125,5 +126,10 @@ class MongoDb
     public function getDbh()
     {
         return $this->dbh;
+    }
+
+    public function setDatabase($dbName)
+    {
+        $this->dbh = $this->client->selectDB($dbName);
     }
 }

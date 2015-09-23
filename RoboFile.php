@@ -214,6 +214,7 @@ class RoboFile extends \Robo\Tasks
         $this->buildDocsModules();
         $this->buildDocsUtils();
         $this->buildDocsCommands();
+        $this->buildDocsExtensions();
     }
 
     public function buildDocsModules()
@@ -295,6 +296,26 @@ class RoboFile extends \Robo\Tasks
             ->filterMethods(function(ReflectionMethod $r) { return false; })
             ->run();
 
+    }
+
+    public function buildDocsExtensions()
+    {
+        $this->say('Extensions');
+
+        $extensions = Finder::create()->files()->sortByName()->name('*.php')->in(__DIR__ . '/ext');
+
+        $extGenerator= $this->taskGenDoc('ext/README.md');
+        foreach ($extensions as $command) {
+            $commandName = basename(substr($command, 0, -4));
+            $className = '\Codeception\Extension\\' . $commandName;
+            $extGenerator->docClass($className);
+        }
+        $extGenerator
+            ->prepend("# Official Extensions\n")
+            ->processClassSignature(function ($r, $text) { return "## ".$r->getName();  })
+            ->filterMethods(function(ReflectionMethod $r) { return false; })
+            ->filterProperties(function($r) { return false; })
+            ->run();
     }
 
     /**
@@ -437,9 +458,30 @@ class RoboFile extends \Robo\Tasks
                 $prev_url = substr($prev_url, 0, -3);
                 $doc .= "\n* **Previous Chapter: [< $prev_title]($prev_url)**";
             }
-            $doc .= '<p>&nbsp;</p><div class="alert alert-warning">Docs are incomplete? Outdated? Or you just found a typo? <a href="https://github.com/Codeception/Codeception/tree/'.self::STABLE_BRANCH.'/docs">Help us to improve documentation. Edit it on GitHub</a></div>';
 
-            file_put_contents('docs/'.$filename, $doc);
+            $buttons = [
+                'source' => "https://github.com/Codeception/Codeception/blob/".self::STABLE_BRANCH."/src/Codeception/Module/$name.php"
+            ];
+
+            // building version switcher
+            foreach (['master', '2.1', '2.0', '1.8'] as $branch) {
+                $buttons[$branch] = "https://github.com/Codeception/Codeception/blob/$branch/docs/modules/$name.md";
+            }
+
+            $buttonHtml = "\n\n".'<div class="btn-group" role="group" style="float: right" aria-label="...">';
+            foreach ($buttons as $link => $url) {
+                if ($link == self::STABLE_BRANCH) {
+                    $link = "<strong>$link</strong>";
+                }
+                $buttonHtml.= '<a class="btn btn-default" href="'.$url.'">'.$link.'</a>';
+            }
+            $buttonHtml = '</div>'."\n\n";
+
+            $doc = $buttonHtml . $doc;
+
+            $this->taskWriteToFile('docs/'.$filename)
+                ->text($doc)
+                ->run();
         }
 
 
@@ -451,6 +493,22 @@ class RoboFile extends \Robo\Tasks
             $guides_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/guides.html', $guides_list);
+
+        $this->say("Building Guides index");
+        $this->taskWriteToFile('_includes/guides.html')
+            ->text($guides_list)
+            ->run();
+
+        $this->taskWriteToFile('docs/index.html')
+            ->line('---')
+            ->line('layout: doc')
+            ->line('title: Codeception Documentation')
+            ->line('---')
+            ->line('')
+            ->line("<h1>Codeception Documentation Guides</h1>")
+            ->line('')
+            ->text($guides_list)
+            ->run();
 
         /**
          * Align modules in two columns like this:
@@ -479,6 +537,11 @@ class RoboFile extends \Robo\Tasks
             $reference_list .= '<li><a href="'.$url.'">'.$name.'</a></li>';
         }
         file_put_contents('_includes/reference.html', $reference_list);
+
+        $this->say("Writing extensions docs");
+        $this->taskWriteToFile('_includes/extensions.md')
+            ->textFromFile('ext/README.md')
+            ->run();
 
         $this->publishSite();
         $this->taskExec('git add')->args('.')->run();
@@ -518,8 +581,6 @@ class RoboFile extends \Robo\Tasks
     {
         $this->taskCleanDir([
             'tests/log',
-            'tests/data/claypit/tests/_output',
-            'tests/data/claypit/tests/_log',
             'tests/data/claypit/tests/_output',
             'tests/data/included/_log',
             'tests/data/included/jazz/tests/_log',
@@ -566,6 +627,54 @@ class RoboFile extends \Robo\Tasks
         $this->taskDeleteDir('site')->run();
         chdir('..');
         $this->say("Site build succesfully");
+    }
+
+    public function publishBase($branch = null, $tag = null)
+    {
+        if (!$branch) $branch = self::STABLE_BRANCH;
+        $this->say("Updating Codeception Base distribution");
+
+        $tempBranch = "tmp".uniqid();
+
+        $this->taskGitStack()
+            ->checkout("-b $tempBranch")
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->from('"codeception/codeception"')
+            ->to('"codeception/base"')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"facebook\/webdriver".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskReplaceInFile('composer.json')
+            ->regex('~^\s+"guzzlehttp\/guzzle".*$~m')
+            ->to('')
+            ->run();
+
+        $this->taskComposerUpdate()->run();
+        $this->taskGitStack()
+            ->add('composer*')
+            ->commit('auto-update')
+            ->exec("push -f base $tempBranch:$branch")
+            ->run();
+
+        if ($tag) {
+            $this->taskGitStack()
+                ->exec("tag -d $tag")
+                ->exec("push base :refs/tags/$tag")
+                ->exec("tag $tag")
+                ->push('base', $tag)
+                ->run();
+        }
+
+        $this->taskGitStack()
+            ->checkout($branch)
+            ->exec("branch -D $tempBranch")
+            ->run();
     }
 
 } 

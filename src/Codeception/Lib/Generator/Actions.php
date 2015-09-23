@@ -29,6 +29,7 @@ trait {{name}}Actions
 
     {{methods}}
 }
+
 EOF;
 
 
@@ -214,6 +215,4 @@ EOF;
     {
         return $this->numMethods;
     }
-
-
 } 

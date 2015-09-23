@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Module;
 
-class PhpSiteHelper extends \Codeception\Lib\Framework
+class UniversalFramework extends \Codeception\Lib\Framework
 {
     public function __construct()
     {

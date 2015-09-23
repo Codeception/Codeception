@@ -1,8 +1,8 @@
 <?php
-
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\TestRuntimeException;
+use GuzzleHttp\Psr7\Uri as Psr7Uri;
+use Codeception\Util\Uri;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Post\PostFile;
@@ -96,7 +96,11 @@ class Guzzle extends Client
     {
         $contentType = $response->getHeader('Content-Type');
 
-        if (!$contentType or strpos($contentType, 'charset=') === false) {
+        if (!$contentType) {
+            $contentType = 'text/html';
+        }
+
+        if (strpos($contentType, 'charset=') === false) {
             $body = $response->getBody(true);
             if (preg_match('/\<meta[^\>]+charset *= *["\']?([a-zA-Z\-0-9]+)/i', $body, $matches)) {
                 $contentType .= ';charset=' . $matches[1];
@@ -144,23 +148,17 @@ class Guzzle extends Client
 
     public function getAbsoluteUri($uri)
     {
-        $build = parse_url($this->baseUri);
-        $uriParts = parse_url(preg_replace('~^/+(?=/)~', '', $uri));
-        
-        if ($build === false) {
-            throw new TestRuntimeException("URL '{$this->baseUri}' is malformed");
-        } elseif ($uriParts === false) {
-            throw new TestRuntimeException("URI '{$uri}' is malformed");
-        }
-        
-        foreach ($uriParts as $part => $value) {
-            if ($part === 'path' && strpos($value, '/') !== 0 && !empty($build[$part])) {
-                $build[$part] = rtrim($build[$part], '/') . '/' . $value;
-            } else {
-                $build[$part] = $value;
+        $baseUri = $this->baseUri;
+        if (strpos($uri, '://') === false) {
+            if (strpos($uri, '/') === 0) {
+                return Uri::appendPath((string)$baseUri, $uri);
+            }
+            // relative url
+            if (!$this->getHistory()->isEmpty()) {
+                return Uri::mergeUrls((string)$this->getHistory()->current()->getUri(), $uri);
             }
         }
-        return \GuzzleHttp\Url::buildUrl($build);
+        return Uri::mergeUrls($baseUri, $uri);
     }
 
     protected function doRequest($request)

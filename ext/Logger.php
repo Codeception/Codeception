@@ -11,10 +11,25 @@ use Monolog\Handler\RotatingFileHandler;
 
 /**
  * Log suites/tests/steps using Monolog library.
+ * Monolog should be installed additionally by Composer.
  *
+ * ```
+ * composer require monolog/monolog
+ * ```
  *
- * Class Logger
- * @package Codeception\Platform
+ * Steps are logged into `tests/_output/codeception.log`
+ *
+ * To enable this module add to your `codeception.yml`:
+ *
+ * ``` yaml
+ * extensions:
+ *     enabled: [Codeception\Extension\Logger]
+ * ```
+ *
+ * #### Config
+ *
+ * * `max_files` (default: 3) - how many log files to keep
+ *
  */
 class Logger extends Extension
 {

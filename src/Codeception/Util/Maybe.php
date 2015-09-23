@@ -110,7 +110,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetExists($offset)
     {
-        if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             return isset($this->val[$offset]);
         }
         return false;
@@ -118,7 +118,7 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetGet($offset)
     {
-        if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             return $this->val[$offset];
         }
         return new Maybe();
@@ -126,14 +126,14 @@ class Maybe implements \ArrayAccess, \Iterator, \JsonSerializable
 
     public function offsetSet($offset, $value)
     {
-        if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             $this->val[$offset] = $value;
         }
     }
 
     public function offsetUnset($offset)
     {
-        if (is_array($this->val) or ($this->val instanceof \ArrayAccess)) {
+        if (is_array($this->val) || ($this->val instanceof \ArrayAccess)) {
             unset($this->val[$offset]);
         }
     }

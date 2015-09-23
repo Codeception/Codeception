@@ -39,6 +39,11 @@ This module requires PHPBrowser or any of Framework modules enabled.
 * response - last response (string)
 
 
+## Parts
+
+* Json - actions for validating Json responses (no Xml responses)
+* Xml - actions for validating XML responses (no Json responses)
+
 
 
 ### amBearerAuthenticated
@@ -161,24 +166,9 @@ Element is matched by either CSS or XPath
 
 ### grabDataFromJsonResponse
  
-Returns data from the current JSON response using specified path
-so that it can be used in next scenario steps.
-
-**this method is deprecated in favor of `grabDataFromResponseByJsonPath`**
-
-Example:
-
-``` php
-<?php
-$user_id = $I->grabDataFromJsonResponse('user.user_id');
-$I->sendPUT('/user', array('id' => $user_id, 'name' => 'davert'));
-?>
-```
-
-@deprecated please use `grabDataFromResponseByJsonPath`
- * `param string` $path
-@return string
-@part json
+ * `param` $path
+ ModuleException
+@deprecated
 
 
 ### grabDataFromResponseByJsonPath

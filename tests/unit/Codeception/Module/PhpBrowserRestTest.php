@@ -145,6 +145,51 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContains('host: http://www.example.com');
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2075
+     * Client is undefined for the second test
+     */
+    public function testTwoTests() {
+        $cest1 = Stub::makeEmpty('\Codeception\TestCase\Cest');
+        $cest2 = Stub::makeEmpty('\Codeception\TestCase\Cest');
+
+        $this->module->sendGET('/rest/user/');
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseContains('davert');
+        $this->module->seeResponseContainsJson(array('name' => 'davert'));
+        $this->module->seeResponseCodeIs(200);
+        $this->module->dontSeeResponseCodeIs(404);
+        
+        $this->phpBrowser->_after($cest1);
+        $this->module->_after($cest1);
+        $this->module->_before($cest2);
+        $this->phpBrowser->_before($cest2);
+        
+        $this->module->sendGET('/rest/user/');
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseContains('davert');
+        $this->module->seeResponseContainsJson(array('name' => 'davert'));
+        $this->module->seeResponseCodeIs(200);
+        $this->module->dontSeeResponseCodeIs(404);
+        
+    }
+    
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2070
+     */
+    public function testArrayOfZeroesInJsonResponse()
+    {
+        $this->module->haveHttpHeader('Content-Type', 'application/json');
+        $this->module->sendGET('/rest/zeroes');
+        $this->module->dontSeeResponseContainsJson([
+            'responseCode' => 0,
+            'data' => [
+                0,
+                0,
+                0,
+            ]
+        ]);
+    }
 
     protected function shouldFail()
     {

@@ -9,11 +9,20 @@ use Codeception\TestCase;
 /**
  * Saves failed tests into tests/log/failed in order to rerun failed tests.
  *
- * To rerun failed tests just run `failed` group:
+ * To rerun failed tests just run the `failed` group:
  *
  * ```
  * php codecept run -g failed
  * ```
+ *
+ * Starting from Codeception 2.1 **this extension is enabled by default**.
+ *
+ * ``` yaml
+ * extensions:
+ *     enabled: [Codeception\Extension\RunFailed]
+ * ```
+ *
+ * On each execution failed tests are logged and saved into `tests/_output/failed` file.
  */
 class RunFailed extends Extension
 {

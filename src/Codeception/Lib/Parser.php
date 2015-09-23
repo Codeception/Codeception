@@ -7,7 +7,6 @@ use Codeception\Util\Annotation;
 
 class Parser
 {
-
     protected $scenario;
     protected $code;
 
@@ -61,7 +60,9 @@ class Parser
             }
             foreach ($matches[0] as $line) {
                 // run $scenario->group or $scenario->env
-                \Codeception\Lib\Deprecation::add("$line -> \$scenario->$call() is deprecated in favor of annotation: // @$call");
+                \Codeception\Lib\Deprecation::add("\$scenario->$call() is deprecated in favor of annotation: // @$call",
+                    $this->scenario->getFeature()
+                );
                 eval($line);
             }
 
@@ -82,7 +83,8 @@ class Parser
             }
             // friend's section start
             if (preg_match("~\\\$(.*?)->does\(~", $line, $matches)) {
-                if (!in_array($friend = $matches[1], $friends)) {
+                $friend = $matches[1];
+                if (!in_array($friend, $friends)) {
                     continue;
                 }
                 $isFriend = true;
@@ -96,7 +98,7 @@ class Parser
             }
 
             // friend's section ends
-            if ($isFriend and strpos($line, '}') !== false) {
+            if ($isFriend && strpos($line, '}') !== false) {
                 $this->addCommentStep("-------- back to me\n");
                 $isFriend = false;
             }
@@ -157,7 +159,7 @@ class Parser
 
         return $classes;
     }
-    
+
     /*
      * Include in different scope to prevent included file from affecting $file variable
      */ 
@@ -193,5 +195,4 @@ class Parser
         }
         return $comments;
     }
-
 }

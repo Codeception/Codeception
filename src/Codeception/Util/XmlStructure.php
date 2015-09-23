@@ -89,6 +89,4 @@ class XmlStructure
         }
         return true;
     }
-
-    
 }

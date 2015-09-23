@@ -2,10 +2,10 @@
 namespace Codeception\Step;
 
 use Codeception\Lib\ModuleContainer;
+use Codeception\Step as CodeceptionStep;
 
-class Comment extends \Codeception\Step
+class Comment extends CodeceptionStep
 {
-
     public function __toString()
     {
         return $this->getAction();
@@ -26,10 +26,8 @@ class Comment extends \Codeception\Step
         return '// ' . $this->getAction();
     }
 
-
     public function run(ModuleContainer $container = null)
     {
         // don't do anything, let's rest
     }
-
 }

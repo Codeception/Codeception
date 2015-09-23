@@ -343,4 +343,50 @@ class StubTest extends \PHPUnit_Framework_TestCase
         // Expected null value when no more values
         $this->assertNull($dummy->helloWorld());
     }
+    
+    public function testStubPrivateProperties()
+    {
+        $tester = Stub::construct(
+            'myClassWithPrivateProperties', 
+            ['name' => 'gamma'], 
+            [
+                 'randomName' => 'chicken',
+                 't' => 'ticky2', 
+                 'getRandomName' => function () {
+                     return "randomstuff";
+                 }
+            ]
+        );
+        $this->assertEquals('gamma', $tester->getName());
+        $this->assertEquals('randomstuff', $tester->getRandomName());
+        $this->assertEquals('ticky2', $tester->getT());
+    }
+}
+
+class myClassWithPrivateProperties
+{
+
+    private $name;
+    private $randomName = "gaia";
+    private $t          = "ticky";
+
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getRandomName()
+    {
+        return $this->randomName;
+    }
+
+    public function getT()
+    {
+        return $this->t;
+    }
 }

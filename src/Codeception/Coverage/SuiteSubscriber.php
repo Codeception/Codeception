@@ -9,7 +9,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class SuiteSubscriber implements EventSubscriberInterface
 {
-
     use StaticEvents;
 
     protected $defaultSettings = [
@@ -86,5 +85,4 @@ abstract class SuiteSubscriber implements EventSubscriberInterface
     {
         Printer::$coverage->merge($coverage);
     }
-
 }

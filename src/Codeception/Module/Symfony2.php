@@ -1,13 +1,13 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Configuration;
+use Codeception\TestCase;
+use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\FlattenException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * This module uses Symfony2 Crawler and HttpKernel to emulate requests and test response.
@@ -65,7 +65,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
+class Symfony2 extends Framework implements DoctrineProvider
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -92,22 +92,20 @@ class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
 
     public $permanentServices = [];
 
-
     public function _initialize()
     {
-        $cache = \Codeception\Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
+        $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
             throw new ModuleRequireException(__CLASS__, 'Symfony2 bootstrap file not found in ' . $cache);
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestCase $test) 
     {
-        $this->kernel->boot();
+        $this->bootKernel();
         $this->container = $this->kernel->getContainer();
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
@@ -115,13 +113,19 @@ class Symfony2 extends \Codeception\Lib\Framework implements DoctrineProvider
 
     public function _getEntityManager()
     {
-        $this->kernel->boot();
+        $this->bootKernel();
         if (!$this->kernel->getContainer()->has($this->config['em_service'])) {
             return null;
         }
         $this->client->persistentServices[] = $this->config['em_service'];
         $this->client->persistentServices[] = 'doctrine.orm.default_entity_manager';
         return $this->kernel->getContainer()->get($this->config['em_service']);
+    }
+
+    protected function bootKernel()
+    {
+        $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
+        $this->kernel->boot();
     }
 
     /**

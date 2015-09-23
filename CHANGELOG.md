@@ -2,7 +2,8 @@
 
 #### 2.1.0
 
-* **Updated to Guzzle 6**. Codeception can now work both with Guzzle v5 and Guzzle v6. PhpBrowser choses right connector depending on Guzzle version installed.
+* [Recorder](https://github.com/Codeception/Codeception/tree/master/ext#codeceptionextensionrecorder) extension added. Shows acceptance test progress with a recorded slideshow.
+* **Updated to Guzzle 6**. Codeception can now work both with Guzzle v5 and Guzzle v6. PhpBrowser chooses right connector depending on Guzzle version installed. By @davertmik and @enumag
 * Annotations in Cept files.
   Instead of calling `$scenario->skip()`, `$scenario->group('firefox')`, etc, it is recommended to set scenario metadata with annotations `// @skip`, `// @group firefox`.
   Annotations can be parsed from line or block comments. `$scenario->skip()` and `$scenario->incomplete()` are still valid and can be executed inside conditional statements:
@@ -31,14 +32,27 @@
 * Graceful tests termination using `pcntl_signal`. See #1286
 * Group classes renamed to GroupObjects; Base GroupObject class renamed to `Codeception\GroupObject`
 * Official extensions moved to `ext` dir; Base Extension class renamed to `Codeception\Extension`
+* Duplicate environment options won't cause Codeception to run environment tests twice
+* [Phalcon1] `haveServiceInDi` method implemented by @sergeyklay
+* [Db] `seeNumRecords` method added by @sergeyklay
 
 #### 2.0.15
 
+* [Phalcon1] Fixed getting has more than one field by @sergeyklay #2010.
+* [PhpBrowser][Frameworks] Compute relative URIs against the effective request URI when there is a redirect. #2058 #2057
+* [PhpBrowser] Fixed Guzzle Connector headers by @valeriyaslovikovskaya #2028
+* [Symfony2] kernel is created for every test by @quaninte #2020
+* [WebDriver] Added WebDriver init settings `connection_timeout` and `request_timeout` by @n8whnp #2065
+* [MongoDb] added ability to change the database by @clarkeash #2015
+* [Doctrine2] Fixed issues after first request is made #2025 @AlexStansfield
+* [REST] Improved JsonArray to compare repeated values correctly by @Naktibalda #2070
+* [MongoDb] Remove not necessary config fields `user` and `password` by @nicklasos
+* `Stub::construct` can be used to set private/protected properties by @Naktibalda #2082
 * Fixed @before and @after hooks in Cest. _before method was executed on each call of method specified in @before annotation *2015-06-15*
 * [Laravel5] Fix for domains in `route()` helper. See #2000. *2015-06-04*
 * [REST] Fixed sending `JsonSerializable` object on POST by @Naktibalda and @andersonamuller. See #1988 #1994
 * [MongoDb] escaped filename shell argument for loading MongoDB by @christoph-hautzinger. #1998 *2015-06-03*
-* [Lumen] Module added by @janhenkgerritsen
+* [Lumen] **Module added** by @janhenkgerritsen
 
 #### 2.0.14
 

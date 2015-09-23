@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Module as CodeceptionModule;
+
 /**
  * Wrapper for basic shell commands and shell output
  *
@@ -11,7 +13,7 @@ namespace Codeception\Module;
  *
  * *Please review the code of non-stable modules and provide patches if you have issues.*
  */
-class Cli extends \Codeception\Module
+class Cli extends CodeceptionModule
 {
     public $output = '';
 
@@ -76,5 +78,4 @@ class Cli extends \Codeception\Module
     {
         \PHPUnit_Framework_Assert::assertRegExp($regex, $this->output);
     }
-
 }

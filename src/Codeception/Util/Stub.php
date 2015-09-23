@@ -1,5 +1,4 @@
 <?php
-
 namespace Codeception\Util;
 
 class Stub
@@ -35,7 +34,7 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                  $class - A class to be mocked
+     * @param mixed $class - A class to be mocked
      * @param array $params - properties and methods to set
      * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
@@ -82,7 +81,7 @@ class Stub
     /**
      * Creates $num instances of class through `Stub::make`.
      *
-     * @param       $class
+     * @param mixed $class
      * @param int $num
      * @param array $params
      *
@@ -128,8 +127,8 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                  $class
-     * @param                                  $method
+     * @param mixed $class
+     * @param string $method
      * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
@@ -200,7 +199,7 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                 $class
+     * @param mixed $class
      * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
      *
@@ -270,7 +269,7 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                  $class
+     * @param mixed $class
      * @param array $constructorParams
      * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
@@ -321,7 +320,7 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                  $class
+     * @param mixed $class
      * @param array $constructorParams
      * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
@@ -376,8 +375,8 @@ class Stub
      * ?>
      * ```
      *
-     * @param                                 $class
-     * @param                                 $method
+     * @param mixed $class
+     * @param string $method
      * @param array $constructorParams
      * @param array $params
      * @param bool|\PHPUnit_Framework_TestCase $testCase
@@ -496,6 +495,9 @@ class Stub
     protected static function bindParameters($mock, $params)
     {
         $reflectionClass = new \ReflectionClass($mock);
+        if ($mock instanceof \PHPUnit_Framework_MockObject_MockObject) {
+            $reflectionClass = $reflectionClass->getParentClass();
+        }
 
         foreach ($params as $param => $value) {
             // redefine method

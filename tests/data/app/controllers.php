@@ -30,6 +30,12 @@ class redirect4 {
     }
 }
 
+class redirect_relative {
+    function GET() {
+        header('Location: info');
+    }
+}
+
 class redirect2 {
     function GET() {
         include __DIR__.'/view/redirect2.php';
@@ -99,6 +105,7 @@ class cookiesHeader {
     public function GET()
     {
         header("Set-Cookie: a=b;Path=/;");
+        header("Set-Cookie: c=d;Path=/;", false);
         include __DIR__.'/view/index.php';
     }
 }
@@ -170,5 +177,19 @@ class register {
     
     function POST() {
         $this->GET();
+    }
+}
+
+class contentType1 {
+    function GET() {
+        header('Content-Type:', true);
+        include __DIR__.'/view/content_type.php';
+    }
+}
+
+class contentType2 {
+    function GET() {
+        header('Content-Type:', true);
+        include __DIR__.'/view/content_type2.php';
     }
 }

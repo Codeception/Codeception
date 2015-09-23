@@ -1,6 +1,8 @@
 <?php
 namespace Codeception\Step;
 
-class Assertion extends \Codeception\Step
+use Codeception\Step as CodeceptionStep;
+
+class Assertion extends CodeceptionStep
 {
 }

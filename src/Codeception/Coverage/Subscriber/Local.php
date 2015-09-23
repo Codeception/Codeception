@@ -44,5 +44,4 @@ class Local extends SuiteSubscriber
         }
         $this->mergeToPrint($e->getResult()->getCodeCoverage());
     }
-
 }
