@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Application;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
