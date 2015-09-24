@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Util\Debug;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;

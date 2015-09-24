@@ -6,7 +6,6 @@ use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Configuration;
 use Codeception\TestCase;
@@ -60,7 +59,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
  */
-class Laravel4 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
+class Laravel4 extends Framework implements ActiveRecord, PartedModule
 {
 
     /**

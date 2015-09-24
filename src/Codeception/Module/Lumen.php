@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * * client - `BrowserKit` client
  *
  */
-class Lumen extends Framework implements ActiveRecord, SupportsDomainRouting
+class Lumen extends Framework implements ActiveRecord
 {
 
     /**
