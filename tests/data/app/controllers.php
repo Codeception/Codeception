@@ -129,6 +129,13 @@ class cookiesHeader {
     }
 }
 
+class iframe {
+    public function GET()
+    {
+        include __DIR__.'/view/iframe.php';
+    }
+}
+
 class facebookController {
     function GET($matches) {
         include __DIR__.'/view/facebook.php';

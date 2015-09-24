@@ -1346,4 +1346,35 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         return $this->clientRequest($link->getMethod(), $link->getUri());
     }
+
+    /**
+     * Switch to iframe or frame on the page.
+     *
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIframe("another_frame");
+     * ```
+     *
+     * @param string $name
+     */
+
+    public function switchToIframe($name)
+    {
+        $iframe = $this->match("iframe[name=$name]")->first();
+        if (!count($iframe)) {
+            $iframe = $this->match("frame[name=$name]")->first();
+        }
+        if (!count($iframe)) {
+            throw new ElementNotFound("name=$name", 'Iframe');
+        }
+
+        $uri = $iframe->getNode(0)->getAttribute('src');
+        $this->clientRequest('GET', $uri);
+    }
 }
