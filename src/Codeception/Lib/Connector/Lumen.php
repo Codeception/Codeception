@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Application;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -9,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class Lumen extends Client implements HttpKernelInterface, SupportsDomainRouting
+class Lumen extends Client implements HttpKernelInterface
 {
 
     /**
