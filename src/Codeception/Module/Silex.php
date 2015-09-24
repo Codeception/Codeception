@@ -4,7 +4,6 @@ namespace Codeception\Module;
 use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
-use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\TestCase;
 use Symfony\Component\HttpKernel\Client;
 
@@ -49,7 +48,7 @@ use Symfony\Component\HttpKernel\Client;
  * Class Silex
  * @package Codeception\Module
  */
-class Silex extends Framework implements DoctrineProvider
+class Silex extends Framework
 {
     protected $app;
     protected $requiredFields = ['app'];
