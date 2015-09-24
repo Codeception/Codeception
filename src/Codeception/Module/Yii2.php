@@ -42,7 +42,7 @@ use Yii;
  * Stability: **stable**
  *
  */
-class Yii2 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
+class Yii2 extends Framework implements ActiveRecord, PartedModule
 {
     /**
      * Application config file must be set.

@@ -7,7 +7,6 @@ use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -67,7 +66,7 @@ use Illuminate\Support\Facades\Facade;
  *
  *
  */
-class Laravel5 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
+class Laravel5 extends Framework implements ActiveRecord, PartedModule
 {
 
     /**

@@ -72,7 +72,7 @@ use Yii;
  *
  * @property Codeception\Lib\Connector\Yii1 $client
  */
-class Yii1 extends Framework implements SupportsDomainRouting
+class Yii1 extends Framework
 {
 
     /**
