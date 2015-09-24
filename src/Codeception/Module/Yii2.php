@@ -7,6 +7,7 @@ use Codeception\Configuration;
 use Codeception\TestCase;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Connector\Yii2 as Yii2Connector;
 use yii\db\ActiveRecordInterface;
 use Yii;
