@@ -63,7 +63,12 @@ class ZF2 extends Client
 
         $zendRequest->setMethod($method);
         $zendRequest->setUri($uri);
-        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+        $requestUri = $uri->getPath();
+        if (!empty($queryString)) {
+            $requestUri .= '?' . $queryString;
+        }
+
+        $zendRequest->setRequestUri($requestUri);
         
         $zendRequest->setHeaders($this->extractHeaders($request));
         $this->application->run();
