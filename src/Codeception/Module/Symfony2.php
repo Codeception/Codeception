@@ -7,6 +7,7 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -65,7 +66,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider
+class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRouting
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
