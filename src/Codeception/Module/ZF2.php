@@ -65,8 +65,6 @@ class ZF2 extends Framework implements DoctrineProvider
     {
         require Configuration::projectDir() . 'init_autoloader.php';
 
-        $this->client = new ZF2Connector();
-
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
         if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
             $applicationConfig['module_listener_options']['config_cache_enabled'] = false;
@@ -76,6 +74,8 @@ class ZF2 extends Framework implements DoctrineProvider
 
     public function _before(TestCase $test)
     {
+        $this->client = new ZF2Connector();
+
         $this->application = Application::init($this->applicationConfig);
         $events = $this->application->getEventManager();
         $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
@@ -104,6 +104,8 @@ class ZF2 extends Framework implements DoctrineProvider
         }
         $this->queries = 0;
         $this->time = 0;
+
+        parent::_after($test);
     }
 
     public function _getEntityManager()
