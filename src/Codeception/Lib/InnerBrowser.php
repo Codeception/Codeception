@@ -1365,7 +1365,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if ($this instanceof Framework) {
             if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
                 $hostname = parse_url($uri, PHP_URL_HOST);
-                if (!in_array($hostname, $this->getInternalDomains())) {
+
+                if (!$this->isInternalDomain($hostname)) {
                     throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
                 }
             }
@@ -1382,6 +1383,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->client->followRedirects(false);
         $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
         return $this->redirectIfNecessary($result, $maxRedirects, 0);
+    }
+
+    protected function isInternalDomain($domain)
+    {
+        foreach ($this->getInternalDomains() as $pattern) {
+            if (preg_match($pattern, $domain)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
