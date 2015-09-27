@@ -421,11 +421,4 @@ class PhpBrowserTest extends TestsForBrowsers
       $this->module->seeResponseCodeIs(200);
       $this->module->dontSeeCookie('a');
     }
-
-    public function testSwitchToIframe()
-    {
-        $this->module->amOnPage('/iframe');
-        $this->module->switchToIframe('content');
-        $this->module->see('Is that interesting?');
-    }
 }

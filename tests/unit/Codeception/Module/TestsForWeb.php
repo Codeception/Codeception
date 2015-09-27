@@ -1292,4 +1292,11 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $form = data::get('form');
         $this->assertEquals('this & that', $form['name']);
     }
+
+    public function testSwitchToIframe()
+    {
+        $this->module->amOnPage('/iframe');
+        $this->module->switchToIframe('content');
+        $this->module->see('Is that interesting?');
+    }
 }
