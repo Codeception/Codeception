@@ -281,7 +281,7 @@ class RoboFile extends \Robo\Tasks
     public function buildDocsUtils()
     {
         $this->say("Util Classes");
-        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder'];
+        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder', 'JsonType'];
 
         foreach ($utils as $utilName) {
             $className = '\Codeception\Util\\' . $utilName;
