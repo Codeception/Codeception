@@ -153,6 +153,11 @@ class Guzzle extends Client
         $baseUri = $this->baseUri;
         if (strpos($uri, '://') === false) {
             if (strpos($uri, '/') === 0) {
+                $baseUriPath = parse_url($baseUri, PHP_URL_PATH);
+                if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
+                    $uri = substr($uri, strlen($baseUriPath));
+                }
+
                 return Uri::appendPath((string)$baseUri, $uri);
             }
             // relative url
