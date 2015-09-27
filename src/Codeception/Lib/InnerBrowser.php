@@ -1373,6 +1373,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         $uri = $iframe->getNode(0)->getAttribute('src');
-        $this->crawler = $this->clientRequest('GET', $uri);
+        $this->amOnPage($uri);
     }
 }
