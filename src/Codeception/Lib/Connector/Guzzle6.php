@@ -149,6 +149,11 @@ class Guzzle6 extends Client
         $baseUri = $this->client->getConfig('base_uri');
         if (strpos($uri, '://') === false) {
             if (strpos($uri, '/') === 0) {
+                $baseUriPath = $baseUri->getPath();
+                if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
+                    $uri = substr($uri, strlen($baseUriPath));
+                }
+
                 return Uri::appendPath((string)$baseUri, $uri);
             }
             // relative url
