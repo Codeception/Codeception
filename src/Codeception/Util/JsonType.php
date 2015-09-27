@@ -154,10 +154,10 @@ class JsonType
 
         // apply custom filters
         foreach (static::$customFilters as $customFilter => $callable) {
-            if (strpos($customFilter,'/') === 0) {
+            if (strpos($customFilter, '/') === 0) {
                 if (preg_match($customFilter, $filter, $matches)) {
-                    $params = array_shift($matches);
-                    return call_user_func_array($callable, array_merge($value, $params));
+                    array_shift($matches);
+                    return call_user_func_array($callable, array_merge([$value], $matches));
                 }
             }
             if ($customFilter == $filter) {

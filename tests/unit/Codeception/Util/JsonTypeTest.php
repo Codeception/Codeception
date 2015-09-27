@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class JsonTypeTest extends \Codeception\TestCase\Test
 {
     protected $types = [
@@ -42,7 +41,7 @@ class JsonTypeTest extends \Codeception\TestCase\Test
         $jsonType = new JsonType($this->data);
         $this->assertContains('`id: 11` is not of type', $jsonType->matches(['id' => 'integer:<5']));
         $this->assertContains('`id: 11` is not of type', $jsonType->matches(['id' => 'integer:>15']));
-        $this->assertTrue($jsonType->matches(['id' => 'integer:=111']));
+        $this->assertTrue($jsonType->matches(['id' => 'integer:=11']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5:<12']));
         $this->assertNotTrue($jsonType->matches(['id' => 'integer:>5:<10']));
@@ -73,7 +72,7 @@ class JsonTypeTest extends \Codeception\TestCase\Test
     {
         $jsonType = new JsonType(['name' => 'davert', 'id' => 1]);
         $this->assertTrue($jsonType->matches([
-            'date' => 'string:!date|string:!empty',
+            'name' => 'string:!date|string:!empty',
             'id' => 'integer:!=0',
         ]));
     }
@@ -81,7 +80,7 @@ class JsonTypeTest extends \Codeception\TestCase\Test
     public function testCustomFilters()
     {
         JsonType::addCustomFilter('email', function($value) {
-            return strpos('@', $value) !== false;
+            return strpos($value, '@') !== false;
         });
         $jsonType = new JsonType(['email' => 'davert@codeception.com', 'name' => 'davert']);
         $this->assertTrue($jsonType->matches([
