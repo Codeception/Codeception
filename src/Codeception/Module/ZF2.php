@@ -214,6 +214,6 @@ class ZF2 extends Framework implements DoctrineProvider
     private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
     {
         $regex = PropertyAccess::readPrivateProperty($route, 'regex');
-        $this->internalDomains []= '/' . $regex . '/';
+        $this->internalDomains []= '/^' . $regex . '$/';
     }
 }
