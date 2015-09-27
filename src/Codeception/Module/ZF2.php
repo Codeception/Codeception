@@ -87,6 +87,14 @@ class ZF2 extends Framework implements DoctrineProvider
         $_SERVER['REQUEST_URI'] = '';
     }
 
+    public function _beforeSuite($settings = [])
+    {
+        /**
+         * reset internal domains before suite, because each suite can have a different configuration
+         */
+        $this->internalDomains = null;
+    }
+
     public function _after(TestCase $test)
     {
         $_SESSION = [];
