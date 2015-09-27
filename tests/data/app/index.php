@@ -43,6 +43,7 @@ $urls = array(
     '/content-cp1251' => 'contentType2',
     '/unset-cookie' => 'unsetCookie',
     '/external_url' => 'external_url',
+    '/iframe' => 'iframe',
 );
 
 glue::stick($urls);
