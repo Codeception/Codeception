@@ -1298,5 +1298,6 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->amOnPage('/iframe');
         $this->module->switchToIframe('content');
         $this->module->see('Is that interesting?');
+        $this->module->click('Ссылочка');
     }
 }
