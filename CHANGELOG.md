@@ -2,6 +2,7 @@
 
 #### 2.1.3
 
+* Environments files can now be located in subfolders of `tests/_env` by @Zifius
 * [Symfony2] Fixed issue when accessing profiler when no request has been performed #652.
 * [Symfony2] Added amOnRoute and seeCurrentRouteIs methods to Symfony2 module, by @raistlin
 * [ZF1] Added amOnRoute and seeCurrentRouteIs methods to ZF1 module, by @Naktibalda
