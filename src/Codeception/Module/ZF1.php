@@ -108,11 +108,12 @@ class ZF1 extends Framework
 
         require_once 'Zend/Loader/Autoloader.php';
         \Zend_Loader_Autoloader::getInstance();
-        $this->client = new ZF1Connector();
     }
 
     public function _before(TestCase $test)
     {
+        $this->client = new ZF1Connector();
+
         \Zend_Session::$_unitTestEnabled = true;
         try {
             $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
@@ -147,6 +148,8 @@ class ZF1 extends Framework
         \Zend_Session::$_unitTestEnabled = true;
         $this->queries = 0;
         $this->time = 0;
+
+        parent::_after($test);
     }
 
     protected function debugResponse()
