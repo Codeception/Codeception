@@ -1293,6 +1293,13 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('this & that', $form['name']);
     }
 
+    public function testSeeInDeactivatedField()
+    {
+        $this->module->amOnPage('/form/complex');
+        $this->module->seeInField('#disabled_field', 'disabled_field');
+        $this->module->seeInField('#salutation', 'mr');
+    }
+
     public function testSwitchToIframe()
     {
         $this->module->amOnPage('/iframe');

@@ -315,14 +315,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assert($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assert($this->proceedSeeInField($nodes, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assertNot($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assertNot($this->proceedSeeInField($nodes, $value));
     }
 
     public function seeInFormFields($formSelector, array $params)
@@ -363,40 +363,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
-    /**
-     * Returns an array of values for the field with the passed name.  Usually
-     * the array consists of a single value.  Used by proceedSeeInField
-     *
-     * @param Form $form
-     * @param string $fieldName
-     * @return array
-     */
-    private function getFormFieldValues(Form $form, $fieldName)
-    {
-        $strField = $this->getSubmissionFormFieldName($fieldName);
-        $values = [];
-        if ($form->has($strField)) {
-            $fields = $form->get($strField);
-            // $form->get returns an array for fields with names ending in []
-            if (!is_array($fields)) {
-                $fields = [$fields];
-            }
-            foreach ($fields as $field) {
-                if (!$field->hasValue()) {
-                    continue;
-                }
-                // $field->getValue may return an array (multi-select for example) or a string value
-                $values = array_merge($values, (array) $field->getValue());
-            }
-        }
-        return $values;
-    }
-
     protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $form = $this->getFormFor($fields);
-        $fieldName = $fields->attr('name');
-        $testValues = $this->getFormFieldValues($form, $fieldName);
+        $testValues = $this->proceedGetValueFromField($fields);
+        if (!is_array($testValues)) {
+            $testValues = [$testValues];
+        }
         if (is_bool($value) && $value === true && !empty($testValues)) {
             $value = reset($testValues);
         } elseif (empty($testValues)) {
@@ -406,7 +378,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             'Contains',
             $value,
             $testValues,
-            "Failed testing for '$value' in $fieldName's value: " . var_export($testValues, true)
+            sprintf('Failed asserting that `%s` is in %s\'s value: %s', $value, $fields->nodeName(), var_export($testValues, true))
         ];
     }
 
@@ -996,35 +968,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound($field, 'Field');
         }
+        return $this->proceedGetValueFromField($nodes);
+    }
 
+    /**
+     * @param Crawler $nodes
+     * @return array|mixed|string
+     */
+    protected function proceedGetValueFromField(Crawler $nodes)
+    {
+        $values = [];
         if ($nodes->filter('textarea')->count()) {
-            return $nodes->filter('textarea')->text();
-        }
-        if ($nodes->filter('input')->count()) {
-            return $nodes->filter('input')->attr('value');
+            return (new TextareaFormField($nodes->filter('textarea')->getNode(0)))->getValue();
         }
 
-        if ($nodes->filter('select')->count()) {
-            /** @var  \Symfony\Component\DomCrawler\Crawler $select */
-            $select      = $nodes->filter('select');
-            $isMultiple  = (bool)$select->attr('multiple');
-            $results     = [];
-            foreach ($select->children() as $option) {
-                /** @var  \DOMElement $option */
-                if ($option->getAttribute('selected') == 'selected') {
-                    $val = $option->getAttribute('value');
-                    if (!$isMultiple) {
-                        return $val;
-                    }
-                    $results[] = $val;
+        if ($nodes->filter('input')->count()) {
+            $input = $nodes->filter('input');
+            if ($input->attr('type') == 'checkbox' or $input->attr('type') == 'radio') {
+                $values = [];
+                $input = $nodes->filter('input:checked');
+                foreach ($input as $checkbox) {
+                    $values[] = $checkbox->getAttribute('value');
                 }
+                return $values;
             }
-            if (!$isMultiple) {
-                return null;
-            }
-            return $results;
+            return (new InputFormField($nodes->filter('input')->getNode(0)))->getValue();
         }
-        $this->fail("Element $field is not a form field or does not contain a form field");
+        if ($nodes->filter('select')->count()) {
+            $field = new ChoiceFormField($nodes->filter('select')->getNode(0));
+            $options = $nodes->filter('option[selected]');
+            foreach ($options as $option) {
+                $values[] = $option->getAttribute('value');
+            }
+            if (!$field->isMultiple()) {
+                return reset($values);
+            }
+            return $values;
+        }
+
+        $this->fail("Element $nodes is not a form field or does not contain a form field");
     }
 
     public function setCookie($name, $val, array $params = [])
