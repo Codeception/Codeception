@@ -1299,4 +1299,12 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->module->seeInField('#disabled_field', 'disabled_field');
         $this->module->seeInField('#salutation', 'mr');
     }
+
+    public function testSwitchToIframe()
+    {
+        $this->module->amOnPage('/iframe');
+        $this->module->switchToIframe('content');
+        $this->module->see('Is that interesting?');
+        $this->module->click('Ссылочка');
+    }
 }
