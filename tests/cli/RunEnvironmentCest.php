@@ -103,4 +103,30 @@ class RunEnvironmentCest
         $I->seeInShellOutput('firefox config was created');
         $I->seeFileFound('tests/_envs/firefox.yml');
     }
+
+    public function runEnvironmentForCept(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run messages --env email');
+        $I->seeInShellOutput('Test emails');
+        $I->dontSeeInShellOutput('Multiple env given');
+        $I->executeCommand('run messages --env env1');
+        $I->dontSeeInShellOutput('Test emails');
+    }
+
+    public function showExceptionForUnconfiguredEnvironment(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run skipped NoEnvironmentCept --no-exit');
+        $I->seeInShellOutput("Environment nothing was not configured but used");
+        $I->seeInShellOutput('WARNING');
+    }
+
+    public function environmentsFromSubfolders(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env3');
+        $I->seeInShellOutput('MESSAGE2 FROM ENV3');
+
+    }
 }

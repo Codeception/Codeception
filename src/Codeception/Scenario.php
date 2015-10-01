@@ -165,7 +165,7 @@ class Scenario
     public function current($key)
     {
         if (!isset($this->currents[$key])) {
-            throw new TestRuntimeException("Current $key is not set in this scenario");
+            return null;
         }
         return $this->currents[$key];
     }
@@ -177,13 +177,13 @@ class Scenario
 
     public function preload()
     {
-        \Codeception\Lib\Deprecation::add("Scenario is never preloaded. Please remove \$scenario->preload() call.", $this->getFeature());
+        \Codeception\Lib\Notification::deprecate("Scenario is never preloaded. Please remove \$scenario->preload() call.", $this->getFeature());
         return false;
     }
 
     public function running()
     {
-        \Codeception\Lib\Deprecation::add("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
+        \Codeception\Lib\Notification::deprecate("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
         return true;
     }
 

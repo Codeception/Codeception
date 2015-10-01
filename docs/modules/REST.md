@@ -182,7 +182,7 @@ Example:
 ``` php
 <?php
 // match the first `user.id` in json
-$firstUser = $I->grabDataFromJsonResponse('$..users[0].id');
+$firstUser = $I->grabDataFromResponseByJsonPath('$..users[0].id');
 $I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
 ?>
 ```

@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Configuration;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\Util\Stub;
 
@@ -66,6 +67,15 @@ class GroupManagerTest extends \Codeception\TestCase\Test
         $this->assertContains('g_2', $this->manager->groupsForTest($test2));
     }
 
+    public function testGroupsFileHandlesWhitespace()
+    {
+        $this->manager = new GroupManager(['whitespace_group_test' => 'tests/data/whitespace_group_test']);
+        $goodTest = $this->makeTestCase('tests/WhitespaceTest.php');
+        $badTest = $this->makeTestCase('');
+
+        $this->assertContains('whitespace_group_test', $this->manager->groupsForTest($goodTest));
+        $this->assertEmpty($this->manager->groupsForTest($badTest));
+    }
 
     protected function makeTestCase($file, $name = '')
     {

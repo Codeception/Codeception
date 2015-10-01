@@ -6,6 +6,7 @@ use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -39,6 +40,8 @@ use Illuminate\Support\Facades\Facade;
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
+ * * disable_middleware: `boolean`, default `false` - disable all middleware.
+ * * disable_events: `boolean`, default `false` - disable all events.
  *
  * ## API
  *
@@ -50,7 +53,7 @@ use Illuminate\Support\Facades\Facade;
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
  */
-class Laravel5 extends Framework implements ActiveRecord, PartedModule
+class Laravel5 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
 {
 
     /**
@@ -67,7 +70,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Constructor.
      *
      * @param ModuleContainer $container
-     * @param $config
+     * @param array|null $config
      */
     public function __construct(ModuleContainer $container, $config = null)
     {
@@ -79,6 +82,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'root' => '',
                 'packages' => 'workbench',
                 'disable_middleware' => false,
+                'disable_events' => false,
             ],
             (array)$config
         );
@@ -127,6 +131,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             // Destroy existing sessions of previous tests
             $this->app['session']->migrate(true);
         }
+
+        $this->client->clearExpectedEvents();
     }
 
     /**
@@ -138,6 +144,10 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
+        }
+
+        if ($missedEvents = $this->client->missedEvents()) {
+            $test->fail('The following events did not fire: ' . implode(',', $missedEvents));
         }
     }
 
@@ -236,6 +246,55 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function enableMiddleware()
     {
         $this->config['disable_middleware'] = false;
+    }
+
+    /**
+     * Disable events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->disableEvents();
+     * ?>
+     * ```
+     */
+    public function disableEvents()
+    {
+        $this->config['disable_events'] = true;
+    }
+
+    /**
+     * Enable events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->enableEvents();
+     * ?>
+     * ```
+     */
+    public function enableEvents()
+    {
+        $this->config['disable_events'] = false;
+    }
+
+    /**
+     * Make sure events fired during the test.
+     *
+     * ``` php
+     * <?php
+     * $I->expectEvents('App\MyEvent');
+     * $I->expectEvents('App\MyEvent', 'App\MyOtherEvent');
+     * $I->expectEvents(['App\MyEvent', 'App\MyOtherEvent']);
+     * ?>
+     * ```
+     * @param $events
+     */
+    public function expectEvents($events)
+    {
+        $events = is_array($events) ? $events : func_get_args();
+
+        foreach ($events as $expectedEvent) {
+            $this->client->addExpectedEvent($expectedEvent);
+        }
     }
 
     /**
@@ -366,7 +425,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * ```
      *
      * @param  string|array $key
-     * @param  mixed $value
+     * @param  mixed|null $value
      * @return void
      */
     public function seeInSession($key, $value = null)
@@ -426,6 +485,23 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Assert that there are no form errors bound to the View.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeFormErrors();
+     * ?>
+     * ```
+     *
+     * @return bool
+     */
+    public function dontSeeFormErrors()
+    {
+        $viewErrorBag = $this->app->make('view')->shared('errors');
+        $this->assertTrue(count($viewErrorBag) == 0);
+    }
+
+    /**
      * Assert that specific form error messages are set in the view.
      *
      * Useful for validation messages e.g.
@@ -476,8 +552,21 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * Takes either an object that implements the User interface or
      * an array of credentials.
      *
+     * Example of Usage
+     *
+     * ``` php
+     * <?php
+     * // provide array of credentials
+     * $I->amLoggedAs(['username' => 'jane@example.com', 'password' => 'password']);
+     *
+     * // provide User object
+     * $I->amLoggesAs( new User );
+     *
+     * // can be verified with $I->seeAuthentication();
+     * ?>
+     * ```
      * @param  \Illuminate\Contracts\Auth\User|array $user
-     * @param  string $driver
+     * @param  string|null $driver 'eloquent', 'database', or custom driver
      * @return void
      */
     public function amLoggedAs($user, $driver = null)

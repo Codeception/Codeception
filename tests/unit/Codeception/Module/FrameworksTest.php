@@ -28,5 +28,11 @@ class FrameworksTest extends TestsForWeb
         $this->module->see('Forbidden');
     }
 
+    public function testExceptionIsThrownOnRedirectToExternalUrl()
+    {
+        $this->setExpectedException('\Codeception\Exception\ExternalUrlException');
+        $this->module->amOnPage('/external_url');
+        $this->module->click('Next');
+    }
 
 }

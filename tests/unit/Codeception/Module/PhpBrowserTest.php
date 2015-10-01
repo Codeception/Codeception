@@ -146,6 +146,32 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertContains('test@gmail.com', $params);
     }
 
+    public function testRedirectBaseUriHasPath()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['url'] .= '/somepath'; // append path to the base url
+        $this->module->_reconfigure($config);
+
+        $this->module->amOnPage('/redirect_base_uri_has_path');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/somepath/info');
+        $this->module->see('Lots of valuable data here');
+    }
+
+    public function testRedirectBaseUriHasPathAnd302Code()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['url'] .= '/somepath'; // append path to the base url
+        $this->module->_reconfigure($config);
+
+        $this->module->amOnPage('/redirect_base_uri_has_path_302');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/somepath/info');
+        $this->module->see('Lots of valuable data here');
+    }
+
     public function testRelativeRedirect()
     {
         // test relative redirects where the effective request URI is in a
@@ -157,6 +183,40 @@ class PhpBrowserTest extends TestsForBrowsers
         // also, test relative redirects where the effective request URI is not
         // in a subdirectory
         $this->module->amOnPage('/relative_redirect');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testChainedRedirects()
+    {
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testDisabledRedirects()
+    {
+        $this->module->client->followRedirects(false);
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(302);
+        $this->module->seeCurrentUrlEquals('/redirect_twice');
+    }
+
+    public function testRedirectLimitReached()
+    {
+        $this->module->client->setMaxRedirects(1);
+        try {
+            $this->module->amOnPage('/redirect_twice');
+            $this->assertTrue(false, 'redirect limit is not respected');
+        } catch (\LogicException $e) {
+            $this->assertEquals('The maximum number (1) of redirections was reached.', $e->getMessage(), 'redirect limit is respected');
+        }
+    }
+
+    public function testRedirectLimitNotReached()
+    {
+        $this->module->client->setMaxRedirects(2);
+        $this->module->amOnPage('/redirect_twice');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
     }

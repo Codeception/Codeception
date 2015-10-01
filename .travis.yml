@@ -37,14 +37,14 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
-  - composer global require "fxp/composer-asset-plugin:1.0.0"
+  - composer global require "fxp/composer-asset-plugin:~1.0.3"
   - composer self-update
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0; fi' # install old guzzle
   - composer install --prefer-source
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.6'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.8'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (git clone -q --depth=1 https://github.com/phalcon/forum.git frameworks-phalcon; cp frameworks-phalcon/tests/config/config.php.dist frameworks-phalcon/app/config/config.php)'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || composer install -d frameworks-phalcon --no-dev  --prefer-source'

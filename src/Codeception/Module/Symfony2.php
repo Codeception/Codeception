@@ -7,6 +7,7 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -65,7 +66,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider
+class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRouting
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -169,6 +170,61 @@ class Symfony2 extends Framework implements DoctrineProvider
     }
 
     /**
+     * Opens web page using route name and parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnRoute('posts.create');
+     * $I->amOnRoute('posts.show', array('id' => 34));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function amOnRoute($routeName, array $params = [])
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+        $router = $this->kernel->getContainer()->get('router');
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+
+        $url = $router->generate($routeName, $params);
+        $this->amOnPage($url);
+    }
+
+    /**
+     * Checks that current url matches route.
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * $I->seeCurrentRouteIs('posts.show', array('id' => 8));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function seeCurrentRouteIs($routeName, array $params = [])
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+        $router = $this->kernel->getContainer()->get('router');
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+
+        $this->seeCurrentUrlEquals($router->generate($routeName, $params));
+    }
+
+    /**
      * Checks if any email were sent by last request
      *
      * @throws \LogicException
@@ -216,7 +272,11 @@ class Symfony2 extends Framework implements DoctrineProvider
             return null;
         }
         $profiler = $this->kernel->getContainer()->get('profiler');
-        return $profiler->loadProfileFromResponse($this->client->getResponse());
+        $response = $this->client->getResponse();
+        if (null === $response) {
+            $this->fail("You must perform a request before using this method.");
+        }
+        return $profiler->loadProfileFromResponse($response);
     }
 
     protected function debugResponse()

@@ -1,5 +1,30 @@
 # Changelog
 
+#### 2.1.3
+
+* [REST] Added matching data types by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType. See #2391
+* Environment files can now be located in subfolders of `tests/_env` by @Zifius
+* [Symfony2] Fixed issue when accessing profiler when no request has been performed #652.
+* [Symfony2] Added amOnRoute and seeCurrentRouteIs methods to Symfony2 module, by @raistlin
+* [ZF2] Added amOnRoute and seeCurrentRouteIs methods to ZF2 module, by @Naktibalda
+* Fixed issue with trailing slashes in `seeCurrentUrlEquals` and `dontSeeCurrentUrlEquals` methods #2324. By @janhenkgerritsen
+* Warning is displayed once using unconfigured environment.
+* Fixed loading environment configurations for Cept files by @splinter89
+* Fixed bootstrap with namespaces to inject namespaced actor classes properly.
+* [PhpBrowser][Frameworks] added hidden `_request()` method to send requests to backend from Helper classes.
+* [Laravel5] Added `disableEvents()`, `enableEvents()` and `expectEvents()` methods. By @janhenkgerritsen
+* [Laravel5] Added `dontSeeFormErrors()` method. By @janhenkgerritsen
+* [Db] Deleted Oracle driver (it existed by mistake, the real driver is Oci). By @Naktibalda
+* [Db] Implemented getPrimaryKey method for Sqlite, Mysql, Postgresql, Oracle and MsSql. By @Naktibalda
+* [Db] Implemented support for composite primary keys and tables without primary keys. By @Naktibalda
+* Fixed the scalarizeArray to be aware of NULL fields #2264. By @fbidu
+* [Soap] Fixed SOAP module #2296. By @relaxart
+* Fixed a bug where blank lines in a groups file would run every test in the project #2297. By @imjoehaines
+* [WebDriver] seeNumberOfElements should only count visible elements #2303. By @sascha-egerer
+* [PhpBrowser][Frameworks] Verbose output for all HTTP requests. By @Naktibalda
+* [PhpBrowser][Frameworks] Throw Codeception\Exception\ExternalUrlException when framework module tries to open an external URL #2328. By @Naktibalda
+* [PhpBrowser][Frameworks] Added switchToIframe method. By @Naktibalda
+
 #### 2.1.2
 
 * **Updated to PHPUnit 4.8**

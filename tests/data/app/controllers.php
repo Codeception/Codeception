@@ -48,6 +48,12 @@ class redirect3 {
     }
 }
 
+class redirect_twice {
+    function GET() {
+        header('Location: /redirect3');
+    }
+}
+
 class redirect_params {
     function GET() {
         include __DIR__.'/view/redirect_params.php';
@@ -72,6 +78,25 @@ class redirect_header_interval {
         header('Refresh:1800;url=/info');
     }
 }
+
+class redirect_base_uri_has_path {
+    function GET() {
+        header('Refresh:0;url=/somepath/info');
+    }
+}
+
+class redirect_base_uri_has_path_302 {
+    function GET() {
+        header('Location: /somepath/info', true, 302);
+    }
+}
+
+class external_url {
+    function GET() {
+        include __DIR__ . '/view/external_url.php';
+    }
+}
+
 
 class login {
 
@@ -113,6 +138,13 @@ class cookiesHeader {
         header("Set-Cookie: a=b;Path=/;");
         header("Set-Cookie: c=d;Path=/;", false);
         include __DIR__.'/view/index.php';
+    }
+}
+
+class iframe {
+    public function GET()
+    {
+        include __DIR__.'/view/iframe.php';
     }
 }
 
@@ -180,7 +212,7 @@ class register {
     function GET() {
         include __DIR__.'/view/register.php';
     }
-    
+
     function POST() {
         $this->GET();
     }

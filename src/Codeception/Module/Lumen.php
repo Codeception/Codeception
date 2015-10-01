@@ -5,6 +5,7 @@ use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\TestCase;
 use Codeception\Step;
 use Codeception\Configuration;
@@ -41,7 +42,7 @@ use Illuminate\Support\Facades\Facade;
  * * client - `BrowserKit` client
  *
  */
-class Lumen extends Framework implements ActiveRecord
+class Lumen extends Framework implements ActiveRecord, SupportsDomainRouting
 {
 
     /**

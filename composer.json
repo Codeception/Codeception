@@ -20,7 +20,7 @@
         "ext-mbstring": "*",
         "phpunit/phpunit": "~4.8.0",
         "facebook/webdriver": ">=1.0.1",
-        "guzzlehttp/guzzle": ">=4.0|<7.0",
+        "guzzlehttp/guzzle": ">=4.1.4 <7.0",
         "guzzlehttp/psr7": "~1.0",
         "symfony/finder": "~2.4",
         "symfony/console": "~2.4",

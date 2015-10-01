@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Exception\ModuleConfigException;
@@ -53,9 +54,13 @@ class Dbh extends CodeceptionModule implements DbInterface
 {
     public static $dbh;
 
+    public function _initialize()
+    {
+        Notification::deprecate("Module Dbh is deprecated and will be removed in 2.2");
+    }
+
     public function _before(TestCase $test)
     {
-
         if (!self::$dbh) {
             throw new ModuleConfigException(
                 __CLASS__,

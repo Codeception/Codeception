@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\TestCase;
 use Codeception\Lib\Connector\Yii1 as Yii1Connector;
@@ -71,7 +72,7 @@ use Yii;
  *
  * @property Codeception\Lib\Connector\Yii1 $client
  */
-class Yii1 extends Framework
+class Yii1 extends Framework implements SupportsDomainRouting
 {
 
     /**
@@ -145,6 +146,7 @@ class Yii1 extends Framework
     public function _createClient()
     {
         $this->client = new Yii1Connector();
+        $this->client->setServerParameter("HTTP_HOST", parse_url($this->config['url'], PHP_URL_HOST));
         $this->client->appPath = $this->config['appPath'];
         $this->client->url = $this->config['url'];
         $this->client->appSettings = [

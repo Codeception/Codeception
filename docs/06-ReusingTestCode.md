@@ -254,7 +254,7 @@ class Login
      */
     protected $tester;
 
-    public function __construct(AcceptanceTester $I)
+    public function __construct(\AcceptanceTester $I)
     {
         $this->tester = $I;
     }
@@ -429,7 +429,7 @@ function seeNumResults($num)
     /**@var $table \Facebook\WebDriver\WebDriverElement */
     $table = $this->getModule('WebDriver')->_findElements('#result');
     $this->assertEquals('table', $table->getTagName());
-    $results = $el->findElements('tr');
+    $results = $table->findElements('tr');
 
     // asserting that table contains exactly $num rows
     $this->assertEquals($num, count($results));

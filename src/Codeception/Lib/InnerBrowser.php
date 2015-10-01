@@ -3,11 +3,13 @@ namespace Codeception\Lib;
 
 use Codeception\Configuration;
 use Codeception\Exception\ElementNotFound;
+use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -15,14 +17,16 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
+use Codeception\Util\PropertyAccess;
 use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Link;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Field\InputFormField;
 use Symfony\Component\DomCrawler\Field\TextareaFormField;
+use Symfony\Component\DomCrawler\Form;
 
 class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator
 {
@@ -70,6 +74,33 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     }
 
     /**
+     * Send custom request to a backend using method, uri, parameters, etc.
+     * Use it in Helpers to create special request actions, like accessing API, sending complex forms, etc.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function createUserByApi($name) {
+     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     * }
+     * ?>
+     * ```
+     *
+     * @api
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     * @return mixed|Crawler
+     */
+    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    {
+        return $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
+    }
+
+    /**
      * @return Crawler
      * @throws ModuleException
      */
@@ -108,9 +139,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function amOnPage($page)
     {
-        $this->crawler = $this->client->request('GET', $page);
+        $this->crawler = $this->clientRequest('GET', $page);
         $this->forms = [];
-        $this->debugResponse();
     }
 
     public function click($link, $context = null)
@@ -128,9 +158,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $anchor = $this->getCrawler()->selectLink($link);
         }
         if (count($anchor)) {
-            $this->crawler = $this->getRunningClient()->click($anchor->first()->link());
+            $this->crawler = $this->clientClick($anchor->first()->link());
             $this->forms = [];
-            $this->debugResponse();
             return;
         }
 
@@ -162,9 +191,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $tag = $node->nodeName;
             $type = $node->getAttribute('type');
             if ($tag === 'a') {
-                $this->crawler = $this->getRunningClient()->click($nodes->first()->link());
+                $this->crawler = $this->clientClick($nodes->first()->link());
                 $this->forms = [];
-                $this->debugResponse();
                 break;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
                 $buttonValue = [];
@@ -239,12 +267,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeCurrentUrlEquals($uri)
     {
-        $this->assertEquals($uri, $this->_getCurrentUri());
+        $this->assertEquals(rtrim($uri, '/'), rtrim($this->_getCurrentUri(), '/'));
     }
 
     public function dontSeeCurrentUrlEquals($uri)
     {
-        $this->assertNotEquals($uri, $this->_getCurrentUri());
+        $this->assertNotEquals(rtrim($uri, '/'), rtrim($this->_getCurrentUri(), '/'));
     }
 
     public function seeCurrentUrlMatches($uri)
@@ -475,14 +503,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $requestParams= $this->getFormPhpValues($requestParams);
 
-        $this->crawler = $this->client->request(
+        $this->crawler = $this->clientRequest(
             $form->getMethod(),
             $url,
             $requestParams,
             $form->getPhpFiles()
         );
         $this->forms = [];
-        $this->debugResponse();
     }
 
     public function submitForm($selector, array $params, $button = null)
@@ -725,7 +752,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             } else {
                 $options->getNode(0)->setAttribute('checked', 'checked');
             }
-            if ($options->first()->attr('value')) {
+            if ($options->first()->attr('value') !== false) {
                 return $options->first()->attr('value');
             }
             return $options->first()->text();
@@ -839,14 +866,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->client->request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
-        $this->debugResponse();
+        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
     }
 
     protected function debugResponse()
     {
-        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
         $this->debugSection('Headers', $this->client->getInternalResponse()->getHeaders());
     }
@@ -1177,13 +1203,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function assertPageContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThat($this->getRunningClient()->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThat(
+            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            $constraint,
+            $message
+        );
     }
 
     protected function assertPageNotContains($needle, $message = '')
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
-        $this->assertThatItsNot($this->getRunningClient()->getInternalResponse()->getContent(), $constraint, $message);
+        $this->assertThatItsNot(
+            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            $constraint,
+            $message
+        );
     }
 
     /**
@@ -1246,5 +1280,99 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if ($this instanceof Framework) {
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
+                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+            }
+        }
+
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $result;
+        } else {
+            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+            $this->client->followRedirects(false);
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $this->redirectIfNecessary($result, $maxRedirects, 0);
+        }
+    }
+
+    /**
+     * @param $result
+     * @return mixed
+     */
+    protected function redirectIfNecessary($result, $maxRedirects, $redirectCount)
+    {
+        $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
+        if ($locationHeader) {
+            if ($redirectCount == $maxRedirects) {
+                throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $maxRedirects));
+            }
+
+            $this->debugSection('Redirecting to', $locationHeader);
+
+            $result = $this->client->followRedirect();
+            $this->debugResponse();
+            return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
+        }
+        $this->client->followRedirects(true);
+        return $result;
+    }
+
+    /**
+     * Clicks on a given link.
+     *
+     * @param Link $link A Link instance
+     *
+     * @return Crawler
+     */
+    protected function clientClick(Link $link)
+    {
+        if ($link instanceof Form) {
+            return $this->proceedSubmitForm($link);
+        }
+
+        return $this->clientRequest($link->getMethod(), $link->getUri());
+    }
+
+    /**
+     * Switch to iframe or frame on the page.
+     *
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIframe("another_frame");
+     * ```
+     *
+     * @param string $name
+     */
+
+    public function switchToIframe($name)
+    {
+        $iframe = $this->match("iframe[name=$name]")->first();
+        if (!count($iframe)) {
+            $iframe = $this->match("frame[name=$name]")->first();
+        }
+        if (!count($iframe)) {
+            throw new ElementNotFound("name=$name", 'Iframe');
+        }
+
+        $uri = $iframe->getNode(0)->getAttribute('src');
+        $this->amOnPage($uri);
     }
 }
