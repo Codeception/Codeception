@@ -35,5 +35,11 @@
     Invisible text
 </div>
 
+<div id="grab-multiple">
+    <a id="first-link">First</a>
+    <a id="second-link">Second</a>
+    <a id="third-link">Third</a>
+</div>
+
 </body>
 </html>

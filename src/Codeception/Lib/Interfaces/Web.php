@@ -691,6 +691,32 @@ interface Web
      * @return mixed
      */
     public function grabAttributeFrom($cssOrXpath, $attribute);
+    
+    /**
+     * Grabs either the text content, or attribute values, of nodes
+     * matched by $cssOrXpath and returns them as an array.
+     * 
+     * ```html
+     * <a href="#first">First</a>
+     * <a href="#second">Second</a>
+     * <a href="#third">Third</a>
+     * ```
+     * 
+     * ```php
+     * <?php
+     * // would return ['First', 'Second', 'Third']
+     * $aLinkText = $I->grabMultiple('a');
+     * 
+     * // would return ['#first', '#second', '#third']
+     * $aLinks = $I->grabMultiple('a', 'href');
+     * ?>
+     * ```
+     * 
+     * @param $cssOrXpath
+     * @param $attribute
+     * @return string[]
+     */
+    public function grabMultiple($cssOrXpath, $attribute = null);
 
     /**
      * Checks that the given element exists on the page and is visible.
