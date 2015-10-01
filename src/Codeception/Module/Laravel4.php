@@ -687,15 +687,47 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Returns a list of recognized domain names.
+     * This elements of this list are regular expressions.
      *
-     * @todo not implemented
      * @return array
      */
-    public function getInternalDomains()
+    protected function getInternalDomains()
     {
-        return [
-            'localhost',
-        ];
+        $internalDomains = [$this->getApplicationDomainRegex()];
+
+        foreach ($this->app['router']->getRoutes() as $route) {
+            if (!is_null($route->domain())) {
+                $internalDomains[] = $this->getDomainRegex($route);
+            }
+        }
+
+        return array_unique($internalDomains);
     }
+
+    /**
+     * @return string
+     */
+    private function getApplicationDomainRegex()
+    {
+        $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
+        $domain = $server['HTTP_HOST'];
+
+        return '/^' . str_replace('.', '\.', $domain) . '$/';
+    }
+
+    /**
+     * Get the regex for matching the domain part of this route.
+     *
+     * @param \Illuminate\Routing\Route $route
+     * @return string
+     */
+    private function getDomainRegex($route)
+    {
+        ReflectionHelper::invokePrivateMethod($route, 'compileRoute');
+        $compiledRoute = ReflectionHelper::readPrivateProperty($route, 'compiled');
+
+        return $compiledRoute->getHostRegex();
+    }
+
 }
