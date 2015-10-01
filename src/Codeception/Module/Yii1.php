@@ -2,7 +2,6 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\TestCase;
 use Codeception\Lib\Connector\Yii1 as Yii1Connector;
@@ -72,7 +71,7 @@ use Yii;
  *
  * @property Codeception\Lib\Connector\Yii1 $client
  */
-class Yii1 extends Framework implements SupportsDomainRouting
+class Yii1 extends Framework
 {
 
     /**
