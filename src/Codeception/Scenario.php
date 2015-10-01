@@ -130,7 +130,7 @@ class Scenario
         foreach ($this->getSteps() as $step) {
             /** @var Step $step */
             if ($step->getName() !== 'Comment') {
-                $text .= 'I ' . $step->getHtml() . '<br/>';
+                $text .= $step->getHtml() . '<br/>';
             } else {
                 $text .= trim($step->getHumanizedArguments(), '"') . '<br/>';
             }
