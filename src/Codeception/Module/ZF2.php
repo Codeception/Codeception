@@ -5,6 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Util\PropertyAccess;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
 use Zend\Mvc\Application;
@@ -61,11 +62,11 @@ class ZF2 extends Framework implements DoctrineProvider
     protected $queries = 0;
     protected $time = 0;
 
+    private $internalDomains = null;
+
     public function _initialize()
     {
         require Configuration::projectDir() . 'init_autoloader.php';
-
-        $this->client = new ZF2Connector();
 
         $this->applicationConfig = require Configuration::projectDir() . $this->config['config'];
         if (isset($applicationConfig['module_listener_options']['config_cache_enabled'])) {
@@ -76,12 +77,22 @@ class ZF2 extends Framework implements DoctrineProvider
 
     public function _before(TestCase $test)
     {
+        $this->client = new ZF2Connector();
+
         $this->application = Application::init($this->applicationConfig);
         $events = $this->application->getEventManager();
         $events->detach($this->application->getServiceManager()->get('SendResponseListener'));
 
         $this->client->setApplication($this->application);
         $_SERVER['REQUEST_URI'] = '';
+    }
+
+    public function _beforeSuite($settings = [])
+    {
+        /**
+         * reset internal domains before suite, because each suite can have a different configuration
+         */
+        $this->internalDomains = null;
     }
 
     public function _after(TestCase $test)
@@ -104,6 +115,8 @@ class ZF2 extends Framework implements DoctrineProvider
         }
         $this->queries = 0;
         $this->time = 0;
+
+        parent::_after($test);
     }
 
     public function _getEntityManager()
@@ -171,5 +184,44 @@ class ZF2 extends Framework implements DoctrineProvider
         $router = $this->application->getServiceManager()->get('router');
         $url = $router->assemble($params, ['name' => $routeName]);
         $this->seeCurrentUrlEquals($url);
+    }
+
+    protected function getInternalDomains()
+    {
+        if ($this->internalDomains === null) {
+            /**
+             * @var Zend\Mvc\Router\Http\TreeRouteStack
+             */
+            $router = $this->application->getServiceManager()->get('router');
+            $this->addInternalDomainsFromRoutes($router->getRoutes());
+            $this->internalDomains = array_unique($this->internalDomains);
+        }
+        return $this->internalDomains;
+    }
+
+    private function addInternalDomainsFromRoutes($routes)
+    {
+        foreach ($routes as $name => $route) {
+            if ($route instanceof \Zend\Mvc\Router\Http\Hostname) {
+                $this->addInternalDomain($route);
+            } elseif ($route instanceof \Zend\Mvc\Router\Http\Part) {
+                $parentRoute = PropertyAccess::readPrivateProperty($route, 'route');
+                if ($parentRoute instanceof \Zend\Mvc\Router\Http\Hostname) {
+                    $this->addInternalDomain($parentRoute);
+                }
+                // this is necessary to instantiate child routes
+                try {
+                    $route->assemble([],[]);
+                } catch (\Exception $e) {
+                }
+                $this->addInternalDomainsFromRoutes($route->getRoutes());
+            }
+        }
+    }
+
+    private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
+    {
+        $regex = PropertyAccess::readPrivateProperty($route, 'regex');
+        $this->internalDomains []= '/^' . $regex . '$/';
     }
 }
