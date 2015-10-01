@@ -155,36 +155,36 @@ class RunCest
     public function runOneTestFromUnit(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeShellOutputMatches("~AnotherTest::testFirst\s*?Ok~");
-        $I->dontSeeInShellOutput('AnotherTest::testSecond');
+        $I->seeShellOutputMatches("~AnotherTest:testFirst\s*?Ok~");
+        $I->dontSeeInShellOutput('AnotherTest:testSecond');
     }
 
     public function runOneTestFromCest(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
-        $I->seeShellOutputMatches("~\(AnotherCest::optimistic\)\s*?Ok~");
-        $I->dontSeeInShellOutput('AnotherCest::pessimistic');
+        $I->seeShellOutputMatches("~\(AnotherCest:optimistic\)\s*?Ok~");
+        $I->dontSeeInShellOutput('AnotherCest:pessimistic');
     }
 
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
         $I->seeInShellOutput(
-          'Test is triangle | "real triangle" (DataProvidersTest::testIsTriangle)'
+          'Test is triangle | "real triangle" (DataProvidersTest:testIsTriangle)'
         );
-        $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest::testIsTriangle)');
-        $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest::testIsTriangle)');
+        $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest:testIsTriangle)');
+        $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest:testIsTriangle)');
         $I->seeInShellOutput("OK");
     }
 
     public function runTestWithFailFast(\CliGuy $I)
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
-        $I->seeInShellOutput('FailingTest::testMe');
-        $I->seeInShellOutput("PassingTest::testMe");
+        $I->seeInShellOutput('FailingTest:testMe');
+        $I->seeInShellOutput("PassingTest:testMe");
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
-        $I->dontSeeInShellOutput("PassingTest::testMe");
+        $I->dontSeeInShellOutput("PassingTest:testMe");
     }
 
     public function runWithCustomOuptutPath(\CliGuy $I)
@@ -202,10 +202,10 @@ class RunCest
     public function runTestsWithDependencyInjections(\CliGuy $I)
     {
         $I->executeCommand('run math');
-        $I->seeInShellOutput('Test addition (MathCest::testAddition)');
-        $I->seeInShellOutput('Test subtraction (MathCest::testSubtraction)');
-        $I->seeInShellOutput('Test square (MathCest::testSquare)');
-        $I->seeInShellOutput('Test all (MathTest::testAll)');
+        $I->seeInShellOutput('Test addition (MathCest:testAddition)');
+        $I->seeInShellOutput('Test subtraction (MathCest:testSubtraction)');
+        $I->seeInShellOutput('Test square (MathCest:testSquare)');
+        $I->seeInShellOutput('Test all (MathTest:testAll)');
         $I->seeInShellOutput('OK (');
         $I->dontSeeInShellOutput('fail');
         $I->dontSeeInShellOutput('error');

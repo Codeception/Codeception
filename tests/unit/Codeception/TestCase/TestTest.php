@@ -1,5 +1,5 @@
 <?php
-class TestTest extends \Codeception\TestCase\Test
+class TestTest extends \Codeception\Test\TestCase
 {
     public function testBaseOne()
     {
@@ -16,7 +16,7 @@ class TestTest extends \Codeception\TestCase\Test
 
     public function testReportedInterface()
     {
-        $this->assertInstanceOf('\\Codeception\\TestCase\\Interfaces\\Reported', $this);
+        $this->assertInstanceOf('\\Codeception\\Test\\Interfaces\\Reported', $this);
         $this->assertEquals(array(
             'file' => __FILE__,
             'name' => 'testReportedInterface',

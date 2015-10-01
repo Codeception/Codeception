@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreStart
 namespace Symfony\Component\CssSelector {
 if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
         class CssSelectorConverter {
@@ -8,3 +9,17 @@ if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
         }
     }
 }
+
+// prefering old names
+namespace Codeception {
+
+    interface TestCase extends \Codeception\TestInterface {
+    }
+}
+
+namespace Codeception\TestCase {
+
+    class Test extends \Codeception\Test\TestCase {
+    }
+}
+// @codingStandardsIgnoreEnd

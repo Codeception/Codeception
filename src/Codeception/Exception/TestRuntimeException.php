@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Exception;
 
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 class TestRuntimeException extends \RuntimeException
 {

@@ -1,11 +1,9 @@
 <?php
 namespace Codeception\Lib;
 
-use Codeception\Configuration;
-use Codeception\TestCase\Interfaces\Reported;
 use Codeception\Util\Stub;
 
-class GroupManagerTest extends \Codeception\TestCase\Test
+class GroupManagerTest extends \Codeception\Test\TestCase
 {
     /**
      * @var \Codeception\Lib\GroupManager
@@ -87,11 +85,7 @@ class GroupManagerTest extends \Codeception\TestCase\Test
 
 }
 
-class DescriptiveTestCase extends \Codeception\TestCase implements Reported
+class DescriptiveTestCase extends \Codeception\Test\TestCase
 {
-    public function getEnvironment() {}
-    public function getScenario() {}
-    public function getReportFields() {}
-    public function _startTest() {}
-    public function _finishTest() {}
+
 }

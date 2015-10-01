@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\TestCase\Interfaces;
+namespace Codeception\Test\Interfaces;
 
 interface Reported
 {

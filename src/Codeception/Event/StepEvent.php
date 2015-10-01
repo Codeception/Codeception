@@ -2,7 +2,7 @@
 namespace Codeception\Event;
 
 use Codeception\Step;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 class StepEvent extends TestEvent
 {
@@ -11,7 +11,7 @@ class StepEvent extends TestEvent
      */
     protected $step;
 
-    public function __construct(TestCase $test, Step $step)
+    public function __construct($test, Step $step)
     {
         $this->test = $test;
         $this->step = $step;

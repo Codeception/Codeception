@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Phalcon\Di;
 use Phalcon\Mvc\Model as PhalconModel;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (2.x).

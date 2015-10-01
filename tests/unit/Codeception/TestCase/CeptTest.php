@@ -1,5 +1,5 @@
 <?php
-class CeptTest extends Codeception\TestCase\Test
+class CeptTest extends \Codeception\Test\TestCase
 {
 
     /**
@@ -7,21 +7,19 @@ class CeptTest extends Codeception\TestCase\Test
      */
     public function testCeptNamings()
     {
-        $cept = new \Codeception\TestCase\Cept();
-        $cept->configName('LoginCept.php')
-            ->config('testFile', 'tests/acceptance/LoginCept.php');
+        $cept = new \Codeception\Test\Cept('Login', 'tests/acceptance/LoginCept.php');
 
         $this->assertEquals(
             'tests/acceptance/LoginCept.php',
-            \Codeception\TestCase::getTestFileName($cept)
+            \Codeception\Test\Descriptor::getTestFileName($cept)
         );
         $this->assertEquals(
             'tests/acceptance/LoginCept.php',
-            \Codeception\TestCase::getTestFullName($cept)
+            \Codeception\Test\Descriptor::getTestFullName($cept)
         );
         $this->assertEquals(
             'LoginCept',
-            \Codeception\TestCase::getTestSignature($cept)
+            \Codeception\Test\Descriptor::getTestSignature($cept)
         );
     }
 

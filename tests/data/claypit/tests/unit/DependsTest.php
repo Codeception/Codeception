@@ -1,5 +1,5 @@
 <?php
-class DependsTest extends \Codeception\TestCase\Test {
+class DependsTest extends \Codeception\Test\TestCase {
 
     public function testOne()
     {
