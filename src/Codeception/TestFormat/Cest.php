@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Format;
+namespace Codeception\TestFormat;
 
 use Codeception\TestCase\Interfaces\Configurable;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
