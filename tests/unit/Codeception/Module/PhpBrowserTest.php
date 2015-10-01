@@ -447,4 +447,25 @@ class PhpBrowserTest extends TestsForBrowsers
       $this->module->seeResponseCodeIs(200);
       $this->module->dontSeeCookie('a');
     }
+
+    public function testRequestApi()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $response = $this->module->_request('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->assertInternalType('string', $response);
+        $this->assertContains('Welcome to test app', $response);
+        $this->module->click('Welcome to test app'); // page not loaded
+    }
+
+    public function testLoadPageApi()
+    {
+        $this->module->_loadPage('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->module->see('Welcome to test app');
+        $this->module->click('More info');
+        $this->module->seeInCurrentUrl('/info');
+    }
 }

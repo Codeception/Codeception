@@ -75,18 +75,21 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * Send custom request to a backend using method, uri, parameters, etc.
-     * Use it in Helpers to create special request actions, like accessing API, sending complex forms, etc.
+     * Use it in Helpers to create special request actions, like accessing API
+     * Returns a string with response body.
      *
      * ```php
      * <?php
      * // in Helper class
      * public function createUserByApi($name) {
-     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     *     $userData = $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     *     $user = json_decode($userData);
+     *     return $user->id;
      * }
      * ?>
      * ```
-     * Does not load the response into the module but returns `\Symfony\Component\DomCrawler\Crawler` instance.
-     * I.e. this method doesn't change neither current context nor current page. Use `_loadPage` to switch to arbitrary page.
+     * Does not load the response into the module so you can't interact with response page (click, fill forms).
+     * To load arbitrary page for interaction, use `_loadPage` method.
      *
      * @api
      * @param $method
@@ -99,7 +102,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * @throws ExternalUrlException
      * @see `_loadPage`
      */
-    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
+    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    {
+        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
+        return $this->getRunningClient()->getInternalResponse()->getContent();
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
     {
         if ($this instanceof Framework) {
             if ($method !== 'GET' && $content === null && !empty($parameters)) {
@@ -126,6 +135,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * Opens a page with arbitrary request parameters.
+     * Useful for testing multi-step forms on a specific step.
      *
      * ```php
      * <?php
@@ -146,7 +156,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function _loadPage($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
     {
-        $this->crawler = $this->_request($method, $uri, $parameters, $files, $server, $content);
+        $this->crawler = $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
         $this->forms = [];
     }
 
@@ -165,7 +175,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     private function getRunningClient()
     {
         if ($this->client->getHistory()->isEmpty()) {
-            throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` to open it");
+            throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it");
         }
         return $this->client;
     }
@@ -190,8 +200,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function amOnPage($page)
     {
-        $this->crawler = $this->clientRequest('GET', $page);
-        $this->forms = [];
+        $this->_loadPage('GET', $page);
     }
 
     public function click($link, $context = null)
@@ -889,15 +898,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->_request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'], null, false);
+        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'], null, false);
     }
 
     protected function debugResponse()
     {
-        $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Page', $this->getRunningClient()->getHistory()->current()->getUri());
         $this->debugSection('Response', $this->getResponseStatusCode());
-        $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
-        $this->debugSection('Headers', $this->client->getInternalResponse()->getHeaders());
+        $this->debugSection('Cookies', $this->getRunningClient()->getInternalRequest()->getCookies());
+        $this->debugSection('Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
     protected function getResponseStatusCode()
