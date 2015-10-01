@@ -85,6 +85,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * }
      * ?>
      * ```
+     * Does not load the response into the module but returns `\Symfony\Component\DomCrawler\Crawler` instance.
+     * I.e. this method doesn't change neither current context nor current page. Use `_loadPage` to switch to arbitrary page.
      *
      * @api
      * @param $method
@@ -94,10 +96,58 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * @param array $server
      * @param null $content
      * @return mixed|Crawler
+     * @throws ExternalUrlException
+     * @see `_loadPage`
      */
-    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
     {
-        return $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
+        if ($this instanceof Framework) {
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
+                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+            }
+        }
+
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $result;
+        } else {
+            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+            $this->client->followRedirects(false);
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $this->redirectIfNecessary($result, $maxRedirects, 0);
+        }
+    }
+
+    /**
+     * Opens a page with arbitrary request parameters.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function openCheckoutFormStep2($orderId) {
+     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/checkout/step2', ['order' => $orderId]);
+     * }
+     * ?>
+     * ```
+     *
+     * @api
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     */
+    public function _loadPage($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    {
+        $this->crawler = $this->_request($method, $uri, $parameters, $files, $server, $content);
+        $this->forms = [];
     }
 
     /**
@@ -136,6 +186,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->client->setServerParameter('PHP_AUTH_USER', $username);
         $this->client->setServerParameter('PHP_AUTH_PW', $password);
     }
+
 
     public function amOnPage($page)
     {
@@ -838,7 +889,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $this->_request($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'], null, false);
     }
 
     protected function debugResponse()
@@ -1262,31 +1313,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
-    }
-
-    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
-    {
-        if ($this instanceof Framework) {
-            if ($method !== 'GET' && $content === null && !empty($parameters)) {
-                $content = http_build_query($parameters);
-            }
-
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
-                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
-            }
-        }
-
-        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
-            return $result;
-        } else {
-            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
-            $this->client->followRedirects(false);
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
-            return $this->redirectIfNecessary($result, $maxRedirects, 0);
-        }
     }
 
     /**
