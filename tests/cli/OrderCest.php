@@ -43,7 +43,7 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order --no-exit --group simple');
         $I->seeFileFound('order.txt','tests/_output');
-        $I->seeFileContentsEqual("BIB({{{[ST][STFFT][STF][ST])}}}");
+        $I->seeFileContentsEqual("BIB({{{[ST][STFFT][STF][ST]}}})");
     }
 
     public function checkCestOrder(CliGuy $I)
@@ -82,7 +82,7 @@ class OrderCest
             afterSuite,
             afterClass,
             @afterClass');
-        $I->seeFileContentsEqual("BIB({{[<C>])}}");
+        $I->seeFileContentsEqual("BIB({{[<C>]}})");
     }
 
     public function checkAfterBeforeClassInTests(CliGuy $I)
@@ -90,6 +90,6 @@ class OrderCest
         $I->amInPath('tests/data/sandbox');
         $I->executeCommand('run order BeforeAfterClassTest.php');
         $I->seeFileFound('order.txt', 'tests/_output');
-        $I->seeInThisFile('BIB({[1][2])}');
+        $I->seeInThisFile('BIB({[1][2]})');
     }
 }

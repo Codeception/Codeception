@@ -16,7 +16,7 @@ class GenerateTestTest extends BaseCommandRunner {
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHill'));
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
-        $this->assertContains('class HallUnderTheHillTest extends \Codeception\TestCase\Test', $this->content);
+        $this->assertContains('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertContains('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);
         $this->assertContains('protected function _before()', $this->content);
         $this->assertContains('protected function _after()', $this->content);
@@ -34,7 +34,7 @@ class GenerateTestTest extends BaseCommandRunner {
         $this->execute(array('suite' => 'shire', 'class' => 'MiddleEarth\HallUnderTheHillTest'));
         $this->assertEquals('tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->filename);
         $this->assertContains('namespace MiddleEarth;', $this->content);
-        $this->assertContains('class HallUnderTheHillTest extends \Codeception\TestCase\Test', $this->content);
+        $this->assertContains('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertContains('Test was created in tests/shire/MiddleEarth/HallUnderTheHillTest.php', $this->output);
     }
 
@@ -42,7 +42,7 @@ class GenerateTestTest extends BaseCommandRunner {
     {
         $this->execute(array('suite' => 'shire', 'class' => 'HallUnderTheHillTest.php'));
         $this->assertEquals('tests/shire/HallUnderTheHillTest.php', $this->filename);
-        $this->assertContains('class HallUnderTheHillTest extends \Codeception\TestCase\Test', $this->content);
+        $this->assertContains('class HallUnderTheHillTest extends \Codeception\Test\Unit', $this->content);
         $this->assertContains('protected $guy;', $this->content);
         $this->assertContains('@var \HobbitGuy', $this->content);
         $this->assertContains('Test was created in tests/shire/HallUnderTheHillTest.php', $this->output);

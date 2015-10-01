@@ -18,7 +18,6 @@ abstract class Actor
     public function __construct(Scenario $scenario)
     {
         $this->scenario = $scenario;
-        $this->scenario->stopIfBlocked();
     }
 
     /**

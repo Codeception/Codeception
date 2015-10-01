@@ -1,21 +1,22 @@
 <?php
-class DependsTest extends \Codeception\TestCase\Test {
-
-    public function testOne()
-    {
-        $this->assertTrue(true);
-        return 'hey';
-    }
-
+class DependsTest extends \Codeception\Test\Unit {
 
     /**
+     * @group depends
      * @depends testOne
      */
-    public function testTwo($hey)
+    public function testTwo()
     {
-        $this->assertEquals('hey', $hey);
+        $this->assertTrue(true);
     }
 
+    /**
+     * @group depends
+     */
+    public function testOne()
+    {
+        $this->assertTrue(false);
+    }
 
 
 

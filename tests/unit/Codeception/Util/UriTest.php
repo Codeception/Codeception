@@ -2,7 +2,7 @@
 namespace Codeception\Util;
 
 
-class UriTest extends \Codeception\TestCase\Test
+class UriTest extends \Codeception\Test\Unit
 {
     // tests
     public function testUrlMerge()

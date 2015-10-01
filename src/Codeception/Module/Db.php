@@ -7,7 +7,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Lib\Driver\Db as Driver;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 
 /**
  * Works with SQL database.
@@ -190,7 +190,7 @@ class Db extends CodeceptionModule implements DbInterface
         $this->driver = null;
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if ($this->config['reconnect']) {
             $this->connect();
@@ -202,7 +202,7 @@ class Db extends CodeceptionModule implements DbInterface
         parent::_before($test);
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $this->populated = false;
         $this->removeInserted();

@@ -19,7 +19,7 @@ class DbhTest extends \PHPUnit_Framework_TestCase
     protected $module = null;
 
     public function setUp() {
-      $this->testCase = Stub::make('\Codeception\TestCase');
+      $this->testCase = Stub::makeEmpty('\Codeception\TestCase');
 
       $module = new \Codeception\Module\Dbh(make_container());
 
