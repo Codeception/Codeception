@@ -319,7 +319,9 @@ class Symfony2 extends Framework implements DoctrineProvider
         foreach($this->getRouter()->getRouteCollection() as $route) {
             if (!is_null($route->getHost())) {
                 $compiled = $route->compile();
-                $internalDomains[] = $compiled->getHostRegex();
+                if (!is_null($compiled->getHostRegex())) {
+                    $internalDomains[] = $compiled->getHostRegex();
+                }
             }
         }
 
