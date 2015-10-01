@@ -24,8 +24,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module = Stub::make('\Codeception\Module\REST');
         $this->module->_inject($this->phpBrowser);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Format\Cest'));
-        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Format\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
+        $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
 
     }
 
@@ -34,7 +34,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->phpBrowser = Stub::make('\Codeception\Module\PhpBrowser', ['_getResponseContent' => $response]);
         $this->module->_inject($this->phpBrowser);
         $this->module->_initialize();
-        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Format\Cest'));
+        $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
     }
 
     public function testGet()
@@ -156,8 +156,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * Client is undefined for the second test
      */
     public function testTwoTests() {
-        $cest1 = Stub::makeEmpty('\Codeception\Test\Format\Cest');
-        $cest2 = Stub::makeEmpty('\Codeception\Test\Format\Cest');
+        $cest1 = Stub::makeEmpty('\Codeception\Test\Cest');
+        $cest2 = Stub::makeEmpty('\Codeception\Test\Cest');
 
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();

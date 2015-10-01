@@ -10,7 +10,7 @@ use Codeception\Test\Metadata;
 class Scenario
 {
     /**
-     * @var Testable
+     * @var TestInterface
      */
     protected $test;
     /**
@@ -33,9 +33,9 @@ class Scenario
     /**
      * Constructor
      *
-     * @param Testable $test
+     * @param TestInterface $test
      */
-    public function __construct(Testable $test)
+    public function __construct(TestInterface $test)
     {
         $this->metadata = $test->getMetadata();
         $this->test = $test;

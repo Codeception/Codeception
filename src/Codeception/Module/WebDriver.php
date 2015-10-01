@@ -19,7 +19,7 @@ use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
 use Codeception\Test\Descriptor;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
@@ -220,7 +220,7 @@ class WebDriver extends CodeceptionModule implements
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
@@ -253,7 +253,7 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
@@ -267,7 +267,7 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _failed(Testable $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
         $filename = str_replace(['::', '\\', '/'], ['.', '', ''], Descriptor::getTestSignature($test)) . '.fail';

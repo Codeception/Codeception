@@ -5,7 +5,7 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Exception;
 use PHPUnit_Framework_Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -83,7 +83,7 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function startTest(\PHPUnit_Framework_Test $test)
     {
         $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
-        if (!$test instanceof Testable) {
+        if (!$test instanceof TestInterface) {
             return;
         }
         if ($test->getMetadata()->isBlocked()) {
@@ -116,7 +116,7 @@ class Listener implements \PHPUnit_Framework_TestListener
     protected function fire($event, TestEvent $eventType)
     {
         $test = $eventType->getTest();
-        if ($test instanceof Testable) {
+        if ($test instanceof TestInterface) {
             foreach ($test->getMetadata()->getGroups() as $group) {
                 $this->dispatcher->dispatch($event . '.' . $group, $eventType);
             }

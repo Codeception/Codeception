@@ -5,7 +5,7 @@ use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Lumen as LumenConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Step;
 use Codeception\Configuration;
 use Codeception\Lib\ModuleContainer;
@@ -86,10 +86,10 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * Before hook.
      *
-     * @param \Codeception\Testable $test
+     * @param \Codeception\TestInterface $test
      * @throws ModuleConfig
      */
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         $this->initializeLumen();
 
@@ -101,9 +101,9 @@ class Lumen extends Framework implements ActiveRecord
     /**
      * After hook.
      *
-     * @param \Codeception\Testable $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();

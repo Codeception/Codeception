@@ -48,7 +48,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\Test\Format\Cept');
+        return Stub::makeEmpty('\Codeception\Test\Cept');
     }
 
     public function testAjax() {

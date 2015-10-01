@@ -141,17 +141,17 @@ abstract class Module
     }
 
     // HOOK: before scenario
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
     }
 
     // HOOK: after scenario
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
     }
 
     // HOOK: on fail
-    public function _failed(Testable $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
     }
 

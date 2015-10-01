@@ -1,12 +1,11 @@
 <?php
 use Codeception\Lib\Parser;
-use Codeception\Util\Stub;
 
 /**
  * @group core
  * Class ParserTest
  */
-class ParserTest extends \Codeception\Test\Format\TestCase
+class ParserTest extends \Codeception\Test\Unit
 {
     /**
      * @var Parser
@@ -20,7 +19,7 @@ class ParserTest extends \Codeception\Test\Format\TestCase
 
     protected function _before()
     {
-        $cept = new \Codeception\Test\Format\Cept('demo','DemoCept.php');
+        $cept = new \Codeception\Test\Cept('demo','DemoCept.php');
 
         $this->metadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);

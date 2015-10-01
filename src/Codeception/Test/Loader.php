@@ -3,8 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\Test\Loader\Cept as CeptLoader;
 use Codeception\Test\Loader\Cest as CestLoader;
-use Codeception\Test\Loader\Gherkin as GherkinLoader;
-use Codeception\Test\Loader\TestCase as TestCaseLoader;
+use Codeception\Test\Loader\Unit as UnitLoader;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -44,14 +43,13 @@ class Loader
     protected $tests = [];
     protected $path;
 
-    public function __construct(array $settings)
+    public function __construct(array $suiteSettings)
     {
-        $this->path = $settings['path'];
+        $this->path = $suiteSettings['path'];
         $this->formats = [
             new CeptLoader(),
             new CestLoader(),
-            new TestCaseLoader(),
-            new GherkinLoader($settings),
+            new UnitLoader(),
         ];
     }
 
@@ -68,7 +66,7 @@ class Loader
     protected function findPath($path)
     {
         if (!file_exists($path)
-            && substr(strtolower($path), -strlen('.php')) !== '.php'
+            && substr($path, -strlen('.php')) !== '.php'
             && file_exists($newPath = $path . '.php')
         ) {
             return $newPath;
@@ -117,8 +115,12 @@ class Loader
         throw new \Exception('Test format not supported. Please, check you use the right suffix. Available filetypes: Cept, Cest, Test');
     }
 
-    public function loadTests()
+    public function loadTests($fileName = null)
     {
+        if ($fileName) {
+            return $this->loadTest($fileName);
+        }
+
         $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
 
         foreach ($this->formats as $format) {

@@ -1,7 +1,7 @@
 <?php
 use Codeception\Module\OrderHelper;
 
-class CodeTest extends \Codeception\Test\Format\TestCase
+class CodeTest extends \Codeception\Test\Unit
 {
     public function testThis()
     {

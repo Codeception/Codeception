@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleConfigException;
 
 /**
@@ -37,7 +37,7 @@ class Memcache extends CodeceptionModule
 
     protected $config = ['host' => 'localhost', 'port' => 11211];
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         if (class_exists('\Memcache')) {
             $this->memcache = new \Memcache;
@@ -50,7 +50,7 @@ class Memcache extends CodeceptionModule
         }
     }
 
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
         $this->memcache->flush();
         switch (get_class($this->memcache)) {

@@ -11,7 +11,7 @@ use Codeception\Lib\ModuleContainer;
 use Codeception\Step;
 use Codeception\Subscriber\ErrorHandler;
 use Codeception\Util\ReflectionHelper;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ClassLoader;
@@ -121,10 +121,10 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     /**
      * Before hook.
      *
-     * @param \Codeception\Testable $test
+     * @param \Codeception\TestInterface $test
      * @throws ModuleConfig
      */
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new LaravelConnector($this);
 
@@ -140,9 +140,9 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule
     /**
      * After hook.
      *
-     * @param \Codeception\Testable $test
+     * @param \Codeception\TestInterface $test
      */
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
         if ($this->app['db'] && $this->cleanupDatabase()) {
             $this->app['db']->rollback();

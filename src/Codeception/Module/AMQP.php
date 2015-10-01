@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleException as ModuleException;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Exception;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPConnection;
@@ -94,7 +94,7 @@ class AMQP extends CodeceptionModule
         }
     }
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         if ($this->config['cleanup']) {
             $this->cleanup();

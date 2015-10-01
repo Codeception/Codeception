@@ -2,10 +2,10 @@
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
-use Codeception\Test\Format\Cest as CestFormat;
+use Codeception\Test\Cest as CestFormat;
 use Codeception\Util\Annotation;
 
-class Cest implements Loader
+class Cest implements LoaderInterface
 {
     protected $tests = [];
 
@@ -19,7 +19,7 @@ class Cest implements Loader
         return '~Cest\.php$~';
     }
 
-    function loadTests($file)
+    public function loadTests($file)
     {
         Parser::load($file);
         $testClasses = Parser::getClassesFromFile($file);
@@ -49,8 +49,7 @@ class Cest implements Loader
         if (strpos($methodName, '_') === 0) {
             return null;
         }
-        $cest = new CestFormat($cestInstance, $methodName, $file);
-        $cest->getMetadata()->setEnv(Annotation::forMethod($cestInstance, $methodName)->fetchAll('env'));
-        return $cest;
+
+        return new CestFormat($cestInstance, $methodName, $file);
     }
 }

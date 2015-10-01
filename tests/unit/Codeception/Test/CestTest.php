@@ -3,7 +3,7 @@
 /**
  * Class CestTest
  */
-class CestTest extends \Codeception\Test\Format\TestCase
+class CestTest extends \Codeception\Test\Unit
 {
 
     /**
@@ -12,7 +12,7 @@ class CestTest extends \Codeception\Test\Format\TestCase
     public function testCestNamings()
     {
         $klass = new stdClass();
-        $cest = new \Codeception\Test\Format\Cest($klass, 'user', 'tests/acceptance/LoginCest.php');
+        $cest = new \Codeception\Test\Cest($klass, 'user', 'tests/acceptance/LoginCest.php');
 
         $this->assertEquals(
             'tests/acceptance/LoginCest.php:user',

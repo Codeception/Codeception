@@ -8,17 +8,7 @@ trait MetadataCollector
     /**
      * @var Metadata
      */
-    protected $metadata;
-
-    protected function metadataCollectorStart()
-    {
-        if ($incomplete = $this->getMetadata()->getIncomplete()) {
-            throw new \PHPUnit_Framework_IncompleteTestError((string)$incomplete);
-        }
-        if ($skip = $this->getMetadata()->getSkip()) {
-            throw new \PHPUnit_Framework_SkippedTestError((string)$skip);
-        }
-    }
+    private $metadata;
 
     protected function setMetadata(Metadata $metadata)
     {

@@ -3,7 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException as ConfigurationException;
-use Codeception\Test\Format\Cest;
+use Codeception\Test\Cest;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

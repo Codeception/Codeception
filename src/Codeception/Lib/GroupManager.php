@@ -5,7 +5,7 @@ use Codeception\Configuration;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Descriptor;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -89,7 +89,7 @@ class GroupManager
     {
         $groups = [];
         $filename = Descriptor::getTestFileName($test);
-        if ($test instanceof Testable) {
+        if ($test instanceof TestInterface) {
             $groups = $test->getMetadata()->getGroups();
         }
         if ($test instanceof Reported) {

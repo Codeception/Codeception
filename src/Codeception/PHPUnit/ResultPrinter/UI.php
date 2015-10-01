@@ -3,7 +3,7 @@ namespace Codeception\PHPUnit\ResultPrinter;
 
 use Codeception\Event\FailEvent;
 use Codeception\Events;
-use Codeception\Test\Format\TestCase;
+use Codeception\Test\Unit;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class UI extends \PHPUnit_TextUI_ResultPrinter
@@ -58,7 +58,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
-        if ($test instanceof TestCase) {
+        if ($test instanceof Unit) {
             parent::startTest($test);
         }
     }

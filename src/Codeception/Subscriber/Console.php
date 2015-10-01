@@ -13,10 +13,8 @@ use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Suite;
-use Codeception\Test\Descriptor;
-use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -513,7 +511,7 @@ class Console implements EventSubscriberInterface
         if ($this->isDetailed($test)) {
             return;
         }
-        
+
         if ($this->output->isInteractive()) {
             $this->output->write("\x0D");
         }

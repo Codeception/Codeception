@@ -5,15 +5,15 @@ namespace Codeception\Module;
 
 class CliHelper extends \Codeception\Module
 {
-    public function _before(\Codeception\Testable $test) {
+    public function _before(\Codeception\TestInterface $test) {
         codecept_debug('creating dirs');
-        chdir(\Codeception\Configuration::projectDir());
         $this->getModule('Filesystem')->copyDir(\Codeception\Configuration::dataDir().'claypit', \Codeception\Configuration::dataDir().'sandbox');
     }
 
-    public function _after(\Codeception\Testable $test) {
+    public function _after(\Codeception\TestInterface $test) {
         codecept_debug('deleting dirs');
         $this->getModule('Filesystem')->deleteDir(\Codeception\Configuration::dataDir().'sandbox');
+        chdir(\Codeception\Configuration::projectDir());
     }
 
     public function executeCommand($command) {

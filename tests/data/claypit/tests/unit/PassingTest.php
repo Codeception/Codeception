@@ -1,6 +1,6 @@
 <?php
 
-class PassingTest extends \Codeception\Test\Format\TestCase
+class PassingTest extends \Codeception\Test\Unit
 {
 
     public function testMe()

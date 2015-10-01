@@ -5,7 +5,7 @@ use Codeception\Lib\Notification;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Lib\Interfaces\Db as DbInterface;
 use Codeception\Exception\ModuleConfigException;
-use Codeception\Testable;
+use Codeception\TestInterface;
 
 /**
  * This module replaces Db module for functional and unit testing, and requires PDO instance to be set.
@@ -59,7 +59,7 @@ class Dbh extends CodeceptionModule implements DbInterface
         Notification::deprecate("Module Dbh is deprecated and will be removed in 2.2");
     }
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         if (!self::$dbh) {
             throw new ModuleConfigException(
@@ -75,7 +75,7 @@ class Dbh extends CodeceptionModule implements DbInterface
         }
     }
 
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
 
         if (!self::$dbh) {

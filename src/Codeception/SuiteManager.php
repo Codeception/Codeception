@@ -1,9 +1,6 @@
 <?php
-
 namespace Codeception;
 
-use Codeception\Event\Suite;
-use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
@@ -79,23 +76,21 @@ class SuiteManager
 
     public function initialize()
     {
-        $this->dispatcher->dispatch(Events::MODULE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(Events::MODULE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
         if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
             throw new Exception\ConfigurationException($this->settings['class_name'] . " class doesn't exist in suite folder.\nRun the 'build' command to generate it");
         }
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
         ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     public function loadTests($path = null)
     {
         $testLoader = new Loader($this->settings);
-        $path
-            ? $testLoader->loadTest($path)
-            : $testLoader->loadTests();
+        $testLoader->loadTests($path);
 
         $tests = $testLoader->getTests();
         if ($this->settings['shuffle']) {
@@ -104,6 +99,7 @@ class SuiteManager
         foreach ($tests as $test) {
             $this->addToSuite($test);
         }
+        $this->suite->reorderDependencies();
     }
 
     protected function addToSuite($test)
@@ -118,7 +114,7 @@ class SuiteManager
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
-        if ($test instanceof Testable) {
+        if ($test instanceof TestInterface) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
                 return; // skip tests from other environments
@@ -128,14 +124,14 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
 
-        if (!empty($groups) && $test instanceof Testable) {
+        if (!empty($groups) && $test instanceof TestInterface) {
             $test->getMetadata()->setGroups($groups);
         }
     }
 
     protected function createSuite($name)
     {
-        $suite = new \Codeception\Suite();
+        $suite = new Suite();
         $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
@@ -177,7 +173,7 @@ class SuiteManager
             : $this->settings['class_name'];
     }
 
-    protected function checkEnvironmentExists(Testable $test)
+    protected function checkEnvironmentExists(TestInterface $test)
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -196,7 +192,7 @@ class SuiteManager
         }
     }
 
-    protected function isExecutedInCurrentEnvironment(Testable $test)
+    protected function isExecutedInCurrentEnvironment(TestInterface $test)
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -218,7 +214,7 @@ class SuiteManager
      */
     protected function configureTest($t)
     {
-        if (!$t instanceof Testable) {
+        if (!$t instanceof TestInterface) {
             return;
         }
         $t->getMetadata()->setServices([
@@ -232,7 +228,4 @@ class SuiteManager
             'modules' => array_keys($this->moduleContainer->all())
         ]);
     }
-
-
 }
-

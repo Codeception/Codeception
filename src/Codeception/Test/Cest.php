@@ -1,16 +1,17 @@
 <?php
-namespace Codeception\Test\Format;
+namespace Codeception\Test;
 
 use Codeception\Lib\Parser;
-use Codeception\Test\Feature\ScenarioLoader;
-use Codeception\Test\Interfaces\Reported;
-use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Test\Metadata;
 use Codeception\Util\Annotation;
 
-class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
+/**
+ * Executes tests delivered in Cest format.
+ *
+ * Handles loading of Cest cases, executing specific methods, following the order from `@before` and `@after` annotations.
+ */
+class Cest extends Test implements Interfaces\ScenarioDriven, Interfaces\Reported, Interfaces\Dependent
 {
-    use ScenarioLoader;
+    use Feature\ScenarioLoader;
     /**
      * @var Parser
      */
@@ -20,9 +21,10 @@ class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
 
     public function __construct($testClass, $methodName, $fileName)
     {
-        $this->setMetadata(new Metadata());
-        $this->getMetadata()->setName($methodName);
-        $this->getMetadata()->setFilename($fileName);
+        $metadata = new Metadata();
+        $metadata->setName($methodName);
+        $metadata->setFilename($fileName);
+        $this->setMetadata($metadata);
         $this->testClassInstance = $testClass;
         $this->testMethod = $methodName;
         $this->createScenario();
@@ -32,13 +34,13 @@ class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
     public function preload()
     {
         $this->scenario->setFeature($this->getSpecFromMethod());
-        $code = $this->getRawBody();
+        $code = $this->getSourceCode();
         $this->parser->parseFeature($code);
         $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
         $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
     }
 
-    public function getRawBody()
+    public function getSourceCode()
     {
         $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
         $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
@@ -129,8 +131,7 @@ class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
     }
     protected function executeTestMethod($I)
     {
-        $testMethodSignature = [$this->testClassInstance, $this->testMethod];
-        if (! is_callable($testMethodSignature)) {
+        if (!method_exists($this->testClassInstance,  $this->testMethod)) {
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
@@ -172,5 +173,17 @@ class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
     protected function getParser()
     {
         return $this->parser;
+    }
+
+    public function getDependencies()
+    {
+        $names = [];
+        foreach ($this->getMetadata()->getDependencies() as $required) {
+            if ((strpos($required, ':') === false) and method_exists($this->getTestClass(), $required)) {
+                $required = get_class($this->getTestClass()) . ":$required";
+            }
+            $names[] = $required;
+        }
+        return $names;
     }
 }

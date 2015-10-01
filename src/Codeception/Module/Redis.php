@@ -3,7 +3,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Driver\Redis as RedisDriver;
 
@@ -57,7 +57,7 @@ class Redis extends CodeceptionModule
         }
     }
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         if ($this->config['cleanup']) {
             $this->cleanup();
@@ -65,7 +65,7 @@ class Redis extends CodeceptionModule
         parent::_before($test);
     }
 
-    public function _after(Testable $test)
+    public function _after(TestInterface $test)
     {
         parent::_after($test);
     }

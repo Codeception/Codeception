@@ -5,7 +5,7 @@ use Codeception\Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Symfony\Component\HttpKernel\Client;
 
 /**
@@ -66,7 +66,7 @@ class Silex extends Framework implements DoctrineProvider
         $this->loadApp();
     }
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         $this->loadApp();
         $this->client = new Client($this->app);

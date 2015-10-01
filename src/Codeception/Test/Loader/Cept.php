@@ -2,9 +2,9 @@
 namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
-use Codeception\Test\Format\Cept as CeptFormat;
+use Codeception\Test\Cept as CeptFormat;
 
-class Cept implements Loader
+class Cept implements LoaderInterface
 {
     protected $tests = [];
 

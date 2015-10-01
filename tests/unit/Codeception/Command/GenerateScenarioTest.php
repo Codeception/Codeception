@@ -37,7 +37,8 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testBasic()
     {
         $this->execute(array('suite' => 'dummy'));
-        $this->assertArrayHasKey($file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt', $this->saved);
+        $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
+        $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $content);
         $this->assertContains('I see file found "$codeception"', $content);
@@ -47,10 +48,10 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testMultipleTestsGeneration()
     {
         $this->execute(['suite' => 'dummy']);
-        $fileNames = array_keys($this->log);
-        $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $fileNames);
-        $this->assertContains(codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt', $fileNames);
-        $this->assertArrayHasKey($file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt', $this->saved);
+        $this->assertArrayHasKey(codecept_root_dir().'tests/data/scenarios/dummy/Another.optimistic.txt', $this->saved);
+        $this->assertArrayHasKey(codecept_root_dir().'tests/data/scenarios/dummy/Another.pessimistic.txt', $this->saved);
+        $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.txt';
+        $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertContains('I WANT TO CHECK CONFIG EXISTS', $content);
         $this->assertContains('I see file found "$codeception"', $content);
@@ -60,7 +61,8 @@ class GenerateScenarioTest extends BaseCommandRunner
     public function testHtml()
     {
         $this->execute(array('suite' => 'dummy', '--format' => 'html'));
-        $this->assertArrayHasKey($file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html', $this->saved);
+        $file = codecept_root_dir().'tests/data/scenarios/dummy/File_Exists.html';
+        $this->assertArrayHasKey($file, $this->saved);
         $content = $this->saved[$file];
         $this->assertContains('<html><body><h3>I WANT TO CHECK CONFIG EXISTS</h3>', $content);
         $this->assertContains('I see file found "$codeception"', strip_tags($content));

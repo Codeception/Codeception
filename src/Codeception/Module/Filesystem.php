@@ -4,7 +4,7 @@ namespace Codeception\Module;
 use Codeception\Util\FileSystem as Util;
 use Symfony\Component\Finder\Finder;
 use Codeception\Module as CodeceptionModule;
-use Codeception\Testable;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 
 /**
@@ -26,7 +26,7 @@ class Filesystem extends CodeceptionModule
 
     protected $path = '';
 
-    public function _before(Testable $test)
+    public function _before(TestInterface $test)
     {
         $this->path = Configuration::projectDir();
     }
