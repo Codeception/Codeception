@@ -296,16 +296,25 @@ class Symfony2 extends Framework implements DoctrineProvider
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Returns a list of recognized domain names.
      *
-     * @todo not implemented
      * @return array
      */
-    public function getInternalDomains()
+    protected function getInternalDomains()
     {
-        return [
+        $internalDomains = [
             'localhost',
         ];
+
+        /* @var \Symfony\Component\Routing\Route $route */
+        foreach($this->getRouter()->getRouteCollection() as $route) {
+            if (!is_null($route->getHost())) {
+                $compiled = $route->compile();
+                $internalDomains[] = $compiled->getHostRegex();
+            }
+        }
+
+        return array_unique($internalDomains);
     }
 
     /**
