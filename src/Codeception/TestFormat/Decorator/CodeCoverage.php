@@ -17,7 +17,7 @@ trait CodeCoverage
         $codeCoverage->start($this);
     }
 
-    public function codeCoverageEnd(&$status, $time)
+    public function codeCoverageEnd($status, $time)
     {
         $codeCoverage = $this->getTestResult()->getCodeCoverage();
         if (!$codeCoverage) {
@@ -26,7 +26,7 @@ trait CodeCoverage
         $linesToBeCovered = \PHPUnit_Util_Test::getLinesToBeCovered(get_class($this->testClassInstance), 'test');
         $linesToBeUsed = \PHPUnit_Util_Test::getLinesToBeUsed(get_class($this->testClassInstance), 'test');
 
-//        try {
+        try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
         // should this be included???
 //        } catch (\PHP_CodeCoverage_Exception_UnintentionallyCoveredCode $cce) {
@@ -46,13 +46,11 @@ trait CodeCoverage
 //                ),
 //                $time
 //            );
-//        } catch (PHP_CodeCoverage_Exception $cce) {
-//            $status = \Codeception\Test::STATUS_ERROR;
-//
-//            if (!isset($e)) {
-//                $e = $cce;
-//            }
-//        }
+        } catch (\PHP_CodeCoverage_Exception $cce) {
+            if ($status === \Codeception\Test::STATUS_OK) {
+                $this->getTestResult()->addError($this, $cce, $time);
+            }
+        }
 
     }
     
