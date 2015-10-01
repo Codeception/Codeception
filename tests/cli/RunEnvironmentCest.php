@@ -121,4 +121,12 @@ class RunEnvironmentCest
         $I->seeInShellOutput("Environment nothing was not configured but used");
         $I->seeInShellOutput('WARNING');
     }
+
+    public function environmentsFromSubfolders(CliGuy $I)
+    {
+        $I->amInPath('tests/data/sandbox');
+        $I->executeCommand('run messages MessageCest.php:allMessages -vv --env env3');
+        $I->seeInShellOutput('MESSAGE2 FROM ENV3');
+
+    }
 }

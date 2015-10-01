@@ -165,7 +165,7 @@ class Scenario
     public function current($key)
     {
         if (!isset($this->currents[$key])) {
-            throw new TestRuntimeException("Current $key is not set in this scenario");
+            return null;
         }
         return $this->currents[$key];
     }

@@ -140,7 +140,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $this->crawler = $this->clientRequest('GET', $page);
         $this->forms = [];
-        $this->debugResponse();
     }
 
     public function click($link, $context = null)
@@ -160,7 +159,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (count($anchor)) {
             $this->crawler = $this->clientClick($anchor->first()->link());
             $this->forms = [];
-            $this->debugResponse();
             return;
         }
 
@@ -194,7 +192,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             if ($tag === 'a') {
                 $this->crawler = $this->clientClick($nodes->first()->link());
                 $this->forms = [];
-                $this->debugResponse();
                 break;
             } elseif (in_array($tag, ['input', 'button']) && in_array($type, ['submit', 'image'])) {
                 $buttonValue = [];
@@ -317,14 +314,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assert($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assert($this->proceedSeeInField($nodes, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assertNot($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assertNot($this->proceedSeeInField($nodes, $value));
     }
 
     public function seeInFormFields($formSelector, array $params)
@@ -365,40 +362,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
-    /**
-     * Returns an array of values for the field with the passed name.  Usually
-     * the array consists of a single value.  Used by proceedSeeInField
-     *
-     * @param Form $form
-     * @param string $fieldName
-     * @return array
-     */
-    private function getFormFieldValues(Form $form, $fieldName)
-    {
-        $strField = $this->getSubmissionFormFieldName($fieldName);
-        $values = [];
-        if ($form->has($strField)) {
-            $fields = $form->get($strField);
-            // $form->get returns an array for fields with names ending in []
-            if (!is_array($fields)) {
-                $fields = [$fields];
-            }
-            foreach ($fields as $field) {
-                if (!$field->hasValue()) {
-                    continue;
-                }
-                // $field->getValue may return an array (multi-select for example) or a string value
-                $values = array_merge($values, (array) $field->getValue());
-            }
-        }
-        return $values;
-    }
-
     protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $form = $this->getFormFor($fields);
-        $fieldName = $fields->attr('name');
-        $testValues = $this->getFormFieldValues($form, $fieldName);
+        $testValues = $this->proceedGetValueFromField($fields);
+        if (!is_array($testValues)) {
+            $testValues = [$testValues];
+        }
         if (is_bool($value) && $value === true && !empty($testValues)) {
             $value = reset($testValues);
         } elseif (empty($testValues)) {
@@ -408,7 +377,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             'Contains',
             $value,
             $testValues,
-            "Failed testing for '$value' in $fieldName's value: " . var_export($testValues, true)
+            sprintf('Failed asserting that `%s` is in %s\'s value: %s', $value, $fields->nodeName(), var_export($testValues, true))
         ];
     }
 
@@ -512,7 +481,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $form->getPhpFiles()
         );
         $this->forms = [];
-        $this->debugResponse();
     }
 
     public function submitForm($selector, array $params, $button = null)
@@ -870,7 +838,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function sendAjaxRequest($method, $uri, $params = [])
     {
         $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
-        $this->debugResponse();
     }
 
     protected function debugResponse()
@@ -1000,35 +967,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound($field, 'Field');
         }
+        return $this->proceedGetValueFromField($nodes);
+    }
 
+    /**
+     * @param Crawler $nodes
+     * @return array|mixed|string
+     */
+    protected function proceedGetValueFromField(Crawler $nodes)
+    {
+        $values = [];
         if ($nodes->filter('textarea')->count()) {
-            return $nodes->filter('textarea')->text();
-        }
-        if ($nodes->filter('input')->count()) {
-            return $nodes->filter('input')->attr('value');
+            return (new TextareaFormField($nodes->filter('textarea')->getNode(0)))->getValue();
         }
 
-        if ($nodes->filter('select')->count()) {
-            /** @var  \Symfony\Component\DomCrawler\Crawler $select */
-            $select      = $nodes->filter('select');
-            $isMultiple  = (bool)$select->attr('multiple');
-            $results     = [];
-            foreach ($select->children() as $option) {
-                /** @var  \DOMElement $option */
-                if ($option->getAttribute('selected') == 'selected') {
-                    $val = $option->getAttribute('value');
-                    if (!$isMultiple) {
-                        return $val;
-                    }
-                    $results[] = $val;
+        if ($nodes->filter('input')->count()) {
+            $input = $nodes->filter('input');
+            if ($input->attr('type') == 'checkbox' or $input->attr('type') == 'radio') {
+                $values = [];
+                $input = $nodes->filter('input:checked');
+                foreach ($input as $checkbox) {
+                    $values[] = $checkbox->getAttribute('value');
                 }
+                return $values;
             }
-            if (!$isMultiple) {
-                return null;
-            }
-            return $results;
+            return (new InputFormField($nodes->filter('input')->getNode(0)))->getValue();
         }
-        $this->fail("Element $field is not a form field or does not contain a form field");
+        if ($nodes->filter('select')->count()) {
+            $field = new ChoiceFormField($nodes->filter('select')->getNode(0));
+            $options = $nodes->filter('option[selected]');
+            foreach ($options as $option) {
+                $values[] = $option->getAttribute('value');
+            }
+            if (!$field->isMultiple()) {
+                return reset($values);
+            }
+            return $values;
+        }
+
+        $this->fail("Element $nodes is not a form field or does not contain a form field");
     }
 
     public function setCookie($name, $val, array $params = [])
@@ -1303,12 +1280,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
-            return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $result;
+        } else {
+            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+            $this->client->followRedirects(false);
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse();
+            return $this->redirectIfNecessary($result, $maxRedirects, 0);
         }
-        $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
-        $this->client->followRedirects(false);
-        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-        return $this->redirectIfNecessary($result, $maxRedirects, 0);
     }
 
     protected function isInternalDomain($domain)
@@ -1329,8 +1310,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $locationHeader = $this->client->getInternalResponse()->getHeader('Location');
         if ($locationHeader) {
-            $this->debugResponse();
-
             if ($redirectCount == $maxRedirects) {
                 throw new \LogicException(sprintf('The maximum number (%d) of redirections was reached.', $maxRedirects));
             }
@@ -1338,6 +1317,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->debugSection('Redirecting to', $locationHeader);
 
             $result = $this->client->followRedirect();
+            $this->debugResponse();
             return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
         }
         $this->client->followRedirects(true);
@@ -1358,5 +1338,36 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
 
         return $this->clientRequest($link->getMethod(), $link->getUri());
+    }
+
+    /**
+     * Switch to iframe or frame on the page.
+     *
+     * Example:
+     * ``` html
+     * <iframe name="another_frame" src="http://example.com">
+     * ```
+     *
+     * ``` php
+     * <?php
+     * # switch to iframe
+     * $I->switchToIframe("another_frame");
+     * ```
+     *
+     * @param string $name
+     */
+
+    public function switchToIframe($name)
+    {
+        $iframe = $this->match("iframe[name=$name]")->first();
+        if (!count($iframe)) {
+            $iframe = $this->match("frame[name=$name]")->first();
+        }
+        if (!count($iframe)) {
+            throw new ElementNotFound("name=$name", 'Iframe');
+        }
+
+        $uri = $iframe->getNode(0)->getAttribute('src');
+        $this->amOnPage($uri);
     }
 }
