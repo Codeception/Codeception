@@ -8,6 +8,7 @@ use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Subscriber\ErrorHandler;
+use Codeception\Util\ReflectionHelper;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
@@ -132,6 +133,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         }
 
         $this->client->clearExpectedEvents();
+        $this->client->getHistory()->clear();
     }
 
     /**
@@ -731,16 +733,47 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Returns a list of recognized domain names.
+     * This elements of this list are regular expressions.
      *
-     * @todo not implemented
      * @return array
      */
-    public function getInternalDomains()
+    protected function getInternalDomains()
     {
-        return [
-            'localhost',
-        ];
+        $internalDomains = [$this->getApplicationDomainRegex()];
+
+        foreach ($this->app['routes'] as $route) {
+            if (!is_null($route->domain())) {
+                $internalDomains[] = $this->getDomainRegex($route);
+            }
+        }
+
+        return array_unique($internalDomains);
+    }
+
+    /**
+     * @return string
+     */
+    private function getApplicationDomainRegex()
+    {
+        $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
+        $domain = $server['HTTP_HOST'];
+
+        return '/^' . str_replace('.', '\.', $domain) . '$/';
+    }
+
+    /**
+     * Get the regex for matching the domain part of this route.
+     *
+     * @param \Illuminate\Routing\Route $route
+     * @return string
+     */
+    private function getDomainRegex($route)
+    {
+        ReflectionHelper::invokePrivateMethod($route, 'compileRoute');
+        $compiledRoute = ReflectionHelper::readPrivateProperty($route, 'compiled');
+
+        return $compiledRoute->getHostRegex();
     }
 
 }
