@@ -73,6 +73,7 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function startTest(\PHPUnit_Framework_Test $test)
     {
+        codecept_debug('test started');
         $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
         if (!$test instanceof CodeceptionTestCase) {
             return;

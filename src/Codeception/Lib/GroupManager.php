@@ -98,7 +98,7 @@ class GroupManager
             }
             $filename = $info['file'];
         } else {
-            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
+            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->toString()));
             $filename = (new \ReflectionClass($test))->getFileName();
         }
 

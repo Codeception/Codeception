@@ -493,9 +493,9 @@ class Console implements EventSubscriberInterface
      * @param bool $inProgress
      * @return Message
      */
-    protected function getTestMessage(\PHPUnit_Framework_TestCase $test, $inProgress = false)
+    protected function getTestMessage(\PHPUnit_Framework_SelfDescribing $test, $inProgress = false)
     {
-        if (!$test instanceof TestCase) {
+        if (!$test instanceof TestCase and $test instanceof \PHPUnit_Framework_TestCase) {
             $this->message = $this
                 ->message('%s::%s')
                 ->with($this->cutNamespace(get_class($test)), $test->getName(true))
@@ -505,6 +505,16 @@ class Console implements EventSubscriberInterface
                 ->prepend($inProgress ? 'Running ' : '');
             return $this->message;
         }
+        if ($test instanceof \Codeception\Test) {
+            $this->message = $this
+                ->message('%s::%s')
+                ->with($this->cutNamespace(get_class($test)), $test->toString())
+                ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)
+                ->style('focus')
+                ->prepend($inProgress ? 'Running ' : '');
+            return $this->message;
+        }
+
         $filename = $this->cutNamespace($test->getSignature());
         $feature = $test->getFeature();
 
@@ -537,7 +547,7 @@ class Console implements EventSubscriberInterface
         return $className;
     }
 
-    protected function writeCurrentTest(\PHPUnit_Framework_TestCase $test)
+    protected function writeCurrentTest(\PHPUnit_Framework_SelfDescribing $test)
     {
         if (!$this->isDetailed($test) && $this->output->isInteractive()) {
             $this

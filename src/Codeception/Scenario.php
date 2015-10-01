@@ -31,7 +31,7 @@ class Scenario
      *
      * @param  \Codeception\TestCase $test
      */
-    public function __construct(\Codeception\TestCase $test, $currents = [])
+    public function __construct($test, $currents = [])
     {
         $this->test = $test;
         $this->currents = $currents;

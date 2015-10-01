@@ -38,7 +38,7 @@ use Symfony\Component\Finder\Finder;
  */
 class TestLoader
 {
-    protected static $formats = ['Cest', 'Cept', 'Test'];
+    protected static $formats = ['Cest', 'Cept', 'Test', 'Cest2'];
     protected $tests = [];
     protected $path;
 
@@ -174,6 +174,38 @@ class TestLoader
                 $this->tests[] = $test;
             }
         }
+    }
+
+    public function addCest2($file)
+    {
+        $testClasses = Parser::getClassesFromFile($file);
+
+        foreach ($testClasses as $testClass) {
+            if (substr($testClass, -strlen('Cest2')) !== 'Cest2') {
+                continue;
+            }
+            if (!(new \ReflectionClass($testClass))->isInstantiable()) {
+                continue;
+            }
+            $unit = new $testClass;
+
+            $methods = get_class_methods($testClass);
+            foreach ($methods as $method) {
+                if ((strpos($method, '_') === 0) || ($method == '__construct')) {
+                    return null;
+                }
+                $cest = new \Codeception\Format\Cest();
+                $cest->configName($method)
+                    ->configFile($file)
+                    ->config('testClassInstance', $unit)
+                    ->config('testMethod', $method);
+
+//                $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
+
+                $this->tests[] = $cest;
+            }
+        }
+
     }
 
 
