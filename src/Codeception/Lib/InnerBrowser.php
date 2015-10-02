@@ -1007,12 +1007,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $result = [];
         $nodes = $this->match($cssOrXpath);
+        
         foreach ($nodes as $node) {
-            if ($attribute) {
-                $result[] = $node->attr($attribute);
-                continue;
+            if ($attribute !== null) {
+                $result[] = $node->getAttribute($attribute);
+            } else {
+                $result[] = $node->textContent;
             }
-            $result[] = $node->text();
         }
         return $result;
     }
