@@ -141,7 +141,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * <?php
      * // in Helper class
      * public function openCheckoutFormStep2($orderId) {
-     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/checkout/step2', ['order' => $orderId]);
+     *     $this->getModule('{{MODULE_NAME}}')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
      * }
      * ?>
      * ```
