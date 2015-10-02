@@ -92,6 +92,21 @@ use Symfony\Component\DomCrawler\Crawler;
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
  *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+ *
+ *
+ *
+ * ## SauceLabs.com Integration
+ *
+ * SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
+ * enabling you to test locally hosted sites from their servers.
+ *
+ * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ *
+ * [CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
+ *
+ *
  * ## Locating Elements
  *
  * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
