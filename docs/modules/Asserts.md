@@ -76,12 +76,12 @@ Checks that actual is greater or equal than expected
 
 ### assertGreaterThen
  
-@deprecated
+ * `deprecated` 
 
 
 ### assertGreaterThenOrEqual
  
-@deprecated
+ * `deprecated` 
 
 
 ### assertLessThan
