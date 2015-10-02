@@ -454,16 +454,4 @@ class Lumen extends Framework implements ActiveRecord
         return $query->first();
     }
 
-    /**
-     * Returns a list of recognized domain names
-     *
-     * @todo not implemented
-     * @return array
-     */
-    public function getInternalDomains()
-    {
-        return [
-            'localhost',
-        ];
-    }
 }
