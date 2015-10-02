@@ -470,11 +470,7 @@ class RoboFile extends \Robo\Tasks
             // set default language in order not to leave unparsed code inside '```'
 
             $matches = [];
-            $title = "";
-            // Extracting page h1 to re-use in <title>
-            if (preg_match('/^# (.*)$/m', $contents, $matches)) {
-              $title = $matches[1];
-            }
+            $title = $name;
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
 
             file_put_contents('package/site/' .$newfile, $contents);

@@ -161,7 +161,7 @@ In tests you can use a StepObject by instantiating `Step\Acceptance\Admin` inste
 
 ```php
 <?php
-use Step/Acceptance/Admin as AdminTester;
+use Step\Acceptance\Admin as AdminTester;
 
 $I = new AdminTester($scenario);
 $I->loginAsAdmin();

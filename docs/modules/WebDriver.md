@@ -54,6 +54,21 @@ It allows you to run Selenium tests on a server without a GUI installed.
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+
+
+
+## SauceLabs.com Integration
+
+SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
+enabling you to test locally hosted sites from their servers.
+
+1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+
+[CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
+
+
 ## Locating Elements
 
 Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
@@ -640,7 +655,29 @@ $uri = $I->grabFromCurrentUrl();
 
 
 ### grabMultiple
-__not documented__
+ 
+Grabs either the text content, or attribute values, of nodes
+matched by $cssOrXpath and returns them as an array.
+
+```html
+<a href="#first">First</a>
+<a href="#second">Second</a>
+<a href="#third">Third</a>
+```
+
+```php
+<?php
+// would return ['First', 'Second', 'Third']
+$aLinkText = $I->grabMultiple('a');
+
+// would return ['#first', '#second', '#third']
+$aLinks = $I->grabMultiple('a', 'href');
+?>
+```
+
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `return` string[]
 
 
 ### grabTextFrom
@@ -680,10 +717,8 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
 ### loadSessionSnapshot
  
-Loads cookies from saved snapshot.
-
- * `param` $name
-@see saveSessionSnapshot
+ * `param string` $name
+ * `return` bool
 
 
 ### makeScreenshot
@@ -797,33 +832,7 @@ $I->resizeWindow(800, 600);
 
 ### saveSessionSnapshot
  
-Saves current cookies into named snapshot in order to restore them in other tests
-This is useful to save session state between tests.
-For example, if user needs log in to site for each test this scenario can be executed once
-while other tests can just restore saved cookies.
-
-``` php
-<?php
-// inside AcceptanceTester class:
-
-public function login()
-{
-     // if snapshot exists - skipping login
-     if ($I->loadSessionSnapshot('login')) return;
-
-     // logging in
-     $I->amOnPage('/login');
-     $I->fillField('name', 'jon');
-     $I->fillField('password', '123345');
-     $I->click('Login');
-
-     // saving snapshot
-     $I->saveSessionSnapshot('login');
-}
-?>
-```
-
- * `param` $name
+ * `param string` $name
 
 
 ### see
@@ -1099,6 +1108,10 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
  * `param mixed` $expected :
 - string: strict number
 - array: range of numbers [0,10]
+
+
+### seeNumberOfElementsInDOM
+__not documented__
 
 
 ### seeOptionIsSelected

@@ -118,6 +118,17 @@ Opposite to seeResponseJsonMatchesJsonPath
 * Part: ** json**
 
 
+### dontSeeResponseMatchesJsonType
+ 
+Opposite to `seeResponseMatchesJsonType`.
+
+@part json
+@see seeResponseMatchesJsonType
+ * `param` $jsonType jsonType structure
+ * `param null` $jsonPath optionally set specific path to structure with JsonPath
+@version 2.1.3
+
+
 ### dontSeeXmlResponseEquals
  
 Checks XML response does not equal to provided XML.
@@ -164,6 +175,8 @@ Element is matched by either CSS or XPath
 
 ### grabDataFromJsonResponse
  
+Deprecated since 2.0.9 and removed since 2.1.0
+
  * `param` $path
 @throws ModuleException
 @deprecated
@@ -182,13 +195,13 @@ Example:
 ``` php
 <?php
 // match the first `user.id` in json
-$firstUser = $I->grabDataFromResponseByJsonPath('$..users[0].id');
-$I->sendPUT('/user', array('id' => $firstUser[0], 'name' => 'davert'));
+$firstUserId = $I->grabDataFromResponseByJsonPath('$..users[0].id');
+$I->sendPUT('/user', array('id' => $firstUserId[0], 'name' => 'davert'));
 ?>
 ```
 
- * `param` $jsonPath
-@return array
+ * `param string` $jsonPath
+@return array Array of matching items
 @version 2.0.9
 @throws \Exception
 * Part: ** json**
@@ -427,6 +440,85 @@ $I->seeResponseJsonMatchesXpath('/store//price');
 ```
 @part json
 @version 2.0.9
+
+
+### seeResponseMatchesJsonType
+ 
+Checks that Json matches provided types.
+In case you don't know the actual values of JSON data returned you can match them by type.
+Starts check with a root element. If JSON data is array it will check the first element of an array.
+You can specify the path in the json which should be checked with JsonPath
+
+Basic example:
+
+```php
+<?php
+// {'user_id': 1, 'name': 'davert', 'is_active': false}
+$I->seeResponseIsJsonType([
+     'user_id' => 'integer',
+     'name' => 'string|null',
+     'is_active' => 'boolean'
+]);
+
+// narrow down matching with JsonPath:
+// {"users": [{ "name": "davert"}, {"id": 1}]}
+$I->seeResponseMatchesJsonType(['name' => 'string'], '$.users[0]');
+?>
+```
+
+In this case you can match that record contains fields with data types you expected.
+The list of possible data types:
+
+* string
+* integer
+* float
+* array (json object is array as well)
+* boolean
+
+You can also use nested data type structures:
+
+```php
+<?php
+// {'user_id': 1, 'name': 'davert', 'company': {'name': 'Codegyre'}}
+$I->seeResponseIsJsonType([
+     'user_id' => 'integer|string', // multiple types
+     'company' => ['name' => 'string']
+]);
+?>
+```
+
+You can also apply filters to check values. Filter can be applied with `:` char after the type declatation.
+
+Here is the list of possible filters:
+
+* `integer:>{val}` - checks that integer is greater than {val} (works with float and string types too).
+* `integer:<{val}` - checks that integer is lower than {val} (works with float and string types too).
+* `string:url` - checks that value is valid url.
+* `string:regex({val})` - checks that string matches a regex provided with {val}
+
+This is how filters can be used:
+
+```php
+<?php
+// {'user_id': 1, 'email' => 'davert@codeception.com'}
+$I->seeResponseIsJsonType([
+     'user_id' => 'string:>0:<1000', // multiple filters can be used
+     'email' => 'string:regex(~\@~)' // we just check that @ char is included
+]);
+
+// {'user_id': '1'}
+$I->seeResponseIsJsonType([
+     'user_id' => 'string:>0', // works with strings as well
+}
+?>
+```
+
+You can also add custom filters y accessing `JsonType::addCustomFilter` method.
+See JsonType reference.
+
+@version 2.1.3
+ * `param array` $jsonType
+* Part: ** json**
 
 
 ### seeXmlResponseEquals

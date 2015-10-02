@@ -72,6 +72,10 @@ $I->see('Log In', Locator::href('/login.php'));
 
 [See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Locator.php#L72)
 
+#### *public static* humanReadableString($selector) 
+
+[See source](https://github.com/Codeception/Codeception/blob/2.1/src/Codeception/Util/Locator.php#L185)
+
 #### *public static* isCSS($selector) 
 
  * `param` $selector

@@ -180,7 +180,7 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
 ?>
 ```
 
- * `param int`    $num      Expected number
+ * `param int`    $expectedNumber      Expected number
  * `param string` $table    Table name
  * `param array`  $criteria Search criteria [Optional]
 

@@ -56,6 +56,62 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
  * `return` array of interactive elements
 
 
+### _loadPage
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Opens a page with arbitrary request parameters.
+Useful for testing multi-step forms on a specific step.
+
+```php
+<?php
+// in Helper class
+public function openCheckoutFormStep2($orderId) {
+    $this->getModule('Lumen')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
+}
+?>
+```
+
+ * `param` $method
+ * `param` $uri
+ * `param array` $parameters
+ * `param array` $files
+ * `param array` $server
+ * `param null` $content
+
+
+### _request
+
+*hidden API method, expected to be used from Helper classes*
+ 
+Send custom request to a backend using method, uri, parameters, etc.
+Use it in Helpers to create special request actions, like accessing API
+Returns a string with response body.
+
+```php
+<?php
+// in Helper class
+public function createUserByApi($name) {
+    $userData = $this->getModule('Lumen')->_request('POST', '/api/v1/users', ['name' => $name]);
+    $user = json_decode($userData);
+    return $user->id;
+}
+?>
+```
+Does not load the response into the module so you can't interact with response page (click, fill forms).
+To load arbitrary page for interaction, use `_loadPage` method.
+
+ * `param` $method
+ * `param` $uri
+ * `param array` $parameters
+ * `param array` $files
+ * `param array` $server
+ * `param null` $content
+@return mixed|Crawler
+@throws ExternalUrlException
+@see `_loadPage`
+
+
 ### _savePageSource
 
 *hidden API method, expected to be used from Helper classes*
@@ -467,7 +523,29 @@ $uri = $I->grabFromCurrentUrl();
 
 
 ### grabMultiple
-__not documented__
+ 
+Grabs either the text content, or attribute values, of nodes
+matched by $cssOrXpath and returns them as an array.
+
+```html
+<a href="#first">First</a>
+<a href="#second">Second</a>
+<a href="#third">Third</a>
+```
+
+```php
+<?php
+// would return ['First', 'Second', 'Third']
+$aLinkText = $I->grabMultiple('a');
+
+// would return ['#first', '#second', '#third']
+$aLinks = $I->grabMultiple('a', 'href');
+?>
+```
+
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `return` string[]
 
 
 ### grabRecord
@@ -1115,6 +1193,24 @@ $I->submitForm('#my-form', [
  * `param` $selector
  * `param` $params
  * `param` $button
+
+
+### switchToIframe
+ 
+Switch to iframe or frame on the page.
+
+Example:
+``` html
+<iframe name="another_frame" src="http://example.com">
+```
+
+``` php
+<?php
+# switch to iframe
+$I->switchToIframe("another_frame");
+```
+
+ * `param string` $name
 
 
 ### uncheckOption
