@@ -2,7 +2,7 @@
 
 #### 2.1.3
 
-* [REST] **Added matching data types by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType`**. See #2391
+* [REST] **Added matching data types** by with new methods [seeResponseMatchesJsonType](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType) and `dontSeeResponseMatchesJsonType`. See #2391
 * [PhpBrowser][Frameworks] added `_request` and `_loadPage` hidden API methods for performing arbitrary requests.
 * [PhpBrowser][Frameworks] Fixed `seeInField`, `dontSeeInField` for disabled fields #2378. See #2414.
 * Environment files can now be located in subfolders of `tests/_env` by @Zifius
