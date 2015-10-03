@@ -183,10 +183,7 @@ class Symfony2 extends Framework implements DoctrineProvider
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -211,10 +208,7 @@ class Symfony2 extends Framework implements DoctrineProvider
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -302,15 +296,40 @@ class Symfony2 extends Framework implements DoctrineProvider
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Returns a list of recognized domain names.
      *
-     * @todo not implemented
      * @return array
      */
-    public function getInternalDomains()
+    protected function getInternalDomains()
     {
-        return [
+        $internalDomains = [
             'localhost',
         ];
+
+        /* @var \Symfony\Component\Routing\Route $route */
+        foreach($this->getRouter()->getRouteCollection() as $route) {
+            if (!is_null($route->getHost())) {
+                $compiled = $route->compile();
+                if (!is_null($compiled->getHostRegex())) {
+                    $internalDomains[] = $compiled->getHostRegex();
+                }
+            }
+        }
+
+        return array_unique($internalDomains);
+    }
+
+    /**
+     * Helper method to get router safely.
+     *
+     * @return \Symfony\Component\Routing\Router
+     */
+    private function getRouter()
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+
+        return $this->kernel->getContainer()->get('router');
     }
 }
