@@ -122,13 +122,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
             $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
+            $this->debugResponse($uri);
             return $result;
         } else {
             $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
             $this->client->followRedirects(false);
             $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
+            $this->debugResponse($uri);
             return $this->redirectIfNecessary($result, $maxRedirects, 0);
         }
     }
@@ -901,9 +901,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'], null, false);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-        $this->debugSection('Page', $this->getRunningClient()->getHistory()->current()->getUri());
+        $this->debugSection('Page', $url);
         $this->debugSection('Response', $this->getResponseStatusCode());
         $this->debugSection('Cookies', $this->getRunningClient()->getInternalRequest()->getCookies());
         $this->debugSection('Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
@@ -1340,7 +1343,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->debugSection('Redirecting to', $locationHeader);
 
             $result = $this->client->followRedirect();
-            $this->debugResponse();
+            $this->debugResponse($locationHeader);
             return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
         }
         $this->client->followRedirects(true);
