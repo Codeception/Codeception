@@ -4,12 +4,11 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
-use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
+use Codeception\Lib\TestDescriptor;
 use Codeception\Lib\TestLoader;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -185,14 +184,14 @@ class SuiteManager
             return;
         }
         if (!isset($this->settings['env'])) {
-            Notification::warning("Environments are not configured", TestCase::getTestFullName($test));
+            Notification::warning("Environments are not configured", TestDescriptor::getTestFullName($test));
             return;
         }
         $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $test->getEnvironment()));
         foreach ($listedEnvironments as $env) {
             if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", TestCase::getTestFullName($test));
+                Notification::warning("Environment $env was not configured but used in test", TestDescriptor::getTestFullName($test));
             }
         }
     }

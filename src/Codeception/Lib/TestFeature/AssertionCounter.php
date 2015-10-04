@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\TestFormat\Decorator;
+namespace Codeception\Lib\TestFeature;
 
 trait AssertionCounter
 {
@@ -10,12 +10,12 @@ trait AssertionCounter
         return $this->numAssertions;
     }
 
-    function assertionCounterStart()
+    protected function assertionCounterStart()
     {
         \PHPUnit_Framework_Assert::resetCount();
     }
 
-    function assertionCounterEnd()
+    protected function assertionCounterEnd()
     {
         $this->numAssertions = \PHPUnit_Framework_Assert::getCount();
     }

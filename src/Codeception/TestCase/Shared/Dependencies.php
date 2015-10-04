@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\TestCase\Shared;
 
-use Codeception\TestCase\Cest;
+use Codeception\TestCase\OldCest;
 
 trait Dependencies
 {
@@ -17,7 +17,7 @@ trait Dependencies
         $passed = $this->getTestResultObject()->passed();
         $passedKeys = array_map(
             function ($testname) {
-                if ($this instanceof Cest) {
+                if ($this instanceof OldCest) {
                     $testname = str_replace(
                         'Codeception\TestCase\Cest::',
                         get_class($this->getTestClass()) . '::',

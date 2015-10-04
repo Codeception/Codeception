@@ -2,7 +2,6 @@
 namespace Codeception\Lib;
 
 use Codeception\TestCase\Cept;
-use Codeception\TestCase\Cest;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -194,7 +193,7 @@ class TestLoader
                 if ((strpos($method, '_') === 0) || ($method == '__construct')) {
                     return null;
                 }
-                $cest = new \Codeception\Format\Cest();
+                $cest = new \Codeception\TestCase\Cest();
                 $cest->configName($method)
                     ->configFile($file)
                     ->config('testClassInstance', $unit)
@@ -245,7 +244,7 @@ class TestLoader
         }
         $testClass = get_class($cestInstance);
 
-        $cest = new Cest();
+        $cest = new \Codeception\TestCase\Cest();
         $cest->configName($methodName)
             ->configFile($file)
             ->config('testClassInstance', $cestInstance)

@@ -12,7 +12,8 @@ use Codeception\TestCase\Interfaces\Configurable;
 use Codeception\TestCase\Shared\Actor;
 use Codeception\TestCase\Shared\ScenarioPrint;
 
-class Cept extends CodeceptionTestCase implements
+class Cept extends \Codeception\Lib\Test implements
+    CodeceptionTestCase,
     ScenarioDriven,
     Descriptive,
     Reported,
@@ -22,10 +23,14 @@ class Cept extends CodeceptionTestCase implements
     use Actor;
     use ScenarioPrint;
 
-    public function __construct(array $data = [], $dataName = '')
+    public function test()
     {
-        parent::__construct('testCodecept', $data, $dataName);
+        $scenario = $this->scenario;
+        $this->prepareActorForTest();
+        /** @noinspection PhpIncludeInspection */
+        require $this->testFile;
     }
+
 
     public function getSignature()
     {
@@ -56,16 +61,6 @@ class Cept extends CodeceptionTestCase implements
     public function getRawBody()
     {
         return file_get_contents($this->testFile);
-    }
-
-    public function testCodecept()
-    {
-        $scenario = $this->scenario;
-
-        $this->prepareActorForTest();
-
-        /** @noinspection PhpIncludeInspection */
-        require $this->testFile;
     }
 
     public function getEnvironment()

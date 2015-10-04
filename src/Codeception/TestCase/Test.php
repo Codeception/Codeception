@@ -10,7 +10,8 @@ use Codeception\TestCase\Interfaces\Configurable;
 use Codeception\TestCase\Shared\Actor;
 use Codeception\TestCase\Shared\Dependencies;
 
-class Test extends CodeceptionTestCase implements
+class Test extends \PHPUnit_Framework_TestCase implements
+    CodeceptionTestCase,
     Descriptive,
     Configurable,
     Reported

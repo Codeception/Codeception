@@ -109,7 +109,7 @@ trait Actor
 
     public function getFeature()
     {
-        return $this->scenario->getFeature();
+        return $this->getScenario()->getFeature();
     }
 
     public function configActor($actor)

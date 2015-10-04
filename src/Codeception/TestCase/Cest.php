@@ -1,39 +1,46 @@
 <?php
 namespace Codeception\TestCase;
 
-use Codeception\TestCase as CodeceptionTestCase;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Util\Annotation;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
-use Codeception\TestCase\Interfaces\Descriptive;
-use Codeception\TestCase\Interfaces\Reported;
+use Codeception\TestCase;
 use Codeception\TestCase\Interfaces\Configurable;
+use Codeception\TestCase\Interfaces\Descriptive;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase\Shared\Actor;
 use Codeception\TestCase\Shared\Dependencies;
 use Codeception\TestCase\Shared\ScenarioPrint;
+use Codeception\Util\Annotation;
 
-class Cest extends CodeceptionTestCase implements
+class Cest extends \Codeception\Lib\Test implements
+    TestCase,
     ScenarioDriven,
-    Descriptive,
-    Reported,
-    Configurable
+    Configurable,
+    Descriptive
 {
     use Actor;
-    use Dependencies;
     use ScenarioPrint;
+    use Dependencies;
 
-    protected $testClassInstance = null;
-    protected $testMethod = null;
+    protected $testClassInstance;
+    protected $testMethod;
 
-    public function __construct(array $data = [], $dataName = '')
+    public function test()
     {
-        parent::__construct('testCodecept', $data, $dataName);
-    }
+        $I = $this->makeIObject();
 
-    public function getName($withDataSet = true)
-    {
-        return $this->testMethod;
+        $this->prepareActorForTest();
+        try {
+            $this->executeHook($I, 'before');
+            $this->executeBeforeMethods($this->testMethod, $I);
+            $this->executeTestMethod($I);
+            $this->executeAfterMethods($this->testMethod, $I);
+            $this->executeHook($I, 'after');
+        } catch (\Exception $e) {
+            $this->executeHook($I, 'failed');
+            // fails and errors are now handled by Codeception\PHPUnit\Listener
+            throw $e;
+        }
     }
 
     public function preload()
@@ -55,23 +62,28 @@ class Cest extends CodeceptionTestCase implements
         return implode("", array_slice($source, $start_line, $end_line - $start_line));
     }
 
-    public function testCodecept()
+    protected function makeIObject()
     {
-        $I = $this->makeIObject();
+        $className = '\\' . $this->actor;
+        $I = new $className($this->scenario);
+        $spec = $this->getSpecFromMethod();
 
-        $this->prepareActorForTest();
-        try {
-            $this->executeHook($I, 'before');
-            $this->executeBeforeMethods($this->testMethod, $I);
-            $this->executeTestMethod($I);
-            $this->executeAfterMethods($this->testMethod, $I);
-            $this->executeHook($I, 'after');
-        } catch (\Exception $e) {
-            $this->executeHook($I, 'failed');
-            // fails and errors are now handled by Codeception\PHPUnit\Listener
-            throw $e;
+        if ($spec) {
+            $I->wantTo($spec);
         }
+        return $I;
     }
+
+
+    public function getSpecFromMethod()
+    {
+        $text = $this->testMethod;
+        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = strtolower($text);
+        return $text;
+    }
+
 
     protected function executeBeforeMethods($testMethod, $I)
     {
@@ -107,18 +119,6 @@ class Cest extends CodeceptionTestCase implements
         );
     }
 
-    protected function makeIObject()
-    {
-        $className = '\\' . $this->actor;
-        $I = new $className($this->scenario);
-        $spec = $this->getSpecFromMethod();
-
-        if ($spec) {
-            $I->wantTo($spec);
-        }
-        return $I;
-    }
-
     protected function invoke($methodName, array $context)
     {
         foreach ($context as $class) {
@@ -134,25 +134,6 @@ class Cest extends CodeceptionTestCase implements
             throw new \Exception("Method {$this->testMethod} can't be found in tested class");
         }
         $this->invoke($this->testMethod, [$I, $this->scenario]);
-    }
-
-    public function getTestClass()
-    {
-        return $this->testClassInstance;
-    }
-
-    public function getTestMethod()
-    {
-        return $this->testMethod;
-    }
-
-    public function getSpecFromMethod()
-    {
-        $text = $this->testMethod;
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = strtolower($text);
-        return $text;
     }
 
     public function configActor($actor)
@@ -172,19 +153,34 @@ class Cest extends CodeceptionTestCase implements
         return $this;
     }
 
+    public function toString()
+    {
+        return $this->getFeature() .' (' . $this->getSignature() . ' )';
+    }
+
     public function getSignature()
     {
         return get_class($this->getTestClass()) . "::" . $this->getTestMethod();
     }
 
+    public function getTestClass()
+    {
+        return $this->testClassInstance;
+    }
+
+    public function getTestMethod()
+    {
+        return $this->testMethod;
+    }
+
+    public function getName()
+    {
+        return $this->testMethod;
+    }
+
     public function getFileName()
     {
         return $this->testFile;
-    }
-
-    public function toString()
-    {
-        return $this->getFeature() . " (" . $this->getSignature() . ")";
     }
 
     public function getEnvironment()
@@ -211,5 +207,6 @@ class Cest extends CodeceptionTestCase implements
             $this->invoke("_$hook", [$I, $this->scenario]);
         }
     }
+
 
 }

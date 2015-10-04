@@ -505,15 +505,6 @@ class Console implements EventSubscriberInterface
                 ->prepend($inProgress ? 'Running ' : '');
             return $this->message;
         }
-        if ($test instanceof \Codeception\Test) {
-            $this->message = $this
-                ->message('%s::%s')
-                ->with($this->cutNamespace(get_class($test)), $test->toString())
-                ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)
-                ->style('focus')
-                ->prepend($inProgress ? 'Running ' : '');
-            return $this->message;
-        }
 
         $filename = $this->cutNamespace($test->getSignature());
         $feature = $test->getFeature();
@@ -559,7 +550,7 @@ class Console implements EventSubscriberInterface
         $this->getTestMessage($test)->write();
     }
 
-    protected function writeFinishedTest(\PHPUnit_Framework_TestCase $test)
+    protected function writeFinishedTest(\PHPUnit_Framework_Test $test)
     {
         if ($this->isDetailed($test)) {
             return;

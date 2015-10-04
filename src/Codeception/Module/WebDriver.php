@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\ElementLocator;
+use Codeception\Lib\TestDescriptor;
 use Codeception\Module as CodeceptionModule;
 use Codeception\TestCase;
 use Codeception\Exception\ConnectionException;
@@ -243,7 +244,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _failed(TestCase $test, $fail)
     {
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
+        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestDescriptor::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");

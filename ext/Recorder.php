@@ -6,6 +6,7 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
+use Codeception\Lib\TestDescriptor;
 use Codeception\Module\WebDriver;
 use Codeception\Step\Comment as CommentStep;
 use Codeception\TestCase;
@@ -268,7 +269,7 @@ EOF;
         $this->dir = null;
         $this->stepNum = 0;
         $this->slides = [];
-        $testName = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($e->getTest()));
+        $testName = str_replace(['::', '\\', '/'], ['.', '', ''], TestDescriptor::getTestSignature($e->getTest()));
         $this->dir = codecept_output_dir() . "record_{$this->seed}_$testName";
         @mkdir($this->dir);
     }
@@ -312,12 +313,12 @@ EOF;
             ->place('indicators', $indicatorHtml)
             ->place('slides', $slideHtml)
             ->place('feature', ucfirst($e->getTest()->getFeature()))
-            ->place('test', TestCase::getTestSignature($e->getTest()))
+            ->place('test', TestDescriptor::getTestSignature($e->getTest()))
             ->produce();
 
         $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
         file_put_contents($indexFile, $html);
-        $testName = TestCase::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
+        $testName = TestDescriptor::getTestSignature($e->getTest()). ' - '.ucfirst($e->getTest()->getFeature());
         $this->recordedTests[$testName] = substr($indexFile, strlen(codecept_output_dir()));
     }
 

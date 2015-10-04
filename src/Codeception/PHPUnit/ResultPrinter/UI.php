@@ -65,7 +65,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        if ($test instanceof \PHPUnit_Framework_TestCase or $test instanceof \Codeception\Test) {
+        if ($test instanceof \PHPUnit_Framework_TestCase or $test instanceof \Codeception\Lib\Test) {
             $this->numAssertions += $test->getNumAssertions();
         }
 

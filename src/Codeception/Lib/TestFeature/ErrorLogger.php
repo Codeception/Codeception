@@ -1,14 +1,14 @@
 <?php
-namespace Codeception\TestFormat\Decorator;
+namespace Codeception\Lib\TestFeature;
 
-use Codeception\Test as CodeceptionTest;
+use Codeception\Lib\Test as CodeceptionTest;
 
 trait ErrorLogger
 {
     /**
      * @return \PHPUnit_Framework_TestResult
      */
-    abstract public function getTestResult();
+    abstract public function getTestResultObject();
 
     public function errorLoggerEnd($status, $time, $exception = null)
     {
@@ -17,10 +17,10 @@ trait ErrorLogger
         }
 
         if ($status === CodeceptionTest::STATUS_ERROR) {
-             $this->getTestResult()->addError($this, $exception, $time);
+             $this->getTestResultObject()->addError($this, $exception, $time);
         }
         if ($status === CodeceptionTest::STATUS_FAIL) {
-            $this->getTestResult()->addFailure($this, $exception, $time);
+            $this->getTestResultObject()->addFailure($this, $exception, $time);
         }
     }
 }

@@ -1,13 +1,11 @@
 <?php
 namespace Codeception\TestCase\Interfaces;
 
-interface Descriptive
+interface Descriptive extends \PHPUnit_Framework_SelfDescribing
 {
     public function getFileName();
 
     public function getSignature();
 
-    public function getName($withDataSet = true);
-
-    public function toString();
+    public function getName();
 }

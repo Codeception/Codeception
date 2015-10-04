@@ -19,7 +19,7 @@ class CestTest extends Codeception\TestCase\Test
      */
     public function testCestNamings()
     {
-        $cept = new \Codeception\TestCase\Cest();
+        $cept = new \Codeception\TestCase\OldCest();
         $klass = new stdClass();
         $cept->config('testClassInstance',$klass)
             ->config('testMethod', 'user')

@@ -2,6 +2,7 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
+use Codeception\TestCase\Interfaces\Descriptive;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\Finder\Finder;
@@ -88,6 +89,7 @@ class GroupManager
     public function groupsForTest(\PHPUnit_Framework_Test $test)
     {
         $groups = [];
+        $filename = TestDescriptor::getTestFileName($test);
         if ($test instanceof ScenarioDriven) {
             $groups = $test->getScenario()->getGroups();
         }
@@ -97,9 +99,10 @@ class GroupManager
                 $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups($info['class'], $info['name']));
             }
             $filename = $info['file'];
-        } else {
-            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->toString()));
-            $filename = (new \ReflectionClass($test))->getFileName();
+        }
+
+        if ($test instanceof \PHPUnit_Framework_TestCase) {
+            $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
         }
 
         foreach ($this->testsInGroups as $group => $tests) {

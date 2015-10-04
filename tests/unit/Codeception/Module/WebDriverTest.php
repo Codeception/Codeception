@@ -436,7 +436,7 @@ class WebDriverTest extends TestsForBrowsers
             'getPageSource' => Stub::once(function() {})
         ]);
         $this->module->webDriver = $fakeWd;
-        $cest = (new \Codeception\TestCase\Cest())
+        $cest = (new \Codeception\TestCase\OldCest())
             ->config('testClassInstance', new stdClass())
             ->config('testMethod','login');
         $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());

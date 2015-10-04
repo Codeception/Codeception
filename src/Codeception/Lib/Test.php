@@ -1,15 +1,17 @@
 <?php
-namespace Codeception;
+namespace Codeception\Lib;
 
-abstract class Test implements \PHPUnit_Framework_Test, \PHPUnit_Framework_SelfDescribing
+use Codeception\TestCase;
+
+abstract class Test implements TestCase
 {
-    use TestFormat\Decorator\AssertionCounter;
-    use TestFormat\Decorator\CodeCoverage;
-    use TestFormat\Decorator\ErrorLogger;
+    use TestFeature\AssertionCounter;
+    use TestFeature\CodeCoverage;
+    use TestFeature\ErrorLogger;
 
     protected $testResult;
 
-    protected $decorators = [
+    protected $mixins = [
       'coverage',
       'assertionCounter',
       'errorLogger'
@@ -35,8 +37,11 @@ abstract class Test implements \PHPUnit_Framework_Test, \PHPUnit_Framework_SelfD
     {
         $this->testResult = $result;
         $result->startTest($this);
-        foreach ($this->decorators as $decorator) {
-            $this->{$decorator.'Start'}();
+
+        foreach ($this->mixins as $mixin) {
+            if (method_exists($this, $mixin.'Start')) {
+                $this->{$mixin.'Start'}();
+            }
         }
 
         $status = null;
@@ -50,21 +55,26 @@ abstract class Test implements \PHPUnit_Framework_Test, \PHPUnit_Framework_SelfD
             $status = self::STATUS_FAIL;
         } catch (\PHPUnit_Framework_Exception $e) {
             $status = self::STATUS_ERROR;
+        } catch (\Throwable $e) {
+            $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
+            $status = self::STATUS_ERROR;
         } catch (\Exception $e) {
             $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
             $status = self::STATUS_ERROR;
         }
         $time = \PHP_Timer::stop();
 
-        foreach (array_reverse($this->decorators) as $decorator) {
-            $this->{$decorator.'End'}($status, $time, $e);
+        foreach (array_reverse($this->mixins) as $mixin) {
+            if (method_exists($this, $mixin.'End')) {
+                $this->{$mixin.'End'}($status, $time, $e);
+            }
         }
 
         $result->endTest($this, $time);
         return $result;
     }
 
-    public function getTestResult()
+    public function getTestResultObject()
     {
         return $this->testResult;
     }
@@ -72,4 +82,5 @@ abstract class Test implements \PHPUnit_Framework_Test, \PHPUnit_Framework_SelfD
     abstract public function test();
 
     abstract public function toString();
+
 }
