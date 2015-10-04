@@ -31,7 +31,6 @@ class Test extends \PHPUnit_Framework_TestCase implements
             $this->$actorProperty = $this->$property;
         }
         $this->_before();
-        $this->prepareActorForTest();
     }
 
     /**

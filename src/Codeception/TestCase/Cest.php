@@ -29,7 +29,6 @@ class Cest extends \Codeception\Lib\Test implements
     {
         $I = $this->makeIObject();
 
-        $this->prepareActorForTest();
         try {
             $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);

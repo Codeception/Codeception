@@ -2,7 +2,6 @@
 namespace Codeception\TestCase\Shared;
 
 use Codeception\Event\StepEvent;
-use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Exception\ConfigurationException;
@@ -46,11 +45,6 @@ trait Actor
      */
     protected $parser;
 
-    /**
-     * @var \PHPUnit_Framework_TestResult
-     */
-    protected $testResult;
-
 
     public function initConfig()
     {
@@ -86,11 +80,6 @@ trait Actor
      */
     abstract public function getTestResultObject();
 
-    public function prepareActorForTest()
-    {
-        $this->testResult = $this->getTestResultObject();
-    }
-
     public function runStep(Step $step)
     {
         $result = null;
@@ -98,7 +87,7 @@ trait Actor
         try {
             $result = $step->run($this->moduleContainer);
         } catch (ConditionalAssertionFailed $f) {
-            $this->testResult->addFailure(clone($this), $f, $this->testResult->time());
+            $this->getTestResultObject()->addFailure(clone($this), $f, $this->getTestResultObject()->time());
         } catch (\Exception $e) {
             $this->fire(Events::STEP_AFTER, new StepEvent($this, $step));
             throw $e;

@@ -26,7 +26,6 @@ class Cept extends \Codeception\Lib\Test implements
     public function test()
     {
         $scenario = $this->scenario;
-        $this->prepareActorForTest();
         /** @noinspection PhpIncludeInspection */
         require $this->testFile;
     }
