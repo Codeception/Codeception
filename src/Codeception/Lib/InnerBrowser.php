@@ -1396,4 +1396,25 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $uri = $iframe->getNode(0)->getAttribute('src');
         $this->amOnPage($uri);
     }
+
+    /**
+     * Moves back in history.
+     * 
+     * @param int $numberOfSteps (default value 1)
+     */
+    public function moveBack($numberOfSteps = 1)
+    {
+        if (!is_int($numberOfSteps) || $numberOfSteps < 1) {
+            throw new \InvalidArgumentException('numberOfSteps must be positive integer');
+        }
+        try {
+            $history = $this->getRunningClient()->getHistory();
+            for ($i = $numberOfSteps; $i > 0; $i--) {
+                $request = $history->back();
+            }
+        } catch (\LogicException $e) {
+            throw new \InvalidArgumentException('numberOfSteps is set to ' . $numberOfSteps . ', but there are only ' . ($numberOfSteps - $i) . ' previous steps in the history');
+        }
+        $this->_loadPage($request->getMethod(),$request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent());
+    }
 }
