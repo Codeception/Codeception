@@ -70,9 +70,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         $testNames = [];
         foreach ($tests as $test) {
-            if ($test instanceof \PHPUnit_Framework_TestCase) {
-                $testNames[] = \Codeception\TestCase::getTestSignature($test);
-            }
+            $testNames[] = \Codeception\Lib\TestDescriptor::getTestSignature($test);
         }
         return $testNames;
     }

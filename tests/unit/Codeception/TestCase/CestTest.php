@@ -19,7 +19,7 @@ class CestTest extends Codeception\TestCase\Test
      */
     public function testCestNamings()
     {
-        $cept = new \Codeception\TestCase\OldCest();
+        $cept = new \Codeception\TestCase\Cest();
         $klass = new stdClass();
         $cept->config('testClassInstance',$klass)
             ->config('testMethod', 'user')
@@ -27,15 +27,15 @@ class CestTest extends Codeception\TestCase\Test
 
         $this->assertEquals(
             'tests/acceptance/LoginCest.php:user',
-            \Codeception\TestCase::getTestFullName($cept)
+            \Codeception\Lib\TestDescriptor::getTestFullName($cept)
         );
         $this->assertEquals(
             'tests/acceptance/LoginCest.php',
-            \Codeception\TestCase::getTestFileName($cept)
+            \Codeception\Lib\TestDescriptor::getTestFileName($cept)
         );
         $this->assertEquals(
             'stdClass::user',
-            \Codeception\TestCase::getTestSignature($cept)
+            \Codeception\Lib\TestDescriptor::getTestSignature($cept)
         );
     }
 
