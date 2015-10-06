@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.1.4
+
+* [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+
 #### 2.1.3
 
 * [REST] **Added matching data types** by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType`. See #2391
