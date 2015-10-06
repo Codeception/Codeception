@@ -1329,47 +1329,4 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
         $this->assertEquals('second-link', $arr[1]);
         $this->assertEquals('third-link', $arr[2]);
     }
-
-    public function testMoveBackOneStep()
-    {
-        $this->module->amOnPage('/iframe');
-        $this->module->switchToIframe('content');
-        $this->module->seeCurrentUrlEquals('/info');
-        $this->module->click('Ссылочка');
-        $this->module->seeCurrentUrlEquals('/');
-        $this->module->moveBack();
-        $this->module->seeCurrentUrlEquals('/info');
-        $this->module->click('Sign in!');
-        $this->module->seeCurrentUrlEquals('/login');
-    }
-
-    public function testMoveBackTwoSteps()
-    {
-        $this->module->amOnPage('/iframe');
-        $this->module->switchToIframe('content');
-        $this->module->seeCurrentUrlEquals('/info');
-        $this->module->click('Ссылочка');
-        $this->module->seeCurrentUrlEquals('/');
-        $this->module->moveBack(2);
-        $this->module->seeCurrentUrlEquals('/iframe');
-    }
-
-    public function testMoveBackThrowsExceptionIfNumberOfStepsIsInvalid()
-    {
-        $this->module->amOnPage('/iframe');
-        $this->module->switchToIframe('content');
-        $this->module->seeCurrentUrlEquals('/info');
-        $this->module->click('Ссылочка');
-        $this->module->seeCurrentUrlEquals('/');
-
-        $invalidValues = [0, -5, 1.5, 'a', 3];
-        foreach ($invalidValues as $invalidValue) {
-            try {
-                $this->module->moveBack($invalidValue);
-                $this->fail('Expected to get exception here');
-            } catch (\InvalidArgumentException $e) {
-                codecept_debug('Exception: ' . $e->getMessage());
-            }
-        }
-    }
 }
