@@ -237,7 +237,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             return;
         }
 
-        $this->clickByLocator($link);
+        try {
+            $this->clickByLocator($link);
+        } catch (MalformedLocatorException $e) {
+            throw new ElementNotFound("name=$link", "'$link' is invalid CSS and XPath selector and Link or Button");
+        }
     }
 
     protected function clickByLocator($link)
