@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.1.4
+[Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
+
 #### 2.1.3
 
 * [REST] **Added matching data types** by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType`. See #2391
