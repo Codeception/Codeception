@@ -448,6 +448,20 @@ class PhpBrowserTest extends TestsForBrowsers
       $this->module->dontSeeCookie('a');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2436
+     */
+    public function testSiteUpdatesCookieSetWithSetcookie()
+    {
+        //set cookie
+        $this->module->setCookie('a', 'xxx');
+        $this->module->amOnPage('/cookies2');
+        $this->module->seeResponseCodeIs(200);
+
+        $this->assertEquals('d', $this->module->grabCookie('c'), 'Response cookie wasn\'t added to cookie jar');
+        $this->assertNotEquals('xxx', $this->module->grabCookie('a'), 'Cookie wasn\'t updated');
+    }
+
     public function testRequestApi()
     {
         $this->setExpectedException('Codeception\Exception\ModuleException');
