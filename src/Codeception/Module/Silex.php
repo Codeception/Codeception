@@ -100,13 +100,18 @@ class Silex extends Framework
     /**
      * Returns a list of recognized domain names
      *
-     * @todo not implemented
      * @return array
      */
     public function getInternalDomains()
     {
-        return [
-            'localhost',
-        ];
+        $internalDomains = [];
+
+        foreach ($this->app['routes'] as $route) {
+            if ($domain = $route->getHost()) {
+                $internalDomains[] = '/^' . $domain . '$/';
+            }
+        }
+
+        return $internalDomains;
     }
 }
