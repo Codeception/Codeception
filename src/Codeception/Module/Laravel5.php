@@ -2,6 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Exception\ModuleConfigException;
+use Codeception\Exception\ModuleException;
 use Codeception\Lib\Connector\Laravel5 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Facade;
  * ## Status
  *
  * * Maintainer: **Jan-Henk Gerritsen**
- * * Stability: **dev**
+ * * Stability: **stable**
  * * Contact: janhenkgerritsen@gmail.com
  *
  * ## Example
@@ -731,4 +732,95 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         return $query->first();
     }
 
+    /**
+     * Use Laravel's model factory to create a model.
+     * Can only be used with Laravel 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->haveModel('App\User');
+     * $I->haveModel('App\User', ['name' => 'John Doe']);
+     * $I->haveModel('App\User', [], 'admin');
+     * $I->haveModel('App\User', [], 'admin', 3);
+     * ?>
+     * ```
+     *
+     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @param int $times
+     * @return mixed
+     */
+    public function haveModel($model, $attributes = [], $name = 'default', $times = 1)
+    {
+        return $this->createModel($model, $attributes, $name, $times);
+    }
+
+    /**
+     * Use Laravel's model factory to create a model.
+     * Can only be used with Laravel 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->createModel('App\User');
+     * $I->createModel('App\User', ['name' => 'John Doe']);
+     * $I->createModel('App\User', [], 'admin');
+     * $I->createModel('App\User', [], 'admin', 3);
+     * ?>
+     * ```
+     *
+     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @param int $times
+     * @return mixed
+     */
+    public function createModel($model, $attributes = [], $name = 'default', $times = 1)
+    {
+        return $this->modelFactory($model, $name, $times)->create($attributes);
+    }
+
+    /**
+     * Use Laravel's model factory to make a model.
+     * Can only be used with Laravel 5.1 and later.
+     *
+     * ``` php
+     * <?php
+     * $I->makeModel('App\User');
+     * $I->makeModel('App\User', ['name' => 'John Doe']);
+     * $I->makeModel('App\User', [], 'admin');
+     * $I->makeModel('App\User', [], 'admin', 3);
+     * ?>
+     * ```
+     *
+     * @see http://laravel.com/docs/5.1/testing#model-factories
+     * @param string $model
+     * @param array $attributes
+     * @param string $name
+     * @param int $times
+     * @return mixed
+     */
+    public function makeModel($model, $attributes = [], $name = 'default', $times = 1)
+    {
+        return $this->modelFactory($model, $name, $times)->make($attributes);
+    }
+
+    /**
+     * @param string $model
+     * @param string $name
+     * @param int $times
+     * @return \Illuminate\Database\Eloquent\FactoryBuilder
+     * @throws ModuleException
+     */
+    protected function modelFactory($model, $name, $times)
+    {
+        if (! function_exists('factory')) {
+            throw new ModuleException($this, 'The factory() method does not exist. ' .
+                'This functionality relies on Laravel model factories, which were introduced in Laravel 5.1.');
+        }
+
+        return factory($model, $name, $times);
+    }
 }
