@@ -1086,13 +1086,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
 
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     public function grabCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $cookies = $this->getRunningClient()->getCookieJar()->get($cookie, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
@@ -1103,14 +1103,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function seeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNotNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
     public function dontSeeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
@@ -1118,7 +1118,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     private function stringifySelector($selector)
@@ -1395,5 +1395,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $uri = $iframe->getNode(0)->getAttribute('src');
         $this->amOnPage($uri);
+    }
+
+    protected function debugCookieJar()
+    {
+        $cookies = $this->client->getCookieJar()->all();
+        $cookieStrings = array_map('strval', $cookies);
+        $this->debugSection('Cookie Jar', $cookieStrings);
     }
 }
