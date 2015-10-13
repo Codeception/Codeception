@@ -2,8 +2,6 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2012-02-03 00:00:32
-
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -11,11 +9,51 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
-SET search_path = public, pg_catalog;
+--
+-- Name: anotherschema; Type: SCHEMA; Schema: -; Owner: -
+--
+
+DROP SCHEMA IF EXISTS anotherschema CASCADE;
+CREATE SCHEMA anotherschema;
+
+SET search_path = anotherschema, pg_catalog;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: users; Type: TABLE; Schema: anotherschema; Owner: -; Tablespace:
+--
+DROP TABLE IF EXISTS users CASCADE;
+CREATE TABLE users (
+    name character varying(30),
+    email character varying(50),
+    created_at timestamp without time zone DEFAULT now(),
+    id integer NOT NULL
+);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: anotherschema; Owner: -
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: anotherschema; Owner: -
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+SET search_path = public, pg_catalog;
+
 
 --
 -- Name: empty_table; Type: TABLE; Schema: public; Owner: -; Tablespace:
@@ -142,6 +180,17 @@ CREATE SEQUENCE users_id_seq
 ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
+SET search_path = anotherschema, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: anotherschema; Owner: -
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+SET search_path = public, pg_catalog;
+
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
@@ -169,6 +218,25 @@ ALTER TABLE ONLY permissions ALTER COLUMN id SET DEFAULT nextval('permissions_id
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
+
+SET search_path = anotherschema, pg_catalog;
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: anotherschema; Owner: -
+--
+
+COPY users (name, email, created_at, id) FROM stdin;
+andrew	schemauser@example.org	2015-10-13 07:26:51.398693	1
+\.
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: anotherschema; Owner: -
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1, true);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Data for Name: empty_table; Type: TABLE DATA; Schema: public; Owner: -
@@ -239,6 +307,18 @@ bird	charlie@parker.com	2012-02-02 22:32:13.107	4
 
 SELECT pg_catalog.setval('users_id_seq', 4, true);
 
+
+SET search_path = anotherschema, pg_catalog;
+
+--
+-- Name: u1; Type: CONSTRAINT; Schema: anotherschema; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT u1 PRIMARY KEY (id);
+
+
+SET search_path = public, pg_catalog;
 
 --
 -- Name: g1; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
