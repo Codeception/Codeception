@@ -468,4 +468,15 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->click('More info');
         $this->module->seeInCurrentUrl('/info');
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2408
+     */
+    public function testClickFailure()
+    {
+        $this->module->amOnPage('/info');
+        $this->setExpectedException('Codeception\Exception\ElementNotFound',
+            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
+        $this->module->click('Sign In!');
+    }
 }
