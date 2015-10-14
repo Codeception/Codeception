@@ -151,6 +151,10 @@ abstract class Step
 
     public function getHtml($highlightColor = '#732E81')
     {
+        if (empty($this->arguments)) {
+            return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
+        }
+
         return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 
