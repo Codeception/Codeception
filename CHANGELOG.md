@@ -1,7 +1,9 @@
 # Changelog
 
 #### 2.1.4
-[Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
+
+* [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+* [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
 
 #### 2.1.3
 
