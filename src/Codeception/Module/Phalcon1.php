@@ -582,8 +582,11 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             $routes = $router->getRoutes();
 
             foreach ($routes as $route) {
-                if ($route instanceof RouteInterface && !empty($route->getHostName())) {
-                    $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostName()) . '$/';
+                if ($route instanceof RouteInterface) {
+                    $hostName = $route->getHostName();
+                    if (!empty($hostName)) {
+                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostName()) . '$/';
+                    }
                 }
             }
         }
