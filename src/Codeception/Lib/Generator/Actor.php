@@ -155,9 +155,8 @@ EOF;
     {
         $params = array();
         foreach ($refMethod->getParameters() as $param) {
-
             if ($param->isOptional()) {
-                $params[] = '$' . $param->name . ' = null';
+                $params[] = '$' . $param->name . ' = '.$this->getDefaultValue($param);
             } else {
                 $params[] = '$' . $param->name;
             };
@@ -236,5 +235,45 @@ EOF;
         return $this->numMethods;
     }
 
+    private function getDefaultValue(\ReflectionParameter $param)
+    {
+        $isPlainArray = function ($value) {
+            return ((count($value) === 0)
+                || (
+                    (array_keys($value) === range(0, count($value) - 1))
+                    && (0 === count(array_filter(array_keys($value), 'is_string'))))
+            );
+        };
+        if ($param->isDefaultValueAvailable()) {
+            if (method_exists($param, 'isDefaultValueConstant ') && $param->isDefaultValueConstant()) {
+                $constName = $param->getDefaultValueConstantName();
+                if (false !== strpos($constName, '::')) {
+                    list($class, $const) = explode('::', $constName);
+                    if (in_array($class, ['self', 'static'])) {
+                        $constName = $param->getDeclaringClass()->getName().'::'.$const;
+                    }
+                }
 
+                return $constName;
+            }
+
+            $paramValue = $param->getDefaultValue();
+            switch (true) {
+                case (is_array($paramValue) && $isPlainArray($paramValue)):
+                    return '['.implode(', ', $paramValue).']';
+                case is_array($paramValue):
+                    return str_replace(["\r", "\n", "\t"], ' ', var_export($paramValue, true));
+                case is_numeric($paramValue):
+                    return (string)$paramValue;
+                case is_string($paramValue):
+                    return '"'.addslashes((string)$paramValue).'"';
+                case is_bool($paramValue):
+                    return $paramValue? 'true': 'false';
+                case is_scalar($paramValue):
+                    return $paramValue;
+            }
+        }
+
+        return 'null';
+    }
 }
