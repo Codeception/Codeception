@@ -127,7 +127,7 @@ EOF;
      */
     private function getDefaultValue(\ReflectionParameter $param)
     {
-        $is_plain_array = function ($value) {
+        $isPlainArray = function ($value) {
             return ((count($value) === 0)
                 || (
                     (array_keys($value) === range(0, count($value) - 1))
@@ -136,31 +136,31 @@ EOF;
         };
         if ($param->isDefaultValueAvailable()) {
             if (method_exists($param, 'isDefaultValueConstant ') && $param->isDefaultValueConstant()) {
-                $const_name = $param->getDefaultValueConstantName();
-                if (false !== strpos($const_name, '::')) {
-                    list($class, $const) = explode('::', $const_name);
+                $constName = $param->getDefaultValueConstantName();
+                if (false !== strpos($constName, '::')) {
+                    list($class, $const) = explode('::', $constName);
                     if (in_array($class, ['self', 'static'])) {
-                        $const_name = $param->getDeclaringClass()->getName().'::'.$const;
+                        $constName = $param->getDeclaringClass()->getName().'::'.$const;
                     }
                 }
 
-                return $const_name;
+                return $constName;
             }
 
-            $param_value = $param->getDefaultValue();
+            $paramValue = $param->getDefaultValue();
             switch (true) {
-                case (is_array($param_value) && $is_plain_array($param_value)):
-                    return '['.implode(', ', $param_value).']';
-                case is_array($param_value):
-                    return str_replace(["\r", "\n", "\t"], ' ', var_export($param_value, true));
-                case is_numeric($param_value):
-                    return (string)$param_value;
-                case is_string($param_value):
-                    return '"'.addslashes((string)$param_value).'"';
-                case is_bool($param_value):
-                    return $param_value? 'true': 'false';
-                case is_scalar($param_value):
-                    return $param_value;
+                case (is_array($paramValue) && $isPlainArray($paramValue)):
+                    return '['.implode(', ', $paramValue).']';
+                case is_array($paramValue):
+                    return str_replace(["\r", "\n", "\t"], ' ', var_export($paramValue, true));
+                case is_numeric($paramValue):
+                    return (string)$paramValue;
+                case is_string($paramValue):
+                    return '"'.addslashes((string)$paramValue).'"';
+                case is_bool($paramValue):
+                    return $paramValue? 'true': 'false';
+                case is_scalar($paramValue):
+                    return $paramValue;
             }
         }
 
