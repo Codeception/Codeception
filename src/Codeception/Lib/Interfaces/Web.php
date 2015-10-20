@@ -52,6 +52,34 @@ interface Web
      * @param null $selector
      */
     public function dontSee($text, $selector = null);
+    
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ?>
+     * ```
+     *
+     * @param      $raw
+     */
+    public function seeInSource($raw);
+
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ?>
+     * ```
+     *
+     * @param      $raw
+     */
+    public function dontSeeInSource($raw);
 
     /**
      * Submits the given form on the page, optionally with the given form
