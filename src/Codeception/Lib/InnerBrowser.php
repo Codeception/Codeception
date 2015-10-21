@@ -292,6 +292,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
+    public function seeInSource($raw)
+    {
+        $this->assertPageSourceContains($raw);
+    }
+
+    public function dontSeeInSource($raw)
+    {
+        $this->assertPageSourceNotContains($raw);
+    }
+
     public function seeLink($text, $url = null)
     {
         $links = $this->getCrawler()->selectLink($text);
@@ -1265,6 +1275,26 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
             html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThat(
+            $this->getRunningClient()->getInternalResponse()->getContent(),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceNotContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThatItsNot(
+            $this->getRunningClient()->getInternalResponse()->getContent(),
             $constraint,
             $message
         );

@@ -476,6 +476,16 @@ class WebDriver extends CodeceptionModule implements
         $this->assertNodesNotContain($text, $nodes, $selector);
     }
 
+    public function seeInSource($raw)
+    {
+        $this->assertPageSourceContains($raw);
+    }
+
+    public function dontSeeInSource($raw)
+    {
+        $this->assertPageSourceNotContains($raw);
+    }
+
     /**
      * Checks that the page source contains the given string.
      *
@@ -2052,6 +2062,24 @@ class WebDriver extends CodeceptionModule implements
     {
         $this->assertThatItsNot(
             htmlspecialchars_decode($this->getVisibleText()),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
+    }
+
+    protected function assertPageSourceContains($needle, $message = '')
+    {
+        $this->assertThat(
+            $this->webDriver->getPageSource(),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
+    }
+
+    protected function assertPageSourceNotContains($needle, $message = '')
+    {
+        $this->assertThatItsNot(
+            $this->webDriver->getPageSource(),
             new PageConstraint($needle, $this->_getCurrentUri()),
             $message
         );
