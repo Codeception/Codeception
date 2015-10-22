@@ -24,6 +24,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Uri;
 use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\UnknownServerException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
@@ -263,11 +264,16 @@ class WebDriver extends CodeceptionModule implements
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
 
-        // Dump out all available Selenium logs
-        foreach ($this->webDriver->manage()->getAvailableLogTypes() as $logType)
-        {
-           $logEntries = $this->webDriver->manage()->getLog($logType);
-           $this->debugSection("Selenium {$logType} logs", $this->formatLogEntries($logEntries));
+        try {
+           // Dump out all available Selenium logs
+           foreach ($this->webDriver->manage()->getAvailableLogTypes() as $logType) {
+              $logEntries = $this->webDriver->manage()->getLog($logType);
+              $this->debugSection("Selenium {$logType} logs", $this->formatLogEntries($logEntries));
+           }
+        } catch (UnknownServerException $e) {
+           // This only happens with the IE driver, which doesn't support retrieving logs yet:
+           // https://github.com/SeleniumHQ/selenium/issues/468
+           $this->debug("Unable to retrieve Selenium logs");
         }
     }
 
