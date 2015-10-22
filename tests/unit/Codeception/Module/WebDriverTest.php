@@ -419,8 +419,11 @@ class WebDriverTest extends TestsForBrowsers
     public function testCreateCeptScreenshotFail()
     {
         $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
-                'takeScreenshot' => Stub::once(function() {}),
-                'getPageSource' => Stub::once(function() {})
+            'takeScreenshot' => Stub::once(function() {}),
+            'getPageSource' => Stub::once(function() {}),
+            'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
+                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+            ]),
         ]);
         $this->module->webDriver = $fakeWd;
         $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
@@ -433,7 +436,10 @@ class WebDriverTest extends TestsForBrowsers
             'takeScreenshot' => Stub::once(function($filename) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
             }),
-            'getPageSource' => Stub::once(function() {})
+            'getPageSource' => Stub::once(function() {}),
+            'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
+                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+            ]),
         ]);
         $this->module->webDriver = $fakeWd;
         $cest = (new \Codeception\TestCase\Cest())
@@ -449,7 +455,10 @@ class WebDriverTest extends TestsForBrowsers
             'takeScreenshot' => Stub::once(function($filename) use ($test) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
             }),
-            'getPageSource' => Stub::once(function() {})
+            'getPageSource' => Stub::once(function() {}),
+            'manage' => Stub::make('\Facebook\WebDriver\WebDriverOptions', [
+                'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
+            ]),
         ]);
         $this->module->webDriver = $fakeWd;
         $this->module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
