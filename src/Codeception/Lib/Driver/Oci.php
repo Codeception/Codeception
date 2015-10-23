@@ -1,8 +1,37 @@
 <?php
 namespace Codeception\Lib\Driver;
 
-class Oci extends Oracle
+class Oci extends Db
 {
+
+    public function cleanup()
+    {
+        $this->dbh->exec(
+            "BEGIN
+                            FOR i IN (SELECT trigger_name FROM user_triggers)
+                              LOOP
+                                EXECUTE IMMEDIATE('DROP TRIGGER ' || user || '.' || i.trigger_name);
+                              END LOOP;
+                          END;"
+        );
+        $this->dbh->exec(
+            "BEGIN
+                            FOR i IN (SELECT table_name FROM user_tables)
+                              LOOP
+                                EXECUTE IMMEDIATE('DROP TABLE ' || user || '.' || i.table_name || ' CASCADE CONSTRAINTS');
+                              END LOOP;
+                          END;"
+        );
+        $this->dbh->exec(
+            "BEGIN
+                            FOR i IN (SELECT sequence_name FROM user_sequences)
+                              LOOP
+                                EXECUTE IMMEDIATE('DROP SEQUENCE ' || user || '.' || i.sequence_name);
+                              END LOOP;
+                          END;"
+        );
+    }
+
     /**
      * SQL commands should ends with `//` in the dump file
      * IF you want to load triggers too.
@@ -37,5 +66,33 @@ class Oci extends Oracle
                 $query = "";
             }
         }
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return array[string]
+     */
+    public function getPrimaryKey($tableName)
+    {
+        if (!isset($this->primaryKeys[$tableName])) {
+            $primaryKey = [];
+            $query = "SELECT cols.column_name
+                FROM all_constraints cons, all_cons_columns cols
+                WHERE cols.table_name = ?
+                AND cons.constraint_type = 'P'
+                AND cons.constraint_name = cols.constraint_name
+                AND cons.owner = cols.owner
+                ORDER BY cols.table_name, cols.position";
+            $stmt = $this->executeQuery($query, [$tableName]);
+            $columns = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($columns as $column) {
+                $primaryKey []= $column['column_name'];
+            }
+            $this->primaryKeys[$tableName] = $primaryKey;
+        }
+
+        return $this->primaryKeys[$tableName];
     }
 }

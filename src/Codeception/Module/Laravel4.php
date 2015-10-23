@@ -6,6 +6,7 @@ use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Configuration;
 use Codeception\TestCase;
@@ -21,8 +22,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 /**
  *
  * This module allows you to run functional tests for Laravel 4.
- * Please try it and leave your feedback.
- * The original author of this module is Davert.
+ * It should **not** be used for acceptance tests.
  *
  * ## Demo Project
  *
@@ -38,7 +38,6 @@ use Symfony\Component\Console\Output\BufferedOutput;
  *
  * * Maintainer: **Jan-Henk Gerritsen**
  * * Stability: **stable**
- * * Contact: janhenkgerritsen@gmail.com
  *
  * ## Config
  *
@@ -52,14 +51,15 @@ use Symfony\Component\Console\Output\BufferedOutput;
  * ## API
  *
  * * app - `Illuminate\Foundation\Application` instance
- * * client - `BrowserKit` client
+ * * client - `\Symfony\Component\BrowserKit\Client` instance
  *
  * ## Parts
  *
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
+ *
  */
-class Laravel4 extends Framework implements ActiveRecord, PartedModule
+class Laravel4 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
 {
 
     /**

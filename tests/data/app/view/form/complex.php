@@ -22,6 +22,12 @@
         <option value="dead">100-210</option>
     </select>
 
+    <select name="no_salutation" id="salutation" disabled="disabled" id="age">
+        <option value="mr" selected="selected">Mr</option>
+        <option value="ms">Mrs</option>
+    </select>
+
+
     <input type="password" name="password" >
     <label for="checkin">I Agree</label>
     <input type="checkbox" id="checkin" name="terms" value="agree" checked="checked" />

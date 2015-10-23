@@ -26,7 +26,7 @@ class Db
      *
      * @var array
      */
-    protected $primaryColumns = [];
+    protected $primaryKeys = [];
 
     public static function connect($dsn, $user, $password)
     {
@@ -43,7 +43,7 @@ class Db
      * @param $user
      * @param $password
      *
-     * @return Db|MsSql|MySql|Oracle|PostgreSql|Sqlite
+     * @return Db|SqlSrv|MySql|Oci|PostgreSql|Sqlite
      */
     public static function create($dsn, $user, $password)
     {
@@ -57,9 +57,6 @@ class Db
             case 'pgsql':
                 return new PostgreSql($dsn, $user, $password);
             case 'mssql':
-                return new MsSql($dsn, $user, $password);
-            case 'oracle':
-                return new Oracle($dsn, $user, $password);
             case 'sqlsrv':
                 return new SqlSrv($dsn, $user, $password);
             case 'oci':
@@ -149,8 +146,18 @@ class Db
 
     public function select($column, $table, array &$criteria)
     {
-        $where = $criteria ? "where %s" : '';
-        $query = "select %s from %s $where";
+        $where = $this->generateWhereClause($criteria);
+
+        $query = "select %s from %s %s";
+        return sprintf($query, $column, $this->getQuotedName($table), $where);
+    }
+
+    protected function generateWhereClause(array &$criteria)
+    {
+        if (empty($criteria)) {
+            return '';
+        }
+
         $params = [];
         foreach ($criteria as $k => $v) {
             if ($v === null) {
@@ -160,15 +167,25 @@ class Db
                 $params[] = $this->getQuotedName($k) . " = ? ";
             }
         }
-        $sparams = implode('AND ', $params);
 
-        return sprintf($query, $column, $this->getQuotedName($table), $sparams);
+        return 'WHERE ' . implode('AND ', $params);
     }
 
+    /**
+     * @deprecated use deleteQueryByCriteria instead
+     */
     public function deleteQuery($table, $id, $primaryKey = 'id')
     {
-        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ' . $id;
-        $this->sqlQuery($query);
+        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' WHERE ' . $this->getQuotedName($primaryKey) . ' = ?';
+        $this->executeQuery($query, [$id]);
+    }
+
+    public function deleteQueryByCriteria($table, array $criteria)
+    {
+        $where = $this->generateWhereClause($criteria);
+
+        $query = 'DELETE FROM ' . $this->getQuotedName($table) . ' ' . $where;
+        $this->executeQuery($query, array_values($criteria));
     }
 
     public function lastInsertId($table)
@@ -196,26 +213,44 @@ class Db
         $this->dbh->exec($query);
     }
 
+    public function executeQuery($query, array $params)
+    {
+        $sth = $this->dbh->prepare($query);
+        if (!$sth) {
+            throw new \Exception("Query '$query' can't be prepared.");
+        }
+
+        $sth->execute($params);
+        return $sth;
+    }
+
     /**
      * @param string $tableName
      *
      * @return string
      * @throws \Exception
+     * @deprecated use getPrimaryKey instead
      */
     public function getPrimaryColumn($tableName)
     {
-        if (false === isset($this->primaryColumns[$tableName])) {
-            $stmt = $this->getDbh()->query('SHOW KEYS FROM ' . $this->getQuotedName($tableName) . ' WHERE Key_name = "PRIMARY"');
-            $columnInformation = $stmt->fetch(\PDO::FETCH_ASSOC);
-
-            if (true === empty($columnInformation)) { // Need a primary key
-                throw new \Exception('Table ' . $tableName . ' is not valid or doesn\'t have no primary key');
-            }
-
-            $this->primaryColumns[$tableName] = $columnInformation['Column_name'];
+        $primaryKey = $this->getPrimaryKey($tableName);
+        if (empty($primaryKey)) {
+            return null;
+        } elseif (count($primaryKey) > 1) {
+            throw new \Exception('getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead');
         }
 
-        return $this->primaryColumns[$tableName];
+        return $primaryKey[0];
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return array[string]
+     */
+    public function getPrimaryKey($tableName)
+    {
+        return [];
     }
 
     /**
@@ -223,8 +258,8 @@ class Db
      */
     protected function flushPrimaryColumnCache()
     {
-        $this->primaryColumns = [];
+        $this->primaryKeys = [];
 
-        return empty($this->primaryColumns);
+        return empty($this->primaryKeys);
     }
 }

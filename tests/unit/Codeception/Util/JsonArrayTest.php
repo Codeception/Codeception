@@ -89,4 +89,5 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $expectedArray = ['foo', 'bar', 'foo'];
         $this->assertTrue($jsonArray->containsArray($expectedArray));       
     }
+
 }

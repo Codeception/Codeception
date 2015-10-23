@@ -181,4 +181,24 @@ class Locator
     {
         return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
+
+    public static function humanReadableString($selector)
+    {
+       if (is_string($selector)) {
+          return "'$selector'";
+       }
+       if (is_array($selector)) {
+          $type = strtolower(key($selector));
+          $locator = $selector[$type];
+          return "$type '$locator'";
+       }
+       if (class_exists('\Facebook\WebDriver\WebDriverBy')) {
+          if ($selector instanceof \Facebook\WebDriver\WebDriverBy) {
+             $type = $selector->getMechanism();
+             $locator = $selector->getValue();
+             return "$type '$locator'";
+          }
+       }
+       throw new \InvalidArgumentException("Unrecognized selector");
+    }
 }

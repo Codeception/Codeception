@@ -281,7 +281,7 @@ class RoboFile extends \Robo\Tasks
     public function buildDocsUtils()
     {
         $this->say("Util Classes");
-        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder'];
+        $utils = ['Autoload', 'Fixtures', 'Stub', 'Locator', 'XmlBuilder', 'JsonType'];
 
         foreach ($utils as $utilName) {
             $className = '\Codeception\Util\\' . $utilName;
@@ -363,7 +363,12 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGitStack()->add('-A')->run();
 
-        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sortByName()->in('releases')));
+        $sortByVersion = function (\SplFileInfo $a, \SplFileInfo $b)
+        {
+            return version_compare($a->getBaseName(), $b->getBaseName());
+        };
+
+        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sort($sortByVersion)->in('releases')));
         $branch = null;
         $releaseFile = $this->taskWriteToFile('builds.markdown')
             ->line('---')
@@ -470,11 +475,7 @@ class RoboFile extends \Robo\Tasks
             // set default language in order not to leave unparsed code inside '```'
 
             $matches = [];
-            $title = "";
-            // Extracting page h1 to re-use in <title>
-            if (preg_match('/^# (.*)$/m', $contents, $matches)) {
-              $title = $matches[1];
-            }
+            $title = $name;
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
 
             file_put_contents('package/site/' .$newfile, $contents);

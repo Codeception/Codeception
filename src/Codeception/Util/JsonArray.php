@@ -145,7 +145,7 @@ class JsonArray
                     continue;
                 }
 
-                if ($value1 === $value2 && !isset($matchedKeys[$key2])) {
+                if ($this->isEqualValue($value1, $value2) && !isset($matchedKeys[$key2])) {
                     $ret[$key1] = $value1;
                     $matchedKeys[$key2] = true;
                     break;
@@ -173,8 +173,7 @@ class JsonArray
                 $ret[$key] = $return;
                 continue;
             }
-
-            if ($arr1[$key] === $arr2[$key]) {
+            if ($this->isEqualValue($arr1[$key], $arr2[$key])) {
                 $ret[$key] = $arr1[$key];
             }
         }
@@ -211,5 +210,18 @@ class JsonArray
                 $subNode->nodeValue = (string)$value;
             }
         }
+    }
+
+    private function isEqualValue($val1, $val2)
+    {
+        if (is_numeric($val1)) {
+            $val1 = (string) $val1;
+        }
+
+        if (is_numeric($val2)) {
+            $val2 = (string) $val2;
+        }
+
+        return $val1 === $val2;
     }
 }

@@ -28,16 +28,16 @@ class Guzzle extends Client
     {
         $this->baseUri = $uri;
     }
-    
+
     /**
      * Sets the maximum allowable timeout interval for a meta tag refresh to
      * automatically redirect a request.
-     * 
+     *
      * A meta tag detected with an interval equal to or greater than $seconds
      * would not result in a redirect.  A meta tag without a specified interval
      * or one with a value less than $seconds would result in the client
      * automatically redirecting to the specified URL
-     * 
+     *
      * @param int $seconds Number of seconds
      */
     public function setRefreshMaxInterval($seconds)
@@ -107,38 +107,40 @@ class Guzzle extends Client
             }
             $response->setHeader('Content-Type', $contentType);
         }
-        
+
         $headers = $response->getHeaders();
         $status = $response->getStatusCode();
-        $matches = [];
+        if ($status < 300 || $status >= 400) {
+            $matches = [];
 
-        $matchesMeta = preg_match(
-            '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
-            $response->getBody(true),
-            $matches
-        );
-
-        if (!$matchesMeta) {
-            // match by header
-            preg_match(
-                '~(\d*);?url=(.*)~',
-                (string)$response->getHeader('Refresh'),
+            $matchesMeta = preg_match(
+                '/\<meta[^\>]+http-equiv="refresh" content="(\d*)\s*;?\s*url=(.*?)"/i',
+                $response->getBody(true),
                 $matches
             );
-        }
 
-        if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
-            $uri = $this->getAbsoluteUri($matches[2]);
-            $partsUri = parse_url($uri);
-            $partsCur = parse_url($this->getHistory()->current()->getUri());
-            foreach ($partsCur as $key => $part) {
-                if ($key === 'fragment') {
-                    continue;
-                }
-                if (!isset($partsUri[$key]) || $partsUri[$key] !== $part) {
-                    $status = 302;
-                    $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
-                    break;
+            if (!$matchesMeta) {
+                // match by header
+                preg_match(
+                    '~(\d*);?url=(.*)~',
+                    (string)$response->getHeader('Refresh'),
+                    $matches
+                );
+            }
+
+            if ((!empty($matches)) && (empty($matches[1]) || $matches[1] < $this->refreshMaxInterval)) {
+                $uri = $this->getAbsoluteUri($matches[2]);
+                $partsUri = parse_url($uri);
+                $partsCur = parse_url($this->getHistory()->current()->getUri());
+                foreach ($partsCur as $key => $part) {
+                    if ($key === 'fragment') {
+                        continue;
+                    }
+                    if (!isset($partsUri[$key]) || $partsUri[$key] !== $part) {
+                        $status = 302;
+                        $headers['Location'] = $matchesMeta ? htmlspecialchars_decode($uri) : $uri;
+                        break;
+                    }
                 }
             }
         }
@@ -151,6 +153,11 @@ class Guzzle extends Client
         $baseUri = $this->baseUri;
         if (strpos($uri, '://') === false) {
             if (strpos($uri, '/') === 0) {
+                $baseUriPath = parse_url($baseUri, PHP_URL_PATH);
+                if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
+                    $uri = substr($uri, strlen($baseUriPath));
+                }
+
                 return Uri::appendPath((string)$baseUri, $uri);
             }
             // relative url

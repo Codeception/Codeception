@@ -12,15 +12,15 @@ use Codeception\TestCase;
 /**
  * Works with SQL database.
  *
- * The most important function of this module is cleaning database before each test.
- * That's why this module was added into global configuration file: codeception.yml.
+ * The most important function of this module is to clean a database before each test.
+ * That's why this module was added to the global configuration file `codeception.yml`.
  * To have your database properly cleaned you should configure it to access the database.
- * Also provides actions to perform checks in database.
+ * This module also provides actions to perform checks in a database.
  *
  * In order to have your database populated with data you need a raw SQL dump.
- * Just put it in `tests/_data` dir (by default) and specify path to it in config.
- * Next time after database is cleared all your data will be restored from dump.
- * Don't forget to include CREATE TABLE statements into it.
+ * Simply put the dump in the `tests/_data` directory (by default) and specify the path in the config.
+ * The next time after the database is cleared, all your data will be restored from the dump.
+ * Don't forget to include `CREATE TABLE` statements in the dump.
  *
  * Supported and tested databases are:
  *
@@ -33,8 +33,8 @@ use Codeception\TestCase;
  * * MSSQL
  * * Oracle
  *
- * Connection is done by database Drivers, which are stored in Codeception\Lib\Driver namespace.
- * Check out drivers if you get problems loading dumps and cleaning databases.
+ * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver) if you run into problems loading dumps and cleaning databases.
  *
  * ## Status
  *
@@ -54,10 +54,10 @@ use Codeception\TestCase;
  * * dsn *required* - PDO DSN
  * * user *required* - user to access database
  * * password *required* - password
- * * dump - path to database dump.
- * * populate: true - should the dump be loaded before test suite is started.
- * * cleanup: true - should the dump be reloaded after each test
- * * reconnect: false - should the module reconnect to database before each test
+ * * dump - path to database dump
+ * * populate: true - whether the the dump should be loaded before the test suite is started
+ * * cleanup: true - whether the dump should be reloaded after each test
+ * * reconnect: false - whether the module should reconnect to the database before each test
  *
  * ### Example
  *
@@ -76,7 +76,7 @@ use Codeception\TestCase;
  * 
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
- *   * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
+ *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
  *  
  * ```sql
  * -- Add a few contacts to the table.
@@ -89,8 +89,8 @@ use Codeception\TestCase;
  * ```
  * 
  * ## Public Properties
- * * dbh - contains PDO connection.
- * * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
+ * * dbh - contains the PDO connection
+ * * driver - contains the Connection Driver
  *
  */
 class Db extends CodeceptionModule implements DbInterface
@@ -110,10 +110,10 @@ class Db extends CodeceptionModule implements DbInterface
      * @var array
      */
     protected $config = [
-      'populate'  => true,
-      'cleanup'   => true,
-      'reconnect' => false,
-      'dump'      => null
+        'populate' => true,
+        'cleanup' => true,
+        'reconnect' => false,
+        'dump' => null
     ];
 
     /**
@@ -129,7 +129,7 @@ class Db extends CodeceptionModule implements DbInterface
     /**
      * @var array
      */
-    protected $insertedIds = [];
+    protected $insertedRows = [];
 
     /**
      * @var array
@@ -174,7 +174,7 @@ class Db extends CodeceptionModule implements DbInterface
         } catch (\PDOException $e) {
             $message = $e->getMessage();
             if ($message === 'could not find driver') {
-                list ($missingDriver,) = explode(':', $this->config['dsn'],2);
+                list ($missingDriver,) = explode(':', $this->config['dsn'], 2);
                 $message = "could not find $missingDriver driver";
             }
 
@@ -214,14 +214,14 @@ class Db extends CodeceptionModule implements DbInterface
 
     protected function removeInserted()
     {
-        foreach (array_reverse($this->insertedIds) as $insertId) {
+        foreach (array_reverse($this->insertedRows) as $row) {
             try {
-                $this->driver->deleteQuery($insertId['table'], $insertId['id'], $insertId['primary']);
+                $this->driver->deleteQueryByCriteria($row['table'], $row['primary']);
             } catch (\Exception $e) {
-                $this->debug("coudn't delete record {$insertId['id']} from {$insertId['table']}");
+                $this->debug("coudn't delete record " . json_encode($row['primary']) ." from {$row['table']}");
             }
         }
-        $this->insertedIds = [];
+        $this->insertedRows = [];
     }
 
     protected function cleanup()
@@ -229,8 +229,8 @@ class Db extends CodeceptionModule implements DbInterface
         $dbh = $this->driver->getDbh();
         if (!$dbh) {
             throw new ModuleConfigException(
-              __CLASS__,
-              'No connection to database. Remove this module from config if you don\'t need database repopulation'
+                __CLASS__,
+                'No connection to database. Remove this module from config if you don\'t need database repopulation'
             );
         }
         try {
@@ -253,14 +253,14 @@ class Db extends CodeceptionModule implements DbInterface
             $this->driver->load($this->sql);
         } catch (\PDOException $e) {
             throw new ModuleException(
-              __CLASS__,
-              $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
+                __CLASS__,
+                $e->getMessage() . "\nSQL query being executed: " . $this->driver->sqlToRun
             );
         }
     }
 
     /**
-     * Inserts SQL record into database. This record will be erased after the test.
+     * Inserts an SQL record into a database. This record will be erased after the test.
      *
      * ``` php
      * <?php
@@ -278,19 +278,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->insert($table, $data);
         $this->debugSection('Query', $query);
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-        $i = 1;
-        foreach ($data as $val) {
-            $sth->bindValue($i, $val);
-            $i++;
-        }
-        $res = $sth->execute();
-        if (!$res) {
-            $this->fail(sprintf("Record with %s couldn't be inserted into %s", json_encode($data), $table));
-        }
+        $this->driver->executeQuery($query, array_values($data));
 
         try {
             $lastInsertId = (int)$this->driver->lastInsertId($table);
@@ -300,23 +288,45 @@ class Db extends CodeceptionModule implements DbInterface
             $lastInsertId = 0;
         }
 
-        $this->insertedIds[] = [
-            'table' => $table,
-            'id' => $lastInsertId,
-            'primary' => $this->driver->getPrimaryColumn($table)
-        ];
+        $this->addInsertedRow($table, $data, $lastInsertId);
 
         return $lastInsertId;
+    }
+
+    private function addInsertedRow($table, array $row, $id)
+    {
+        $primaryKey = $this->driver->getPrimaryKey($table);
+        $primary = [];
+        if ($primaryKey) {
+            if ($id && count($primaryKey) === 1) {
+                $primary [$primaryKey[0]] = $id;
+            } else {
+                foreach ($primaryKey as $column) {
+                    if (isset($row[$column])) {
+                        $primary[$column] = $row[$column];
+                    } else {
+                        throw new \InvalidArgumentException('Primary key field ' . $column . ' is not set for table ' . $table);
+                    }
+                }
+            }
+        } else {
+            $primary = $row;
+        }
+
+        $this->insertedRows[] = [
+            'table' => $table,
+            'primary' => $primary,
+        ];
     }
 
     public function seeInDatabase($table, $criteria = [])
     {
         $res = $this->countInDatabase($table, $criteria);
-        $this->assertGreaterThan(0, $res, 'No matching records found');
+        $this->assertGreaterThan(0, $res, 'No matching records found for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
-     * Asserts that found number of records in database
+     * Asserts that the given number of records were found in the database.
      *
      * ``` php
      * <?php
@@ -324,24 +334,24 @@ class Db extends CodeceptionModule implements DbInterface
      * ?>
      * ```
      *
-     * @param int    $num      Expected number
+     * @param int    $expectedNumber      Expected number
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
      */
-    public function seeNumRecords($num, $table, array $criteria = [])
+    public function seeNumRecords($expectedNumber, $table, array $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertEquals($num, $res, 'The number of found rows is not consistent with the asserting');
+        $actualNumber = $this->countInDatabase($table, $criteria);
+        $this->assertEquals($expectedNumber, $actualNumber, 'The number of found rows (' . $actualNumber. ') does not match expected number ' . $expectedNumber . ' for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     public function dontSeeInDatabase($table, $criteria = [])
     {
-        $res = $this->countInDatabase($table, $criteria);
-        $this->assertLessThan(1, $res);
+        $count = $this->countInDatabase($table, $criteria);
+        $this->assertLessThan(1, $count, 'Unexpectedly found matching records for criteria ' . json_encode($criteria) . ' in table ' . $table);
     }
 
     /**
-     * Count rows in database
+     * Count rows in a database
      *
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]
@@ -358,12 +368,7 @@ class Db extends CodeceptionModule implements DbInterface
         $query = $this->driver->select($column, $table, $criteria);
         $this->debugSection('Query', $query, json_encode($criteria));
 
-        $sth = $this->driver->getDbh()->prepare($query);
-        if (!$sth) {
-            $this->fail("Query '$query' can't be executed.");
-        }
-
-        $sth->execute(array_values($criteria));
+        $sth = $this->driver->executeQuery($query, array_values($criteria));
 
         return $sth->fetchColumn();
     }

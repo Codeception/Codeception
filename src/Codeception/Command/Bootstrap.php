@@ -150,7 +150,8 @@ class Bootstrap extends Command
 
         $str = Yaml::dump($basicConfig, 4);
         if ($this->namespace) {
-            $str = "namespace: {$this->namespace}\n" . $str;
+            $namespace = rtrim($this->namespace, '\\');
+            $str = "namespace: $namespace\n" . $str;
         }
         file_put_contents('codeception.yml', $str);
     }

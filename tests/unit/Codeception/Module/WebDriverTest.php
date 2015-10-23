@@ -537,4 +537,49 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeCookie('PHPSESSID');
     }
 
+    public function testSaveSessionSnapshotsExcludeInvalidCookieDomains()
+    {
+        $fakeWdOptions = Stub::make('\Facebook\WebDriver\WebDriverOptions', [
+            'getCookies' => Stub::atLeastOnce(function() {
+                return [
+                    [
+                        'name' => 'PHPSESSID',
+                        'value' => '123456',
+                        'path' => '/',
+                    ],
+                    [
+                        'name' => '3rdParty',
+                        'value' => '_value_',
+                        'path' => '/',
+                        'domain' => '.3rd-party.net',
+                    ]
+                ];
+            }),
+        ]);
+
+        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
+            'manage' => Stub::atLeastOnce(function() use ($fakeWdOptions) {
+                return $fakeWdOptions;
+            }),
+        ]);
+
+        // Mock the WebDriverOptions::getCookies() method on the first call to introduce a 3rd-party cookie
+        // which has to be ignored when saving a snapshot.
+        $originalWebDriver = $this->module->webDriver;
+        $this->module->webDriver = $fakeWd;
+
+        $this->module->seeCookie('PHPSESSID');
+        $this->module->seeCookie('3rdParty');
+        $this->module->saveSessionSnapshot('login');
+
+        // Restore the original WebDriver
+        $this->module->webDriver = $originalWebDriver;
+
+        $this->webDriver->manage()->deleteAllCookies();
+        $this->module->dontSeeCookie('PHPSESSID');
+        $this->module->dontSeeCookie('3rdParty');
+        $this->module->loadSessionSnapshot('login');
+        $this->module->seeCookie('PHPSESSID');
+        $this->module->dontSeeCookie('3rdParty');
+    }
 }

@@ -19,6 +19,7 @@ modules:
                 message3: MESSAGE3 FROM SUITE.
 
 env:
+    email: []
     env1:
         modules:
             config:

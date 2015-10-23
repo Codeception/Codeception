@@ -7,6 +7,7 @@ use Codeception\Configuration;
 use Codeception\TestCase;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
+use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Connector\Yii2 as Yii2Connector;
 use yii\db\ActiveRecordInterface;
 use Yii;
@@ -41,7 +42,7 @@ use Yii;
  * Stability: **stable**
  *
  */
-class Yii2 extends Framework implements ActiveRecord, PartedModule
+class Yii2 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
 {
     /**
      * Application config file must be set.
@@ -92,6 +93,8 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         if ($this->transaction && $this->config['cleanup']) {
             $this->transaction->rollback();
         }
+        
+        \yii\web\UploadedFile::reset();
 
         if (Yii::$app) {
             Yii::$app->session->destroy();
