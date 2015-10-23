@@ -3,6 +3,7 @@
 #### 2.1.4
 
 * [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+* [Laravel5] Improved the error messages for several methods. See #2476. By @janhenkgerritsen
 * [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
 
