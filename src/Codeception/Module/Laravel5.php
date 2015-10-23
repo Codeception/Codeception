@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  *
  * This module allows you to run functional tests for Laravel 5.
- * Please try it and leave your feedback.
- * The module is based on the Laravel 4 module by Davert.
+ * It should **not** be used for acceptance tests.
+ * See the Acceptance tests section below for more details.
  *
  * ## Demo project
  * <https://github.com/janhenkgerritsen/codeception-laravel5-sample>
@@ -26,13 +26,13 @@ use Illuminate\Support\Facades\Facade;
  *
  * * Maintainer: **Jan-Henk Gerritsen**
  * * Stability: **stable**
- * * Contact: janhenkgerritsen@gmail.com
  *
  * ## Example
  *
  *     modules:
  *         enabled:
- *             - Laravel5
+ *             - Laravel5:
+ *                 environment_file: .env.testing
  *
  * ## Config
  *
@@ -47,11 +47,24 @@ use Illuminate\Support\Facades\Facade;
  * ## API
  *
  * * app - `Illuminate\Foundation\Application` instance
- * * client - `BrowserKit` client
+ * * client - `\Symfony\Component\BrowserKit\Client` instance
  *
  * ## Parts
  *
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+ *
+ * ## Acceptance tests
+ *
+ * You should not use this module for acceptance tests. If you want to use Laravel functionality with your acceptance tests,
+ * for example to do test setup, you can initialize the Laravel functionality by adding the following lines of code to your
+ * suite `_bootstrap.php` file:
+ *
+ *     require 'bootstrap/autoload.php';
+ *     $app = require 'bootstrap/app.php';
+ *     $app->loadEnvironmentFrom('.env.testing');
+ *     $app->instance('request', new \Illuminate\Http\Request);
+ *     $app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
+ *
  *
  */
 class Laravel5 extends Framework implements ActiveRecord, PartedModule, SupportsDomainRouting
