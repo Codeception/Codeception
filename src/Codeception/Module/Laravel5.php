@@ -495,7 +495,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function seeFormHasErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        $this->assertTrue(count($viewErrorBag) > 0);
+        $this->assertTrue(count($viewErrorBag) > 0, "There are no form errors\n");
     }
 
     /**
@@ -512,20 +512,20 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function dontSeeFormErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        $this->assertTrue(count($viewErrorBag) == 0);
+        $this->assertTrue(count($viewErrorBag) == 0, "There are form errors\n");
     }
 
     /**
      * Assert that specific form error messages are set in the view.
      *
-     * Useful for validation messages e.g.
-     *  return `Redirect::to('register')->withErrors($validator);`
-     *
-     * Example of Usage
+     * This method calls `seeFormErrorMessage` for each entry in the `$bindings` array.
      *
      * ``` php
      * <?php
-     * $I->seeFormErrorMessages(array('username'=>'Invalid Username'));
+     * $I->seeFormErrorMessages([
+     *     'username' => 'Invalid Username',
+     *     'password' => null,
+     * ]);
      * ?>
      * ```
      * @param array $bindings
@@ -538,35 +538,40 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
-     * Assert that specific form error message is set in the view.
+     * Assert that a specific form error message is set in the view.
      *
-     * Useful for validation messages and generally messages array
-     *  e.g.
-     *  return `Redirect::to('register')->withErrors($validator);`
+     * If you want to assert that there is a form error message for a specific key
+     * but don't care about the actual error message you can omit `$expectedErrorMessage`.
      *
-     * Example of Usage
+     * If you do pass `$expectedErrorMessage`, this method checks if the actual error message for a key
+     * contains `$expectedErrorMessage`.
      *
      * ``` php
      * <?php
+     * $I->seeFormErrorMessage('username');
      * $I->seeFormErrorMessage('username', 'Invalid Username');
      * ?>
      * ```
      * @param string $key
-     * @param string $errorMessage
+     * @param string|null $expectedErrorMessage
      */
-    public function seeFormErrorMessage($key, $errorMessage)
+    public function seeFormErrorMessage($key, $expectedErrorMessage = null)
     {
         $viewErrorBag = $this->app['view']->shared('errors');
 
-        $this->assertEquals($errorMessage, $viewErrorBag->first($key));
+        if (!($viewErrorBag->has($key))) {
+            $this->fail("No form error message for key '$key'\n");
+        }
+
+        if (! is_null($expectedErrorMessage)) {
+            $this->assertContains($expectedErrorMessage, $viewErrorBag->first($key));
+        }
     }
 
     /**
      * Set the currently logged in user for the application.
      * Takes either an object that implements the User interface or
      * an array of credentials.
-     *
-     * Example of Usage
      *
      * ``` php
      * <?php
@@ -620,7 +625,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      * Return an instance of a class from the IoC Container.
      * (http://laravel.com/docs/ioc)
      *
-     * Example
      * ``` php
      * <?php
      * // In Laravel
