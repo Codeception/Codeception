@@ -325,15 +325,32 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function amOnRoute($routeName, $params = [])
     {
-        $route = $this->app['routes']->getByName($routeName);
-
-        if (!$route) {
-            $this->fail("Route with name '$routeName' does not exist");
-        }
+        $route = $this->getRouteByName($routeName);
 
         $absolute = !is_null($route->domain());
         $url = $this->app['url']->route($routeName, $params, $absolute);
         $this->amOnPage($url);
+    }
+
+    /**
+     * Checks that current url matches route
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * ?>
+     * ```
+     * @param $route
+     */
+    public function seeCurrentRouteIs($route)
+    {
+        $this->getRouteByName($route); // Fails if route does not exists
+        $currentRoute = $this->app->request->route()->getName();
+
+        if ($currentRoute != $route) {
+            $message = is_null($currentRoute) ? "Current route has no name" : "Current route is \"$currentRoute\"";
+            $this->fail($message);
+        }
     }
 
     /**
@@ -350,16 +367,61 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function amOnAction($action, $params = [])
     {
-        $namespacedAction = $this->actionWithNamespace($action);
-        $route = $this->app['routes']->getByAction($namespacedAction);
+        $route = $this->getRouteByAction($action);
+        $absolute = !is_null($route->domain());
+        $url = $this->app['url']->action($action, $params, $absolute);
 
-        if (!$route) {
+        $this->amOnPage($url);
+    }
+
+    /**
+     * Checks that current url matches action
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentActionIs('PostsController@index');
+     * ?>
+     * ```
+     *
+     * @param $action
+     */
+    public function seeCurrentActionIs($action)
+    {
+        $this->getRouteByAction($action); // Fails if route does not exists
+        $currentAction = $this->app->request->route()->getActionName();
+        $currentAction = ltrim(str_replace($this->getRootControllerNamespace(), "", $currentAction), '\\');
+
+        if ($currentAction != $action) {
+            $this->fail("Current action is \"$currentAction\"");
+        }
+    }
+
+    /**
+     * @param $routeName
+     * @return mixed
+     */
+    protected function getRouteByName($routeName)
+    {
+        if (!$route = $this->app['routes']->getByName($routeName)) {
+            $this->fail("Route with name '$routeName' does not exist");
+        }
+
+        return $route;
+    }
+
+    /**
+     * @param string $action
+     * @return \Illuminate\Routing\Route
+     */
+    protected function getRouteByAction($action)
+    {
+        $namespacedAction = $this->actionWithNamespace($action);
+
+        if (!$route = $this->app['routes']->getByAction($namespacedAction)) {
             $this->fail("Action '$action' does not exist");
         }
 
-        $absolute = !is_null($route->domain());
-        $url = $this->app['url']->action($action, $params, $absolute);
-        $this->amOnPage($url);
+        return $route;
     }
 
     /**
@@ -396,39 +458,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
-     * Checks that current url matches route
-     *
-     * ``` php
-     * <?php
-     * $I->seeCurrentRouteIs('posts.index');
-     * ?>
-     * ```
-     * @param $route
-     * @param array $params
-     */
-    public function seeCurrentRouteIs($route, $params = array())
-    {
-        $this->seeCurrentUrlEquals($this->app['url']->route($route, $params, false));
-    }
-
-    /**
-     * Checks that current url matches action
-     *
-     * ``` php
-     * <?php
-     * $I->seeCurrentActionIs('PostsController@index');
-     * ?>
-     * ```
-     *
-     * @param $action
-     * @param array $params
-     */
-    public function seeCurrentActionIs($action, $params = array())
-    {
-        $this->seeCurrentUrlEquals($this->app['url']->action($action, $params, false));
-    }
-
-    /**
      * Assert that a session variable exists.
      *
      * ``` php
@@ -446,13 +475,14 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     {
         if (is_array($key)) {
             $this->seeSessionHasValues($key);
-
             return;
         }
 
-        if (is_null($value)) {
-            $this->assertTrue($this->app['session']->has($key));
-        } else {
+        if (! $this->app['session']->has($key)) {
+            $this->fail("No session variable with key '$key'");
+        }
+
+        if (! is_null($value)) {
             $this->assertEquals($value, $this->app['session']->get($key));
         }
     }
@@ -495,7 +525,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function seeFormHasErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        $this->assertTrue(count($viewErrorBag) > 0, "There are no form errors\n");
+        if (count($viewErrorBag) == 0) {
+            $this->fail("There are no form errors");
+        }
     }
 
     /**
@@ -512,7 +544,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function dontSeeFormErrors()
     {
         $viewErrorBag = $this->app->make('view')->shared('errors');
-        $this->assertTrue(count($viewErrorBag) == 0, "There are form errors\n");
+        if (count($viewErrorBag) > 0) {
+            $this->fail("Found the following form errors: \n\n" . $viewErrorBag->toJson(JSON_PRETTY_PRINT));
+        }
     }
 
     /**
@@ -591,14 +625,16 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function amLoggedAs($user, $driver = null)
     {
         if ($user instanceof Authenticatable) {
-            $this->app['auth']->driver($driver)->setUser($user);
-        } else {
-            $this->app['auth']->driver($driver)->attempt($user);
+            return $this->app['auth']->driver($driver)->setUser($user);
+        }
+
+        if (! $this->app['auth']->driver($driver)->attempt($user)) {
+            $this->fail("Failed to login with credentials " . json_encode($user));
         }
     }
 
     /**
-     * Logs user out
+     * Logout user.
      */
     public function logout()
     {
@@ -606,11 +642,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
-     * Checks that user is authenticated
+     * Checks that a user is authenticated
      */
     public function seeAuthentication()
     {
-        $this->assertTrue($this->app['auth']->check(), 'User is not logged in');
+        if (! $this->app['auth']->check()) {
+            $this->fail("There is no authenticated user");
+        }
     }
 
     /**
@@ -618,7 +656,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function dontSeeAuthentication()
     {
-        $this->assertFalse($this->app['auth']->check(), 'User is logged in');
+        if ($this->app['auth']->check()) {
+            $this->fail("There is an authenticated user");
+        }
     }
 
     /**
@@ -667,7 +707,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         try {
             return $this->app['db']->table($tableName)->insertGetId($attributes);
         } catch (\Exception $e) {
-            $this->fail("Couldn't insert record into table $tableName: " . $e->getMessage());
+            $this->fail("Could not insert record into table '$tableName':\n\n" . $e->getMessage());
         }
     }
 
@@ -686,11 +726,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function seeRecord($tableName, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        if (!$record) {
-            $this->fail("Couldn't find $tableName with " . json_encode($attributes));
+        if (! $this->findRecord($tableName, $attributes)) {
+            $this->fail("Could not find matching record in table '$tableName'");
         }
-        $this->debugSection($tableName, json_encode($record));
     }
 
     /**
@@ -708,10 +746,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function dontSeeRecord($tableName, $attributes = [])
     {
-        $record = $this->findRecord($tableName, $attributes);
-        $this->debugSection($tableName, json_encode($record));
-        if ($record) {
-            $this->fail("Unexpectedly managed to find $tableName with " . json_encode($attributes));
+        if ($this->findRecord($tableName, $attributes)) {
+            $this->fail("Unexpectedly found matching record in table '$tableName'");
         }
     }
 
@@ -731,7 +767,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function grabRecord($tableName, $attributes = [])
     {
-        return $this->findRecord($tableName, $attributes);
+        if (! $record = $this->findRecord($tableName, $attributes)) {
+            $this->fail("Could not find matching record in table '$tableName'");
+        }
+
+        return $record;
     }
 
     /**
@@ -796,7 +836,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function createModel($model, $attributes = [], $name = 'default', $times = 1)
     {
-        return $this->modelFactory($model, $name, $times)->create($attributes);
+        try {
+            return $this->modelFactory($model, $name, $times)->create($attributes);
+        } catch(\Exception $e) {
+            $this->fail("Could not create model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
     }
 
     /**
@@ -821,7 +865,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function makeModel($model, $attributes = [], $name = 'default', $times = 1)
     {
-        return $this->modelFactory($model, $name, $times)->make($attributes);
+        try {
+            return $this->modelFactory($model, $name, $times)->make($attributes);
+        } catch(\Exception $e) {
+            $this->fail("Could not make model: \n\n" . get_class($e) . "\n\n" . $e->getMessage());
+        }
     }
 
     /**
