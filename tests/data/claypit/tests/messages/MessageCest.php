@@ -30,4 +30,5 @@ class MessageCest
     {
         $I->expect('Multiple env given');
     }
+
 }

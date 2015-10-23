@@ -29,7 +29,11 @@ $urls = array(
     '/redirect_self' => 'redirect_self',
     '/relative_redirect' => 'redirect_relative',
     '/relative/redirect' => 'redirect_relative',
+    '/redirect_twice' => 'redirect_twice',
     '/relative/info' => 'info',
+    '/somepath/redirect_base_uri_has_path' => 'redirect_base_uri_has_path',
+    '/somepath/redirect_base_uri_has_path_302' => 'redirect_base_uri_has_path_302',
+    '/somepath/info' => 'info',
     '/facebook\??.*' => 'facebookController',
     '/form/(.*?)(#|\?.*?)?' => 'form',
     '/articles\??.*' => 'articles',
@@ -38,6 +42,8 @@ $urls = array(
     '/content-iso' => 'contentType1',
     '/content-cp1251' => 'contentType2',
     '/unset-cookie' => 'unsetCookie',
+    '/external_url' => 'external_url',
+    '/iframe' => 'iframe',
 );
 
 glue::stick($urls);

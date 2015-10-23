@@ -19,7 +19,7 @@ class WebDriverConstraintNotTest extends PHPUnit_Framework_TestCase {
         $this->constraint->evaluate($nodes);
     }
 
-    public function testFailMessageResponse()
+    public function testFailMessageResponseWithStringSelector()
     {
         $nodes = array(new TestedWebElement('Bye warcraft'), new TestedWebElement('Bye world'));
         try {
@@ -27,6 +27,19 @@ class WebDriverConstraintNotTest extends PHPUnit_Framework_TestCase {
         } catch (PHPUnit_Framework_AssertionFailedError $fail) {
             $this->assertContains("There was 'selector' element on page <bold>/user</bold>", $fail->getMessage());
             $this->assertNotContains('+ <info><p> Bye world</info>',$fail->getMessage());
+            $this->assertContains('+ <info><p> Bye <bold>warcraft</bold></info>',$fail->getMessage());
+            return;
+        }
+        $this->fail("should have failed, but not");
+    }
+
+    public function testFailMessageResponseWithArraySelector()
+    {
+        $nodes = array(new TestedWebElement('Bye warcraft'));
+        try {
+            $this->constraint->evaluate($nodes, ['css' => 'p.mocked']);
+        } catch (PHPUnit_Framework_AssertionFailedError $fail) {
+            $this->assertContains("There was css 'p.mocked' element on page <bold>/user</bold>", $fail->getMessage());
             $this->assertContains('+ <info><p> Bye <bold>warcraft</bold></info>',$fail->getMessage());
             return;
         }

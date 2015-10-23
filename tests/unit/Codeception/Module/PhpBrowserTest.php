@@ -146,6 +146,32 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertContains('test@gmail.com', $params);
     }
 
+    public function testRedirectBaseUriHasPath()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['url'] .= '/somepath'; // append path to the base url
+        $this->module->_reconfigure($config);
+
+        $this->module->amOnPage('/redirect_base_uri_has_path');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/somepath/info');
+        $this->module->see('Lots of valuable data here');
+    }
+
+    public function testRedirectBaseUriHasPathAnd302Code()
+    {
+        // prepare config
+        $config = $this->module->_getConfig();
+        $config['url'] .= '/somepath'; // append path to the base url
+        $this->module->_reconfigure($config);
+
+        $this->module->amOnPage('/redirect_base_uri_has_path_302');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/somepath/info');
+        $this->module->see('Lots of valuable data here');
+    }
+
     public function testRelativeRedirect()
     {
         // test relative redirects where the effective request URI is in a
@@ -157,6 +183,40 @@ class PhpBrowserTest extends TestsForBrowsers
         // also, test relative redirects where the effective request URI is not
         // in a subdirectory
         $this->module->amOnPage('/relative_redirect');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testChainedRedirects()
+    {
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testDisabledRedirects()
+    {
+        $this->module->client->followRedirects(false);
+        $this->module->amOnPage('/redirect_twice');
+        $this->module->seeResponseCodeIs(302);
+        $this->module->seeCurrentUrlEquals('/redirect_twice');
+    }
+
+    public function testRedirectLimitReached()
+    {
+        $this->module->client->setMaxRedirects(1);
+        try {
+            $this->module->amOnPage('/redirect_twice');
+            $this->assertTrue(false, 'redirect limit is not respected');
+        } catch (\LogicException $e) {
+            $this->assertEquals('The maximum number (1) of redirections was reached.', $e->getMessage(), 'redirect limit is respected');
+        }
+    }
+
+    public function testRedirectLimitNotReached()
+    {
+        $this->module->client->setMaxRedirects(2);
+        $this->module->amOnPage('/redirect_twice');
         $this->module->seeResponseCodeIs(200);
         $this->module->seeCurrentUrlEquals('/info');
     }
@@ -386,5 +446,37 @@ class PhpBrowserTest extends TestsForBrowsers
       $this->module->amOnPage('/unset-cookie');
       $this->module->seeResponseCodeIs(200);
       $this->module->dontSeeCookie('a');
+    }
+
+    public function testRequestApi()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $response = $this->module->_request('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->assertInternalType('string', $response);
+        $this->assertContains('Welcome to test app', $response);
+        $this->module->click('Welcome to test app'); // page not loaded
+    }
+
+    public function testLoadPageApi()
+    {
+        $this->module->_loadPage('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->module->see('Welcome to test app');
+        $this->module->click('More info');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2408
+     */
+    public function testClickFailure()
+    {
+        $this->module->amOnPage('/info');
+        $this->setExpectedException('Codeception\Exception\ElementNotFound',
+            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
+        $this->module->click('Sign In!');
     }
 }

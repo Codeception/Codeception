@@ -35,6 +35,7 @@ use Facebook\WebDriver\WebDriverElement;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Facebook\WebDriver\WebDriverKeys;
 use Facebook\WebDriver\WebDriverSelect;
+use GuzzleHttp\Cookie\SetCookie;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -91,6 +92,21 @@ use Symfony\Component\DomCrawler\Crawler;
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
  *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+ *
+ *
+ *
+ * ## SauceLabs.com Integration
+ *
+ * SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
+ * enabling you to test locally hosted sites from their servers.
+ *
+ * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ *
+ * [CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
+ *
+ *
  * ## Locating Elements
  *
  * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
@@ -458,6 +474,16 @@ class WebDriver extends CodeceptionModule implements
         }
         $nodes = $this->matchVisible($selector);
         $this->assertNodesNotContain($text, $nodes, $selector);
+    }
+
+    public function seeInSource($raw)
+    {
+        $this->assertPageSourceContains($raw);
+    }
+
+    public function dontSeeInSource($raw)
+    {
+        $this->assertPageSourceNotContains($raw);
     }
 
     /**
@@ -1138,6 +1164,24 @@ class WebDriver extends CodeceptionModule implements
     }
 
     public function seeNumberOfElements($selector, $expected)
+    {
+        $counted = count($this->matchVisible($selector));
+        if (is_array($expected)) {
+            list($floor, $ceil) = $expected;
+            $this->assertTrue(
+                $floor <= $counted && $ceil >= $counted,
+                'Number of elements counted differs from expected range'
+            );
+        } else {
+            $this->assertEquals(
+                $expected,
+                $counted,
+                'Number of elements counted differs from expected number'
+            );
+        }
+    }
+
+    public function seeNumberOfElementsInDOM($selector, $expected)
     {
         $counted = count($this->match($this->webDriver, $selector));
         if (is_array($expected)) {
@@ -2023,6 +2067,24 @@ class WebDriver extends CodeceptionModule implements
         );
     }
 
+    protected function assertPageSourceContains($needle, $message = '')
+    {
+        $this->assertThat(
+            $this->webDriver->getPageSource(),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
+    }
+
+    protected function assertPageSourceNotContains($needle, $message = '')
+    {
+        $this->assertThatItsNot(
+            $this->webDriver->getPageSource(),
+            new PageConstraint($needle, $this->_getCurrentUri()),
+            $message
+        );
+    }
+
     /**
      * Append the given text to the given element.
      * Can also add a selection to a select box.
@@ -2139,11 +2201,26 @@ class WebDriver extends CodeceptionModule implements
         throw new \InvalidArgumentException("Only CSS or XPath allowed");
     }
 
+    /**
+     * @param string $name
+     */
     public function saveSessionSnapshot($name)
     {
-        $this->sessionSnapshots[$name] = $this->webDriver->manage()->getCookies();
+        $this->sessionSnapshots[$name] = [];
+
+        foreach ($this->webDriver->manage()->getCookies() as $cookie) {
+            if ($this->cookieDomainMatchesConfigUrl($cookie)) {
+                $this->sessionSnapshots[$name][] = $cookie;
+            }
+        }
+
+        $this->debugSection('Snapshot', "Saved \"$name\" session snapshot");
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public function loadSessionSnapshot($name)
     {
         if (!isset($this->sessionSnapshots[$name])) {
@@ -2152,7 +2229,25 @@ class WebDriver extends CodeceptionModule implements
         foreach ($this->sessionSnapshots[$name] as $cookie) {
             $this->webDriver->manage()->addCookie($cookie);
         }
-        $this->debugSection('Snapshot', "$name session restored");
+        $this->debugSection('Snapshot', "Restored \"$name\" session snapshot");
         return true;
+    }
+
+    /**
+     * Check if the cookie domain matches the config URL.
+     *
+     * @param array $cookie
+     * @return bool
+     */
+    private function cookieDomainMatchesConfigUrl(array $cookie)
+    {
+        if (!array_key_exists('domain', $cookie)) {
+            return true;
+        }
+
+        $setCookie = new SetCookie();
+        $setCookie->setDomain($cookie['domain']);
+
+        return $setCookie->matchesDomain(parse_url($this->config['url'], PHP_URL_HOST));
     }
 }

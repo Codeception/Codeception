@@ -22,6 +22,11 @@ class Laravel5 extends Client
     private $module;
 
     /**
+     * @var array
+     */
+    private $expectedEvents = [];
+
+    /**
      * Constructor.
      * @param \Codeception\Module\Laravel5 $module
      */
@@ -87,6 +92,14 @@ class Laravel5 extends Client
         $this->app->instance('request', Request::createFromBase($request));
         $this->app->instance('middleware.disable', $this->module->config['disable_middleware']);
 
+        // If events should be disabled mock the event dispatcher instance
+        if ($this->module->config['disable_events']) {
+            $this->mockEventDispatcher();
+        }
+
+        // Setup listener for expected events
+        $this->listenForExpectedEvents();
+
         // Bootstrap the application
         $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
 
@@ -118,6 +131,111 @@ class Laravel5 extends Client
         $app->instance('request', new Request());
 
         return $app;
+    }
+
+    /**
+     * Replace the Laravel event dispatcher with a mock.
+     */
+    private function mockEventDispatcher()
+    {
+        $mockGenerator = new \PHPUnit_Framework_MockObject_Generator;
+        $mock = $mockGenerator->getMock('Illuminate\Contracts\Events\Dispatcher');
+        $this->app->instance('events', $mock);
+    }
+
+    /**
+     * Listen for expected events.
+     * Even works when events are disabled.
+     */
+    private function listenForExpectedEvents()
+    {
+        if ($this->module->config['disable_events']) {
+            // Events are disabled so we should listen for events through the mocked event dispatcher
+            $mock = $this->app['events'];
+            $callback = [$this, 'expectedEventListenerForMockedDispatcher'];
+
+            $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
+                ->method('fire')
+                ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($callback));
+        } else {
+            // Listen for all events by registering a wildcard event listener
+            $this->app['events']->listen('*', [$this, 'expectedEventListenerForLaravelDispatcher']);
+        }
+    }
+
+    /**
+     * Add an expected event.
+     *
+     * @param string $event
+     */
+    public function addExpectedEvent($event)
+    {
+        $this->expectedEvents[] = $event;
+    }
+
+    /**
+     * Returns all events that were expected but did not fire.
+     *
+     * @return array
+     */
+    public function missedEvents()
+    {
+        return $this->expectedEvents;
+    }
+
+    /**
+     * Clear all expected events.
+     * Should be called before each test.
+     */
+    public function clearExpectedEvents()
+    {
+        $this->expectedEvents = [];
+    }
+
+    /**
+     * Wildcard event listener for the Laravel event dispatcher.
+     * Used to check if expected events are fired.
+     */
+    public function expectedEventListenerForLaravelDispatcher()
+    {
+        $this->checkForExpectedEvent($this->app['events']->firing());
+    }
+
+    /**
+     * If events are disabled the Laravel event dispatcher is replaced by a mock.
+     * This method is called by the mocked fire() method to check for expected events.
+     *
+     * @param $event
+     */
+    public function expectedEventListenerForMockedDispatcher($event)
+    {
+        $this->checkForExpectedEvent($event);
+    }
+
+    /**
+     * Check if the event was an expected event.
+     *
+     * @param $event
+     */
+    private function checkForExpectedEvent($event)
+    {
+        if (!$this->expectedEvents) {
+            return;
+        }
+
+        if (is_object($event)) {
+            $event = get_class($event);
+        }
+
+        // Events can be formatted as 'event.name: class'
+        $segments = explode(':', $event);
+        $event = $segments[0];
+
+        foreach ($this->expectedEvents as $key => $expectedEvent) {
+            if ($event == $expectedEvent || is_subclass_of($event, $expectedEvent)) {
+                unset($this->expectedEvents[$key]);
+            }
+        }
     }
 
 }

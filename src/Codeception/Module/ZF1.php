@@ -108,11 +108,12 @@ class ZF1 extends Framework
 
         require_once 'Zend/Loader/Autoloader.php';
         \Zend_Loader_Autoloader::getInstance();
-        $this->client = new ZF1Connector();
     }
 
     public function _before(TestCase $test)
     {
+        $this->client = new ZF1Connector();
+
         \Zend_Session::$_unitTestEnabled = true;
         try {
             $this->bootstrap = new \Zend_Application($this->config['env'], Configuration::projectDir() . $this->config['config']);
@@ -147,15 +148,17 @@ class ZF1 extends Framework
         \Zend_Session::$_unitTestEnabled = true;
         $this->queries = 0;
         $this->time = 0;
+
+        parent::_after($test);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-//        $this->debugsection('Route', sprintf('%/%/%',
-//            $this->client->getzendrequest()->getmodulename(),
-//            $this->client->getzendrequest()->getcontrollername(),
-//            $this->client->getzendrequest()->getactionname()
-//        ));
+        parent::debugResponse($url);
+
         $this->debugSection('Session', json_encode($_COOKIE));
         if ($this->db) {
             $profiler = $this->db->getProfiler();
@@ -166,5 +169,45 @@ class ZF1 extends Framework
             $this->time = $profiler->getTotalElapsedSecs();
             $this->queries = $profiler->getTotalNumQueries();
         }
+    }
+
+    /**
+     * Opens web page using route name and parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnRoute('posts.create');
+     * $I->amOnRoute('posts.show', array('id' => 34));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function amOnRoute($routeName, array $params = [])
+    {
+        $router = $this->bootstrap->getBootstrap()->getResource('frontcontroller')->getRouter();
+        $url = $router->assemble($params, $routeName);
+        $this->amOnPage($url);
+    }
+
+    /**
+     * Checks that current url matches route.
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * $I->seeCurrentRouteIs('posts.show', ['id' => 8]));
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function seeCurrentRouteIs($routeName, array $params = [])
+    {
+        $router = $this->bootstrap->getBootstrap()->getResource('frontcontroller')->getRouter();
+        $url = $router->assemble($params, $routeName);
+        $this->seeCurrentUrlEquals($url);
     }
 }

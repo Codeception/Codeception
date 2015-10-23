@@ -4,9 +4,12 @@ namespace Codeception;
 
 use Codeception\Event\Suite;
 use Codeception\Event\SuiteEvent;
+use Codeception\Exception\ConfigurationException;
+use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
+use Codeception\Lib\Notification;
 use Codeception\Lib\TestLoader;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -68,10 +71,10 @@ class SuiteManager
             $this->moduleContainer->create($moduleName);
         }
         $this->moduleContainer->validateConflicts();
-        $this->suite = $this->createSuite($name);
         if (isset($settings['current_environment'])) {
             $this->env = $settings['current_environment'];
         }
+        $this->suite = $this->createSuite($name);
     }
 
     public function initialize()
@@ -113,13 +116,14 @@ class SuiteManager
             }
         }
 
-        if ($test instanceof TestCase) {
-            if (!$this->isCurrentEnvironment($test->getEnvironment())) {
-                return; // skip tests from other environments
-            }
-        }
         if ($test instanceof ScenarioDriven) {
             $test->preload();
+        }
+        if ($test instanceof TestCase) {
+            $this->checkEnvironmentExists($test);
+            if (!$this->isExecutedInCurrentEnvironment($test)) {
+                return; // skip tests from other environments
+            }
         }
 
         $groups = $this->groupManager->groupsForTest($test);
@@ -170,19 +174,35 @@ class SuiteManager
     protected function getActor()
     {
         return $this->settings['namespace']
-            ? $this->settings['namespace'] . '\\' . $this->settings['class_name']
+            ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
             : $this->settings['class_name'];
     }
 
-    protected function isCurrentEnvironment($envs)
+    protected function checkEnvironmentExists(\Codeception\TestCase $test)
     {
+        $envs = $test->getEnvironment();
+        if (empty($envs)) {
+            return;
+        }
+        if (!isset($this->settings['env'])) {
+            Notification::warning("Environments are not configured", TestCase::getTestFullName($test));
+            return;
+        }
+        $availableEnvironments = array_keys($this->settings['env']);
+        $listedEnvironments = explode(',', implode(',', $test->getEnvironment()));
+        foreach ($listedEnvironments as $env) {
+            if (!in_array($env, $availableEnvironments)) {
+                Notification::warning("Environment $env was not configured but used in test", TestCase::getTestFullName($test));
+            }
+        }
+    }
+
+    protected function isExecutedInCurrentEnvironment(\Codeception\TestCase $test)
+    {
+        $envs = $test->getEnvironment();
         if (empty($envs)) {
             return true;
         }
-        if (!$this->env) {
-            return false;
-        }
-
         $currentEnvironments = explode(',', $this->env);
         foreach ($envs as $envList) {
             $envList = explode(',', $envList);

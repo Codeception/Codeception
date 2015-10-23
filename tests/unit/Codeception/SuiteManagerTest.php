@@ -102,4 +102,6 @@ class SuiteManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('test.after.admin', $events);
     }
 
+
+
 }

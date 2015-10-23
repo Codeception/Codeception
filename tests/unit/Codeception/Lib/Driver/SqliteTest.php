@@ -59,4 +59,33 @@ class SqliteTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEquals(false, $res);
         $this->assertNotEmpty($res->fetchAll());
     }
+
+    public function testGetSingleColumnPrimaryKey()
+    {
+        $this->assertEquals(['id'], self::$sqlite->getPrimaryKey('order'));
+    }
+
+    public function testGetCompositePrimaryKey()
+    {
+        $this->assertEquals(['group_id', 'id'], self::$sqlite->getPrimaryKey('composite_pk'));
+    }
+
+    public function testGetEmptyArrayIfTableHasNoPrimaryKey()
+    {
+        $this->assertEquals([], self::$sqlite->getPrimaryKey('no_pk'));
+    }
+
+    public function testGetPrimaryColumnOfTableUsingReservedWordAsTableName()
+    {
+        $this->assertEquals('id', self::$sqlite->getPrimaryColumn('order'));
+    }
+
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage getPrimaryColumn method does not support composite primary keys, use getPrimaryKey instead
+     */
+    public function testGetPrimaryColumnThrowsExceptionIfTableHasCompositePrimaryKey()
+    {
+        self::$sqlite->getPrimaryColumn('composite_pk');
+    }
 }
