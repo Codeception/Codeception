@@ -115,7 +115,8 @@ class TestLoader
             $formatFinder = clone($finder);
             $testFiles = $formatFinder->name("*$format.php");
             foreach ($testFiles as $test) {
-                call_user_func([$this, "add$format"], $test->getPathname());
+                $pathname = str_replace("//", "/", $test->getPathname());
+                call_user_func([$this, "add$format"], $pathname);
             }
         }
     }
