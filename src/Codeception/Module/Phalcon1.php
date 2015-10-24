@@ -215,7 +215,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      */
     public function haveInSession($key, $val)
     {
-        $this->di->get('session')->set($key, (string)$val);
+        $this->di->get('session')->set($key, $val);
         $this->debugSection('Session', json_encode($this->di['session']->getAll()));
     }
 
