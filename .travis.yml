@@ -44,9 +44,9 @@ install:
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.8'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (git clone -q --depth=1 https://github.com/phalcon/forum.git frameworks-phalcon; cp frameworks-phalcon/tests/config/config.php.dist frameworks-phalcon/app/config/config.php)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || composer install -d frameworks-phalcon --no-dev  --prefer-source'
   # Laravel 4
   - git clone -q  -b codeception-2.1 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
@@ -90,8 +90,8 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data/app --listen=127.0.0.1:8000 >/dev/null 2>&1 &'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data --listen=127.0.0.1:8010  >/dev/null 2>&1 &'
   # Phalcon
-  - mysql -e 'CREATE DATABASE phosphorum CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || cat frameworks-phalcon/schemas/forum.sql | mysql phosphorum'
+  - mysql -e 'CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 4
   - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
