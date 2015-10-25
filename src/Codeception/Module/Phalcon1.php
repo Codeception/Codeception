@@ -147,6 +147,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
         Di::setDefault($this->di);
 
         if ($this->di->has('session')) {
+            // Destroy existing sessions of previous tests
             $this->di['session'] = new PhalconMemorySession();
         }
 
@@ -220,24 +221,65 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     public function haveInSession($key, $val)
     {
         $this->di->get('session')->set($key, $val);
-        $this->debugSection('Session', json_encode($this->di['session']->getAll()));
+        $this->debugSection('Session', json_encode($this->di['session']->toArray()));
     }
 
     /**
      * Checks that session contains value.
      * If value is `null` checks that session has key.
      *
+     * ``` php
+     * <?php
+     * $I->seeInSession('key');
+     * $I->seeInSession('key', 'value');
+     * ?>
+     * ```
+     *
      * @param string $key
      * @param mixed $value
      */
     public function seeInSession($key, $value = null)
     {
-        $this->debugSection('Session', json_encode($this->di['session']->getAll()));
-        if (is_null($value)) {
-            $this->assertTrue($this->di['session']->has($key));
+        $this->debugSection('Session', json_encode($this->di['session']->toArray()));
+
+        if (is_array($key)) {
+            $this->seeSessionHasValues($key);
             return;
         }
-        $this->assertEquals($value, $this->di['session']->get($key));
+
+        if (!$this->di['session']->has($key)) {
+            $this->fail("No session variable with key '$key'");
+        }
+
+        if (is_null($value)) {
+            $this->assertTrue($this->di['session']->has($key));
+        } else {
+            $this->assertEquals($value, $this->di['session']->get($key));
+        }
+    }
+
+    /**
+     * Assert that the session has a given list of values.
+     *
+     * ``` php
+     * <?php
+     * $I->seeSessionHasValues(['key1', 'key2']);
+     * $I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
+     * ?>
+     * ```
+     *
+     * @param  array $bindings
+     * @return void
+     */
+    public function seeSessionHasValues(array $bindings)
+    {
+        foreach ($bindings as $key => $value) {
+            if (is_int($key)) {
+                $this->seeInSession($value);
+            } else {
+                $this->seeInSession($key, $value);
+            }
+        }
     }
 
     /**
