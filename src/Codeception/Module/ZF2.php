@@ -62,7 +62,10 @@ class ZF2 extends Framework implements DoctrineProvider
     protected $queries = 0;
     protected $time = 0;
 
-    private $internalDomains = null;
+    /**
+     * @var array Used to collect domains while recusively traversing route tree
+     */
+    private $domainCollector = [];
 
     public function _initialize()
     {
@@ -85,14 +88,6 @@ class ZF2 extends Framework implements DoctrineProvider
 
         $this->client->setApplication($this->application);
         $_SERVER['REQUEST_URI'] = '';
-    }
-
-    public function _beforeSuite($settings = [])
-    {
-        /**
-         * reset internal domains before suite, because each suite can have a different configuration
-         */
-        $this->internalDomains = null;
     }
 
     public function _after(TestCase $test)
@@ -188,15 +183,13 @@ class ZF2 extends Framework implements DoctrineProvider
 
     protected function getInternalDomains()
     {
-        if ($this->internalDomains === null) {
-            /**
-             * @var Zend\Mvc\Router\Http\TreeRouteStack
-             */
-            $router = $this->application->getServiceManager()->get('router');
-            $this->addInternalDomainsFromRoutes($router->getRoutes());
-            $this->internalDomains = array_unique($this->internalDomains);
-        }
-        return $this->internalDomains;
+        /**
+         * @var Zend\Mvc\Router\Http\TreeRouteStack
+         */
+        $router = $this->application->getServiceManager()->get('router');
+        $this->domainCollector = [];
+        $this->addInternalDomainsFromRoutes($router->getRoutes());
+        return array_unique($this->domainCollector);
     }
 
     private function addInternalDomainsFromRoutes($routes)
@@ -222,6 +215,6 @@ class ZF2 extends Framework implements DoctrineProvider
     private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
     {
         $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
-        $this->internalDomains []= '/^' . $regex . '$/';
+        $this->domainCollector []= '/^' . $regex . '$/';
     }
 }
