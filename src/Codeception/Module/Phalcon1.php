@@ -17,6 +17,7 @@ use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Exception\ModuleConfigException;
+use Exception;
 use Codeception\Lib\Connector\PhalconMemorySession;
 
 /**
@@ -406,26 +407,13 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
         }
 
         /** @var Url $url */
-        $url   = $this->di->getShared('url');
-        $route = $this->getRouteByName($routeName);
-        $paths = $route->getPaths();
+        $url = $this->di->getShared('url');
 
-        $urlParams = [
-            'for'    => $routeName,
-            'params' => $params
-        ];
-
-        if (isset($paths['controller'])) {
-            $urlParams['controller'] = $paths['controller'];
+        try {
+            $this->amOnPage($url->get(['for' => $routeName], null, true));
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
         }
-
-        if (isset($paths['action'])) {
-            $urlParams['action'] = $paths['action'];
-        }
-
-        $compiledUrl = $url->get($urlParams);
-
-        $this->amOnPage($compiledUrl);
     }
 
     /**
@@ -448,35 +436,11 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
         /** @var Url $url */
         $url = $this->di->getShared('url');
 
-        $urlParams = [
-            'for'    => $routeName,
-            'params' => $params
-        ];
-
-        $this->seeCurrentUrlEquals($url->get($urlParams));
-    }
-
-    /**
-     * Get Route by name
-     *
-     * @param string $routeName
-     * @return RouteInterface
-     */
-    protected function getRouteByName($routeName)
-    {
-        if (!$this->di->has('router')) {
-            $this->fail('Unable to resolve "router" service.');
+        try {
+            $this->seeCurrentUrlEquals($url->get(['for' => $routeName], null, true));
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
         }
-
-        /** @var RouterInterface $router */
-        $router = $this->di->getShared('router');
-        $route  = $router->getRouteByName($routeName);
-
-        if (!$route instanceof RouteInterface) {
-            $this->fail("Route with name '$routeName' does not exist");
-        }
-
-        return $route;
     }
 
     /**
