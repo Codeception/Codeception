@@ -7,6 +7,7 @@
 * [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
 * [Phalcon] Added `amOnRoute` and `seeCurrentRouteIs` methods by @sergeyklay
+* [Phalcon] Added `seeSessionHasValues` by @sergeyklay
 
 #### 2.1.3
 
