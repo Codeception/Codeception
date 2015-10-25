@@ -429,6 +429,39 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Checks that current url matches route
+     *
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteIs('posts.index');
+     * ?>
+     * ```
+     * @param string $routeName
+     * @param array $params
+     */
+    public function seeCurrentRouteIs($routeName, $params = [])
+    {
+        if (!$this->di->has('url')) {
+            $this->fail('Unable to resolve "url" service.');
+        }
+
+        /** @var Url $url */
+        $url = $this->di->getShared('url');
+
+        $urlParams = [
+            'for'    => $routeName,
+            'params' => $params
+        ];
+
+        $compiledUrl = $url->get($urlParams);
+
+        $this->amOnPage($compiledUrl);
+
+
+        $this->seeCurrentUrlEquals($compiledUrl);
+    }
+
+    /**
      * Get Route by name
      *
      * @param string $routeName
