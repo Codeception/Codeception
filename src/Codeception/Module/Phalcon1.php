@@ -453,12 +453,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             'params' => $params
         ];
 
-        $compiledUrl = $url->get($urlParams);
-
-        $this->amOnPage($compiledUrl);
-
-
-        $this->seeCurrentUrlEquals($compiledUrl);
+        $this->seeCurrentUrlEquals($url->get($urlParams));
     }
 
     /**
