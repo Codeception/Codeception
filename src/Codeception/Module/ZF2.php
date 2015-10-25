@@ -5,7 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\Util\PropertyAccess;
+use Codeception\Util\ReflectionHelper;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
 use Zend\Mvc\Application;
@@ -205,7 +205,7 @@ class ZF2 extends Framework implements DoctrineProvider
             if ($route instanceof \Zend\Mvc\Router\Http\Hostname) {
                 $this->addInternalDomain($route);
             } elseif ($route instanceof \Zend\Mvc\Router\Http\Part) {
-                $parentRoute = PropertyAccess::readPrivateProperty($route, 'route');
+                $parentRoute = ReflectionHelper::readPrivateProperty($route, 'route');
                 if ($parentRoute instanceof \Zend\Mvc\Router\Http\Hostname) {
                     $this->addInternalDomain($parentRoute);
                 }
@@ -221,7 +221,7 @@ class ZF2 extends Framework implements DoctrineProvider
 
     private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
     {
-        $regex = PropertyAccess::readPrivateProperty($route, 'regex');
+        $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
         $this->internalDomains []= '/^' . $regex . '$/';
     }
 }
