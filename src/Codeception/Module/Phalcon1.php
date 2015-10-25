@@ -7,6 +7,9 @@ use Phalcon\Di;
 use Phalcon\DiInterface;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\Url;
+use Phalcon\Mvc\Router\RouteInterface;
+use Phalcon\Mvc\RouterInterface;
 use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\Phalcon as PhalconConnector;
@@ -27,7 +30,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * ## Status
  *
  * * Maintainer: **Serghei Iakovlev**
- * * Stability: **dev**
+ * * Stability: **stable**
  * * Contact: sadhooklay@gmail.com
  *
  * ## Example
@@ -382,6 +385,70 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
 
             return null;
         }
+    }
+
+    /**
+     * Opens web page using route name and parameters.
+     *
+     * ``` php
+     * <?php
+     * $I->amOnRoute('posts.create');
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     * @param array $params
+     */
+    public function amOnRoute($routeName, $params = [])
+    {
+        if (!$this->di->has('url')) {
+            $this->fail('Unable to resolve "url" service.');
+        }
+
+        /** @var Url $url */
+        $url   = $this->di->getShared('url');
+        $route = $this->getRouteByName($routeName);
+        $paths = $route->getPaths();
+
+        $urlParams = [
+            'for'    => $routeName,
+            'params' => $params
+        ];
+
+        if (isset($paths['controller'])) {
+            $urlParams['controller'] = $paths['controller'];
+        }
+
+        if (isset($paths['action'])) {
+            $urlParams['action'] = $paths['action'];
+        }
+
+        $compiledUrl = $url->get($urlParams);
+
+        $this->amOnPage($compiledUrl);
+    }
+
+    /**
+     * Get Route by name
+     *
+     * @param string $routeName
+     * @return RouteInterface
+     */
+    protected function getRouteByName($routeName)
+    {
+        if (!$this->di->has('router')) {
+            $this->fail('Unable to resolve "router" service.');
+        }
+
+        /** @var RouterInterface $router */
+        $router = $this->di->getShared('router');
+        $route  = $router->getRouteByName($routeName);
+
+        if (!$route instanceof RouteInterface) {
+            $this->fail("Route with name '$routeName' does not exist");
+        }
+
+        return $route;
     }
 
     /**
