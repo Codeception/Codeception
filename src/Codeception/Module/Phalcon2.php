@@ -17,7 +17,7 @@ use Codeception\TestCase;
  * ## Status
  *
  * * Maintainer: **Serghei Iakovlev**
- * * Stability: **dev**
+ * * Stability: **stable**
  * * Contact: sadhooklay@gmail.com
  *
  * ## Example
