@@ -4,6 +4,7 @@
 
 * [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
+* [Yii2] Fixed problems with transaction rollbacks when using the `cleanup` flag. See #2488. By @ivokund
 
 #### 2.1.3
 
