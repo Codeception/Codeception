@@ -3,8 +3,11 @@
 #### 2.1.4
 
 * [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+* [Laravel5] Improved the error messages for several methods. See #2476. By @janhenkgerritsen
+* [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
-* [Yii2] Fixed problems with transaction rollbacks when using the `cleanup` flag. See #2488. By @ivokund
+* [Phalcon] Added `amOnRoute` and `seeCurrentRouteIs` methods by @sergeyklay
+* [Phalcon] Added `seeSessionHasValues` by @sergeyklay
 
 #### 2.1.3
 

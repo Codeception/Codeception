@@ -109,7 +109,11 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
+        $maxNestingLevel = 200; // Symfony may have very long nesting level
+        $xdebugMaxLevelKey = 'xdebug.max_nesting_level';
+        if (ini_get($xdebugMaxLevelKey) < $maxNestingLevel) {
+            ini_set($xdebugMaxLevelKey, $maxNestingLevel);
+        }
     }
 
     public function _before(\Codeception\TestCase $test) 

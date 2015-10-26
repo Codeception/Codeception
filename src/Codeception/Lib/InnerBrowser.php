@@ -292,6 +292,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
+    public function seeInSource($raw)
+    {
+        $this->assertPageSourceContains($raw);
+    }
+
+    public function dontSeeInSource($raw)
+    {
+        $this->assertPageSourceNotContains($raw);
+    }
+
     public function seeLink($text, $url = null)
     {
         $links = $this->getCrawler()->selectLink($text);
@@ -912,8 +922,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $this->debugSection('Page', $url);
         $this->debugSection('Response', $this->getResponseStatusCode());
-        $this->debugSection('Cookies', $this->getRunningClient()->getInternalRequest()->getCookies());
-        $this->debugSection('Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
+        $this->debugSection('Request Cookies', $this->getRunningClient()->getInternalRequest()->getCookies());
+        $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
     protected function getResponseStatusCode()
@@ -1090,13 +1100,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
 
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     public function grabCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $cookies = $this->getRunningClient()->getCookieJar()->get($cookie, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
@@ -1107,14 +1117,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function seeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNotNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
     public function dontSeeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
@@ -1122,7 +1132,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     private function stringifySelector($selector)
@@ -1265,6 +1275,26 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
             html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThat(
+            $this->getRunningClient()->getInternalResponse()->getContent(),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceNotContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThatItsNot(
+            $this->getRunningClient()->getInternalResponse()->getContent(),
             $constraint,
             $message
         );
@@ -1420,5 +1450,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             throw new \InvalidArgumentException('numberOfSteps is set to ' . $numberOfSteps . ', but there are only ' . ($numberOfSteps - $i) . ' previous steps in the history');
         }
         $this->_loadPage($request->getMethod(),$request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent());
+    }
+
+    protected function debugCookieJar()
+    {
+        $cookies = $this->client->getCookieJar()->all();
+        $cookieStrings = array_map('strval', $cookies);
+        $this->debugSection('Cookie Jar', $cookieStrings);
     }
 }
