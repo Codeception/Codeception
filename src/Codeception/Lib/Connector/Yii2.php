@@ -18,12 +18,38 @@ class Yii2 extends Client
      * @var string application config file
      */
     public $configFile;
-    
+
     /**
      * @var array
      */
     public $headers;
     public $statusCode;
+
+    /**
+     * @var \yii\web\Application
+     */
+    private $app;
+
+    /**
+     * @var \yii\db\Connection
+     */
+    public static $db; // remember the db instance
+
+    /**
+     * @return \yii\web\Application
+     */
+    public function getApplication()
+    {
+        if (!isset($this->app)) {
+            $this->app = $this->startApp();
+        }
+        return $this->app;
+    }
+
+    public function resetApplication()
+    {
+        $this->app = null;
+    }
 
     public function startApp()
     {
@@ -32,7 +58,14 @@ class Yii2 extends Client
             $config['class'] = 'yii\web\Application';
         }
         /** @var \yii\web\Application $app */
-        return Yii::createObject($config);
+        $app = Yii::createObject($config);
+        // always use the same DB connection
+        if (isset(static::$db)) {
+            $app->set('db', static::$db);
+        } elseif ($app->has('db')) {
+            static::$db = $app->get('db');
+        }
+        return $app;
     }
 
     /**
@@ -67,7 +100,7 @@ class Yii2 extends Client
             $_GET[$k] = $v;
         }
 
-        $app = $this->startApp();
+        $app = $this->getApplication();
 
         $app->getResponse()->on(YiiResponse::EVENT_AFTER_PREPARE, [$this, 'processResponse']);
 
@@ -83,6 +116,9 @@ class Yii2 extends Client
 
         $yiiRequest = $app->getRequest();
         $yiiRequest->setRawBody($request->getContent());
+        $yiiRequest->setBodyParams($_POST);
+        $yiiRequest->setQueryParams($_GET);
+
         try {
             $app->handleRequest($yiiRequest)->send();
         } catch (\Exception $e) {
@@ -94,6 +130,7 @@ class Yii2 extends Client
                 // nothing to do
             } else {
                 // for exceptions not related to Http, we pass them to Codeception
+                $this->resetApplication();
                 throw $e;
             }
         }
@@ -105,6 +142,8 @@ class Yii2 extends Client
         if (isset($this->headers['location'])) {
             Debug::debug("[Headers] " . json_encode($this->headers));
         }
+
+        $this->resetApplication();
 
         return new Response($content, $this->statusCode, $this->headers);
     }
