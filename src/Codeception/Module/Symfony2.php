@@ -114,12 +114,13 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         if (ini_get($xdebugMaxLevelKey) < $maxNestingLevel) {
             ini_set($xdebugMaxLevelKey, $maxNestingLevel);
         }
-    }
 
-    public function _before(\Codeception\TestCase $test) 
-    {
         $this->bootKernel();
         $this->container = $this->kernel->getContainer();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
     }
