@@ -272,9 +272,13 @@ class Symfony2 extends Framework implements DoctrineProvider
         return $profiler->loadProfileFromResponse($response);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-        $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        parent::debugResponse($url);
+
         if ($profile = $this->getProfiler()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {

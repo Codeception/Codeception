@@ -12,15 +12,15 @@ use Codeception\TestCase;
 /**
  * Works with SQL database.
  *
- * The most important function of this module is cleaning database before each test.
- * That's why this module was added into global configuration file: codeception.yml.
+ * The most important function of this module is to clean a database before each test.
+ * That's why this module was added to the global configuration file `codeception.yml`.
  * To have your database properly cleaned you should configure it to access the database.
- * Also provides actions to perform checks in database.
+ * This module also provides actions to perform checks in a database.
  *
  * In order to have your database populated with data you need a raw SQL dump.
- * Just put it in `tests/_data` dir (by default) and specify path to it in config.
- * Next time after database is cleared all your data will be restored from dump.
- * Don't forget to include CREATE TABLE statements into it.
+ * Simply put the dump in the `tests/_data` directory (by default) and specify the path in the config.
+ * The next time after the database is cleared, all your data will be restored from the dump.
+ * Don't forget to include `CREATE TABLE` statements in the dump.
  *
  * Supported and tested databases are:
  *
@@ -33,8 +33,8 @@ use Codeception\TestCase;
  * * MSSQL
  * * Oracle
  *
- * Connection is done by database Drivers, which are stored in Codeception\Lib\Driver namespace.
- * Check out drivers if you get problems loading dumps and cleaning databases.
+ * Connection is done by database Drivers, which are stored in the `Codeception\Lib\Driver` namespace.
+ * [Check out the drivers](https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Lib/Driver) if you run into problems loading dumps and cleaning databases.
  *
  * ## Status
  *
@@ -54,10 +54,10 @@ use Codeception\TestCase;
  * * dsn *required* - PDO DSN
  * * user *required* - user to access database
  * * password *required* - password
- * * dump - path to database dump.
- * * populate: true - should the dump be loaded before test suite is started.
- * * cleanup: true - should the dump be reloaded after each test
- * * reconnect: false - should the module reconnect to database before each test
+ * * dump - path to database dump
+ * * populate: true - whether the the dump should be loaded before the test suite is started
+ * * cleanup: true - whether the dump should be reloaded after each test
+ * * reconnect: false - whether the module should reconnect to the database before each test
  *
  * ### Example
  *
@@ -76,7 +76,7 @@ use Codeception\TestCase;
  * 
  *  * Comments are permitted.
  *  * The `dump.sql` may contain multiline statements.
- *   * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
+ *  * The delimiter, a semi-colon in this case, must be on the same line as the last statement:
  *  
  * ```sql
  * -- Add a few contacts to the table.
@@ -89,8 +89,8 @@ use Codeception\TestCase;
  * ```
  * 
  * ## Public Properties
- * * dbh - contains PDO connection.
- * * driver - contains Connection Driver. See [list all available drivers](https://github.com/Codeception/Codeception/tree/master/src/Codeception/Util/Driver)
+ * * dbh - contains the PDO connection
+ * * driver - contains the Connection Driver
  *
  */
 class Db extends CodeceptionModule implements DbInterface
@@ -260,7 +260,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Inserts SQL record into database. This record will be erased after the test.
+     * Inserts an SQL record into a database. This record will be erased after the test.
      *
      * ``` php
      * <?php
@@ -326,7 +326,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Asserts that found number of records in database
+     * Asserts that the given number of records were found in the database.
      *
      * ``` php
      * <?php
@@ -351,7 +351,7 @@ class Db extends CodeceptionModule implements DbInterface
     }
 
     /**
-     * Count rows in database
+     * Count rows in a database
      *
      * @param string $table    Table name
      * @param array  $criteria Search criteria [Optional]

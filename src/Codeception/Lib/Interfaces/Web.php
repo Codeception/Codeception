@@ -52,6 +52,34 @@ interface Web
      * @param null $selector
      */
     public function dontSee($text, $selector = null);
+    
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ?>
+     * ```
+     *
+     * @param      $raw
+     */
+    public function seeInSource($raw);
+
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ?>
+     * ```
+     *
+     * @param      $raw
+     */
+    public function dontSeeInSource($raw);
 
     /**
      * Submits the given form on the page, optionally with the given form
@@ -691,6 +719,32 @@ interface Web
      * @return mixed
      */
     public function grabAttributeFrom($cssOrXpath, $attribute);
+    
+    /**
+     * Grabs either the text content, or attribute values, of nodes
+     * matched by $cssOrXpath and returns them as an array.
+     * 
+     * ```html
+     * <a href="#first">First</a>
+     * <a href="#second">Second</a>
+     * <a href="#third">Third</a>
+     * ```
+     * 
+     * ```php
+     * <?php
+     * // would return ['First', 'Second', 'Third']
+     * $aLinkText = $I->grabMultiple('a');
+     * 
+     * // would return ['#first', '#second', '#third']
+     * $aLinks = $I->grabMultiple('a', 'href');
+     * ?>
+     * ```
+     * 
+     * @param $cssOrXpath
+     * @param $attribute
+     * @return string[]
+     */
+    public function grabMultiple($cssOrXpath, $attribute = null);
 
     /**
      * Checks that the given element exists on the page and is visible.
