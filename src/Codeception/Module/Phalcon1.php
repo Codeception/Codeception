@@ -7,6 +7,9 @@ use Phalcon\Di;
 use Phalcon\DiInterface;
 use Phalcon\Di\Injectable;
 use Phalcon\Mvc\Model as PhalconModel;
+use Phalcon\Mvc\RouterInterface;
+use Phalcon\Mvc\Router\RouteInterface;
+use Codeception\Util\ReflectionHelper;
 use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\Phalcon as PhalconConnector;
@@ -452,5 +455,45 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
             default:
                 return array_intersect_key(get_object_vars($model), array_flip($primaryKeys));
         }
+    }
+
+    /**
+     * Returns a list of recognized domain names
+     *
+     * @return array
+     */
+    protected function getInternalDomains()
+    {
+        $internalDomains = [$this->getApplicationDomainRegex()];
+
+        /** @var RouterInterface $router */
+        $router = $this->di->get('router');
+
+        if ($router instanceof RouterInterface) {
+            /** @var RouteInterface[] $routes */
+            $routes = $router->getRoutes();
+
+            foreach ($routes as $route) {
+                if ($route instanceof RouteInterface) {
+                    $hostName = $route->getHostName();
+                    if (!empty($hostName)) {
+                        $internalDomains[] = '/^' . str_replace('.', '\.', $route->getHostName()) . '$/';
+                    }
+                }
+            }
+        }
+
+        return array_unique($internalDomains);
+    }
+
+    /**
+     * @return string
+     */
+    private function getApplicationDomainRegex()
+    {
+        $server = ReflectionHelper::readPrivateProperty($this->client, 'server');
+        $domain = $server['HTTP_HOST'];
+
+        return '/^' . str_replace('.', '\.', $domain) . '$/';
     }
 }

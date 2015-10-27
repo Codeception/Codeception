@@ -27,12 +27,18 @@
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
 
-<a href="/" class="sign">Sign in!</a>
+<a href="/login" class="sign">Sign in!</a>
 
 <div>Kill & Destroy</div>
 
 <div style="display: none" class="hidden">
     Invisible text
+</div>
+
+<div id="grab-multiple">
+    <a id="first-link">First</a>
+    <a id="second-link">Second</a>
+    <a id="third-link">Third</a>
 </div>
 
 </body>

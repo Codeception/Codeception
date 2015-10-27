@@ -152,13 +152,13 @@ class ZF1 extends Framework
         parent::_after($test);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-//        $this->debugsection('Route', sprintf('%/%/%',
-//            $this->client->getzendrequest()->getmodulename(),
-//            $this->client->getzendrequest()->getcontrollername(),
-//            $this->client->getzendrequest()->getactionname()
-//        ));
+        parent::debugResponse($url);
+
         $this->debugSection('Session', json_encode($_COOKIE));
         if ($this->db) {
             $profiler = $this->db->getProfiler();
