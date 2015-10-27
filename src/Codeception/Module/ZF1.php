@@ -5,7 +5,10 @@ use Codeception\Configuration;
 use Codeception\Lib\Framework;
 use Codeception\TestCase;
 use Codeception\Exception\ModuleException;
+use Codeception\Util\ReflectionHelper;
 use Codeception\Lib\Connector\ZF1 as ZF1Connector;
+use Zend_Controller_Router_Route_Hostname;
+use Zend_Controller_Router_Route_Chain;
 
 /**
  * This module allows you to run tests inside Zend Framework.
@@ -89,6 +92,12 @@ class ZF1 extends Framework
 
     protected $queries = 0;
     protected $time = 0;
+
+
+    /**
+     * @var array Used to collect domains while recursively traversing route tree
+     */
+    private $domainCollector = [];
 
     public function _initialize()
     {
@@ -209,5 +218,41 @@ class ZF1 extends Framework
         $router = $this->bootstrap->getBootstrap()->getResource('frontcontroller')->getRouter();
         $url = $router->assemble($params, $routeName);
         $this->seeCurrentUrlEquals($url);
+    }
+
+    protected function getInternalDomains()
+    {
+        $router = $this->bootstrap->getBootstrap()->getResource('frontcontroller')->getRouter();
+        $this->domainCollector = [];
+        $this->addInternalDomainsFromRoutes($router->getRoutes());
+        return array_unique($this->domainCollector);
+    }
+
+    private function addInternalDomainsFromRoutes($routes)
+    {
+        foreach ($routes as $name => $route) {
+            try {
+                $route->assemble([]);
+            } catch (\Exception $e) {
+            }
+            if ($route instanceof Zend_Controller_Router_Route_Hostname) {
+                $this->addInternalDomain($route);
+            } elseif ($route instanceof Zend_Controller_Router_Route_Chain) {
+                $chainRoutes = ReflectionHelper::readPrivateProperty($route, '_routes');
+                $this->addInternalDomainsFromRoutes($chainRoutes);
+            }
+        }
+    }
+
+    private function addInternalDomain(Zend_Controller_Router_Route_Hostname $route)
+    {
+        $parts = ReflectionHelper::readPrivateProperty($route, '_parts');
+        foreach ($parts as &$part) {
+            if ($part === null) {
+                $part = '[^.]+';
+            }
+        }
+        $regex = implode('\.', $parts);
+        $this->domainCollector []= '/^' . $regex . '$/iu';
     }
 }
