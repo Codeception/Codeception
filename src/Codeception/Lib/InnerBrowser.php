@@ -140,7 +140,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected function isInternalDomain($domain)
     {
-        foreach ($this->getInternalDomains() as $pattern) {
+        if ($this->internalDomains === null) {
+            $this->internalDomains = $this->getInternalDomains();
+        }
+
+        foreach ($this->internalDomains as $pattern) {
             if (preg_match($pattern, $domain)) {
                 return true;
             }
