@@ -15,6 +15,7 @@ This module may be considered experimental and require feedback and pull request
 ## Config
 
 * app: **required** - path to Silex bootstrap file.
+* em_service: 'db.orm.em' - use the stated EntityManager to pair with Doctrine Module.
 
 ### Bootstrap File
 
