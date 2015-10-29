@@ -25,11 +25,6 @@ services:
 
 sudo: false
 
-cache:
-  directories:
-    - vendor
-    - $HOME/.composer/cache
-
 install:
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
