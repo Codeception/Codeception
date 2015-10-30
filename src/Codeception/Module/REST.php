@@ -516,6 +516,9 @@ EOF;
      */
     public function seeResponseIsJson()
     {
+        if ($this->response === '') {
+            throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
+        }
         json_decode($this->response);
         $errorCode = json_last_error();
         \PHPUnit_Framework_Assert::assertEquals(
@@ -914,6 +917,9 @@ EOF;
      */
     public function seeResponseIsXml()
     {
+        if ($this->response === '') {
+            throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
+        }
         libxml_use_internal_errors(true);
         $doc = simplexml_load_string($this->response);
         $num = "";
