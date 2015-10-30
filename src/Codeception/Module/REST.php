@@ -81,6 +81,10 @@ EOF;
      */
     public $client = null;
     public $isFunctional = false;
+
+    /**
+     * @var InnerBrowser
+     */
     protected $connectionModule;
 
     public $headers = [];
@@ -137,7 +141,7 @@ EOF;
 
     private function getRunningClient()
     {
-        if ($this->client->getHistory()->isEmpty()) {
+        if ($this->client->getInternalRequest() === null) {
             throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
         }
         return $this->client;

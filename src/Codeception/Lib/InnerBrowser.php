@@ -174,7 +174,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     private function getRunningClient()
     {
-        if ($this->client->getHistory()->isEmpty()) {
+        if ($this->client->getInternalRequest() === null) {
             throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it");
         }
         return $this->client;
