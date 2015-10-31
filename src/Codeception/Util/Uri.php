@@ -86,13 +86,10 @@ class Uri
 
     public static function appendPath($url, $path)
     {
-        if ($path === '') {
-            return $url;
-        }
         $uri = new Psr7Uri($url);
         $cutUrl = (string)$uri->withQuery('')->withFragment('');
 
-        if ($path[0] === '#') {
+        if ($path === '' || $path[0] === '#') {
             return $cutUrl . $path;
         } else {
             return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');

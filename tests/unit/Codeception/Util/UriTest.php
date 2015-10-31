@@ -62,5 +62,11 @@ class UriTest extends \Codeception\TestCase\Test
             Uri::appendPath('http://codeception.com/quickstart', ''));
     }
 
+    public function testAppendPathRemovesQueryStringAndAnchor()
+    {
+        $this->assertEquals('http://codeception.com/quickstart',
+            Uri::appendPath('http://codeception.com/quickstart?a=b#c', ''));
+    }
+
 
 }
