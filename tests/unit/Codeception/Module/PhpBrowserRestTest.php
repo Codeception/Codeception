@@ -14,7 +14,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      */
     protected $phpBrowser;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->phpBrowser = new \Codeception\Module\PhpBrowser(make_container());
         $url = 'http://localhost:8010';
         $this->phpBrowser->_setConfig(array('url' => $url));
@@ -28,7 +29,16 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testGet() {
+    private function setStubResponse($response)
+    {
+        $this->phpBrowser = Stub::make('\Codeception\Module\PhpBrowser', ['_getLastResponse' => $response]);
+        $this->module->_inject($this->phpBrowser);
+        $this->module->_initialize();
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+    }
+
+    public function testGet()
+    {
         $this->module->sendGET('/rest/user/');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContains('davert');
@@ -44,7 +54,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://127.0.0.1:8010/rest/user/', $this->module->client->getHistory()->current()->getUri());
     }
 
-    public function testPost() {
+    public function testPost()
+    {
         $this->module->sendPOST('/rest/user/', array('name' => 'john'));
         $this->module->seeResponseContains('john');
         $this->module->seeResponseContainsJson(array('name' => 'john'));
@@ -52,38 +63,39 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testValidJson()
     {
-        $this->module->response = '{"xxx": "yyy"}';
+        $this->setStubResponse('{"xxx": "yyy"}');
         $this->module->seeResponseIsJson();
-        $this->module->response = '{"xxx": "yyy", "zzz": ["a","b"]}';
+        $this->setStubResponse('{"xxx": "yyy", "zzz": ["a","b"]}');
         $this->module->seeResponseIsJson();
-        $this->module->seeResponseEquals($this->module->response);
+        $this->module->seeResponseEquals('{"xxx": "yyy", "zzz": ["a","b"]}');
     }
 
     public function testInvalidJson()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
-        $this->module->response = '{xxx = yyy}';
+        $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
+
     public function testValidXml()
     {
-        $this->module->response = '<xml></xml>';
+        $this->setStubResponse('<xml></xml>');
         $this->module->seeResponseIsXml();
-        $this->module->response = '<xml><name>John</name></xml>';
+        $this->setStubResponse('<xml><name>John</name></xml>');
         $this->module->seeResponseIsXml();
-        $this->module->seeResponseEquals($this->module->response);
+        $this->module->seeResponseEquals('<xml><name>John</name></xml>');
     }
 
     public function testInvalidXml()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
-        $this->module->response = '<xml><name>John</surname></xml>';
+        $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
 
     public function testSeeInJson()
     {
-        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
+        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('name' => 'Davert'));
         $this->module->seeResponseContainsJson(array('user' => array('name' => 'Davert')));
@@ -94,7 +106,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonCollection()
     {
-        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(array('tags' => array('web-dev', 'java')));
         $this->module->seeResponseContainsJson(array('user' => 'John Doe', 'age' => 27));
@@ -103,13 +115,13 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJson()
     {
-        $this->module->response = '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]';
+        $this->setStubResponse('[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]');
         $this->module->seeResponseContainsJson(array('id' => 1));
     }
 
     public function testDontSeeInJson()
     {
-        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}';
+        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}');
         $this->module->seeResponseIsJson();
         $this->module->dontSeeResponseContainsJson(array('name' => 'Davet'));
         $this->module->dontSeeResponseContainsJson(array('user' => array('name' => 'Davet')));
@@ -227,6 +239,13 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->seeResponseContainsJson([
             'uploaded' => true,
         ]);
+    }
+
+    public function testCanInspectResultOfPhpBrowserRequest()
+    {
+        $this->phpBrowser->amOnPage('/rest/user/');
+        $this->module->seeResponseCodeIs(200);
+        $this->module->seeResponseIsJson();
     }
 
     protected function shouldFail()

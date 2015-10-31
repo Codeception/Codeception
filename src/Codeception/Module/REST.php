@@ -479,12 +479,11 @@ EOF;
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
             }
             $this->client->request($method, $url, $parameters, $files);
-
         } else {
             $this->debugSection("Request", "$method $url " . $parameters);
             $this->client->request($method, $url, [], $files, [], $parameters);
         }
-        $this->response = (string)$this->client->getInternalResponse()->getContent();
+        $this->response = (string)$this->connectionModule->_getLastResponse();
         $this->debugSection("Response", $this->response);
 
         if (count($this->client->getInternalRequest()->getCookies())) {
@@ -520,10 +519,7 @@ EOF;
      */
     public function seeResponseIsJson()
     {
-        if ($this->response === '') {
-            throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
-        }
-        json_decode($this->response);
+        json_decode($this->connectionModule->_getLastResponse());
         $errorCode = json_last_error();
         \PHPUnit_Framework_Assert::assertEquals(
             JSON_ERROR_NONE,
@@ -541,7 +537,7 @@ EOF;
      */
     public function seeResponseContains($text)
     {
-        $this->assertContains($text, $this->response, "REST response contains");
+        $this->assertContains($text, $this->connectionModule->_getLastResponse(), "REST response contains");
     }
 
     /**
@@ -553,7 +549,7 @@ EOF;
      */
     public function dontSeeResponseContains($text)
     {
-        $this->assertNotContains($text, $this->response, "REST response contains");
+        $this->assertNotContains($text, $this->connectionModule->_getLastResponse(), "REST response contains");
     }
 
     /**
@@ -582,7 +578,7 @@ EOF;
      */
     public function seeResponseContainsJson($json = [])
     {
-        $jsonResponseArray = new JsonArray($this->response);
+        $jsonResponseArray = new JsonArray($this->connectionModule->_getLastResponse());
         \PHPUnit_Framework_Assert::assertTrue(
             $jsonResponseArray->containsArray($json),
             "Response JSON contains provided\n"
@@ -610,7 +606,7 @@ EOF;
      */
     public function grabResponse()
     {
-        return $this->response;
+        return $this->connectionModule->_getLastResponse();
     }
 
     /**
@@ -638,7 +634,7 @@ EOF;
      */
     public function grabDataFromResponseByJsonPath($jsonPath)
     {
-        return (new JsonArray($this->response))->filterByJsonPath($jsonPath);
+        return (new JsonArray($this->connectionModule->_getLastResponse()))->filterByJsonPath($jsonPath);
     }
 
     /**
@@ -683,9 +679,10 @@ EOF;
      */
     public function seeResponseJsonMatchesXpath($xpath)
     {
+        $response = $this->connectionModule->_getLastResponse();
         $this->assertGreaterThan(
-            0, (new JsonArray($this->response))->filterByXPath($xpath)->length,
-            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $this->response
+            0, (new JsonArray($response))->filterByXPath($xpath)->length,
+            "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
 
@@ -734,9 +731,10 @@ EOF;
      */
     public function seeResponseJsonMatchesJsonPath($jsonPath)
     {
+        $response = $this->connectionModule->_getLastResponse();
         $this->assertNotEmpty(
-            (new JsonArray($this->response))->filterByJsonPath($jsonPath),
-            "Received JSON did not match the JsonPath provided\n" . $this->response
+            (new JsonArray($response))->filterByJsonPath($jsonPath),
+            "Received JSON did not match the JsonPath provided\n" . $response
         );
     }
 
@@ -748,9 +746,10 @@ EOF;
      */
     public function dontSeeResponseJsonMatchesJsonPath($jsonPath)
     {
+        $response = $this->connectionModule->_getLastResponse();
         $this->assertEmpty(
-            (new JsonArray($this->response))->filterByJsonPath($jsonPath),
-            "Received JSON did (but should not) match the JsonPath provided\n" . $this->response
+            (new JsonArray($response))->filterByJsonPath($jsonPath),
+            "Received JSON did (but should not) match the JsonPath provided\n" . $response
         );
     }
 
@@ -762,7 +761,7 @@ EOF;
      */
     public function dontSeeResponseContainsJson($json = [])
     {
-        $jsonResponseArray = new JsonArray($this->response);
+        $jsonResponseArray = new JsonArray($this->connectionModule->_getLastResponse());
         $this->assertFalse(
             $jsonResponseArray->containsArray($json),
             "Response JSON does not contain JSON provided\n"
@@ -850,7 +849,7 @@ EOF;
      */
     public function seeResponseMatchesJsonType(array $jsonType, $jsonPath = null)
     {
-        $jsonArray = new JsonArray($this->response);
+        $jsonArray = new JsonArray($this->connectionModule->_getLastResponse());
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
@@ -869,7 +868,7 @@ EOF;
      */
     public function dontSeeResponseMatchesJsonType($jsonType, $jsonPath = null)
     {
-        $jsonArray = new JsonArray($this->response);
+        $jsonArray = new JsonArray($this->connectionModule->_getLastResponse());
         if ($jsonPath) {
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
@@ -884,9 +883,9 @@ EOF;
      * @part xml
      * @param $response
      */
-    public function seeResponseEquals($response)
+    public function seeResponseEquals($expected)
     {
-        $this->assertEquals($response, $this->response);
+        $this->assertEquals($expected, $this->connectionModule->_getLastResponse());
     }
 
     /**
@@ -921,11 +920,8 @@ EOF;
      */
     public function seeResponseIsXml()
     {
-        if ($this->response === '') {
-            throw new ModuleException($this, "Response is empty. Use `\$I->sendXXX()` methods to send HTTP request");
-        }
         libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($this->response);
+        $doc = simplexml_load_string($this->connectionModule->_getLastResponse());
         $num = "";
         $title = "";
         if ($doc === false) {
@@ -954,7 +950,7 @@ EOF;
      */
     public function seeXmlResponseMatchesXpath($xpath)
     {
-        $structure = new XmlStructure($this->response);
+        $structure = new XmlStructure($this->connectionModule->_getLastResponse());
         $this->assertTrue($structure->matchesXpath($xpath), 'xpath not matched');
     }
 
@@ -970,7 +966,7 @@ EOF;
      */
     public function dontSeeXmlResponseMatchesXpath($xpath)
     {
-        $structure = new XmlStructure($this->response);
+        $structure = new XmlStructure($this->connectionModule->_getLastResponse());
         $this->assertTrue($structure->matchesXpath($xpath), 'accidentally matched xpath');
     }
 
@@ -984,7 +980,7 @@ EOF;
      */
     public function grabTextContentFromXmlElement($cssOrXPath)
     {
-        $el = (new XmlStructure($this->response))->matchElement($cssOrXPath);
+        $el = (new XmlStructure($this->connectionModule->_getLastResponse()))->matchElement($cssOrXPath);
         return $el->textContent;
     }
 
@@ -999,7 +995,7 @@ EOF;
      */
     public function grabAttributeFrom($cssOrXPath, $attribute)
     {
-        $el = (new XmlStructure($this->response))->matchElement($cssOrXPath);
+        $el = (new XmlStructure($this->connectionModule->_getLastResponse()))->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
             $this->fail("Attribute not found in element matched by '$cssOrXPath'");
         }
@@ -1017,7 +1013,7 @@ EOF;
      */
     public function seeXmlResponseEquals($xml)
     {
-        \PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString($this->response, $xml);
+        \PHPUnit_Framework_Assert::assertXmlStringEqualsXmlString($this->connectionModule->_getLastResponse(), $xml);
     }
 
 
@@ -1032,7 +1028,7 @@ EOF;
      */
     public function dontSeeXmlResponseEquals($xml)
     {
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->response, $xml);
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->connectionModule->_getLastResponse(), $xml);
     }
 
     /**
@@ -1052,7 +1048,7 @@ EOF;
      */
     public function seeXmlResponseIncludes($xml)
     {
-        $this->assertContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
+        $this->assertContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->connectionModule->_getLastResponse())->C14N(), "found in XML Response");
     }
 
     /**
@@ -1065,7 +1061,7 @@ EOF;
      */
     public function dontSeeXmlResponseIncludes($xml)
     {
-        $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->response)->C14N(), "found in XML Response");
+        $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->connectionModule->_getLastResponse())->C14N(), "found in XML Response");
     }
 
     /**
