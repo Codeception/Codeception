@@ -116,7 +116,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function _getResponseContent()
     {
-        return $this->getRunningClient()->getInternalResponse()->getContent();
+        return (string)$this->getRunningClient()->getInternalResponse()->getContent();
     }
 
     protected function clientRequest($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
