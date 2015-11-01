@@ -33,6 +33,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    private function setStubResponse($response)
+    {
+        $connectionModule = Stub::make('\Codeception\Module\UniversalFramework', ['_getResponseContent' => $response]);
+        $this->module->_inject($connectionModule);
+        $this->module->_initialize();
+        $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
+    }
+
     public function testBeforeHookResetsVariables()
     {
         $this->module->haveHttpHeader('Origin','http://www.example.com');
@@ -86,38 +94,38 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testValidJson()
     {
-        $this->module->response = '{"xxx": "yyy"}';
+        $this->setStubResponse('{"xxx": "yyy"}');
         $this->module->seeResponseIsJson();
-        $this->module->response = '{"xxx": "yyy", "zzz": ["a","b"]}';
+        $this->setStubResponse('{"xxx": "yyy", "zzz": ["a","b"]}');
         $this->module->seeResponseIsJson();
-        $this->module->seeResponseEquals($this->module->response);
+        $this->module->seeResponseEquals('{"xxx": "yyy", "zzz": ["a","b"]}');
     }
 
     public function testInvalidJson()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
-        $this->module->response = '{xxx = yyy}';
+        $this->setStubResponse('{xxx = yyy}');
         $this->module->seeResponseIsJson();
     }
     public function testValidXml()
     {
-        $this->module->response = '<xml></xml>';
+        $this->setStubResponse('<xml></xml>');
         $this->module->seeResponseIsXml();
-        $this->module->response = '<xml><name>John</name></xml>';
+        $this->setStubResponse('<xml><name>John</name></xml>');
         $this->module->seeResponseIsXml();
-        $this->module->seeResponseEquals($this->module->response);
+        $this->module->seeResponseEquals('<xml><name>John</name></xml>');
     }
 
     public function testInvalidXml()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
-        $this->module->response = '<xml><name>John</surname></xml>';
+        $this->setStubResponse('<xml><name>John</surname></xml>');
         $this->module->seeResponseIsXml();
     }
 
     public function testSeeInJsonResponse()
     {
-        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}';
+        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}, "labels": null}}');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(['name' => 'Davert']);
         $this->module->seeResponseContainsJson(['user' => ['name' => 'Davert']]);
@@ -128,7 +136,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testSeeInJsonCollection()
     {
-        $this->module->response = '[{"user":"Blacknoir","age":"42","tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->setStubResponse('[{"user":"Blacknoir","age":"42","tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseContainsJson(['tags' => ['web-dev', 'java']]);
         $this->module->seeResponseContainsJson(['user' => 'John Doe', 'age' => 27]);
@@ -138,13 +146,13 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJson()
     {
-        $this->module->response = '[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]';
+        $this->setStubResponse('[{"id":1,"title": "Bug should be fixed"},{"title": "Feature should be implemented","id":2}]');
         $this->module->seeResponseContainsJson(['id' => 1]);
     }
 
     public function testDontSeeInJson()
     {
-        $this->module->response = '{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}';
+        $this->setStubResponse('{"ticket": {"title": "Bug should be fixed", "user": {"name": "Davert"}}}');
         $this->module->seeResponseIsJson();
         $this->module->dontSeeResponseContainsJson(['name' => 'Davet']);
         $this->module->dontSeeResponseContainsJson(['user' => ['name' => 'Davet']]);
@@ -225,7 +233,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testArrayJsonPathAndXPath()
     {
-        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesXpath('//user');
         $this->module->seeResponseJsonMatchesJsonPath('$[*].user');
@@ -237,7 +245,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
     public function testArrayJsonPathFails()
     {
         $this->shouldFail();
-        $this->module->response = '[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]';
+        $this->setStubResponse('[{"user":"Blacknoir","age":27,"tags":["wed-dev","php"]},{"user":"John Doe","age":27,"tags":["web-dev","java"]}]');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesJsonPath('$[*].profile');
     }
@@ -245,7 +253,7 @@ class RestTest extends \PHPUnit_Framework_TestCase
     
     public function testStructuredJsonPathAndXPath()
     {
-        $this->module->response = '{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }';
+        $this->setStubResponse('{ "store": {"book": [{ "category": "reference", "author": "Nigel Rees", "title": "Sayings of the Century", "price": 8.95 }, { "category": "fiction", "author": "Evelyn Waugh", "title": "Sword of Honour", "price": 12.99 }, { "category": "fiction", "author": "Herman Melville", "title": "Moby Dick", "isbn": "0-553-21311-3", "price": 8.99 }, { "category": "fiction", "author": "J. R. R. Tolkien", "title": "The Lord of the Rings", "isbn": "0-395-19395-8", "price": 22.99 } ], "bicycle": {"color": "red", "price": 19.95 } } }');
         $this->module->seeResponseIsJson();
         $this->module->seeResponseJsonMatchesXpath('//book/category');
         $this->module->seeResponseJsonMatchesJsonPath('$..book');
@@ -266,14 +274,14 @@ class RestTest extends \PHPUnit_Framework_TestCase
 
     public function testJsonTypeMatches()
     {
-        $this->module->response = '{"xxx": "yyy", "user_id": 1}';
+        $this->setStubResponse('{"xxx": "yyy", "user_id": 1}');
         $this->module->seeResponseMatchesJsonType(['xxx' => 'string', 'user_id' => 'integer:<10']);
         $this->module->dontSeeResponseMatchesJsonType(['xxx' => 'integer', 'user_id' => 'integer:<10']);
     }
 
     public function testJsonTypeMatchesWithJsonPath()
     {
-        $this->module->response = '{"users": [{ "name": "davert"}, {"id": 1}]}';
+        $this->setStubResponse('{"users": [{ "name": "davert"}, {"id": 1}]}');
         $this->module->seeResponseMatchesJsonType(['name' => 'string'], '$.users[0]');
         $this->module->seeResponseMatchesJsonType(['id' => 'integer'], '$.users[1]');
         $this->module->dontSeeResponseMatchesJsonType(['id' => 'integer'], '$.users[0]');
