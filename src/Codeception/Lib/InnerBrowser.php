@@ -105,10 +105,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
     {
         $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
-        return $this->_getLastResponse();
+        return $this->_getResponseContent();
     }
 
-    public function _getLastResponse()
+    /**
+     * Returns content of the last response
+     * 
+     * @return string
+     * @throws ModuleException
+     */
+    public function _getResponseContent()
     {
         return $this->getRunningClient()->getInternalResponse()->getContent();
     }
@@ -187,7 +193,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->_getLastResponse());
+        file_put_contents($filename, $this->_getResponseContent());
     }
 
     /**
@@ -1269,7 +1275,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->_getLastResponse()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1279,7 +1285,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->_getLastResponse()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1289,7 +1295,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            $this->_getLastResponse(),
+            $this->_getResponseContent(),
             $constraint,
             $message
         );
@@ -1299,7 +1305,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            $this->_getLastResponse(),
+            $this->_getResponseContent(),
             $constraint,
             $message
         );

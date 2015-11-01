@@ -31,7 +31,7 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
 
     private function setStubResponse($response)
     {
-        $this->phpBrowser = Stub::make('\Codeception\Module\PhpBrowser', ['_getLastResponse' => $response]);
+        $this->phpBrowser = Stub::make('\Codeception\Module\PhpBrowser', ['_getResponseContent' => $response]);
         $this->module->_inject($this->phpBrowser);
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\TestCase\Cest'));
