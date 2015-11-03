@@ -119,16 +119,16 @@ class JsonType
             }
             $matchTypes = explode('|', $type);
             $matched = false;
+            $currentType = strtolower(gettype($data[$key]));
+            if ($currentType == 'double') {
+                $currentType = 'float';
+            }
             foreach ($matchTypes as $matchType) {
-                $currentType = strtolower(gettype($data[$key]));
-                if ($currentType == 'double') {
-                    $currentType = 'float';
-                }
                 $filters = explode(':', $matchType);
                 $expectedType = trim(strtolower(array_shift($filters)));
 
                 if ($expectedType != $currentType) {
-                    break;
+                    continue;
                 }
                 if (empty($filters)) {
                     $matched = true;
