@@ -60,11 +60,11 @@ class GenerateSuite extends Command
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
-        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, '_bootstrap.php');
+        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
 
         // generate bootstrap
         $this->save(
-            $dir . $suite . DIRECTORY_SEPARATOR . '_bootstrap.php',
+            $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
             "<?php\n// Here you can initialize variables that will be available to your tests\n",
             true
         );
