@@ -340,15 +340,17 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      * $I->seeCurrentRouteIs('posts.index');
      * ?>
      * ```
-     * @param $route
+     * @param $routeName
      */
-    public function seeCurrentRouteIs($route)
+    public function seeCurrentRouteIs($routeName)
     {
-        $this->getRouteByName($route); // Fails if route does not exists
-        $currentRoute = $this->app->request->route()->getName();
+        $this->getRouteByName($routeName); // Fails if route does not exists
 
-        if ($currentRoute != $route) {
-            $message = is_null($currentRoute) ? "Current route has no name" : "Current route is \"$currentRoute\"";
+        $currentRoute = $this->app->request->route();
+        $currentRouteName = $currentRoute ? $currentRoute->getName() : '';
+
+        if ($currentRouteName != $routeName) {
+            $message = empty($currentRouteName) ? "Current route has no name" : "Current route is \"$currentRoute\"";
             $this->fail($message);
         }
     }
@@ -388,7 +390,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function seeCurrentActionIs($action)
     {
         $this->getRouteByAction($action); // Fails if route does not exists
-        $currentAction = $this->app->request->route()->getActionName();
+        $currentRoute = $this->app->request->route();
+        $currentAction = $currentRoute ? $currentRoute->getActionName() : '';
         $currentAction = ltrim(str_replace($this->getRootControllerNamespace(), "", $currentAction), '\\');
 
         if ($currentAction != $action) {
