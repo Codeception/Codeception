@@ -110,7 +110,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * Returns content of the last response
-     * 
+     * Use it in Helpers when you want to retrieve response of request performed by another module.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function seeResponseContains($text)
+     * {
+     *    $this->assertContains($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
+     * }
+     * ?>
+     * ```
+     *
+     * @api
      * @return string
      * @throws ModuleException
      */
