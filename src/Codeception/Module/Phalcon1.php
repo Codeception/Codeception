@@ -213,6 +213,17 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
+     * Provides access the Phalcon application object.
+     *
+     * @see \Codeception\Lib\Connector\Phalcon::getApplication
+     * @return \Phalcon\Mvc\Application|\Phalcon\Mvc\Micro|\Phalcon\Cli\Console
+     */
+    public function getApplication()
+    {
+        $this->client->getApplication();
+    }
+
+    /**
      * Sets value to session. Use for authorization.
      *
      * @param string $key
@@ -467,9 +478,8 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      * ?>
      * ```
      * @param string $routeName
-     * @param array $params
      */
-    public function seeCurrentRouteIs($routeName, $params = [])
+    public function seeCurrentRouteIs($routeName)
     {
         if (!$this->di->has('url')) {
             $this->fail('Unable to resolve "url" service.');
