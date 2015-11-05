@@ -2,7 +2,9 @@
 
 #### 2.1.4
 
-* [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+* [REST] REST methods can be used to inspect result of the last request made by PhpBrowser or framework module. see #2507. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `_getResponseContent` hidden method. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `moveBack` method. By @Naktibalda
 * [Laravel5] Fixed fatal error in `seeCurrentRouteIs` and `seeCurrentActionIs` methods. See #2517. By @janhenkgerritsen
 * [Laravel5] Improved the error messages for several methods. See #2476. By @janhenkgerritsen
 * [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
