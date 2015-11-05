@@ -9,6 +9,7 @@
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
 * [Phalcon] Added `amOnRoute` and `seeCurrentRouteIs` methods by @sergeyklay
 * [Phalcon] Added `seeSessionHasValues` by @sergeyklay
+* [Phalcon] Added `getApplication()` method by @sergeyklay
 * [Yii2] Fixed problems with transaction rollbacks when using the `cleanup` flag. See #2488. By @ivokund
 
 #### 2.1.3
