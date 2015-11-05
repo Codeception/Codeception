@@ -1017,30 +1017,19 @@ $I->amOnPage('test-headers.php');
 Submits the given form on the page, optionally with the given form
 values.  Give the form fields values as an array.
 
-Although this function can be used as a short-hand version of 
-`fillField()`, `selectOption()`, `click()` etc. it has some important 
-differences:
-
- * Only field *names* may be used, not CSS/XPath selectors nor field labels
- * If a field is sent to this function that does *not* exist on the page,
-   it will silently be added to the HTTP request.  This is helpful for testing
-   some types of forms, but be aware that you will *not* get an exception
-   like you would if you called `fillField()` or `selectOption()` with
-   a missing field.
-
-Fields that are not provided will be filled by their values from the page, 
-or from any previous calls to `fillField()`, `selectOption()` etc.
+Skipped fields will be filled by their values from the page.
 You don't need to click the 'Submit' button afterwards.
 This command itself triggers the request to form's action.
 
-You can optionally specify which button's value to include
-in the request with the last parameter (as an alternative to
-explicitly setting its value in the second parameter), as
+You can optionally specify what button's value to include
+in the request with the last parameter as an alternative to
+explicitly setting its value in the second parameter, as
 button values are not otherwise included in the request.
 
 Examples:
 
 ``` php
+<?php
 $I->submitForm('#login', [
     'login' => 'davert',
     'password' => '123456'
@@ -1075,6 +1064,7 @@ For example, given this sample "Sign Up" form:
 You could write the following to submit it:
 
 ``` php
+<?php
 $I->submitForm(
     '#userForm',
     [
@@ -1094,6 +1084,7 @@ You can also emulate a JavaScript submission by not specifying any
 buttons in the third parameter to submitForm.
 
 ```php
+<?php
 $I->submitForm(
     '#userForm',
     [
@@ -1106,32 +1097,34 @@ $I->submitForm(
 );
 ```
 
-This function works well when paired with `seeInFormFields()` for quickly testing CRUD interfaces and form validation logic.
+Pair this with seeInFormFields for quick testing magic.
 
 ``` php
+<?php
 $form = [
      'field1' => 'value',
      'field2' => 'another value',
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('#my-form', $form, 'submitButton');
+$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('#my-form', $form);
+$I->seeInFormFields('//form[@id=my-form]', $form);
 ?>
 ```
 
 Parameter values can be set to arrays for multiple input fields
 of the same name, or multi-select combo boxes.  For checkboxes,
-you can use either the string value or boolean `true`/`false` which will
+either the string value can be used, or boolean values which will
 be replaced by the checkbox's value in the DOM.
 
 ``` php
+<?php
 $I->submitForm('#my-form', [
      'field1' => 'value',
      'checkbox' => [
          'value of first checkbox',
-         'value of second checkbox',
+         'value of second checkbox,
      ],
      'otherCheckboxes' => [
          true,
@@ -1149,22 +1142,21 @@ $I->submitForm('#my-form', [
 Mixing string and boolean values for a checkbox's value is not supported
 and may produce unexpected results.
 
-Field names ending in `[]` must be passed without the trailing square 
+Field names ending in "[]" must be passed without the trailing square 
 bracket characters, and must contain an array for its value.  This allows
 submitting multiple values with the same name, consider:
 
 ```php
-// This will NOT work correctly
 $I->submitForm('#my-form', [
     'field[]' => 'value',
-    'field[]' => 'another value',   // 'field[]' is already a defined key
+    'field[]' => 'another value', // 'field[]' is already a defined key
 ]);
 ```
 
 The solution is to pass an array value:
 
 ```php
-// This way both values are submitted
+// this way both values are submitted
 $I->submitForm('#my-form', [
     'field' => [
         'value',
