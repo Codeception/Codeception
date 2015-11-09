@@ -273,6 +273,20 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
+     * Enable events for the next requests.
+     *
+     * ``` php
+     * <?php
+     * $I->enableEvents();
+     * ?>
+     * ```
+     */
+    public function enableEvents()
+    {
+        $this->config['disable_events'] = false;
+    }
+
+    /**
      * Make sure events fired during the test.
      *
      * ``` php
