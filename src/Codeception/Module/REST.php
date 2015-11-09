@@ -19,7 +19,7 @@ use Codeception\Util\Soap as XmlUtils;
  *
  * This module can be used either with frameworks or PHPBrowser.
  * If a framework module is connected, the testing will occur in the application directly.
- * Otherwise, a PHPBrowser should be specified as dependency to send requests and receive responses from a server.
+ * Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
  * 
  *
  * ## Status
