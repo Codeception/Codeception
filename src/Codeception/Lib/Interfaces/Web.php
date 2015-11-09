@@ -12,7 +12,6 @@ interface Web
      * $I->amOnPage('/');
      * // opens /register page
      * $I->amOnPage('/register');
-     * ?>
      * ```
      *
      * @param $page
@@ -20,16 +19,31 @@ interface Web
     public function amOnPage($page);
 
     /**
-     * Checks that the current page contains the given string.
-     * Specify a locator as the second parameter to match a specific region.
+     * Checks that the current page contains the given string (case insensitive).
+     * 
+     * You can specify a specific HTML element (via CSS or XPath) as the second 
+     * parameter to only search within that element.
      *
      * ``` php
      * <?php
-     * $I->see('Logout'); // I can suppose user is logged in
-     * $I->see('Sign Up','h1'); // I can suppose it's a signup page
-     * $I->see('Sign Up','//body/h1'); // with XPath
-     * ?>
+     * $I->see('Logout');                 // I can suppose user is logged in
+     * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
+     * $I->see('Sign Up', '//body/h1');   // with XPath
      * ```
+     * 
+     * Note that the search is done after stripping all HTML tags from the body,
+     * so `$I->see('strong')` will return true for strings like:
+     * 
+     *   - `<p>I am Stronger than thou</p>`
+     *   - `<script>document.createElement('strong');</script>`
+     * 
+     * But will *not* be true for strings like:
+     * 
+     *   - `<strong>Home</strong>`
+     *   - `<div class="strong">Home</strong>`
+     *   - `<!-- strong -->`
+     * 
+     * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
      * @param null $selector
@@ -37,16 +51,29 @@ interface Web
     public function see($text, $selector = null);
 
     /**
-     * Checks that the current page doesn't contain the text specified.
+     * Checks that the current page doesn't contain the text specified (case insensitive).
      * Give a locator as the second parameter to match a specific region.
      *
      * ```php
      * <?php
-     * $I->dontSee('Login'); // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     * $I->dontSee('Sign Up','//body/h1'); // with XPath
-     * ?>
+     * $I->dontSee('Login');                    // I can suppose user is already logged in
+     * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
+     * $I->dontSee('Sign Up','//body/h1');      // with XPath
      * ```
+     * 
+     * Note that the search is done after stripping all HTML tags from the body,
+     * so `$I->dontSee('strong')` will fail on strings like:
+     * 
+     *   - `<p>I am Stronger than thou</p>`
+     *   - `<script>document.createElement('strong');</script>`
+     * 
+     * But will ignore strings like:
+     * 
+     *   - `<strong>Home</strong>`
+     *   - `<div class="strong">Home</strong>`
+     *   - `<!-- strong -->`
+     * 
+     * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
      * @param null $selector
@@ -60,7 +87,6 @@ interface Web
      * ``` php
      * <?php
      * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
-     * ?>
      * ```
      *
      * @param      $raw
@@ -74,7 +100,6 @@ interface Web
      * ```php
      * <?php
      * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
-     * ?>
      * ```
      *
      * @param      $raw
