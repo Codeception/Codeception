@@ -146,7 +146,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
             $this->app['session']->migrate(true);
         }
 
-        $this->client->clearExpectedEvents();
+        $this->client->clearTriggeredEvents();
     }
 
     /**
@@ -158,10 +158,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
-        }
-
-        if ($missedEvents = $this->client->missedEvents()) {
-            $test->fail('The following events did not fire: ' . implode(',', $missedEvents));
         }
     }
 
@@ -277,37 +273,58 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
-     * Enable events for the next requests.
-     *
-     * ``` php
-     * <?php
-     * $I->enableEvents();
-     * ?>
-     * ```
-     */
-    public function enableEvents()
-    {
-        $this->config['disable_events'] = false;
-    }
-
-    /**
      * Make sure events fired during the test.
      *
      * ``` php
      * <?php
-     * $I->expectEvents('App\MyEvent');
-     * $I->expectEvents('App\MyEvent', 'App\MyOtherEvent');
-     * $I->expectEvents(['App\MyEvent', 'App\MyOtherEvent']);
+     * $I->seeEventTriggered('App\MyEvent');
+     * $I->seeEventTriggered(new App\Events\MyEvent());
+     * $I->seeEventTriggered('App\MyEvent', 'App\MyOtherEvent');
+     * $I->seeEventTriggered(['App\MyEvent', 'App\MyOtherEvent']);
      * ?>
      * ```
      * @param $events
      */
-    public function expectEvents($events)
+    public function seeEventTriggered($events)
     {
         $events = is_array($events) ? $events : func_get_args();
 
-        foreach ($events as $expectedEvent) {
-            $this->client->addExpectedEvent($expectedEvent);
+        foreach ($events as $event) {
+            if (!$this->client->eventTriggered($event)) {
+                if (is_object($event)) {
+                    $event = get_class($event);
+                }
+
+                $this->fail("The '$event' event did not trigger");
+            }
+        }
+    }
+
+    /**
+     * Make sure events did not fire during the test.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeEventTriggered('App\MyEvent');
+     * $I->dontSeeEventTriggered(new App\Events\MyEvent());
+     * $I->dontSeeEventTriggered('App\MyEvent', 'App\MyOtherEvent');
+     * $I->dontSeeEventTriggered(['App\MyEvent', 'App\MyOtherEvent']);
+     * ?>
+     * ```
+     * @param $events
+     */
+    public function dontSeeEventTriggered($events)
+    {
+        $events = is_array($events) ? $events : func_get_args();
+
+        foreach ($events as $event) {
+            if ($this->client->eventTriggered($event)) {
+                if (is_object($event)) {
+                    $event = get_class($event);
+                }
+
+                $this->fail("The '$event' event triggered");
+            }
         }
     }
 
