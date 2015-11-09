@@ -18,10 +18,9 @@ use Codeception\Util\Soap as XmlUtils;
  * Module for testing REST WebService.
  *
  * This module can be used either with frameworks or PHPBrowser.
- * It tries to guess the framework is is attached to.
- *
- * Whether framework is used it operates via standard framework modules.
- * Otherwise sends raw HTTP requests to url via PHPBrowser.
+ * If a framework module is connected, the testing will occur in the application directly.
+ * Otherwise, a PHPBrowser should be specified as dependency to send requests and receive responses from a server.
+ * 
  *
  * ## Status
  *
