@@ -51,14 +51,19 @@ class ZF2 extends Client
 
         if ($queryString) {
             parse_str($queryString, $query);
-            $zendRequest->setQuery(new Parameters($query));
+        } else {
+            $query = [];
         }
+        $zendRequest->setQuery(new Parameters($query));
         
         if ($request->getContent() !== null) {
+            $zendRequest->setPost(new Parameters([]));
             $zendRequest->setContent($request->getContent());
         } elseif ($method != HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
             $zendRequest->setPost(new Parameters($post));
+        } else {
+            $zendRequest->setPost(new Parameters([]));
         }
 
         $zendRequest->setMethod($method);
