@@ -2,6 +2,11 @@
 
 #### 2.1.4
 
+* Added support for nested helper by @luka-zitnik #2494
+* Make `generate:suite` respect bootstrap setting in #2512. By @dmitrivereshchagin
+* [ZF2] grab service from container without reinitializing it. Fixes #2519 where Doctrine2 gets different instances of the entity manager everytime grabServiceFromContainer is called. By @dranzd
+* [REST] fixed usage of JsonArray and `json_last_error_msg` function on PHP 5.4. See #2535. By @Naktibalda
+* [REST] `seeResponseIsJsonType` can now validate emails with `string:email` definition. By @DavertMik
 * [REST] REST methods can be used to inspect result of the last request made by PhpBrowser or framework module. see #2507. By @Naktibalda
 * [PhpBrowser][Frameworks] Added `_getResponseContent` hidden method. By @Naktibalda
 * [PhpBrowser][Frameworks] Added `moveBack` method. By @Naktibalda
