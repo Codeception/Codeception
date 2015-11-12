@@ -815,6 +815,8 @@ EOF;
      * * `integer:>{val}` - checks that integer is greater than {val} (works with float and string types too).
      * * `integer:<{val}` - checks that integer is lower than {val} (works with float and string types too).
      * * `string:url` - checks that value is valid url.
+     * * `string:date` - checks that value is date in JavaScript format: https://weblog.west-wind.com/posts/2014/Jan/06/JavaScript-JSON-Date-Parsing-and-real-Dates
+     * * `string:email` - checks that value is a valid email according to http://emailregex.com/
      * * `string:regex({val})` - checks that string matches a regex provided with {val}
      *
      * This is how filters can be used:

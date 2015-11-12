@@ -68,6 +68,15 @@ class JsonTypeTest extends \Codeception\TestCase\Test
         $this->assertTrue($jsonType->matches(['date' => 'string:date']));
     }
 
+    public function testEmailFilter()
+    {
+        $jsonType = new JsonType(['email' => 'davert@codeception.com']);
+        $this->assertTrue($jsonType->matches(['email' => 'string:email']));
+        $jsonType = new JsonType(['email' => 'davert.codeception.com']);
+        $this->assertNotTrue($jsonType->matches(['email' => 'string:email']));
+
+    }
+
     public function testNegativeFilters()
     {
         $jsonType = new JsonType(['name' => 'davert', 'id' => 1]);
@@ -79,25 +88,25 @@ class JsonTypeTest extends \Codeception\TestCase\Test
 
     public function testCustomFilters()
     {
-        JsonType::addCustomFilter('email', function($value) {
-            return strpos($value, '@') !== false;
+        JsonType::addCustomFilter('slug', function($value) {
+            return strpos($value, ' ') === false;
         });
-        $jsonType = new JsonType(['email' => 'davert@codeception.com', 'name' => 'davert']);
+        $jsonType = new JsonType(['title' => 'have a test', 'slug' => 'have-a-test']);
         $this->assertTrue($jsonType->matches([
-            'email' => 'string:email'
+            'slug' => 'string:slug'
         ]));
         $this->assertNotTrue($jsonType->matches([
-            'name' => 'string:email'
+            'title' => 'string:slug'
         ]));
 
         JsonType::addCustomFilter('/len\((.*?)\)/', function($value, $len) {
             return strlen($value) == $len;
         });
         $this->assertTrue($jsonType->matches([
-            'email' => 'string:len(22)'
+            'slug' => 'string:len(11)'
         ]));
         $this->assertNotTrue($jsonType->matches([
-            'email' => 'string:len(7)'
+            'slug' => 'string:len(7)'
         ]));
     }
 
