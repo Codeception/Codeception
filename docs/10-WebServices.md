@@ -124,6 +124,26 @@ $I->seeResponseJsonMatchesXpath('//user/login');
 ?>
 ```
 
+More detailed check can be applied if you need to validate the type of fields in a response.
+You can do that by using with a [seeResponseMatchesJsonType](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType) action in which you define the structure of JSON response.
+
+```php
+<?php
+$I->sendGET('/users/1');
+$I->seeResponseIsJson();
+$I->seeResponseMatchesJsonType([
+    'id' => 'integer',
+    'name' => 'string',
+    'email' => 'string:email',
+    'homepage' => 'string:url|null',
+    'created_at' => 'string:date',
+    'is_active' => 'boolean'
+]);
+?>
+```
+
+Codeception uses this simple and lightweight definitions format which can be [easily learned and extended](http://codeception.com/docs/modules/REST#seeResponseMatchesJsonType).
+
 ### Testing XML Responses
 
 In case your REST API works with XML format you can use similar methods to test its data and structure. 
