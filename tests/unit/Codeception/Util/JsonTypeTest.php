@@ -35,14 +35,14 @@ class JsonTypeTest extends \Codeception\TestCase\Test
     {
         $this->data['in_reply_to_screen_name'] = true;
         $jsonType = new JsonType($this->data);
-        $this->assertContains('`in_reply_to_screen_name: true` is not of type', $jsonType->matches($this->types));
+        $this->assertContains('`in_reply_to_screen_name: true` is of type', $jsonType->matches($this->types));
     }
 
     public function testIntegerFilter()
     {
         $jsonType = new JsonType($this->data);
-        $this->assertContains('`id: 11` is not of type', $jsonType->matches(['id' => 'integer:<5']));
-        $this->assertContains('`id: 11` is not of type', $jsonType->matches(['id' => 'integer:>15']));
+        $this->assertContains('`id: 11` is of type', $jsonType->matches(['id' => 'integer:<5']));
+        $this->assertContains('`id: 11` is of type', $jsonType->matches(['id' => 'integer:>15']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:=11']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5']));
         $this->assertTrue($jsonType->matches(['id' => 'integer:>5:<12']));
@@ -117,5 +117,22 @@ class JsonTypeTest extends \Codeception\TestCase\Test
         $this->types['user'] = 'array';
         $jsonType = new JsonType($this->data);
         $this->assertTrue($jsonType->matches($this->types));
+    }
+
+    public function testNull()
+    {
+        $jsonType = new JsonType(json_decode('{
+            "id": 123456,
+            "birthdate": null,
+            "firstname": "John",
+            "lastname": "Doe"
+        }', true));
+        $this->assertTrue($jsonType->matches([
+            'birthdate' => 'string|null'
+        ]));
+        $this->assertTrue($jsonType->matches([
+            'birthdate' => 'null'
+        ]));
+
     }
 }

@@ -139,7 +139,7 @@ class JsonType
                 }
             }
             if (!$matched) {
-                return sprintf("`$key: %s` is not of type `$type`", var_export($data[$key], true));
+                return sprintf("`$key: %s` is of type `$type`", var_export($data[$key], true));
             }
         }
         return true;
