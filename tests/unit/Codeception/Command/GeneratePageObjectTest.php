@@ -18,7 +18,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     public function testBasic()
     {
         unset($this->config['class_name']);
-        $this->execute(array('page' => 'Login'), false);
+        $this->execute(array('suite' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertContains('class Login', $this->content);
         $this->assertContains('public static', $this->content);
@@ -30,7 +30,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
     {
         unset($this->config['class_name']);
         $this->config['namespace'] = 'MiddleEarth';
-        $this->execute(array('page' => 'Login'), false);
+        $this->execute(array('suite' => 'Login'), false);
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/Login.php', $this->filename);
         $this->assertContains('namespace MiddleEarth\Page;', $this->content);
         $this->assertContains('class Login', $this->content);
@@ -63,7 +63,7 @@ class GeneratePageObjectTest extends BaseCommandRunner
 
     public function testCreateInSubpath()
     {
-        $this->execute(array('page' => 'User/View'));
+        $this->execute(array('suite' => 'User/View'));
         $this->assertEquals(\Codeception\Configuration::supportDir().'Page/User/View.php', $this->filename);
         $this->assertIsValidPhp($this->content);
     }
