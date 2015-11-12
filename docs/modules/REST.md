@@ -156,7 +156,7 @@ Checks wheather XML response does not match XPath
 
 ```php
 <?php
-$I->dontSeeXmlResponseMatchesXpath('//root/user[ * `id=1]');` 
+$I->dontSeeXmlResponseMatchesXpath('//root/user[ * `id=1]');`
 ```
  * `[Part]` xml
  * `param` $xpath
@@ -179,7 +179,7 @@ Deprecated since 2.0.9 and removed since 2.1.0
 
  * `param` $path
  * `throws`  ModuleException
- * `deprecated` 
+ * `deprecated`
 
 
 ### grabDataFromResponseByJsonPath
@@ -315,11 +315,11 @@ Examples:
 
 ``` php
 <?php
-// response: {name: john, email: john * `gmail.com}` 
+// response: {name: john, email: john * `gmail.com}`
 $I->seeResponseContainsJson(array('name' => 'john'));
 
 // response {user: john, profile: { email: john * `gmail.com`  }}
-$I->seeResponseContainsJson(array('email' => 'john * `gmail.com'));` 
+$I->seeResponseContainsJson(array('email' => 'john * `gmail.com'));`
 
 ?>
 ```
@@ -500,7 +500,7 @@ This is how filters can be used:
 
 ```php
 <?php
-// {'user_id': 1, 'email' => 'davert * `codeception.com'}` 
+// {'user_id': 1, 'email' => 'davert * `codeception.com'}`
 $I->seeResponseIsJsonType([
      'user_id' => 'string:>0:<1000', // multiple filters can be used
      'email' => 'string:regex(~\ * `~)'`  // we just check that  * ``  char is included
@@ -555,7 +555,7 @@ Checks wheather XML response matches XPath
 
 ```php
 <?php
-$I->seeXmlResponseMatchesXpath('//root/user[ * `id=1]');` 
+$I->seeXmlResponseMatchesXpath('//root/user[ * `id=1]');`
 ```
  * `[Part]` xml
  * `param` $xpath
@@ -601,7 +601,7 @@ Sends LINK request to given uri.
 
  * `link`  http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 
- * `author`  samva.ua * `gmail.com` 
+ * `author`  samva.ua * `gmail.com`
  * `[Part]` json
  * `[Part]` xml
 
@@ -658,7 +658,7 @@ Sends UNLINK request to given uri.
  * `param`       $url
  * `param array` $linkEntries (entry is array with keys "uri" and "link-param")
  * `link`  http://tools.ietf.org/html/rfc2068#section-19.6.2.4
- * `author`  samva.ua * `gmail.com` 
+ * `author`  samva.ua * `gmail.com`
  * `[Part]` json
  * `[Part]` xml
 

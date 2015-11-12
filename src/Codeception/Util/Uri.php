@@ -88,6 +88,11 @@ class Uri
     {
         $uri = new Psr7Uri($url);
         $cutUrl = (string)$uri->withQuery('')->withFragment('');
-        return rtrim($cutUrl,'/') . '/'  . ltrim($path, '/');
+
+        if ($path === '' || $path[0] === '#') {
+            return $cutUrl . $path;
+        } else {
+            return rtrim($cutUrl, '/') . '/'  . ltrim($path, '/');
+        }
     }
 }

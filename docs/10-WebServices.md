@@ -89,7 +89,7 @@ $I->seeResponseContainsJson([
 ?>
 ```
 
-You may want to perform even more complex assertions on a response. This can be done by writing your own methods in the [Helper](http://codeception.com/docs/03-ModulesAndHelpers#Helpers) classes. To access the latest JSON response you will need to get the `response` property of the `REST` module. Let's demonstrate it with the `seeResponseIsHtml` method:
+You may want to perform even more complex assertions on a response. This can be done by writing your own methods in the [Helper](http://codeception.com/docs/06-ReusingTestCode#Modules-and-Helpers) classes. To access the latest JSON response you will need to get the `response` property of the `REST` module. Let's demonstrate it with the `seeResponseIsHtml` method:
 
 ```php
 <?php

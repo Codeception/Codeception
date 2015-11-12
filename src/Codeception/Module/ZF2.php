@@ -112,7 +112,7 @@ class ZF2 extends Framework implements DoctrineProvider
     {
         return $this->grabServiceFromContainer('Doctrine\ORM\EntityManager');
     }
-    
+
     /**
      * Grabs a service from ZF2 container.
      * Recommended to use for unit testing.
@@ -128,10 +128,12 @@ class ZF2 extends Framework implements DoctrineProvider
      */
     public function grabServiceFromContainer($service)
     {
-        $serviceLocator = Application::init($this->applicationConfig)->getServiceManager();
+        $serviceLocator = $this->application
+            ? $this->application->getServiceManager()
+            : Application::init($this->applicationConfig)->getServiceManager();
         if (!$serviceLocator->has($service)) {
             $this->fail("Service $service is not available in container");
-        }        
+        }
         return $serviceLocator->get($service);
     }
 

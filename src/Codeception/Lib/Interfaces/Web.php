@@ -12,7 +12,6 @@ interface Web
      * $I->amOnPage('/');
      * // opens /register page
      * $I->amOnPage('/register');
-     * ?>
      * ```
      *
      * @param $page
@@ -20,16 +19,31 @@ interface Web
     public function amOnPage($page);
 
     /**
-     * Checks that the current page contains the given string.
-     * Specify a locator as the second parameter to match a specific region.
+     * Checks that the current page contains the given string (case insensitive).
+     * 
+     * You can specify a specific HTML element (via CSS or XPath) as the second 
+     * parameter to only search within that element.
      *
      * ``` php
      * <?php
-     * $I->see('Logout'); // I can suppose user is logged in
-     * $I->see('Sign Up','h1'); // I can suppose it's a signup page
-     * $I->see('Sign Up','//body/h1'); // with XPath
-     * ?>
+     * $I->see('Logout');                 // I can suppose user is logged in
+     * $I->see('Sign Up', 'h1');          // I can suppose it's a signup page
+     * $I->see('Sign Up', '//body/h1');   // with XPath
      * ```
+     * 
+     * Note that the search is done after stripping all HTML tags from the body,
+     * so `$I->see('strong')` will return true for strings like:
+     * 
+     *   - `<p>I am Stronger than thou</p>`
+     *   - `<script>document.createElement('strong');</script>`
+     * 
+     * But will *not* be true for strings like:
+     * 
+     *   - `<strong>Home</strong>`
+     *   - `<div class="strong">Home</strong>`
+     *   - `<!-- strong -->`
+     * 
+     * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
      * @param null $selector
@@ -37,33 +51,84 @@ interface Web
     public function see($text, $selector = null);
 
     /**
-     * Checks that the current page doesn't contain the text specified.
+     * Checks that the current page doesn't contain the text specified (case insensitive).
      * Give a locator as the second parameter to match a specific region.
      *
      * ```php
      * <?php
-     * $I->dontSee('Login'); // I can suppose user is already logged in
-     * $I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-     * $I->dontSee('Sign Up','//body/h1'); // with XPath
-     * ?>
+     * $I->dontSee('Login');                    // I can suppose user is already logged in
+     * $I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
+     * $I->dontSee('Sign Up','//body/h1');      // with XPath
      * ```
+     * 
+     * Note that the search is done after stripping all HTML tags from the body,
+     * so `$I->dontSee('strong')` will fail on strings like:
+     * 
+     *   - `<p>I am Stronger than thou</p>`
+     *   - `<script>document.createElement('strong');</script>`
+     * 
+     * But will ignore strings like:
+     * 
+     *   - `<strong>Home</strong>`
+     *   - `<div class="strong">Home</strong>`
+     *   - `<!-- strong -->`
+     * 
+     * For checking the raw source code, use `seeInSource()`.
      *
      * @param      $text
      * @param null $selector
      */
     public function dontSee($text, $selector = null);
+    
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ``` php
+     * <?php
+     * $I->seeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ```
+     *
+     * @param      $raw
+     */
+    public function seeInSource($raw);
+
+    /**
+     * Checks that the current page contains the given string in its
+     * raw source code.
+     *
+     * ```php
+     * <?php
+     * $I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
+     * ```
+     *
+     * @param      $raw
+     */
+    public function dontSeeInSource($raw);
 
     /**
      * Submits the given form on the page, optionally with the given form
      * values.  Give the form fields values as an array.
      *
-     * Skipped fields will be filled by their values from the page.
+     * Although this function can be used as a short-hand version of 
+     * `fillField()`, `selectOption()`, `click()` etc. it has some important 
+     * differences:
+     * 
+     *  * Only field *names* may be used, not CSS/XPath selectors nor field labels
+     *  * If a field is sent to this function that does *not* exist on the page,
+     *    it will silently be added to the HTTP request.  This is helpful for testing
+     *    some types of forms, but be aware that you will *not* get an exception
+     *    like you would if you called `fillField()` or `selectOption()` with
+     *    a missing field.
+     * 
+     * Fields that are not provided will be filled by their values from the page, 
+     * or from any previous calls to `fillField()`, `selectOption()` etc.
      * You don't need to click the 'Submit' button afterwards.
      * This command itself triggers the request to form's action.
      *
-     * You can optionally specify what button's value to include
-     * in the request with the last parameter as an alternative to
-     * explicitly setting its value in the second parameter, as
+     * You can optionally specify which button's value to include
+     * in the request with the last parameter (as an alternative to
+     * explicitly setting its value in the second parameter), as
      * button values are not otherwise included in the request.
      *
      * Examples:
@@ -137,7 +202,8 @@ interface Web
      * );
      * ```
      * 
-     * Pair this with seeInFormFields for quick testing magic.
+     * This function works well when paired with `seeInFormFields()` 
+     * for quickly testing CRUD interfaces and form validation logic.
      * 
      * ``` php
      * <?php
@@ -147,15 +213,14 @@ interface Web
      *      'checkbox1' => true,
      *      // ...
      * ];
-     * $I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+     * $I->submitForm('#my-form', $form, 'submitButton');
      * // $I->amOnPage('/path/to/form-page') may be needed
-     * $I->seeInFormFields('//form[@id=my-form]', $form);
-     * ?>
+     * $I->seeInFormFields('#my-form', $form);
      * ```
      *
      * Parameter values can be set to arrays for multiple input fields
      * of the same name, or multi-select combo boxes.  For checkboxes,
-     * either the string value can be used, or boolean values which will
+     * you can use either the string value or boolean `true`/`false` which will
      * be replaced by the checkbox's value in the DOM.
      *
      * ``` php
@@ -164,7 +229,7 @@ interface Web
      *      'field1' => 'value',
      *      'checkbox' => [
      *          'value of first checkbox',
-     *          'value of second checkbox,
+     *          'value of second checkbox',
      *      ],
      *      'otherCheckboxes' => [
      *          true,
@@ -176,27 +241,29 @@ interface Web
      *          'second option value'
      *      ]
      * ]);
-     * ?>
      * ```
      *
      * Mixing string and boolean values for a checkbox's value is not supported
      * and may produce unexpected results.
      * 
-     * Field names ending in "[]" must be passed without the trailing square 
+     * Field names ending in `[]` must be passed without the trailing square 
      * bracket characters, and must contain an array for its value.  This allows
      * submitting multiple values with the same name, consider:
      * 
      * ```php
+     * <?php
+     * // This will NOT work correctly
      * $I->submitForm('#my-form', [
      *     'field[]' => 'value',
-     *     'field[]' => 'another value', // 'field[]' is already a defined key
+     *     'field[]' => 'another value',  // 'field[]' is already a defined key
      * ]);
      * ```
      * 
      * The solution is to pass an array value:
      * 
      * ```php
-     * // this way both values are submitted
+     * <?php
+     * // This way both values are submitted
      * $I->submitForm('#my-form', [
      *     'field' => [
      *         'value',

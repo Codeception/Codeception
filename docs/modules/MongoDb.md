@@ -151,7 +151,7 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
 
 ### useDatabase
  
-Inserts data into collection
+Specify the database to use
 
 ``` php
 <?php

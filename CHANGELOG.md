@@ -1,5 +1,20 @@
 # Changelog
 
+#### 2.1.4
+
+* [REST] REST methods can be used to inspect result of the last request made by PhpBrowser or framework module. see #2507. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `_getResponseContent` hidden method. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `moveBack` method. By @Naktibalda
+* [Laravel5] Removed `expectEvents` and added `seeEventTriggered` and `dontSeeEventTriggered`. By @janhenkgerritsen
+* [Laravel5] Fixed fatal error in `seeCurrentRouteIs` and `seeCurrentActionIs` methods. See #2517. By @janhenkgerritsen
+* [Laravel5] Improved the error messages for several methods. See #2476. By @janhenkgerritsen
+* [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
+* [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
+* [Phalcon] Added `amOnRoute` and `seeCurrentRouteIs` methods by @sergeyklay
+* [Phalcon] Added `seeSessionHasValues` by @sergeyklay
+* [Phalcon] Added `getApplication()` method by @sergeyklay
+* [Yii2] Fixed problems with transaction rollbacks when using the `cleanup` flag. See #2488. By @ivokund
+
 #### 2.1.3
 
 * [REST] **Added matching data types** by with new methods `seeResponseMatchesJsonType` and `dontSeeResponseMatchesJsonType`. See #2391

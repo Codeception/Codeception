@@ -362,7 +362,12 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGitStack()->add('-A')->run();
 
-        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sortByName()->in('releases')));
+        $sortByVersion = function (\SplFileInfo $a, \SplFileInfo $b)
+        {
+            return version_compare($a->getBaseName(), $b->getBaseName());
+        };
+
+        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sort($sortByVersion)->in('releases')));
         $branch = null;
         $releaseFile = $this->taskWriteToFile('builds.markdown')
             ->line('---')

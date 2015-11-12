@@ -27,7 +27,7 @@
 <p>Текст на русском</p>
 <a href="/">Ссылочка</a>
 
-<a href="/" class="sign">Sign in!</a>
+<a href="/login" class="sign">Sign in!</a>
 
 <div>Kill & Destroy</div>
 

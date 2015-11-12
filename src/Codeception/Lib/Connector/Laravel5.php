@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -24,7 +23,12 @@ class Laravel5 extends Client
     /**
      * @var array
      */
-    private $expectedEvents = [];
+    private $triggeredEvents = [];
+
+    /**
+     * @var object
+     */
+    private $oldDb;
 
     /**
      * Constructor.
@@ -67,9 +71,9 @@ class Laravel5 extends Client
     {
         // Store a reference to the database object
         // so the database connection can be reused during tests
-        $oldDb = null;
+        $this->oldDb = null;
         if ($this->app['db'] && $this->app['db']->connection()) {
-            $oldDb = $this->app['db'];
+            $this->oldDb = $this->app['db'];
         }
 
         // The module can login a user with the $I->amLoggedAs() method,
@@ -92,22 +96,26 @@ class Laravel5 extends Client
         $this->app->instance('request', Request::createFromBase($request));
         $this->app->instance('middleware.disable', $this->module->config['disable_middleware']);
 
+        // Reset the old database after the DatabaseServiceProvider ran.
+        // This way other service providers that rely on the $app['db'] entry
+        // have the correct instance available.
+        if ($this->oldDb) {
+            $this->app['events']->listen('Illuminate\Database\DatabaseServiceProvider', function () {
+                $this->app->singleton('db', function () {
+                    return $this->oldDb;
+                });
+            });
+        }
+
+        $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
+
         // If events should be disabled mock the event dispatcher instance
         if ($this->module->config['disable_events']) {
             $this->mockEventDispatcher();
         }
 
-        // Setup listener for expected events
-        $this->listenForExpectedEvents();
-
-        // Bootstrap the application
-        $this->app->make('Illuminate\Contracts\Http\Kernel')->bootstrap();
-
-        // Restore the old database object if available
-        if ($oldDb) {
-            $this->app['db'] = $oldDb;
-            Model::setConnectionResolver($this->app['db']);
-        }
+        // Setup an event listener to listen for all events that are triggered
+        $this->setupEventListener();
 
         // If there was a user logged in restore this user.
         // Also reload the user object from the user provider to prevent stale user data.
@@ -144,98 +152,78 @@ class Laravel5 extends Client
     }
 
     /**
-     * Listen for expected events.
+     * Listen for events.
      * Even works when events are disabled.
      */
-    private function listenForExpectedEvents()
+    private function setupEventListener()
     {
         if ($this->module->config['disable_events']) {
             // Events are disabled so we should listen for events through the mocked event dispatcher
             $mock = $this->app['events'];
-            $callback = [$this, 'expectedEventListenerForMockedDispatcher'];
+            $callback = function ($event) {
+                $this->triggeredEvents[] = $this->normalizeEvent($event);
+            };
 
             $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
                 ->method('fire')
                 ->will(new \PHPUnit_Framework_MockObject_Stub_ReturnCallback($callback));
         } else {
             // Listen for all events by registering a wildcard event listener
-            $this->app['events']->listen('*', [$this, 'expectedEventListenerForLaravelDispatcher']);
+            $callback = function () {
+                $this->triggeredEvents[] = $this->normalizeEvent($this->app['events']->firing());
+            };
+            $this->app['events']->listen('*', $callback);
         }
     }
 
     /**
-     * Add an expected event.
+     * Normalize events to class names.
      *
-     * @param string $event
+     * @param $event
+     * @return string
      */
-    public function addExpectedEvent($event)
+    private function normalizeEvent($event)
     {
-        $this->expectedEvents[] = $event;
+        if (is_object($event)) {
+            $event = get_class($event);
+        }
+
+        if (preg_match('/^bootstrapp(ing|ed): /', $event)) {
+            return $event;
+        }
+
+        // Events can be formatted as 'event.name: parameters'
+        $segments = explode(':', $event);
+
+        return $segments[0];
     }
 
     /**
-     * Returns all events that were expected but did not fire.
+     * Did an event trigger?
      *
-     * @return array
+     * @param $event
+     * @return bool
      */
-    public function missedEvents()
+    public function eventTriggered($event)
     {
-        return $this->expectedEvents;
+        $event = $this->normalizeEvent($event);
+
+        foreach ($this->triggeredEvents as $triggeredEvent) {
+            if ($event == $triggeredEvent || is_subclass_of($event, $triggeredEvent)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * Clear all expected events.
      * Should be called before each test.
      */
-    public function clearExpectedEvents()
+    public function clearTriggeredEvents()
     {
-        $this->expectedEvents = [];
-    }
-
-    /**
-     * Wildcard event listener for the Laravel event dispatcher.
-     * Used to check if expected events are fired.
-     */
-    public function expectedEventListenerForLaravelDispatcher()
-    {
-        $this->checkForExpectedEvent($this->app['events']->firing());
-    }
-
-    /**
-     * If events are disabled the Laravel event dispatcher is replaced by a mock.
-     * This method is called by the mocked fire() method to check for expected events.
-     *
-     * @param $event
-     */
-    public function expectedEventListenerForMockedDispatcher($event)
-    {
-        $this->checkForExpectedEvent($event);
-    }
-
-    /**
-     * Check if the event was an expected event.
-     *
-     * @param $event
-     */
-    private function checkForExpectedEvent($event)
-    {
-        if (!$this->expectedEvents) {
-            return;
-        }
-
-        if (is_object($event)) {
-            $event = get_class($event);
-        }
-
-        // Events can be formatted as 'event.name: class'
-        $segments = explode(':', $event);
-        $event = $segments[0];
-
-        foreach ($this->expectedEvents as $key => $expectedEvent) {
-            if ($event == $expectedEvent || is_subclass_of($event, $expectedEvent)) {
-                unset($this->expectedEvents[$key]);
-            }
-        }
+        $this->triggeredEvents = [];
     }
 
 }
