@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.1.5
+
+* [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
+
 #### 2.1.4
 
 * [PhpBrowser][Frameworks] Added `_getResponseContent` hidden method. By @Naktibalda
