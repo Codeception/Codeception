@@ -310,12 +310,34 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $this->module->_initialize();
         if (method_exists($this->module->guzzle, 'getConfig')) {
-            $config = $this->module->guzzle->getConfig('config');
+            $config = $this->module->guzzle->getConfig();
         } else {
             $config = $this->module->guzzle->getDefaultOption('config');
         }
         $this->assertArrayHasKey('curl', $config);
-        $this->assertArrayHasKey('CURLOPT_NOBODY', $config['curl']);
+        $this->assertArrayHasKey(CURLOPT_NOBODY, $config['curl']);
+    }
+
+
+    public function testCurlSslOptions()
+    {
+        $this->module->_setConfig(array(
+            'url' => 'https://google.com',
+            'curl' => array(
+                'CURLOPT_NOBODY' => true,
+                'CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',
+            )));
+        $this->module->_initialize();
+        if (method_exists($this->module->guzzle, 'getConfig')) {
+            $config = $this->module->guzzle->getConfig();
+        } else {
+            $config = $this->module->guzzle->getDefaultOption('config');
+        }
+
+        $this->assertArrayHasKey('curl', $config);
+        $this->assertArrayHasKey(CURLOPT_SSL_CIPHER_LIST, $config['curl']);
+        $this->module->amOnPage('/');
+        $this->assertSame('', $this->module->_getResponseContent(), 'CURLOPT_NOBODY setting is not respected');
     }
 
     public function testHttpAuth()
