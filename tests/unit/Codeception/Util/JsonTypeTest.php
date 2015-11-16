@@ -68,6 +68,10 @@ class JsonTypeTest extends \Codeception\TestCase\Test
     {
         $jsonType = new JsonType(['date' => '2011-11-30T04:06:44Z']);
         $this->assertTrue($jsonType->matches(['date' => 'string:date']));
+        $jsonType = new JsonType(['date' => '2012-04-30T04:06:00.123Z']);
+        $this->assertTrue($jsonType->matches(['date' => 'string:date']));
+        $jsonType = new JsonType(['date' => '1931-01-05T04:06:03.1+05:30']);
+        $this->assertTrue($jsonType->matches(['date' => 'string:date']));
     }
 
     public function testEmailFilter()
