@@ -376,7 +376,7 @@ class REST extends \Codeception\Module
         }
 
         $this->params = $parameters;
-        
+
         $parameters = $this->encodeApplicationJson($method, $parameters);
 
         if (is_array($parameters) || $method === 'GET') {
@@ -391,7 +391,13 @@ class REST extends \Codeception\Module
             $this->client->request($method, $url, $parameters, $files);
 
         } else {
-            $this->debugSection("Request", "$method $url " . $parameters);
+            $requestData = $parameters;
+            if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
+                // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
+                // display string to signify the presence of request data
+                $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
+            }
+            $this->debugSection("Request", "$method $url " . $requestData);
             $this->client->request($method, $url, array(), $files, array(), $parameters);
         }
         $this->response = (string)$this->client->getInternalResponse()->getContent();
@@ -407,10 +413,10 @@ class REST extends \Codeception\Module
     protected function encodeApplicationJson($method, $parameters)
     {
         if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
-            && ($this->headers['Content-Type'] === 'application/json' 
+            && ($this->headers['Content-Type'] === 'application/json'
                 || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
-                ) 
-            
+                )
+
         ) {
             if ($parameters instanceof \JsonSerializable) {
                 return json_encode($parameters);
