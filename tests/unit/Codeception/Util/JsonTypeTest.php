@@ -62,6 +62,18 @@ class JsonTypeTest extends \Codeception\TestCase\Test
         $this->assertTrue($jsonType->matches(['numbers' => 'string:regex(~1-2-3~)']));
         $this->assertTrue($jsonType->matches(['numbers' => 'string:regex(~\d-\d-\d~)']));
         $this->assertNotTrue($jsonType->matches(['numbers' => 'string:regex(~^\d-\d$~)']));
+        
+        $jsonType = new JsonType(['published' => 1]);
+        $this->assertTrue($jsonType->matches(['published' => 'integer:regex(~1~)']));
+        $this->assertTrue($jsonType->matches(['published' => 'integer:regex(~1|2~)']));
+        $this->assertTrue($jsonType->matches(['published' => 'integer:regex(~2|1~)']));
+        $this->assertNotTrue($jsonType->matches(['published' => 'integer:regex(~2~)']));
+        $this->assertNotTrue($jsonType->matches(['published' => 'integer:regex(~2|3~)']));
+        $this->assertNotTrue($jsonType->matches(['published' => 'integer:regex(~3|2~)']));
+
+        $jsonType = new JsonType(['date' => '2011-11-30T04:06:44Z']);
+        $this->assertTrue($jsonType->matches(['date' => 'string:regex(~2011-11-30T04:06:44Z|2011-11-30T05:07:00Z~)']));
+        $this->assertNotTrue($jsonType->matches(['date' => 'string:regex(~2015-11-30T04:06:44Z|2016-11-30T05:07:00Z~)']));
     }
 
     public function testDateTimeFilter()
