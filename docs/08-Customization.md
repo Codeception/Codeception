@@ -69,7 +69,7 @@ It allows you to rerun failed tests with `-g failed` option:
 php codecept.phar run -g failed
 ```
 
-Codeception comes with bundled extensions located in `ext` directory. For instance, you can enable Logger extension to log test exection with Monolog 
+Codeception comes with bundled extensions located in `ext` directory. For instance, you can enable Logger extension to log test execution with Monolog
 
 ```yaml
 extensions:
