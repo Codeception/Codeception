@@ -1,5 +1,5 @@
 {
-    "name":"codeception/codeception",
+    "name":"niclopez/codeception",
     "description":"BDD-style testing framework",
     "keywords":["BDD", "acceptance testing", "functional testing", "unit testing", "tdd"],
     "homepage":"http://codeception.com/",
