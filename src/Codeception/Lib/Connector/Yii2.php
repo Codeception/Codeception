@@ -115,8 +115,13 @@ class Yii2 extends Client
         ob_start();
 
         $yiiRequest = $app->getRequest();
-        $yiiRequest->setRawBody($request->getContent());
-        $yiiRequest->setBodyParams($_POST);
+        if ($request->getContent() !== null) {
+            $yiiRequest->setRawBody($request->getContent());
+            $yiiRequest->setBodyParams(null);
+        } else {
+            $yiiRequest->setRawBody(null);
+            $yiiRequest->setBodyParams($_POST);
+        }
         $yiiRequest->setQueryParams($_GET);
 
         try {
