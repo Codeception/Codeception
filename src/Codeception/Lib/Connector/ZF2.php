@@ -49,23 +49,20 @@ class ZF2 extends Client
 
         $zendRequest->setCookies(new Parameters($request->getCookies()));
 
+        $query = [];
+        $post = [];
+        $content = $request->getContent();
         if ($queryString) {
             parse_str($queryString, $query);
-        } else {
-            $query = [];
         }
-        $zendRequest->setQuery(new Parameters($query));
         
-        if ($request->getContent() !== null) {
-            $zendRequest->setPost(new Parameters([]));
-            $zendRequest->setContent($request->getContent());
-        } elseif ($method != HttpRequest::METHOD_GET) {
+        if ($content === null && $method != HttpRequest::METHOD_GET) {
             $post = $request->getParameters();
-            $zendRequest->setPost(new Parameters($post));
-        } else {
-            $zendRequest->setPost(new Parameters([]));
         }
 
+        $zendRequest->setQuery(new Parameters($query));
+        $zendRequest->setPost(new Parameters($post));
+        $zendRequest->setContent($content);
         $zendRequest->setMethod($method);
         $zendRequest->setUri($uri);
         $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
