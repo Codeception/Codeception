@@ -117,14 +117,14 @@ class JsonType
                 }
                 continue;
             }
-            $matchTypes = explode('|', $type);
+            $matchTypes = preg_split("#(?![^]\(]*\))\|#", $type);
             $matched = false;
             $currentType = strtolower(gettype($data[$key]));
             if ($currentType == 'double') {
                 $currentType = 'float';
             }
             foreach ($matchTypes as $matchType) {
-                $filters = explode(':', $matchType);
+                $filters = preg_split("#(?![^]\(]*\))\:#", $matchType);
                 $expectedType = trim(strtolower(array_shift($filters)));
 
                 if ($expectedType != $currentType) {
