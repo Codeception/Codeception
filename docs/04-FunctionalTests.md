@@ -151,7 +151,7 @@ modules:
 
 ## Writing Functional Tests
 
-Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/04-AcceptanceTests) with `PhpBrowser` module enabled. All framework modules and `PhpBrowser` module share the same methods and the same engine.
+Functional tests are written in the same manner as [Acceptance Tests](http://codeception.com/docs/03-AcceptanceTests) with `PhpBrowser` module enabled. All framework modules and `PhpBrowser` module share the same methods and the same engine.
 
 Therefore we can open a web page with `amOnPage` command.
 
