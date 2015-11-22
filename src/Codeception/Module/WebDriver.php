@@ -841,7 +841,7 @@ class WebDriver extends CodeceptionModule implements
         }
         foreach ($elements as $el) {
             if ($el->getTagName() === 'textarea') {
-                $currentValues[] = $el->getText();
+                $currentValues[] = $el->getAttribute('value');
             } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
                 if ($el->getAttribute('checked')) {
                     if (is_bool($value)) {
