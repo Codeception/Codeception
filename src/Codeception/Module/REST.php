@@ -520,10 +520,15 @@ EOF;
     {
         json_decode($this->connectionModule->_getResponseContent());
         $errorCode = json_last_error();
+        $errorMessage = json_last_error_msg();
         \PHPUnit_Framework_Assert::assertEquals(
             JSON_ERROR_NONE,
             $errorCode,
-            "json decoding error #$errorCode, see http://php.net/manual/en/function.json-last-error.php"
+            sprintf(
+                "Invalid json: %s. System message: %s.",
+                $this->connectionModule->_getResponseContent(),
+                json_last_error_msg()
+            )
         );
     }
 
