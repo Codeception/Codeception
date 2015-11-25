@@ -528,7 +528,7 @@ EOF;
                 "Invalid json: %s. System message: %s.",
                 $this->connectionModule->_getResponseContent(),
                 json_last_error_msg()
-            ),
+            )
         );
     }
 
