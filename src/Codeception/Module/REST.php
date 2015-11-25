@@ -525,10 +525,10 @@ EOF;
             JSON_ERROR_NONE,
             $errorCode,
             sprintf(
-                    "Invalid json: %s. System message: %s.",
-                    $this->connectionModule->_getResponseContent(),
-                    json_last_error_msg()
-                ),
+                "Invalid json: %s. System message: %s.",
+                $this->connectionModule->_getResponseContent(),
+                json_last_error_msg()
+            ),
         );
     }
 
