@@ -130,12 +130,13 @@ class JsonType
                 if ($expectedType != $currentType) {
                     continue;
                 }
-                if (empty($filters)) {
-                    $matched = true;
-                    break;
-                }
+                $matched = true;
+
                 foreach ($filters as $filter) {
-                    $matched = $this->matchFilter($filter, $data[$key]);
+                    $matched = $matched && $this->matchFilter($filter, $data[$key]);
+                }
+                if ($matched) {
+                    break;
                 }
             }
             if (!$matched) {

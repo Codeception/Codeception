@@ -149,6 +149,21 @@ class JsonTypeTest extends \Codeception\TestCase\Test
         $this->assertTrue($jsonType->matches([
             'birthdate' => 'null'
         ]));
+    }
 
+    public function testOR()
+    {
+        $jsonType = new JsonType(json_decode('{
+            "type": "DAY"
+        }', true));
+        $this->assertTrue($jsonType->matches([
+            'type' => 'string:=DAY|string:=WEEK'
+        ]));
+        $jsonType = new JsonType(json_decode('{
+            "type": "WEEK"
+        }', true));
+        $this->assertTrue($jsonType->matches([
+            'type' => 'string:=DAY|string:=WEEK'
+        ]));
     }
 }
