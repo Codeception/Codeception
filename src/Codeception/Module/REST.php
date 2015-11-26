@@ -20,7 +20,7 @@ use Codeception\Util\Soap as XmlUtils;
  * This module can be used either with frameworks or PHPBrowser.
  * If a framework module is connected, the testing will occur in the application directly.
  * Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
- * 
+ *
  *
  * ## Status
  *
@@ -479,7 +479,13 @@ EOF;
             }
             $this->client->request($method, $url, $parameters, $files);
         } else {
-            $this->debugSection("Request", "$method $url " . $parameters);
+            $requestData = $parameters;
+            if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
+                // if the request data has non-printable bytes and it is not a valid unicode string, reformat the
+                // display string to signify the presence of request data
+                $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
+            }
+            $this->debugSection("Request", "$method $url " . $requestData);
             $this->client->request($method, $url, [], $files, [], $parameters);
         }
         $this->response = (string)$this->connectionModule->_getResponseContent();
@@ -495,7 +501,7 @@ EOF;
     protected function encodeApplicationJson($method, $parameters)
     {
         if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
-            && ($this->headers['Content-Type'] === 'application/json' 
+            && ($this->headers['Content-Type'] === 'application/json'
                 || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
             )
         ) {
@@ -520,10 +526,15 @@ EOF;
     {
         json_decode($this->connectionModule->_getResponseContent());
         $errorCode = json_last_error();
+        $errorMessage = json_last_error_msg();
         \PHPUnit_Framework_Assert::assertEquals(
             JSON_ERROR_NONE,
             $errorCode,
-            "json decoding error #$errorCode, see http://php.net/manual/en/function.json-last-error.php"
+            sprintf(
+                "Invalid json: %s. System message: %s.",
+                $this->connectionModule->_getResponseContent(),
+                json_last_error_msg()
+            )
         );
     }
 
