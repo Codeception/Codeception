@@ -78,7 +78,7 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $I = $this;
         $I->amOnPage('/login');
-        $I->submitForm('#loginForm' [
+        $I->submitForm('#loginForm', [
             'login' => $name, 
             'password' => $password
         ]);
