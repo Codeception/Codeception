@@ -170,7 +170,7 @@ class JsonType
             return $value == substr($filter, 1);
         }
         if ($filter === 'url') {
-            return preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $value);
+            return filter_var($value, FILTER_VALIDATE_URL);
         }
         if ($filter === 'date') {
             return preg_match('/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(\.\d+)?(?:Z|(\+|-)([\d|:]*))?$/', $value);
