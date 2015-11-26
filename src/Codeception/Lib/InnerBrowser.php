@@ -1115,7 +1115,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
 
-        $expires      = isset($params['expires']) ? $params['expires'] : null;
+        $expires      = isset($params['expiry']) ? $params['expiry'] : null; // WebDriver compatibility
+        $expires      = isset($params['expires']) && !$expires ? $params['expires'] : null;
         $path         = isset($params['path'])    ? $params['path'] : null;
         $domain       = isset($params['domain'])  ? $params['domain'] : '';
         $secure       = isset($params['secure'])  ? $params['secure'] : false;

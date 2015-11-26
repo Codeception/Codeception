@@ -456,6 +456,9 @@ class WebDriver extends CodeceptionModule implements
     {
         $params['name'] = $cookie;
         $params['value'] = $value;
+        if (isset($params['expires'])) { // PhpBrowser compatibility
+            $params['expiry'] = $params['expires'];
+        }
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
