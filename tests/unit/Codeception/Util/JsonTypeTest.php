@@ -166,4 +166,23 @@ class JsonTypeTest extends \Codeception\TestCase\Test
             'type' => 'string:=DAY|string:=WEEK'
         ]));
     }
+
+    public function testCollection()
+    {
+        $jsonType = new JsonType([
+            ['id' => 1],
+            ['id' => 3],
+            ['id' => 5]
+        ]);
+        $this->assertTrue($jsonType->matches([
+            'id' => 'integer'
+        ]));
+
+        $this->assertNotTrue($res = $jsonType->matches([
+            'id' => 'integer:<3'
+        ]));
+        
+        $this->assertContains('3` is of type `integer:<3', $res);
+        $this->assertContains('5` is of type `integer:<3', $res);
+    }
 }
