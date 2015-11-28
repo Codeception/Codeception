@@ -2183,6 +2183,7 @@ class WebDriver extends CodeceptionModule implements
                 throw new ElementNotFound(json_encode($value), "Option inside $field matched by name or value");
                 break;
             case "textarea":
+            case "div": //allows for content editable divs
                 $el->sendKeys($value);
                 return;
                 break;
