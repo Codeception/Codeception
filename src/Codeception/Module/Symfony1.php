@@ -196,12 +196,12 @@ class Symfony1 extends Module
             }
             $response = self::formatResponse($response);
 
-            return array('pageContains', $text, $values, "'$selector' on $response");
+            return array('contains', $text, $values, "'$selector' on $response");
         }
 
         $response = self::formatResponse($response);
 
-        return array('pageContains', $text, strip_tags($this->browser->getResponse()->getContent()), "on $response.");
+        return array('contains', $text, strip_tags($this->browser->getResponse()->getContent()), "on $response.");
     }
 
     /**
