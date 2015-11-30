@@ -381,7 +381,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         $currentRouteName = $currentRoute ? $currentRoute->getName() : '';
 
         if ($currentRouteName != $routeName) {
-            $message = empty($currentRouteName) ? "Current route has no name" : "Current route is \"$currentRoute\"";
+            $message = empty($currentRouteName) ? "Current route has no name" : "Current route is \"$currentRouteName\"";
             $this->fail($message);
         }
     }
