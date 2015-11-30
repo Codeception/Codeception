@@ -194,12 +194,12 @@ class Symfony1 extends Module
             foreach ($nodes as $node) {
                 $values .= '<!-- Merged Output -->'.trim($node->nodeValue);
             }
-            $response = Framework::formatResponse($response);
+            $response = self::formatResponse($response);
 
             return array('pageContains', $text, $values, "'$selector' on $response");
         }
 
-        $response = Framework::formatResponse($response);
+        $response = self::formatResponse($response);
 
         return array('pageContains', $text, strip_tags($this->browser->getResponse()->getContent()), "on $response.");
     }
@@ -567,6 +567,26 @@ class Symfony1 extends Module
 
         $browser->get('/');
         $this->followRedirect();
+    }
+    
+        public static function formatResponse($response)
+    {
+        if (strlen($response) <= 500) {
+            $response = trim($response);
+            $response = preg_replace('/\s[\s]+/',' ',$response); // strip spaces
+            $response = str_replace("\n",'', $response);
+            return $response;
+        }
+        if (strpos($response, '<html') !== false) {
+            $formatted = 'page [';
+            $crawler = new \Symfony\Component\DomCrawler\Crawler($response);
+            $title = $crawler->filter('title');
+            if (count($title)) $formatted .= "Title: " . trim($title->first()->text());
+            $h1 = $crawler->filter('h1');
+            if (count($h1)) $formatted .= "\nH1: " . trim($h1->first()->text());
+            return $formatted. "]";
+        }
+        return "page.";
     }
 
 }
