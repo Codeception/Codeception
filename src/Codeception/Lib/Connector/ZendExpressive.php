@@ -49,7 +49,6 @@ class ZendExpressive extends Client
      */
     public function doRequest($request)
     {
-        //@todo write $request->getContent() to php://memory
         $inputStream = fopen('php://memory', 'r+');
         $content = $request->getContent();
         if ($content !== null) {
@@ -58,16 +57,20 @@ class ZendExpressive extends Client
         }
 
         $queryParams = [];
+        $postParams = [];
         $queryString = parse_url($request->getUri(), PHP_URL_QUERY);
         if ($queryString != '') {
             parse_str($queryString, $queryParams);
+        }
+        if ($request->getMethod() !== 'GET') {
+            $postParams = $request->getParameters();
         }
         $zendRequest = new ServerRequest($request->getServer(), $request->getFiles(), $request->getUri(),
             $request->getMethod(), $inputStream, $this->extractHeaders($request));
 
         $zendRequest = $zendRequest->withCookieParams($request->getCookies())
             ->withQueryParams($queryParams)
-            ->withParsedBody($request->getParameters());
+            ->withParsedBody($postParams);
         $this->application->run($zendRequest);
 
         $this->request = $zendRequest;
