@@ -83,7 +83,11 @@ class ZendExpressive extends Client
         $zendRequest = $zendRequest->withCookieParams($request->getCookies())
             ->withQueryParams($queryParams)
             ->withParsedBody($postParams);
+
+        $cwd = getcwd();
+        chdir(codecept_root_dir());
         $this->application->run($zendRequest);
+        chdir($cwd);
 
         $this->request = $zendRequest;
 

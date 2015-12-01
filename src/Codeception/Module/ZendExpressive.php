@@ -53,7 +53,10 @@ class ZendExpressive extends Framework
 
     public function _initialize()
     {
+        $cwd = getcwd();
+        chdir(Configuration::projectDir());
         $this->container = require Configuration::projectDir() . $this->config['container'];
+        chdir($cwd);
         $this->application = $this->container->get('Zend\Expressive\Application');
         $this->initResponseCollector();
     }
