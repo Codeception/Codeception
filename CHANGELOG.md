@@ -2,6 +2,8 @@
 
 #### 2.1.5
 
+* **PHP7 support**
+* Syntax check for tests. If PHP7 is used, `ParseException` handles syntax error, otherwise linting happens with `php -l`. @davertmik
 * [Laravel5] Removed `enableMiddleware` and `enableEvents` methods. See #2602. By @janhenkgerritsen
 * [Laravel] Refactored modules. See #2602. By @janhenkgerritsen
 * [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
