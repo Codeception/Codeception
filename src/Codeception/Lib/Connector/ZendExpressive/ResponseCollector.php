@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gintas
- * Date: 29/11/15
- * Time: 21:49
- */
 namespace Codeception\Lib\Connector\ZendExpressive;
 
 use Psr\Http\Message\ResponseInterface;

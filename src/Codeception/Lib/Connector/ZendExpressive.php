@@ -7,16 +7,15 @@ use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
-use Zend\Diactoros\Response AS ZendResponse;
+use Zend\Diactoros\Response as ZendResponse;
 use Zend\Expressive\Application;
 use GuzzleHttp\Psr7\Uri;
-
 
 class ZendExpressive extends Client
 {
 
     /**
-     * @var \Zend\Expressive\Application
+     * @var Application
      */
     protected $application;
 
@@ -28,7 +27,7 @@ class ZendExpressive extends Client
     /**
      * @param Application
      */
-    public function setApplication($application)
+    public function setApplication(Application $application)
     {
         $this->application = $application;
     }
@@ -65,8 +64,14 @@ class ZendExpressive extends Client
         if ($request->getMethod() !== 'GET') {
             $postParams = $request->getParameters();
         }
-        $zendRequest = new ServerRequest($request->getServer(), $request->getFiles(), $request->getUri(),
-            $request->getMethod(), $inputStream, $this->extractHeaders($request));
+        $zendRequest = new ServerRequest(
+            $request->getServer(),
+            $request->getFiles(),
+            $request->getUri(),
+            $request->getMethod(),
+            $inputStream,
+            $this->extractHeaders($request)
+        );
 
         $zendRequest = $zendRequest->withCookieParams($request->getCookies())
             ->withQueryParams($queryParams)
