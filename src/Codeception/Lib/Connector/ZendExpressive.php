@@ -64,8 +64,15 @@ class ZendExpressive extends Client
         if ($request->getMethod() !== 'GET') {
             $postParams = $request->getParameters();
         }
+
+        $serverParams = $request->getServer();
+        if (!isset($serverParams['SCRIPT_NAME'])) {
+            //required by WhoopsErrorHandler
+            $serverParams['SCRIPT_NAME'] = 'Codeception';
+        }
+
         $zendRequest = new ServerRequest(
-            $request->getServer(),
+            $serverParams,
             $request->getFiles(),
             $request->getUri(),
             $request->getMethod(),
