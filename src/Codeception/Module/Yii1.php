@@ -185,7 +185,7 @@ class Yii1 extends Framework
                 if ($rule->hasHostInfo === true) {
                     $domain = $this->getDomainFromUrl($rule->template);
                     if (strpos($domain, '<')) {
-                        // not parametrized route support for now
+                        // no parametrized route support for now
                         continue;
                     }
                     $domains[] = $domain;

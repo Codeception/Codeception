@@ -247,7 +247,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 if ($rule->host !== null) {
                     $domain = $this->getDomainFromUrl($rule->host);
                     if (strpos($domain, '<')) {
-                        // not parametrized route support for now
+                        // no parametrized route support for now
                         continue;
                     }
                     $domains[] = $domain;
