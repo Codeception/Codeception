@@ -5,6 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\TestCase;
 use Codeception\Lib\Connector\Yii1 as Yii1Connector;
+use Codeception\Util\ReflectionHelper;
 use Yii;
 
 /**
@@ -173,13 +174,36 @@ class Yii1 extends Framework
     /**
      * Returns a list of recognized domain names
      *
-     * @todo not implemented
      * @return array
      */
     public function getInternalDomains()
     {
-        return [
-            'localhost',
-        ];
+        $domains = [$this->getDomainFromUrl(Yii::app()->request->getHostInfo())];
+        if (Yii::app()->urlManager->urlFormat === 'path') {
+            $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules');
+            foreach ($rules as $rule) {
+                if ($rule->hasHostInfo === true) {
+                    $domain = $this->getDomainFromUrl($rule->template);
+                    if (strpos($domain, '<')) {
+                        // not parametrized route support for now
+                        continue;
+                    }
+                    $domains[] = $domain;
+                }
+            }
+        }
+        return array_unique($domains);
+    }
+
+    /**
+     * Getting domain from URL
+     *
+     * @param string $url
+     * @return string domain
+     */
+    private function getDomainFromUrl($url)
+    {
+        $urlParts = parse_url($url);
+        return $urlParts['host'];
     }
 }

@@ -239,11 +239,19 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
      */
     public function getInternalDomains()
     {
-        $domains = [$this->getDomainFromUrl(Yii::$app->request->host)];
-        foreach (Yii::$app->urlManager->rules as $rule) {
-            /** @var \yii\web\UrlRule $rule */
-            if ($rule->host !== null) {
-                $domains[] = $this->getDomainFromUrl($rule->host);
+        $domains = [$this->getDomainFromUrl(Yii::$app->urlManager->hostInfo)];
+
+        if (Yii::$app->urlManager->enablePrettyUrl) {
+            foreach (Yii::$app->urlManager->rules as $rule) {
+                /** @var \yii\web\UrlRule $rule */
+                if ($rule->host !== null) {
+                    $domain = $this->getDomainFromUrl($rule->host);
+                    if (strpos($domain, '<')) {
+                        // not parametrized route support for now
+                        continue;
+                    }
+                    $domains[] = $domain;
+                }
             }
         }
         return array_unique($domains);
