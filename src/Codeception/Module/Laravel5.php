@@ -110,6 +110,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         parent::__construct($container);
     }
 
+    /**
+     * @return array
+     */
     public function _parts()
     {
         return ['orm'];
@@ -123,7 +126,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         $this->checkBootstrapFileExists();
         $this->registerAutoloaders();
         $this->revertErrorHandler();
-        $this->client = new LaravelConnector($this);
     }
 
     /**
@@ -133,20 +135,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function _before(\Codeception\TestCase $test)
     {
+        $this->client = new LaravelConnector($this);
+
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
         }
-
-        if ($this->app['auth']) {
-            $this->app['auth']->logout();
-        }
-
-        if ($this->app['session']) {
-            // Destroy existing sessions of previous tests
-            $this->app['session']->migrate(true);
-        }
-
-        $this->client->clearTriggeredEvents();
     }
 
     /**
@@ -159,18 +152,14 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();
         }
-    }
 
-    /**
-     * After step hook.
-     *
-     * @param \Codeception\Step $step
-     */
-    public function _afterStep(\Codeception\Step $step)
-    {
-        parent::_afterStep($step);
+        if ($this->app['auth']) {
+            $this->app['auth']->logout();
+        }
 
-        Facade::clearResolvedInstances();
+        if ($this->app['session']) {
+            $this->app['session']->flush();
+        }
     }
 
     /**
@@ -199,8 +188,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
 
         \Illuminate\Support\ClassLoader::register();
     }
-
-
 
     /**
      * Revert back to the Codeception error handler,
@@ -241,21 +228,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function disableMiddleware()
     {
-        $this->config['disable_middleware'] = true;
-    }
-
-    /**
-     * Enable middleware for the next requests.
-     *
-     * ``` php
-     * <?php
-     * $I->enableMiddleware();
-     * ?>
-     * ```
-     */
-    public function enableMiddleware()
-    {
-        $this->config['disable_middleware'] = false;
+        $this->client->disableMiddleware();
     }
 
     /**
@@ -269,21 +242,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function disableEvents()
     {
-        $this->config['disable_events'] = true;
-    }
-
-    /**
-     * Enable events for the next requests.
-     *
-     * ``` php
-     * <?php
-     * $I->enableEvents();
-     * ?>
-     * ```
-     */
-    public function enableEvents()
-    {
-        $this->config['disable_events'] = false;
+        $this->client->disableEvents();
     }
 
     /**
@@ -659,7 +618,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule, Supports
     public function amLoggedAs($user, $driver = null)
     {
         if ($user instanceof Authenticatable) {
-            return $this->app['auth']->driver($driver)->setUser($user);
+            $this->app['auth']->driver($driver)->setUser($user);
+            return;
         }
 
         if (! $this->app['auth']->driver($driver)->attempt($user)) {
