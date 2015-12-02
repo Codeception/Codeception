@@ -235,13 +235,29 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     /**
      * Returns a list of recognized domain names
      *
-     * @todo not implemented
      * @return array
      */
     public function getInternalDomains()
     {
-        return [
-            'localhost',
-        ];
+        $domains = [$this->getDomainFromUrl(Yii::$app->request->host)];
+        foreach (Yii::$app->urlManager->rules as $rule) {
+            /** @var \yii\web\UrlRule $rule */
+            if ($rule->host !== null) {
+                $domains[] = $this->getDomainFromUrl($rule->host);
+            }
+        }
+        return array_unique($domains);
+    }
+
+    /**
+     * Getting domain from URL
+     *
+     * @param string $url
+     * @return string domain
+     */
+    private function getDomainFromUrl($url)
+    {
+        $urlParts = parse_url($url);
+        return $urlParts['host'];
     }
 }
