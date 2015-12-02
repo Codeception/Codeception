@@ -2,7 +2,9 @@
 
 #### 2.1.5
 
-* [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter.
+* [Laravel5] Removed `enableMiddleware` and `enableEvents` methods. See #2602. By @janhenkgerritsen
+* [Laravel] Refactored modules. See #2602. By @janhenkgerritsen
+* [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
 * [PhpBrowser][WebDriver] Unifies `expires` parameter for `setCookie`. Fixes #2582 By @davertmik
 * [REST] Fixes validation of several types with filters. See #2581 By @davertmik
 * [REST] JsonType improved URL filter to use `filter_var($value, FILTER_VALIDATE_URL)`
