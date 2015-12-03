@@ -233,39 +233,50 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Getting domain regex from rule host template
+     *
+     * @param string $template
+     * @return string
+     */
+    private function getDomainRegex($template)
+    {
+        if (preg_match('#https?://(.*)#', $template, $matches)) {
+            $template = $matches[1];
+        }
+        $parameters = [];
+        if (strpos($template, '<') !== false) {
+            $template = preg_replace_callback(
+                '/<(?:\w+):?([^>]+)?>/u',
+                function ($matches) use (&$parameters) {
+                    $key = '#' . count($parameters) . '#';
+                    $parameters[$key] = isset($matches[1]) ? $matches[1] : '\w+';
+                    return $key;
+                },
+                $template
+            );
+        }
+        $template = preg_quote($template);
+        $template = strtr($template, $parameters);
+        return '/^' . $template . '$/u';
+    }
+
+    /**
+     * Returns a list of regex patterns for recognized domain names
      *
      * @return array
      */
     public function getInternalDomains()
     {
-        $domains = [$this->getDomainFromUrl(Yii::$app->urlManager->hostInfo)];
+        $domains = [$this->getDomainRegex(Yii::$app->urlManager->hostInfo)];
 
         if (Yii::$app->urlManager->enablePrettyUrl) {
             foreach (Yii::$app->urlManager->rules as $rule) {
                 /** @var \yii\web\UrlRule $rule */
                 if ($rule->host !== null) {
-                    $domain = $this->getDomainFromUrl($rule->host);
-                    if (strpos($domain, '<')) {
-                        // no parametrized route support for now
-                        continue;
-                    }
-                    $domains[] = $domain;
+                    $domains[] = $this->getDomainRegex($rule->host);
                 }
             }
         }
         return array_unique($domains);
-    }
-
-    /**
-     * Getting domain from URL
-     *
-     * @param string $url
-     * @return string domain
-     */
-    private function getDomainFromUrl($url)
-    {
-        $urlParts = parse_url($url);
-        return $urlParts['host'];
     }
 }
