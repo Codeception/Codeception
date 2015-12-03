@@ -172,38 +172,44 @@ class Yii1 extends Framework
     }
 
     /**
-     * Returns a list of recognized domain names
+     * Getting domain regex from rule template and parameters
+     *
+     * @param string $template
+     * @param array $parameters
+     * @return string
+     */
+    private function getDomainRegex($template, $parameters = [])
+    {
+        if (preg_match('#https?://(.*?)/#', $template, $matches)) {
+            $template = $matches[1];
+        }
+        if (strpos($template, '<') !== false) {
+            $template = str_replace(['<', '>'], '#', $template);
+        }
+        $template = preg_quote($template);
+        foreach ($parameters as $name => $value) {
+            $template = str_replace("#$name#", $value, $template);
+        }
+        return '/^' . $template . '$/u';
+    }
+
+
+    /**
+     * Returns a list of regex patterns for recognized domain names
      *
      * @return array
      */
     public function getInternalDomains()
     {
-        $domains = [$this->getDomainFromUrl(Yii::app()->request->getHostInfo())];
+        $domains = [$this->getDomainRegex(Yii::app()->request->getHostInfo())];
         if (Yii::app()->urlManager->urlFormat === 'path') {
             $rules = ReflectionHelper::readPrivateProperty(Yii::app()->urlManager, '_rules');
             foreach ($rules as $rule) {
                 if ($rule->hasHostInfo === true) {
-                    $domain = $this->getDomainFromUrl($rule->template);
-                    if (strpos($domain, '<')) {
-                        // no parametrized route support for now
-                        continue;
-                    }
-                    $domains[] = $domain;
+                    $domains[] = $this->getDomainRegex($rule->template, $rule->params);
                 }
             }
         }
         return array_unique($domains);
-    }
-
-    /**
-     * Getting domain from URL
-     *
-     * @param string $url
-     * @return string domain
-     */
-    private function getDomainFromUrl($url)
-    {
-        $urlParts = parse_url($url);
-        return $urlParts['host'];
     }
 }
