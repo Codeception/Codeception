@@ -108,7 +108,7 @@ class Silex extends Framework
 
         foreach ($this->app['routes'] as $route) {
             if ($domain = $route->getHost()) {
-                $internalDomains[] = '/^' . $domain . '$/';
+                $internalDomains[] = '/^' . preg_quote($domain, '/') . '$/';
             }
         }
 
