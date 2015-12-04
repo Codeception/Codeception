@@ -83,6 +83,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         'var_path' => 'app',
         'environment' => 'test',
         'debug' => true,
+        'cache_router' => false,
         'em_service' => 'doctrine.orm.entity_manager'
     ];
 
@@ -90,6 +91,9 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      * @var
      */
     protected $kernelClass;
+
+    /** @var */
+    protected static $router;
 
     public $permanentServices = [];
 
@@ -174,6 +178,46 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
     }
 
     /**
+     * Get router from container.
+     *
+     * @return object
+     */
+    private function getNonCachedRouter()
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+
+        return $this->kernel->getContainer()->get('router');
+    }
+
+    /**
+     * Helper method to get router.
+     * Router can be cached or not by configuration.
+     *
+     * @return object
+     */
+    protected function getRouter()
+    {
+        if ($this->config['cache_router'] === true) {
+            if (null === self::$router) {
+                self::$router = $this->getNonCachedRouter();
+            }
+            return self::$router;
+        }
+
+        return $this->getNonCachedRouter();
+    }
+
+    /**
+     * Invalidate previously cached router.
+     */
+    public function invalidateCachedRouter()
+    {
+        self::$router = null;
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php
@@ -188,10 +232,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -216,10 +257,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
