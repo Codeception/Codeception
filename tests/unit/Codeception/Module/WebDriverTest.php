@@ -610,6 +610,8 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->see('sunrise', '#description');
         //fill in some new text and see if we can see it
         $textarea_value = 'moonrise';
+        //go to end first
+        $this->module->pressKey('#description', WebDriverKeys::END);
         $this->module->appendField('#description', $textarea_value);
         $this->module->see('sunrise' . $textarea_value, '#description');
     }
