@@ -443,7 +443,6 @@ interface Web
      *
      * @param null $uri
      *
-     * @internal param $url
      * @return mixed
      */
     public function grabFromCurrentUrl($uri = null);
@@ -754,7 +753,7 @@ interface Web
      *
      * @param $cssOrXpath
      * @param $attribute
-     * @internal param $element
+     *
      * @return mixed
      */
     public function grabAttributeFrom($cssOrXpath, $attribute);

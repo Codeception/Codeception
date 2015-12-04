@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Configuration;
 use Codeception\Exception\ModuleConfig;
 use Codeception\Lib\Connector\Laravel4 as LaravelConnector;
 use Codeception\Lib\Framework;
@@ -8,15 +9,13 @@ use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\ModuleContainer;
-use Codeception\Configuration;
-use Codeception\TestCase;
 use Codeception\Step;
 use Codeception\Subscriber\ErrorHandler;
-use Illuminate\Support\Facades\Facade;
+use Codeception\TestCase;
+use Illuminate\Auth\UserInterface;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ClassLoader;
 use Illuminate\Workbench\Starter;
-use Illuminate\Foundation\Application;
-use Illuminate\Auth\UserInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
@@ -72,18 +71,24 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public $config = [];
 
+    /**
+     * Constructor.
+     *
+     * @param ModuleContainer $container
+     * @param null $config
+     */
     public function __construct(ModuleContainer $container, $config = null)
     {
         $this->config = array_merge(
             [
-                'cleanup'     => true,
-                'unit'        => true,
+                'cleanup' => true,
+                'unit' => true,
                 'environment' => 'testing',
                 'start' => 'bootstrap' . DIRECTORY_SEPARATOR . 'start.php',
                 'root' => '',
                 'filters' => false,
             ],
-            (array) $config
+            (array)$config
         );
 
         $projectDir = explode('workbench', Configuration::projectDir())[0];
@@ -96,6 +101,14 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
+     * @return array
+     */
+    public function _parts()
+    {
+        return ['framework', 'orm'];
+    }
+
+    /**
      * Initialize hook.
      */
     public function _initialize()
@@ -103,18 +116,6 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
         $this->checkStartFileExists();
         $this->registerAutoloaders();
         $this->revertErrorHandler();
-        $this->client = new LaravelConnector($this);
-    }
-
-    public function _parts()
-    {
-        return ['framework', 'orm'];
-    }
-
-    protected function revertErrorHandler()
-    {
-        $handler = new ErrorHandler();
-        set_error_handler([$handler, 'errorHandler']);
     }
 
     /**
@@ -125,12 +126,14 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
      */
     public function _before(TestCase $test)
     {
-        if ($this->config['filters']) {
-            $this->haveEnabledFilters();
-        }
+        $this->client = new LaravelConnector($this);
 
         if ($this->app['db'] && $this->cleanupDatabase()) {
             $this->app['db']->beginTransaction();
+        }
+
+        if ($this->config['filters']) {
+            $this->haveEnabledFilters();
         }
     }
 
@@ -144,34 +147,14 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
         if ($this->app['db'] && $this->cleanupDatabase()) {
             $this->app['db']->rollback();
         }
-    }
 
-    /**
-     * Before step hook.
-     *
-     * @param \Codeception\Step $step
-     */
-    public function _beforeStep(Step $step)
-    {
-        parent::_beforeStep($step);
-
-        $session = $this->app['session.store'];
-        if (! $session->isStarted()) {
-            $session->start();
+        if ($this->app['auth']) {
+            $this->app['auth']->logout();
         }
-    }
 
-    /**
-     * After step hook.
-     *
-     * @param \Codeception\Step $step
-     */
-    public function _afterStep(Step $step)
-    {
-        parent::_beforeStep($step);
-
-        $this->app['session.store']->save();
-        Facade::clearResolvedInstances();
+        if ($this->app['session']) {
+            $this->app['session']->flush();
+        }
     }
 
     /**
@@ -179,11 +162,11 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
      *
      * @throws ModuleConfig
      */
-    public function checkStartFileExists()
+    protected function checkStartFileExists()
     {
         $startFile = $this->config['start_file'];
 
-        if (! file_exists($startFile)) {
+        if (!file_exists($startFile)) {
             throw new ModuleConfig(
                 $this,
                 "Laravel bootstrap start.php file not found in $startFile.\n"
@@ -207,13 +190,23 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
     }
 
     /**
+     * Revert back to the Codeception error handler,
+     * becauses Laravel registers it's own error handler.
+     */
+    protected function revertErrorHandler()
+    {
+        $handler = new ErrorHandler();
+        set_error_handler([$handler, 'errorHandler']);
+    }
+
+    /**
      * Should database cleanup be performed?
      *
      * @return bool
      */
     protected function cleanupDatabase()
     {
-        if (! $this->databaseTransactionsSupported()) {
+        if (!$this->databaseTransactionsSupported()) {
             return false;
         }
 
@@ -279,7 +272,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
     public function amOnRoute($route, $params = [])
     {
         $domain = $this->app['router']->getRoutes()->getByName($route)->domain();
-        $absolute = ! is_null($domain);
+        $absolute = !is_null($domain);
 
         $url = $this->app['url']->route($route, $params, $absolute);
         $this->amOnPage($url);
@@ -300,7 +293,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
     public function amOnAction($action, $params = [])
     {
         $domain = $this->app['router']->getRoutes()->getByAction($action)->domain();
-        $absolute = ! is_null($domain);
+        $absolute = !is_null($domain);
 
         $url = $this->app['url']->action($action, $params, $absolute);
         $this->amOnPage($url);
@@ -357,6 +350,7 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
     {
         if (is_array($key)) {
             $this->seeSessionHasValues($key);
+
             return;
         }
 
@@ -670,14 +664,15 @@ class Laravel4 extends Framework implements ActiveRecord, PartedModule, Supports
         foreach ($attributes as $key => $value) {
             $query->where($key, $value);
         }
+
         return $query->first();
     }
 
     /**
      * Calls an Artisan command and returns output as a string
      *
-     * @param string $command       The name of the command as displayed in the artisan command list
-     * @param array  $parameters    An associative array of command arguments
+     * @param string $command The name of the command as displayed in the artisan command list
+     * @param array $parameters An associative array of command arguments
      *
      * @return string
      */

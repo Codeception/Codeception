@@ -789,7 +789,6 @@ trait WebGuyActions
      *
      * @param null $uri
      *
-     * @internal param $url
      * @return mixed
      * @see \Codeception\Module\WebDriver::grabFromCurrentUrl()
      */
@@ -1387,7 +1386,7 @@ trait WebGuyActions
      *
      * @param $cssOrXpath
      * @param $attribute
-     * @internal param $element
+     *
      * @return mixed
      * @see \Codeception\Module\WebDriver::grabAttributeFrom()
      */

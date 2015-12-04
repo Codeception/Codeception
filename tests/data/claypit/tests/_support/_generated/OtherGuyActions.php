@@ -645,7 +645,6 @@ trait OtherGuyActions
      *
      * @param null $uri
      *
-     * @internal param $url
      * @return mixed
      * @see \Codeception\Lib\InnerBrowser::grabFromCurrentUrl()
      */
@@ -1454,7 +1453,7 @@ trait OtherGuyActions
      *
      * @param $cssOrXpath
      * @param $attribute
-     * @internal param $element
+     *
      * @return mixed
      * @see \Codeception\Lib\InnerBrowser::grabAttributeFrom()
      */
