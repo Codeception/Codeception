@@ -9,7 +9,6 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -47,6 +46,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected $forms = [];
 
     protected $defaultCookieParameters = ['expires' => null, 'path' => '/', 'domain' => '', 'secure' => false];
+
+    protected $internalDomains = null;
 
     public function _failed(TestCase $test, $fail)
     {
@@ -129,31 +130,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function _getResponseContent()
     {
         return (string)$this->getRunningClient()->getInternalResponse()->getContent();
-    }
-
-    protected function clientRequest($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null, $changeHistory = true)
-    {
-        if ($this instanceof Framework) {
-            if ($method !== 'GET' && $content === null && !empty($parameters)) {
-                $content = http_build_query($parameters);
-            }
-
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
-                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
-            }
-        }
-
-        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse($uri);
-            return $result;
-        } else {
-            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
-            $this->client->followRedirects(false);
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse($uri);
-            return $this->redirectIfNecessary($result, $maxRedirects, 0);
-        }
     }
 
     /**
@@ -1384,6 +1360,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             }
         }
         return $requestParams;
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if ($this instanceof Framework) {
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+                $hostname = parse_url($uri, PHP_URL_HOST);
+
+                if (!$this->isInternalDomain($hostname)) {
+                    throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                }
+            }
+
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+        }
+
+        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
+            return $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        }
+        $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+        $this->client->followRedirects(false);
+        $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+        return $this->redirectIfNecessary($result, $maxRedirects, 0);
+    }
+
+    protected function isInternalDomain($domain)
+    {
+        if ($this->internalDomains === null) {
+            $this->internalDomains = $this->getInternalDomains();
+        }
+
+        foreach ($this->internalDomains as $pattern) {
+            if (preg_match($pattern, $domain)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

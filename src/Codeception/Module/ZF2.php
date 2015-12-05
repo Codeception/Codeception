@@ -5,6 +5,7 @@ use Codeception\Lib\Framework;
 use Codeception\TestCase;
 use Codeception\Configuration;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Util\ReflectionHelper;
 use Zend\Console\Console;
 use Zend\EventManager\StaticEventManager;
 use Zend\Mvc\Application;
@@ -60,6 +61,11 @@ class ZF2 extends Framework implements DoctrineProvider
 
     protected $queries = 0;
     protected $time = 0;
+
+    /**
+     * @var array Used to collect domains while recusively traversing route tree
+     */
+    private $domainCollector = [];
 
     public function _initialize()
     {
@@ -175,5 +181,42 @@ class ZF2 extends Framework implements DoctrineProvider
         $router = $this->application->getServiceManager()->get('router');
         $url = $router->assemble($params, ['name' => $routeName]);
         $this->seeCurrentUrlEquals($url);
+    }
+
+    protected function getInternalDomains()
+    {
+        /**
+         * @var Zend\Mvc\Router\Http\TreeRouteStack
+         */
+        $router = $this->application->getServiceManager()->get('router');
+        $this->domainCollector = [];
+        $this->addInternalDomainsFromRoutes($router->getRoutes());
+        return array_unique($this->domainCollector);
+    }
+
+    private function addInternalDomainsFromRoutes($routes)
+    {
+        foreach ($routes as $name => $route) {
+            if ($route instanceof \Zend\Mvc\Router\Http\Hostname) {
+                $this->addInternalDomain($route);
+            } elseif ($route instanceof \Zend\Mvc\Router\Http\Part) {
+                $parentRoute = ReflectionHelper::readPrivateProperty($route, 'route');
+                if ($parentRoute instanceof \Zend\Mvc\Router\Http\Hostname) {
+                    $this->addInternalDomain($parentRoute);
+                }
+                // this is necessary to instantiate child routes
+                try {
+                    $route->assemble([],[]);
+                } catch (\Exception $e) {
+                }
+                $this->addInternalDomainsFromRoutes($route->getRoutes());
+            }
+        }
+    }
+
+    private function addInternalDomain(\Zend\Mvc\Router\Http\Hostname $route)
+    {
+        $regex = ReflectionHelper::readPrivateProperty($route, 'regex');
+        $this->domainCollector []= '/^' . $regex . '$/';
     }
 }

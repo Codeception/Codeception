@@ -1,16 +1,17 @@
 <?php
 namespace Codeception\Util;
 
-
 class PropertyAccess
 {
+    /**
+     * @deprecated Use ReflectionHelper::readPrivateProperty()
+     * @param object $object
+     * @param string $property
+     * @param string|null $class
+     * @return mixed
+     */
     public static function readPrivateProperty($object, $property, $class = null)
     {
-        if ($class === null) {
-            $class = $object;
-        }
-        $property = new \ReflectionProperty($class, $property);
-        $property->setAccessible(true);
-        return $property->getValue($object);
+        return ReflectionHelper::readPrivateProperty($object, $property, $class);
     }
 }
