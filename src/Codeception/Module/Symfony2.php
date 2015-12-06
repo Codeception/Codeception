@@ -144,10 +144,10 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
         if ($this->config['cache_router'] === true) {
-            if (null === $this->permanentServices['router']) {
-                $this->permanentServices['router'] = $this->getRouter();
-            } else {
+            if (isset($this->permanentServices['router'])) {
                 $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
+            } else {
+                $this->permanentServices['router'] = $this->getRouter();
             }
         }
     }
@@ -196,7 +196,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
     }
 
     /**
-     * Invalidate previously cached router.
+     * Invalidate previously cached routes.
      */
     public function invalidateCachedRouter()
     {
