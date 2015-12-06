@@ -92,9 +92,6 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     protected $kernelClass;
 
-    /** @var */
-    protected static $router;
-
     public $permanentServices = [];
 
     public function _initialize()
@@ -146,6 +143,13 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         }
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
+        if ($this->config['cache_router'] === true) {
+            if (null === $this->permanentServices['router']) {
+                $this->permanentServices['router'] = $this->getRouter();
+            } else {
+                $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
+            }
+        }
     }
 
     /**
@@ -182,7 +186,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      *
      * @return object
      */
-    private function getNonCachedRouter()
+    private function getRouter()
     {
         if (!$this->kernel->getContainer()->has('router')) {
             $this->fail('Router not found.');
@@ -192,29 +196,11 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
     }
 
     /**
-     * Helper method to get router.
-     * Router can be cached or not by configuration.
-     *
-     * @return object
-     */
-    protected function getRouter()
-    {
-        if ($this->config['cache_router'] === true) {
-            if (null === self::$router) {
-                self::$router = $this->getNonCachedRouter();
-            }
-            return self::$router;
-        }
-
-        return $this->getNonCachedRouter();
-    }
-
-    /**
      * Invalidate previously cached router.
      */
     public function invalidateCachedRouter()
     {
-        self::$router = null;
+        $this->permanentServices['router'] = null;
     }
 
     /**
