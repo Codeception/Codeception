@@ -115,8 +115,11 @@ abstract class Step
                 return Locator::humanReadableString($argument);
             }
         }
-        if (is_callable($argument, true)) {
+        if ($argument instanceof \Closure) {
             return 'lambda function';
+        }
+        if (is_callable($argument)) {
+            return 'callable function';
         }
         if (!is_object($argument)) {
             return $argument;

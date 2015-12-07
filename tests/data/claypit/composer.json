@@ -1,15 +1,5 @@
 {
     "require-dev": {
-        "codeception/c3": "2.*"
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "Codeception\\c3\\Installer::copyC3ToRoot",
-            "rm -rf vendor"
-        ],
-        "post-update-cmd": [
-            "Codeception\\c3\\Installer::copyC3ToRoot",
-            "rm -rf vendor"
-        ]
+        "codeception/c3": "@dev"
     }
 }

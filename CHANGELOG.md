@@ -1,11 +1,43 @@
 # Changelog
 
+#### 2.1.5
+
+* [Laravel5] Removed `enableMiddleware` and `enableEvents` methods. See #2602. By @janhenkgerritsen
+* [Laravel] Refactored modules. See #2602. By @janhenkgerritsen
+* [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
+* [PhpBrowser][WebDriver] Unifies `expires` parameter for `setCookie`. Fixes #2582 By @davertmik
+* [REST] Fixes validation of several types with filters. See #2581 By @davertmik
+* [REST] JsonType improved URL filter to use `filter_var($value, FILTER_VALIDATE_URL)`
+* [REST] JsonType to support collections: all items in an array will be validates against JsonType. By @davertmik
+* [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
+
 #### 2.1.4
 
-* [PhpBrowser][Frameworks] Added moveBack method. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `_getResponseContent` hidden method. By @Naktibalda
+* [PhpBrowser][Frameworks] Added `moveBack` method. By @Naktibalda
+* [WebDriver][PhpBrowser][Frameworks] Added `seeInSource`, `dontSeeInSource` methods to check raw HTML instead of stripped text in `see`/`dontSee`. By @zbateson in #2465
+* [WebDriver] print Selenium WebDriver logs on failure or manually with `debugWebDriverLogs` in debug mode. Config option `debug_log_entries` added. See #2471 By @MasonM and @DavertMik.
+* [ZF2] grabs service from container without reinitializing it. Fixes #2519 where Doctrine2 gets different instances of the entity manager everytime grabServiceFromContainer is called. By @dranzd
+* [REST] fixed usage of JsonArray and `json_last_error_msg` function on PHP 5.4. See #2535. By @Naktibalda
+* [REST] `seeResponseIsJsonType` can now validate emails with `string:email` definition. By @DavertMik
+* [REST] `seeResponseIsJsonType`: `string|null` as well as `null|string` can be used to match null type. #2522 #2500 By @vslovik
+* [REST] REST methods can be used to inspect result of the last request made by PhpBrowser or framework module. see #2507. By @Naktibalda
+* [Silex] Doctrine provider added. Doctrine2 module can be connected to Silex app with `depends: Silex` in config. By @arduanov #2503
+* [Laravel5] Removed `expectEvents` and added `seeEventTriggered` and `dontSeeEventTriggered`. By @janhenkgerritsen
+* [Laravel5] Fixed fatal error in `seeCurrentRouteIs` and `seeCurrentActionIs` methods. See #2517. By @janhenkgerritsen
 * [Laravel5] Improved the error messages for several methods. See #2476. By @janhenkgerritsen
 * [Laravel5] Improved form error methods. See #2432. By @janhenkgerritsen
 * [Laravel5] Added wrapper methods for Laravel 5 model factories. See #2442. By @janhenkgerritsen
+* [Phalcon] Added `amOnRoute` and `seeCurrentRouteIs` methods by @sergeyklay
+* [Phalcon] Added `seeSessionHasValues` by @sergeyklay
+* [Phalcon] Added `getApplication()` method by @sergeyklay
+* [Symfony2] Sets `xdebug.max_nesting_level` to 200 only if it is lower. Fixes error hiding #2462 by @mhightower
+* [Db] Save the search path when importing Postgres dumps #2441 by @EspadaV8
+* [Yii2] Fixed problems with transaction rollbacks when using the `cleanup` flag. See #2488. By @ivokund
+* [Yii2] Clean up previously uploaded files between tests by @tibee
+* Actor classes generation improved by @codemedic #2453
+* Added support for nested helper by @luka-zitnik #2494
+* Make `generate:suite` respect bootstrap setting in #2512. By @dmitrivereshchagin
 
 #### 2.1.3
 

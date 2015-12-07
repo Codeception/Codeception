@@ -106,7 +106,30 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
     {
         $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
-        return $this->getRunningClient()->getInternalResponse()->getContent();
+        return $this->_getResponseContent();
+    }
+
+    /**
+     * Returns content of the last response
+     * Use it in Helpers when you want to retrieve response of request performed by another module.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function seeResponseContains($text)
+     * {
+     *    $this->assertContains($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
+     * }
+     * ?>
+     * ```
+     *
+     * @api
+     * @return string
+     * @throws ModuleException
+     */
+    public function _getResponseContent()
+    {
+        return (string)$this->getRunningClient()->getInternalResponse()->getContent();
     }
 
     protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
@@ -193,7 +216,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     private function getRunningClient()
     {
-        if ($this->client->getHistory()->isEmpty()) {
+        if ($this->client->getInternalRequest() === null) {
             throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it");
         }
         return $this->client;
@@ -201,7 +224,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->getRunningClient()->getInternalResponse()->getContent());
+        file_put_contents($filename, $this->_getResponseContent());
     }
 
     /**
@@ -1111,7 +1134,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
 
-        $expires      = isset($params['expires']) ? $params['expires'] : null;
+        $expires      = isset($params['expiry']) ? $params['expiry'] : null; // WebDriver compatibility
+        $expires      = isset($params['expires']) && !$expires ? $params['expires'] : null;
         $path         = isset($params['path'])    ? $params['path'] : null;
         $domain       = isset($params['domain'])  ? $params['domain'] : '';
         $secure       = isset($params['secure'])  ? $params['secure'] : false;
@@ -1283,7 +1307,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1293,7 +1317,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1303,7 +1327,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            $this->getRunningClient()->getInternalResponse()->getContent(),
+            $this->_getResponseContent(),
             $constraint,
             $message
         );
@@ -1313,7 +1337,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            $this->getRunningClient()->getInternalResponse()->getContent(),
+            $this->_getResponseContent(),
             $constraint,
             $message
         );

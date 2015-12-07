@@ -37,7 +37,7 @@ class BasicCest
 
 **Each public method of Cest (except those starting with `_`) will be executed as a test** and will receive Actor class as the first parameter and `$scenario` variable as the second one.
 
-In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class. This actually makes Cest tests more flexible then Cepts, which rely only on similar methods in Helper classes.
+In `_before` and `_after` methods you can use common setups and teardowns for the tests in the class. This actually makes Cest tests more flexible than Cepts, which rely only on similar methods in Helper classes.
 
 As you see, we are passing Actor object into `tryToTest` method. It allows us to write scenarios the way we did before.
 

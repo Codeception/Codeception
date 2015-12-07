@@ -3,7 +3,6 @@ namespace Codeception\Lib\Connector;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
-use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Client;
@@ -22,6 +21,11 @@ class Laravel4 extends Client
     private $module;
 
     /**
+     * @var bool
+     */
+    private $firstRequest = true;
+
+    /**
      * Constructor.
      *
      * @param \Codeception\Module\Laravel4 $module
@@ -31,7 +35,10 @@ class Laravel4 extends Client
         $this->module = $module;
         $this->initialize();
 
-        parent::__construct($this->kernel);
+        $components = parse_url($this->app['config']->get('app.url', 'http://localhost'));
+        $host = isset($components['host']) ? $components['host'] : 'localhost';
+
+        parent::__construct($this->kernel, ['HTTP_HOST' => $host]);
 
         // Parent constructor defaults to not following redirects
         $this->followRedirects(true);
@@ -43,20 +50,15 @@ class Laravel4 extends Client
      */
     protected function doRequest($request)
     {
-        $this->initialize();
+        if (!$this->firstRequest) {
+            $this->initialize($request);
+        }
+        $this->firstRequest = false;
 
-        return $this->kernel->handle($request);
-    }
+        $response = $this->kernel->handle($request);
+        $this->kernel->terminate($request, $response);
 
-    /**
-     * @param BrowserKitRequest $request
-     * @return Request
-     */
-    protected function filterRequest(BrowserKitRequest $request)
-    {
-        $request = parent::filterRequest($request);
-
-        return $this->addSessionCookiesToRequest($request);
+        return $response;
     }
 
     /**
@@ -97,7 +99,7 @@ class Laravel4 extends Client
             Model::setConnectionResolver($this->app['db']);
         }
 
-        if (! is_null($oldFiltersEnabled)) {
+        if (!is_null($oldFiltersEnabled)) {
             $oldFiltersEnabled ? $this->app['router']->enableFilters() : $this->app['router']->disableFilters();
         }
 
@@ -120,23 +122,6 @@ class Laravel4 extends Client
         $this->setConfiguredSessionDriver($app);
 
         return $app;
-    }
-
-    /**
-     * @param Request $request
-     * @return Request
-     */
-    private function addSessionCookiesToRequest(Request $request)
-    {
-        $session = $this->app['session'];
-        $sessionIsPersistent = ! in_array($session->getSessionConfig()['driver'], array(null, 'array'));
-
-        if ($sessionIsPersistent) {
-            $encryptedSessionId = $this->app['encrypter']->encrypt($session->getId());
-            $request->cookies->add([$session->getName() => $encryptedSessionId]);
-        }
-
-        return $request;
     }
 
     /**

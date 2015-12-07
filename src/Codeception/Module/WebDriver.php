@@ -1,29 +1,30 @@
 <?php
 namespace Codeception\Module;
 
-use Codeception\Lib\Interfaces\ElementLocator;
-use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
 use Codeception\Exception\ConnectionException;
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
+use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Remote as RemoteInterface;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
 use Codeception\Lib\Interfaces\SessionSnapshot;
-use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web as WebInterface;
+use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
+use Codeception\TestCase;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
 use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
+use Facebook\WebDriver\Exception\UnknownServerException;
 use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
@@ -79,6 +80,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
  * * `http_proxy` - sets http proxy server url for testing a remote server.
  * * `http_proxy_port` - sets http proxy server port
+ * * `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
  *
  * ### Example (`acceptance.suite.yml`)
  *
@@ -153,17 +155,18 @@ class WebDriver extends CodeceptionModule implements
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
-        'host'          => '127.0.0.1',
-        'port'          => '4444',
-        'restart'       => false,
-        'wait'          => 0,
-        'clear_cookies' => true,
-        'window_size'   => false,
-        'capabilities'  => [],
+        'host'               => '127.0.0.1',
+        'port'               => '4444',
+        'restart'            => false,
+        'wait'               => 0,
+        'clear_cookies'      => true,
+        'window_size'        => false,
+        'capabilities'       => [],
         'connection_timeout' => null,
-        'request_timeout' => null,
-        'http_proxy'	=> null,
-        'http_proxy_port' => null
+        'request_timeout'    => null,
+        'http_proxy'         => null,
+        'http_proxy_port'    => null,
+        'debug_log_entries'  => 15,
     ];
 
     protected $wd_host;
@@ -198,7 +201,7 @@ class WebDriver extends CodeceptionModule implements
                 $this->httpProxyPort
             );
         } catch (WebDriverCurlException $e) {
-            throw new ConnectionException($e->getMessage()."\n \nPlease make sure that Selenium Server or PhantomJS is running.");
+            throw new ConnectionException($e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running.");
         }
         $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
         $this->initialWindowSize();
@@ -258,10 +261,57 @@ class WebDriver extends CodeceptionModule implements
 
     public function _failed(TestCase $test, $fail)
     {
+        $this->debugWebDriverLogs();
         $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
+    }
+
+    /**
+     * Print out latest Selenium Logs in debug mode
+     */
+    public function debugWebDriverLogs()
+    {
+        try {
+            // Dump out latest Selenium logs
+            $logs = $this->webDriver->manage()->getAvailableLogTypes();
+            foreach ($logs as $logType) {
+                $logEntries = array_slice($this->webDriver->manage()->getLog($logType), -$this->config['debug_log_entries']);
+                if (empty($logEntries)) {
+                    $this->debugSection("Selenium {$logType} Logs", " EMPTY ");
+                    continue;
+                }
+                $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
+            }
+        } catch (UnknownServerException $e) {
+            // This only happens with the IE driver, which doesn't support retrieving logs yet:
+            // https://github.com/SeleniumHQ/selenium/issues/468
+            $this->debug("Unable to retrieve Selenium logs");
+        }
+
+    }
+
+    /**
+     * Turns an array of log entries into a human-readable string.
+     * Each log entry is an array with the keys "timestamp", "level", and "message".
+     * See https://code.google.com/p/selenium/wiki/JsonWireProtocol#Log_Entry_JSON_Object
+     *
+     * @param array $logEntries
+     * @return string
+     */
+    protected function formatLogEntries(array $logEntries)
+    {
+        $formattedLogs = '';
+
+        foreach ($logEntries as $logEntry) {
+            // Timestamp is in milliseconds, but date() requires seconds.
+            $time = date('H:i:s', $logEntry['timestamp'] / 1000) .
+                // Append the milliseconds to the end of the time string
+                '.' . ($logEntry['timestamp'] % 1000);
+            $formattedLogs .= "{$time} {$logEntry['level']} - {$logEntry['message']}\n";
+        }
+        return $formattedLogs;
     }
 
     public function _afterSuite()
@@ -406,6 +456,9 @@ class WebDriver extends CodeceptionModule implements
     {
         $params['name'] = $cookie;
         $params['value'] = $value;
+        if (isset($params['expires'])) { // PhpBrowser compatibility
+            $params['expiry'] = $params['expires'];
+        }
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
     }
@@ -682,7 +735,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function seeCurrentUrlMatches($uri)
     {
-       $this->assertRegExp($uri, $this->_getCurrentUri());
+        $this->assertRegExp($uri, $this->_getCurrentUri());
     }
 
     public function dontSeeInCurrentUrl($uri)
@@ -697,7 +750,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function dontSeeCurrentUrlMatches($uri)
     {
-       $this->assertNotRegExp($uri, $this->_getCurrentUri());
+        $this->assertNotRegExp($uri, $this->_getCurrentUri());
     }
 
     public function grabFromCurrentUrl($uri = null)
@@ -737,17 +790,17 @@ class WebDriver extends CodeceptionModule implements
         $els = $this->findFields($field);
         $this->assertNot($this->proceedSeeInField($els, $value));
     }
-    
+
     public function seeInFormFields($formSelector, array $params)
     {
         $this->proceedSeeInFormFields($formSelector, $params, false);
     }
-    
+
     public function dontSeeInFormFields($formSelector, array $params)
     {
         $this->proceedSeeInFormFields($formSelector, $params, true);
     }
-    
+
     protected function proceedSeeInFormFields($formSelector, array $params, $assertNot)
     {
         $form = $this->match($this->webDriver, $formSelector);
@@ -791,7 +844,7 @@ class WebDriver extends CodeceptionModule implements
         }
         foreach ($elements as $el) {
             if ($el->getTagName() === 'textarea') {
-                $currentValues[] = $el->getText();
+                $currentValues[] = $el->getAttribute('value');
             } elseif ($el->getTagName() === 'input' && $el->getAttribute('type') === 'radio' || $el->getAttribute('type') === 'checkbox') {
                 if ($el->getAttribute('checked')) {
                     if (is_bool($value)) {
@@ -1096,12 +1149,14 @@ class WebDriver extends CodeceptionModule implements
     public function grabMultiple($cssOrXpath, $attribute = null)
     {
         $els = $this->match($this->webDriver, $cssOrXpath);
-        return array_map(function (WebDriverElement $e) use ($attribute) {
-            if ($attribute) {
-                return $e->getAttribute($attribute);
-            }
-            return $e->getText();
-        }, $els);
+        return array_map(
+            function (WebDriverElement $e) use ($attribute) {
+                if ($attribute) {
+                    return $e->getAttribute($attribute);
+                }
+                return $e->getText();
+            }, $els
+        );
     }
 
 
@@ -1389,13 +1444,13 @@ class WebDriver extends CodeceptionModule implements
      * ```
      * Note that "2" will be the submitted value for the "plan" field, as it is
      * the selected option.
-     * 
+     *
      * Also note that this differs from PhpBrowser, in that
      * ```'user' => [ 'login' => 'Davert' ]``` is not supported at the moment.
      * Named array keys *must* be included in the name as above.
-     * 
+     *
      * Pair this with seeInFormFields for quick testing magic.
-     * 
+     *
      * ``` php
      * <?php
      * $form = [
@@ -1438,20 +1493,20 @@ class WebDriver extends CodeceptionModule implements
      *
      * Mixing string and boolean values for a checkbox's value is not supported
      * and may produce unexpected results.
-     * 
-     * Field names ending in "[]" must be passed without the trailing square 
+     *
+     * Field names ending in "[]" must be passed without the trailing square
      * bracket characters, and must contain an array for its value.  This allows
      * submitting multiple values with the same name, consider:
-     * 
+     *
      * ```php
      * $I->submitForm('#my-form', [
      *     'field[]' => 'value',
      *     'field[]' => 'another value', // 'field[]' is already a defined key
      * ]);
      * ```
-     * 
+     *
      * The solution is to pass an array value:
-     * 
+     *
      * ```php
      * // this way both values are submitted
      * $I->submitForm('#my-form', [
@@ -1472,7 +1527,7 @@ class WebDriver extends CodeceptionModule implements
             throw new ElementNotFound($selector, "Form via CSS or XPath");
         }
         $form = reset($form);
-        
+
         $fields = $form->findElements(WebDriverBy::cssSelector('input:enabled,textarea:enabled,select:enabled,input[type=hidden]'));
         foreach ($fields as $field) {
             $fieldName = $this->getSubmissionFormFieldName($field->getAttribute('name'));
@@ -1498,7 +1553,7 @@ class WebDriver extends CodeceptionModule implements
                     $value = array_pop($params[$fieldName]);
                 }
             }
-            
+
             if ($field->getAttribute('type') === 'checkbox' || $field->getAttribute('type') === 'radio') {
                 if ($value === true || $value === $field->getAttribute('value')) {
                     $this->checkOption($field);
@@ -1513,7 +1568,7 @@ class WebDriver extends CodeceptionModule implements
                 $this->fillField($field, $value);
             }
         }
-        
+
         $this->debugSection(
             'Uri',
             $form->getAttribute('action') ? $form->getAttribute('action') : $this->_getCurrentUri()

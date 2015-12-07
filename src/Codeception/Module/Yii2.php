@@ -74,7 +74,7 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
                 parse_url($mainConfig['config']['test_entry_url'], PHP_URL_SCHEME) === 'https'
             );
         }
-        $this->app = $this->client->startApp();
+        $this->app = $this->client->getApplication();
 
         if ($this->config['cleanup'] && isset($this->app->db)) {
             $this->transaction = $this->app->db->beginTransaction();
@@ -213,15 +213,15 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Converting $page to valid Yii 2 URL
-     * 
+     *
      * Allows input like:
-     * 
+     *
      * ```php
      * $I->amOnPage(['site/view','page'=>'about']);
      * $I->amOnPage('index-test.php?site/index');
      * $I->amOnPage('http://localhost/index-test.php?site/index');
      * ```
-     * 
+     *
      * @param $page string|array parameter for \yii\web\UrlManager::createUrl()
      */
     public function amOnPage($page)
@@ -280,3 +280,4 @@ class Yii2 extends Framework implements ActiveRecord, PartedModule
         return array_unique($domains);
     }
 }
+

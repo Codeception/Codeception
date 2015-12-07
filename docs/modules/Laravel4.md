@@ -121,9 +121,9 @@ To load arbitrary page for interaction, use `_loadPage` method.
  * `param array` $files
  * `param array` $server
  * `param null` $content
-@return mixed|Crawler
-@throws ExternalUrlException
-@see `_loadPage`
+ * `return` mixed|Crawler
+ * `throws`  ExternalUrlException
+ * `see`  `_loadPage`
 
 
 ### _savePageSource
@@ -153,8 +153,8 @@ Takes either `UserInterface` instance or array of credentials.
 
  * `param`  \Illuminate\Auth\UserInterface|array $user
  * `param`  string $driver
-@return void
-* Part: ** framework**
+ * `return` void
+ * `[Part]` framework
 
 
 ### amOnAction
@@ -163,7 +163,7 @@ Opens web page by action name
 
 ``` php
 <?php
-$I->amOnAction('PostsController@index');
+$I->amOnAction('PostsController * `index');` 
 ?>
 ```
 
@@ -208,7 +208,7 @@ Attaches a file relative to the Codeception data directory to the given file upl
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[@type="file"]', 'prices.xls');
+$I->attachFile('input[ * `type="file"]',`  'prices.xls');
 ?>
 ```
 
@@ -243,7 +243,7 @@ $I->checkOption('#agree');
  
 Make sure the Laravel start file exists.
 
-
+ * `throws`  ModuleConfig
 
 
 ### click
@@ -267,7 +267,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[@type=submit]');
+$I->click('//form/*[ * `type=submit]');` 
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -396,7 +396,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[@name=search]','Search');
+$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -499,8 +499,8 @@ $I->dontSeeRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
-* Part: ** framework**
+ * `[Part]` orm
+ * `[Part]` framework
 
 
 ### fillField
@@ -509,8 +509,8 @@ Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[@type='text']", "Hello World!");
-$I->fillField(['name' => 'email'], 'jon@mail.com');
+$I->fillField("//input[ * `type='text']",`  "Hello World!");
+$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
 ?>
 ```
 
@@ -607,8 +607,8 @@ $category = $I->grabRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part ORM
-* Part: ** framework**
+ * `[Part]` ORM
+ * `[Part]` framework
 
 
 ### grabService
@@ -633,7 +633,7 @@ $service = $I->grabService('foo');
 ```
 
  * `param`  string $class
-* Part: ** framework**
+ * `[Part]` framework
 
 
 ### grabTextFrom
@@ -682,14 +682,14 @@ $user_id = $I->haveRecord('users', array('name' => 'Davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
-* Part: ** framework**
+ * `[Part]` orm
+ * `[Part]` framework
 
 
 ### logout
  
 Logs user out
-* Part: ** framework**
+ * `[Part]` framework
 
 
 ### resetCookie
@@ -722,7 +722,7 @@ $I->see('Sign Up','//body/h1'); // with XPath
 ### seeAuthentication
  
 Checks that user is authenticated
-* Part: ** framework**
+ * `[Part]` framework
 
 
 ### seeCheckboxIsChecked
@@ -733,7 +733,7 @@ Checks that the specified checkbox is checked.
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
+$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
 ?>
 ```
 
@@ -761,7 +761,7 @@ Checks that current url matches action
 
 ``` php
 <?php
-$I->seeCurrentActionIs('PostsController@index');
+$I->seeCurrentActionIs('PostsController * `index');` 
 ?>
 ```
 
@@ -830,7 +830,7 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
-@return
+ * `return` 
 
 
 ### seeFormErrorMessage
@@ -910,7 +910,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[@name=search]','Search');
+$I->seeInField('//form/*[ * `name=search]','Search');` 
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -972,9 +972,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[@id=my-form]', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
 ?>
 ```
 
@@ -1076,8 +1076,8 @@ $I->seeRecord('users', array('name' => 'davert'));
 
  * `param` $tableName
  * `param array` $attributes
-@part orm
-* Part: ** framework**
+ * `[Part]` orm
+ * `[Part]` framework
 
 
 ### seeResponseCodeIs
@@ -1105,7 +1105,7 @@ $I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
 ?>
 ```
  * `param array` $bindings
-@deprecated
+ * `deprecated` 
 
 
 ### seeSessionHasErrors
@@ -1118,8 +1118,8 @@ $I->seeSessionHasErrors();
 ?>
 ```
 
-@return bool
-@deprecated
+ * `return` bool
+ * `deprecated` 
 
 
 ### seeSessionHasValues
@@ -1145,7 +1145,7 @@ Selects an option in a select tag or in radio button group.
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[@name=account]', 'Monthly');
+$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
 ?>
 ```
 
@@ -1331,9 +1331,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[@id=my-form]', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
 ?>
 ```
 

@@ -157,7 +157,7 @@ class MongoDb extends CodeceptionModule
     }
 
     /**
-     * Inserts data into collection
+     * Specify the database to use
      *
      * ``` php
      * <?php

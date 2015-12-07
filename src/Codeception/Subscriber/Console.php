@@ -465,7 +465,7 @@ class Console implements EventSubscriberInterface
                 $test = $test->testAt(0);
                 $output_length = $test instanceof TestCase
                     ? strlen($test->getFeature()) + strlen($test->getFileName())
-                    : $test->toString();
+                    : strlen($test->toString());
 
                 $this->columns[0] = max(
                     $this->columns[0],

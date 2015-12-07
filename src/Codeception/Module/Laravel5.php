@@ -110,6 +110,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         parent::__construct($container);
     }
 
+    /**
+     * @return array
+     */
     public function _parts()
     {
         return ['orm'];
@@ -123,7 +126,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         $this->checkBootstrapFileExists();
         $this->registerAutoloaders();
         $this->revertErrorHandler();
-        $this->client = new LaravelConnector($this);
     }
 
     /**
@@ -133,21 +135,11 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function _before(\Codeception\TestCase $test)
     {
+        $this->client = new LaravelConnector($this);
+
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->beginTransaction();
         }
-
-        if ($this->app['auth']) {
-            $this->app['auth']->logout();
-        }
-
-        if ($this->app['session']) {
-            // Destroy existing sessions of previous tests
-            $this->app['session']->migrate(true);
-        }
-
-        $this->client->clearExpectedEvents();
-        $this->client->getHistory()->clear();
     }
 
     /**
@@ -161,21 +153,13 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
             $this->app['db']->rollback();
         }
 
-        if ($missedEvents = $this->client->missedEvents()) {
-            $test->fail('The following events did not fire: ' . implode(',', $missedEvents));
+        if ($this->app['auth']) {
+            $this->app['auth']->logout();
         }
-    }
 
-    /**
-     * After step hook.
-     *
-     * @param \Codeception\Step $step
-     */
-    public function _afterStep(\Codeception\Step $step)
-    {
-        parent::_afterStep($step);
-
-        Facade::clearResolvedInstances();
+        if ($this->app['session']) {
+            $this->app['session']->flush();
+        }
     }
 
     /**
@@ -204,8 +188,6 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
 
         \Illuminate\Support\ClassLoader::register();
     }
-
-
 
     /**
      * Revert back to the Codeception error handler,
@@ -246,21 +228,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function disableMiddleware()
     {
-        $this->config['disable_middleware'] = true;
-    }
-
-    /**
-     * Enable middleware for the next requests.
-     *
-     * ``` php
-     * <?php
-     * $I->enableMiddleware();
-     * ?>
-     * ```
-     */
-    public function enableMiddleware()
-    {
-        $this->config['disable_middleware'] = false;
+        $this->client->disableMiddleware();
     }
 
     /**
@@ -274,21 +242,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      */
     public function disableEvents()
     {
-        $this->config['disable_events'] = true;
-    }
-
-    /**
-     * Enable events for the next requests.
-     *
-     * ``` php
-     * <?php
-     * $I->enableEvents();
-     * ?>
-     * ```
-     */
-    public function enableEvents()
-    {
-        $this->config['disable_events'] = false;
+        $this->client->disableEvents();
     }
 
     /**
@@ -296,19 +250,54 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      *
      * ``` php
      * <?php
-     * $I->expectEvents('App\MyEvent');
-     * $I->expectEvents('App\MyEvent', 'App\MyOtherEvent');
-     * $I->expectEvents(['App\MyEvent', 'App\MyOtherEvent']);
+     * $I->seeEventTriggered('App\MyEvent');
+     * $I->seeEventTriggered(new App\Events\MyEvent());
+     * $I->seeEventTriggered('App\MyEvent', 'App\MyOtherEvent');
+     * $I->seeEventTriggered(['App\MyEvent', 'App\MyOtherEvent']);
      * ?>
      * ```
      * @param $events
      */
-    public function expectEvents($events)
+    public function seeEventTriggered($events)
     {
         $events = is_array($events) ? $events : func_get_args();
 
-        foreach ($events as $expectedEvent) {
-            $this->client->addExpectedEvent($expectedEvent);
+        foreach ($events as $event) {
+            if (!$this->client->eventTriggered($event)) {
+                if (is_object($event)) {
+                    $event = get_class($event);
+                }
+
+                $this->fail("The '$event' event did not trigger");
+            }
+        }
+    }
+
+    /**
+     * Make sure events did not fire during the test.
+     *
+     * ``` php
+     * <?php
+     * $I->dontSeeEventTriggered('App\MyEvent');
+     * $I->dontSeeEventTriggered(new App\Events\MyEvent());
+     * $I->dontSeeEventTriggered('App\MyEvent', 'App\MyOtherEvent');
+     * $I->dontSeeEventTriggered(['App\MyEvent', 'App\MyOtherEvent']);
+     * ?>
+     * ```
+     * @param $events
+     */
+    public function dontSeeEventTriggered($events)
+    {
+        $events = is_array($events) ? $events : func_get_args();
+
+        foreach ($events as $event) {
+            if ($this->client->eventTriggered($event)) {
+                if (is_object($event)) {
+                    $event = get_class($event);
+                }
+
+                $this->fail("The '$event' event triggered");
+            }
         }
     }
 
@@ -341,15 +330,17 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * $I->seeCurrentRouteIs('posts.index');
      * ?>
      * ```
-     * @param $route
+     * @param $routeName
      */
-    public function seeCurrentRouteIs($route)
+    public function seeCurrentRouteIs($routeName)
     {
-        $this->getRouteByName($route); // Fails if route does not exists
-        $currentRoute = $this->app->request->route()->getName();
+        $this->getRouteByName($routeName); // Fails if route does not exists
 
-        if ($currentRoute != $route) {
-            $message = is_null($currentRoute) ? "Current route has no name" : "Current route is \"$currentRoute\"";
+        $currentRoute = $this->app->request->route();
+        $currentRouteName = $currentRoute ? $currentRoute->getName() : '';
+
+        if ($currentRouteName != $routeName) {
+            $message = empty($currentRouteName) ? "Current route has no name" : "Current route is \"$currentRouteName\"";
             $this->fail($message);
         }
     }
@@ -389,7 +380,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function seeCurrentActionIs($action)
     {
         $this->getRouteByAction($action); // Fails if route does not exists
-        $currentAction = $this->app->request->route()->getActionName();
+        $currentRoute = $this->app->request->route();
+        $currentAction = $currentRoute ? $currentRoute->getActionName() : '';
         $currentAction = ltrim(str_replace($this->getRootControllerNamespace(), "", $currentAction), '\\');
 
         if ($currentAction != $action) {
@@ -626,7 +618,8 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function amLoggedAs($user, $driver = null)
     {
         if ($user instanceof Authenticatable) {
-            return $this->app['auth']->driver($driver)->setUser($user);
+            $this->app['auth']->driver($driver)->setUser($user);
+            return;
         }
 
         if (! $this->app['auth']->driver($driver)->attempt($user)) {
