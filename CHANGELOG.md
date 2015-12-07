@@ -10,6 +10,7 @@
 * [REST] JsonType improved URL filter to use `filter_var($value, FILTER_VALIDATE_URL)`
 * [REST] JsonType to support collections: all items in an array will be validates against JsonType. By @davertmik
 * [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
+* Framework modules now throw an `ExternalUrlException` when a test tries to open a URL that is not handled by the framework, i.e. an external URL. See #2396
 
 #### 2.1.4
 
