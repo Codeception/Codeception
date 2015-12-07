@@ -32,7 +32,8 @@ if (!function_exists('json_last_error_msg')) {
      * Copied from http://php.net/manual/en/function.json-last-error-msg.php#117393
      * @return string
      */
-    function json_last_error_msg() {
+    function json_last_error_msg()
+    {
         static $errors = array(
             JSON_ERROR_NONE => 'No error',
             JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',

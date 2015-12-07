@@ -7,7 +7,6 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -66,7 +65,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRouting
+class Symfony2 extends Framework implements DoctrineProvider
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -189,10 +188,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -217,10 +213,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -309,5 +302,43 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
                 $this->debugSection('Time', $profile->getCollector('timer')->getTime());
             }
         }
+    }
+
+    /**
+     * Returns a list of recognized domain names.
+     *
+     * @return array
+     */
+    protected function getInternalDomains()
+    {
+        $internalDomains = [
+            'localhost',
+        ];
+
+        /* @var \Symfony\Component\Routing\Route $route */
+        foreach ($this->getRouter()->getRouteCollection() as $route) {
+            if (!is_null($route->getHost())) {
+                $compiled = $route->compile();
+                if (!is_null($compiled->getHostRegex())) {
+                    $internalDomains[] = $compiled->getHostRegex();
+                }
+            }
+        }
+
+        return array_unique($internalDomains);
+    }
+
+    /**
+     * Helper method to get router safely.
+     *
+     * @return \Symfony\Component\Routing\Router
+     */
+    private function getRouter()
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+
+        return $this->kernel->getContainer()->get('router');
     }
 }
