@@ -316,7 +316,7 @@ class Symfony2 extends Framework implements DoctrineProvider
         ];
 
         /* @var \Symfony\Component\Routing\Route $route */
-        foreach($this->getRouter()->getRouteCollection() as $route) {
+        foreach ($this->getRouter()->getRouteCollection() as $route) {
             if (!is_null($route->getHost())) {
                 $compiled = $route->compile();
                 if (!is_null($compiled->getHostRegex())) {

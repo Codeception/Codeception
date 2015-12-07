@@ -206,7 +206,7 @@ class ZF2 extends Framework implements DoctrineProvider
                 }
                 // this is necessary to instantiate child routes
                 try {
-                    $route->assemble([],[]);
+                    $route->assemble([], []);
                 } catch (\Exception $e) {
                 }
                 $this->addInternalDomainsFromRoutes($route->getRoutes());
