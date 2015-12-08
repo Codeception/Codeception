@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Lib;
 
+use Codeception\Exception\TestParseException;
 use Codeception\TestCase\Cept;
 use Codeception\TestCase\Cest;
 use Symfony\Component\Finder\Finder;
@@ -123,6 +124,7 @@ class TestLoader
 
     public function addTest($path)
     {
+        Parser::load($path);
         $testClasses = Parser::getClassesFromFile($path);
 
         foreach ($testClasses as $testClass) {
@@ -144,6 +146,7 @@ class TestLoader
 
     public function addCept($file)
     {
+        Parser::validate($file);
         $name = $this->relativeName($file);
 
         $cept = new Cept();
@@ -155,6 +158,7 @@ class TestLoader
 
     public function addCest($file)
     {
+        Parser::load($file);
         $testClasses = Parser::getClassesFromFile($file);
 
         foreach ($testClasses as $testClass) {
@@ -164,6 +168,7 @@ class TestLoader
             if (!(new \ReflectionClass($testClass))->isInstantiable()) {
                 continue;
             }
+
             $unit = new $testClass;
 
             $methods = get_class_methods($testClass);

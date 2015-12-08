@@ -51,7 +51,7 @@ class ModuleContainer
         }
 
         // helper
-        $hasNamespace = (mb_strpos($moduleName, '\\') !== false);
+        $hasNamespace = (strpos($moduleName, '\\') !== false);
         if ($hasNamespace) {
             return $this->instantiate($moduleName, $moduleName, $config);
         }
