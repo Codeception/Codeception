@@ -166,6 +166,8 @@ class WebDriver extends CodeceptionModule implements
         'request_timeout'    => null,
         'http_proxy'         => null,
         'http_proxy_port'    => null,
+        'ssl_proxy'          => null,
+        'ssl_proxy_port'     => null,
         'debug_log_entries'  => 15,
     ];
 
@@ -177,6 +179,8 @@ class WebDriver extends CodeceptionModule implements
     protected $sessionSnapshots = [];
     protected $httpProxy;
     protected $httpProxyPort;
+    protected $sslProxy;
+    protected $sslProxyPort;
 
     /**
      * @var RemoteWebDriver
@@ -188,6 +192,7 @@ class WebDriver extends CodeceptionModule implements
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
+        $this->capabilities[WebDriverCapabilityType::PROXY] = $this->_getProxy();
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
@@ -346,6 +351,13 @@ class WebDriver extends CodeceptionModule implements
             );
         }
         return $this->config['url'];
+    }
+    
+    public function _getProxy()
+    {
+        $http_proxy = $this->config['http_proxy'] . ':' . $this->config['http_proxy_port'];
+        $ssl_proxy = $this->config['ssl_proxy'] . ':' . $this->config['ssl_proxy_port'];
+        return array('proxyType' => 'manual', 'httpProxy' => $http_proxy, 'sslProxy' => $ssl_proxy);
     }
 
     /**
