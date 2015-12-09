@@ -160,6 +160,15 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
         if ($this->app['session']) {
             $this->app['session']->flush();
         }
+
+        if ($this->app['cache']) {
+            $this->app['cache']->flush();
+        }
+
+        // disconnect from DB to prevent "Too many connections" issue
+        if ($this->app['db']) {
+            $this->app['db']->disconnect();
+        }
     }
 
     /**
