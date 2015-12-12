@@ -91,7 +91,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     public function _parts()
     {
-        return ['serives'];
+        return ['services'];
     }
 
     /**
