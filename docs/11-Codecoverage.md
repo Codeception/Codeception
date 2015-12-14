@@ -25,6 +25,7 @@ That's ok for now. But what files should be present in final coverage report? Yo
 
 ``` yaml
 coverage:
+    enabled: true
     whitelist:
         include:
             - app/*
