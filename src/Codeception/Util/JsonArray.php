@@ -110,7 +110,6 @@ class JsonArray
         if ($this->arrayIsSequential($arr1) && $this->arrayIsSequential($arr2)) {
             return $this->sequentialArrayIntersect($arr1, $arr2);
         }
-
         return $this->associativeArrayIntersect($arr1, $arr2);
     }
 
@@ -139,13 +138,17 @@ class JsonArray
         $matchedKeys = [];
         foreach ($arr1 as $key1 => $value1) {
             foreach ($arr2 as $key2 => $value2) {
+                if (isset($matchedKeys[$key2])) {
+                    continue;
+                }
+
                 $return = $this->arrayIntersectRecursive($value1, $value2);
-                if ($return) {
+                if ($return == $arr1) {
                     $ret[$key1] = $return;
                     continue;
                 }
 
-                if ($this->isEqualValue($value1, $value2) && !isset($matchedKeys[$key2])) {
+                if ($this->isEqualValue($value1, $value2)) {
                     $ret[$key1] = $value1;
                     $matchedKeys[$key2] = true;
                     break;

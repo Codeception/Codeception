@@ -100,27 +100,92 @@ class JsonArrayTest extends \Codeception\TestCase\Test
     /**
      * @issue https://github.com/Codeception/Codeception/issues/2630
      */
-    public function testContainsArrayComparesNestedSequentialArraysCorrectly()
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsTheSame()
     {
-        $jsonArray = new JsonArray('{
-            "flattened_array": [
-                [
-                    "2015-09-10",
-                    "unknown-date-1"
-                ],
-                [
-                    "2015-10-10",
-                    "unknown-date-1"
-                ]
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-1"
             ]
-        }');
+        ]');
         $expectedArray = [
-            "flattened_array" => [
-                ["2015-09-10", "unknown-date-1"],
-                ["2015-10-10", "unknown-date-1"]
-            ]
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-1"],
         ];
         $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsTheSameButOrderOfItemsIsDifferent()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-1"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-10-10", "unknown-date-1"],
+            ["2015-09-10", "unknown-date-1"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsDifferent()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-2"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-2"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenJsonHasMoreItemsThanExpectedArray()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-02",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-2"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-2"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
     }
 }
