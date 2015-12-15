@@ -7,6 +7,7 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
+use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -65,7 +66,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider
+class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -84,6 +85,14 @@ class Symfony2 extends Framework implements DoctrineProvider
         'debug' => true,
         'em_service' => 'doctrine.orm.entity_manager'
     ];
+
+    /**
+     * @return array
+     */
+    public function _parts()
+    {
+        return ['services'];
+    }
 
     /**
      * @var
@@ -252,6 +261,7 @@ class Symfony2 extends Framework implements DoctrineProvider
      *
      * @param $service
      * @return mixed
+     * @part services
      */
     public function grabServiceFromContainer($service)
     {
