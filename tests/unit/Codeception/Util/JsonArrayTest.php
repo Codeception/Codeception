@@ -97,4 +97,30 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         new JsonArray('{"test":');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectly()
+    {
+        $jsonArray = new JsonArray('{
+            "flattened_array": [
+                [
+                    "2015-09-10",
+                    "unknown-date-1"
+                ],
+                [
+                    "2015-10-10",
+                    "unknown-date-1"
+                ]
+            ]
+        }');
+        $expectedArray = [
+            "flattened_array" => [
+                ["2015-09-10", "unknown-date-1"],
+                ["2015-10-10", "unknown-date-1"]
+            ]
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+
+    }
 }
