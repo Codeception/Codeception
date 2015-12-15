@@ -83,6 +83,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         'var_path' => 'app',
         'environment' => 'test',
         'debug' => true,
+        'cache_router' => false,
         'em_service' => 'doctrine.orm.entity_manager'
     ];
 
@@ -151,6 +152,13 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         }
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
+        if ($this->config['cache_router'] === true) {
+            if (isset($this->permanentServices['router'])) {
+                $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
+            } else {
+                $this->permanentServices['router'] = $this->getRouter();
+            }
+        }
     }
 
     /**
@@ -180,6 +188,28 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         require_once $file;
 
         return $class;
+    }
+
+    /**
+     * Get router from container.
+     *
+     * @return object
+     */
+    private function getRouter()
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+
+        return $this->kernel->getContainer()->get('router');
+    }
+
+    /**
+     * Invalidate previously cached routes.
+     */
+    public function invalidateCachedRouter()
+    {
+        $this->permanentServices['router'] = null;
     }
 
     /**
