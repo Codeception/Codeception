@@ -157,7 +157,7 @@ EOF;
 
         $this->em->getConnection()->connect();
     }
-    
+
     public function _after(TestCase $test)
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
@@ -170,6 +170,7 @@ EOF;
             }
         }
         $this->clean();
+        $this->em->getConnection()->close();
     }
 
     protected function clean()
