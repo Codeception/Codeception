@@ -355,6 +355,7 @@ class WebDriver extends CodeceptionModule implements
     
     public function _getProxy()
     {
+        $proxyConfig = [];
         if ($this->config['http_proxy']) {
             $proxyConfig['httpProxy'] = $this->config['http_proxy'];
             if ($this->config['http_proxy_port']) {
