@@ -36,7 +36,7 @@ install:
   - composer self-update && composer --version
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0; fi' # install old guzzle
-  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer update fi' # install old deps
+  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer update; fi' # install old deps
   - composer install --prefer-source
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
