@@ -193,9 +193,7 @@ class WebDriver extends CodeceptionModule implements
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
 
-        if ($proxy = $this->getProxy()) {
-            $this->capabilities[WebDriverCapabilityType::PROXY] = $proxy;
-        }
+        $this->capabilities[WebDriverCapabilityType::PROXY] = $this->getProxy();
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
