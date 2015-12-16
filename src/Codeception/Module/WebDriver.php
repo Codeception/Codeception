@@ -355,9 +355,20 @@ class WebDriver extends CodeceptionModule implements
     
     public function _getProxy()
     {
-        $http_proxy = $this->config['http_proxy'] . ':' . $this->config['http_proxy_port'];
-        $ssl_proxy = $this->config['ssl_proxy'] . ':' . $this->config['ssl_proxy_port'];
-        return array('proxyType' => 'manual', 'httpProxy' => $http_proxy, 'sslProxy' => $ssl_proxy);
+        $proxyConfig = ['proxyType' => 'manual'];
+        if ($this->config['http_proxy']) {
+            $proxyConfig['httpProxy'] = $this->config['http_proxy'];
+            if ($this->config['http_proxy_port']) {
+                $proxyConfig['httpProxy'] .= ':' . $this->config['http_proxy_port'];
+            }
+        }
+        if ($this->config['ssl_proxy']) {
+            $proxyConfig['sslProxy'] = $this->config['ssl_proxy'];
+            if ($this->config['ssl_proxy_port']) {
+                $proxyConfig['sslProxy'] .= ':' . $this->config['ssl_proxy_port'];
+            }
+        }
+        return $proxyConfig;
     }
 
     /**
