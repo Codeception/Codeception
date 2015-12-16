@@ -192,7 +192,10 @@ class WebDriver extends CodeceptionModule implements
         $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
-        $this->capabilities[WebDriverCapabilityType::PROXY] = $this->_getProxy();
+
+        if ($proxy = $this->getProxy()) {
+            $this->capabilities[WebDriverCapabilityType::PROXY] = $proxy;
+        }
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
@@ -353,7 +356,7 @@ class WebDriver extends CodeceptionModule implements
         return $this->config['url'];
     }
     
-    public function _getProxy()
+    protected function getProxy()
     {
         $proxyConfig = [];
         if ($this->config['http_proxy']) {
