@@ -1,5 +1,4 @@
 <?php
-use \CliGuy;
 
 class ExtensionsCest
 {
