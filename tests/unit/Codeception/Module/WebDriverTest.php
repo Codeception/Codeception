@@ -605,7 +605,6 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testAppendFieldDiv()
     {
-        $this->markTestSkipped("Doesn't work on Travis setup :(");
         $this->module->amOnPage('/form/div_content_editable');
         //make sure we see 'sunrise' which is the default text in the textarea
         $this->module->see('sunrise', '#description');
