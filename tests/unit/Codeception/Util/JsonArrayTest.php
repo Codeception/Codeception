@@ -188,4 +188,20 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         ];
         $this->assertTrue($jsonArray->containsArray($expectedArray));
     }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/pull/2635
+     */
+    public function testContainsMatchesSuperSetOfExpectedAssociativeArrayInsideSequentialArray()
+    {
+        $jsonArray = new JsonArray(json_encode([[
+                'id' => '1',
+                'title' => 'Game of Thrones',
+                'body' => 'You are so awesome',
+                'created_at' => '2015-12-16 10:42:20',
+                'updated_at' => '2015-12-16 10:42:20',
+            ]]));
+        $expectedArray = [['id' => '1']];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
 }

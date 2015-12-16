@@ -143,7 +143,7 @@ class JsonArray
                 }
 
                 $return = $this->arrayIntersectRecursive($value1, $value2);
-                if ($return == $arr1) {
+                if ($return !== false && $return == $value1) {
                     $ret[$key1] = $return;
                     continue;
                 }
