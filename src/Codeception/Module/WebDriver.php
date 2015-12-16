@@ -2198,6 +2198,11 @@ class WebDriver extends CodeceptionModule implements
                 $el->sendKeys($value);
                 return;
                 break;
+            case "div": //allows for content editable divs
+                $el->sendKeys(WebDriverKeys::END);
+                $el->sendKeys($value);
+                return;
+                break;
             //Text, Checkbox, Radio
             case "input":
                 $type = $el->getAttribute('type');

@@ -602,4 +602,15 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->fillField('#description', $textarea_value);
         $this->module->seeInField('#description', $textarea_value);
     }
+
+    public function testAppendFieldDiv()
+    {
+        $this->module->amOnPage('/form/div_content_editable');
+        //make sure we see 'sunrise' which is the default text in the textarea
+        $this->module->see('sunrise', '#description');
+        //fill in some new text and see if we can see it
+        $textarea_value = 'moonrise';
+        $this->module->appendField('#description', $textarea_value);
+        $this->module->see('sunrise' . $textarea_value, '#description');
+    }
 }
