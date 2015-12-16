@@ -145,6 +145,7 @@ class JsonArray
                 $return = $this->arrayIntersectRecursive($value1, $value2);
                 if ($return !== false && $return == $value1) {
                     $ret[$key1] = $return;
+                    $matchedKeys[$key2] = true;
                     continue;
                 }
 
