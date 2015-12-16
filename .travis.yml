@@ -11,6 +11,12 @@ matrix:
   allow_failures:
     - php: hhvm
 
+env:
+  matrix:
+    - SYMFONY="min"
+    - SYMFONY="2.8.0"
+    - SYMFONY="3.0.0"
+
 branches:
   except:
     - gh-pages
@@ -36,7 +42,13 @@ install:
   - composer self-update && composer --version
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0; fi' # install old guzzle
-#  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then rm composer.lock; composer install; fi' # install old deps
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/finder=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/console=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/event-dispatcher=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/yaml=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/browser-kit=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/css-selector=~$SYMFONY; fi'
+  - 'if [ "$SYMFONY" != "min" ]; then composer require symfony/dom-crawler=~$SYMFONY; fi'
   - composer install --prefer-source
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
