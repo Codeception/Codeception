@@ -370,8 +370,9 @@ class WebDriver extends CodeceptionModule implements
         }
         if (!empty($proxyConfig)) {
             $proxyConfig['proxyType'] = 'manual';
+            return $proxyConfig;
         }
-        return $proxyConfig;
+        return null;
     }
 
     /**
