@@ -28,6 +28,7 @@ if (!class_exists('RemoteWebDriver') and class_exists('Facebook\WebDriver\Remote
     interface WebDriverElement extends Facebook\WebDriver\WebDriverElement {};
 }
 
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'symfony-shim.php';
 // compat
 if (PHP_MAJOR_VERSION < 7) {
     interface Throwable {};
