@@ -367,18 +367,4 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 
         return array_unique($internalDomains);
     }
-
-    /**
-     * Helper method to get router safely.
-     *
-     * @return \Symfony\Component\Routing\Router
-     */
-    private function getRouter()
-    {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-
-        return $this->kernel->getContainer()->get('router');
-    }
 }
