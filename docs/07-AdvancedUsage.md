@@ -138,7 +138,7 @@ class MathTest extends \Codeception\TestCase\Test
 
 However, Dependency Injection is not limited to this. It allows you to **inject any class**, which can be constructed with arguments known to Codeception.
 
-In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to speicfy the type of arguments, so Codeception can guess which objects are expected to be received. The `_inject()` will be invoked just once right after creation of the TestCase object (either Cest or Test). Dependency Injection will also work in a similar manner for Helper and Actor classes.
+In order to make auto-wiring work, you will need to implement `_inject()` method with the list of desired arguments. It is important to specify the type of arguments, so Codeception can guess which objects are expected to be received. The `_inject()` will be invoked just once right after creation of the TestCase object (either Cest or Test). Dependency Injection will also work in a similar manner for Helper and Actor classes.
 
 Each test of Cest class can declare its own dependencies and receive them from method arguments:
 
