@@ -85,8 +85,8 @@ Inserts data into collection
 
 ``` php
 <?php
-$I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
-$user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
+$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
 ```
 
  * `param` $collection
@@ -151,7 +151,7 @@ $I->seeNumElementsInCollection('users', 1, array('name' => 'miles'));
 
 ### useDatabase
  
-Inserts data into collection
+Specify the database to use
 
 ``` php
 <?php

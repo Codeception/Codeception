@@ -7,7 +7,7 @@ use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
+use Codeception\Lib\Interfaces\PartedModule;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -66,7 +66,7 @@ use Symfony\Component\Finder\Finder;
  * * container - dependency injection container instance
  *
  */
-class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRouting
+class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 {
     /**
      * @var \Symfony\Component\HttpKernel\Kernel
@@ -83,8 +83,17 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         'var_path' => 'app',
         'environment' => 'test',
         'debug' => true,
+        'cache_router' => false,
         'em_service' => 'doctrine.orm.entity_manager'
     ];
+
+    /**
+     * @return array
+     */
+    public function _parts()
+    {
+        return ['services'];
+    }
 
     /**
      * @var
@@ -109,13 +118,18 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
-        ini_set('xdebug.max_nesting_level', 200); // Symfony may have very long nesting level
-    }
+        $maxNestingLevel = 200; // Symfony may have very long nesting level
+        $xdebugMaxLevelKey = 'xdebug.max_nesting_level';
+        if (ini_get($xdebugMaxLevelKey) < $maxNestingLevel) {
+            ini_set($xdebugMaxLevelKey, $maxNestingLevel);
+        }
 
-    public function _before(\Codeception\TestCase $test) 
-    {
         $this->bootKernel();
         $this->container = $this->kernel->getContainer();
+    }
+
+    public function _before(\Codeception\TestCase $test)
+    {
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);
     }
@@ -138,6 +152,13 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         }
         $this->kernel = new $this->kernelClass($this->config['environment'], $this->config['debug']);
         $this->kernel->boot();
+        if ($this->config['cache_router'] === true) {
+            if (isset($this->permanentServices['router'])) {
+                $this->kernel->getContainer()->set('router', $this->permanentServices['router']);
+            } else {
+                $this->permanentServices['router'] = $this->getRouter();
+            }
+        }
     }
 
     /**
@@ -170,6 +191,28 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
     }
 
     /**
+     * Get router from container.
+     *
+     * @return object
+     */
+    private function getRouter()
+    {
+        if (!$this->kernel->getContainer()->has('router')) {
+            $this->fail('Router not found.');
+        }
+
+        return $this->kernel->getContainer()->get('router');
+    }
+
+    /**
+     * Invalidate previously cached routes.
+     */
+    public function invalidateCachedRouter()
+    {
+        $this->permanentServices['router'] = null;
+    }
+
+    /**
      * Opens web page using route name and parameters.
      *
      * ``` php
@@ -184,10 +227,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function amOnRoute($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -212,10 +252,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      */
     public function seeCurrentRouteIs($routeName, array $params = [])
     {
-        if (!$this->kernel->getContainer()->has('router')) {
-            $this->fail('Router not found.');
-        }
-        $router = $this->kernel->getContainer()->get('router');
+        $router = $this->getRouter();
         $route = $router->getRouteCollection()->get($routeName);
         if (!$route) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
@@ -254,6 +291,7 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
      *
      * @param $service
      * @return mixed
+     * @part services
      */
     public function grabServiceFromContainer($service)
     {
@@ -279,9 +317,13 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
         return $profiler->loadProfileFromResponse($response);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-        $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        parent::debugResponse($url);
+
         if ($profile = $this->getProfiler()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
@@ -300,5 +342,29 @@ class Symfony2 extends Framework implements DoctrineProvider, SupportsDomainRout
                 $this->debugSection('Time', $profile->getCollector('timer')->getTime());
             }
         }
+    }
+
+    /**
+     * Returns a list of recognized domain names.
+     *
+     * @return array
+     */
+    protected function getInternalDomains()
+    {
+        $internalDomains = [
+            'localhost',
+        ];
+
+        /* @var \Symfony\Component\Routing\Route $route */
+        foreach ($this->getRouter()->getRouteCollection() as $route) {
+            if (!is_null($route->getHost())) {
+                $compiled = $route->compile();
+                if (!is_null($compiled->getHostRegex())) {
+                    $internalDomains[] = $compiled->getHostRegex();
+                }
+            }
+        }
+
+        return array_unique($internalDomains);
     }
 }

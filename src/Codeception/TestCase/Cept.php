@@ -3,6 +3,7 @@ namespace Codeception\TestCase;
 
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Exception\TestParseException;
 use Codeception\TestCase as CodeceptionTestCase;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase\Interfaces\Descriptive;
@@ -27,7 +28,11 @@ class Cept extends \Codeception\Lib\Test implements
     {
         $scenario = $this->scenario;
         /** @noinspection PhpIncludeInspection */
-        require $this->testFile;
+        try {
+            require $this->testFile;
+        } catch (\ParseError $e) {
+            throw new TestParseException($this->testFile);
+        }
     }
 
 

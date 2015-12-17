@@ -3,6 +3,7 @@ namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta;
+use Codeception\Util\Locator;
 
 abstract class Step
 {
@@ -106,11 +107,19 @@ abstract class Step
 
     protected function parseArgumentAsString($argument)
     {
-        if (is_object($argument) && method_exists($argument, '__toString')) {
-            return (string)$argument;
+        if (is_object($argument)) {
+            if (method_exists($argument, '__toString')) {
+                return (string)$argument;
+            }
+            if (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
+                return Locator::humanReadableString($argument);
+            }
         }
-        if (is_callable($argument, true)) {
+        if ($argument instanceof \Closure) {
             return 'lambda function';
+        }
+        if (is_callable($argument)) {
+            return 'callable function';
         }
         if (!is_object($argument)) {
             return $argument;
@@ -145,6 +154,10 @@ abstract class Step
 
     public function getHtml($highlightColor = '#732E81')
     {
+        if (empty($this->arguments)) {
+            return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
+        }
+
         return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 

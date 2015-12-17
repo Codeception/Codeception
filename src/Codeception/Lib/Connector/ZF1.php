@@ -57,7 +57,15 @@ class ZF1 extends Client
         // relying on $request->getPost()
         $zendRequest->setPost($request->getParameters());
         $zendRequest->setRawBody($request->getContent());
-        $zendRequest->setRequestUri(str_replace('http://localhost','',$request->getUri()));
+
+        $uri = $request->getUri();
+        $queryString = parse_url($uri, PHP_URL_QUERY);
+        $requestUri = parse_url($uri, PHP_URL_PATH);
+        if (!empty($queryString)) {
+            $requestUri .= '?' . $queryString;
+        }
+        $zendRequest->setRequestUri($requestUri);
+
         $zendRequest->setHeaders($this->extractHeaders($request));
         $_FILES  = $this->remapFiles($request->getFiles());
         $_SERVER = array_merge($_SERVER, $request->getServer());

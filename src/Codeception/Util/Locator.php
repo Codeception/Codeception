@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Util;
 
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Symfony\Component\CssSelector\XPath\Translator;
 
@@ -113,7 +113,7 @@ class Locator
     protected static function toXPath($selector)
     {
         try {
-            $xpath = CssSelector::toXPath($selector);
+            $xpath = (new CssSelectorConverter())->toXPath($selector);
             return $xpath;
         } catch (ParseException $e) {
             if (self::isXPath($selector)) {
@@ -153,7 +153,7 @@ class Locator
     public static function isCSS($selector)
     {
         try {
-            CssSelector::toXPath($selector);
+            (new CssSelectorConverter())->toXPath($selector);
         } catch (ParseException $e) {
             return false;
         }

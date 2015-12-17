@@ -9,7 +9,6 @@ use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
-use Codeception\Lib\Interfaces\SupportsDomainRouting;
 use Codeception\Lib\Interfaces\Web;
 use Codeception\Module;
 use Codeception\PHPUnit\Constraint\Crawler as CrawlerConstraint;
@@ -17,7 +16,7 @@ use Codeception\PHPUnit\Constraint\CrawlerNot as CrawlerNotConstraint;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\TestCase;
 use Codeception\Util\Locator;
-use Codeception\Util\PropertyAccess;
+use Codeception\Util\ReflectionHelper;
 use Codeception\Util\Uri;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\DomCrawler\Link;
@@ -48,6 +47,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     protected $defaultCookieParameters = ['expires' => null, 'path' => '/', 'domain' => '', 'secure' => false];
 
+    protected $internalDomains = null;
+
     public function _failed(TestCase $test, $fail)
     {
         if (!$this->client || !$this->client->getInternalResponse()) {
@@ -75,13 +76,114 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     /**
      * Send custom request to a backend using method, uri, parameters, etc.
-     * Use it in Helpers to create special request actions, like accessing API, sending complex forms, etc.
+     * Use it in Helpers to create special request actions, like accessing API
+     * Returns a string with response body.
      *
      * ```php
      * <?php
      * // in Helper class
      * public function createUserByApi($name) {
-     *     $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     *     $userData = $this->getModule('{{MODULE_NAME}}')->_request('POST', '/api/v1/users', ['name' => $name]);
+     *     $user = json_decode($userData);
+     *     return $user->id;
+     * }
+     * ?>
+     * ```
+     * Does not load the response into the module so you can't interact with response page (click, fill forms).
+     * To load arbitrary page for interaction, use `_loadPage` method.
+     *
+     * @api
+     * @param $method
+     * @param $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     * @return mixed|Crawler
+     * @throws ExternalUrlException
+     * @see `_loadPage`
+     */
+    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    {
+        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
+        return $this->_getResponseContent();
+    }
+
+    /**
+     * Returns content of the last response
+     * Use it in Helpers when you want to retrieve response of request performed by another module.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function seeResponseContains($text)
+     * {
+     *    $this->assertContains($text, $this->getModule('{{MODULE_NAME}}')->_getResponseContent(), "response contains");
+     * }
+     * ?>
+     * ```
+     *
+     * @api
+     * @return string
+     * @throws ModuleException
+     */
+    public function _getResponseContent()
+    {
+        return (string)$this->getRunningClient()->getInternalResponse()->getContent();
+    }
+
+    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
+    {
+        if ($this instanceof Framework) {
+            if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
+                $hostname = parse_url($uri, PHP_URL_HOST);
+
+                if (!$this->isInternalDomain($hostname)) {
+                    throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
+                }
+            }
+
+            if ($method !== 'GET' && $content === null && !empty($parameters)) {
+                $content = http_build_query($parameters);
+            }
+        }
+
+        if (!ReflectionHelper::readPrivateProperty($this->client, 'followRedirects')) {
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse($uri);
+            return $result;
+        } else {
+            $maxRedirects = ReflectionHelper::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
+            $this->client->followRedirects(false);
+            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
+            $this->debugResponse($uri);
+            return $this->redirectIfNecessary($result, $maxRedirects, 0);
+        }
+    }
+
+    protected function isInternalDomain($domain)
+    {
+        if ($this->internalDomains === null) {
+            $this->internalDomains = $this->getInternalDomains();
+        }
+
+        foreach ($this->internalDomains as $pattern) {
+            if (preg_match($pattern, $domain)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Opens a page with arbitrary request parameters.
+     * Useful for testing multi-step forms on a specific step.
+     *
+     * ```php
+     * <?php
+     * // in Helper class
+     * public function openCheckoutFormStep2($orderId) {
+     *     $this->getModule('{{MODULE_NAME}}')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
      * }
      * ?>
      * ```
@@ -93,11 +195,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      * @param array $files
      * @param array $server
      * @param null $content
-     * @return mixed|Crawler
      */
-    public function _request($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
+    public function _loadPage($method, $uri, array $parameters = [],  array $files = [], array $server = [], $content = null)
     {
-        return $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
+        $this->crawler = $this->clientRequest($method, $uri, $parameters, $files, $server, $content);
+        $this->forms = [];
     }
 
     /**
@@ -114,15 +216,15 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     private function getRunningClient()
     {
-        if ($this->client->getHistory()->isEmpty()) {
-            throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` to open it");
+        if ($this->client->getInternalRequest() === null) {
+            throw new ModuleException($this, "Page not loaded. Use `\$I->amOnPage` (or hidden API methods `_request` and `_loadPage`) to open it");
         }
         return $this->client;
     }
 
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->getRunningClient()->getInternalResponse()->getContent());
+        file_put_contents($filename, $this->_getResponseContent());
     }
 
     /**
@@ -137,10 +239,10 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $this->client->setServerParameter('PHP_AUTH_PW', $password);
     }
 
+
     public function amOnPage($page)
     {
-        $this->crawler = $this->clientRequest('GET', $page);
-        $this->forms = [];
+        $this->_loadPage('GET', $page);
     }
 
     public function click($link, $context = null)
@@ -177,7 +279,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             return;
         }
 
-        $this->clickByLocator($link);
+        try {
+            $this->clickByLocator($link);
+        } catch (MalformedLocatorException $e) {
+            throw new ElementNotFound("name=$link", "'$link' is invalid CSS and XPath selector and Link or Button");
+        }
     }
 
     protected function clickByLocator($link)
@@ -226,6 +332,16 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $nodes = $this->match($selector);
             $this->assertDomNotContains($nodes, $this->stringifySelector($selector), $text);
         }
+    }
+
+    public function seeInSource($raw)
+    {
+        $this->assertPageSourceContains($raw);
+    }
+
+    public function dontSeeInSource($raw)
+    {
+        $this->assertPageSourceNotContains($raw);
     }
 
     public function seeLink($text, $url = null)
@@ -315,14 +431,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
     public function seeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assert($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assert($this->proceedSeeInField($nodes, $value));
     }
 
     public function dontSeeInField($field, $value)
     {
-        $crawler = $this->getFieldsByLabelOrCss($field);
-        $this->assertNot($this->proceedSeeInField($crawler, $value));
+        $nodes = $this->getFieldsByLabelOrCss($field);
+        $this->assertNot($this->proceedSeeInField($nodes, $value));
     }
 
     public function seeInFormFields($formSelector, array $params)
@@ -363,40 +479,12 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         }
     }
 
-    /**
-     * Returns an array of values for the field with the passed name.  Usually
-     * the array consists of a single value.  Used by proceedSeeInField
-     *
-     * @param Form $form
-     * @param string $fieldName
-     * @return array
-     */
-    private function getFormFieldValues(Form $form, $fieldName)
-    {
-        $strField = $this->getSubmissionFormFieldName($fieldName);
-        $values = [];
-        if ($form->has($strField)) {
-            $fields = $form->get($strField);
-            // $form->get returns an array for fields with names ending in []
-            if (!is_array($fields)) {
-                $fields = [$fields];
-            }
-            foreach ($fields as $field) {
-                if (!$field->hasValue()) {
-                    continue;
-                }
-                // $field->getValue may return an array (multi-select for example) or a string value
-                $values = array_merge($values, (array) $field->getValue());
-            }
-        }
-        return $values;
-    }
-
     protected function proceedSeeInField(Crawler $fields, $value)
     {
-        $form = $this->getFormFor($fields);
-        $fieldName = $fields->attr('name');
-        $testValues = $this->getFormFieldValues($form, $fieldName);
+        $testValues = $this->proceedGetValueFromField($fields);
+        if (!is_array($testValues)) {
+            $testValues = [$testValues];
+        }
         if (is_bool($value) && $value === true && !empty($testValues)) {
             $value = reset($testValues);
         } elseif (empty($testValues)) {
@@ -406,7 +494,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             'Contains',
             $value,
             $testValues,
-            "Failed testing for '$value' in $fieldName's value: " . var_export($testValues, true)
+            sprintf('Failed asserting that `%s` is in %s\'s value: %s', $value, $fields->nodeName(), var_export($testValues, true))
         ];
     }
 
@@ -866,15 +954,18 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function sendAjaxRequest($method, $uri, $params = [])
     {
-        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest']);
+        $this->clientRequest($method, $uri, $params, [], ['HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'], null, false);
     }
 
-    protected function debugResponse()
+    /**
+     * @param $url
+     */
+    protected function debugResponse($url)
     {
-        $this->debugSection('Page', $this->client->getHistory()->current()->getUri());
+        $this->debugSection('Page', $url);
         $this->debugSection('Response', $this->getResponseStatusCode());
-        $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
-        $this->debugSection('Headers', $this->client->getInternalResponse()->getHeaders());
+        $this->debugSection('Request Cookies', $this->getRunningClient()->getInternalRequest()->getCookies());
+        $this->debugSection('Response Headers', $this->getRunningClient()->getInternalResponse()->getHeaders());
     }
 
     protected function getResponseStatusCode()
@@ -975,12 +1066,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $result = [];
         $nodes = $this->match($cssOrXpath);
+        
         foreach ($nodes as $node) {
-            if ($attribute) {
-                $result[] = $node->attr($attribute);
-                continue;
+            if ($attribute !== null) {
+                $result[] = $node->getAttribute($attribute);
+            } else {
+                $result[] = $node->textContent;
             }
-            $result[] = $node->text();
         }
         return $result;
     }
@@ -996,35 +1088,45 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         if (!$nodes->count()) {
             throw new ElementNotFound($field, 'Field');
         }
+        return $this->proceedGetValueFromField($nodes);
+    }
 
+    /**
+     * @param Crawler $nodes
+     * @return array|mixed|string
+     */
+    protected function proceedGetValueFromField(Crawler $nodes)
+    {
+        $values = [];
         if ($nodes->filter('textarea')->count()) {
-            return $nodes->filter('textarea')->text();
-        }
-        if ($nodes->filter('input')->count()) {
-            return $nodes->filter('input')->attr('value');
+            return (new TextareaFormField($nodes->filter('textarea')->getNode(0)))->getValue();
         }
 
-        if ($nodes->filter('select')->count()) {
-            /** @var  \Symfony\Component\DomCrawler\Crawler $select */
-            $select      = $nodes->filter('select');
-            $isMultiple  = (bool)$select->attr('multiple');
-            $results     = [];
-            foreach ($select->children() as $option) {
-                /** @var  \DOMElement $option */
-                if ($option->getAttribute('selected') == 'selected') {
-                    $val = $option->getAttribute('value');
-                    if (!$isMultiple) {
-                        return $val;
-                    }
-                    $results[] = $val;
+        if ($nodes->filter('input')->count()) {
+            $input = $nodes->filter('input');
+            if ($input->attr('type') == 'checkbox' or $input->attr('type') == 'radio') {
+                $values = [];
+                $input = $nodes->filter('input:checked');
+                foreach ($input as $checkbox) {
+                    $values[] = $checkbox->getAttribute('value');
                 }
+                return $values;
             }
-            if (!$isMultiple) {
-                return null;
-            }
-            return $results;
+            return (new InputFormField($nodes->filter('input')->getNode(0)))->getValue();
         }
-        $this->fail("Element $field is not a form field or does not contain a form field");
+        if ($nodes->filter('select')->count()) {
+            $field = new ChoiceFormField($nodes->filter('select')->getNode(0));
+            $options = $nodes->filter('option[selected]');
+            foreach ($options as $option) {
+                $values[] = $option->getAttribute('value');
+            }
+            if (!$field->isMultiple()) {
+                return reset($values);
+            }
+            return $values;
+        }
+
+        $this->fail("Element $nodes is not a form field or does not contain a form field");
     }
 
     public function setCookie($name, $val, array $params = [])
@@ -1032,7 +1134,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $cookies = $this->client->getCookieJar();
         $params = array_merge($this->defaultCookieParameters, $params);
 
-        $expires      = isset($params['expires']) ? $params['expires'] : null;
+        $expires      = isset($params['expiry']) ? $params['expiry'] : null; // WebDriver compatibility
+        $expires      = isset($params['expires']) && !$expires ? $params['expires'] : null;
         $path         = isset($params['path'])    ? $params['path'] : null;
         $domain       = isset($params['domain'])  ? $params['domain'] : '';
         $secure       = isset($params['secure'])  ? $params['secure'] : false;
@@ -1040,13 +1143,13 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
 
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     public function grabCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $cookies = $this->getRunningClient()->getCookieJar()->get($cookie, $params['path'], $params['domain']);
         if (!$cookies) {
             return null;
@@ -1057,14 +1160,14 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     public function seeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNotNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
     public function dontSeeCookie($cookie, array $params = [])
     {
         $params = array_merge($this->defaultCookieParameters, $params);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
         $this->assertNull($this->client->getCookieJar()->get($cookie, $params['path'], $params['domain']));
     }
 
@@ -1072,7 +1175,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $params = array_merge($this->defaultCookieParameters, $params);
         $this->client->getCookieJar()->expire($name, $params['path'], $params['domain']);
-        $this->debugSection('Cookies', $this->client->getCookieJar()->all());
+        $this->debugCookieJar();
     }
 
     private function stringifySelector($selector)
@@ -1204,7 +1307,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
             $constraint,
             $message
         );
@@ -1214,7 +1317,27 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->getRunningClient()->getInternalResponse()->getContent()), ENT_QUOTES),
+            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThat(
+            $this->_getResponseContent(),
+            $constraint,
+            $message
+        );
+    }
+
+    protected function assertPageSourceNotContains($needle, $message = '')
+    {
+        $constraint = new PageConstraint($needle, $this->_getCurrentUri());
+        $this->assertThatItsNot(
+            $this->_getResponseContent(),
             $constraint,
             $message
         );
@@ -1282,31 +1405,6 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         return $requestParams;
     }
 
-    protected function clientRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true)
-    {
-        if ($this instanceof Framework) {
-            if ($method !== 'GET' && $content === null && !empty($parameters)) {
-                $content = http_build_query($parameters);
-            }
-
-            if (preg_match('#^(//|https?://(?!localhost))#', $uri) && (!$this instanceof SupportsDomainRouting)) {
-                throw new ExternalUrlException(get_class($this) . " can't open external URL: " . $uri);
-            }
-        }
-
-        if (!PropertyAccess::readPrivateProperty($this->client, 'followRedirects')) {
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
-            return $result;
-        } else {
-            $maxRedirects = PropertyAccess::readPrivateProperty($this->client, 'maxRedirects', 'Symfony\Component\BrowserKit\Client');
-            $this->client->followRedirects(false);
-            $result = $this->client->request($method, $uri, $parameters, $files, $server, $content, $changeHistory);
-            $this->debugResponse();
-            return $this->redirectIfNecessary($result, $maxRedirects, 0);
-        }
-    }
-
     /**
      * @param $result
      * @return mixed
@@ -1322,7 +1420,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
             $this->debugSection('Redirecting to', $locationHeader);
 
             $result = $this->client->followRedirect();
-            $this->debugResponse();
+            $this->debugResponse($locationHeader);
             return $this->redirectIfNecessary($result, $maxRedirects, $redirectCount + 1);
         }
         $this->client->followRedirects(true);
@@ -1374,5 +1472,33 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
 
         $uri = $iframe->getNode(0)->getAttribute('src');
         $this->amOnPage($uri);
+    }
+
+    /**
+     * Moves back in history.
+     * 
+     * @param int $numberOfSteps (default value 1)
+     */
+    public function moveBack($numberOfSteps = 1)
+    {
+        if (!is_int($numberOfSteps) || $numberOfSteps < 1) {
+            throw new \InvalidArgumentException('numberOfSteps must be positive integer');
+        }
+        try {
+            $history = $this->getRunningClient()->getHistory();
+            for ($i = $numberOfSteps; $i > 0; $i--) {
+                $request = $history->back();
+            }
+        } catch (\LogicException $e) {
+            throw new \InvalidArgumentException('numberOfSteps is set to ' . $numberOfSteps . ', but there are only ' . ($numberOfSteps - $i) . ' previous steps in the history');
+        }
+        $this->_loadPage($request->getMethod(),$request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent());
+    }
+
+    protected function debugCookieJar()
+    {
+        $cookies = $this->client->getCookieJar()->all();
+        $cookieStrings = array_map('strval', $cookies);
+        $this->debugSection('Cookie Jar', $cookieStrings);
     }
 }

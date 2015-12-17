@@ -41,7 +41,6 @@ class Memcache extends CodeceptionModule
     {
         if (class_exists('\Memcache')) {
             $this->memcache = new \Memcache;
-            $this->memcache->close();
             $this->memcache->connect($this->config['host'], $this->config['port']);
         } elseif (class_exists('\Memcached')) {
             $this->memcache = new \Memcached;
@@ -54,6 +53,14 @@ class Memcache extends CodeceptionModule
     public function _after(TestCase $test)
     {
         $this->memcache->flush();
+        switch (get_class($this->memcache)) {
+            case 'Memcache':
+                $this->memcache->close();
+                break;
+            case 'Memcached':
+                $this->memcache->quit();
+                break;
+        }
     }
 
     /**

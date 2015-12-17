@@ -4,6 +4,7 @@ php:
   - 5.4
   - 5.5
   - 5.6
+  - 7
   - hhvm
 
 matrix:
@@ -25,29 +26,24 @@ services:
 
 sudo: false
 
-cache:
-  directories:
-    - vendor
-    - $HOME/.composer/cache
-
 install:
   # use hhvm-serve instead of builtin server
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || mkdir -p /home/travis/go/{src,bin,pkg}'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export GOPATH="/home/travis/go"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
-  - wget http://selenium-release.storage.googleapis.com/2.42/selenium-server-standalone-2.42.2.jar
-  - composer global require "fxp/composer-asset-plugin:~1.0.3"
-  - composer self-update
+  - wget http://selenium-release.storage.googleapis.com/2.48/selenium-server-standalone-2.48.2.jar
+  - composer self-update && composer --version
+  - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0; fi' # install old guzzle
   - composer install --prefer-source
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git -b phalcon-v2.0.8'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || (git clone -q --depth=1 https://github.com/phalcon/forum.git frameworks-phalcon; cp frameworks-phalcon/tests/config/config.php.dist frameworks-phalcon/app/config/config.php)'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || composer install -d frameworks-phalcon --no-dev  --prefer-source'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || git clone -q --depth=1 https://github.com/phalcon/cphalcon.git'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || (cd cphalcon/ext; export CFLAGS="-g3 -O1 -fno-delete-null-pointer-checks -Wall"; phpize &> /dev/null && ./configure --silent --enable-phalcon &> /dev/null && make --silent -j4 > /dev/null && make --silent install && phpenv config-add ../unit-tests/ci/phalcon.ini &> /dev/null && cd ../..;)'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || git clone -q --depth=1 https://github.com/Codeception/phalcon-demo.git frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || composer install -d frameworks-phalcon --no-dev  --prefer-source'
   # Laravel 4
   - git clone -q  -b codeception-2.1 https://github.com/Codeception/sample-l4-app.git frameworks-laravel
   - composer install -d frameworks-laravel --no-dev  --prefer-source
@@ -55,7 +51,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b codeception-2.1 https://github.com/janhenkgerritsen/codeception-laravel5-sample.git frameworks-l5'
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-l5 --no-dev  --prefer-dist'
   # Symfony
-  - git clone -q -b symfony-old-demo https://github.com/Codeception/symfony-demo.git frameworks-symfony
+  - git clone -q -b 2.1 https://github.com/Codeception/symfony-demo.git frameworks-symfony
   - composer install -d frameworks-symfony --no-dev --prefer-source
   # ZF1
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf1-tests frameworks-zf1
@@ -63,12 +59,15 @@ install:
   # ZF2
   - git clone -q -b 2.1 --recursive https://github.com/Naktibalda/codeception-zf2-tests frameworks-zf2
   - composer install -d frameworks-zf2 --no-dev  --prefer-source
+  # Zend Expressive
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || git clone -q -b master --recursive https://github.com/Naktibalda/codeception-zend-expressive-tests frameworks-zend-expressive'
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || composer install -d frameworks-zend-expressive --no-dev  --prefer-source'
 
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
-  - java -jar selenium-server-standalone-2.42.2.jar -port 4444 >/dev/null 2>&1 &
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
+  - java -jar selenium-server-standalone-2.48.2.jar -port 4444 >/dev/null 2>&1 &
   # create config file for hhvm
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.port = 9000" >>/tmp/hhvm.ini'
@@ -90,8 +89,8 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data/app --listen=127.0.0.1:8000 >/dev/null 2>&1 &'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm-serve --document-root=tests/data --listen=127.0.0.1:8010  >/dev/null 2>&1 &'
   # Phalcon
-  - mysql -e 'CREATE DATABASE phosphorum CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || cat frameworks-phalcon/schemas/forum.sql | mysql phosphorum'
+  - mysql -e 'CREATE DATABASE phalcon_demo CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || cat frameworks-phalcon/schemas/phalcon_demo.sql | mysql phalcon_demo'
   # Laravel 4
   - touch frameworks-laravel/app/database/database.sqlite
   - php frameworks-laravel/artisan migrate --seed -n --force
@@ -103,20 +102,22 @@ before_script:
   - php frameworks-symfony/app/console doctrine:fixtures:load -n --env test
   # Build
   - php codecept build -c frameworks-yii-basic/tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept build -c frameworks-phalcon'
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || php codecept build -c frameworks-phalcon'
   - php codecept build -c frameworks-laravel
-  - php codecept build -c frameworks-symfony
+  - php codecept build -c frameworks-symfony/src/AppBundle
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-l5'
   - php codecept build -c frameworks-zf1
   - php codecept build -c frameworks-zf2
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept build -c frameworks-zend-expressive'
 
 script:
   - php codecept run cli,unit,web # self tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run coverage'  # run coverage tests on php only
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] ||  php codecept run coverage'  # run coverage tests on php only
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
-  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
-  - php codecept run functional -c frameworks-symfony # Symfony Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7" ]] || php codecept run functional -c frameworks-phalcon' # Phalcon Tests
+  - php codecept run functional -c frameworks-symfony/src/AppBundle # Symfony Tests
   - php codecept run functional -c frameworks-zf1 # ZF1 Tests
   - php codecept run functional -c frameworks-zf2 # ZF2 Tests
+  - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run functional -c frameworks-zend-expressive' # Zend Expressive Tests

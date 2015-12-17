@@ -310,12 +310,34 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->module->_setConfig(array('url' => 'http://google.com', 'curl' => array('CURLOPT_NOBODY' => true)));
         $this->module->_initialize();
         if (method_exists($this->module->guzzle, 'getConfig')) {
-            $config = $this->module->guzzle->getConfig('config');
+            $config = $this->module->guzzle->getConfig();
         } else {
             $config = $this->module->guzzle->getDefaultOption('config');
         }
         $this->assertArrayHasKey('curl', $config);
-        $this->assertArrayHasKey('CURLOPT_NOBODY', $config['curl']);
+        $this->assertArrayHasKey(CURLOPT_NOBODY, $config['curl']);
+    }
+
+
+    public function testCurlSslOptions()
+    {
+        $this->module->_setConfig(array(
+            'url' => 'https://google.com',
+            'curl' => array(
+                'CURLOPT_NOBODY' => true,
+                'CURLOPT_SSL_CIPHER_LIST' => 'TLSv1',
+            )));
+        $this->module->_initialize();
+        if (method_exists($this->module->guzzle, 'getConfig')) {
+            $config = $this->module->guzzle->getConfig();
+        } else {
+            $config = $this->module->guzzle->getDefaultOption('config');
+        }
+
+        $this->assertArrayHasKey('curl', $config);
+        $this->assertArrayHasKey(CURLOPT_SSL_CIPHER_LIST, $config['curl']);
+        $this->module->amOnPage('/');
+        $this->assertSame('', $this->module->_getResponseContent(), 'CURLOPT_NOBODY setting is not respected');
     }
 
     public function testHttpAuth()
@@ -446,5 +468,37 @@ class PhpBrowserTest extends TestsForBrowsers
       $this->module->amOnPage('/unset-cookie');
       $this->module->seeResponseCodeIs(200);
       $this->module->dontSeeCookie('a');
+    }
+
+    public function testRequestApi()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleException');
+        $response = $this->module->_request('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->assertInternalType('string', $response);
+        $this->assertContains('Welcome to test app', $response);
+        $this->module->click('Welcome to test app'); // page not loaded
+    }
+
+    public function testLoadPageApi()
+    {
+        $this->module->_loadPage('POST', '/form/try', ['user' => 'davert']);
+        $data = data::get('form');
+        $this->assertEquals('davert', $data['user']);
+        $this->module->see('Welcome to test app');
+        $this->module->click('More info');
+        $this->module->seeInCurrentUrl('/info');
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2408
+     */
+    public function testClickFailure()
+    {
+        $this->module->amOnPage('/info');
+        $this->setExpectedException('Codeception\Exception\ElementNotFound',
+            "'Sign In!' is invalid CSS and XPath selector and Link or Button element with 'name=Sign In!' was not found");
+        $this->module->click('Sign In!');
     }
 }

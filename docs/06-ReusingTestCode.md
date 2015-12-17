@@ -78,7 +78,7 @@ class AcceptanceTester extends \Codeception\Actor
     {
         $I = $this;
         $I->amOnPage('/login');
-        $I->submitForm('#loginForm' [
+        $I->submitForm('#loginForm', [
             'login' => $name, 
             'password' => $password
         ]);
@@ -161,7 +161,7 @@ In tests you can use a StepObject by instantiating `Step\Acceptance\Admin` inste
 
 ```php
 <?php
-use Step/Acceptance/Admin as AdminTester;
+use Step\Acceptance\Admin as AdminTester;
 
 $I = new AdminTester($scenario);
 $I->loginAsAdmin();
@@ -306,7 +306,7 @@ class UserCest
 
 The dependency injection container can construct any object that require any known class type. For instance, `Page\Login` required `AcceptanceTester`, and so it was injected into `Page\Login` constructor, and PageObject was created and passed into method arguments. You should specify explicitly the types of required objects for Codeception to know what objects should be created for a test. Dependency Injection will be described in the next chapter.
 
-## Modules and Helpers
+## Helpers
 
 In the examples above we only grouped actions into one. What happens when we need to create a custom action? 
 In this case it's a good idea to define missing actions or assertion commands in custom modules, which are called Helpers. They can be found in the `tests/_support/Helper` directory.
@@ -427,10 +427,11 @@ function seeNumResults($num)
 {
     // retrieving webdriver session
     /**@var $table \Facebook\WebDriver\WebDriverElement */
-    $table = $this->getModule('WebDriver')->_findElements('#result');
+    $elements = $this->getModule('WebDriver')->_findElements('#result');
+    $this->assertNotEmpty($elements);
+    $table = reset($elements);
     $this->assertEquals('table', $table->getTagName());
     $results = $table->findElements('tr');
-
     // asserting that table contains exactly $num rows
     $this->assertEquals($num, count($results));
 }

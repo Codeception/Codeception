@@ -13,6 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Creates empty Helper class.
  *
  * * `codecept g:helper MyHelper`
+ * * `codecept g:helper "My\Helper"`
  *
  */
 class GenerateHelper extends Command
@@ -23,7 +24,7 @@ class GenerateHelper extends Command
     protected function configure()
     {
         $this->setDefinition([
-            new InputArgument('name', InputArgument::REQUIRED, 'suite to be generated'),
+            new InputArgument('name', InputArgument::REQUIRED, 'helper name'),
             new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
     }
@@ -48,6 +49,4 @@ class GenerateHelper extends Command
             $output->writeln("<error>Error creating helper $filename</error>");
         }
     }
-
-
 }

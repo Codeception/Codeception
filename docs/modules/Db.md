@@ -96,13 +96,13 @@ Example:
 
 ``` php
 <?php
-$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+$I->dontSeeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
 ```
 Fails if such user was found.
 
@@ -123,7 +123,7 @@ $mail = $I->grabFromDatabase('users', 'email', array('name' => 'Davert'));
 
 ```
 
-@version 1.1
+ * `Available since` 1.1
 
  * `param`       $table
  * `param`       $column
@@ -137,7 +137,7 @@ Inserts SQL record into database. This record will be erased after the test.
 
 ``` php
 <?php
-$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles@davis.com'));
+$I->haveInDatabase('users', array('name' => 'miles', 'email' => 'miles * `davis.com'));` 
 ?>
 ```
 
@@ -156,13 +156,13 @@ Example:
 
 ``` php
 <?php
-$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert@mail.com'));
+$I->seeInDatabase('users', array('name' => 'Davert', 'email' => 'davert * `mail.com'));` 
 
 ```
 Will generate:
 
 ``` sql
-SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert@mail.com'
+SELECT COUNT(*) FROM `users` WHERE `name` = 'Davert' AND `email` = 'davert * `mail.com'` 
 ```
 Fails if no such user found.
 
@@ -180,7 +180,7 @@ $I->seeNumRecords(1, 'users', ['name' => 'davert'])
 ?>
 ```
 
- * `param int`    $num      Expected number
+ * `param int`    $expectedNumber      Expected number
  * `param string` $table    Table name
  * `param array`  $criteria Search criteria [Optional]
 

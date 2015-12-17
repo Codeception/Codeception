@@ -1,9 +1,9 @@
-<?php 
+<?php
 namespace Codeception\Util;
 
 use Codeception\Exception\ElementNotFound;
 use Codeception\Exception\MalformedLocatorException;
-use Symfony\Component\CssSelector\CssSelector;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\ParseException;
 use Codeception\Util\Soap as XmlUtils;
 
@@ -37,7 +37,7 @@ class XmlStructure
     {
         $xpath = new \DOMXpath($this->xml);
         try {
-            $selector = CssSelector::toXPath($cssOrXPath);
+            $selector = (new CssSelectorConverter())->toXPath($cssOrXPath);
             $els = $xpath->query($selector);
             if ($els) {
                 return $els->item(0);
@@ -50,8 +50,8 @@ class XmlStructure
         }
         throw new ElementNotFound($cssOrXPath);
     }
-
     /**
+
      * @param $xml
      * @return bool
      */

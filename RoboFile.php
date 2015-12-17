@@ -265,12 +265,11 @@ class RoboFile extends \Robo\Tasks
                     };
 
                     if (!trim($text)) return $title."__not documented__\n";
-                    $text = str_replace(['@since'], [' * available since version'], $text);
-                    $text = preg_replace('~@throws(.*?)$~', '', $text);
-                    $text = preg_replace('~@part(.*?)$~', '* Part: **$1**', $text);
+                    $text = str_replace(['@since', '@version'], [' * `Available since`', ' * `Available since`'], $text);
+                    $text = str_replace('@part ', ' * `[Part]` ', $text);
                     $text = str_replace("@return mixed\n", '', $text);
-                    $text = preg_replace('~@return (.*?)$~', ' * `return` $1', $text);
-                    $text = str_replace(["\n @"], ["\n * "], $text);
+                    $text = preg_replace('~@return (.*?)~', ' * `return` $1', $text);
+                    $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
                     return $title . $text;
                 })->processMethodSignature(false)
                 ->reorderMethods('ksort')
@@ -294,7 +293,7 @@ class RoboFile extends \Robo\Tasks
                     return $text . "\n";
                 })->processMethodDocBlock(function(ReflectionMethod $r, $text) use ($utilName, $source) {
                     $line = $r->getStartLine();
-                    $text = preg_replace("~@(.*?)([$\s])~",' * `$1` $2', $text);
+                    $text = preg_replace("~@(.*?)([$\s])~", ' * `$1` $2', $text);
                     $text .= "\n[See source]($source#L$line)";
                     return "\n" . $text."\n";
                 })
@@ -363,7 +362,12 @@ class RoboFile extends \Robo\Tasks
 
         $this->taskGitStack()->add('-A')->run();
 
-        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sortByName()->in('releases')));
+        $sortByVersion = function (\SplFileInfo $a, \SplFileInfo $b)
+        {
+            return version_compare($a->getBaseName(), $b->getBaseName());
+        };
+
+        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sort($sortByVersion)->in('releases')));
         $branch = null;
         $releaseFile = $this->taskWriteToFile('builds.markdown')
             ->line('---')
@@ -470,11 +474,7 @@ class RoboFile extends \Robo\Tasks
             // set default language in order not to leave unparsed code inside '```'
 
             $matches = [];
-            $title = "";
-            // Extracting page h1 to re-use in <title>
-            if (preg_match('/^# (.*)$/m', $contents, $matches)) {
-              $title = $matches[1];
-            }
+            $title = $name;
             $contents = "---\nlayout: doc\ntitle: ".($title!="" ? $title." - " : "")."Codeception - Documentation\n---\n\n".$contents;
 
             file_put_contents('package/site/' .$newfile, $contents);

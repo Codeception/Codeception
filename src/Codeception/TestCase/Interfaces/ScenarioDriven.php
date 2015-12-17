@@ -13,4 +13,6 @@ interface ScenarioDriven
     public function getScenarioText($format = 'text');
 
     public function preload();
+
+    public function getRawBody();
 }

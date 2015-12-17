@@ -54,6 +54,21 @@ It allows you to run Selenium tests on a server without a GUI installed.
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+
+
+
+## SauceLabs.com Integration
+
+SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
+enabling you to test locally hosted sites from their servers.
+
+1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+
+[CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
+
+
 ## Locating Elements
 
 Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
@@ -123,8 +138,8 @@ PhpBrowser and Framework modules return `Symfony\Component\DomCrawler\Crawler` i
 *hidden API method, expected to be used from Helper classes*
  
 Uri of currently opened page.
-@return string
-
+ * `return` string
+ * `throws`  ModuleException
 
 
 ### _getUrl
@@ -132,7 +147,7 @@ Uri of currently opened page.
 *hidden API method, expected to be used from Helper classes*
  
 Returns URL of a host.
-
+ * `throws`  ModuleConfigException
 
 
 ### _savePageSource
@@ -224,7 +239,7 @@ $I->appendField('#myTextField', 'appended');
 
  * `param string` $field
  * `param string` $value
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### attachFile
@@ -234,7 +249,7 @@ Attaches a file relative to the Codeception data directory to the given file upl
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[@type="file"]', 'prices.xls');
+$I->attachFile('input[ * `type="file"]',`  'prices.xls');
 ?>
 ```
 
@@ -281,7 +296,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[@type=submit]');
+$I->click('//form/*[ * `type=submit]');` 
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -298,7 +313,7 @@ $I->click(['link' => 'Login']);
 Performs contextual click with the right mouse button on an element.
 
  * `param` $cssOrXPath
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### dontSee
@@ -420,7 +435,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[@name=search]','Search');
+$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -523,7 +538,7 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 Performs a double-click on an element matched by CSS or XPath.
 
  * `param` $cssOrXPath
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### dragAndDrop
@@ -579,8 +594,8 @@ Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[@type='text']", "Hello World!");
-$I->fillField(['name' => 'email'], 'jon@mail.com');
+$I->fillField("//input[ * `type='text']",`  "Hello World!");
+$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
 ?>
 ```
 
@@ -640,7 +655,29 @@ $uri = $I->grabFromCurrentUrl();
 
 
 ### grabMultiple
-__not documented__
+ 
+Grabs either the text content, or attribute values, of nodes
+matched by $cssOrXpath and returns them as an array.
+
+```html
+<a href="#first">First</a>
+<a href="#second">Second</a>
+<a href="#third">Third</a>
+```
+
+```php
+<?php
+// would return ['First', 'Second', 'Third']
+$aLinkText = $I->grabMultiple('a');
+
+// would return ['#first', '#second', '#third']
+$aLinks = $I->grabMultiple('a', 'href');
+?>
+```
+
+ * `param` $cssOrXpath
+ * `param` $attribute
+ * `return` string[]
 
 
 ### grabTextFrom
@@ -669,7 +706,7 @@ If a fuzzy locator is used, the field is found by field name, CSS, and XPath.
 <?php
 $name = $I->grabValueFrom('Name');
 $name = $I->grabValueFrom('input[name=username]');
-$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[@name = 'username']');
+$name = $I->grabValueFrom('descendant-or-self::form/descendant::input[ * `name`  = 'username']');
 $name = $I->grabValueFrom(['name' => 'username']);
 ?>
 ```
@@ -680,10 +717,8 @@ $name = $I->grabValueFrom(['name' => 'username']);
 
 ### loadSessionSnapshot
  
-Loads cookies from saved snapshot.
-
- * `param` $name
-@see saveSessionSnapshot
+ * `param string` $name
+ * `return` bool
 
 
 ### makeScreenshot
@@ -732,7 +767,7 @@ $I->moveMouseOver(['css' => '.checkout'], 20, 50);
  * `param int` $offsetX
  * `param int` $offsetY
 
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### pauseExecution
@@ -756,14 +791,14 @@ For special keys use key constants from WebDriverKeys class.
 $I->pressKey('#page','a'); // => olda
 $I->pressKey('#page',array('ctrl','a'),'new'); //=> new
 $I->pressKey('#page',array('shift','111'),'1','x'); //=> old!!!1x
-$I->pressKey('descendant-or-self::*[@id='page']','u'); //=> oldu
+$I->pressKey('descendant-or-self::*[ * `id='page']','u');`  //=> oldu
 $I->pressKey('#name', array('ctrl', 'a'), \Facebook\WebDriver\WebDriverKeys::DELETE); //=>''
 ?>
 ```
 
  * `param` $element
  * `param` $char Can be char or array with modifier. You can provide several chars.
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### reloadPage
@@ -797,33 +832,7 @@ $I->resizeWindow(800, 600);
 
 ### saveSessionSnapshot
  
-Saves current cookies into named snapshot in order to restore them in other tests
-This is useful to save session state between tests.
-For example, if user needs log in to site for each test this scenario can be executed once
-while other tests can just restore saved cookies.
-
-``` php
-<?php
-// inside AcceptanceTester class:
-
-public function login()
-{
-     // if snapshot exists - skipping login
-     if ($I->loadSessionSnapshot('login')) return;
-
-     // logging in
-     $I->amOnPage('/login');
-     $I->fillField('name', 'jon');
-     $I->fillField('password', '123345');
-     $I->click('Login');
-
-     // saving snapshot
-     $I->saveSessionSnapshot('login');
-}
-?>
-```
-
- * `param` $name
+ * `param string` $name
 
 
 ### see
@@ -851,7 +860,7 @@ Checks that the specified checkbox is checked.
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
+$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
 ?>
 ```
 
@@ -921,7 +930,7 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
-@return
+ * `return` 
 
 
 ### seeElementInDOM
@@ -964,7 +973,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[@name=search]','Search');
+$I->seeInField('//form/*[ * `name=search]','Search');` 
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -1026,9 +1035,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[@id=my-form]', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
 ?>
 ```
 
@@ -1101,6 +1110,10 @@ $I->seeNumberOfElements('tr', [0,10]); //between 0 and 10 elements
 - array: range of numbers [0,10]
 
 
+### seeNumberOfElementsInDOM
+__not documented__
+
+
 ### seeOptionIsSelected
  
 Checks that the given option is selected.
@@ -1124,7 +1137,7 @@ Selects an option in a select tag or in radio button group.
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[@name=account]', 'Monthly');
+$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
 ?>
 ```
 
@@ -1238,9 +1251,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
+$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[@id=my-form]', $form);
+$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
 ?>
 ```
 
@@ -1387,7 +1400,7 @@ __not documented__
 Wait for $timeout seconds.
 
  * `param int` $timeout secs
-
+ * `throws`  \Codeception\Exception\TestRuntimeException
 
 
 ### waitForElement
@@ -1404,7 +1417,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
-
+ * `throws`  \Exception
 
 
 ### waitForElementChange
@@ -1424,7 +1437,7 @@ $I->waitForElementChange('#menu', function(WebDriverElement $el) {
  * `param` $element
  * `param \Closure` $callback
  * `param int` $timeout seconds
-
+ * `throws`  \Codeception\Exception\ElementNotFound
 
 
 ### waitForElementNotVisible
@@ -1440,7 +1453,7 @@ $I->waitForElementNotVisible('#agree_button', 30); // secs
 
  * `param` $element
  * `param int` $timeout seconds
-
+ * `throws`  \Exception
 
 
 ### waitForElementVisible
@@ -1457,7 +1470,7 @@ $I->click('#agree_button');
 
  * `param` $element
  * `param int` $timeout seconds
-
+ * `throws`  \Exception
 
 
 ### waitForJS
@@ -1492,6 +1505,6 @@ $I->waitForText('foo', 30, '.title'); // secs
  * `param string` $text
  * `param int` $timeout seconds
  * `param null` $selector
-
+ * `throws`  \Exception
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/WebDriver.php">Help us to improve documentation. Edit module reference</a></div>
