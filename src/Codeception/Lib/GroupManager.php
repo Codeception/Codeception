@@ -2,9 +2,9 @@
 namespace Codeception\Lib;
 
 use Codeception\Configuration;
-use Codeception\TestCase\Interfaces\Descriptive;
 use Codeception\TestCase\Interfaces\Reported;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\TestDescriptor;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 

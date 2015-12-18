@@ -12,7 +12,7 @@ use Codeception\TestCase\Shared\Dependencies;
 use Codeception\TestCase\Shared\ScenarioPrint;
 use Codeception\Util\Annotation;
 
-class Cest extends \Codeception\Lib\Test implements
+class Cest extends \Codeception\Test implements
     TestCase,
     ScenarioDriven,
     Configurable,

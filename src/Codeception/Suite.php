@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Lib;
+namespace Codeception;
 
 class Suite extends \PHPUnit_Framework_TestSuite
 {
