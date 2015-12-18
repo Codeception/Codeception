@@ -5,19 +5,15 @@ use Behat\Gherkin\Keywords\ArrayKeywords as GherkinArrayKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
 use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Parser as GherkinParser;
-use Codeception\Lib\Di;
-use Codeception\Lib\ModuleContainer;
-use Codeception\TestCase;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class Feature extends \Codeception\Lib\Test implements
-    TestCase,
-    TestCase\Interfaces\ScenarioDriven,
-    TestCase\Interfaces\Descriptive,
-    TestCase\Interfaces\Configurable
+class Feature extends \Codeception\Test implements
+    \Codeception\TestCase,
+    Interfaces\ScenarioDriven,
+    Interfaces\Descriptive,
+    Interfaces\Configurable
 {
-    use TestCase\Shared\Actor;
-    use TestCase\Shared\ScenarioPrint;
+    use Shared\Actor;
+    use Shared\ScenarioPrint;
 
     /**
      * @var FeatureNode;
