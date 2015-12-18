@@ -31,6 +31,7 @@
         "symfony/dom-crawler": "~2.7"
     },
     "require-dev": {
+        "behat/gherkin": "~4.4.0",
         "monolog/monolog": "~1.8",
         "facebook/php-sdk-v4": "~4.0",
         "videlalvaro/php-amqplib": "~2.4",
