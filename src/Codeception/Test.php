@@ -1,6 +1,7 @@
 <?php
-namespace Codeception\Lib;
+namespace Codeception;
 
+use Codeception\Lib\TestFeature;
 use Codeception\TestCase;
 
 abstract class Test implements TestCase

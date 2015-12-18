@@ -6,7 +6,7 @@ use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\Lib\Suite;
+use Codeception\Suite;
 use Codeception\TestCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

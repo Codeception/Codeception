@@ -1,7 +1,7 @@
 <?php
-namespace Codeception\Lib;
+namespace Codeception;
 
-use Codeception\Exception\TestParseException;
+use Codeception\Lib\Parser;
 use Codeception\TestCase\Cept;
 use Symfony\Component\Finder\Finder;
 

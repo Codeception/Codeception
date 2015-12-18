@@ -29,7 +29,7 @@ trait CodeCoverage
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
         } catch (\PHP_CodeCoverage_Exception $cce) {
-            if ($status === \Codeception\Lib\Test::STATUS_OK) {
+            if ($status === \Codeception\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);
             }
         }

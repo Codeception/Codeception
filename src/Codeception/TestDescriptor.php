@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Lib;
+namespace Codeception;
 
 use Codeception\TestCase\Interfaces\Descriptive;
 use Codeception\TestCase\Interfaces\Plain;

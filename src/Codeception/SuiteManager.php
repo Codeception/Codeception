@@ -8,8 +8,6 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
-use Codeception\Lib\TestDescriptor;
-use Codeception\Lib\TestLoader;
 use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -135,7 +133,7 @@ class SuiteManager
 
     protected function createSuite($name)
     {
-        $suite = new Lib\Suite();
+        $suite = new \Codeception\Suite();
         $suite->setBaseName($this->env ? substr($name, 0, strpos($name, '-' . $this->env)) : $name);
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
@@ -155,7 +153,7 @@ class SuiteManager
 
 
     /**
-     * @return \Codeception\Lib\Suite
+     * @return \Codeception\Suite
      */
     public function getSuite()
     {

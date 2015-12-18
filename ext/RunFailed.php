@@ -4,8 +4,8 @@ namespace Codeception\Extension;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
-use Codeception\Lib\TestDescriptor;
 use Codeception\TestCase;
+use Codeception\TestDescriptor;
 
 /**
  * Saves failed tests into tests/log/failed in order to rerun failed tests.

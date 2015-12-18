@@ -13,15 +13,15 @@ class CeptTest extends Codeception\TestCase\Test
 
         $this->assertEquals(
             'tests/acceptance/LoginCept.php',
-            \Codeception\Lib\TestDescriptor::getTestFileName($cept)
+            Codeception\TestDescriptor::getTestFileName($cept)
         );
         $this->assertEquals(
             'tests/acceptance/LoginCept.php',
-            \Codeception\Lib\TestDescriptor::getTestFullName($cept)
+            Codeception\TestDescriptor::getTestFullName($cept)
         );
         $this->assertEquals(
             'LoginCept',
-            \Codeception\Lib\TestDescriptor::getTestSignature($cept)
+            Codeception\TestDescriptor::getTestSignature($cept)
         );
     }
 

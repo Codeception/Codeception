@@ -6,10 +6,10 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\ExtensionException;
 use Codeception\Lib\Interfaces\ScreenshotSaver;
-use Codeception\Lib\TestDescriptor;
 use Codeception\Module\WebDriver;
 use Codeception\Step\Comment as CommentStep;
 use Codeception\TestCase;
+use Codeception\TestDescriptor;
 use Codeception\Util\FileSystem;
 use Codeception\Util\Template;
 

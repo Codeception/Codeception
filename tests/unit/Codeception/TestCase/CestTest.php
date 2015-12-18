@@ -27,15 +27,15 @@ class CestTest extends Codeception\TestCase\Test
 
         $this->assertEquals(
             'tests/acceptance/LoginCest.php:user',
-            \Codeception\Lib\TestDescriptor::getTestFullName($cept)
+            Codeception\TestDescriptor::getTestFullName($cept)
         );
         $this->assertEquals(
             'tests/acceptance/LoginCest.php',
-            \Codeception\Lib\TestDescriptor::getTestFileName($cept)
+            Codeception\TestDescriptor::getTestFileName($cept)
         );
         $this->assertEquals(
             'stdClass::user',
-            \Codeception\Lib\TestDescriptor::getTestSignature($cept)
+            Codeception\TestDescriptor::getTestSignature($cept)
         );
     }
 

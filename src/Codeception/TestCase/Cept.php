@@ -5,15 +5,15 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Exception\TestParseException;
 use Codeception\TestCase as CodeceptionTestCase;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
-use Codeception\TestCase\Interfaces\Descriptive;
-use Codeception\TestCase\Interfaces\Reported;
-use Codeception\TestCase\Interfaces\Plain;
 use Codeception\TestCase\Interfaces\Configurable;
+use Codeception\TestCase\Interfaces\Descriptive;
+use Codeception\TestCase\Interfaces\Plain;
+use Codeception\TestCase\Interfaces\Reported;
+use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\TestCase\Shared\Actor;
 use Codeception\TestCase\Shared\ScenarioPrint;
 
-class Cept extends \Codeception\Lib\Test implements
+class Cept extends \Codeception\Test implements
     CodeceptionTestCase,
     ScenarioDriven,
     Descriptive,
