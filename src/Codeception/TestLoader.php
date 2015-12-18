@@ -1,8 +1,10 @@
 <?php
 namespace Codeception;
 
-use Codeception\Lib\Parser;
-use Codeception\TestCase\Cept;
+use Codeception\TestCase\Loader\Cept as CeptLoader;
+use Codeception\TestCase\Loader\Cest as CestLoader;
+use Codeception\TestCase\Loader\Loader;
+use Codeception\TestCase\Loader\Test as TestCaseLoader;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -38,13 +40,18 @@ use Symfony\Component\Finder\Finder;
  */
 class TestLoader
 {
-    protected static $formats = ['Cest', 'Cept', 'Test'];
+    protected $formats = [];
     protected $tests = [];
     protected $path;
 
     public function __construct($path)
     {
         $this->path = $path;
+        $this->formats = [
+            new CeptLoader(),
+            new CestLoader(),
+            new TestCaseLoader(),
+        ];
     }
 
     public function getTests()
@@ -90,9 +97,11 @@ class TestLoader
     {
         $path = $this->makePath($path);
 
-        foreach (self::$formats as $format) {
-            if (preg_match("~$format.php$~", $path)) {
-                call_user_func([$this, "add$format"], $path);
+        foreach ($this->formats as $format) {
+            /** @var $format Loader  **/
+            if (preg_match($format->getPattern(), $path)) {
+                $format->loadTests($path);
+                $this->tests = $format->getTests();
                 return;
             }
         }
@@ -111,119 +120,16 @@ class TestLoader
     {
         $finder = Finder::create()->files()->sortByName()->in($this->path)->followLinks();
 
-        foreach (self::$formats as $format) {
+        foreach ($this->formats as $format) {
+            /** @var $format Loader  **/
             $formatFinder = clone($finder);
-            $testFiles = $formatFinder->name("*$format.php");
+            $testFiles = $formatFinder->name($format->getPattern());
             foreach ($testFiles as $test) {
                 $pathname = str_replace("//", "/", $test->getPathname());
-                call_user_func([$this, "add$format"], $pathname);
+                $format->loadTests($pathname);
+                $this->tests = array_merge($this->tests, $format->getTests());
             }
         }
     }
 
-    public function addTest($path)
-    {
-        Parser::load($path);
-        $testClasses = Parser::getClassesFromFile($path);
-
-        foreach ($testClasses as $testClass) {
-            $reflected = new \ReflectionClass($testClass);
-
-            if (!$reflected->isInstantiable()) {
-                continue;
-            }
-
-            foreach ($reflected->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-                $test = $this->createTestFromPhpUnitMethod($reflected, $method);
-                if (!$test) {
-                    continue;
-                }
-                $this->tests[] = $test;
-            }
-        }
-    }
-
-    public function addCept($file)
-    {
-        Parser::validate($file);
-        $name = $this->relativeName($file);
-
-        $cept = new Cept();
-        $cept->configName($name)
-            ->configFile($file);
-
-        $this->tests[] = $cept;
-    }
-
-    public function addCest($file)
-    {
-        Parser::load($file);
-        $testClasses = Parser::getClassesFromFile($file);
-
-        foreach ($testClasses as $testClass) {
-            if (substr($testClass, -strlen('Cest')) !== 'Cest') {
-                continue;
-            }
-            if (!(new \ReflectionClass($testClass))->isInstantiable()) {
-                continue;
-            }
-
-            $unit = new $testClass;
-
-            $methods = get_class_methods($testClass);
-            foreach ($methods as $method) {
-                $test = $this->createTestFromCestMethod($unit, $method, $file);
-                if (!$test) {
-                    continue;
-                }
-                $this->tests[] = $test;
-            }
-        }
-    }
-
-    protected function createTestFromPhpUnitMethod(\ReflectionClass $class, \ReflectionMethod $method)
-    {
-        if (!\PHPUnit_Framework_TestSuite::isTestMethod($method)) {
-            return;
-        }
-        $test = \PHPUnit_Framework_TestSuite::createTest($class, $method->name);
-
-        if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
-            foreach ($test->tests() as $t) {
-                $this->enhancePhpunitTest($t);
-            }
-            return $test;
-        }
-
-        $this->enhancePhpunitTest($test);
-        return $test;
-    }
-
-    protected function enhancePhpunitTest(\PHPUnit_Framework_TestCase $test)
-    {
-        $className = get_class($test);
-        $methodName = $test->getName(false);
-        $test->setDependencies(\PHPUnit_Util_Test::getDependencies($className, $methodName));
-
-        if (!$test instanceof \Codeception\TestCase) {
-            return;
-        }
-    }
-
-    protected function createTestFromCestMethod($cestInstance, $methodName, $file)
-    {
-        if ((strpos($methodName, '_') === 0) || ($methodName == '__construct')) {
-            return null;
-        }
-        $testClass = get_class($cestInstance);
-
-        $cest = new \Codeception\TestCase\Cest();
-        $cest->configName($methodName)
-            ->configFile($file)
-            ->config('testClassInstance', $cestInstance)
-            ->config('testMethod', $methodName);
-
-        $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
-        return $cest;
-    }
 }
