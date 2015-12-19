@@ -8,7 +8,9 @@ Codeception is a modern full-stack testing framework for PHP.
 Inspired by BDD, it provides you an absolutely new way of writing acceptance, functional and even unit tests.
 Powered by PHPUnit.
 
-[![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.1)](http://travis-ci.org/Codeception/Codeception) [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) [![Build Status](https://semaphoreci.com/api/v1/projects/70184807-8ef8-4778-866c-e284fff0029a/639484/badge.svg)](https://semaphoreci.com/codeception/codeception)
+| General |  Windows |  Webdriver  |
+| ------- | -------- | -------- |
+| [![Build Status](https://secure.travis-ci.org/Codeception/Codeception.png?branch=2.1)](http://travis-ci.org/Codeception/Codeception) | [![Build status](https://ci.appveyor.com/api/projects/status/ntjj9i4y67d1rb7y/branch/2.0?svg=true)](https://ci.appveyor.com/project/DavertMik/codeception/branch/2.1) | [![Build Status](https://semaphoreci.com/api/v1/projects/70184807-8ef8-4778-866c-e284fff0029a/639484/badge.svg)](https://semaphoreci.com/codeception/codeception)
 
 
 #### Contributions
