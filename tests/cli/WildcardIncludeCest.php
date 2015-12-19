@@ -1,6 +1,4 @@
 <?php
-use \CliGuy;
-
 class WildcardIncludeCest
 {
     /**
