@@ -66,6 +66,24 @@ use Symfony\Component\Finder\Finder;
  * * client - current Crawler instance
  * * container - dependency injection container instance
  *
+ * ## Parts
+ * 
+ * * services - allows to use Symfony2 DIC only with WebDriver or PhpBrowser modules. 
+ * 
+ * Usage example:
+ * 
+ * ```yaml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - Symfony2:
+ *             part: SERVICES
+ *         - Doctrine2:
+ *             depends: Symfony2
+ *       - WebDriver:
+ *             url: http://your-url.com
+ *             browser: phantomjs
+ * ```
  */
 class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 {
