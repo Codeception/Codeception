@@ -28,6 +28,7 @@
 * [Laravel] Refactored modules. See #2602. By @janhenkgerritsen
 * [Laravel5] Fix bug for `seeCurrentRouteIs` when routes don't match. See #2593. By @maddhatter
 * [PhpBrowser] Set curl options for Guzzle6 correctly. See #2533. By @Naktibalda
+* Fixed usage of GroupObject by unit tests. GroupObjects can skip tests by @davetmik. See #2617
 
 
 #### 2.1.4
