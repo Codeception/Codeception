@@ -141,6 +141,8 @@ class Parser
             self::includeFile($file);
         } catch (\ParseError $e) {
             throw new TestParseException($file, $e->getMessage());
+        } catch (\Exception $e) {
+            // file is valid otherwise
         }
     }
 
