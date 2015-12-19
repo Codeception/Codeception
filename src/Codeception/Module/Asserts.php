@@ -7,6 +7,7 @@ use \Codeception\Util\Shared\Asserts as SharedAsserts;
 /**
  * Special module for using asserts in your tests.
  *
+ * <div class="alert alert-warning">Warning: does not work on <a href="https://github.com/facebook/hhvm/issues/5786">HHVM</a></div>
  */
 class Asserts extends CodeceptionModule
 {
