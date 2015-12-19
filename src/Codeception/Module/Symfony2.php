@@ -80,7 +80,7 @@ use Symfony\Component\Finder\Finder;
  *             part: SERVICES
  *         - Doctrine2:
  *             depends: Symfony2
- *       - WebDriver:
+ *         - WebDriver:
  *             url: http://your-url.com
  *             browser: phantomjs
  * ```
