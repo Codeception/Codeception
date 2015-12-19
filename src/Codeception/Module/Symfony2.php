@@ -19,9 +19,8 @@ use Symfony\Component\Finder\Finder;
  *
  * ## Status
  *
- * * Maintainer: **davert**
+ * * Maintainer: **raistlin**
  * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
@@ -31,7 +30,8 @@ use Symfony\Component\Finder\Finder;
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * *
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire) 
+ * 
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
  * ```
