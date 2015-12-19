@@ -79,13 +79,13 @@ class Listener implements \PHPUnit_Framework_TestListener
         }
         try {
             $test->getScenario()->stopIfBlocked();
+            $this->startedTests[] = spl_object_hash($test);
+            $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
-            return;
+            $test->getTestResultObject()->addError($test, $e, 0);
         } catch (\PHPUnit_Framework_SkippedTestError $e) {
-            return;
+            $test->getTestResultObject()->addError($test, $e, 0);
         }
-        $this->startedTests[] = spl_object_hash($test);
-        $this->fire(Events::TEST_BEFORE, new TestEvent($test));
     }
 
     public function endTest(\PHPUnit_Framework_Test $test, $time)
