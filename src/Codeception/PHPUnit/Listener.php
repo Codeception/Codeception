@@ -62,12 +62,12 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        if (in_array($test, $this->skippedTests)) {
+        if (in_array(spl_object_hash($test), $this->skippedTests)) {
             return;
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $e));
-        $this->skippedTests[] = $test;
+        $this->skippedTests[] = spl_object_hash($test);
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
