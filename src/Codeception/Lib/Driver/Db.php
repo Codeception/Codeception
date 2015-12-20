@@ -57,6 +57,7 @@ class Db
             case 'pgsql':
                 return new PostgreSql($dsn, $user, $password);
             case 'mssql':
+            case 'dblib':
             case 'sqlsrv':
                 return new SqlSrv($dsn, $user, $password);
             case 'oci':
