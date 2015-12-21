@@ -43,6 +43,7 @@ install:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || export PATH="$GOPATH/bin:$PATH"'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || go get github.com/Naktibalda/hhvm-serve'
   - composer self-update && composer --version
+  - if [ -n "$CI_USER_TOKEN" ]; then composer config github-oauth.github.com ${$CI_USER_TOKEN}; fi;
   - composer global require "fxp/composer-asset-plugin:~1.1.1"
   - '[[ -z "$SYMFONY" ]] || composer require symfony/finder=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/yaml=~$SYMFONY --no-update --ignore-platform-reqs'
