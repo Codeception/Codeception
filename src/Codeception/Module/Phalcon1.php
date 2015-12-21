@@ -221,7 +221,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      */
     public function getApplication()
     {
-        $this->client->getApplication();
+        return $this->client->getApplication();
     }
 
     /**
@@ -454,7 +454,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
      * @param $routeName
      * @param array $params
      */
-    public function amOnRoute($routeName, $params = [])
+    public function amOnRoute($routeName, array $params = [])
     {
         if (!$this->di->has('url')) {
             $this->fail('Unable to resolve "url" service.');
