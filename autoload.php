@@ -30,9 +30,13 @@ if (!class_exists('RemoteWebDriver') and class_exists('Facebook\WebDriver\Remote
 
 @include_once __DIR__ . DIRECTORY_SEPARATOR . 'symfony-shim.php';
 // compat
-if (PHP_MAJOR_VERSION < 7 && false === interface_exists('Throwable', false)) {
-    interface Throwable {};
-    class ParseError extends \Exception {}
+if (PHP_MAJOR_VERSION < 7) {
+    if (false === interface_exists('Throwable', false)) {
+        interface Throwable {};
+    }
+    if (false === class_exists('ParseError', false)) {
+        class ParseError extends \Exception {};
+    }
 }
 // @codingStandardsIgnoreEnd
 
