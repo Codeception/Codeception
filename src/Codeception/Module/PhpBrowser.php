@@ -91,7 +91,6 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         'proxy',
         'expect',
         'version',
-        'cookies',
         'timeout',
         'connect_timeout'
     ];
@@ -248,6 +247,8 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
                 $curlOptions[constant($key)] = $val;
             }
         }
+
+        $this->setCookiesFromOptions();
 
         if ($this->isGuzzlePsr7) {
             $defaults['base_uri'] = $this->config['url'];
