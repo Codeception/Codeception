@@ -281,6 +281,36 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
+     * Checks that current url matches route. 
+     * Unlike seeCurrentRouteIs, this can matches without exact route parameters
+     * 
+     * ``` php
+     * <?php
+     * $I->seeCurrentRouteMatches(my_blog_pages);
+     * ?>
+     * ```
+     *
+     * @param $routeName
+     */
+    public function seeCurrentRouteMatches($routeName)
+    {
+        $router = $this->grabServiceFromContainer('router');
+        
+        $route = $router->getRouteCollection()->get($routeName);
+        if (!$route) {
+            $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
+        }
+        
+        try {
+            $matchedRouteName = $router->match($this->grabFromCurrentUrl())['_route'];
+        } catch(\Exception\ResourceNotFoundException $e) {
+            $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
+        }
+        
+        $this->assertEquals($matchedRouteName, $routeName);
+    }
+
+    /**
      * Checks if any email were sent by last request
      *
      * @throws \LogicException
