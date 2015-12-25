@@ -46,6 +46,18 @@ use GuzzleHttp\Client as GuzzleClient;
  *                auth: ['admin', '123345']
  *                curl:
  *                    CURLOPT_RETURNTRANSFER: true
+ *                cookies:
+ *                    cookie-1:
+ *                        Name: userName
+ *                        Value: john.doe
+ *                    cookie-2:
+ *                        Name: authToken
+ *                        Value: 1abcd2345
+ *                        Domain: subdomain.domain.com
+ *                        Path: /admin/
+ *                        Expires: 1292177455
+ *                        Secure: true
+ *                        HttpOnly: false
  *
  *
  * All SSL certification checks are disabled by default.
