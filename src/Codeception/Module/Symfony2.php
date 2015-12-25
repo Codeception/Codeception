@@ -281,12 +281,12 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     }
 
     /**
-     * Checks that current url matches route. 
+     * Checks that current url matches route.
      * Unlike seeCurrentRouteIs, this can matches without exact route parameters
-     * 
+     *
      * ``` php
      * <?php
-     * $I->seeCurrentRouteMatches(my_blog_pages);
+     * $I->seeCurrentRouteMatches('my_blog_pages');
      * ?>
      * ```
      *
@@ -303,7 +303,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         
         try {
             $matchedRouteName = $router->match($this->grabFromCurrentUrl())['_route'];
-        } catch(\Exception\ResourceNotFoundException $e) {
+        } catch (\Exception\ResourceNotFoundException $e) {
             $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
         }
         
