@@ -292,7 +292,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      *
      * @param $routeName
      */
-    public function seeCurrentRouteMatches($routeName)
+    public function seeInCurrentRoute($routeName)
     {
         $router = $this->grabServiceFromContainer('router');
         
