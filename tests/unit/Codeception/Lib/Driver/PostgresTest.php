@@ -59,6 +59,18 @@ class PostgresTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->postgres->getDbh()->query("SELECT * FROM pg_tables where schemaname = 'public'")->fetchAll());
     }
 
+    public function testCleanupDatabaseDeletesTypes()
+    {
+        $customTypes = ['composite_type', 'enum_type', 'range_type', 'base_type'];
+        foreach ($customTypes as $customType) {
+            $this->assertNotEmpty($this->postgres->getDbh()->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")->fetchAll());
+        }
+        $this->postgres->cleanup();
+        foreach ($customTypes as $customType) {
+            $this->assertEmpty($this->postgres->getDbh()->query("SELECT 1 FROM pg_type WHERE typname = '" . $customType . "';")->fetchAll());
+        }
+    }
+
     public function testLoadDump()
     {
         $res = $this->postgres->getDbh()->query("select * from users where name = 'davert'");
