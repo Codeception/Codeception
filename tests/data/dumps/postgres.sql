@@ -408,6 +408,30 @@ CREATE TABLE "order" (
 
 insert  into "order"("id","name","status") values (1,'main', 'open');
 
+-- Custom Types
+DROP TYPE IF EXISTS composite_type;
+CREATE TYPE composite_type AS (
+    a decimal,
+    b decimal
+);
+
+DROP TYPE IF EXISTS enum_type;
+CREATE TYPE enum_type AS ENUM (
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun'
+);
+
+DROP TYPE IF EXISTS range_type;
+CREATE TYPE range_type AS range (subtype = time);
+
+DROP TYPE IF EXISTS base_type;
+CREATE TYPE base_type;
+
 -- --
 -- PostgreSQL database dump complete
 --
