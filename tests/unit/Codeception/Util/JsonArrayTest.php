@@ -74,6 +74,23 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         $this->assertFalse($jsonArray->containsArray($expectedArray));
     }
 
+    public function testContainsArrayComparesArrayWithMultipleIdenticalSubArraysCorrectly()
+    {
+        $jsonArray = new JsonArray(json_encode([
+            'responseCode' => 0,
+            'message' => 'OK',
+            'data' => [[9], [0], [0]],
+        ]));
+
+        $expectedArray = [
+            'responseCode' => 0,
+            'message' => 'OK',
+            'data' => [[0], [0], [0]],
+        ];
+
+        $this->assertFalse($jsonArray->containsArray($expectedArray));
+    }
+
     public function testContainsArrayComparesArrayWithValueRepeatedMultipleTimesCorrectlyNegativeCase()
     {
         $jsonArray = new JsonArray(json_encode(['foo', 'foo', 'bar']));
@@ -97,4 +114,111 @@ class JsonArrayTest extends \Codeception\TestCase\Test
         new JsonArray('{"test":');
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsTheSame()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-1"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-1"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsTheSameButOrderOfItemsIsDifferent()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-1"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-10-10", "unknown-date-1"],
+            ["2015-09-10", "unknown-date-1"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenSecondValueIsDifferent()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-2"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-2"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayComparesNestedSequentialArraysCorrectlyWhenJsonHasMoreItemsThanExpectedArray()
+    {
+        $jsonArray = new JsonArray('[
+            [
+                "2015-09-10",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-02",
+                "unknown-date-1"
+            ],
+            [
+                "2015-10-10",
+                "unknown-date-2"
+            ]
+        ]');
+        $expectedArray = [
+            ["2015-09-10", "unknown-date-1"],
+            ["2015-10-10", "unknown-date-2"],
+        ];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/pull/2635
+     */
+    public function testContainsMatchesSuperSetOfExpectedAssociativeArrayInsideSequentialArray()
+    {
+        $jsonArray = new JsonArray(json_encode([[
+                'id' => '1',
+                'title' => 'Game of Thrones',
+                'body' => 'You are so awesome',
+                'created_at' => '2015-12-16 10:42:20',
+                'updated_at' => '2015-12-16 10:42:20',
+            ]]));
+        $expectedArray = [['id' => '1']];
+        $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
 }
