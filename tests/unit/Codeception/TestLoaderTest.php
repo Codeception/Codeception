@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Class TestLoaderTest
+ * @group load
+ */
 class TestLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -59,7 +64,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
 
         $testNames = $this->getTestNames($this->testLoader->getTests());
 
-        $this->assertContainsTestName('order/AnotherCept', $testNames);
+        $this->assertContainsTestName('AnotherCept', $testNames);
         $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
         $this->assertContainsTestName('FailingTest::testMe', $testNames);
         $this->assertContainsTestName('MathCest::testAddition', $testNames);

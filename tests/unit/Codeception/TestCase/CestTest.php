@@ -1,9 +1,14 @@
 <?php
+
+/**
+ * Class CestTest
+ */
 class CestTest extends Codeception\TestCase\Test
 {
 
     /**
      * @group core
+     * @group load
      */
     public function testFilename()
     {

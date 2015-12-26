@@ -12,7 +12,7 @@ class BeforeAfterTest implements EventSubscriberInterface
 
     static $events = [
         Events::SUITE_BEFORE => 'beforeClass',
-        Events::SUITE_AFTER  => 'afterClass',
+        Events::SUITE_AFTER  => ['afterClass', 100]
     ];
 
     protected $hooks = [];

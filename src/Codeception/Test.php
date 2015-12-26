@@ -70,7 +70,6 @@ abstract class Test implements TestCase
                 $this->{$mixin.'End'}($status, $time, $e);
             }
         }
-
         $result->endTest($this, $time);
         return $result;
     }

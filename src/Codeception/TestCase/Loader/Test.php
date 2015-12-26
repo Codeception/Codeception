@@ -29,7 +29,7 @@ class Test implements Loader
                 if (!$test) {
                     continue;
                 }
-                $tests[] = $test;
+                $this->tests[] = $test;
             }
         }
     }

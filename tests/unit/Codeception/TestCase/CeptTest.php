@@ -8,7 +8,7 @@ class CeptTest extends Codeception\TestCase\Test
     public function testCeptNamings()
     {
         $cept = new \Codeception\TestCase\Cept();
-        $cept->configName('LoginCept.php')
+        $cept->configName('Login')
             ->config('testFile', 'tests/acceptance/LoginCept.php');
 
         $this->assertEquals(

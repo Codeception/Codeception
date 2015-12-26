@@ -6,7 +6,7 @@ use Codeception\TestCase\Cept as CeptFormat;
 
 class Cept implements Loader
 {
-    protected $cept;
+    protected $tests = [];
 
     public function getPattern()
     {
@@ -17,13 +17,14 @@ class Cept implements Loader
         Parser::validate($file);
         $name = basename($file,'Cept.php');
 
-        $this->cept = new CeptFormat();
-        $this->cept->configName($name)
+        $cept = new CeptFormat();
+        $cept->configName($name)
             ->configFile($file);
+        $this->tests[] = $cept;
     }
 
     public function getTests()
     {
-        return [$this->cept];
+        return $this->tests;
     }
 }

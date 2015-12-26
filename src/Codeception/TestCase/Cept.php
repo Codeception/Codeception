@@ -38,10 +38,10 @@ class Cept extends \Codeception\Test implements
 
     public function getSignature()
     {
-        return ltrim(substr($this->testName, 0, -4), '\\/'); // cut ".php" in end; cut "/" in start
+        return $this->testName . 'Cept';
     }
 
-    public function getName($withDataSet = true)
+    public function getName()
     {
         return $this->getFeature() ? $this->getFeature() : $this->testName;
     }

@@ -84,11 +84,13 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function startTest(\PHPUnit_Framework_Test $test)
     {
         $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
-        if (!$test instanceof ScenarioDriven) {
+        if (!$test instanceof CodeceptionTestCase) {
             return;
         }
         try {
-            $test->getScenario()->stopIfBlocked();
+            if ($test instanceof ScenarioDriven) {
+                $test->getScenario()->stopIfBlocked();
+            }
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {

@@ -127,8 +127,8 @@ class TestLoader
             foreach ($testFiles as $test) {
                 $pathname = str_replace("//", "/", $test->getPathname());
                 $format->loadTests($pathname);
-                $this->tests = array_merge($this->tests, $format->getTests());
             }
+            $this->tests = array_merge($this->tests, $format->getTests());
         }
     }
 

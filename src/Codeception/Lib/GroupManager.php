@@ -80,8 +80,6 @@ class GroupManager
                     }
                     fclose($handle);
                 }
-            } else {
-                codecept_debug("Group '$group' is empty, no tests are loaded");
             }
         }
     }
