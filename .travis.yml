@@ -83,7 +83,9 @@ install:
 
 before_script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] || echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini'
-  # create config file for hhvm
+  # enable xdebug for hhvm
+  - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = On" >> /etc/hhvm/php.ini'
+  # create config file for hhvm daemon
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "pid = /tmp/hhvm.pid" >>/tmp/hhvm.ini'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.port = 9000" >>/tmp/hhvm.ini'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.server.type = fastcgi" >>/tmp/hhvm.ini'
@@ -91,7 +93,7 @@ before_script:
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.log.use_log_file = true" >>/tmp/hhvm.ini'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.log.file = /tmp/hhvm-error.log" >>/tmp/hhvm.ini'
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "hhvm.repo.central.path = /tmp/hhvm.hhbc" >>/tmp/hhvm.ini'
-  # start hhvm
+  # start hhvm daemon
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || hhvm --config "/tmp/hhvm.ini" --mode daemon'
   # preparing databases
   - "mysql -e 'create database codeception_test;'"
