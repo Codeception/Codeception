@@ -152,19 +152,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @Issue https://github.com/Codeception/Codeception/issues/1650
-     */
-    public function testHostHeaders()
-    {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            $this->markTestSkipped('only for php 5.5');
-        }
-        $this->module->haveHttpHeader('Host','http://www.example.com');
-        $this->module->sendGET('/rest/ping/');
-        $this->module->seeResponseContains('host: http://www.example.com');
-    }
-
-    /**
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
