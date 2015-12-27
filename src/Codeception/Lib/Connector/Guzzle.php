@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use GuzzleHttp\Psr7\Uri as Psr7Uri;
 use Codeception\Util\Uri;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
@@ -205,13 +204,6 @@ class Guzzle extends Client
     {
         $headers = [];
         $server = $request->getServer();
-
-        $uri                 = Url::fromString($request->getUri());
-        $server['HTTP_HOST'] = $uri->getHost();
-        $port                = $uri->getPort();
-        if ($port !== null && $port !== 443 && $port != 80) {
-            $server['HTTP_HOST'] .= ':' . $port;
-        }
 
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
