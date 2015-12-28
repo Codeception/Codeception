@@ -5,8 +5,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 
-require_once 'tests/data/app/data.php';
-require_once __DIR__ . '/TestsForBrowsers.php';
+require_once codecept_data_dir() . 'app/data.php';
+require_once __DIR__ . '/../unit/Codeception/Module/TestsForBrowsers.php';
 
 class WebDriverTest extends TestsForBrowsers
 {
