@@ -1,9 +1,11 @@
 <?php
-namespace Codeception\TestCase\Loader;
+namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
+use Codeception\Test\Format\TestCase as TestCaseFormat;
+use Codeception\Util\Annotation;
 
-class Test implements Loader
+class TestCase implements Loader
 {
     protected $tests = [];
 
@@ -62,9 +64,8 @@ class Test implements Loader
         $className = get_class($test);
         $methodName = $test->getName(false);
         $test->setDependencies(\PHPUnit_Util_Test::getDependencies($className, $methodName));
-
-        if (!$test instanceof \Codeception\TestCase) {
-            return;
+        if ($test instanceof TestCaseFormat) {
+            $test->getMetadata()->setEnv(Annotation::forMethod($test, $methodName)->fetchAll('env'));
         }
     }
 

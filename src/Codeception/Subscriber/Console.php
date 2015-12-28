@@ -12,8 +12,8 @@ use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Suite;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestCase;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -497,7 +497,7 @@ class Console implements EventSubscriberInterface
     {
         if (!$test instanceof TestCase and $test instanceof \PHPUnit_Framework_TestCase) {
             $this->message = $this
-                ->message('%s::%s')
+                ->message('%s:%s')
                 ->with($this->cutNamespace(get_class($test)), $test->getName(true))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
                 ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)

@@ -7,13 +7,13 @@
 class TestLoaderTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Codeception\TestLoader
+     * @var \Codeception\Test\Loader
      */
     protected $testLoader;
 
     protected function setUp()
     {
-        $this->testLoader = new Codeception\TestLoader(\Codeception\Configuration::dataDir());
+        $this->testLoader = new \Codeception\Test\Loader(\Codeception\Configuration::dataDir());
     }
 
     /**
@@ -59,23 +59,23 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         Codeception\Util\Autoload::addNamespace('Math', codecept_data_dir().'claypit/tests/_support/Math'); // to autoload dependencies
 
-        $this->testLoader = new Codeception\TestLoader(codecept_data_dir().'claypit/tests');
+        $this->testLoader = new \Codeception\Test\Loader(codecept_data_dir().'claypit/tests');
         $this->testLoader->loadTests();
 
         $testNames = $this->getTestNames($this->testLoader->getTests());
 
         $this->assertContainsTestName('AnotherCept', $testNames);
-        $this->assertContainsTestName('MageGuildCest::darkPower', $testNames);
-        $this->assertContainsTestName('FailingTest::testMe', $testNames);
-        $this->assertContainsTestName('MathCest::testAddition', $testNames);
-        $this->assertContainsTestName('MathTest::testAll', $testNames);
+        $this->assertContainsTestName('MageGuildCest:darkPower', $testNames);
+        $this->assertContainsTestName('FailingTest:testMe', $testNames);
+        $this->assertContainsTestName('MathCest:testAddition', $testNames);
+        $this->assertContainsTestName('MathTest:testAll', $testNames);
     }
 
     protected function getTestNames($tests)
     {
         $testNames = [];
         foreach ($tests as $test) {
-            $testNames[] = Codeception\TestDescriptor::getTestSignature($test);
+            $testNames[] = \Codeception\Test\Descriptor::getTestSignature($test);
         }
         return $testNames;
     }

@@ -8,3 +8,8 @@ if (!class_exists('Symfony\Component\CssSelector\CssSelectorConverter')) {
         }
     }
 }
+
+namespace Codeception\TestCase {
+    class Test extends \Codeception\Test\Format\TestCase {
+    }
+}

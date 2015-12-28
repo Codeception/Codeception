@@ -1,7 +1,9 @@
 <?php
-namespace Codeception\TestCase\Loader;
+namespace Codeception\Test\Loader;
 
 use Codeception\Lib\Parser;
+use Codeception\Test\Format\Cest as CestFormat;
+use Codeception\Util\Annotation;
 
 class Cest implements Loader
 {
@@ -35,28 +37,20 @@ class Cest implements Loader
             $methods = get_class_methods($testClass);
             foreach ($methods as $method) {
                 $test = $this->createTestForMethod($unit, $method, $file);
-                if (!$test) {
-                    continue;
+                if ($test) {
+                    $this->tests[] = $test;
                 }
-                $this->tests[] = $test;
             }
         }
     }
 
     protected function createTestForMethod($cestInstance, $methodName, $file)
     {
-        if ((strpos($methodName, '_') === 0) || ($methodName == '__construct')) {
+        if (strpos($methodName, '_') === 0) {
             return null;
         }
-        $testClass = get_class($cestInstance);
-
-        $cest = new \Codeception\TestCase\Cest();
-        $cest->configName($methodName)
-            ->configFile($file)
-            ->config('testClassInstance', $cestInstance)
-            ->config('testMethod', $methodName);
-
-        $cest->setDependencies(\PHPUnit_Util_Test::getDependencies($testClass, $methodName));
+        $cest = new CestFormat($cestInstance, $methodName, $file);
+        $cest->getMetadata()->setEnv(Annotation::forMethod($cestInstance, $methodName)->fetchAll('env'));
         return $cest;
     }
 }

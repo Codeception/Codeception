@@ -2,8 +2,8 @@
 namespace Codeception\PHPUnit\Log;
 
 use Codeception\Configuration;
-use Codeception\Test;
-use Codeception\TestCase\Interfaces\Reported;
+use Codeception\Test\Interfaces\Reported;
+use Codeception\Test\Test;
 
 class JUnit extends \PHPUnit_Util_Log_JUnit
 {

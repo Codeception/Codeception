@@ -1,10 +1,9 @@
 <?php
-namespace Codeception;
+namespace Codeception\Test;
 
-use Codeception\TestCase\Loader\Cept as CeptLoader;
-use Codeception\TestCase\Loader\Cest as CestLoader;
-use Codeception\TestCase\Loader\Loader;
-use Codeception\TestCase\Loader\Test as TestCaseLoader;
+use Codeception\Test\Loader\Cept as CeptLoader;
+use Codeception\Test\Loader\Cest as CestLoader;
+use Codeception\Test\Loader\TestCase as TestCaseLoader;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -38,7 +37,7 @@ use Symfony\Component\Finder\Finder;
  * ```
  *
  */
-class TestLoader
+class Loader
 {
     protected $formats = [];
     protected $tests = [];

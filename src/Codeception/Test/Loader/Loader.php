@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\TestCase\Loader;
+namespace Codeception\Test\Loader;
 
 interface Loader
 {

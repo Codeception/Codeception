@@ -1,14 +1,17 @@
 <?php
-namespace Codeception;
+namespace Codeception\Test;
 
-use Codeception\Lib\TestFeature;
+use Codeception\Test\Interfaces\Configurable;
+use Codeception\Test\Interfaces\Descriptive;
 use Codeception\TestCase;
 
-abstract class Test implements TestCase
+abstract class Test implements TestCase, Configurable, Descriptive
 {
-    use TestFeature\AssertionCounter;
-    use TestFeature\CodeCoverage;
-    use TestFeature\ErrorLogger;
+    use Feature\AssertionCounter;
+    use Feature\CodeCoverage;
+    use Feature\ErrorLogger;
+    use Feature\MetadataCollector;
+    use Feature\Services;
 
     protected $testResult;
 
@@ -17,7 +20,6 @@ abstract class Test implements TestCase
       'assertionCounter',
       'errorLogger'
     ];
-
 
     const STATUS_FAIL = 'fail';
     const STATUS_ERROR = 'error';

@@ -8,7 +8,10 @@ use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Lib\Notification;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Interfaces\Configurable;
+use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\Test\Loader;
+use Codeception\Test\Descriptor;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class SuiteManager
@@ -32,7 +35,7 @@ class SuiteManager
     protected $groupManager;
 
     /**
-     * @var TestLoader
+     * @var Loader
      */
     protected $testLoader;
 
@@ -89,7 +92,7 @@ class SuiteManager
 
     public function loadTests($path = null)
     {
-        $testLoader = new TestLoader($this->settings['path']);
+        $testLoader = new Loader($this->settings['path']);
         $path
             ? $testLoader->loadTest($path)
             : $testLoader->loadTests();
@@ -116,7 +119,7 @@ class SuiteManager
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
-        if ($test instanceof TestCase) {
+        if ($test instanceof \Codeception\Test\Test) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
                 return; // skip tests from other environments
@@ -126,8 +129,8 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
 
-        if (!empty($groups) && $test instanceof TestCase) {
-            $test->getScenario()->group($groups);
+        if (!empty($groups) && $test instanceof Configurable) {
+            $test->getMetadata()->setGroups($groups);
         }
     }
 
@@ -175,28 +178,28 @@ class SuiteManager
             : $this->settings['class_name'];
     }
 
-    protected function checkEnvironmentExists(\Codeception\TestCase $test)
+    protected function checkEnvironmentExists(\Codeception\Test\Test $test)
     {
-        $envs = $test->getEnvironment();
+        $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
             return;
         }
         if (!isset($this->settings['env'])) {
-            Notification::warning("Environments are not configured", TestDescriptor::getTestFullName($test));
+            Notification::warning("Environments are not configured", Descriptor::getTestFullName($test));
             return;
         }
         $availableEnvironments = array_keys($this->settings['env']);
         $listedEnvironments = explode(',', implode(',', $test->getEnvironment()));
         foreach ($listedEnvironments as $env) {
             if (!in_array($env, $availableEnvironments)) {
-                Notification::warning("Environment $env was not configured but used in test", TestDescriptor::getTestFullName($test));
+                Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
             }
         }
     }
 
-    protected function isExecutedInCurrentEnvironment(\Codeception\TestCase $test)
+    protected function isExecutedInCurrentEnvironment(\Codeception\Test\Test $test)
     {
-        $envs = $test->getEnvironment();
+        $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
             return true;
         }
@@ -216,16 +219,12 @@ class SuiteManager
      */
     protected function configureTest($t)
     {
-        if (!$t instanceof TestCase\Interfaces\Configurable) {
+        if (!$t instanceof Configurable) {
             return;
         }
-        $t->configDispatcher($this->dispatcher);
-        $t->configActor($this->getActor());
-        $t->configEnv($this->env);
-        $t->configModules($this->moduleContainer);
-        $t->configDi($this->di);
-        $t->initConfig();
-        $this->di->injectDependencies($t);
+        $t->setServices($this->dispatcher, $this->moduleContainer, $this->di);
+        $t->getMetadata()->setCurrent('env', $this->env);
+        $t->getMetadata()->set('actor', $this->getActor());
     }
 
 

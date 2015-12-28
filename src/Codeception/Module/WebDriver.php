@@ -18,8 +18,8 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
+use Codeception\Test\Descriptor;
 use Codeception\TestCase;
-use Codeception\TestDescriptor;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
@@ -268,7 +268,7 @@ class WebDriver extends CodeceptionModule implements
     public function _failed(TestCase $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestDescriptor::getTestSignature($test)) . '.fail';
+        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], Descriptor::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");

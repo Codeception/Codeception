@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Lib\TestFeature;
+namespace Codeception\Test\Feature;
 
 trait AssertionCounter
 {

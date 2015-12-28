@@ -1,5 +1,5 @@
 <?php
-class TestTest extends \Codeception\TestCase\Test
+class TestTest extends \Codeception\Test\Format\TestCase
 {
     public function testBaseOne()
     {

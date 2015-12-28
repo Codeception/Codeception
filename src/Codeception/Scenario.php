@@ -1,12 +1,18 @@
 <?php
 namespace Codeception;
 
-use Codeception\Exception\TestRuntimeException;
+use Codeception\Event\StepEvent;
+use Codeception\Exception\ConditionalAssertionFailed;
+use Codeception\Lib\Notification;
+use Codeception\Step;
+use Codeception\Test\Interfaces\Configurable;
+use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\Test\Test;
 
 class Scenario
 {
     /**
-     * @var    \Codeception\TestCase
+     * @var    \Codeception\Test\Test
      */
     protected $test;
 
@@ -19,59 +25,15 @@ class Scenario
      * @var    string
      */
     protected $feature;
-    protected $running = false;
-    protected $blocker = null;
-    protected $groups = [];
-    protected $env = [];
-
-    protected $currents = [];
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param  \Codeception\TestCase $test
+     * @param Test $test
      */
-    public function __construct($test, $currents = [])
+    public function __construct(Test $test)
     {
         $this->test = $test;
-        $this->currents = $currents;
-    }
-
-    public function group($group)
-    {
-        if (!is_array($group)) {
-            $this->groups[] = $group;
-            return;
-        }
-        foreach ($group as $t) {
-            $this->group($t);
-        }
-    }
-
-    public function env($env)
-    {
-        if (!is_array($env)) {
-            $this->env[] = $env;
-            return;
-        }
-        foreach ($env as $e) {
-            $this->env($e);
-        }
-    }
-
-    public function groups()
-    {
-        $this->group(func_get_args());
-    }
-
-    public function getGroups()
-    {
-        return $this->groups;
-    }
-
-    public function getEnv()
-    {
-        return $this->env;
     }
 
     public function setFeature($feature)
@@ -79,34 +41,27 @@ class Scenario
         $this->feature = $feature;
     }
 
-    public function skip($reason = "")
+    public function current($key)
     {
-        $this->blocker = new \Codeception\Step\Skip($reason, []);
-    }
-
-    public function incomplete($reason = "")
-    {
-        $this->blocker = new \Codeception\Step\Incomplete($reason, []);
-    }
-
-    protected function ignore()
-    {
-        $this->blocker = new \Codeception\Step\Ignore;
+        return $this->test->getMetadata()->getCurrent($key);
     }
 
     public function runStep(Step $step)
     {
-        $this->stopIfBlocked();
         $this->steps[] = $step;
-        $result = $this->test->runStep($step);
+        $result = null;
+        $this->test->getDispatcher()->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
+        try {
+            $result = $step->run($this->test->getModuleContainer());
+        } catch (ConditionalAssertionFailed $f) {
+            $this->test->getTestResultObject()->addFailure(clone($this), $f, $this->test->getTestResultObject()->time());
+        } catch (\Exception $e) {
+            $this->test->getDispatcher()->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+            throw $e;
+        }
+        $this->test->getDispatcher()->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
         $step->executed = true;
         return $result;
-    }
-
-    public function addStep(\Codeception\Step $step)
-    {
-        $this->steps[] = $step;
-        return $this->test;
     }
 
     /**
@@ -150,41 +105,9 @@ class Scenario
 
     }
 
-    public function comment($comment)
+    public function __call($method, $args)
     {
-        $this->runStep(new \Codeception\Step\Comment($comment, []));
+        // all methods were deprecated and removed from here
+        Notification::deprecate("\$scenario->$method() was deprecated in 2.1 and removed. Don't use it");
     }
-
-    public function stopIfBlocked()
-    {
-        if ($this->isBlocked()) {
-            return $this->blocker->run();
-        }
-    }
-
-    public function current($key)
-    {
-        if (!isset($this->currents[$key])) {
-            return null;
-        }
-        return $this->currents[$key];
-    }
-
-    public function isBlocked()
-    {
-        return (bool)$this->blocker;
-    }
-
-    public function preload()
-    {
-        \Codeception\Lib\Notification::deprecate("Scenario is never preloaded. Please remove \$scenario->preload() call.", $this->getFeature());
-        return false;
-    }
-
-    public function running()
-    {
-        \Codeception\Lib\Notification::deprecate("Scenario is always running. Please remove \$scenario->running() call.", $this->getFeature());
-        return true;
-    }
-
 }

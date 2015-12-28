@@ -5,8 +5,10 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
+use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestCase as CodeceptionTestCase;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Interfaces\Configurable;
+use Codeception\TestCase;
 use Exception;
 use PHPUnit_Framework_Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -87,10 +89,16 @@ class Listener implements \PHPUnit_Framework_TestListener
         if (!$test instanceof CodeceptionTestCase) {
             return;
         }
+        if ($skip = $test->getMetadata()->getSkip()) {
+            $this->addSkippedTest($test, new \PHPUnit_Framework_SkippedTestError($skip), 0);
+            return;
+        }
+        if ($incomplete = $test->getMetadata()->getIncomplete()) {
+            $this->addIncompleteTest($test, new \PHPUnit_Framework_SkippedTestError($incomplete), 0);
+            return;
+        }
+
         try {
-            if ($test instanceof ScenarioDriven) {
-                $test->getScenario()->stopIfBlocked();
-            }
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
@@ -116,8 +124,8 @@ class Listener implements \PHPUnit_Framework_TestListener
     protected function fire($event, TestEvent $eventType)
     {
         $test = $eventType->getTest();
-        if ($test instanceof ScenarioDriven) {
-            foreach ($test->getScenario()->getGroups() as $group) {
+        if ($test instanceof TestCase) {
+            foreach ($test->getMetadata()->getGroups() as $group) {
                 $this->dispatcher->dispatch($event . '.' . $group, $eventType);
             }
         }
