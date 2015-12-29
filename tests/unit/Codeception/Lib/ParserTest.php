@@ -22,8 +22,8 @@ class ParserTest extends \Codeception\Test\Format\TestCase
 
     protected function _before()
     {
-        $this->scenario = new Codeception\Scenario(Stub::make('Codeception\Test\Format\Cept'));
         $this->metadata = new \Codeception\Test\Metadata();
+        $this->scenario = new Codeception\Scenario(Stub::make('Codeception\Test\Format\Cept'));
         $this->parser = new Parser($this->scenario, $this->metadata);
     }
 

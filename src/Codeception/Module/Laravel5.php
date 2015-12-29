@@ -131,9 +131,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * Before hook.
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\Testable $test
      */
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\Testable $test)
     {
         $this->client = new LaravelConnector($this);
 
@@ -145,9 +145,9 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     /**
      * After hook.
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\Testable $test
      */
-    public function _after(\Codeception\TestCase $test)
+    public function _after(\Codeception\Testable $test)
     {
         if ($this->app['db'] && $this->config['cleanup']) {
             $this->app['db']->rollback();

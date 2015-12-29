@@ -5,6 +5,9 @@ namespace Jazz\_generated;
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
+use Codeception\Module\Filesystem;
+use Jazz\Codeception\Module\TestHelper;
+
 trait TestGuyActions
 {
     /**

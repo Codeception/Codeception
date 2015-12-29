@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Framework;
@@ -87,7 +87,7 @@ EOF;
      */
     protected $connectionModule;
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->buildRequest();

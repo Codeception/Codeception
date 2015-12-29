@@ -16,7 +16,7 @@ class EmulateModuleHelper extends \Codeception\Module
         \PHPUnit_Framework_Assert::assertEquals($expected, $this->scenario->getFeature());
     }
 
-    public function _before(\Codeception\TestCase $test) {
+    public function _before(\Codeception\Testable $test) {
         $this->scenario = $test->getScenario();
     }
 

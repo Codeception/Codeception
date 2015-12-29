@@ -1,17 +1,15 @@
 <?php
 namespace Codeception\Test;
 
-use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Interfaces\Descriptive;
-use Codeception\TestCase;
+use Codeception\Testable;
 
-abstract class Test implements TestCase, Configurable, Descriptive
+abstract class Test implements Testable, Descriptive
 {
     use Feature\AssertionCounter;
     use Feature\CodeCoverage;
     use Feature\ErrorLogger;
     use Feature\MetadataCollector;
-    use Feature\Services;
 
     protected $testResult;
 

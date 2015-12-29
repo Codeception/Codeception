@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Driver\AmazonSQS;
 use Codeception\Lib\Driver\Beanstalk;
@@ -97,9 +97,9 @@ class Queue extends CodeceptionModule
     /**
      * Setup connection and open/setup the connection with config settings
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\Testable $test
      */
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $this->queueDriver->openConnection($this->config);
     }

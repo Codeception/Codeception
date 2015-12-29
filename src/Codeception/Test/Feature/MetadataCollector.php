@@ -10,11 +10,13 @@ trait MetadataCollector
      */
     protected $metadata;
 
+    protected function setMetadata(Metadata $metadata)
+    {
+        $this->metadata = $metadata;
+    }
+
     public function getMetadata()
     {
-        if (!$this->metadata) {
-            $this->metadata = new Metadata();
-        }
         return $this->metadata;
     }
 

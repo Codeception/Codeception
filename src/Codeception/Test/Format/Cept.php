@@ -4,14 +4,13 @@ namespace Codeception\Test\Format;
 use Codeception\Exception\TestParseException;
 use Codeception\Lib\Parser;
 use Codeception\Test\Feature\ScenarioLoader;
-use Codeception\Test\Feature\ScenarioRunner;
 use Codeception\Test\Interfaces\Plain;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\Test\Metadata;
 
 class Cept extends \Codeception\Test\Test implements Plain, ScenarioDriven, Reported
 {
-    use ScenarioRunner;
     use ScenarioLoader;
 
     /**
@@ -21,6 +20,7 @@ class Cept extends \Codeception\Test\Test implements Plain, ScenarioDriven, Repo
 
     public function __construct($name, $file)
     {
+        $this->setMetadata(new Metadata());
         $this->getMetadata()->setName($name);
         $this->getMetadata()->setFilename($file);
         $this->createScenario();
@@ -51,9 +51,7 @@ class Cept extends \Codeception\Test\Test implements Plain, ScenarioDriven, Repo
 
     public function getName()
     {
-        return $this->getFeature()
-            ? $this->getFeature()
-            : $this->getMetadata()->getName() . 'Cept';
+        return $this->getMetadata()->getName() . 'Cept';
     }
 
     public function toString()

@@ -1,18 +1,22 @@
 <?php
 namespace Codeception\Test;
 
+use Codeception\Exception\InjectionException;
+
 class Metadata
 {
     protected $name;
     protected $filename;
+    protected $feature;
 
     protected $env = [];
     protected $groups = [];
     protected $dependencies = [];
-    protected $skip;
-    protected $incomplete;
+    protected $skip = null;
+    protected $incomplete = null;
 
     protected $current = [];
+    protected $services = [];
 
     /**
      * @return mixed
@@ -84,19 +88,18 @@ class Metadata
      */
     public function getCurrent($key = null)
     {
-        if (isset($this->current[$key])) {
+        if ($key && isset($this->current[$key])) {
             return $this->current[$key];
+        }
+        if ($key) {
+            return null;
         }
         return $this->current;
     }
 
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function setCurrent($key, $value)
+    public function setCurrent(array $currents)
     {
-        $this->current[$key] = $value;
+        $this->current = array_merge($this->current, $currents);
     }
 
     /**
@@ -160,6 +163,43 @@ class Metadata
     public function isBlocked()
     {
         return (bool)($this->skip || $this->incomplete);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFeature()
+    {
+        return $this->feature;
+    }
+
+    /**
+     * @param mixed $feature
+     */
+    public function setFeature($feature)
+    {
+        $this->feature = $feature;
+    }
+
+    /**
+     * @param $service
+     * @return array
+     * @throws InjectionException
+     */
+    public function getService($service)
+    {
+        if (!isset($this->services[$service])) {
+            throw new InjectionException("Service $service is not defined and can't be accessed from a test");
+        }
+        return $this->services[$service];
+    }
+
+    /**
+     * @param array $services
+     */
+    public function setServices($services)
+    {
+        $this->services = $services;
     }
 
 }

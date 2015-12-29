@@ -2,7 +2,7 @@
 namespace Codeception\Event;
 
 use Codeception\Step;
-use Codeception\TestCase;
+use Codeception\Testable;
 
 class StepEvent extends TestEvent
 {

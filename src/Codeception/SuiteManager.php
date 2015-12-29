@@ -119,7 +119,7 @@ class SuiteManager
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }
-        if ($test instanceof \Codeception\Test\Test) {
+        if ($test instanceof Testable) {
             $this->checkEnvironmentExists($test);
             if (!$this->isExecutedInCurrentEnvironment($test)) {
                 return; // skip tests from other environments
@@ -129,7 +129,7 @@ class SuiteManager
         $groups = $this->groupManager->groupsForTest($test);
         $this->suite->addTest($test, $groups);
 
-        if (!empty($groups) && $test instanceof Configurable) {
+        if (!empty($groups) && $test instanceof Testable) {
             $test->getMetadata()->setGroups($groups);
         }
     }
@@ -178,7 +178,7 @@ class SuiteManager
             : $this->settings['class_name'];
     }
 
-    protected function checkEnvironmentExists(\Codeception\Test\Test $test)
+    protected function checkEnvironmentExists(Testable $test)
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -189,7 +189,7 @@ class SuiteManager
             return;
         }
         $availableEnvironments = array_keys($this->settings['env']);
-        $listedEnvironments = explode(',', implode(',', $test->getEnvironment()));
+        $listedEnvironments = explode(',', implode(',', $envs));
         foreach ($listedEnvironments as $env) {
             if (!in_array($env, $availableEnvironments)) {
                 Notification::warning("Environment $env was not configured but used in test", Descriptor::getTestFullName($test));
@@ -197,7 +197,7 @@ class SuiteManager
         }
     }
 
-    protected function isExecutedInCurrentEnvironment(\Codeception\Test\Test $test)
+    protected function isExecutedInCurrentEnvironment(Testable $test)
     {
         $envs = $test->getMetadata()->getEnv();
         if (empty($envs)) {
@@ -219,12 +219,19 @@ class SuiteManager
      */
     protected function configureTest($t)
     {
-        if (!$t instanceof Configurable) {
+        if (!$t instanceof Testable) {
             return;
         }
-        $t->setServices($this->dispatcher, $this->moduleContainer, $this->di);
-        $t->getMetadata()->setCurrent('env', $this->env);
-        $t->getMetadata()->set('actor', $this->getActor());
+        $t->getMetadata()->setServices([
+            'di' => clone($this->di),
+            'dispatcher' => $this->dispatcher,
+            'modules' => $this->moduleContainer
+        ]);
+        $t->getMetadata()->setCurrent([
+            'actor' => $this->getActor(),
+            'env' => $this->env,
+            'modules' => array_keys($this->moduleContainer->all())
+        ]);
     }
 
 

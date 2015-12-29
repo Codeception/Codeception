@@ -5,16 +5,18 @@ use Codeception\Event\StepEvent;
 use Codeception\Exception\ConditionalAssertionFailed;
 use Codeception\Lib\Notification;
 use Codeception\Step;
-use Codeception\Test\Interfaces\Configurable;
-use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Test\Test;
+use Codeception\Test\Metadata;
 
 class Scenario
 {
     /**
-     * @var    \Codeception\Test\Test
+     * @var Testable
      */
     protected $test;
+    /**
+     * @var Metadata
+     */
+    protected $metadata;
 
     /**
      * @var    array
@@ -29,39 +31,46 @@ class Scenario
     /**
      * Constructor
      *
-     * @param Test $test
+     * @param Testable $test
      */
-    public function __construct(Test $test)
+    public function __construct(Testable $test)
     {
+        $this->metadata = $test->getMetadata();
         $this->test = $test;
     }
 
     public function setFeature($feature)
     {
-        $this->feature = $feature;
+        $this->metadata->setFeature($feature);
     }
 
     public function current($key)
     {
-        return $this->test->getMetadata()->getCurrent($key);
+        return $this->metadata->getCurrent($key);
     }
 
     public function runStep(Step $step)
     {
         $this->steps[] = $step;
         $result = null;
-        $this->test->getDispatcher()->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
+        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
         try {
-            $result = $step->run($this->test->getModuleContainer());
+            $result = $step->run($this->metadata->getService('modules'));
         } catch (ConditionalAssertionFailed $f) {
-            $this->test->getTestResultObject()->addFailure(clone($this), $f, $this->test->getTestResultObject()->time());
+            $result = $this->test->getTestResultObject();
+            $result->addFailure(clone($this->test), $f, $result->time());
         } catch (\Exception $e) {
-            $this->test->getDispatcher()->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+            $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
             throw $e;
         }
-        $this->test->getDispatcher()->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
+        $this->metadata->getService('dispatcher')->dispatch(Events::STEP_AFTER, new StepEvent($this->test, $step));
         $step->executed = true;
         return $result;
+    }
+
+    public function addStep(Step $step)
+    {
+        $this->steps[] = $step;
     }
 
     /**
@@ -76,7 +85,7 @@ class Scenario
 
     public function getFeature()
     {
-        return $this->feature;
+        return $this->metadata->getFeature();
     }
 
     public function getHtml()
@@ -104,6 +113,12 @@ class Scenario
         return $text;
 
     }
+
+    public function comment($comment)
+    {
+        $this->runStep(new \Codeception\Step\Comment($comment, []));
+    }
+
 
     public function __call($method, $args)
     {

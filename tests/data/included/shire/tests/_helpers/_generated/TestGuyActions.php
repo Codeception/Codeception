@@ -5,6 +5,9 @@ namespace Shire\_generated;
 // You should not change it manually as it will be overwritten on next build
 // @codingStandardsIgnoreFile
 
+use Codeception\Module\Filesystem;
+use Shire\Codeception\Module\TestHelper;
+
 trait TestGuyActions
 {
     /**

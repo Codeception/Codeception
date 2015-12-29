@@ -3,18 +3,16 @@ namespace Codeception\Test\Format;
 
 use Codeception\Configuration;
 use Codeception\Scenario;
-use Codeception\Test\Feature\Services;
-use Codeception\Test\Interfaces\Configurable;
 use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\Reported;
 use Codeception\Test\Metadata;
+use Codeception\Testable;
 
 class TestCase extends \PHPUnit_Framework_TestCase implements
     Descriptive,
-    Configurable,
-    Reported
+    Reported,
+    Testable
 {
-    use Services;
 
     /**
      * @var Metadata
@@ -31,13 +29,14 @@ class TestCase extends \PHPUnit_Framework_TestCase implements
 
     protected function setUp()
     {
-        $this->getDi()->set(new Scenario($this));
-        $actorClass = $this->getMetadata()->get('actor');
+        $scenario = new Scenario($this);
+        $actorClass = $this->getMetadata()->getCurrent('actor');
         if ($actorClass) {
+            $I = new $actorClass($scenario);
             $property = lcfirst(Configuration::config()['actor']);
-            $this->$property = $this->getDi()->get($actorClass);
+            $this->$property = $I;
         }
-        $this->getDi()->injectDependencies($this); // injecting dependencies
+        $this->getMetadata()->getService('di')->injectDependencies($this); // injecting dependencies
         $this->_before();
     }
 
@@ -86,7 +85,7 @@ class TestCase extends \PHPUnit_Framework_TestCase implements
      */
     public function getModule($module)
     {
-        return $this->getModuleContainer()->getModule($module);
+        return $this->getMetadata()->getCurrent('modules')->getModule($module);
     }
 
     /**
@@ -119,7 +118,7 @@ class TestCase extends \PHPUnit_Framework_TestCase implements
         $dependencyInput = [];
 
         foreach ($dependencies as $dependency) {
-            if (strpos($dependency, '::') === false) {
+            if (strpos($dependency, ':') === false) {
                 $dependency = str_replace($this->getName(), $dependency, $this->getSignature());
             }
 

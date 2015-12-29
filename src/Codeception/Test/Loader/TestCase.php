@@ -63,8 +63,9 @@ class TestCase implements Loader
     {
         $className = get_class($test);
         $methodName = $test->getName(false);
-        $test->setDependencies(\PHPUnit_Util_Test::getDependencies($className, $methodName));
+        $test->setDependencies($deps = \PHPUnit_Util_Test::getDependencies($className, $methodName));
         if ($test instanceof TestCaseFormat) {
+            $test->getMetadata()->setDependencies($deps);
             $test->getMetadata()->setEnv(Annotation::forMethod($test, $methodName)->fetchAll('env'));
         }
     }
