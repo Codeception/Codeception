@@ -9,6 +9,8 @@ use Codeception\Util\Stub;
 use Phalcon\Di;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Micro As MicroApplication;
+use Phalcon\Http\Request;
+use Phalcon\Http\RequestInterface;
 use Phalcon\Session\AdapterInterface as SessionInterface;
 use ReflectionProperty;
 use RuntimeException;
@@ -37,7 +39,7 @@ class Phalcon extends Client
     /**
      * Get Phalcon Application
      *
-     * @return mixed
+     * @return Application|MicroApplication
      */
     public function getApplication()
     {
@@ -63,40 +65,57 @@ class Phalcon extends Client
     public function doRequest($request)
     {
         $application = $this->getApplication();
-        $di          = $application->getDI();
-        Di::reset();
-        Di::setDefault($di);
-
-        $_SERVER = [];
-        foreach ($request->getServer() as $key => $value) {
-            $_SERVER[strtoupper(str_replace('-', '_', $key))] = $value;
-        }
-
         if (!$application instanceof Application && !$application instanceof MicroApplication) {
             throw new RuntimeException('Unsupported application class.');
         }
 
-        $_COOKIE = $request->getCookies();
-        $_FILES = $this->remapFiles($request->getFiles());
+        $di = $application->getDI();
+        /** @var \Phalcon\Http\Request $phRequest */
+        if ($di->has('request')) {
+            $phRequest = $di->get('request');
+        }
+
+        if (!$phRequest instanceof RequestInterface) {
+            $phRequest = new Request;
+        }
+
+        $uri         = $request->getUri() ?: $phRequest->getURI();
+        $pathString  = parse_url($uri, PHP_URL_PATH);
+        $queryString = parse_url($uri, PHP_URL_QUERY);
+
+        $_SERVER = $request->getServer();
         $_SERVER['REQUEST_METHOD'] = strtoupper($request->getMethod());
+        $_SERVER['REQUEST_URI'] = null === $queryString ? $pathString : $pathString . '?' . $queryString;
+
+        $_COOKIE  = $request->getCookies();
+        $_FILES   = $this->remapFiles($request->getFiles());
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
+        $_POST    = [];
+        $_GET     = [];
+
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
         }
-        $uri = str_replace('http://localhost', '', $request->getUri());
-        $_SERVER['REQUEST_URI'] = $uri;
-        $_GET['_url'] = strtok($uri, '?');
-        $_SERVER['QUERY_STRING'] = http_build_query($_GET);
-        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
-        $di['request'] = Stub::construct($di->get('request'), [], ['getRawBody' => $request->getContent()]);
+        parse_str($queryString, $output);
+        foreach ($output as $k => $v) {
+            $_GET[$k] = $v;
+        }
+
+        $_GET['_url']            = $pathString;
+        $_SERVER['QUERY_STRING'] = http_build_query($_GET);
+
+        Di::reset();
+        Di::setDefault($di);
+
+        $di['request'] = Stub::construct($phRequest, [], ['getRawBody' => $request->getContent()]);
 
         $response = $application->handle();
 
         $headers = $response->getHeaders();
-        $status = (int)$headers->get('Status');
+        $status = (int) $headers->get('Status');
 
         $headersProperty = new ReflectionProperty($headers, '_headers');
         $headersProperty->setAccessible(true);
