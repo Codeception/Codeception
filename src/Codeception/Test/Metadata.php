@@ -150,19 +150,9 @@ class Metadata
         $this->dependencies = $dependencies;
     }
 
-    public function set($key, $value)
-    {
-        $this->$key = $value;
-    }
-
-    public function get($key)
-    {
-        if ($this->$key) return $this->$key;
-    }
-
     public function isBlocked()
     {
-        return (bool)($this->skip || $this->incomplete);
+        return $this->skip !== null || $this->incomplete !== null;
     }
 
     /**

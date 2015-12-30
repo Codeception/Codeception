@@ -14,16 +14,16 @@ class ParserTest extends \Codeception\Test\Format\TestCase
     protected $parser;
 
     /**
-     * @var \Codeception\Test\Metadata
+     * @var \Codeception\Scenario
      */
-    protected $metadata;
-
     protected $scenario;
 
     protected function _before()
     {
-        $this->metadata = new \Codeception\Test\Metadata();
-        $this->scenario = new Codeception\Scenario(Stub::make('Codeception\Test\Format\Cept'));
+        $cept = new \Codeception\Test\Format\Cept('demo','DemoCept.php');
+
+        $this->metadata = $cept->getMetadata();
+        $this->scenario = new Codeception\Scenario($cept);
         $this->parser = new Parser($this->scenario, $this->metadata);
     }
 

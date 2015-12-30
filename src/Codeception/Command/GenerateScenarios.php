@@ -3,6 +3,7 @@ namespace Codeception\Command;
 
 use Codeception\Configuration;
 use Codeception\Exception\ConfigurationException as ConfigurationException;
+use Codeception\Test\Format\Cest;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -84,7 +85,7 @@ class GenerateScenarios extends Command
             $name = $this->underscore(basename($test->getFileName(), '.php'));
 
             // create separate file for each test in Cest
-            if (get_class($test) == 'Codeception\TestCase\Cest' && !$input->getOption('single-file')) {
+            if ($test instanceof Cest && !$input->getOption('single-file')) {
                 $name .= '.' . $this->underscore($test->getTestMethod());
             }
 

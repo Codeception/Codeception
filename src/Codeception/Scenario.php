@@ -44,6 +44,11 @@ class Scenario
         $this->metadata->setFeature($feature);
     }
 
+    public function getFeature()
+    {
+        return $this->metadata->getFeature();
+    }
+
     public function current($key)
     {
         return $this->metadata->getCurrent($key);
@@ -81,11 +86,6 @@ class Scenario
     public function getSteps()
     {
         return $this->steps;
-    }
-
-    public function getFeature()
-    {
-        return $this->metadata->getFeature();
     }
 
     public function getHtml()
