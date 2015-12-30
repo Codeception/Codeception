@@ -9,7 +9,6 @@ use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response as ZendResponse;
 use Zend\Expressive\Application;
-use GuzzleHttp\Psr7\Uri;
 
 class ZendExpressive extends Client
 {
@@ -105,12 +104,6 @@ class ZendExpressive extends Client
     {
         $headers = [];
         $server = $request->getServer();
-        $uri                 = new Uri($request->getUri());
-        $server['HTTP_HOST'] = $uri->getHost();
-        $port                = $uri->getPort();
-        if ($port !== null && $port !== 443 && $port != 80) {
-            $server['HTTP_HOST'] .= ':' . $port;
-        }
 
         $contentHeaders = array('Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true);
         foreach ($server as $header => $val) {

@@ -18,13 +18,6 @@ $GLOBALS['RESTmap']['GET'] = [
                 'country' => 'Ukraine',
             ]];
     },
-    'ping' => function() {
-        $resp = '';
-        foreach (getallheaders() as $k => $v) {
-            $resp .= strtolower($k) . ": $v\n";
-        }
-        return $resp;
-    },
     'zeroes' => function() {
         return [
             'responseCode' => 0,

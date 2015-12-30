@@ -48,7 +48,8 @@ class Recorder extends \Codeception\Extension
     protected $config = [
         'delete_successful' => true,
         'module'            => 'WebDriver',
-        'template'          => null
+        'template'          => null,
+        'animate_slides'    => true
     ];
 
     protected $template = <<<EOF
@@ -109,7 +110,7 @@ class Recorder extends \Codeception\Extension
             </a>
         </div>
     </nav>
-    <header id="steps" class="carousel slide">
+    <header id="steps" class="carousel{{carousel_class}}">
         <!-- Indicators -->
         <ol class="carousel-indicators">
             {{indicators}}
@@ -313,6 +314,7 @@ EOF;
             ->place('slides', $slideHtml)
             ->place('feature', ucfirst($e->getTest()->getFeature()))
             ->place('test', Descriptor::getTestSignature($e->getTest()))
+            ->place('carousel_class', $this->config['animate_slides'] ? ' slide' : '')
             ->produce();
 
         $indexFile = $this->dir . DIRECTORY_SEPARATOR . 'index.html';
