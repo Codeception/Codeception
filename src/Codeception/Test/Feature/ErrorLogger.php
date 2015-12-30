@@ -1,7 +1,7 @@
 <?php
-namespace Codeception\Lib\TestFeature;
+namespace Codeception\Test\Feature;
 
-use Codeception\Test as CodeceptionTest;
+use Codeception\Test\Test as CodeceptionTest;
 
 trait ErrorLogger
 {

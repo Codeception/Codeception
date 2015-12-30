@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Lib\TestFeature;
+namespace Codeception\Test\Feature;
 
 trait CodeCoverage
 {
@@ -29,7 +29,7 @@ trait CodeCoverage
         try {
             $codeCoverage->stop(true, $linesToBeCovered, $linesToBeUsed);
         } catch (\PHP_CodeCoverage_Exception $cce) {
-            if ($status === \Codeception\Test::STATUS_OK) {
+            if ($status === \Codeception\Test\Test::STATUS_OK) {
                 $this->getTestResultObject()->addError($this, $cce, $time);
             }
         }

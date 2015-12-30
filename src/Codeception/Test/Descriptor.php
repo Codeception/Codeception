@@ -1,10 +1,10 @@
 <?php
-namespace Codeception;
+namespace Codeception\Test;
 
-use Codeception\TestCase\Interfaces\Descriptive;
-use Codeception\TestCase\Interfaces\Plain;
+use Codeception\Test\Interfaces\Descriptive;
+use Codeception\Test\Interfaces\Plain;
 
-class TestDescriptor
+class Descriptor
 {
     public static function getTestSignature(\PHPUnit_Framework_SelfDescribing $testCase)
     {
@@ -12,7 +12,7 @@ class TestDescriptor
             return $testCase->getSignature();
         }
         if ($testCase instanceof \PHPUnit_Framework_TestCase) {
-            return get_class($testCase) . '::' . $testCase->getName(false);
+            return get_class($testCase) . ':' . $testCase->getName(false);
         }
         return $testCase->toString();
     }

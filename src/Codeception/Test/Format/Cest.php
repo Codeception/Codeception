@@ -1,34 +1,65 @@
 <?php
-namespace Codeception\TestCase;
+namespace Codeception\Test\Format;
 
-use Codeception\Event\TestEvent;
-use Codeception\Events;
-use Codeception\TestCase;
-use Codeception\TestCase\Interfaces\Configurable;
-use Codeception\TestCase\Interfaces\Descriptive;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
-use Codeception\TestCase\Shared\Actor;
-use Codeception\TestCase\Shared\Dependencies;
-use Codeception\TestCase\Shared\ScenarioPrint;
+use Codeception\Lib\Parser;
+use Codeception\Test\Feature\ScenarioLoader;
+use Codeception\Test\Interfaces\Reported;
+use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\Test\Metadata;
 use Codeception\Util\Annotation;
 
-class Cest extends \Codeception\Test implements
-    TestCase,
-    ScenarioDriven,
-    Configurable,
-    Descriptive
+class Cest extends \Codeception\Test\Test implements ScenarioDriven, Reported
 {
-    use Actor;
-    use ScenarioPrint;
-    use Dependencies;
-
+    use ScenarioLoader;
+    /**
+     * @var Parser
+     */
+    protected $parser;
     protected $testClassInstance;
     protected $testMethod;
+
+    public function __construct($testClass, $methodName, $fileName)
+    {
+        $this->setMetadata(new Metadata());
+        $this->getMetadata()->setName($methodName);
+        $this->getMetadata()->setFilename($fileName);
+        $this->testClassInstance = $testClass;
+        $this->testMethod = $methodName;
+        $this->createScenario();
+        $this->parser = new Parser($this->getScenario(), $this->getMetadata());
+    }
+
+    public function preload()
+    {
+        $this->scenario->setFeature($this->getSpecFromMethod());
+        $code = $this->getRawBody();
+        $this->parser->parseFeature($code);
+        $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
+        $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance);
+    }
+
+    public function getRawBody()
+    {
+        $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
+        $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
+        $end_line = $method->getEndLine();
+        $source = file($method->getFileName());
+        return implode("", array_slice($source, $start_line, $end_line - $start_line));
+    }
+
+    public function getSpecFromMethod()
+    {
+        $text = $this->testMethod;
+        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
+        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+        $text = strtolower($text);
+        return $text;
+    }
+
 
     public function test()
     {
         $I = $this->makeIObject();
-
         try {
             $this->executeHook($I, 'before');
             $this->executeBeforeMethods($this->testMethod, $I);
@@ -42,47 +73,12 @@ class Cest extends \Codeception\Test implements
         }
     }
 
-    public function preload()
+    protected function executeHook($I, $hook)
     {
-        $this->scenario->setFeature($this->getSpecFromMethod());
-        $code = $this->getRawBody();
-        $this->parser->parseFeature($code);
-        $this->parser->attachMetadata(Annotation::forMethod($this->testClassInstance, $this->testMethod)->raw());
-        $this->di->injectDependencies($this->testClassInstance);
-        $this->fire(Events::TEST_PARSED, new TestEvent($this));
-    }
-
-    public function getRawBody()
-    {
-        $method = new \ReflectionMethod($this->testClassInstance, $this->testMethod);
-        $start_line = $method->getStartLine() - 1; // it's actually - 1, otherwise you wont get the function() block
-        $end_line = $method->getEndLine();
-        $source = file($method->getFileName());
-        return implode("", array_slice($source, $start_line, $end_line - $start_line));
-    }
-
-    protected function makeIObject()
-    {
-        $className = '\\' . $this->actor;
-        $I = new $className($this->scenario);
-        $spec = $this->getSpecFromMethod();
-
-        if ($spec) {
-            $I->wantTo($spec);
+        if (is_callable([$this->testClassInstance, "_$hook"])) {
+            $this->invoke("_$hook", [$I, $this->scenario]);
         }
-        return $I;
     }
-
-
-    public function getSpecFromMethod()
-    {
-        $text = $this->testMethod;
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        $text = strtolower($text);
-        return $text;
-    }
-
 
     protected function executeBeforeMethods($testMethod, $I)
     {
@@ -93,7 +89,6 @@ class Cest extends \Codeception\Test implements
             }
         }
     }
-
     protected function executeAfterMethods($testMethod, $I)
     {
         $annotations = \PHPUnit_Util_Test::parseTestMethodAnnotations(get_class($this->testClassInstance), $testMethod);
@@ -103,7 +98,6 @@ class Cest extends \Codeception\Test implements
             }
         }
     }
-
     protected function executeContextMethod($context, $I)
     {
         if (method_exists($this->testClassInstance, $context)) {
@@ -112,20 +106,27 @@ class Cest extends \Codeception\Test implements
             $this->executeAfterMethods($context, $I);
             return;
         }
-
         throw new \LogicException(
             "Method $context defined in annotation but does not exist in " . get_class($this->testClassInstance)
         );
     }
-
+    protected function makeIObject()
+    {
+        $className = '\\' . $this->getMetadata()->getCurrent('actor');
+        $I = new $className($this->getScenario());
+        $spec = $this->getSpecFromMethod();
+        if ($spec) {
+            $I->wantTo($spec);
+        }
+        return $I;
+    }
     protected function invoke($methodName, array $context)
     {
         foreach ($context as $class) {
-            $this->di->set($class);
+            $this->getMetadata()->getService('di')->set($class);
         }
-        $this->di->injectDependencies($this->testClassInstance, $methodName, $context);
+        $this->getMetadata()->getService('di')->injectDependencies($this->testClassInstance, $methodName, $context);
     }
-
     protected function executeTestMethod($I)
     {
         $testMethodSignature = [$this->testClassInstance, $this->testMethod];
@@ -135,23 +136,6 @@ class Cest extends \Codeception\Test implements
         $this->invoke($this->testMethod, [$I, $this->scenario]);
     }
 
-    public function configActor($actor)
-    {
-        foreach (['actor', 'guy'] as $annotation) {
-            $definedActor = Annotation::forMethod($this->testClassInstance, $this->testMethod)->fetch($annotation);
-            if ($definedActor === null) {
-                $definedActor = Annotation::forClass($this->testClassInstance)->fetch($annotation);
-            }
-            if ($definedActor !== null) {
-                $this->actor = $definedActor;
-                return $this;
-            }
-        }
-
-        $this->actor = $actor;
-        return $this;
-    }
-
     public function toString()
     {
         return $this->getFeature() .' (' . $this->getSignature() . ' )';
@@ -159,7 +143,7 @@ class Cest extends \Codeception\Test implements
 
     public function getSignature()
     {
-        return get_class($this->getTestClass()) . "::" . $this->getTestMethod();
+        return get_class($this->getTestClass()) . ":" . $this->getTestMethod();
     }
 
     public function getTestClass()
@@ -170,21 +154,6 @@ class Cest extends \Codeception\Test implements
     public function getTestMethod()
     {
         return $this->testMethod;
-    }
-
-    public function getName()
-    {
-        return $this->testMethod;
-    }
-
-    public function getFileName()
-    {
-        return $this->testFile;
-    }
-
-    public function getEnvironment()
-    {
-        return Annotation::forMethod($this->testClassInstance, $this->testMethod)->fetchAll('env');
     }
 
     /**
@@ -200,12 +169,8 @@ class Cest extends \Codeception\Test implements
         ];
     }
 
-    protected function executeHook($I, $hook)
+    protected function getParser()
     {
-        if (is_callable([$this->testClassInstance, "_$hook"])) {
-            $this->invoke("_$hook", [$I, $this->scenario]);
-        }
+        return $this->parser;
     }
-
-
 }

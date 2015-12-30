@@ -12,8 +12,8 @@ use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Suite;
-use Codeception\TestCase;
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\Testable;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -454,7 +454,7 @@ class Console implements EventSubscriberInterface
     {
         $this->columns = [40, 5];
         foreach ($e->getSuite()->tests() as $test) {
-            if ($test instanceof TestCase) {
+            if ($test instanceof Testable) {
                 $this->columns[0] = max(
                     $this->columns[0],
                     20 + strlen($test->getFeature()) + strlen($test->getFileName())
@@ -463,7 +463,7 @@ class Console implements EventSubscriberInterface
             }
             if ($test instanceof \PHPUnit_Framework_TestSuite_DataProvider) {
                 $test = $test->testAt(0);
-                $output_length = $test instanceof TestCase
+                $output_length = $test instanceof Testable
                     ? strlen($test->getFeature()) + strlen($test->getFileName())
                     : strlen($test->toString());
 
@@ -495,9 +495,9 @@ class Console implements EventSubscriberInterface
      */
     protected function getTestMessage(\PHPUnit_Framework_SelfDescribing $test, $inProgress = false)
     {
-        if (!$test instanceof TestCase and $test instanceof \PHPUnit_Framework_TestCase) {
+        if (!$test instanceof Testable and $test instanceof \PHPUnit_Framework_TestCase) {
             $this->message = $this
-                ->message('%s::%s')
+                ->message('%s:%s')
                 ->with($this->cutNamespace(get_class($test)), $test->getName(true))
                 ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
                 ->cut($inProgress ? $this->columns[0] + $this->columns[1] - 16 : $this->columns[0] - 2)

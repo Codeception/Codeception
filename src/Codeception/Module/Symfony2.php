@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
@@ -19,9 +19,8 @@ use Symfony\Component\Finder\Finder;
  *
  * ## Status
  *
- * * Maintainer: **davert**
+ * * Maintainer: **raistlin**
  * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
  *
  * ## Config
  *
@@ -31,7 +30,8 @@ use Symfony\Component\Finder\Finder;
  * * environment: 'local' - environment used for load kernel
  * * debug: true - turn on/off debug mode
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
- * *
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire) 
+ * 
  * ### Example (`functional.suite.yml`) - Symfony 2.x Directory Structure
  *
  * ```
@@ -48,6 +48,7 @@ use Symfony\Component\Finder\Finder;
  * * environment: 'local' - environment used for load kernel
  * * em_service: 'doctrine.orm.entity_manager' - use the stated EntityManager to pair with Doctrine Module.
  * * debug: true - turn on/off debug mode
+ * * cache_router: 'false' - enable router caching between tests in order to [increase performance](http://lakion.com/blog/how-did-we-speed-up-sylius-behat-suite-with-blackfire) 
  *
  * ### Example (`functional.suite.yml`) - Symfony 3 Directory Structure
  *
@@ -65,6 +66,24 @@ use Symfony\Component\Finder\Finder;
  * * client - current Crawler instance
  * * container - dependency injection container instance
  *
+ * ## Parts
+ * 
+ * * services - allows to use Symfony2 DIC only with WebDriver or PhpBrowser modules. 
+ * 
+ * Usage example:
+ * 
+ * ```yaml
+ * class_name: AcceptanceTester
+ * modules:
+ *     enabled:
+ *         - Symfony2:
+ *             part: SERVICES
+ *         - Doctrine2:
+ *             depends: Symfony2
+ *         - WebDriver:
+ *             url: http://your-url.com
+ *             browser: phantomjs
+ * ```
  */
 class Symfony2 extends Framework implements DoctrineProvider, PartedModule
 {
@@ -128,7 +147,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         $this->container = $this->kernel->getContainer();
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\Testable $test)
     {
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);

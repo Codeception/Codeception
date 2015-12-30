@@ -7,7 +7,7 @@ use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Suite;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Module implements EventSubscriberInterface
@@ -48,7 +48,7 @@ class Module implements EventSubscriberInterface
 
     public function before(TestEvent $event)
     {
-        if (!$event->getTest() instanceof TestCase) {
+        if (!$event->getTest() instanceof Testable) {
             return;
         }
 
@@ -61,7 +61,7 @@ class Module implements EventSubscriberInterface
 
     public function after(TestEvent $e)
     {
-        if (!$e->getTest() instanceof TestCase) {
+        if (!$e->getTest() instanceof Testable) {
             return;
         }
         foreach ($this->modules as $module) {
@@ -71,7 +71,7 @@ class Module implements EventSubscriberInterface
 
     public function failed(FailEvent $e)
     {
-        if (!$e->getTest() instanceof TestCase) {
+        if (!$e->getTest() instanceof Testable) {
             return;
         }
         foreach ($this->modules as $module) {

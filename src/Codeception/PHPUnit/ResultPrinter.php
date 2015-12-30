@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\PHPUnit;
 
-use Codeception\TestCase\Interfaces\ScenarioDriven;
+use Codeception\Test\Interfaces\ScenarioDriven;
 
 class ResultPrinter extends \PHPUnit_Util_TestDox_ResultPrinter
 {

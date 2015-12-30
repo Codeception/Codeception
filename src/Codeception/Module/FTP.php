@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module\Filesystem;
-use Codeception\TestCase;
+use Codeception\Testable;
 
 /**
  *
@@ -124,9 +124,9 @@ class FTP extends Filesystem
     /**
      * Setup connection and login with config settings
      *
-     * @param \Codeception\TestCase $test
+     * @param \Codeception\Testable $test
      */
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         // Login using config settings
         $this->loginAs($this->config['user'], $this->config['password']);

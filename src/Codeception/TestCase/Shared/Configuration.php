@@ -17,37 +17,18 @@ trait Configuration
     protected $testFile;
     protected $env;
 
-    public function configActor($actor)
-    {
-        $this->actor = $actor;
-        return $this;
-    }
-
-    public function configDispatcher(EventDispatcher $dispatcher)
+    public function _services(EventDispatcher $dispatcher, ModuleContainer $moduleContainer, Di $di)
     {
         $this->dispatcher = $dispatcher;
-        return $this;
+        $this->di = clone($di);
+        $this->moduleContainer = $moduleContainer;
     }
 
-    public function configFile($file)
+    public function _configure($config)
     {
-        if (!is_file($file)) {
-            throw new ConfigurationException("Test file $file not found");
+        foreach ($config as $property => $value) {
+            $this->$property = $value;
         }
-
-        $this->testFile = $file;
-        return $this;
-    }
-
-    public function configName($name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function config($property, $value)
-    {
-        $this->$property = $value;
         return $this;
     }
 }

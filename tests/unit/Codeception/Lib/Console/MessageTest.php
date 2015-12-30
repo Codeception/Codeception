@@ -2,7 +2,7 @@
 namespace Codeception\Lib\Console;
 
 
-class MessageTest extends \Codeception\TestCase\Test
+class MessageTest extends \Codeception\Test\Format\TestCase
 {
 
     // tests

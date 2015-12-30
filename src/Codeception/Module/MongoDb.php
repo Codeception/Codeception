@@ -6,7 +6,7 @@ use Codeception\Configuration as Configuration;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Lib\Driver\MongoDb as MongoDbDriver;
-use Codeception\TestCase;
+use Codeception\Testable;
 
 /**
  * Works with MongoDb database.
@@ -114,7 +114,7 @@ class MongoDb extends CodeceptionModule
         }
     }
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         if ($this->config['cleanup'] && !$this->populated) {
             $this->cleanup();
@@ -122,7 +122,7 @@ class MongoDb extends CodeceptionModule
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(Testable $test)
     {
         $this->populated = false;
     }
