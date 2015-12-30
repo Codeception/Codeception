@@ -43,9 +43,9 @@ class Loader
     protected $tests = [];
     protected $path;
 
-    public function __construct($path)
+    public function __construct(array $suiteSettings)
     {
-        $this->path = $path;
+        $this->path = $suiteSettings['path'];
         $this->formats = [
             new CeptLoader(),
             new CestLoader(),

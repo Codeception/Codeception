@@ -450,6 +450,28 @@ class PhpBrowserTest extends TestsForBrowsers
         $this->assertEquals('codeception.com', $cookie['Domain']);
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2653
+     */
+    public function testSetCookiesByOptions()
+    {
+        $config = $this->module->_getConfig();
+        $config['cookies'] = [
+            [
+                'Name' => 'foo',
+                'Value' => 'bar1',
+            ],
+            [
+                'Name' => 'baz',
+                'Value' => 'bar2',
+            ],
+        ];
+        $this->module->_reconfigure($config);
+        // this url redirects if cookies are present
+        $this->module->amOnPage('/cookies');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
     private function skipForOldGuzzle()
     {
         if (class_exists('GuzzleHttp\Url')) {

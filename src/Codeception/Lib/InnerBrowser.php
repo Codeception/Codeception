@@ -1502,4 +1502,35 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $cookieStrings = array_map('strval', $cookies);
         $this->debugSection('Cookie Jar', $cookieStrings);
     }
+
+    protected function setCookiesFromOptions()
+    {
+        if (isset($this->config['cookies']) && is_array($this->config['cookies']) && !empty($this->config['cookies'])) {
+
+            $domain = parse_url($this->config['url'], PHP_URL_HOST);
+            $cookieJar = $this->client->getCookieJar();
+            foreach ($this->config['cookies'] as &$cookie) {
+                if (!is_array($cookie) || !array_key_exists('Name', $cookie) || !array_key_exists('Value', $cookie)) {
+                    throw new \InvalidArgumentException('Cookies must have at least Name and Value attributes');
+                }
+                if (!isset($cookie['Domain'])) {
+                    $cookie['Domain'] = $domain;
+                }
+                if (!isset($cookie['Expires'])) {
+                    $cookie['Expires'] = null;
+                }
+                if (!isset($cookie['Path'])) {
+                    $cookie['Path'] = '/';
+                }
+                if (!isset($cookie['Secure'])) {
+                    $cookie['Secure'] = false;
+                }
+                if (!isset($cookie['HttpOnly'])) {
+                    $cookie['HttpOnly'] = false;
+                }
+                $cookieJar->set(new \Symfony\Component\BrowserKit\Cookie($cookie['Name'], $cookie['Value'],
+                    $cookie['Expires'], $cookie['Path'], $cookie['Domain'], $cookie['Secure'], $cookie['HttpOnly']));
+            }
+        }
+    }
 }

@@ -92,7 +92,7 @@ class SuiteManager
 
     public function loadTests($path = null)
     {
-        $testLoader = new Loader($this->settings['path']);
+        $testLoader = new Loader($this->settings);
         $path
             ? $testLoader->loadTest($path)
             : $testLoader->loadTests();
@@ -115,7 +115,6 @@ class SuiteManager
                 $this->configureTest($t);
             }
         }
-
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }

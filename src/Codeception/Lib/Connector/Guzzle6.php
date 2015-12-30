@@ -201,13 +201,6 @@ class Guzzle6 extends Client
         $headers = [];
         $server = $request->getServer();
 
-        $uri = new Psr7Uri($request->getUri());
-        $server['HTTP_HOST'] = $uri->getHost();
-        $port = $uri->getPort();
-        if ($port !== null && $port !== 443 && $port != 80) {
-            $server['HTTP_HOST'] .= ':' . $port;
-        }
-
         $contentHeaders = ['Content-Length' => true, 'Content-Md5' => true, 'Content-Type' => true];
         foreach ($server as $header => $val) {
             $header = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $header)))));
