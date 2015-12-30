@@ -92,7 +92,7 @@ class SuiteManager
 
     public function loadTests($path = null)
     {
-        $testLoader = new Loader($this->settings['path']);
+        $testLoader = new Loader($this->settings);
         $path
             ? $testLoader->loadTest($path)
             : $testLoader->loadTests();

@@ -43,7 +43,7 @@ class Loader
     protected $tests = [];
     protected $path;
 
-    public function __construct($suiteSettings)
+    public function __construct(array $suiteSettings)
     {
         $this->path = $suiteSettings['path'];
         $this->formats = [
