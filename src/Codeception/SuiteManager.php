@@ -115,7 +115,6 @@ class SuiteManager
                 $this->configureTest($t);
             }
         }
-
         if ($test instanceof ScenarioDriven) {
             $test->preload();
         }

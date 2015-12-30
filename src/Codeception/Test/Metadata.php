@@ -47,7 +47,7 @@ class Metadata
      */
     public function setGroups($groups)
     {
-        $this->groups = $groups;
+        $this->groups = array_merge($this->groups, $groups);
     }
 
     /**
