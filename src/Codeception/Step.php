@@ -2,12 +2,12 @@
 namespace Codeception;
 
 use Codeception\Lib\ModuleContainer;
-use Codeception\Step\Meta;
+use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
 
 abstract class Step
 {
-    const STACK_POSITION = 3;
+    const STACK_POSITION = 4;
     /**
      * @var    string
      */
@@ -27,7 +27,7 @@ abstract class Step
     protected $actor = 'I';
 
     /**
-     * @var Meta
+     * @var MetaStep
      */
     protected $metaStep = null;
 
@@ -37,15 +37,13 @@ abstract class Step
     {
         $this->action = $action;
         $this->arguments = $arguments;
-        $this->storeCallerInfo();
     }
 
-    protected function storeCallerInfo()
+    public function detectMetaStep()
     {
         if (!function_exists('xdebug_get_function_stack')) {
             return;
         }
-
         ini_set('xdebug.collect_params', '1');
         $stack = xdebug_get_function_stack();
         ini_set('xdebug.collect_params', 0);
@@ -93,7 +91,7 @@ abstract class Step
 
     public function getArguments($asString = false)
     {
-        return ($asString) ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
+        return $asString ? $this->getArgumentsAsString($this->arguments) : $this->arguments;
     }
 
     protected function getArgumentsAsString(array $arguments)
@@ -241,5 +239,13 @@ abstract class Step
             }
             return;
         }
+    }
+
+    /**
+     * @param MetaStep $metaStep
+     */
+    public function setMetaStep($metaStep)
+    {
+        $this->metaStep = $metaStep;
     }
 }

@@ -3,6 +3,7 @@ namespace Codeception\Test;
 
 use Codeception\Test\Loader\Cept as CeptLoader;
 use Codeception\Test\Loader\Cest as CestLoader;
+use Codeception\Test\Loader\Gherkin as GherkinLoader;
 use Codeception\Test\Loader\TestCase as TestCaseLoader;
 use Symfony\Component\Finder\Finder;
 
@@ -50,6 +51,7 @@ class Loader
             new CeptLoader(),
             new CestLoader(),
             new TestCaseLoader(),
+            new GherkinLoader($suiteSettings['gherkin']),
         ];
     }
 

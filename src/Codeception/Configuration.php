@@ -101,6 +101,13 @@ class Configuration
         'groups'      => [],
         'shuffle'     => false,
         'error_level' => 'E_ALL & ~E_STRICT & ~E_DEPRECATED',
+        'gherkin' => [
+            'contexts' => [
+                'default' => [],
+                'tag' => [],
+                'role' => []
+            ]
+        ]
     ];
 
     /**
