@@ -162,6 +162,7 @@ class Laravel5 extends Client
         // So to record the triggered events we have to catch the calls to the fire method of the event dispatcher mock.
         $callback = function ($event) {
             $this->triggeredEvents[] = $this->normalizeEvent($event);
+            return [];
         };
         $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
             ->method('fire')
