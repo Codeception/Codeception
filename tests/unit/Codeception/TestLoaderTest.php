@@ -13,7 +13,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->testLoader = new \Codeception\Test\Loader(\Codeception\Configuration::dataDir());
+        $this->testLoader = new \Codeception\Test\Loader(['path' => \Codeception\Configuration::dataDir()]);
     }
 
     /**
@@ -59,7 +59,7 @@ class TestLoaderTest extends \PHPUnit_Framework_TestCase
     {
         Codeception\Util\Autoload::addNamespace('Math', codecept_data_dir().'claypit/tests/_support/Math'); // to autoload dependencies
 
-        $this->testLoader = new \Codeception\Test\Loader(codecept_data_dir().'claypit/tests');
+        $this->testLoader = new \Codeception\Test\Loader(['path' => codecept_data_dir().'claypit/tests']);
         $this->testLoader->loadTests();
 
         $testNames = $this->getTestNames($this->testLoader->getTests());
