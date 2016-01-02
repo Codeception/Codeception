@@ -6,6 +6,7 @@ use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\StepNode;
 use Codeception\Lib\Di;
 use Codeception\Scenario;
+use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\Test\Metadata;
@@ -34,9 +35,11 @@ class Gherkin extends Test implements ScenarioDriven
     {
         $this->featureNode = $featureNode;
         $this->scenarioNode = $scenarioNode;
-        $this->scenario = new Scenario($this);
+        $this->steps = $steps;
         $this->setMetadata(new Metadata());
+        $this->scenario = new Scenario($this);
         $this->getMetadata()->setName($featureNode->getTitle());
+        $this->getMetadata()->setFeature($scenarioNode->getTitle());
         $this->getMetadata()->setFilename($featureNode->getFile());
 
     }
@@ -51,12 +54,16 @@ class Gherkin extends Test implements ScenarioDriven
 
     public function getSignature()
     {
-        return $this->scenarioNode->getTitle();
+        return codecept_relative_path($this->getFileName());
     }
 
     public function test()
     {
         $this->makeContexts();
+        $description = explode("\n", $this->featureNode->getDescription());
+        foreach ($description as $line) {
+            $this->getScenario()->runStep(new Comment($line));
+        }
 
         if ($background = $this->featureNode->getBackground()) {
             foreach ($background->getSteps() as $step) {
@@ -71,15 +78,13 @@ class Gherkin extends Test implements ScenarioDriven
 
     protected function runStep(StepNode $step)
     {
-        $type = $step->getKeywordType();
-        if (!isset($this->steps[$type])) {
-            return;
-        }
-        $this->scenario->setMetaStep(new Meta($step->getText(), [])); // enable metastep
+        $meta = new Meta($step->getText(), []);
+        $meta->setActor($step->getKeyword());
+        $this->scenario->setMetaStep($meta); // enable metastep
 
         $stepText = $step->getText();
         $executed = false;
-        foreach ($this->steps[$type] as $pattern => $context) {
+        foreach ($this->steps as $pattern => $context) {
             $matches = [];
             if (!preg_match($pattern, $stepText, $matches)) {
                 continue;
@@ -90,7 +95,7 @@ class Gherkin extends Test implements ScenarioDriven
         }
         $this->scenario->setMetaStep(null); // disable metastep
         if (!$executed) {
-            throw new \PHPUnit_Framework_IncompleteTestError("Step definition for `$stepText` not found in contexts", $this);
+            throw new \PHPUnit_Framework_IncompleteTestError("Step definition for `$stepText` not found in contexts");
         }
     }
 
@@ -99,27 +104,21 @@ class Gherkin extends Test implements ScenarioDriven
         /** @var $di Di  **/
         $di = $this->getMetadata()->getService('di');
         $di->set($this->scenario);
-        $className = '\\' . $this->getMetadata()->getCurrent('actor');
-        $di->set(new $className($this->scenario));
 
-        foreach ($this->steps as $stepType => $steps) {
-            foreach ($steps as $pattern => $step) {
-                if (empty($step)) {
-                    continue;
-                }
-                $this->steps[$stepType][$pattern][0] = $di->get($step[0]);
-            }
+        foreach ($this->steps as $pattern => $step) {
+            $di->instantiate($step[0]);
+            $this->steps[$pattern][0] = $di->get($step[0]);
         }
     }
 
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->getFeature() . ' ' . $this->getFileName();
     }
 
     public function getFeature()
     {
-        // TODO: Implement getFeature() method.
+        return $this->metadata->getFeature();
     }
 
     /**
@@ -127,7 +126,7 @@ class Gherkin extends Test implements ScenarioDriven
      */
     public function getScenario()
     {
-        // TODO: Implement getScenario() method.
+        return $this->scenario;
     }
 
     public function getScenarioText($format = 'text')

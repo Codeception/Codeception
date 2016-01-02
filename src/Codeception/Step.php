@@ -33,7 +33,7 @@ abstract class Step
 
     protected $failed = false;
 
-    public function __construct($action, array $arguments)
+    public function __construct($action, array $arguments = [])
     {
         $this->action = $action;
         $this->arguments = $arguments;

@@ -26,4 +26,30 @@ class ScenarioGuy extends \Codeception\Actor
         $this->seeFileFound('composer.json');
         $this->seeInThisFile('codeception/c3');
     }
+
+    /**
+     * @Given I have terminal opened
+     */
+    public function terminal()
+    {
+        $this->comment('I am terminal user!');
+    }
+
+    /**
+     * @When I am in current directory
+     */
+    public function openCurrentDir()
+    {
+        $this->amInPath('.');
+    }
+
+    /**
+     * @Then there is a file :name
+     */
+    public function matchFile($name)
+    {
+        $this->seeFileFound($name);
+    }
+    
+    
 }

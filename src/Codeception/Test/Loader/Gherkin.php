@@ -6,6 +6,7 @@ use Behat\Gherkin\Keywords\ArrayKeywords as GherkinKeywords;
 use Behat\Gherkin\Lexer as GherkinLexer;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
+use Codeception\Configuration;
 use Codeception\Test\Format\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
 
@@ -24,6 +25,16 @@ class Gherkin implements Loader
         'but'              => 'But'
     ];
 
+    protected static $defaultSettings = [
+        'gherkin' => [
+            'contexts' => [
+                'default' => [],
+                'tag' => [],
+                'role' => []
+            ]
+        ]
+    ];
+
     protected $tests = [];
 
     /**
@@ -34,12 +45,11 @@ class Gherkin implements Loader
     protected $settings = [];
 
     protected $steps = [
-        'default' => []
     ];
 
-    public function __construct($settings)
+    public function __construct($settings = [])
     {
-        $this->settings = $settings;
+        $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
         $keywords = new GherkinKeywords(['en' => static::$defaultKeywords]);
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
@@ -48,19 +58,27 @@ class Gherkin implements Loader
 
     protected function fetchGherkinSteps()
     {
-        $contexts = $this->settings['contexts'];
-        $this->addSteps($contexts['default']);
+        $contexts = $this->settings['gherkin']['contexts'];
+
         foreach ($contexts['tag'] as $tag => $tagContexts) {
             $this->addSteps($tagContexts, "tag:$tag");
         }
         foreach ($contexts['role'] as $role => $roleContexts) {
             $this->addSteps($roleContexts, "role:$role");
         }
+
+        if (empty($this->steps) and empty($contexts['default'])) { // if no context is set, actor to be a context
+            $contexts['default'] = $this->settings['namespace']
+                ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
+                : $this->settings['class_name'];
+        }
+        $this->addSteps($contexts['default']);
+
     }
 
     protected function addSteps(array $contexts, $group = 'default')
     {
-        $this->steps[$group] = ['Given' => [], 'When' => [], 'Then' => []];
+        $this->steps[$group] = [];
         foreach ($contexts as $context) {
             $methods = get_class_methods($context);
             foreach ($methods as $method) {
@@ -71,7 +89,7 @@ class Gherkin implements Loader
                         continue;
                     }
                     $pattern = $this->makePlaceholderPattern($pattern);
-                    $this->steps[$group][$type][$pattern] = [$context, $method];
+                    $this->steps[$group][$pattern] = [$context, $method];
                 }
             }
         }
@@ -80,7 +98,9 @@ class Gherkin implements Loader
     protected function makePlaceholderPattern($pattern)
     {
         if (strpos($pattern, '/') !== 0) {
-            $pattern = preg_replace('~:(\w+)~', '(\w+)', $pattern);
+            $pattern = preg_quote($pattern);
+            $pattern = preg_replace('~":(\w+)"~', '"(.*?)"', $pattern);
+            $pattern = preg_replace('~:(\w+)~', '"(.*?)"', $pattern);
             $pattern = "/$pattern/";
         }
         return $pattern;
@@ -88,19 +108,19 @@ class Gherkin implements Loader
 
     public function loadTests($filename)
     {
-        $featureNode = $this->parser->parse(file_get_contents($filename));
+        $featureNode = $this->parser->parse(file_get_contents($filename), $filename);
 
         foreach ($featureNode->getScenarios() as $scenarioNode) {
             /** @var $scenarioNode ScenarioNode  **/
             $steps = $this->steps['default']; // load default context
 
-            foreach ($scenarioNode->getTags() as $tag) { // load tag contexts
+            foreach (array_merge($scenarioNode->getTags(), $featureNode->getTags()) as $tag) { // load tag contexts
                 if (isset($this->steps["tag:$tag"])) {
                     $steps = array_merge($steps, $this->steps["tag:$tag"]);
                 }
             }
 
-            $roles = $this->settings['contexts']['role']; // load role contexts
+            $roles = $this->settings['gherkin']['contexts']['role']; // load role contexts
             foreach ($roles as $role) {
                 $filter = new RoleFilter($role);
                 if ($filter->isFeatureMatch($featureNode)) {
@@ -110,6 +130,7 @@ class Gherkin implements Loader
             }
 
             $this->tests[] = new GherkinFormat($featureNode, $scenarioNode, $steps);
+
         }
     }
 

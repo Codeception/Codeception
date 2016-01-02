@@ -44,14 +44,14 @@ class Loader
     protected $tests = [];
     protected $path;
 
-    public function __construct(array $suiteSettings)
+    public function __construct(array $settings)
     {
-        $this->path = $suiteSettings['path'];
+        $this->path = $settings['path'];
         $this->formats = [
             new CeptLoader(),
             new CestLoader(),
             new TestCaseLoader(),
-            new GherkinLoader($suiteSettings['gherkin']),
+            new GherkinLoader($settings),
         ];
     }
 

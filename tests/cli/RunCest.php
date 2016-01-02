@@ -295,4 +295,9 @@ EOF
 );
 
     }
+
+    public function runGherkinTest()
+    {
+        
+    }
 }

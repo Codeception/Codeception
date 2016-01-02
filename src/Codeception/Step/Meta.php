@@ -6,10 +6,6 @@ use Codeception\Step as CodeceptionStep;
 
 class Meta extends CodeceptionStep
 {
-    protected function storeCallerInfo()
-    {
-    }
-
     public function run(ModuleContainer $container = null)
     {
     }
