@@ -5,8 +5,8 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverKeys;
 
-require_once 'tests/data/app/data.php';
-require_once __DIR__ . '/TestsForBrowsers.php';
+require_once codecept_data_dir() . 'app/data.php';
+require_once __DIR__ . '/../unit/Codeception/Module/TestsForBrowsers.php';
 
 class WebDriverTest extends TestsForBrowsers
 {
@@ -29,7 +29,7 @@ class WebDriverTest extends TestsForBrowsers
     {
         $this->noPhpWebserver();
         $this->noSelenium();
-        $this->module = new \Codeception\Module\WebDriver(make_container());
+        $this->module = new \Codeception\Module\WebDriver(\Codeception\Util\Stub::make('Codeception\Lib\ModuleContainer'));
         $url = 'http://localhost:8000';
         $this->module->_setConfig(['url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0]);
         $this->module->_initialize();
