@@ -1,7 +1,7 @@
 # Changelog
 
 #### 2.1.6
-* [Laravel5]] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
+* [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
 * [HHVM] Asserts module works on HHVM
 
 #### 2.1.5
