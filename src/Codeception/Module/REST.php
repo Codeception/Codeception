@@ -174,7 +174,6 @@ EOF;
             $this->assertEquals(
                 $value,
                 $this->getRunningClient()->getInternalResponse()->getHeader($name)
-
             );
             return;
         }
