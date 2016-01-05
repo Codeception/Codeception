@@ -347,6 +347,13 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
+        if ($e instanceof \PHPUnit_Framework_SkippedTestError) {
+            return;
+        }
+        if ($e instanceof \PHPUnit_Framework_IncompleteTestError) {
+            return;
+        }
+
         if ($this->rawStackTrace) {
             $this->message(\PHPUnit_Util_Filter::getFilteredStacktrace($e, true, false))->writeln();
             return;

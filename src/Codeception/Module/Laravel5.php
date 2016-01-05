@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Facade;
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
  * * disable_middleware: `boolean`, default `false` - disable all middleware.
  * * disable_events: `boolean`, default `false` - disable all events.
+ * * url: `string`, default `` - The application URL.
  *
  * ## API
  *

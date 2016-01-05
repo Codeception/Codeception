@@ -108,7 +108,7 @@ class RoboFile extends \Robo\Tasks
         sleep(3); // wait for selenium to launch
 
         $this->taskCodecept('./codecept')
-            ->test('tests/unit/Codeception/Module/WebDriverTest.php'.$test)
+            ->test('tests/web/WebDriverTest.php'.$test)
             ->args($args)
             ->run();
         

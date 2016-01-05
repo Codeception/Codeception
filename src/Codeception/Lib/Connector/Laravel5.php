@@ -54,7 +54,7 @@ class Laravel5 extends Client
         $this->module = $module;
         $this->initialize();
 
-        $components = parse_url($this->app['config']->get('app.url', 'http://localhost'));
+        $components = array_key_exists('url', $this->module->config) ? parse_url($this->module->config['url']) : parse_url($this->app['config']->get('app.url', 'http://localhost'));
         $host = isset($components['host']) ? $components['host'] : 'localhost';
 
         parent::__construct($this->app, ['HTTP_HOST' => $host]);
@@ -162,6 +162,7 @@ class Laravel5 extends Client
         // So to record the triggered events we have to catch the calls to the fire method of the event dispatcher mock.
         $callback = function ($event) {
             $this->triggeredEvents[] = $this->normalizeEvent($event);
+            return [];
         };
         $mock->expects(new \PHPUnit_Framework_MockObject_Matcher_AnyInvokedCount)
             ->method('fire')

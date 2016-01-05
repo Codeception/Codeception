@@ -16,7 +16,7 @@ class TestTest extends \Codeception\Test\Format\TestCase
 
     public function testReportedInterface()
     {
-        $this->assertInstanceOf('\\Codeception\\TestCase\\Interfaces\\Reported', $this);
+        $this->assertInstanceOf('\\Codeception\\Test\\Interfaces\\Reported', $this);
         $this->assertEquals(array(
             'file' => __FILE__,
             'name' => 'testReportedInterface',
