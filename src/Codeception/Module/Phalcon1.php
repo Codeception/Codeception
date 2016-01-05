@@ -11,7 +11,7 @@ use Phalcon\Mvc\RouterInterface;
 use Phalcon\Mvc\Router\RouteInterface;
 use Codeception\Util\ReflectionHelper;
 use Phalcon\Mvc\Url;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Configuration;
 use Codeception\Lib\Connector\Phalcon as PhalconConnector;
 use Codeception\Lib\Framework;
@@ -128,10 +128,10 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     /**
      * HOOK: before scenario
      *
-     * @param TestCase $test
+     * @param Testable $test
      * @throws ModuleException
      */
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $application = require $this->bootstrapFile;
         if (!$application instanceof Injectable) {
@@ -185,9 +185,9 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     /**
      * HOOK: after scenario
      *
-     * @param TestCase $test
+     * @param Testable $test
      */
-    public function _after(TestCase $test)
+    public function _after(Testable $test)
     {
         if ($this->config['cleanup'] && isset($this->di['db'])) {
             while ($this->di['db']->isUnderTransaction()) {

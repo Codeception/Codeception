@@ -1,7 +1,7 @@
 <?php 
 namespace Codeception\Lib;
 
-class DiTest extends \Codeception\TestCase\Test
+class DiTest extends \Codeception\Test\Format\TestCase
 {
     /**
      * @var Di

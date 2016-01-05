@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Coverage;
 
-class FilterTest extends \Codeception\TestCase\Test
+class FilterTest extends \Codeception\Test\Format\TestCase
 {
     /**
      * @var Filter

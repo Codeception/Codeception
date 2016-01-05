@@ -5,7 +5,7 @@ use Codeception\Event\FailEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
 use Codeception\Events;
-use Codeception\TestCase as CodeceptionTestCase;
+use Codeception\Testable;
 use Exception;
 use PHPUnit_Framework_Test;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -58,6 +58,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $e));
         $this->skippedTests[] = $test;
+        $test->getTestResultObject()->addError($test, $e, $time);
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
@@ -68,6 +69,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $e));
         $this->skippedTests[] = spl_object_hash($test);
+        $test->getTestResultObject()->addError($test, $e, $time);
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -83,11 +85,19 @@ class Listener implements \PHPUnit_Framework_TestListener
     public function startTest(\PHPUnit_Framework_Test $test)
     {
         $this->dispatcher->dispatch(Events::TEST_START, new TestEvent($test));
-        if (!$test instanceof CodeceptionTestCase) {
+        if (!$test instanceof Testable) {
             return;
         }
+        if ($test->getMetadata()->getSkip() !== null) {
+            $this->addSkippedTest($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
+            return;
+        }
+        if ($test->getMetadata()->getIncomplete() !== null) {
+            $this->addIncompleteTest($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
+            return;
+        }
+
         try {
-            $test->getScenario()->stopIfBlocked();
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
@@ -101,10 +111,10 @@ class Listener implements \PHPUnit_Framework_TestListener
     {
         $hash = spl_object_hash($test);
         if (!in_array($hash, $this->unsuccessfulTests)) {
-            $this->fire(Events::TEST_SUCCESS, new TestEvent($test));
+            $this->fire(Events::TEST_SUCCESS, new TestEvent($test, $time));
         }
-        if (in_array($hash, $this->startedTests) and ($test instanceof CodeceptionTestCase)) {
-            $this->fire(Events::TEST_AFTER, new TestEvent($test));
+        if (in_array($hash, $this->startedTests)) {
+            $this->fire(Events::TEST_AFTER, new TestEvent($test, $time));
         }
 
         $this->dispatcher->dispatch(Events::TEST_END, new TestEvent($test, $time));
@@ -113,8 +123,8 @@ class Listener implements \PHPUnit_Framework_TestListener
     protected function fire($event, TestEvent $eventType)
     {
         $test = $eventType->getTest();
-        if ($test instanceof CodeceptionTestCase) {
-            foreach ($test->getScenario()->getGroups() as $group) {
+        if ($test instanceof Testable) {
+            foreach ($test->getMetadata()->getGroups() as $group) {
                 $this->dispatcher->dispatch($event . '.' . $group, $eventType);
             }
         }

@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Exception\ModuleException as ModuleException;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
@@ -90,7 +90,7 @@ EOF;
     public $params = [];
     public $response = "";
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();

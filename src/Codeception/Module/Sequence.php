@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleException;
-use Codeception\TestCase;
+use Codeception\Testable;
 
 /**
  * Sequence solves data cleanup issue in alternative way.
@@ -55,7 +55,7 @@ class Sequence extends CodeceptionModule
 {
     public static $hash = array();
 
-    public function _after(TestCase $t)
+    public function _after(Testable $t)
     {
         self::$hash = [];
     }

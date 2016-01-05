@@ -5,7 +5,7 @@ use Codeception\Exception\ModuleException;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\MultiSession;
 use Codeception\Lib\Interfaces\Remote;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 
@@ -136,7 +136,7 @@ class PhpBrowser extends InnerBrowser implements Remote, MultiSession
         return new \Codeception\Lib\Connector\Guzzle6();
     }
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         if (!$this->client) {
             $this->client = $this->guessGuzzleConnector();

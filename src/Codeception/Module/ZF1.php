@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Configuration;
 use Codeception\Lib\Framework;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Lib\Connector\ZF1 as ZF1Connector;
@@ -119,7 +119,7 @@ class ZF1 extends Framework
         \Zend_Loader_Autoloader::getInstance();
     }
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $this->client = new ZF1Connector();
 
@@ -140,7 +140,7 @@ class ZF1 extends Framework
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(Testable $test)
     {
         $_SESSION = [];
         $_GET = [];

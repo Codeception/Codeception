@@ -7,17 +7,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 interface Configurable
 {
-    public function configActor($actor);
-
-    public function configDispatcher(EventDispatcher $dispatcher);
-
-    public function configModules(ModuleContainer $moduleContainer);
-
-    public function configDi(Di $di);
-
-    public function config($name, $value);
-
-    public function configEnv($env);
-
+    public function _services(EventDispatcher $dispatcher, ModuleContainer $moduleContainer, Di $di);
+    public function _configure($config);
     public function initConfig();
 } 

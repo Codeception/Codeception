@@ -6,7 +6,7 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Exception\ModuleRequireException;
-use Codeception\TestCase;
+use Codeception\Testable;
 
 /**
  * Module for testing XMLRPC WebService.
@@ -62,7 +62,7 @@ class XMLRPC extends CodeceptionModule
         parent::_initialize();
     }
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         if (!$this->client) {
             if (!strpos($this->config['url'], '://')) {

@@ -5,7 +5,7 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
 use Codeception\Lib\Interfaces\DoctrineProvider;
-use Codeception\TestCase;
+use Codeception\Testable;
 use Doctrine\ORM\EntityManager;
 use Codeception\Util\Stub;
 
@@ -117,7 +117,7 @@ EOF;
         $this->retrieveEntityManager();
     }
 
-    public function _before(TestCase $test)
+    public function _before(Testable $test)
     {
         $this->retrieveEntityManager();
         if ($this->config['cleanup']) {
@@ -158,7 +158,7 @@ EOF;
         $this->em->getConnection()->connect();
     }
 
-    public function _after(TestCase $test)
+    public function _after(Testable $test)
     {
         if (!$this->em instanceof \Doctrine\ORM\EntityManager) {
             return;

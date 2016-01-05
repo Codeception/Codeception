@@ -7,7 +7,7 @@ class ScenarioTest extends \PHPUnit_Framework_TestCase
         $step1 = $this->getMockBuilder('\Codeception\Step')->setConstructorArgs(['Do some testing', ['arg1', 'arg2']])->setMethods(null)->getMock();
         $step2 = $this->getMockBuilder('\Codeception\Step')->setConstructorArgs(['Do even more testing without args', []])->setMethods(null)->getMock();
 
-        $scenario = $this->getMockBuilder('\Codeception\Scenario')->disableOriginalConstructor()->setMethods(null)->getMock();
+        $scenario = new \Codeception\Scenario(new \Codeception\Test\Format\Cept('test','testCept.php'));
         $scenario->addStep($step1);
         $scenario->addStep($step2);
         $scenario->setFeature('Do some testing');
