@@ -1052,6 +1052,7 @@ EOF;
      * ```
      *
      * @param $xml
+     * @part xml
      */
     public function seeXmlResponseIncludes($xml)
     {
