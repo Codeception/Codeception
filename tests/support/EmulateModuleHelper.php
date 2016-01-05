@@ -17,7 +17,7 @@ class EmulateModuleHelper extends \Codeception\Module
     }
 
     public function _before(\Codeception\Testable $test) {
-        $this->feature = $test->getFeature();
+        $this->feature = $test->getMetadata()->getFeature();
     }
 
 }

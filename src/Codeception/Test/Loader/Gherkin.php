@@ -26,6 +26,8 @@ class Gherkin implements Loader
     ];
 
     protected static $defaultSettings = [
+        'namespace' => '',
+        'class_name' => '',
         'gherkin' => [
             'contexts' => [
                 'default' => [],
@@ -68,12 +70,15 @@ class Gherkin implements Loader
         }
 
         if (empty($this->steps) and empty($contexts['default'])) { // if no context is set, actor to be a context
-            $contexts['default'] = $this->settings['namespace']
-                ? rtrim($this->settings['namespace'], '\\') . '\\' . $this->settings['class_name']
+            $actorContext = $this->settings['namespace']
+                ? rtrim($this->settings['namespace'] . '\\' . $this->settings['class_name'], '\\')
                 : $this->settings['class_name'];
+            if ($actorContext) {
+                $contexts['default'][] = $actorContext;
+            }
         }
-        $this->addSteps($contexts['default']);
 
+        $this->addSteps($contexts['default']);
     }
 
     protected function addSteps(array $contexts, $group = 'default')
@@ -81,6 +86,9 @@ class Gherkin implements Loader
         $this->steps[$group] = [];
         foreach ($contexts as $context) {
             $methods = get_class_methods($context);
+            if (!$methods) {
+                continue;
+            }
             foreach ($methods as $method) {
                 $annotation = Annotation::forMethod($context, $method);
                 foreach (['Given', 'When', 'Then'] as $type) {

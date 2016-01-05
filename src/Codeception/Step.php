@@ -7,7 +7,7 @@ use Codeception\Util\Locator;
 
 abstract class Step
 {
-    const STACK_POSITION = 4;
+    const STACK_POSITION = 3;
     /**
      * @var    string
      */
@@ -24,7 +24,7 @@ abstract class Step
 
     protected $line = null;
     protected $file = null;
-    protected $actor = 'I';
+    protected $prefix = 'I';
 
     /**
      * @var MetaStep
@@ -39,7 +39,7 @@ abstract class Step
         $this->arguments = $arguments;
     }
 
-    public function detectMetaStep()
+    public function saveTrace()
     {
         if (!function_exists('xdebug_get_function_stack')) {
             return;
@@ -133,7 +133,7 @@ abstract class Step
 
     public function getPhpCode()
     {
-        return "\${$this->actor}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
+        return "\${$this->prefix}->" . $this->getAction() . '(' . $this->getHumanizedArguments() .')';
     }
 
     /**
@@ -142,21 +142,20 @@ abstract class Step
     public function getMetaStep()
     {
         return $this->metaStep;
-
     }
 
     public function __toString()
     {
-        return $this->actor . ' ' . $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
+        return $this->humanize($this->getAction()) . ' ' . $this->getHumanizedArguments();
     }
 
     public function getHtml($highlightColor = '#732E81')
     {
         if (empty($this->arguments)) {
-            return sprintf('%s %s', ucfirst($this->actor), $this->humanize($this->getAction()));
+            return sprintf('%s %s', ucfirst($this->prefix), $this->humanize($this->getAction()));
         }
 
-        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->actor), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
+        return sprintf('%s %s <span style="color: %s">%s</span>', ucfirst($this->prefix), $this->humanize($this->getAction()), $highlightColor, $this->getHumanizedArguments());
     }
 
     public function getHumanizedActionWithoutArguments()
@@ -230,12 +229,12 @@ abstract class Step
                 continue;
             }
 
-            $this->metaStep = new Meta($step['function'], array_values($step['params']));
+            $this->metaStep = new Step\Meta($step['function'], array_values($step['params']));
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"
             if (!(new \ReflectionClass($step['class']))->isSubclassOf('Codeception\Actor')) {
-                $this->metaStep->setActor($step['class'] . ':');
+                $this->metaStep->setPrefix($step['class'] . ':');
             }
             return;
         }
@@ -247,5 +246,13 @@ abstract class Step
     public function setMetaStep($metaStep)
     {
         $this->metaStep = $metaStep;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->prefix . ' ';
     }
 }

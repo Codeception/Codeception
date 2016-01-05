@@ -79,7 +79,7 @@ class Gherkin extends Test implements ScenarioDriven
     protected function runStep(StepNode $step)
     {
         $meta = new Meta($step->getText(), []);
-        $meta->setActor($step->getKeyword());
+        $meta->setPrefix($step->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
 
         $stepText = $step->getText();

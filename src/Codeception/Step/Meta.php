@@ -16,8 +16,8 @@ class Meta extends CodeceptionStep
         $this->line = $line;
     }
 
-    public function setActor($actor)
+    public function setPrefix($actor)
     {
-        $this->actor = $actor;
+        $this->prefix = $actor;
     }
 }

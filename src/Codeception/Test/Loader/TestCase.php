@@ -67,7 +67,12 @@ class TestCase implements Loader
         if ($test instanceof TestCaseFormat) {
             $test->getMetadata()->setDependencies($deps);
             $test->getMetadata()->setEnv(Annotation::forMethod($test, $methodName)->fetchAll('env'));
+
+            // set feature
+            $name = $test->getName(true);
+            $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $name);
+            $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
+            $test->getMetadata()->setFeature(strtolower($text));
         }
     }
-
 }

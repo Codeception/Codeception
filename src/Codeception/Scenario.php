@@ -58,9 +58,7 @@ class Scenario
 
     public function runStep(Step $step)
     {
-        if ($this->metaStep === true) {
-            $step->detectMetaStep();
-        }
+        $step->saveTrace();
         if ($this->metaStep instanceof Step\Meta) {
             $step->setMetaStep($this->metaStep);
         }
@@ -115,8 +113,11 @@ class Scenario
 
     public function getText()
     {
-        $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(['"\'', '\'"'], ["'", "'"], $text);
+        $text = '';
+        foreach ($this->getSteps() as $step) {
+            $text .= $step->getPrefix() . "$step \r\n";
+        }
+        $text = trim(str_replace(['"\'', '\'"'], ["'", "'"], $text));
         $text = strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
         return $text;
 
