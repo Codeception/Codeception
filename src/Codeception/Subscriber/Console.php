@@ -520,10 +520,11 @@ class Console implements EventSubscriberInterface
             return;
         }
         
-        if (!$this->output->isInteractive()) {
-            $result->append(' ')->write();
-            $this->writeCurrentTest($test);
+        if ($this->output->isInteractive()) {
+            $this->output->write("\x0D");
         }
+        $result->append(' ')->write();
+        $this->writeCurrentTest($test, false);
 
         $conditionalFails = "";
         $numFails  = count($this->fails);
@@ -547,12 +548,5 @@ class Console implements EventSubscriberInterface
                 ->style('info')
                 ->write();
         }
-
-        if (!$this->output->isInteractive()) {
-            return;
-        }
-
-        $this->output->write("\x0D");
-        $result->write();
     }
 }
