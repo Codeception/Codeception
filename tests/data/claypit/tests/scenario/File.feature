@@ -7,4 +7,6 @@ Feature: Run gherkin
     Given I have terminal opened
     When I am in current directory
     Then there is a file "scenario.suite.yml"
-    And I have terminal opened
+    And there are values in it
+      | class_name | ScenarioGuy |
+      | enabled | FileSystem
