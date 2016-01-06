@@ -1763,7 +1763,7 @@ class WebDriver extends CodeceptionModule implements
      * If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
      *
      * ``` php
-     * $I->executeInSelenium(function(\Facebook\WebDriver\RemoteWebDriver $webdriver) {
+     * $I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
      *   $webdriver->get('http://google.com');
      * });
      * ```
@@ -1803,7 +1803,7 @@ class WebDriver extends CodeceptionModule implements
      *
      * ``` php
      * <?php
-     * $I->executeInSelenium(function (\Facebook\WebDriver\RemoteWebDriver $webdriver) {
+     * $I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
      *      $handles=$webdriver->getWindowHandles();
      *      $last_window = end($handles);
      *      $webdriver->switchTo()->window($last_window);
