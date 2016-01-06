@@ -172,8 +172,8 @@ EOF;
     {
         if ($value !== null) {
             $this->assertEquals(
-                $this->getRunningClient()->getInternalResponse()->getHeader($name),
-                $value
+                $value,
+                $this->getRunningClient()->getInternalResponse()->getHeader($name)
             );
             return;
         }
@@ -193,8 +193,8 @@ EOF;
     {
         if ($value !== null) {
             $this->assertNotEquals(
-                $this->getRunningClient()->getInternalResponse()->getHeader($name),
-                $value
+                $value,
+                $this->getRunningClient()->getInternalResponse()->getHeader($name)
             );
             return;
         }
