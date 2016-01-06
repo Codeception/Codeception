@@ -103,12 +103,16 @@ class Gherkin implements Loader
         }
     }
 
-    protected function makePlaceholderPattern($pattern)
+    public function makePlaceholderPattern($pattern)
     {
         if (strpos($pattern, '/') !== 0) {
             $pattern = preg_quote($pattern);
-            $pattern = preg_replace('~":(\w+)"~', '"(.*?)"', $pattern);
-            $pattern = preg_replace('~:(\w+)~', '"(.*?)"', $pattern);
+
+            $pattern = preg_replace('~(\w+)\/(\w+)~', '(?:$1|$2)', $pattern); // or
+            $pattern = preg_replace('~\\\\\((\w)\\\\\)~', '$1?', $pattern); // (s)codecept_debug($pattern);
+
+            // params
+            $pattern = preg_replace('~"?\\\:(\w+)"?~', '"(.*?)"', $pattern);
             $pattern = "/$pattern/";
         }
         return $pattern;
