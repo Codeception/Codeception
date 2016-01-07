@@ -363,18 +363,22 @@ class Db extends CodeceptionModule implements DbInterface
         return (int) $this->proceedSeeInDatabase($table, 'count(*)', $criteria);
     }
 
-    protected function proceedSeeInDatabase($table, $column, $criteria)
+    protected function proceedSeeInDatabase($table, $column, $criteria, $allValues = false)
     {
         $query = $this->driver->select($column, $table, $criteria);
         $this->debugSection('Query', $query, json_encode($criteria));
 
         $sth = $this->driver->executeQuery($query, array_values($criteria));
 
-        return $sth->fetchColumn();
+        return $allValues?
+            array_column($sth->fetchAll(), $column)
+            :
+            $sth->fetchColumn();
+
     }
 
-    public function grabFromDatabase($table, $column, $criteria = [])
+    public function grabFromDatabase($table, $column, $criteria = [], $allValues = false)
     {
-        return $this->proceedSeeInDatabase($table, $column, $criteria);
+        return $this->proceedSeeInDatabase($table, $column, $criteria, $allValues);
     }
 }
