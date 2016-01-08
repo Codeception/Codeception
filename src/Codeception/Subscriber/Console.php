@@ -233,12 +233,16 @@ class Console implements EventSubscriberInterface
                 ->writeln();
         }
         $this->metaStep = $metaStep;
+        $text = $e->getStep()->__toString();
+        if ($e->getStep() instanceof Comment and !$text) {
+            return; // don't print empty comments
+        }
         $msg = $this->message(' ');
         $msg->append($e->getStep()->getPrefix());
         if (!$metaStep) {
             $msg->style('bold');
         }
-        $msg->append($e->getStep()->__toString());
+        $msg->append($text);
         if ($metaStep) {
             $msg->style('info')->prepend('  ');
         }

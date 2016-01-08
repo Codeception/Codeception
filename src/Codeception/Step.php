@@ -1,6 +1,7 @@
 <?php
 namespace Codeception;
 
+use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
@@ -96,11 +97,17 @@ abstract class Step
 
     protected function getArgumentsAsString(array $arguments)
     {
+        $lastArgAsString = '';
+        $lastArg = end($arguments);
+        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
+            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
+            array_pop($arguments);
+        }
         foreach ($arguments as $key => $argument) {
             $arguments[$key] = (is_string($argument)) ? trim($argument,"''") : $this->parseArgumentAsString($argument);
         }
 
-        return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
+        return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]')) . $lastArgAsString;
     }
 
     protected function parseArgumentAsString($argument)

@@ -4,6 +4,7 @@ namespace Codeception\Test\Format;
 use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Node\StepNode;
+use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\Di;
 use Codeception\Scenario;
 use Codeception\Step\Comment;
@@ -78,18 +79,29 @@ class Gherkin extends Test implements ScenarioDriven
 
     protected function runStep(StepNode $step)
     {
-        $meta = new Meta($step->getText(), []);
+        $params = [];
+        if ($step->hasArguments()) {
+            $args = $step->getArguments();
+            $table = $args[0];
+            if ($table instanceof TableNode) {
+                $params = [$table->getTableAsString()];
+            }
+        }
+        $meta = new Meta($step->getText(), $params);
         $meta->setPrefix($step->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
-
         $stepText = $step->getText();
         $executed = false;
+        $this->getScenario()->comment(null); // make metastep to be printed even if no steps
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
             if (!preg_match($pattern, $stepText, $matches)) {
                 continue;
             }
             array_shift($matches);
+            if ($step->hasArguments()) {
+                $matches = array_merge($matches, $step->getArguments());
+            }
             call_user_func_array($context, $matches); // execute the step
             $executed = true;
         }

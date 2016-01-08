@@ -50,6 +50,13 @@ class ScenarioGuy extends \Codeception\Actor
     {
         $this->seeFileFound($name);
     }
-    
-    
+
+    /**
+     * @Then there are values in :smth
+     */
+    public function thereAreValues($file, \Behat\Gherkin\Node\TableNode $node)
+    {
+        codecept_debug($node);
+        codecept_debug('here');
+    }
 }
