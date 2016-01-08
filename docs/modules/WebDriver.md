@@ -561,7 +561,7 @@ Low-level API method.
 If Codeception commands are not enough, this allows you to use Selenium WebDriver methods directly:
 
 ``` php
-$I->executeInSelenium(function(\Facebook\WebDriver\RemoteWebDriver $webdriver) {
+$I->executeInSelenium(function(\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
   $webdriver->get('http://google.com');
 });
 ```
@@ -1360,7 +1360,7 @@ If the window has no name, the only way to access it is via the `executeInSeleni
 
 ``` php
 <?php
-$I->executeInSelenium(function (\Facebook\WebDriver\RemoteWebDriver $webdriver) {
+$I->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
      $handles=$webdriver->getWindowHandles();
      $last_window = end($handles);
      $webdriver->switchTo()->window($last_window);
