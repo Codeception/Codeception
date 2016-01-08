@@ -57,7 +57,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $e));
-        $this->skippedTests[] = $test;
+        $this->skippedTests[] = spl_object_hash($test);
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
