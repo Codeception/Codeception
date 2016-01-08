@@ -52,7 +52,7 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        if (in_array($test, $this->skippedTests)) {
+        if (in_array(spl_object_hash($test), $this->skippedTests)) {
             return;
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
