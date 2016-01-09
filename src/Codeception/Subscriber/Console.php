@@ -201,7 +201,9 @@ class Console implements EventSubscriberInterface
 
     public function testSkipped(FailEvent $e)
     {
-        if (!$this->printedTest) {
+        if ($this->isDetailed($e->getTest())) {
+            $msg = $e->getFail()->getMessage();
+            $this->message('SKIPPED')->append($msg ? ": $msg" : '')->center(' ')->style('pending')->writeln();
             return;
         }
         $this->writeFinishedTest($e, $this->message('S')->style('pending'));
@@ -209,6 +211,11 @@ class Console implements EventSubscriberInterface
 
     public function testIncomplete(FailEvent $e)
     {
+        if ($this->isDetailed($e->getTest())) {
+            $msg = $e->getFail()->getMessage();
+            $this->message('INCOMPLETE')->append($msg ? ": $msg" : '')->center(' ')->style('pending')->writeln();
+            return;
+        }
         $this->writeFinishedTest($e, $this->message('I')->style('pending'));
     }
 

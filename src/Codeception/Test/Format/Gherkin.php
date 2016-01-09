@@ -104,6 +104,7 @@ class Gherkin extends Test implements ScenarioDriven
             }
             call_user_func_array($context, $matches); // execute the step
             $executed = true;
+            break;
         }
         $this->scenario->setMetaStep(null); // disable metastep
         if (!$executed) {
