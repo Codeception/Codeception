@@ -10,6 +10,16 @@ trait MetadataCollector
      */
     protected $metadata;
 
+    protected function metadataCollectorStart()
+    {
+        if ($incomplete = $this->getMetadata()->getIncomplete()) {
+            throw new \PHPUnit_Framework_IncompleteTestError((string)$incomplete);
+        }
+        if ($skip = $this->getMetadata()->getSkip()) {
+            throw new \PHPUnit_Framework_SkippedTestError((string)$skip);
+        }
+    }
+
     protected function setMetadata(Metadata $metadata)
     {
         $this->metadata = $metadata;

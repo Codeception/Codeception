@@ -14,6 +14,7 @@ abstract class Test implements Testable, Descriptive
     protected $testResult;
 
     protected $mixins = [
+      'metadataCollector',
       'coverage',
       'assertionCounter',
       'errorLogger'

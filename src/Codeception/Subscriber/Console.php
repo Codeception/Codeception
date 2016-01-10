@@ -272,11 +272,11 @@ class Console implements EventSubscriberInterface
         
         $this->output->write($e->getCount() . ") ");
 
+        $this->writeCurrentTest($failedTest, false);
         if ($failedTest instanceof ScenarioDriven) {
             $this->printScenarioFail($failedTest, $fail);
             return;
         }
-        $this->writeCurrentTest($failedTest, false);
 
         $this->printException($fail);
         $this->printExceptionTrace($fail);
@@ -314,25 +314,7 @@ class Console implements EventSubscriberInterface
 
     protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
-        $feature = $failedTest->getFeature();
         $failToString = \PHPUnit_Framework_TestFailure::exceptionToString($fail);
-
-        $failMessage = $this->message($failedTest->getSignature())
-            ->style('bold')
-            ->append(' (')
-            ->append(codecept_relative_path($failedTest->getFileName()))
-            ->append(')');
-
-        if ($fail instanceof \PHPUnit_Framework_SkippedTest
-            || $fail instanceof \PHPUnit_Framework_IncompleteTest
-        ) {
-            $this->printSkippedTest($feature, $failedTest->getFileName(), $failToString);
-            return;
-        }
-        if ($feature) {
-            $failMessage->prepend("Failed to $feature in ");
-        }
-        $failMessage->writeln();
 
         $failedStep = "";
         foreach ($failedTest->getScenario()->getSteps() as $step) {
@@ -342,7 +324,6 @@ class Console implements EventSubscriberInterface
             }
         }
         $this->printException($fail,$failedStep);
-
         $this->printScenarioTrace($failedTest, $failToString);
         if ($this->output->getVerbosity() == OutputInterface::VERBOSITY_DEBUG) {
             $this->printExceptionTrace($fail);
@@ -440,6 +421,10 @@ class Console implements EventSubscriberInterface
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
+
+            if (!$step->__toString()) {
+                continue;
+            }
 
             $message = $this
                 ->message($i)

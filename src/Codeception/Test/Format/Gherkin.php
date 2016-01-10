@@ -50,6 +50,16 @@ class Gherkin extends Test implements ScenarioDriven
         $this->getMetadata()->setGroups($this->featureNode->getTags());
         $this->getMetadata()->setGroups($this->scenarioNode->getTags());
         $this->scenario->setMetaStep(null);
+
+        if ($background = $this->featureNode->getBackground()) {
+            foreach ($background->getSteps() as $step) {
+                $this->validateStep($step);
+            }
+        }
+
+        foreach ($this->scenarioNode->getSteps() as $step) {
+            $this->validateStep($step);
+        }
     }
 
 
@@ -77,21 +87,32 @@ class Gherkin extends Test implements ScenarioDriven
         }
     }
 
-    protected function runStep(StepNode $step)
+    protected function validateStep(StepNode $stepNode)
+    {
+        $stepText = $stepNode->getText();
+        foreach ($this->steps as $pattern => $context) {
+            if (!preg_match($pattern, $stepText)) {
+                continue;
+            }
+            return;
+        }
+        $this->getMetadata()->setIncomplete("Step definition for `$stepText` not found in contexts");
+    }
+
+    protected function runStep(StepNode $stepNode)
     {
         $params = [];
-        if ($step->hasArguments()) {
-            $args = $step->getArguments();
+        if ($stepNode->hasArguments()) {
+            $args = $stepNode->getArguments();
             $table = $args[0];
             if ($table instanceof TableNode) {
                 $params = [$table->getTableAsString()];
             }
         }
-        $meta = new Meta($step->getText(), $params);
-        $meta->setPrefix($step->getKeyword());
+        $meta = new Meta($stepNode->getText(), $params);
+        $meta->setPrefix($stepNode->getKeyword());
         $this->scenario->setMetaStep($meta); // enable metastep
-        $stepText = $step->getText();
-        $executed = false;
+        $stepText = $stepNode->getText();
         $this->getScenario()->comment(null); // make metastep to be printed even if no steps
         foreach ($this->steps as $pattern => $context) {
             $matches = [];
@@ -99,17 +120,13 @@ class Gherkin extends Test implements ScenarioDriven
                 continue;
             }
             array_shift($matches);
-            if ($step->hasArguments()) {
-                $matches = array_merge($matches, $step->getArguments());
+            if ($stepNode->hasArguments()) {
+                $matches = array_merge($matches, $stepNode->getArguments());
             }
             call_user_func_array($context, $matches); // execute the step
-            $executed = true;
             break;
         }
         $this->scenario->setMetaStep(null); // disable metastep
-        if (!$executed) {
-            throw new \PHPUnit_Framework_IncompleteTestError("Step definition for `$stepText` not found in contexts");
-        }
     }
 
     protected function makeContexts()
