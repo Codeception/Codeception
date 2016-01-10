@@ -52,7 +52,7 @@ class Listener implements \PHPUnit_Framework_TestListener
 
     public function addIncompleteTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        if (in_array($test, $this->skippedTests)) {
+        if (in_array(spl_object_hash($test), $this->skippedTests)) {
             return;
         }
         $this->unsuccessfulTests[] = spl_object_hash($test);
@@ -87,11 +87,11 @@ class Listener implements \PHPUnit_Framework_TestListener
             return;
         }
         if ($test->getMetadata()->getSkip() !== null) {
-            $this->addSkippedTest($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
+            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
             return;
         }
         if ($test->getMetadata()->getIncomplete() !== null) {
-            $this->addIncompleteTest($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
+            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
             return;
         }
 
@@ -99,9 +99,9 @@ class Listener implements \PHPUnit_Framework_TestListener
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
-            $this->addIncompleteTest($test, $e, 0);
+            $test->getTestResultObject()->addFailure($test, $e, 0);
         } catch (\PHPUnit_Framework_SkippedTestError $e) {
-            $this->addSkippedTest($test, $e, 0);
+            $test->getTestResultObject()->addFailure($test, $e, 0);
         }
     }
 
