@@ -58,7 +58,6 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_INCOMPLETE, new FailEvent($test, $e));
         $this->skippedTests[] = spl_object_hash($test);
-        $test->getTestResultObject()->addError($test, $e, $time);
     }
 
     public function addSkippedTest(\PHPUnit_Framework_Test $test, \Exception $e, $time)
@@ -69,7 +68,6 @@ class Listener implements \PHPUnit_Framework_TestListener
         $this->unsuccessfulTests[] = spl_object_hash($test);
         $this->fire(Events::TEST_SKIPPED, new FailEvent($test, $e));
         $this->skippedTests[] = spl_object_hash($test);
-        $test->getTestResultObject()->addError($test, $e, $time);
     }
 
     public function startTestSuite(\PHPUnit_Framework_TestSuite $suite)
@@ -89,11 +87,11 @@ class Listener implements \PHPUnit_Framework_TestListener
             return;
         }
         if ($test->getMetadata()->getSkip() !== null) {
-            $this->addSkippedTest($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
+            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
             return;
         }
         if ($test->getMetadata()->getIncomplete() !== null) {
-            $this->addIncompleteTest($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
+            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
             return;
         }
 
@@ -101,9 +99,9 @@ class Listener implements \PHPUnit_Framework_TestListener
             $this->startedTests[] = spl_object_hash($test);
             $this->fire(Events::TEST_BEFORE, new TestEvent($test));
         } catch (\PHPUnit_Framework_IncompleteTestError $e) {
-            $this->addIncompleteTest($test, $e, 0);
+            $test->getTestResultObject()->addFailure($test, $e, 0);
         } catch (\PHPUnit_Framework_SkippedTestError $e) {
-            $this->addSkippedTest($test, $e, 0);
+            $test->getTestResultObject()->addFailure($test, $e, 0);
         }
     }
 

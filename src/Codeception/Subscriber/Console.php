@@ -358,10 +358,8 @@ class Console implements EventSubscriberInterface
     {
         static $limit = 10;
 
-        if ($e instanceof \PHPUnit_Framework_SkippedTestError) {
-            return;
-        }
-        if ($e instanceof \PHPUnit_Framework_IncompleteTestError) {
+        if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
+            $this->message($e->getMessage())->writeln();
             return;
         }
 
