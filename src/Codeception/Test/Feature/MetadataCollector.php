@@ -29,4 +29,5 @@ trait MetadataCollector
     {
         return $this->getMetadata()->getFilename();
     }
+
 }

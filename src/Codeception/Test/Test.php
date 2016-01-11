@@ -10,10 +10,13 @@ abstract class Test implements Testable, Descriptive
     use Feature\CodeCoverage;
     use Feature\ErrorLogger;
     use Feature\MetadataCollector;
+    use Feature\BlockByMetadata;
 
     protected $testResult;
+    protected $blocked = false;
 
     protected $mixins = [
+      'blockByMetadata',
       'coverage',
       'assertionCounter',
       'errorLogger'
@@ -22,6 +25,8 @@ abstract class Test implements Testable, Descriptive
     const STATUS_FAIL = 'fail';
     const STATUS_ERROR = 'error';
     const STATUS_OK = 'ok';
+    const STATUS_PENDING = 'pending';
+
 
     public function count()
     {
@@ -45,31 +50,34 @@ abstract class Test implements Testable, Descriptive
             }
         }
 
-        $status = null;
+        $status = self::STATUS_PENDING;
+        $time = 0;
         $e = null;
-
-        \PHP_Timer::start();
-        try {
-            $this->test();
-            $status = self::STATUS_OK;
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
-            $status = self::STATUS_FAIL;
-        } catch (\PHPUnit_Framework_Exception $e) {
-            $status = self::STATUS_ERROR;
-        } catch (\Throwable $e) {
-            $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
-            $status = self::STATUS_ERROR;
-        } catch (\Exception $e) {
-            $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
-            $status = self::STATUS_ERROR;
+        if (!$this->blocked) {
+            \PHP_Timer::start();
+            try {
+                $this->test();
+                $status = self::STATUS_OK;
+            } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+                $status = self::STATUS_FAIL;
+            } catch (\PHPUnit_Framework_Exception $e) {
+                $status = self::STATUS_ERROR;
+            } catch (\Throwable $e) {
+                $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
+                $status = self::STATUS_ERROR;
+            } catch (\Exception $e) {
+                $e     = new \PHPUnit_Framework_ExceptionWrapper($e);
+                $status = self::STATUS_ERROR;
+            }
+            $time = \PHP_Timer::stop();
         }
-        $time = \PHP_Timer::stop();
 
         foreach (array_reverse($this->mixins) as $mixin) {
             if (method_exists($this, $mixin.'End')) {
                 $this->{$mixin.'End'}($status, $time, $e);
             }
         }
+
         $result->endTest($this, $time);
         return $result;
     }
@@ -79,8 +87,18 @@ abstract class Test implements Testable, Descriptive
         return $this->testResult;
     }
 
+
+
     abstract public function test();
 
     abstract public function toString();
+
+    /**
+     * @param boolean $blocked
+     */
+    protected function block($blocked)
+    {
+        $this->blocked = $blocked;
+    }
 
 }

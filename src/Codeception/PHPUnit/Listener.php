@@ -86,12 +86,7 @@ class Listener implements \PHPUnit_Framework_TestListener
         if (!$test instanceof Testable) {
             return;
         }
-        if ($test->getMetadata()->getSkip() !== null) {
-            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_SkippedTestError((string)$test->getMetadata()->getSkip()), 0);
-            return;
-        }
-        if ($test->getMetadata()->getIncomplete() !== null) {
-            $test->getTestResultObject()->addFailure($test, new \PHPUnit_Framework_IncompleteTestError((string)$test->getMetadata()->getIncomplete()), 0);
+        if ($test->getMetadata()->isBlocked()) {
             return;
         }
 
