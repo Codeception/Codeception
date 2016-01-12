@@ -310,6 +310,21 @@ EOF
         $I->seeInShellOutput('Given i have terminal opened');
         $I->seeInShellOutput('When i am in current directory');
         $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
-        $I->seeInShellOutput('And i have terminal opened');
+        $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
+        $I->seeInShellOutput(<<<EOF
+   | class_name | ScenarioGuy |
+   | enabled    | Filesystem  |
+EOF
+);
+        $I->seeInShellOutput('PASSED');
     }
+
+    public function runIncompleteGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario File.feature');
+        $I->seeInShellOutput('OK, but incomplete');
+        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+    }
+
+
 }

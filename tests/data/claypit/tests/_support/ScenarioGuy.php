@@ -52,11 +52,13 @@ class ScenarioGuy extends \Codeception\Actor
     }
 
     /**
-     * @Then there are values in :smth
+     * @Then there are keywords in :smth
      */
     public function thereAreValues($file, \Behat\Gherkin\Node\TableNode $node)
     {
-        codecept_debug($node);
-        codecept_debug('here');
+        $this->seeFileFound($file);
+        foreach ($node->getRows() as $row) {
+            $this->seeThisFileMatches('~' . implode('.*?', $row) . '~');
+        }
     }
 }

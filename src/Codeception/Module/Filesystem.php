@@ -148,6 +148,15 @@ class Filesystem extends CodeceptionModule
         $this->assertContains($text, $this->file, "No text '$text' in currently opened file");
     }
 
+    /**
+     * Checks that contents of currently opened file matches $regex
+     *
+     * @param $regex
+     */
+    public function seeThisFileMatches($regex)
+    {
+        $this->assertRegExp($regex, $this->file, "Contents of currently opened file does not match '$regex'");
+    }
 
     /**
      * Checks the strict matching of file contents.

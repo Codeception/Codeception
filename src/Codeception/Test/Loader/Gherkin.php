@@ -52,6 +52,9 @@ class Gherkin implements Loader
     public function __construct($settings = [])
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
+        if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
+            throw new \TestParseException('Feature file can only be parsed with Gherkin library. Please install `behat/gherkin` with Composer');
+        }
         $keywords = new GherkinKeywords(['en' => static::$defaultKeywords]);
         $lexer = new GherkinLexer($keywords);
         $this->parser = new GherkinParser($lexer);
