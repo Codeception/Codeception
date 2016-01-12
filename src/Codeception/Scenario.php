@@ -128,6 +128,15 @@ class Scenario
         $this->runStep(new \Codeception\Step\Comment($comment, []));
     }
 
+    public function skip($message = '')
+    {
+        throw new \PHPUnit_Framework_SkippedTestError($message);
+    }
+
+    public function incomplete($message = '')
+    {
+        throw new \PHPUnit_Framework_IncompleteTestError($message);
+    }
 
     public function __call($method, $args)
     {
