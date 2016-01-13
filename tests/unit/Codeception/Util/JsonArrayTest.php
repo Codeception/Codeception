@@ -289,4 +289,16 @@ class JsonArrayTest extends \Codeception\TestCase\Test
             "- <info>" . var_export($expectedArray, true) . "</info>\n"
             . "+ " . var_export($jsonArray->toArray(), true));
     }
+
+    /**
+     * Simplified testcase for issue reproduced by testContainsArrayWithUnexpectedLevel
+     */
+    public function testContainsArrayComparesSequentialArraysHavingDuplicateSubArraysCorrectly()
+    {
+        $jsonArray = new JsonArray('[[1],[1]]');
+        $expectedArray = [[1],[1]];
+        $this->assertTrue($jsonArray->containsArray($expectedArray),
+            "- <info>" . var_export($expectedArray, true) . "</info>\n"
+            . "+ " . var_export($jsonArray->toArray(), true));
+    }
 }
