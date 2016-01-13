@@ -131,6 +131,11 @@ script:
   - '[[ "$TRAVIS_PHP_VERSION" == "hhvm" ]] || [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ||  php codecept run coverage'  # run coverage tests on php only
   # disable xdebug before running framework tests
   - '[[ "$TRAVIS_PHP_VERSION" != "hhvm" ]] || echo "xdebug.enable = Off" >> /etc/hhvm/php.ini'
+  # run PhpBrowser tests with Guzzle 5
+  - 'if [ "$TRAVIS_PHP_VERSION" != "5.4" ]; then composer require guzzlehttp/guzzle=~5.0 ; fi' # install old guzzle
+  - php codecept run tests/unit/Codeception/Module/PhpBrowserTest.php
+  - php codecept run tests/unit/Codeception/Module/PhpBrowserRestTest.php
+  # run framework tests
   - php codecept run functional -c frameworks-yii-basic/tests # Yii2 tests
   - php codecept run -c frameworks-laravel functional,api,unit # Laravel4 Tests
   - '[[ "$TRAVIS_PHP_VERSION" == "5.4" ]] || php codecept run -c frameworks-l5' # Laravel5 Tests
