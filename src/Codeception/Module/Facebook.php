@@ -12,7 +12,7 @@ use Codeception\Module as BaseModule;
  * Relies on Facebook's tool Test User API.
  *
  * <div class="alert alert-info">
- * To use this module with Composer you need <em>"facebook/php-sdk": "3.*"</em> package.
+ * To use this module with Composer you need <em>"facebook/php-sdk4": "5.*"</em> package.
  * </div>
  *
  * ## Status
@@ -181,16 +181,13 @@ class Facebook extends BaseModule implements DependsOnModule
                 'Facebook test user was not found. Did you forget to create one?'
             );
         }
-        // go to facebook and make login; it work only if you visit facebook.com first
-        $this->phpBrowser->amOnPage('https://www.facebook.com/');
-        $this->phpBrowser->sendAjaxPostRequest(
-            'login.php',
-            [
-                'email' => $this->grabFacebookTestUserEmail(),
-                'pass' => $this->testUser['password']
-            ]
-        );
+
+        $this->phpBrowser->amOnUrl('https://facebook.com');
+        $this->phpBrowser->fillField('email', $this->grabFacebookTestUserEmail());
+        $this->phpBrowser->fillField('pass', $this->grabFacebookTestUserPassword());
+        $this->phpBrowser->click('#loginbutton input[type=submit]');
         $this->phpBrowser->see($this->grabFacebookTestUserName());
+
     }
 
     /**
@@ -265,19 +262,19 @@ class Facebook extends BaseModule implements DependsOnModule
      *
      * Please, note that you must have publish_actions permission to be able to publish to user's feed.
      *
-     * @param string $placeId Place identifier to be verified against user published posts
+     * @param string $message published post to be verified against the actual post on facebook
      */
-    public function seePostOnFacebookWithAttachedPlace($placeId)
+    public function seePostOnFacebookWithAttachedPlace($message)
     {
         $posts = $this->facebook->getLastPostsForTestUser($this->grabFacebookTestUserAccessToken());
         if ($posts['data']) {
             foreach ($posts['data'] as $post) {
-                if (array_key_exists('place', $post) && ($post['place']['id'] == $placeId)) {
+                if (array_key_exists('message', $post) && ($post['message'] == $message)) {
                     return; // success
                 }
             }
         }
 
-        $this->fail('Failed to see post on Facebook with attached place with id ' . $placeId);
+        $this->fail('Failed to see post on Faceboo: ' . $message);
     }
 }

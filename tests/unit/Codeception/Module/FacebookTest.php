@@ -14,7 +14,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         'app_id' => '460287924057084',
         'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
         'test_user' => array(
-            'permissions' => [],
+            'permissions' => ['publish_actions', 'user_posts'],
             'name' => 'Codeception Testuser'
         )
     );
@@ -61,6 +61,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
      */
     public function testHaveFacebookTestUserAccount()
     {
+        //$this->markTestSkipped();
         $this->module->haveFacebookTestUserAccount(false);
         $this->assertNotEmpty($this->module->grabFacebookTestUserId());
         $this->assertNotEmpty($this->module->grabFacebookTestUserEmail());
@@ -80,6 +81,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testSeePostOnFacebookWithAttachedPlace()
     {
+        //$this->markTestSkipped();
         if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
                 'user_posts',
                 $this->config['test_user']['permissions']
@@ -91,24 +93,24 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->haveFacebookTestUserAccount();
 
         // precondition #2: I have published the post with place attached
-        $params = array('place' => '141971499276483');
+        $params = array('message' => 'I feel great!');
         $this->module->postToFacebookAsTestUser($params);
 
         // assert that post was published in the facebook and place is the same
-        $this->module->seePostOnFacebookWithAttachedPlace($params['place']);
+        $this->module->seePostOnFacebookWithAttachedPlace($params['message']);
     }
 
     public function testLoginToFacebook()
     {
-        $this->markTestSkipped();
+        //$this->markTestSkipped();
         // preconditions: #1 php web server being run
         $browserModule = new PhpBrowser(make_container());
-        $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
+        $browserModule->_setConfig(array('url' => 'http://localhost'));
         $browserModule->_initialize();
         $browserModule->_cleanup();
         $browserModule->_before($this->makeTest());
 
-        SuiteManager::$modules['PhpBrowser'] = $browserModule;
+        $this->module->_inject($browserModule);
 
         // preconditions: #2 facebook test user was created
         $this->module->haveFacebookTestUserAccount();
@@ -117,21 +119,9 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         // preconditions: #3 test user logged in on facebook
         $this->module->haveTestUserLoggedInOnFacebook();
 
-        // go to our page with facebook login button
-        $browserModule->amOnPage('/facebook');
-
-        // check that yet we are not logged in with facebook
-        $browserModule->see('You are not Connected.');
-
-        // click on "Login with Facebook" button to start login with facebook
-        $browserModule->click('Login with Facebook');
-
-        // check that we are logged in with facebook
-        $browserModule->see('Your User Object (/me)');
         $browserModule->see($testUserName);
 
         // cleanup
-        unset(SuiteManager::$modules['PhpBrowser']);
         $browserModule->_after($this->makeTest());
         data::clean();
     }
