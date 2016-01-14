@@ -370,9 +370,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
      */
     protected function getInternalDomains()
     {
-        $internalDomains = [
-            'localhost',
-        ];
+        $internalDomains = [];
 
         /* @var \Symfony\Component\Routing\Route $route */
         foreach ($this->getRouter()->getRouteCollection() as $route) {
