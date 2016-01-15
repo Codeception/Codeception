@@ -4,16 +4,20 @@
  */
 namespace Codeception\Lib\Driver;
 
-use Facebook\Facebook as Facebook_SDK;
+use Facebook\Facebook as FacebookSDK;
 
 class Facebook
 {
     protected $logCallback;
 
     /**
-     * @var Facebook_SDK
+     * @var FacebookSDK
      */
     protected $fb;
+
+    protected $appId;
+    protected $appSecret;
+
 
     public function __construct($config, $logCallback = null)
     {
@@ -21,7 +25,7 @@ class Facebook
             $this->logCallback = $logCallback;
         }
 
-        $this->fb = new Facebook_SDK([
+        $this->fb = new FacebookSDK([
             'app_id' => $config['app_id'],
             'app_secret' => $config['secret'],
             'default_graph_version' => 'v2.5', //TODO add to config
@@ -38,11 +42,11 @@ class Facebook
      */
     public function createTestUser($name, array $permissions)
     {
-        $app_token = $this->appId . '|' . $this->appSecret;
+        $appToken = $this->appId . '|' . $this->appSecret;
         $response = $this->executeFacebookRequest(
             'POST',
             $this->appId . '/accounts/test-users',
-            $app_token,
+            $appToken,
             [
                 'name' => $name,
                 'installed' => true,
@@ -55,11 +59,11 @@ class Facebook
 
     public function deleteTestUser($testUserID)
     {
-        $app_token = $this->appId . '|' . $this->appSecret;
+        $appToken = $this->appId . '|' . $this->appSecret;
         $this->executeFacebookRequest(
             'DELETE',
             '/' . $testUserID,
-            $app_token
+            $appToken
         );
     }
 
