@@ -112,13 +112,13 @@ class Facebook
         }
 
         switch ($method) {
-            case 'GET' :
+            case 'GET':
                 $response = $this->fb->get($endpoint, $token);
                 break;
-            case 'POST' :
+            case 'POST':
                 $response = $this->fb->post($endpoint, $parameters, $token);
                 break;
-            case 'DELETE' :
+            case 'DELETE':
                 $response = $this->fb->delete($endpoint, $parameters, $token);
                 break;
             default:
