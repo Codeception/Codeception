@@ -61,7 +61,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
      */
     public function testHaveFacebookTestUserAccount()
     {
-        //$this->markTestSkipped();
         $this->module->haveFacebookTestUserAccount(false);
         $this->assertNotEmpty($this->module->grabFacebookTestUserId());
         $this->assertNotEmpty($this->module->grabFacebookTestUserEmail());
@@ -79,9 +78,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ucwords($this->config['test_user']['name']), $this->module->grabFacebookTestUserName());
     }
 
-    public function testSeePostOnFacebookWithAttachedPlace()
+    public function testSeePostOnFacebookWithMessage()
     {
-        //$this->markTestSkipped();
         if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
                 'user_posts',
                 $this->config['test_user']['permissions']
@@ -97,15 +95,14 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->postToFacebookAsTestUser($params);
 
         // assert that post was published in the facebook and place is the same
-        $this->module->seePostOnFacebookWithAttachedPlace($params['message']);
+        $this->module->seePostOnFacebookWithMessage($params['message']);
     }
 
     public function testLoginToFacebook()
     {
-        //$this->markTestSkipped();
         // preconditions: #1 php web server being run
         $browserModule = new PhpBrowser(make_container());
-        $browserModule->_setConfig(array('url' => 'http://localhost'));
+        $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
         $browserModule->_initialize();
         $browserModule->_cleanup();
         $browserModule->_before($this->makeTest());

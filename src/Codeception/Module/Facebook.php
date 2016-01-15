@@ -187,7 +187,6 @@ class Facebook extends BaseModule implements DependsOnModule
         $this->phpBrowser->fillField('pass', $this->grabFacebookTestUserPassword());
         $this->phpBrowser->click('#loginbutton input[type=submit]');
         $this->phpBrowser->see($this->grabFacebookTestUserName());
-
     }
 
     /**
@@ -264,17 +263,18 @@ class Facebook extends BaseModule implements DependsOnModule
      *
      * @param string $message published post to be verified against the actual post on facebook
      */
-    public function seePostOnFacebookWithAttachedPlace($message)
+    public function seePostOnFacebookWithMessage($message)
     {
         $posts = $this->facebook->getLastPostsForTestUser($this->grabFacebookTestUserAccessToken());
+        $facebook_post_message = '';
+        $this->assertNotEquals($message, $facebook_post_message, "You can not test for an empty message post");
         if ($posts['data']) {
             foreach ($posts['data'] as $post) {
                 if (array_key_exists('message', $post) && ($post['message'] == $message)) {
-                    return; // success
+                    $facebook_post_message = $post['message'];
                 }
             }
         }
-
-        $this->fail('Failed to see post on Faceboo: ' . $message);
+        $this->assertEquals($message, $facebook_post_message, "The post message was not found on facebook page");
     }
 }
