@@ -92,18 +92,22 @@ class Facebook extends BaseModule implements DependsOnModule
     protected $testUser = [];
 
     /**
-     * @var PhpBrowser
+     * @var BaseModule
      */
-    protected $phpBrowser;
+    protected $browserModule;
 
     public function _depends()
     {
-        return 'Codeception\Module\PhpBrowser';
+        if ($this->config['depends'] == 'PhpBrowser')
+            return PhpBrowser::class;
+        elseif ($this->config['depends'] == 'WebDriver')
+            return WebDriver::class;
     }
 
-    public function _inject(PhpBrowser $browser)
+    public function _inject(BaseModule $browserModule)
     {
-        $this->phpBrowser = $browser;
+        //this could be ether PhpBrowser or WebDriver
+        $this->browserModule = $browserModule;
     }
 
     protected function deleteTestUser()
@@ -170,6 +174,7 @@ class Facebook extends BaseModule implements DependsOnModule
 
     /**
      * Get facebook test user be logged in on facebook.
+     * This is done by going to facebook.com
      *
      * @throws ModuleConfigException
      */
@@ -182,11 +187,13 @@ class Facebook extends BaseModule implements DependsOnModule
             );
         }
 
-        $this->phpBrowser->amOnUrl('https://facebook.com');
-        $this->phpBrowser->fillField('email', $this->grabFacebookTestUserEmail());
-        $this->phpBrowser->fillField('pass', $this->grabFacebookTestUserPassword());
-        $this->phpBrowser->click('#loginbutton input[type=submit]');
-        $this->phpBrowser->see($this->grabFacebookTestUserName());
+        $callbackUrl = $this->browserModule->_getUrl();
+        $this->browserModule->amOnUrl('https://facebook.com');
+        $this->browserModule->fillField('#email', $this->grabFacebookTestUserEmail());
+        $this->browserModule->fillField('#pass', $this->grabFacebookTestUserPassword());
+        $this->browserModule->click('#loginbutton input[type=submit]');
+        $this->browserModule->see($this->grabFacebookTestUserName());
+        $this->browserModule->amOnUrl($callbackUrl);
     }
 
     /**

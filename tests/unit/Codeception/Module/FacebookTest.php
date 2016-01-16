@@ -2,17 +2,18 @@
 
 require_once 'tests/data/app/data.php';
 
+use Codeception\Module;
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
-use Codeception\SuiteManager;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
+use Codeception\Module\WebDriver;
 use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
 {
     protected $config = array(
-        'app_id' => '460287924057084',
-        'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
+        'app_id' => '559014250919816',
+        'secret' => 'cba289481ed31d875bd112b289285325',
         'test_user' => array(
             'permissions' => ['publish_actions', 'user_posts'],
             'name' => 'Codeception Testuser'
@@ -98,25 +99,49 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->seePostOnFacebookWithMessage($params['message']);
     }
 
-    public function testLoginToFacebook()
-    {
-        // preconditions: #1 php web server being run
+    public function testLoginToFacebookWebDriver() {
+        //the test will fail in every 5-10 runs
+        $this->markTestSkipped();
+        $browserModule = new WebDriver(make_container());
+        $browserModule->_setConfig(array('url' => 'http://localhost:8000', 'browser' => 'firefox'));
+        $this->testLoginToFacebook($browserModule);
+    }
+
+    public function testLoginToFacebookPhpBrowser() {
+        //the test will vail in every 5-10 runs
+        //$this->markTestSkipped();
         $browserModule = new PhpBrowser(make_container());
         $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
+        $this->testLoginToFacebook($browserModule);
+    }
+
+    private function testLoginToFacebook(Module $browserModule)
+    {
         $browserModule->_initialize();
         $browserModule->_cleanup();
         $browserModule->_before($this->makeTest());
 
         $this->module->_inject($browserModule);
 
-        // preconditions: #2 facebook test user was created
+        // preconditions: #2 facebook test user is created
         $this->module->haveFacebookTestUserAccount();
         $testUserName = $this->module->grabFacebookTestUserName();
 
-        // preconditions: #3 test user logged in on facebook
+        // preconditions: #3 test user is logged in on facebook
         $this->module->haveTestUserLoggedInOnFacebook();
 
+        // go to our page with facebook login button
+        $browserModule->amOnPage('/facebook');
+        // check that yet we are not logged in on facebook
+        $browserModule->see('You are not Connected.');
+
+        // click on "Login with Facebook" button to start login with facebook
+        $browserModule->click('Login with Facebook');
+
+        // check that we are logged in with facebook
+        $browserModule->see('Your User Object (/me)');
         $browserModule->see($testUserName);
+
 
         // cleanup
         $browserModule->_after($this->makeTest());

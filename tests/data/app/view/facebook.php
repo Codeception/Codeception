@@ -16,79 +16,105 @@
  */
 
 
-// Create our Application instance (replace this with your appId and secret).
-$facebook = new Facebook(array(
-  'appId'  => '460287924057084',
-  'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
+
+/**
+ * Facebook gives cross-site-request-forgery-validation-failed without
+ * initializing session data and without having the
+ * 'persistent_data_handler' => 'session' property below
+ */
+session_start();
+
+
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Facebook;
+
+
+/**
+ * you should update these values when debugging,
+ * NOTE website URL for the app must be be set to http://localhost:8000/
+ */
+$fb = new Facebook(array(
+    'app_id' => '559014250919816',
+    'app_secret' => 'cba289481ed31d875bd112b289285325',
+    'default_graph_version' => 'v2.5',
+    'persistent_data_handler' => 'session'
 ));
 
-// Get User ID
-$user = $facebook->getUser();
+$debug = true;
 
-// We may or may not have this data based on whether the user is logged in.
-//
-// If we have a $user id here, it means we know the user is logged into
-// Facebook, but we don't know if the access token is valid. An access
-// token is invalid if the user logged out of Facebook.
+$helper = $fb->getRedirectLoginHelper();
 
-if ($user) {
-  try {
-    // Proceed knowing you have a logged in user who's authenticated.
-    $user_profile = $facebook->api('/me', 'GET');
-  } catch (FacebookApiException $e) {
-    error_log($e);
+$permissions = [];
+
+//after logging in facebook will redirect us to this callback page
+$callback = 'http://localhost:8000/facebook';
+
+try {
+    $accessToken = $helper->getAccessToken();
+    if ($accessToken) {
+        //if everything is ok we have accessToken from the callback
+        $response = $fb->get('/me', $accessToken);
+        $user = $response->getGraphUser()->asArray();
+        $logoutUrl = $helper->getLogoutUrl($accessToken, $callback);
+        $errorCode = 0;
+    } else {
+        //the first time we come to this page access token will be null
+        $loginUrl = $helper->getLoginUrl($callback);
+        $errorCode = 1;
+        $user = null;
+    }
+} catch (FacebookSDKException $e) {
+    //the second time we come to this we might get this if something is wrong with login
+    $errorCode = " 3 " . $e->getMessage();
     $user = null;
-  }
 }
 
-// Login or logout url will be needed depending on current user state.
-if ($user) {
-  $logoutUrl = $facebook->getLogoutUrl();
-} else {
-  $loginUrl = $facebook->getLoginUrl();
-}
 
 ?>
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
-  <head>
+<head>
     <title>php-sdk</title>
-    <style>
-      body {
-        font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
-      }
-      h1 a {
-        text-decoration: none;
-        color: #3b5998;
-      }
-      h1 a:hover {
-        text-decoration: underline;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>php-sdk</h1>
 
-    <?php if ($user): ?>
-      <a href="<?php echo $logoutUrl; ?>">Logout</a>
-    <?php else: ?>
-      <div>
+    <?php if (false): ?>
+        <style>
+            body {
+                font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+            }
+
+            h1 a {
+                text-decoration: none;
+                color: #3b5998;
+            }
+
+            h1 a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    <?php endif ?>
+</head>
+<body>
+<h1>php-sdk</h1>
+<pre><?php print_r($debug ? "\n errorCode: " . $errorCode . "\n" : ''); ?></pre>
+<?php if ($user): ?>
+    <a href="<?php echo $logoutUrl; ?>">Logout</a>
+<?php else: ?>
+    <div>
         Login using OAuth 2.0 handled by the PHP SDK:
         <a href="<?php echo $loginUrl; ?>">Login with Facebook</a>
-      </div>
-    <?php endif ?>
+    </div>
+<?php endif ?>
 
-    <h3>PHP Session</h3>
-    <pre><?php print_r($_SESSION); ?></pre>
+<h3>PHP Session</h3>
 
-    <?php if ($user): ?>
-      <h3>You</h3>
-      <img src="https://graph.facebook.com/<?php echo $user; ?>/picture">
+<?php if ($user): ?>
+    <h3>You</h3>
+    <img src="https://graph.facebook.com/<?php echo $user['name']; ?>/picture">
 
-      <h3>Your User Object (/me)</h3>
-      <pre><?php print_r($user_profile); ?></pre>
-    <?php else: ?>
-      <strong><em>You are not Connected.</em></strong>
-    <?php endif ?>
-  </body>
+    <h3>Your User Object (/me)</h3>
+    <pre><?php print_r($user['name']); ?></pre>
+<?php else: ?>
+    <strong><em>You are not Connected.</em></strong>
+<?php endif ?>
+</body>
 </html>
