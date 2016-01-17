@@ -155,10 +155,8 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     private function checkPublishPermissions()
     {
-        if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
-                'user_posts',
-                $this->config['test_user']['permissions']
-            )
+        if (!in_array('publish_actions', $this->config['test_user']['permissions']) ||
+            !in_array('user_posts', $this->config['test_user']['permissions'])
         ) {
             $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
         }

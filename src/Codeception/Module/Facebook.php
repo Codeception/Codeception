@@ -115,8 +115,9 @@ EOF;
 
     public function _depends()
     {
-        if ($this->config['depends'] == 'WebDriver')
+        if ($this->config['depends'] == 'WebDriver') {
             return [WebDriver::class => $this->dependencyMessage];
+        }
         return [PhpBrowser::class => $this->dependencyMessage];
     }
 

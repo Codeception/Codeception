@@ -16,7 +16,6 @@
  */
 
 
-
 /**
  * Facebook gives cross-site-request-forgery-validation-failed without
  * initializing session data and without having the
@@ -27,7 +26,6 @@ session_start();
 
 use Facebook\Exceptions\FacebookSDKException;
 use Facebook\Facebook;
-
 
 /**
  * you should update these values when debugging,
@@ -68,37 +66,38 @@ try {
     $errorCode = " 3 " . $e->getMessage();
     $user = null;
 }
-
-
 ?>
+
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
     <title>php-sdk</title>
 
-    <?php if (false): ?>
-        <style>
-            body {
-                font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
-            }
+    <style>
+        body {
+            font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+        }
 
-            h1 a {
-                text-decoration: none;
-                color: #3b5998;
-            }
+        h1 a {
+            text-decoration: none;
+            color: #3b5998;
+        }
 
-            h1 a:hover {
-                text-decoration: underline;
-            }
-        </style>
-    <?php endif ?>
+        h1 a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
 </head>
 <body>
 <h1>php-sdk</h1>
+
 <pre><?php print_r($debug ? "\n errorCode: " . $errorCode . "\n" : ''); ?></pre>
-<?php if ($user): ?>
+
+<?php if ($user) : ?>
     <a href="<?php echo $logoutUrl; ?>">Logout</a>
-<?php else: ?>
+<?php else : ?>
     <div>
         Login using OAuth 2.0 handled by the PHP SDK:
         <a href="<?php echo $loginUrl; ?>">Login with Facebook</a>
@@ -106,14 +105,15 @@ try {
 <?php endif ?>
 
 <h3>PHP Session</h3>
+<pre><?php print_r($_SESSION); ?></pre>
 
-<?php if ($user): ?>
+<?php if ($user) : ?>
     <h3>You</h3>
     <img src="https://graph.facebook.com/<?php echo $user['name']; ?>/picture">
 
     <h3>Your User Object (/me)</h3>
     <pre><?php print_r($user['name']); ?></pre>
-<?php else: ?>
+<?php else : ?>
     <strong><em>You are not Connected.</em></strong>
 <?php endif ?>
 </body>
