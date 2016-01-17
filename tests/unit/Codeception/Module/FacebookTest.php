@@ -81,13 +81,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
 
     public function testSeePostOnFacebookWithMessage()
     {
-        if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
-                'user_posts',
-                $this->config['test_user']['permissions']
-            )
-        ) {
-            $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
-        }
+        $this->checkPublishPermissions();
         // precondition #1: I have facebook user
         $this->module->haveFacebookTestUserAccount();
 
@@ -99,35 +93,46 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->seePostOnFacebookWithMessage($params['message']);
     }
 
-    public function testLoginToFacebookWebDriver() {
-        //the test will fail in every 5-10 runs
+    public function testSeePostOnFacebookWithAttachedPlace()
+    {
+        $this->checkPublishPermissions();
+
+        // precondition #1: I have facebook user
+        $this->module->haveFacebookTestUserAccount();
+
+        // precondition #2: I have published the post with place attached
+        $params = array('place' => '141971499276483');
+        $this->module->postToFacebookAsTestUser($params);
+
+        // assert that post was published in the facebook and place is the same
+        $this->module->seePostOnFacebookWithAttachedPlace($params['place']);
+    }
+
+    /**
+     *  Selenium is needed for running of this test
+     */
+    public function testLoginToFacebookWebDriver()
+    {
         $this->markTestSkipped();
         $browserModule = new WebDriver(make_container());
-        $browserModule->_setConfig(array('url' => 'http://localhost:8000', 'browser' => 'firefox'));
-        $this->testLoginToFacebook($browserModule);
+        $this->initModule($browserModule, ['url' => 'http://localhost:8000', 'browser' => 'firefox']);
+        $this->loginToFacebook($browserModule);
     }
 
-    public function testLoginToFacebookPhpBrowser() {
-        //the test will vail in every 5-10 runs
-        //$this->markTestSkipped();
-        $browserModule = new PhpBrowser(make_container());
-        $browserModule->_setConfig(array('url' => 'http://localhost:8000'));
-        $this->testLoginToFacebook($browserModule);
-    }
-
-    private function testLoginToFacebook(Module $browserModule)
+    public function testLoginToFacebookPhpBrowser()
     {
-        $browserModule->_initialize();
-        $browserModule->_cleanup();
-        $browserModule->_before($this->makeTest());
+        $browserModule = new PhpBrowser(make_container());
+        $this->initModule($browserModule, ['url' => 'http://localhost:8000']);
+        $this->loginToFacebook($browserModule);
+    }
 
-        $this->module->_inject($browserModule);
-
-        // preconditions: #2 facebook test user is created
+    private function loginToFacebook(Module $browserModule)
+    {
+        // preconditions: #1 facebook test user is created
         $this->module->haveFacebookTestUserAccount();
         $testUserName = $this->module->grabFacebookTestUserName();
 
-        // preconditions: #3 test user is logged in on facebook
+        // preconditions: #2 test user is logged in on facebook
         $this->module->haveTestUserLoggedInOnFacebook();
 
         // go to our page with facebook login button
@@ -146,5 +151,25 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         // cleanup
         $browserModule->_after($this->makeTest());
         data::clean();
+    }
+
+    private function checkPublishPermissions()
+    {
+        if (!in_array('publish_actions', $this->config['test_user']['permissions']) || !in_array(
+                'user_posts',
+                $this->config['test_user']['permissions']
+            )
+        ) {
+            $this->markTestSkipped("You need both publish_actions and user_posts permissions for this test");
+        }
+    }
+
+    private function initModule(Module $browserModule, array $params)
+    {
+        $browserModule->_setConfig($params);
+        $browserModule->_initialize();
+        $browserModule->_cleanup();
+        $browserModule->_before($this->makeTest());
+        $this->module->_inject($browserModule);
     }
 }

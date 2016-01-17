@@ -89,6 +89,17 @@ class Facebook
         return $response->getDecodedBody();
     }
 
+    public function getVisitedPlaceTagForTestUser($placeId, $testUserAccessToken)
+    {
+        $response = $this->executeFacebookRequest(
+            'GET',
+            "/$placeId",
+            $testUserAccessToken
+        );
+
+        return $response->getDecodedBody();
+    }
+
     public function sendPostToFacebook($testUserAccessToken, array $parameters)
     {
         $response = $this->executeFacebookRequest(

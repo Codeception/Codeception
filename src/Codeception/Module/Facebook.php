@@ -92,16 +92,32 @@ class Facebook extends BaseModule implements DependsOnModule
     protected $testUser = [];
 
     /**
-     * @var BaseModule
+     * @var PhpBrowser
      */
     protected $browserModule;
 
+    protected $dependencyMessage = <<<EOF
+Example configuring PhpBrowser
+--
+modules
+    enabled:
+        - Facebook:
+            depends: PhpBrowser
+            app_id: 412345678901234
+            secret: ccb79c1b0fdff54e4f7c928bf233aea5
+            test_user:
+                name: FacebookGuy
+                locale: uk_UA
+                permissions: [email, publish_stream]
+
+(note: this module also supports WebDriver)
+EOF;
+
     public function _depends()
     {
-        if ($this->config['depends'] == 'PhpBrowser')
-            return PhpBrowser::class;
-        elseif ($this->config['depends'] == 'WebDriver')
-            return WebDriver::class;
+        if ($this->config['depends'] == 'WebDriver')
+            return [WebDriver::class => $this->dependencyMessage];
+        return [PhpBrowser::class => $this->dependencyMessage];
     }
 
     public function _inject(BaseModule $browserModule)
@@ -188,10 +204,10 @@ class Facebook extends BaseModule implements DependsOnModule
         }
 
         $callbackUrl = $this->browserModule->_getUrl();
-        $this->browserModule->amOnUrl('https://facebook.com');
+        $this->browserModule->amOnUrl('https://facebook.com/login');
         $this->browserModule->fillField('#email', $this->grabFacebookTestUserEmail());
         $this->browserModule->fillField('#pass', $this->grabFacebookTestUserPassword());
-        $this->browserModule->click('#loginbutton input[type=submit]');
+        $this->browserModule->click('label#loginbutton input[type=submit]');
         $this->browserModule->see($this->grabFacebookTestUserName());
         $this->browserModule->amOnUrl($callbackUrl);
     }
@@ -262,6 +278,18 @@ class Facebook extends BaseModule implements DependsOnModule
     public function postToFacebookAsTestUser($params)
     {
         $this->facebook->sendPostToFacebook($this->grabFacebookTestUserAccessToken(), $params);
+    }
+
+    /**
+     *
+     * Please, note that you must have publish_actions permission to be able to publish to user's feed.
+     *
+     * @param string $placeId Place identifier to be verified against user published posts
+     */
+    public function seePostOnFacebookWithAttachedPlace($placeId)
+    {
+        $place = $this->facebook->getVisitedPlaceTagForTestUser($placeId, $this->grabFacebookTestUserAccessToken());
+        $this->assertEquals($placeId, $place['id'], "The place was not found on facebook page");
     }
 
     /**
