@@ -6,7 +6,6 @@ use Codeception\Module;
 use Codeception\Module\Facebook;
 use Codeception\Module\PhpBrowser;
 use Codeception\Lib\Driver\Facebook as FacebookDriver;
-use Codeception\Module\WebDriver;
 use Codeception\Util\Stub;
 
 class FacebookTest extends \PHPUnit_Framework_TestCase
@@ -108,25 +107,18 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         $this->module->seePostOnFacebookWithAttachedPlace($params['place']);
     }
 
-    /**
-     *  Selenium is needed for running of this test
-     */
-    public function testLoginToFacebookWebDriver()
-    {
-        $this->markTestSkipped();
-        $browserModule = new WebDriver(make_container());
-        $this->initModule($browserModule, ['url' => 'http://localhost:8000', 'browser' => 'firefox']);
-        $this->loginToFacebook($browserModule);
-    }
-
-    public function testLoginToFacebookPhpBrowser()
+    public function testLoginToFacebook()
     {
         $browserModule = new PhpBrowser(make_container());
         $this->initModule($browserModule, ['url' => 'http://localhost:8000']);
         $this->loginToFacebook($browserModule);
+
+        // cleanup
+        $browserModule->_after($this->makeTest());
+        data::clean();
     }
 
-    private function loginToFacebook(Module $browserModule)
+    private function loginToFacebook(PhpBrowser $browserModule)
     {
         // preconditions: #1 facebook test user is created
         $this->module->haveFacebookTestUserAccount();
@@ -146,11 +138,6 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         // check that we are logged in with facebook
         $browserModule->see('Your User Object (/me)');
         $browserModule->see($testUserName);
-
-
-        // cleanup
-        $browserModule->_after($this->makeTest());
-        data::clean();
     }
 
     private function checkPublishPermissions()
@@ -162,7 +149,7 @@ class FacebookTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    private function initModule(Module $browserModule, array $params)
+    private function initModule(PhpBrowser $browserModule, array $params)
     {
         $browserModule->_setConfig($params);
         $browserModule->_initialize();

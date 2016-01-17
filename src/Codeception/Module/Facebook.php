@@ -109,21 +109,15 @@ modules
                 name: FacebookGuy
                 locale: uk_UA
                 permissions: [email, publish_stream]
-
-(note: this module also supports WebDriver)
 EOF;
 
     public function _depends()
     {
-        if ($this->config['depends'] == 'WebDriver') {
-            return [WebDriver::class => $this->dependencyMessage];
-        }
-        return [PhpBrowser::class => $this->dependencyMessage];
+        return ['Codeception\Module\PhpBrowser' => $this->dependencyMessage];
     }
 
-    public function _inject(BaseModule $browserModule)
+    public function _inject(PhpBrowser $browserModule)
     {
-        //this could be ether PhpBrowser or WebDriver
         $this->browserModule = $browserModule;
     }
 
@@ -208,7 +202,7 @@ EOF;
         $this->browserModule->amOnUrl('https://facebook.com/login');
         $this->browserModule->fillField('#email', $this->grabFacebookTestUserEmail());
         $this->browserModule->fillField('#pass', $this->grabFacebookTestUserPassword());
-        $this->browserModule->click('label#loginbutton input[type=submit]');
+        $this->browserModule->click('login', 'input');
         $this->browserModule->see($this->grabFacebookTestUserName());
         $this->browserModule->amOnUrl($callbackUrl);
     }
