@@ -22,7 +22,7 @@ use Exception;
 use Codeception\Lib\Connector\PhalconMemorySession;
 
 /**
- * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+ * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (2.x).
  * Please try it and leave your feedback.
  *
  * ## Demo Project
@@ -39,7 +39,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  *
  *     modules:
  *         enabled:
- *             - Phalcon1:
+ *             - Phalcon:
  *                 bootstrap: 'app/config/bootstrap.php'
  *                 cleanup: true
  *                 savepoints: true
@@ -47,9 +47,10 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * ## Config
  *
  * The following configurations are required for this module:
- * * boostrap: the path of the application bootstrap file</li>
- * * cleanup: cleanup database (using transactions)</li>
- * * savepoints: use savepoints to emulate nested transactions</li>
+ *
+ * * bootstrap: the path of the application bootstrap file
+ * * cleanup: cleanup database (using transactions)
+ * * savepoints: use savepoints to emulate nested transactions
  *
  * The application bootstrap file must return Application object but not call its handle() method.
  *
@@ -75,7 +76,7 @@ use Codeception\Lib\Connector\PhalconMemorySession;
  * * ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
  *
  */
-class Phalcon1 extends Framework implements ActiveRecord, PartedModule
+class Phalcon extends Framework implements ActiveRecord, PartedModule
 {
     protected $config = [
         'bootstrap'  => 'app/config/bootstrap.php',

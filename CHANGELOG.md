@@ -1,5 +1,8 @@
 # Changelog
 
+#### 2.2.0
+* [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
+
 #### 2.1.6
 
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
