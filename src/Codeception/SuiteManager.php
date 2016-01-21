@@ -136,7 +136,7 @@ class SuiteManager
     protected function createSuite($name)
     {
         $suite = new \Codeception\Suite();
-        $suite->setBaseName($this->env ? substr($name, 0, strpos($name, '-' . $this->env)) : $name);
+        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
         }
