@@ -208,6 +208,9 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->module->amOnPage('/form/complex');
         $this->module->seeOptionIsSelected('#age', 'below 13');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('child', $form['age'], 'first option was not submitted');
     }
 
     /**
