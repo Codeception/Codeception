@@ -202,6 +202,18 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2733
+     */
+    public function testSeeSelectedOptionReturnsFirstOptionIfNotSelected()
+    {
+        $this->module->amOnPage('/form/complex');
+        $this->module->seeOptionIsSelected('#age', 'below 13');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('child', $form['age'], 'first option was not submitted');
+    }
+
+    /**
      * @group testSubmitSeveralSubmitsForm
      * @Issue https://github.com/Codeception/Codeception/issues/1183
      */
