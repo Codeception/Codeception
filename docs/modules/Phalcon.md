@@ -26,9 +26,10 @@ Please try it and leave your feedback.
 ## Config
 
 The following configurations are required for this module:
-* bootstrap: the path of the application bootstrap file</li>
-* cleanup: cleanup database (using transactions)</li>
-* savepoints: use savepoints to emulate nested transactions</li>
+
+* bootstrap: the path of the application bootstrap file
+* cleanup: cleanup database (using transactions)
+* savepoints: use savepoints to emulate nested transactions
 
 The application bootstrap file must return Application object but not call its handle() method.
 

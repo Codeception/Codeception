@@ -18,7 +18,6 @@ use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Exception\ModuleConfigException;
-use Exception;
 use Codeception\Lib\Connector\PhalconMemorySession;
 
 /**
