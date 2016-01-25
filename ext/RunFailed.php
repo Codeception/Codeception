@@ -4,7 +4,7 @@ namespace Codeception\Extension;
 use Codeception\Event\PrintResultEvent;
 use Codeception\Events;
 use Codeception\Extension;
-use Codeception\TestCase;
+use Codeception\Test\Descriptor;
 
 /**
  * Saves failed tests into tests/log/failed in order to rerun failed tests.
@@ -50,10 +50,10 @@ class RunFailed extends Extension
         }
         $output = [];
         foreach ($result->failures() as $fail) {
-            $output[] = $this->localizePath(TestCase::getTestFullName($fail->failedTest()));
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->failedTest()));
         }
         foreach ($result->errors() as $fail) {
-            $output[] = $this->localizePath(TestCase::getTestFullName($fail->failedTest()));
+            $output[] = $this->localizePath(Descriptor::getTestFullName($fail->failedTest()));
         }
 
         file_put_contents($file, implode("\n", $output));

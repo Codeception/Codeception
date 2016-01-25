@@ -15,7 +15,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase
     public $content = "";
     public $output = "";
     public $config = [];
-    public $log = [];
+    public $saved = [];
 
     protected $commandName = 'do:stuff';
 
@@ -54,6 +54,7 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase
                 $self->filename = $file;
                 $self->content = $output;
                 $self->log[] = ['filename' => $file, 'content' => $output];
+                $self->saved[$file] = $output;
                 return true;
             },
             'getGlobalConfig' => function () use ($self) {

@@ -1,7 +1,6 @@
 <?php
-use Codeception\Util\Stub;
 
-class PassingTest extends \Codeception\TestCase\Test
+class PassingTest extends \Codeception\Test\Unit
 {
 
     public function testMe()

@@ -1,5 +1,7 @@
 <?php
-namespace Codeception\TestCase\Interfaces;
+namespace Codeception\Test\Interfaces;
+
+use Codeception\Step;
 
 interface ScenarioDriven
 {
@@ -14,5 +16,5 @@ interface ScenarioDriven
 
     public function preload();
 
-    public function getRawBody();
+    public function getSourceCode();
 }
