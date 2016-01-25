@@ -70,14 +70,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     {
     }
 
-    public function getFeature()
-    {
-        $text = $this->getName();
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        return strtolower($text);
-    }
-
     public function getSignature()
     {
         return get_class($this) . ':' . $this->getName(false);
@@ -107,8 +99,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         return [
             'name'    => $this->getName(),
             'class'   => get_class($this),
-            'file'    => $this->getFileName(),
-            'feature' => $this->getFeature()
+            'file'    => $this->getFileName()
         ];
     }
 

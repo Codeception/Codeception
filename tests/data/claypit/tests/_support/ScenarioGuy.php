@@ -20,7 +20,7 @@ class ScenarioGuy extends \Codeception\Actor
 {
     use _generated\ScenarioGuyActions;
 
-    function seeCodeCoverageFilesArePresent()
+    public function seeCodeCoverageFilesArePresent()
     {
         $this->seeFileFound('c3.php');
         $this->seeFileFound('composer.json');

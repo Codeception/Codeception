@@ -7,7 +7,8 @@ use Behat\Gherkin\Lexer as GherkinLexer;
 use Behat\Gherkin\Node\ScenarioNode;
 use Behat\Gherkin\Parser as GherkinParser;
 use Codeception\Configuration;
-use Codeception\Test\Format\Gherkin as GherkinFormat;
+use Codeception\Exception\TestParseException;
+use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
 
 class Gherkin implements Loader
@@ -53,7 +54,7 @@ class Gherkin implements Loader
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
         if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
-            throw new \TestParseException('Feature file can only be parsed with Gherkin library. Please install `behat/gherkin` with Composer');
+            throw new TestParseException('Feature file can only be parsed with Gherkin library. Please install `behat/gherkin` with Composer');
         }
         $keywords = new GherkinKeywords(['en' => static::$defaultKeywords]);
         $lexer = new GherkinLexer($keywords);

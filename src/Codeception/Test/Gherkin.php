@@ -1,5 +1,5 @@
 <?php
-namespace Codeception\Test\Format;
+namespace Codeception\Test;
 
 use Behat\Gherkin\Node\FeatureNode;
 use Behat\Gherkin\Node\ScenarioNode;
@@ -10,8 +10,6 @@ use Codeception\Scenario;
 use Codeception\Step\Comment;
 use Codeception\Step\Meta;
 use Codeception\Test\Interfaces\ScenarioDriven;
-use Codeception\Test\Metadata;
-use Codeception\Test\Test;
 
 class Gherkin extends Test implements ScenarioDriven
 {
@@ -148,7 +146,7 @@ class Gherkin extends Test implements ScenarioDriven
 
     public function getFeature()
     {
-        return $this->metadata->getFeature();
+        return $this->getMetadata()->getFeature();
     }
 
     /**
@@ -164,7 +162,7 @@ class Gherkin extends Test implements ScenarioDriven
         return file_get_contents($this->getFileName());
     }
 
-    public function getRawBody()
+    public function getSourceCode()
     {
         // TODO: Implement getRawBody() method.
     }

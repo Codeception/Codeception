@@ -8,11 +8,12 @@ use Codeception\Event\TestEvent;
 use Codeception\Events;
 use Codeception\Lib\Console\Message;
 use Codeception\Lib\Console\Output;
-use Codeception\Lib\Generator\Test;
 use Codeception\Lib\Notification;
 use Codeception\Step;
 use Codeception\Step\Comment;
 use Codeception\Suite;
+use Codeception\Test\Descriptor;
+use Codeception\Test\Interfaces\Descriptive;
 use Codeception\Test\Interfaces\ScenarioDriven;
 use Codeception\TestInterface;
 use Codeception\Util\Debug;
@@ -495,7 +496,7 @@ class Console implements EventSubscriberInterface
         }
 
         $feature = $test->getName(true);
-        if ($test instanceof Testable) {
+        if ($test instanceof TestInterface and $test->getMetadata()->getFeature()) {
             $feature = $test->getMetadata()->getFeature();
         }
         $this->message(ucfirst($feature))

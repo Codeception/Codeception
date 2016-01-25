@@ -40,7 +40,7 @@ class GherkinTest extends PHPUnit_Framework_TestCase
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $tests = $this->loader->getTests();
         $this->assertCount(1, $tests);
-        /** @var $test \Codeception\Test\Format\Gherkin  * */
+        /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
         $this->assertInstanceOf('\Codeception\Test\Format\Gherkin', $test);
         $this->assertEquals('Jeff returns a faulty microwave', $test->getFeature());
@@ -53,7 +53,7 @@ class GherkinTest extends PHPUnit_Framework_TestCase
     {
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Format\Gherkin  * */
+        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
         $this->assertEquals('abc', self::$calls);
@@ -75,7 +75,7 @@ class GherkinTest extends PHPUnit_Framework_TestCase
         );
         $this->loader->loadTests(codecept_data_dir('refund.feature'));
         $test = $this->loader->getTests()[0];
-        /** @var $test \Codeception\Test\Format\Gherkin  * */
+        /** @var $test \Codeception\Test\Gherkin  * */
         $test->getMetadata()->setServices($this->getServices());
         $test->test();
         $this->assertEquals('aXc', self::$calls);
