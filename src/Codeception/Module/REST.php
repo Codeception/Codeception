@@ -586,7 +586,7 @@ EOF;
         $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
         \PHPUnit_Framework_Assert::assertTrue(
             $jsonResponseArray->containsArray($json),
-            "Response JSON contains provided\n"
+            "Response JSON does not contain the provided JSON\n"
             . "- <info>" . var_export($json, true) . "</info>\n"
             . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
@@ -769,7 +769,7 @@ EOF;
         $jsonResponseArray = new JsonArray($this->connectionModule->_getResponseContent());
         $this->assertFalse(
             $jsonResponseArray->containsArray($json),
-            "Response JSON does not contain JSON provided\n"
+            "Response JSON contains provided JSON\n"
             . "- <info>" . var_export($json, true) . "</info>\n"
             . "+ " . var_export($jsonResponseArray->toArray(), true)
         );
