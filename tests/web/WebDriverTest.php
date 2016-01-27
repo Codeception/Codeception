@@ -426,7 +426,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $this->module->webDriver = $fakeWd;
-        $cept = (new \Codeception\Test\Cept())->configName('loginCept.php');
+        $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
         $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
