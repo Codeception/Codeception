@@ -2,7 +2,7 @@
 
 namespace Codeception\Lib\Interfaces;
 
-interface CustomCommands
+interface CustomCommand
 {
 
     /**

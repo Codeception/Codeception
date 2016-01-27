@@ -8,12 +8,12 @@
 namespace Codeception\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Codeception\Lib\Interfaces\CustomCommands;
+use Codeception\Lib\Interfaces\CustomCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MyCustomCommand extends Command implements CustomCommands
+class MyCustomCommand extends Command implements CustomCommand
 {
 
     use Shared\FileSystem;

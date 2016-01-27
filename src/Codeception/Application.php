@@ -5,7 +5,7 @@ namespace Codeception;
 use Codeception\Exception\ConfigurationException;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Codeception\Lib\Interfaces\CustomCommands;
+use Codeception\Lib\Interfaces\CustomCommand;
 
 class Application extends BaseApplication
 {
@@ -39,7 +39,7 @@ class Application extends BaseApplication
     /**
      * Validate and get the name of the command
      *
-     * @param CustomCommands $sCommandClass
+     * @param CustomCommand $sCommandClass
      *
      * @throws ConfigurationException
      *
@@ -53,8 +53,8 @@ class Application extends BaseApplication
 
         $aInterfaces = class_implements($sCommandClass);
 
-        if (!in_array('Codeception\Lib\Interfaces\CustomCommands', $aInterfaces)) {
-            throw new ConfigurationException("Extension: Command $sCommandClass must implement the interface `Codeception\\Lib\\Interfaces\\CustomCommands`");
+        if (!in_array('Codeception\Lib\Interfaces\CustomCommand', $aInterfaces)) {
+            throw new ConfigurationException("Extension: Command $sCommandClass must implement the interface `Codeception\\Lib\\Interfaces\\CustomCommand`");
         }
 
         return $sCommandClass::getCommandName();
