@@ -283,6 +283,9 @@ class Console implements EventSubscriberInterface
 
     protected function printException($e, $cause = null)
     {
+        if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
+            return;
+        }
         $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
             ? $e->getClassname()
             : get_class($e);
@@ -509,7 +512,7 @@ class Console implements EventSubscriberInterface
             ->write();
     }
 
-    protected function writeFinishedTest(\PHPUnit_Framework_TestCase $test)
+    protected function writeFinishedTest(TestEvent $e, Message $result)
     {
         $test = $e->getTest();
         if ($this->isDetailed($test)) {
