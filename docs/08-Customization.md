@@ -196,7 +196,7 @@ extensions:
 If you want to activate the Command globally, because you use more then one ```codeception.yml``` file, then
 you have to register your command in ```codeception.dist.yml``` in the root folder of your project.
 
-You can find an example here:  [src/Codeception/Command/MyCustomCommand.php]
+You can find an example here:  [tests/data/claypit/MyCustomCommand.php]
 
 ## Group Objects
 

@@ -6,6 +6,12 @@ use Codeception\Application;
 
 class ApplicationTest extends \PHPUnit_Framework_TestCase
 {
+
+    public static function setUpBeforeClass()
+    {
+        require_once \Codeception\Configuration::dataDir() . 'claypit/MyCustomCommand.php';
+    }
+
     public function testRegisterCustomCommand()
     {
         \Codeception\Configuration::append(array('extensions' => array(
