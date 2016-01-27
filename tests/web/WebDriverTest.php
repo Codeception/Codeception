@@ -442,9 +442,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $this->module->webDriver = $fakeWd;
-        $cest = (new \Codeception\Test\Cest())
-            ->config('testClassInstance', new stdClass())
-            ->config('testMethod','login');
+        $cest = new \Codeception\Test\Cest(new stdClass(), 'login', 'someCest.php');
         $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
