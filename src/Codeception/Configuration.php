@@ -69,8 +69,9 @@ class Configuration
         ],
         'modules'    => [],
         'extensions' => [
-            'enabled' => [],
-            'config'  => [],
+            'enabled'  => [],
+            'config'   => [],
+            'commands' => [],
         ],
         'reporters'  => [
             'xml'    => 'Codeception\PHPUnit\Log\JUnit',
