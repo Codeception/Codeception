@@ -15,13 +15,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $application = new Application();
         $application->registerCustomCommands();
 
-        $command = null;
-
         try {
-            $command = $application->find('myProjekt:myCommand');
+            $application->find('myProjekt:myCommand');
         } catch (\Exception $e) {
+            $this->fail($e->getMessage());
         }
-
-        $this->assertNotEmpty($command, "Custom command not found.");
     }
 }
