@@ -13,5 +13,4 @@ class MyCustomCommandTest extends \PHPUnit_Framework_TestCase {
         $commandName = Codeception\Command\MyCustomCommand::getCommandName();
         $this->assertEquals('myProjekt:myCommand', $commandName);
     }
-
 }

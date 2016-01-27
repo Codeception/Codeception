@@ -10,7 +10,7 @@ use Codeception\Lib\Interfaces\CustomCommands;
 class Application extends BaseApplication
 {
     /**
-     * Register Commands from a Config file
+     * Register commands from a config file
      *
      *  extensions:
      *      commands:
@@ -37,7 +37,7 @@ class Application extends BaseApplication
     }
 
     /**
-     * Validate and Get the Command Name
+     * Validate and get the name of the command
      *
      * @param CustomCommands $sCommandClass
      *
@@ -54,7 +54,7 @@ class Application extends BaseApplication
         $aInterfaces = class_implements($sCommandClass);
 
         if (!in_array('Codeception\Lib\Interfaces\CustomCommands', $aInterfaces)) {
-            throw new ConfigurationException("Extension: Command $sCommandClass has not the Interface `Codeception\\Lib\\Interfaces\\CustomCommands`");
+            throw new ConfigurationException("Extension: Command $sCommandClass must implement the interface `Codeception\\Lib\\Interfaces\\CustomCommands`");
         }
 
         return $sCommandClass::getCommandName();

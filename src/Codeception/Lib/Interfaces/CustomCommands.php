@@ -15,7 +15,7 @@ interface CustomCommands
 {
 
     /**
-     * Give the Command Name
+     * returns the name of the command
      *
      * @return string
      */

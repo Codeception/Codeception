@@ -1,6 +1,6 @@
 <?php
 /**
- * A Example for a custom command to add in the framework.
+ * An example for a custom command to add to the framework.
  *
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
@@ -20,7 +20,7 @@ class MyCustomCommand extends Command implements CustomCommands
     use Shared\Config;
 
     /**
-     * Give the Command Name
+     * returns the name of the command
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class MyCustomCommand extends Command implements CustomCommands
      */
     public function getDescription()
     {
-        return "This is my command. To echo a hello";
+        return "This is my command to say hello";
     }
 
     /**
@@ -81,5 +81,4 @@ class MyCustomCommand extends Command implements CustomCommands
         echo "Hello " . get_current_user();
         echo $messageEnd . PHP_EOL;
     }
-
 }
