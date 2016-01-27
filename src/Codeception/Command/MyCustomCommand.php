@@ -35,7 +35,8 @@ class MyCustomCommand extends Command implements CustomCommands
     protected function configure()
     {
         $this->setDefinition(array(
-            new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly')
+            new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly'),
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config')
         ));
 
         parent::configure();
@@ -48,7 +49,7 @@ class MyCustomCommand extends Command implements CustomCommands
      */
     public function getDescription()
     {
-        return "This is my command. To echo a hallo";
+        return "This is my command. To echo a hello";
     }
 
     /**
@@ -77,7 +78,7 @@ class MyCustomCommand extends Command implements CustomCommands
             $messageEnd .= "how are you?" . PHP_EOL;
         }
 
-        echo "Hallo " . get_current_user();
+        echo "Hello " . get_current_user();
         echo $messageEnd . PHP_EOL;
     }
 
