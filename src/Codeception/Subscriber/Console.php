@@ -480,16 +480,17 @@ class Console implements EventSubscriberInterface
         if ($filename) {
             $atMessage = $atMessage
                 ->append($this->options['colors'] ? '' : 'at ')
-                ->append($filename)
-                ->style('info');
+                ->append($filename);
         }
 
+        $stripDataSet = function ($str) { return str_replace('with data set', "|", $str); };
+
         if (!$test instanceof Descriptive) {
+            $title = $this->message(str_replace('::', ':', $test->toString()))->apply($stripDataSet);
+            $atMessage->cut($this->width - 4 - strlen($title))->style('info');
             $this
-                ->message(str_replace('::', ':', $test->toString()))
-                ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
+                ->message($title)
                 ->append($atMessage)
-                ->cut($this->width-2)
                 ->prepend($prefix)
                 ->write();
             return;
@@ -499,14 +500,16 @@ class Console implements EventSubscriberInterface
         if ($test instanceof TestInterface and $test->getMetadata()->getFeature()) {
             $feature = $test->getMetadata()->getFeature();
         }
-        $this->message(ucfirst($feature))
-            ->apply(function ($str) { return str_replace('with data set', "|", $str); } )
+        $title = $this->message(ucfirst($feature))->apply($stripDataSet);
+        $atMessage->cut($this->width - 4 - strlen($title))->style('info');
+
+        $this->message($title)
             ->prepend($prefix)
             ->append($atMessage)
             ->write();
     }
 
-    protected function writeFinishedTest(TestEvent $e, Message $result)
+    protected function writeFinishedTest(\PHPUnit_Framework_TestCase $test)
     {
         $test = $e->getTest();
         if ($this->isDetailed($test)) {

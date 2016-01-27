@@ -49,7 +49,7 @@ class WebDriverTest extends TestsForBrowsers
     protected function makeTest()
     {
         return Stub::makeEmpty(
-            '\Codeception\TestCase\Cept',
+            '\Codeception\Test\Test',
             ['dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')]
         );
     }
