@@ -225,7 +225,7 @@ class SuiteManager
         $t->getMetadata()->setCurrent([
             'actor' => $this->getActor(),
             'env' => $this->env,
-            'modules' => array_keys($this->moduleContainer->all())
+            'modules' => $this->moduleContainer->all()
         ]);
     }
 }
