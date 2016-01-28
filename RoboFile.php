@@ -14,6 +14,9 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
+        $this->installDependenciesForPhp54();
+        $this->buildPhar54();
+        $this->installDependenciesForPhp55();
         $this->buildPhar();
         $this->publishPhar();
         $this->publishGit();
@@ -142,13 +145,74 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
+    private function installDependenciesForPhp54()
+    {
+        $dependencies = [
+            'guzzlehttp/guzzle' => '5.*',
+            'symfony/finder' => '2.8.*',
+            'symfony/console' => '2.8.*',
+            'symfony/event-dispatcher' => '2.8.*',
+            'symfony/yaml' => '2.8.*',
+            'symfony/browser-kit' => '2.8.*',
+            'symfony/css-selector' => '2.8.*',
+            'symfony/dom-crawler' => '2.8.*',
+        ];
+
+        $this->installDependencies($dependencies);
+    }
+
+    private function installDependenciesForPhp55()
+    {
+        $dependencies = [
+            'guzzlehttp/guzzle' => '6.*',
+            'symfony/finder' => '3.*',
+            'symfony/console' => '3.*',
+            'symfony/event-dispatcher' => '3.*',
+            'symfony/yaml' => '3.*',
+            'symfony/browser-kit' => '3.*',
+            'symfony/css-selector' => '3.*',
+            'symfony/dom-crawler' => '3.*',
+        ];
+
+        $this->installDependencies($dependencies);
+    }
+
+
+
+    private function installDependencies($dependencies)
+    {
+        $composerRequireCommand = str_replace(' install', ' require --no-update ', $this->taskComposerInstall()->getCommand());
+        foreach ($dependencies as $dependency => $version) {
+            $code = $this->taskExec($composerRequireCommand . $dependency . ' ' . $version )->printed(true)->run()->getExitCode();
+            if ($code !== 0) {
+                throw new Exception("There was problem compiling phar");
+            }
+        }
+        $this->taskComposerUpdate()->run();
+    }
+
     /**
      * @desc creates codecept.phar
      * @throws Exception
      */
     public function buildPhar()
     {
-        $pharTask = $this->taskPackPhar('package/codecept.phar')
+        $this->packPhar('package/codecept.phar');
+    }
+
+    /**
+     * @desc creates codecept.phar with Guzzle 5.3 and Symfony 2.8
+     * @throws Exception
+     */
+    public function buildPhar54()
+    {
+        mkdir('package/php54');
+        $this->packPhar('package/php54/codecept.phar');
+    }
+
+    private function packPhar($pharFileName)
+    {
+        $pharTask = $this->taskPackPhar($pharFileName)
             ->compress()
             ->stub('package/stub.php');
 
@@ -209,7 +273,7 @@ class RoboFile extends \Robo\Tasks
             ->addFile('codecept', 'package/bin')
             ->run();
         
-        $code = $this->taskExec('php package/codecept.phar')->run()->getExitCode();
+        $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
         if ($code !== 0) {
             throw new Exception("There was problem compiling phar");
         }
@@ -352,12 +416,19 @@ class RoboFile extends \Robo\Tasks
         if (strpos($version, self::STABLE_BRANCH) === 0) {
             $this->say("publishing to release branch");
             copy('../codecept.phar','codecept.phar');
+            if (!is_dir('php54')) {
+                mkdir('php54');
+            }
+            copy('../php54/codecept.phar','php54/codecept.phar');
             $this->taskExec('git add codecept.phar')->run();
+            $this->taskExec('git add php54/codecept.phar')->run();
         }
 
         $this->taskFileSystemStack()
             ->mkdir("releases/$version")
+            ->mkdir("releases/$version/php54")
             ->copy('../codecept.phar',"releases/$version/codecept.phar")
+            ->copy('../php54/codecept.phar',"releases/$version/php54/codecept.phar")
             ->run();
 
         $this->taskGitStack()->add('-A')->run();
@@ -390,7 +461,11 @@ class RoboFile extends \Robo\Tasks
                 }
                 $releaseFile->line("* **[Download Latest $branch Release](http://codeception.com/releases/$releaseName/codecept.phar)**");
             }
-            $releaseFile->line("* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)");
+            $versionLine = "* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)";
+            if (file_exists("releases/$releaseName/php54/codecept.phar")) {
+                $versionLine .= ", [for PHP 5.4](http://codeception.com/releases/$releaseName/php54/codecept.phar)";
+            }
+            $releaseFile->line($versionLine);
         }
         $releaseFile->run();
 
