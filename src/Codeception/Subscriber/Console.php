@@ -284,8 +284,10 @@ class Console implements EventSubscriberInterface
     protected function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
+            $this->message($e->getMessage())->writeln();
             return;
         }
+
         $class = $e instanceof \PHPUnit_Framework_ExceptionWrapper
             ? $e->getClassname()
             : get_class($e);
@@ -342,7 +344,6 @@ class Console implements EventSubscriberInterface
         static $limit = 10;
 
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
-            $this->message($e->getMessage())->writeln();
             return;
         }
 
