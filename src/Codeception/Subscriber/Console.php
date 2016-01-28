@@ -170,14 +170,13 @@ class Console implements EventSubscriberInterface
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
             return;
         }
-        $this->writeFinishedTest($e, $this->message($this->isWin() ? "\u221A"  : '✔' )->style('ok'));
+        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u221A"  : '✔' )->style('ok'));
     }
 
     public function endTest(TestEvent $e)
     {
         $this->metaStep = null;
         $this->printedTest = null;
-        $this->output->writeln('');
     }
 
     public function testFail(FailEvent $e)
@@ -186,7 +185,7 @@ class Console implements EventSubscriberInterface
             $this->message('FAIL')->center(' ')->style('fail')->append("\n")->writeln();
             return;
         }
-        $this->writeFinishedTest($e, $this->message($this->isWin() ? "\u00D7" : '✖')->style('fail'));
+        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u00D7" : '✖')->style('fail'));
     }
 
     public function testError(FailEvent $e)
@@ -195,7 +194,7 @@ class Console implements EventSubscriberInterface
             $this->message('ERROR')->center(' ')->style('fail')->append("\n")->writeln();
             return;
         }
-        $this->writeFinishedTest($e, $this->message('E')->style('fail'));
+        $this->writelnFinishedTest($e, $this->message('E')->style('fail'));
     }
 
     public function testSkipped(FailEvent $e)
@@ -205,7 +204,7 @@ class Console implements EventSubscriberInterface
             $this->message('SKIPPED')->append($msg ? ": $msg" : '')->center(' ')->style('pending')->writeln();
             return;
         }
-        $this->writeFinishedTest($e, $this->message('S')->style('pending'));
+        $this->writelnFinishedTest($e, $this->message('S')->style('pending'));
     }
 
     public function testIncomplete(FailEvent $e)
@@ -215,7 +214,7 @@ class Console implements EventSubscriberInterface
             $this->message('INCOMPLETE')->append($msg ? ": $msg" : '')->center(' ')->style('pending')->writeln();
             return;
         }
-        $this->writeFinishedTest($e, $this->message('I')->style('pending'));
+        $this->writelnFinishedTest($e, $this->message('I')->style('pending'));
     }
 
     protected function isDetailed($test)
@@ -284,7 +283,7 @@ class Console implements EventSubscriberInterface
     protected function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
-            $this->message($e->getMessage())->writeln();
+            $this->message($e->getMessage())->prepend("\n")->writeln();
             return;
         }
 
@@ -513,7 +512,7 @@ class Console implements EventSubscriberInterface
             ->write();
     }
 
-    protected function writeFinishedTest(TestEvent $e, Message $result)
+    protected function writelnFinishedTest(TestEvent $e, Message $result)
     {
         $test = $e->getTest();
         if ($this->isDetailed($test)) {
@@ -548,5 +547,6 @@ class Console implements EventSubscriberInterface
                 ->style('info')
                 ->write();
         }
+        $this->output->writeln('');
     }
 }

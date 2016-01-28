@@ -2,6 +2,7 @@
 namespace Codeception\Test;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
 use Codeception\Scenario;
 use Codeception\TestInterface;
 
@@ -18,7 +19,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     /**
      * @var Metadata
      */
-    protected $metadata;
+    private $metadata;
 
     public function getMetadata()
     {
@@ -36,7 +37,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
             }
             if ($this->getMetadata()->getIncomplete() !== null) {
                 $this->markTestIncomplete($this->getMetadata()->getIncomplete());
-                return;
             }
             return;
         }
@@ -82,13 +82,16 @@ class Unit extends \PHPUnit_Framework_TestCase implements
 
     /**
      * @param $module
-     *
      * @return \Codeception\Module
-     * @throws \Codeception\Exception\TestRuntimeException
+     * @throws ModuleException
      */
     public function getModule($module)
     {
-        return $this->getMetadata()->getCurrent('modules')->getModule($module);
+        $modules = $this->getMetadata()->getCurrent('modules');
+        if (!isset($modules[$module])) {
+            throw new ModuleException($module, "Can't access from a unit test");
+        }
+        return $modules[$module];
     }
 
     /**
