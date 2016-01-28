@@ -5,6 +5,7 @@
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
 * [HHVM] Asserts module works on HHVM
 * Fixed using codecoverage with environments #2634
+* [Filesystem] Added `seeNumberNewLines` method to check the number of new lines in opened file. By @sergeyklay
 
 #### 2.1.5
 
