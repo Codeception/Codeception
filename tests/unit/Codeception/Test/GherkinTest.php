@@ -42,7 +42,7 @@ class GherkinTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $tests);
         /** @var $test \Codeception\Test\Gherkin  * */
         $test = $tests[0];
-        $this->assertInstanceOf('\Codeception\Test\Format\Gherkin', $test);
+        $this->assertInstanceOf('\Codeception\Test\Gherkin', $test);
         $this->assertEquals('Jeff returns a faulty microwave', $test->getFeature());
     }
 
