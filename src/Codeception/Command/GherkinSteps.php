@@ -60,5 +60,4 @@ class GherkinSteps extends Command
             $output->writeln("No steps are defined, start creating them by running <bold>gherkin:snippets</bold>");
         }
     }
-
 }

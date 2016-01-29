@@ -11,7 +11,7 @@ use Codeception\Exception\TestParseException;
 use Codeception\Test\Gherkin as GherkinFormat;
 use Codeception\Util\Annotation;
 
-class Gherkin implements Loader
+class Gherkin implements LoaderInterface
 {
     protected static $defaultKeywords = [
         'feature'          => 'Feature',

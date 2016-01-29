@@ -66,7 +66,7 @@ EOF;
             foreach ($matches[1] as $num => $param) {
                 $num++;
                 $args[] = '$arg' . $num;
-                $pattern = str_replace('"'.$param.'"', ":arg$num" , $pattern);
+                $pattern = str_replace('"'.$param.'"', ":arg$num", $pattern);
             }
         }
 

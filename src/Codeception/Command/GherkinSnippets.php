@@ -50,5 +50,4 @@ class GherkinSnippets extends Command
         $output->writeln("<info> ----------------------------------------- </info>");
         $output->writeln("<notice> Copy generated snippets to {$config['class_name']} or a specific Gherkin context </notice>");
     }
-
 }

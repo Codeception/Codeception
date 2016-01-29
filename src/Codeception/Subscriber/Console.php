@@ -178,7 +178,7 @@ class Console implements EventSubscriberInterface
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
             return;
         }
-        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u221A"  : '✔' )->style('ok'));
+        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u221A" : '✔')->style('ok'));
     }
 
     public function endTest(TestEvent $e)
@@ -496,7 +496,9 @@ class Console implements EventSubscriberInterface
                 ->append($filename);
         }
 
-        $stripDataSet = function ($str) { return str_replace('with data set', "|", $str); };
+        $stripDataSet = function ($str) {
+            return str_replace('with data set', "|", $str);
+        };
 
         if (!$test instanceof Descriptive) {
             $title = $this->message(str_replace('::', ':', $test->toString()))->apply($stripDataSet);
