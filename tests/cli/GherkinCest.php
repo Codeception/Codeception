@@ -1,5 +1,4 @@
 <?php
-
 class GherkinCest
 {
     public function _before(CliGuy $I)

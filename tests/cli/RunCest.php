@@ -170,9 +170,7 @@ class RunCest
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput(
-          'Test is triangle | "real triangle"'
-        );
+        $I->seeInShellOutput('Test is triangle | "real triangle"');
         $I->seeInShellOutput('Test is triangle | #0');
         $I->seeInShellOutput('Test is triangle | #1');
         $I->seeInShellOutput('DataProvidersTest.php');
@@ -287,14 +285,14 @@ Scenario --
  I am in path "."
  I see code coverage files are present
 EOF
-);
+        );
         // I split this assertion into two, because extra space is printed after "present" on HHVM
         $I->seeInShellOutput(<<<EOF
    I see file found "c3.php"
    I see file found "composer.json"
    I see in this file "$file"
 EOF
-);
+        );
     }
 
     public function runDependentCest(CliGuy $I)
@@ -328,7 +326,7 @@ EOF
    | class_name | ScenarioGuy |
    | enabled    | Filesystem  |
 EOF
-);
+        );
         $I->seeInShellOutput('PASSED');
     }
 
