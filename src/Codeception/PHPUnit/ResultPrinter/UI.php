@@ -4,6 +4,7 @@ namespace Codeception\PHPUnit\ResultPrinter;
 use Codeception\Event\FailEvent;
 use Codeception\Events;
 use Codeception\Test\Unit;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class UI extends \PHPUnit_TextUI_ResultPrinter
@@ -15,7 +16,7 @@ class UI extends \PHPUnit_TextUI_ResultPrinter
 
     public function __construct(EventDispatcher $dispatcher, $options, $out = null)
     {
-        parent::__construct($out, $options['verbosity'] > 1, $options['colors'] ? 'always' : 'never');
+        parent::__construct($out, $options['verbosity'] > OutputInterface::VERBOSITY_NORMAL, $options['colors'] ? 'always' : 'never');
         $this->dispatcher = $dispatcher;
     }
 

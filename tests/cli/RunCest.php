@@ -334,7 +334,7 @@ EOF
 
     public function runIncompleteGherkinTest(CliGuy $I)
     {
-        $I->executeCommand('run scenario File.feature');
+        $I->executeCommand('run scenario File.feature -v');
         $I->seeInShellOutput('OK, but incomplete');
         $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
     }

@@ -2,6 +2,7 @@
 namespace Codeception\Subscriber;
 
 use Codeception\Event\FailEvent;
+use Codeception\Event\PrintResultEvent;
 use Codeception\Event\StepEvent;
 use Codeception\Event\SuiteEvent;
 use Codeception\Event\TestEvent;
@@ -149,8 +150,15 @@ class Console implements EventSubscriberInterface
         }
     }
 
-    public function afterResult()
+    /**
+     * @param PrintResultEvent $event
+     */
+    public function afterResult(PrintResultEvent $event)
     {
+        $result = $event->getResult();
+        if ($result->skippedCount() + $result->notImplementedCount() > 0 and $this->options['verbosity'] < OutputInterface::VERBOSITY_VERBOSE) {
+            $this->output->writeln("run with `-v` to get more info about skipped or incomplete tests");
+        }
         foreach ($this->reports as $message) {
             $this->output->writeln($message);
         }
