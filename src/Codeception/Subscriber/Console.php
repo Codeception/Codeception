@@ -131,7 +131,6 @@ class Console implements EventSubscriberInterface
         $test = $e->getTest();
         $this->printedTest = $test;
         $this->message = null;
-        $this->output->waitForDebugOutput = true;
 
         if (!$this->output->isInteractive() and !$this->isDetailed($test)) {
             return;
@@ -139,6 +138,7 @@ class Console implements EventSubscriberInterface
         $this->writeCurrentTest($test);
         if ($this->steps && $this->isDetailed($test)) {
             $this->message('Scenario --')->style('comment')->prepend("\n")->writeln();
+            $this->output->waitForDebugOutput = false;
         }
     }
 
@@ -291,7 +291,9 @@ class Console implements EventSubscriberInterface
     protected function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
-            $this->message($e->getMessage())->prepend("\n")->writeln();
+            if ($e->getMessage()) {
+                $this->message($e->getMessage())->prepend("\n")->writeln();
+            }
             return;
         }
 
