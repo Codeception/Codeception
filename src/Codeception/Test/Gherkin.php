@@ -166,4 +166,12 @@ class Gherkin extends Test implements ScenarioDriven
     {
         // TODO: Implement getRawBody() method.
     }
+
+    /**
+     * @return ScenarioNode
+     */
+    public function getScenarioNode()
+    {
+        return $this->scenarioNode;
+    }
 }

@@ -47,14 +47,13 @@ class Gherkin implements Loader
 
     protected $settings = [];
 
-    protected $steps = [
-    ];
+    protected $steps = [];
 
     public function __construct($settings = [])
     {
         $this->settings = Configuration::mergeConfigs(self::$defaultSettings, $settings);
         if (!class_exists('Behat\Gherkin\Keywords\ArrayKeywords')) {
-            throw new TestParseException('Feature file can only be parsed with Gherkin library. Please install `behat/gherkin` with Composer');
+            throw new TestParseException('Feature file can only be parsed with Behat\Gherkin library. Please install `behat/gherkin` with Composer');
         }
         $keywords = new GherkinKeywords(['en' => static::$defaultKeywords]);
         $lexer = new GherkinLexer($keywords);
@@ -109,6 +108,9 @@ class Gherkin implements Loader
 
     public function makePlaceholderPattern($pattern)
     {
+        if (isset($this->settings['describe_steps'])) {
+            return $pattern;
+        }
         if (strpos($pattern, '/') !== 0) {
             $pattern = preg_quote($pattern);
 
@@ -158,5 +160,13 @@ class Gherkin implements Loader
     public function getPattern()
     {
         return '~\.feature$~';
+    }
+
+    /**
+     * @return array
+     */
+    public function getSteps()
+    {
+        return $this->steps;
     }
 }
