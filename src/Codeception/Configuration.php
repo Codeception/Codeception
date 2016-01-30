@@ -158,7 +158,7 @@ class Configuration
 
         // config without tests, for inclusion of other configs
         if (count($config['include']) and !isset($config['paths']['tests'])) {
-            return $config;
+            return self::$config = $config;
         }
 
         if (!isset($config['paths']['tests'])) {
