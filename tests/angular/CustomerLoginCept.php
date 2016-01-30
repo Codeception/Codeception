@@ -1,4 +1,4 @@
-<?php 
+<?php
 $I = new AngularGuy($scenario);
 $I->wantTo('check simple angularjs app');
 $I->amOnPage('/');

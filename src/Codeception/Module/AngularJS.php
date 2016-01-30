@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Step;
-use WebDriverBy;
+use Facebook\WebDriver\WebDriverBy;
 
 /**
  * Module for AngularJS testing, based on [WebDriver module](http://codeception.com/docs/modules/WebDriver) and [Protractor](http://angular.github.io/protractor/).
