@@ -1,7 +1,7 @@
 <?php
 namespace Codeception\Util;
 
-class JsonTypeTest extends \Codeception\Test\TestCase
+class JsonTypeTest extends \Codeception\Test\Unit
 {
     protected $types = [
         'id' => 'integer:>10',

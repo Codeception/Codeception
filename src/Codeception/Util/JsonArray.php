@@ -146,7 +146,7 @@ class JsonArray
                 if ($return !== false && $return == $value1) {
                     $ret[$key1] = $return;
                     $matchedKeys[$key2] = true;
-                    continue;
+                    break;
                 }
 
                 if ($this->isEqualValue($value1, $value2)) {

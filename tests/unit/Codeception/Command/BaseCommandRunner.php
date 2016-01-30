@@ -15,7 +15,6 @@ class BaseCommandRunner extends \PHPUnit_Framework_TestCase
     public $content = "";
     public $output = "";
     public $config = [];
-    public $log = [];
     public $saved = [];
 
     protected $commandName = 'do:stuff';

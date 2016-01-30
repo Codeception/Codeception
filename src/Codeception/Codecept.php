@@ -132,6 +132,7 @@ class Codecept
         // required
         $this->dispatcher->addSubscriber(new Subscriber\GracefulTermination());
         $this->dispatcher->addSubscriber(new Subscriber\ErrorHandler());
+        $this->dispatcher->addSubscriber(new Subscriber\Dependencies());
         $this->dispatcher->addSubscriber(new Subscriber\Bootstrap());
         $this->dispatcher->addSubscriber(new Subscriber\Module());
         $this->dispatcher->addSubscriber(new Subscriber\BeforeAfterTest());

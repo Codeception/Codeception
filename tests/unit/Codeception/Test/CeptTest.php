@@ -1,5 +1,5 @@
 <?php
-class CeptTest extends \Codeception\Test\TestCase
+class CeptTest extends \Codeception\Test\Unit
 {
 
     /**

@@ -57,11 +57,12 @@ class Parser
     {
         $this->metadata->setGroups(Annotation::fetchAllFromComment('group', $comments));
         $this->metadata->setEnv(Annotation::fetchAllFromComment('env', $comments));
-        $this->metadata->setSkip($this->flatten(Annotation::fetchAllFromComment('skip', $comments)));
-        $this->metadata->setIncomplete($this->flatten(Annotation::fetchAllFromComment('incomplete', $comments)));
+        $this->metadata->setDependencies(Annotation::fetchAllFromComment('depends', $comments));
+        $this->metadata->setSkip($this->firstOrNull(Annotation::fetchAllFromComment('skip', $comments)));
+        $this->metadata->setIncomplete($this->firstOrNull(Annotation::fetchAllFromComment('incomplete', $comments)));
     }
 
-    private function flatten($array)
+    private function firstOrNull($array)
     {
         if (empty($array)) {
             return null;

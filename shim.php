@@ -19,7 +19,7 @@ namespace Codeception {
 
 namespace Codeception\TestCase {
 
-    class Test extends \Codeception\Test\TestCase {
+    class Test extends \Codeception\Test\Unit {
     }
 }
 // @codingStandardsIgnoreEnd

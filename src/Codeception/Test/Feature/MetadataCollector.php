@@ -8,7 +8,7 @@ trait MetadataCollector
     /**
      * @var Metadata
      */
-    protected $metadata;
+    private $metadata;
 
     protected function setMetadata(Metadata $metadata)
     {

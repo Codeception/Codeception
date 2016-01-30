@@ -3,7 +3,7 @@
 /**
  * Class CestTest
  */
-class CestTest extends \Codeception\Test\TestCase
+class CestTest extends \Codeception\Test\Unit
 {
 
     /**

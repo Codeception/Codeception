@@ -10,7 +10,7 @@ trait ScenarioLoader
     /**
      * @var Scenario
      */
-    protected $scenario;
+    private $scenario;
 
     /**
      * @return Metadata
@@ -37,7 +37,7 @@ trait ScenarioLoader
 
     public function getScenarioText($format = 'text')
     {
-        $code = $this->getRawBody();
+        $code = $this->getSourceCode();
         $this->getParser()->parseFeature($code);
         $this->getParser()->parseSteps($code);
         if ($format == 'html') {
@@ -50,5 +50,5 @@ trait ScenarioLoader
      * @return Parser
      */
     abstract protected function getParser();
-    abstract public function getRawBody();
+    abstract public function getSourceCode();
 }

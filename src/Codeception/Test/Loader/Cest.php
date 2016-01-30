@@ -19,7 +19,7 @@ class Cest implements LoaderInterface
         return '~Cest\.php$~';
     }
 
-    function loadTests($file)
+    public function loadTests($file)
     {
         Parser::load($file);
         $testClasses = Parser::getClassesFromFile($file);
@@ -49,8 +49,7 @@ class Cest implements LoaderInterface
         if (strpos($methodName, '_') === 0) {
             return null;
         }
-        $cest = new CestFormat($cestInstance, $methodName, $file);
-        $cest->getMetadata()->setEnv(Annotation::forMethod($cestInstance, $methodName)->fetchAll('env'));
-        return $cest;
+
+        return new CestFormat($cestInstance, $methodName, $file);
     }
 }

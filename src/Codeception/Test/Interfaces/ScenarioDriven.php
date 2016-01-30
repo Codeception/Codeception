@@ -16,5 +16,5 @@ interface ScenarioDriven
 
     public function preload();
 
-    public function getRawBody();
+    public function getSourceCode();
 }

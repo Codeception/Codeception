@@ -5,7 +5,7 @@ use Codeception\Lib\Parser;
  * @group core
  * Class ParserTest
  */
-class ParserTest extends \Codeception\Test\TestCase
+class ParserTest extends \Codeception\Test\Unit
 {
     /**
      * @var Parser

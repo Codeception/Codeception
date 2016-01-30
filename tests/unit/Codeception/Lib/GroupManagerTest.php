@@ -3,7 +3,7 @@ namespace Codeception\Lib;
 
 use Codeception\Util\Stub;
 
-class GroupManagerTest extends \Codeception\Test\TestCase
+class GroupManagerTest extends \Codeception\Test\Unit
 {
     /**
      * @var \Codeception\Lib\GroupManager
@@ -85,7 +85,7 @@ class GroupManagerTest extends \Codeception\Test\TestCase
 
 }
 
-class DescriptiveTestCase extends \Codeception\Test\TestCase
+class DescriptiveTestCase extends \Codeception\Test\Unit
 {
 
 }

@@ -97,9 +97,8 @@ class GroupManager
             if (isset($info['class'])) {
                 $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups($info['class'], $info['name']));
             }
-            $filename = preg_replace('{//}', '/', $info['file']);
+            $filename = str_replace(['\\\\', '//'], ['\\', '/'], $info['file']);
         }
-
         if ($test instanceof \PHPUnit_Framework_TestCase) {
             $groups = array_merge($groups, \PHPUnit_Util_Test::getGroups(get_class($test), $test->getName(false)));
         }

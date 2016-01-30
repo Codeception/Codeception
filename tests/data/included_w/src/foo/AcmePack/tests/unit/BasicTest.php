@@ -1,7 +1,7 @@
 <?php
 namespace AcmePack\Test;
 
-class BasicTest extends \Codeception\Test\TestCase
+class BasicTest extends \Codeception\Test\Unit
 {
     function testAssert()
     {

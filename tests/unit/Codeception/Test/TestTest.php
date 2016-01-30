@@ -1,18 +1,6 @@
 <?php
-class TestTest extends \Codeception\Test\TestCase
+class TestTest extends \Codeception\Test\Unit
 {
-    public function testBaseOne()
-    {
-        return 'hey';
-    }
-
-    /**
-     * @depends testBaseOne
-     */
-    public function testDependentOne($hey)
-    {
-        $this->assertEquals('hey', $hey);
-    }
 
     public function testReportedInterface()
     {

@@ -1,9 +1,6 @@
 <?php
-
 namespace Codeception;
 
-use Codeception\Event\Suite;
-use Codeception\Event\SuiteEvent;
 use Codeception\Lib\Di;
 use Codeception\Lib\GroupManager;
 use Codeception\Lib\ModuleContainer;
@@ -79,23 +76,21 @@ class SuiteManager
 
     public function initialize()
     {
-        $this->dispatcher->dispatch(Events::MODULE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(Events::MODULE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
         foreach ($this->moduleContainer->all() as $module) {
             $module->_initialize();
         }
         if (!file_exists(Configuration::supportDir() . $this->settings['class_name'] . '.php')) {
             throw new Exception\ConfigurationException($this->settings['class_name'] . " class doesn't exist in suite folder.\nRun the 'build' command to generate it");
         }
-        $this->dispatcher->dispatch(Events::SUITE_INIT, new SuiteEvent($this->suite, null, $this->settings));
+        $this->dispatcher->dispatch(Events::SUITE_INIT, new Event\SuiteEvent($this->suite, null, $this->settings));
         ini_set('xdebug.show_exception_trace', 0); // Issue https://github.com/symfony/symfony/issues/7646
     }
 
     public function loadTests($path = null)
     {
         $testLoader = new Loader($this->settings);
-        $path
-            ? $testLoader->loadTest($path)
-            : $testLoader->loadTests();
+        $testLoader->loadTests($path);
 
         $tests = $testLoader->getTests();
         if ($this->settings['shuffle']) {
@@ -104,6 +99,7 @@ class SuiteManager
         foreach ($tests as $test) {
             $this->addToSuite($test);
         }
+        $this->suite->reorderDependencies();
     }
 
     protected function addToSuite($test)
@@ -135,8 +131,8 @@ class SuiteManager
 
     protected function createSuite($name)
     {
-        $suite = new \Codeception\Suite();
-        $suite->setBaseName($this->env ? substr($name, 0, strpos($name, '-' . $this->env)) : $name);
+        $suite = new Suite();
+        $suite->setBaseName(preg_replace('~\s.+$~', '', $name)); // replace everything after space (env name)
         if ($this->settings['namespace']) {
             $name = $this->settings['namespace'] . ".$name";
         }
@@ -229,10 +225,7 @@ class SuiteManager
         $t->getMetadata()->setCurrent([
             'actor' => $this->getActor(),
             'env' => $this->env,
-            'modules' => array_keys($this->moduleContainer->all())
+            'modules' => $this->moduleContainer->all()
         ]);
     }
-
-
 }
-

@@ -3,7 +3,7 @@
  * @group App
  * @group New
  */
-class BeforeAfterClassTest extends \Codeception\Test\TestCase
+class BeforeAfterClassTest extends \Codeception\Test\Unit
 {
     /**
      * @beforeClass

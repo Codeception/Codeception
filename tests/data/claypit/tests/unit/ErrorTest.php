@@ -13,7 +13,7 @@ class SomeErrorClass {
 }
 
 
-class ErrorTest extends \Codeception\Test\TestCase
+class ErrorTest extends \Codeception\Test\Unit
 {
 
     /**

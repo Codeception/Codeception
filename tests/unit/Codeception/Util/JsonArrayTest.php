@@ -2,7 +2,7 @@
 namespace Codeception\Util;
 
 
-class JsonArrayTest extends \Codeception\Test\TestCase
+class JsonArrayTest extends \Codeception\Test\Unit
 {
 
     /**
@@ -220,5 +220,85 @@ class JsonArrayTest extends \Codeception\Test\TestCase
             ]]));
         $expectedArray = [['id' => '1']];
         $this->assertTrue($jsonArray->containsArray($expectedArray));
+    }
+
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/2630
+     */
+    public function testContainsArrayWithUnexpectedLevel()
+    {
+        $jsonArray = new JsonArray('{
+            "level1": {
+                "level2irrelevant": [],
+                "level2": [
+                    {
+                        "level3": [
+                            {
+                                "level5irrelevant1": "a1",
+                                "level5irrelevant2": "a2",
+                                "level5irrelevant3": "a3",
+                                "level5irrelevant4": "a4",
+                                "level5irrelevant5": "a5",
+                                "level5irrelevant6": "a6",
+                                "level5irrelevant7": "a7",
+                                "level5irrelevant8": "a8",
+                                "int1": 1
+                            }
+                        ],
+                        "level3irrelevant": {
+                            "level4irrelevant": 1
+                        }
+                    },
+                    {
+                        "level3": [
+                            {
+                                "level5irrelevant1": "b1",
+                                "level5irrelevant2": "b2",
+                                "level5irrelevant3": "b3",
+                                "level5irrelevant4": "b4",
+                                "level5irrelevant5": "b5",
+                                "level5irrelevant6": "b6",
+                                "level5irrelevant7": "b7",
+                                "level5irrelevant8": "b8",
+                                "int1": 1
+                            }
+                        ],
+                        "level3irrelevant": {
+                            "level4irrelevant": 2
+                        }
+                    }
+                ]
+            }
+        }');
+
+        $expectedArray = [
+            'level1' => [
+                'level2' => [
+                    [
+                        'int1' => 1,
+                    ],
+                    [
+                        'int1' => 1,
+                    ],
+
+                ]
+            ]
+        ];
+
+        $this->assertTrue($jsonArray->containsArray($expectedArray),
+            "- <info>" . var_export($expectedArray, true) . "</info>\n"
+            . "+ " . var_export($jsonArray->toArray(), true));
+    }
+
+    /**
+     * Simplified testcase for issue reproduced by testContainsArrayWithUnexpectedLevel
+     */
+    public function testContainsArrayComparesSequentialArraysHavingDuplicateSubArraysCorrectly()
+    {
+        $jsonArray = new JsonArray('[[1],[1]]');
+        $expectedArray = [[1],[1]];
+        $this->assertTrue($jsonArray->containsArray($expectedArray),
+            "- <info>" . var_export($expectedArray, true) . "</info>\n"
+            . "+ " . var_export($jsonArray->toArray(), true));
     }
 }

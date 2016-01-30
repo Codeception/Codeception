@@ -616,7 +616,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
      * $I->amLoggedAs(['username' => 'jane@example.com', 'password' => 'password']);
      *
      * // provide User object
-     * $I->amLoggesAs( new User );
+     * $I->amLoggedAs( new User );
      *
      * // can be verified with $I->seeAuthentication();
      * ?>

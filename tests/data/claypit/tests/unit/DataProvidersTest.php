@@ -1,6 +1,6 @@
 <?php
 
-class DataProvidersTest extends \Codeception\Test\TestCase
+class DataProvidersTest extends \Codeception\Test\Unit
 {
    /**
     * @var \CodeGuy

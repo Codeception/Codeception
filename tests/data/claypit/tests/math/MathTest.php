@@ -2,7 +2,7 @@
 
 use Math\CalcHelper as Calc;
 
-class MathTest extends \Codeception\Test\TestCase
+class MathTest extends \Codeception\Test\Unit
 {
    /**
     * @var \MathTester
