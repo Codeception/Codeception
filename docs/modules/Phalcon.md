@@ -1,7 +1,7 @@
 
 
 
-This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
+This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (2.x).
 Please try it and leave your feedback.
 
 ## Demo Project
@@ -18,7 +18,7 @@ Please try it and leave your feedback.
 
     modules:
         enabled:
-            - Phalcon1:
+            - Phalcon:
                 bootstrap: 'app/config/bootstrap.php'
                 cleanup: true
                 savepoints: true
@@ -26,9 +26,10 @@ Please try it and leave your feedback.
 ## Config
 
 The following configurations are required for this module:
-* boostrap: the path of the application bootstrap file</li>
-* cleanup: cleanup database (using transactions)</li>
-* savepoints: use savepoints to emulate nested transactions</li>
+
+* bootstrap: the path of the application bootstrap file
+* cleanup: cleanup database (using transactions)
+* savepoints: use savepoints to emulate nested transactions
 
 The application bootstrap file must return Application object but not call its handle() method.
 
@@ -69,10 +70,10 @@ Use it in Helpers or GroupObject or Extension classes:
 
 ```php
 <?php
-$els = $this->getModule('Phalcon1')->_findElements('.items');
-$els = $this->getModule('Phalcon1')->_findElements(['name' => 'username']);
+$els = $this->getModule('Phalcon')->_findElements('.items');
+$els = $this->getModule('Phalcon')->_findElements(['name' => 'username']);
 
-$editLinks = $this->getModule('Phalcon1')->_findElements(['link' => 'Edit']);
+$editLinks = $this->getModule('Phalcon')->_findElements(['link' => 'Edit']);
 // now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
@@ -94,7 +95,7 @@ Useful for testing multi-step forms on a specific step.
 <?php
 // in Helper class
 public function openCheckoutFormStep2($orderId) {
-    $this->getModule('Phalcon1')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
+    $this->getModule('Phalcon')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
 }
 ?>
 ```
@@ -119,7 +120,7 @@ Returns a string with response body.
 <?php
 // in Helper class
 public function createUserByApi($name) {
-    $userData = $this->getModule('Phalcon1')->_request('POST', '/api/v1/users', ['name' => $name]);
+    $userData = $this->getModule('Phalcon')->_request('POST', '/api/v1/users', ['name' => $name]);
     $user = json_decode($userData);
     return $user->id;
 }
@@ -146,7 +147,7 @@ To load arbitrary page for interaction, use `_loadPage` method.
 Saves page source of to a file
 
 ```php
-$this->getModule('Phalcon1')->_savePageSource(codecept_output_dir().'page.html');
+$this->getModule('Phalcon')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
 
@@ -1215,4 +1216,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Phalcon1.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Phalcon.php">Help us to improve documentation. Edit module reference</a></div>
