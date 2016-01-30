@@ -317,7 +317,7 @@ EOF
  As a user
  I need to be able to see output
 EOF
-);
+        );
         $I->seeInShellOutput('Given i have terminal opened');
         $I->seeInShellOutput('When i am in current directory');
         $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
