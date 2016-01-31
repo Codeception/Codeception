@@ -36,9 +36,6 @@ class Build extends Command
 
     protected function configure()
     {
-        $this->setDefinition([
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
-        ]);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
