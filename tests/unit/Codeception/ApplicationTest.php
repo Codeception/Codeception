@@ -9,7 +9,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        require_once \Codeception\Configuration::dataDir() . 'claypit/MyCustomCommand.php';
+        require_once \Codeception\Configuration::dataDir() . 'register_command/examples/MyCustomCommand.php';
     }
 
     public function testRegisterCustomCommand()
@@ -22,7 +22,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $application->registerCustomCommands();
 
         try {
-            $application->find('myProjekt:myCommand');
+            $application->find('myProject:myCommand');
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }

@@ -5,7 +5,7 @@ class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
-        require_once \Codeception\Configuration::dataDir() . 'claypit/MyCustomCommand.php';
+        require_once \Codeception\Configuration::dataDir() . 'register_command/examples/MyCustomCommand.php';
     }
 
     public function testHasCodeceptionCustomCommandInterface()
@@ -17,6 +17,6 @@ class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
     public function testHasCommandName()
     {
         $commandName = \Codeception\Command\MyCustomCommand::getCommandName();
-        $this->assertEquals('myProjekt:myCommand', $commandName);
+        $this->assertEquals('myProject:myCommand', $commandName);
     }
 }
