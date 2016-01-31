@@ -1,6 +1,6 @@
 <?php
 use Codeception\Util\Stub;
-use Symfony\Component\Console\Application;
+use Codeception\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BaseCommandRunner extends \PHPUnit_Framework_TestCase
