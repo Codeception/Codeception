@@ -4,11 +4,22 @@ namespace Codeception;
 
 use Codeception\Exception\ConfigurationException;
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Codeception\Lib\Interfaces\CustomCommand;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
+
+    /**
+     * @var ArgvInput
+     */
+    protected $coreArguments = null;
+
     /**
      * Register commands from a config file
      *
@@ -58,5 +69,86 @@ class Application extends BaseApplication
         }
 
         return $commandClass::getCommandName();
+    }
+
+    /**
+     * To cache Class ArgvInput
+     *
+     * @inheritDoc
+     */
+    public function run(InputInterface $input = null, OutputInterface $output = null)
+    {
+        if ($input === null) {
+            $input = $this->getCoreArguments();
+        }
+
+        return parent::run($input, $output);
+    }
+
+    /**
+     * Add global a --config option.
+     *
+     * @return InputDefinition
+     */
+    protected function getDefaultInputDefinition()
+    {
+        $inputDefinition = parent::getDefaultInputDefinition();
+        $inputDefinition->addOption(
+            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config')
+        );
+        return $inputDefinition;
+    }
+
+    /**
+     * Search for --config Option and if found will be loaded
+     *
+     * example:
+     * -c file.yml
+     * --config file.yml
+     * --config=file.yml
+     *
+     * @return ArgvInput
+     */
+    protected function getCoreArguments()
+    {
+        if ($this->coreArguments !== null) {
+            return $this->coreArguments;
+        }
+
+        $argv = $_SERVER['argv'];
+        $argvWithoutConfig = array();
+
+        for ($i = 0; $i < count($argv); $i++) {
+            if (preg_match("/^(?:-c|--config(?:=(.*))?)$/", $argv[$i], $match)) {
+                if (isset($match[1])) { //same index
+                    $this->preloadConfigration($match[1]);
+                } elseif (isset($argv[$i + 1])) { //next index
+                    $this->preloadConfigration($argv[++$i]);
+                }
+                continue;
+            }
+            $argvWithoutConfig[] = $argv[$i];
+        }
+
+        return $this->coreArguments = new ArgvInput($argvWithoutConfig);
+    }
+
+    /**
+     * Pre load Configuration, the config option is use.
+     *
+     * @param string $configfile Path to Configuration
+     *
+     * @throws ConfigurationException
+     */
+    protected function preloadConfigration($configfile)
+    {
+        try {
+            Configuration::config($configfile);
+        } catch (ConfigurationException $e) {
+            if ($e->getCode() == 404) {
+                throw new ConfigurationException("Your configuration file `{$configfile}` could not be found.", 405);
+            }
+            throw $e;
+        }
     }
 }
