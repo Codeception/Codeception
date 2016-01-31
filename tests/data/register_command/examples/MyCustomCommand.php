@@ -7,11 +7,11 @@
  */
 namespace Codeception\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Codeception\Lib\Interfaces\CustomCommand;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use \Symfony\Component\Console\Command\Command;
+use \Codeception\Lib\Interfaces\CustomCommand;
+use \Symfony\Component\Console\Input\InputOption;
+use \Symfony\Component\Console\Input\InputInterface;
+use \Symfony\Component\Console\Output\OutputInterface;
 
 class MyCustomCommand extends Command implements CustomCommand
 {
@@ -26,7 +26,7 @@ class MyCustomCommand extends Command implements CustomCommand
      */
     public static function getCommandName()
     {
-        return "myProjekt:myCommand";
+        return "myProject:myCommand";
     }
 
     /**
@@ -36,7 +36,6 @@ class MyCustomCommand extends Command implements CustomCommand
     {
         $this->setDefinition(array(
             new InputOption('friendly', 'f', InputOption::VALUE_NONE, 'The Message will be friendly'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config')
         ));
 
         parent::configure();
