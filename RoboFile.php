@@ -18,6 +18,7 @@ class RoboFile extends \Robo\Tasks
         $this->buildPhar54();
         $this->installDependenciesForPhp55();
         $this->buildPhar();
+        $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
         $this->versionBump();
@@ -147,49 +148,32 @@ class RoboFile extends \Robo\Tasks
 
     private function installDependenciesForPhp54()
     {
-        $dependencies = [
-            'guzzlehttp/guzzle' => '5.*',
-            'symfony/finder' => '2.8.*',
-            'symfony/console' => '2.8.*',
-            'symfony/event-dispatcher' => '2.8.*',
-            'symfony/yaml' => '2.8.*',
-            'symfony/browser-kit' => '2.8.*',
-            'symfony/css-selector' => '2.8.*',
-            'symfony/dom-crawler' => '2.8.*',
-        ];
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {"php": "5.4.0"}')
+            ->run();
 
-        $this->installDependencies($dependencies);
+        $this->taskComposerUpdate()->run();
     }
 
     private function installDependenciesForPhp55()
     {
-        $dependencies = [
-            'guzzlehttp/guzzle' => '6.*',
-            'symfony/finder' => '3.*',
-            'symfony/console' => '3.*',
-            'symfony/event-dispatcher' => '3.*',
-            'symfony/yaml' => '3.*',
-            'symfony/browser-kit' => '3.*',
-            'symfony/css-selector' => '3.*',
-            'symfony/dom-crawler' => '3.*',
-        ];
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {"php": "5.5.10"}')
+            ->run();
 
-        $this->installDependencies($dependencies);
-    }
-
-
-
-    private function installDependencies($dependencies)
-    {
-        $composerRequireCommand = str_replace(' install', ' require --no-update ', $this->taskComposerInstall()->getCommand());
-        foreach ($dependencies as $dependency => $version) {
-            $code = $this->taskExec($composerRequireCommand . $dependency . ' ' . $version )->printed(true)->run()->getExitCode();
-            if ($code !== 0) {
-                throw new Exception("There was problem compiling phar");
-            }
-        }
         $this->taskComposerUpdate()->run();
     }
+
+    private function revertComposerJsonChanges()
+    {
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {}')
+            ->run();
+    }
+
 
     /**
      * @desc creates codecept.phar
@@ -206,7 +190,9 @@ class RoboFile extends \Robo\Tasks
      */
     public function buildPhar54()
     {
-        mkdir('package/php54');
+        if (!file_exists('package/php54')) {
+            mkdir('package/php54');
+        }
         $this->packPhar('package/php54/codecept.phar');
     }
 
