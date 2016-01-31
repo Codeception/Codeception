@@ -36,7 +36,6 @@ class Console extends Command
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
         ]);
 
