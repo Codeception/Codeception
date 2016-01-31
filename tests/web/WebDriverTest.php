@@ -22,7 +22,7 @@ class WebDriverTest extends TestsForBrowsers
 
     // this is my local config
     protected $is_local = false;
-    
+
     protected $initialized = false;
 
     public function setUp()
@@ -49,7 +49,7 @@ class WebDriverTest extends TestsForBrowsers
     protected function makeTest()
     {
         return Stub::makeEmpty(
-            '\Codeception\TestCase\Cept',
+            '\Codeception\Test\Test',
             ['dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')]
         );
     }
@@ -426,7 +426,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $this->module->webDriver = $fakeWd;
-        $cept = (new \Codeception\TestCase\Cept())->configName('loginCept.php');
+        $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
         $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
@@ -442,9 +442,7 @@ class WebDriverTest extends TestsForBrowsers
             ]),
         ]);
         $this->module->webDriver = $fakeWd;
-        $cest = (new \Codeception\TestCase\Cest())
-            ->config('testClassInstance', new stdClass())
-            ->config('testMethod','login');
+        $cest = new \Codeception\Test\Cest(new stdClass(), 'login', 'someCest.php');
         $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
@@ -527,7 +525,7 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->seeOptionIsSelected('input[name=first_test_radio]', 'Yes');
         $this->module->dontSeeOptionIsSelected('input[name=first_test_radio]', 'No');
     }
-    
+
     public function testBug2046()
     {
         $this->module->webDriver = null;

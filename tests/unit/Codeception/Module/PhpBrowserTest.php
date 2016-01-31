@@ -48,7 +48,7 @@ class PhpBrowserTest extends TestsForBrowsers
 
     protected function makeTest()
     {
-        return Stub::makeEmpty('\Codeception\TestCase\Cept', array('dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')));
+        return Stub::makeEmpty('\Codeception\Test\Cept');
     }
 
     public function testAjax() {

@@ -18,7 +18,8 @@ use Codeception\Module as CodeceptionModule;
 use Codeception\PHPUnit\Constraint\Page as PageConstraint;
 use Codeception\PHPUnit\Constraint\WebDriver as WebDriverConstraint;
 use Codeception\PHPUnit\Constraint\WebDriverNot as WebDriverConstraintNot;
-use Codeception\TestCase;
+use Codeception\Test\Descriptor;
+use Codeception\TestInterface;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
@@ -219,7 +220,7 @@ class WebDriver extends CodeceptionModule implements
         return 'Codeception\Lib\Interfaces\Web';
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
             $this->_initialize();
@@ -252,7 +253,7 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         if ($this->config['restart'] && isset($this->webDriver)) {
             $this->webDriver->quit();
@@ -266,10 +267,10 @@ class WebDriver extends CodeceptionModule implements
         }
     }
 
-    public function _failed(TestCase $test, $fail)
+    public function _failed(TestInterface $test, $fail)
     {
         $this->debugWebDriverLogs();
-        $filename = str_replace(['::', '\\', '/'], ['.', '', ''], TestCase::getTestSignature($test)) . '.fail';
+        $filename = str_replace([':', '\\', '/'], ['.', '', ''], Descriptor::getTestSignature($test)) . '.fail';
         $this->_saveScreenshot(codecept_output_dir() . $filename . '.png');
         $this->_savePageSource(codecept_output_dir() . $filename . '.html');
         $this->debug("Screenshot and page source were saved into '_output' dir");
@@ -354,7 +355,7 @@ class WebDriver extends CodeceptionModule implements
         }
         return $this->config['url'];
     }
-    
+
     protected function getProxy()
     {
         $proxyConfig = [];

@@ -1,8 +1,8 @@
 <?php
 namespace Codeception\Lib\Actor\Shared;
 
-use Codeception\Scenario;
 use Codeception\Lib\Friend as LibFriend;
+use Codeception\Scenario;
 
 trait Friend
 {

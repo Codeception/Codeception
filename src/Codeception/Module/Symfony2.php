@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Configuration;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Lib\Framework;
 use Codeception\Exception\ModuleRequireException;
 use Codeception\Lib\Connector\Symfony2 as Symfony2Connector;
@@ -147,7 +147,7 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         $this->container = $this->kernel->getContainer();
     }
 
-    public function _before(\Codeception\TestCase $test)
+    public function _before(\Codeception\TestInterface $test)
     {
         $this->client = new Symfony2Connector($this->kernel);
         $this->client->followRedirects(true);

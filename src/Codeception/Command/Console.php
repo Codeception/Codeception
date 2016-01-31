@@ -9,7 +9,7 @@ use Codeception\Events;
 use Codeception\Lib\Console\Output;
 use Codeception\Scenario;
 use Codeception\SuiteManager;
-use Codeception\TestCase\Cept;
+use Codeception\Test\Cept;
 use Codeception\Util\Debug;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -36,7 +36,6 @@ class Console extends Command
     {
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite to be executed'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             new InputOption('colors', '', InputOption::VALUE_NONE, 'Use colors in output'),
         ]);
 

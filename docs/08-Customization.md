@@ -179,6 +179,25 @@ Passed configuration is accessible via `config` property: `$this->config['param'
 
 Check out a very basic extension [Notifier](https://github.com/Codeception/Notifier).
 
+### Custom Commands
+
+You can add your own commands to codeception.
+
+Your custom commands have to implement the interface Codeception\Lib\Interfaces\CustomCommand,
+because there has to be a function to get the name of the command.
+
+You have to register your command in the file `codeception.yml` 
+
+```yaml
+extensions:
+    commands: [Codeception\Command\MyCustomCommand]
+```
+
+If you want to activate the Command globally, because you use more then one ```codeception.yml``` file, then
+you have to register your command in ```codeception.dist.yml``` in the root folder of your project.
+
+You can find an example here: [/tests/data/register_command/examples/MyCustomCommand.php]
+
 ## Group Objects
 
 Group Objects are extensions listening to events of a tests belonging to a specific group.
