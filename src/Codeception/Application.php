@@ -21,7 +21,7 @@ class Application extends BaseApplication
     protected $coreArguments = null;
 
     /**
-     * Register commands from a config file
+     * Register commands from config file
      *
      *  extensions:
      *      commands:
@@ -30,20 +30,38 @@ class Application extends BaseApplication
      */
     public function registerCustomCommands()
     {
+        try {
+            $this->readCustomCommandsFromConfig();
+        } catch (ConfigurationException $e) {
+            if ($e->getCode() === 404) {
+                return;
+            }
+            $this->renderException($e, new ConsoleOutput());
+            exit(1);
+        } catch (\Exception $e) {
+            $this->renderException($e, new ConsoleOutput());
+            exit(1);
+        }
+    }
+
+    /**
+     * Search custom commands and register them.
+     *
+     * @throws ConfigurationException
+     */
+    protected function readCustomCommandsFromConfig()
+    {
+        $this->getCoreArguments(); // Maybe load outside configfile
+
         $config = Configuration::config();
 
         if (empty($config['extensions']['commands'])) {
             return;
         }
 
-        try {
-            foreach ($config['extensions']['commands'] as $commandClass) {
-                $commandName = $this->getCustomCommandName($commandClass);
-                $this->add(new $commandClass($commandName));
-            }
-        } catch (\Exception $e) {
-            $this->renderException($e, new ConsoleOutput());
-            exit;
+        foreach ($config['extensions']['commands'] as $commandClass) {
+            $commandName = $this->getCustomCommandName($commandClass);
+            $this->add(new $commandClass($commandName));
         }
     }
 
@@ -65,7 +83,8 @@ class Application extends BaseApplication
         $interfaces = class_implements($commandClass);
 
         if (!in_array('Codeception\Lib\Interfaces\CustomCommand', $interfaces)) {
-            throw new ConfigurationException("Extension: Command {$commandClass} must implement the interface `Codeception\\Lib\\Interfaces\\CustomCommand`");
+            throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
+                                             "the interface `Codeception\\Lib\\Interfaces\\CustomCommand`");
         }
 
         return $commandClass::getCommandName();
