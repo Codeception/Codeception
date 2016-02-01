@@ -178,7 +178,7 @@ class Console implements EventSubscriberInterface
             $this->message('PASSED')->center(' ')->style('ok')->append("\n")->writeln();
             return;
         }
-        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u221A" : '✔')->style('ok'));
+        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "+" : '✔')->style('ok'));
     }
 
     public function endTest(TestEvent $e)
@@ -193,7 +193,7 @@ class Console implements EventSubscriberInterface
             $this->message('FAIL')->center(' ')->style('fail')->append("\n")->writeln();
             return;
         }
-        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "\u00D7" : '✖')->style('fail'));
+        $this->writelnFinishedTest($e, $this->message($this->isWin() ? "x" : '✖')->style('fail'));
     }
 
     public function testError(FailEvent $e)
@@ -464,15 +464,15 @@ class Console implements EventSubscriberInterface
 
     protected function detectWidth()
     {
+        $this->width = 40;
         if (!$this->isWin()
             && (php_sapi_name() == "cli")
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`)-2;
-            return;
+            $this->width = max($this->width, (int)(`command -v tput >> /dev/null 2>&1 && tput cols`)-2);
         }
-        return $this->width = 40;
+        return $this->width;
     }
 
     private function isWin()
