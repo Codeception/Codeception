@@ -39,9 +39,11 @@ use Facebook\WebDriver\WebDriverBy;
  */
 class AngularJS extends WebDriver
 {
+    protected $insideApplication = true;
+
     protected $defaultAngularConfig = [
         'script_timeout' => 5,
-        'el' => 'body'
+        'el' => 'body',
     ];
 
     protected $waitForAngular = <<<EOF
@@ -75,6 +77,7 @@ class AngularJS extends WebDriver
   }
 EOF;
 
+
     public function _setConfig($config)
     {
         parent::_setConfig(array_merge($this->defaultAngularConfig, $config));
@@ -86,8 +89,30 @@ EOF;
         $this->webDriver->manage()->timeouts()->setScriptTimeout($this->config['script_timeout']);
     }
 
+    /**
+     * Enables Angular mode (enabled by default).
+     * Waits for Angular to finish rendering after each action.
+     */
+    public function amInsideAngularApp()
+    {
+        $this->insideApplication = true;
+    }
+
+    /**
+     * Disabled Angular mode.
+     *
+     * Falls back to original WebDriver, in case web page does not contain Angular app.
+     */
+    public function amOutsideAngularApp()
+    {
+        $this->insideApplication = false;
+    }
+
     public function _afterStep(Step $step)
     {
+        if (!$this->insideApplication) {
+            return;
+        }
         $actions = [
             'amOnPage',
             'click',
