@@ -126,6 +126,7 @@ class Parser
 
     public static function validate($file)
     {
+        $file = str_replace(' ', '\ ', $file);
         exec("php -l ".escapeshellarg($file)." 2>&1", $output, $code);
         if ($code !== 0) {
             throw new TestParseException($file, implode("\n", $output));
