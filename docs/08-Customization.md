@@ -183,7 +183,7 @@ Check out a very basic extension [Notifier](https://github.com/Codeception/Notif
 
 You can add your own commands to codeception.
 
-Your custom commands have to implement the interface Codeception\Lib\Interfaces\CustomCommand,
+Your custom commands have to implement the interface Codeception\CustomCommandInterface,
 because there has to be a function to get the name of the command.
 
 You have to register your command in the file `codeception.yml` 
