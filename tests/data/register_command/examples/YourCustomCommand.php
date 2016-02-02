@@ -5,15 +5,15 @@
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
  */
-namespace Codeception\Command; // TODO change namespace to \Codeception\Command
+namespace Codeception\Command;
 
 use \Symfony\Component\Console\Command\Command;
-use \Codeception\Lib\Interfaces\CustomCommand;
+use \Codeception\CustomCommandInterface;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 
-class YourCustomCommand extends Command implements CustomCommand
+class YourCustomCommand extends Command implements CustomCommandInterface
 {
 
     use Shared\FileSystem;
@@ -35,7 +35,7 @@ class YourCustomCommand extends Command implements CustomCommand
     protected function configure()
     {
         $this->setDefinition(array(
-            new InputOption('something', 's', InputOption::VALUE_NONE, 'The Message will be friendly'),
+            new InputOption('something', 's', InputOption::VALUE_NONE, 'The Message will show you something more'),
         ));
 
         parent::configure();

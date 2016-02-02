@@ -11,7 +11,7 @@ class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
     public function testHasCodeceptionCustomCommandInterface()
     {
         $command = new \Codeception\Command\MyCustomCommand('commandName');
-        $this->assertInstanceOf('Codeception\Lib\Interfaces\CustomCommand', $command);
+        $this->assertInstanceOf('Codeception\CustomCommandInterface', $command);
     }
 
     public function testHasCommandName()

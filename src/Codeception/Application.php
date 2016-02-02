@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Codeception\Lib\Interfaces\CustomCommand;
+use Codeception\CustomCommandInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -82,9 +82,9 @@ class Application extends BaseApplication
 
         $interfaces = class_implements($commandClass);
 
-        if (!in_array('Codeception\Lib\Interfaces\CustomCommand', $interfaces)) {
+        if (!in_array('Codeception\CustomCommandInterface', $interfaces)) {
             throw new ConfigurationException("Extension: Command {$commandClass} must implement " .
-                                             "the interface `Codeception\\Lib\\Interfaces\\CustomCommand`");
+                                             "the interface `Codeception\\CustomCommandInterface`");
         }
 
         return $commandClass::getCommandName();

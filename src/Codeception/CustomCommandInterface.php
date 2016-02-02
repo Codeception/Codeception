@@ -1,8 +1,8 @@
 <?php
 
-namespace Codeception\Lib\Interfaces;
+namespace Codeception;
 
-interface CustomCommand
+interface CustomCommandInterface
 {
 
     /**
