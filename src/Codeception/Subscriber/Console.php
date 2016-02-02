@@ -464,13 +464,13 @@ class Console implements EventSubscriberInterface
 
     protected function detectWidth()
     {
-        $this->width = 40;
+        $this->width = 60;
         if (!$this->isWin()
             && (php_sapi_name() == "cli")
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            $this->width = max($this->width, (int)(`command -v tput >> /dev/null 2>&1 && tput cols`)-2);
+            $this->width = (int)(`command -v tput >> /dev/null 2>&1 && tput cols`)-2;
         }
         return $this->width;
     }
