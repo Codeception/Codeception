@@ -154,17 +154,17 @@ class Application extends BaseApplication
     /**
      * Pre load Configuration, the config option is use.
      *
-     * @param string $configfile Path to Configuration
+     * @param string $configFile Path to Configuration
      *
      * @throws ConfigurationException
      */
-    protected function preloadConfigration($configfile)
+    protected function preloadConfigration($configFile)
     {
         try {
-            Configuration::config($configfile);
+            Configuration::config($configFile);
         } catch (ConfigurationException $e) {
             if ($e->getCode() == 404) {
-                throw new ConfigurationException("Your configuration file `{$configfile}` could not be found.", 405);
+                throw new ConfigurationException("Your configuration file `{$configFile}` could not be found.", 405);
             }
             throw $e;
         }
