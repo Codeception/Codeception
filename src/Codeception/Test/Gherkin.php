@@ -164,7 +164,6 @@ class Gherkin extends Test implements ScenarioDriven
 
     public function getSourceCode()
     {
-        // TODO: Implement getRawBody() method.
     }
 
     /**

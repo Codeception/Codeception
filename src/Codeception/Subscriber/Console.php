@@ -524,9 +524,9 @@ class Console implements EventSubscriberInterface
             ->write();
     }
 
-    protected function writelnFinishedTest(TestEvent $e, Message $result)
+    protected function writelnFinishedTest(TestEvent $event, Message $result)
     {
-        $test = $e->getTest();
+        $test = $event->getTest();
         if ($this->isDetailed($test)) {
             return;
         }
@@ -547,7 +547,7 @@ class Console implements EventSubscriberInterface
         $conditionalFails = "<error>$conditionalFails</error> ";
         $this->message($conditionalFails)->write();
 
-        $time = $e->getTime();
+        $time = $event->getTime();
 
         if ($time) {
             $seconds = (int)($milliseconds = (int)($time * 100)) / 100;

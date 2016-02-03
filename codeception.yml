@@ -5,7 +5,7 @@ paths:
     support: tests/support
     envs: tests/envs
 settings:
-    shuffle: false
+    shuffle: true
     bootstrap: _bootstrap.php
     suite_class: \PHPUnit_Framework_TestSuite
     colors: true
