@@ -27,7 +27,6 @@ class GenerateCest extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'suite where tests will be put'),
             new InputArgument('class', InputArgument::REQUIRED, 'test name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
     }
 

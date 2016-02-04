@@ -27,7 +27,6 @@ class GeneratePageObject extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'Either suite name or page object name)'),
             new InputArgument('page', InputArgument::OPTIONAL, 'Page name of pageobject to represent'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
         ]);
         parent::configure();
     }

@@ -27,7 +27,6 @@ class GenerateStepObject extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::REQUIRED, 'Suite for StepObject'),
             new InputArgument('step', InputArgument::REQUIRED, 'StepObject name'),
-            new InputOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Use custom path for config'),
             new InputOption('silent', '', InputOption::VALUE_NONE, 'skip verification question'),
         ]);
     }
