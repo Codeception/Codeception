@@ -7,6 +7,7 @@ use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleConfigException as ModuleConfigException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\MultiSession as MultiSessionInterface;
 use Codeception\Lib\Interfaces\PageSourceSaver;
@@ -152,7 +153,8 @@ class WebDriver extends CodeceptionModule implements
     SessionSnapshot,
     ScreenshotSaver,
     PageSourceSaver,
-    ElementLocator
+    ElementLocator,
+    ConflictsWithModule
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [

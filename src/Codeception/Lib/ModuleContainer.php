@@ -62,14 +62,6 @@ class ModuleContainer
             return $this->instantiate($moduleName, $moduleClass, $config);
         }
 
-        // (deprecated) try find module under namespace setting
-        $namespace = isset($this->config['namespace']) ? $this->config['namespace'] : '';
-        $moduleClass = $namespace . self::MODULE_NAMESPACE . $moduleName;
-
-        if (class_exists($moduleClass)) {
-            return $this->instantiate($moduleName, $moduleClass, $config);
-        }
-
         throw new ConfigurationException("Module $moduleName could not be found and loaded");
     }
 
@@ -185,18 +177,34 @@ class ModuleContainer
     public function validateConflicts()
     {
         $moduleNames = array_keys($this->modules);
-        for ($i = 0; $i < count($this->modules); $i++) {
-            /** @var $currentModule Module  **/
-            $currentModule = $this->modules[$moduleNames[$i]];
+        foreach ($moduleNames as $moduleName) {
+            $currentModule = $this->modules[$moduleName];
+            /** @var $currentModule Module  * */
             if (!$currentModule instanceof ConflictsWithModule) {
-                continue;
+                continue; // don't validate modules which are not in conflict
             }
-            for ($j = $i; $j < count($this->modules); $j++) {
-                $inspectedModule = $this->modules[$moduleNames[$j]];
-                $nameAndInterfaces = array_merge([get_class($inspectedModule), $inspectedModule->_getName()], class_implements($inspectedModule));
-                if (in_array(ltrim($currentModule->_conflicts(), '\\'), $nameAndInterfaces)) {
-                    throw new ModuleConflictException($currentModule, $inspectedModule);
+            if ($currentModule instanceof PartedModule) {
+                if ($currentModule->_getConfig('part')) {
+                    continue; // skip partially loaded modules
                 }
+            }
+            $conflicts = $currentModule->_conflicts();
+            if (!interface_exists($conflicts) and !class_exists($conflicts)) {
+                if (!$this->hasModule($conflicts)) {
+                    continue;
+                }
+                $conflicts = get_class($this->getModule($conflicts)); // try get module by name
+            }
+            foreach(get_class_methods($conflicts) as $interfaceMethod) {
+                if (!isset($this->actions[$interfaceMethod])) {
+                    continue;
+                }
+                $inspectedModule = $this->modules[$this->actions[$interfaceMethod]];
+                if ($inspectedModule instanceof $currentModule) {
+                    continue; // if action is from current module then ok
+                }
+                // if action from a conflicted interface is not in current module - throw an exception
+                throw new ModuleConflictException($currentModule, $inspectedModule);
             }
         }
     }

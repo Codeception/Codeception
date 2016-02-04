@@ -183,6 +183,28 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->validateConflicts();
     }
 
+    public function testConflictsByWebInterface()
+    {
+        $this->setExpectedException('Codeception\Exception\ModuleConflictException');
+        $this->moduleContainer->create('Laravel5');
+        $this->moduleContainer->create('Symfony2');
+        $this->moduleContainer->validateConflicts();
+    }
+
+    public function testNoConflictsForPartedModules()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'Laravel5' => [
+                    'part' => 'ORM',
+                ]
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('Laravel5');
+        $this->moduleContainer->create('Symfony2');
+    }
+
     public function testModuleDependenciesFail()
     {
         $this->setExpectedException('Codeception\Exception\ModuleRequireException');
