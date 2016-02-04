@@ -206,6 +206,22 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->validateConflicts();
     }
 
+    public function testConflictsOnDependentModules()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'WebDriver' => ['url' => 'localhost', 'browser' => 'firefox'],
+                'REST' => [
+                    'depends' => 'PhpBrowser',
+                ]
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('WebDriver');
+        $this->moduleContainer->create('REST');
+        $this->moduleContainer->validateConflicts();
+    }
+
 
     public function testNoConflictsForPartedModules()
     {

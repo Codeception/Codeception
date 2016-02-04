@@ -188,6 +188,10 @@ class ModuleContainer
                     continue; // skip partially loaded modules
                 }
             }
+            if (!$this->active[$moduleName]) {
+                continue; // if module is not active it should not be validated
+            }
+
             $conflicts = $currentModule->_conflicts();
             if (!interface_exists($conflicts) and !class_exists($conflicts)) {
                 if (!$this->hasModule($conflicts)) {
