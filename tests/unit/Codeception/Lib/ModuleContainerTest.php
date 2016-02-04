@@ -219,6 +219,7 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
         $this->moduleContainer->create('Laravel5');
         $this->moduleContainer->create('Symfony2');
+        $this->moduleContainer->validateConflicts();
     }
 
     public function testModuleDependenciesFail()
