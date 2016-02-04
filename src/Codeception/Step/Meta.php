@@ -20,4 +20,15 @@ class Meta extends CodeceptionStep
     {
         $this->prefix = $actor;
     }
+
+    protected function getArgumentsAsString(array $arguments)
+    {
+        $lastArgAsString = '';
+        $lastArg = end($arguments);
+        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
+            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
+            array_pop($arguments);
+        }
+        return parent::getArgumentsAsString($arguments) . $lastArgAsString;
+    }
 }

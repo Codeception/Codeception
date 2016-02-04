@@ -1,7 +1,6 @@
 <?php
 namespace Codeception;
 
-use Behat\Gherkin\Node\TableNode;
 use Codeception\Lib\ModuleContainer;
 use Codeception\Step\Meta as MetaStep;
 use Codeception\Util\Locator;
@@ -97,17 +96,10 @@ abstract class Step
 
     protected function getArgumentsAsString(array $arguments)
     {
-        $lastArgAsString = '';
-        $lastArg = end($arguments);
-        if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
-            $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
-            array_pop($arguments);
-        }
         foreach ($arguments as $key => $argument) {
             $arguments[$key] = (is_string($argument)) ? trim($argument,"''") : $this->parseArgumentAsString($argument);
         }
-
-        return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]')) . $lastArgAsString;
+        return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
     }
 
     protected function parseArgumentAsString($argument)
@@ -240,7 +232,7 @@ abstract class Step
             $this->metaStep->setTraceInfo($step['file'], $step['line']);
 
             // pageobjects or other classes should not be included with "I"
-            if (!(new \ReflectionClass($step['class']))->isSubclassOf('Codeception\Actor')) {
+            if (!in_array('Codeception\Actor', class_parents($step['class']))) {
                 $this->metaStep->setPrefix($step['class'] . ':');
             }
             return;
