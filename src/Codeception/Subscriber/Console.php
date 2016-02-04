@@ -246,18 +246,27 @@ class Console implements EventSubscriberInterface
                 ->writeln();
         }
         $this->metaStep = $metaStep;
-        $text = $e->getStep()->__toString();
-        if ($e->getStep() instanceof Comment and !$text) {
+
+        $this->printStep($e->getStep());
+    }
+
+    private function printStep(Step $step)
+    {
+        if ($step instanceof Comment and $step->__toString() == '') {
             return; // don't print empty comments
         }
         $msg = $this->message(' ');
-        $msg->append($e->getStep()->getPrefix());
-        if (!$metaStep) {
+        if ($this->metaStep) {
+            $msg->append('  ');
+        }
+        $msg->append($step->getPrefix());
+        if (!$this->metaStep) {
             $msg->style('bold');
         }
-        $msg->append($text);
-        if ($metaStep) {
-            $msg->style('info')->prepend('  ');
+        $maxLength = $this->width - $msg->getLength();
+        $msg->append($step->toString($maxLength));
+        if ($this->metaStep) {
+            $msg->style('info');
         }
         $msg->writeln();
     }
@@ -419,12 +428,11 @@ class Console implements EventSubscriberInterface
 
     /**
      * @param $failedTest
-     * @param $fail
      */
     public function printScenarioTrace(ScenarioDriven $failedTest)
     {
         $trace = array_reverse($failedTest->getScenario()->getSteps());
-        $length = $i = count($trace);
+        $length = $stepNumber = count($trace);
 
         if (!$length) {
             return;
@@ -433,19 +441,22 @@ class Console implements EventSubscriberInterface
         $this->message("\nScenario Steps:\n")->style('comment')->writeln();
 
         foreach ($trace as $step) {
-
+            /**
+             * @var $step Step
+             */
             if (!$step->__toString()) {
                 continue;
             }
 
             $message = $this
-                ->message($i)
+                ->message($stepNumber)
                 ->prepend(' ')
                 ->width(strlen($length))
-                ->append(". " . $step->getPhpCode());
+                ->append(". " );
+            $message->append($step->getPhpCode($this->width - $message->getLength()));
 
             if ($step->hasFailed()) {
-                $message->append('')->style('bold');
+                $message->style('bold');
             }
 
             $line = $step->getLine();
@@ -453,9 +464,9 @@ class Console implements EventSubscriberInterface
                 $message->append(" at <info>$line</info>");
             }
 
-            $i--;
+            $stepNumber--;
             $message->writeln();
-            if (($length - $i - 1) >= $this->traceLength) {
+            if (($length - $stepNumber - 1) >= $this->traceLength) {
                 break;
             }
         }
@@ -502,7 +513,7 @@ class Console implements EventSubscriberInterface
 
         if (!$test instanceof Descriptive) {
             $title = $this->message(str_replace('::', ':', $test->toString()))->apply($stripDataSet);
-            $atMessage->cut($this->width - 4 - strlen($title))->style('info');
+            $atMessage->cut($this->width - 4 - mb_strlen($title))->style('info');
             $this
                 ->message($title)
                 ->append($atMessage)
@@ -516,7 +527,7 @@ class Console implements EventSubscriberInterface
             $feature = $test->getMetadata()->getFeature();
         }
         $title = $this->message(ucfirst($feature))->apply($stripDataSet);
-        $atMessage->cut($this->width - 4 - strlen($title))->style('info');
+        $atMessage->cut($this->width - 4 - mb_strlen($title))->style('info');
 
         $this->message($title)
             ->prepend($prefix)
