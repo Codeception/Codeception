@@ -1000,7 +1000,7 @@ EOF;
      * @return string
      * @part xml
      */
-    public function grabAttributeFrom($cssOrXPath, $attribute)
+    public function grabAttributeFromXmlElement($cssOrXPath, $attribute)
     {
         $el = (new XmlStructure($this->connectionModule->_getResponseContent()))->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {

@@ -191,6 +191,22 @@ class ModuleContainerTest extends \PHPUnit_Framework_TestCase
         $this->moduleContainer->validateConflicts();
     }
 
+    public function testConflictsForREST()
+    {
+        $config = ['modules' =>
+            ['config' => [
+                'REST' => [
+                    'depends' => 'ZF1',
+                ]
+            ]
+        ]];
+        $this->moduleContainer = new ModuleContainer(Stub::make('Codeception\Lib\Di'), $config);
+        $this->moduleContainer->create('ZF1');
+        $this->moduleContainer->create('REST');
+        $this->moduleContainer->validateConflicts();
+    }
+
+
     public function testNoConflictsForPartedModules()
     {
         $config = ['modules' =>

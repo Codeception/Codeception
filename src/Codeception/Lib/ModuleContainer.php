@@ -204,7 +204,7 @@ class ModuleContainer
                     continue; // if action is from current module then ok
                 }
                 // if action from a conflicted interface is not in current module - throw an exception
-                throw new ModuleConflictException($currentModule, $inspectedModule);
+                throw new ModuleConflictException($currentModule, $inspectedModule, $interfaceMethod);
             }
         }
     }

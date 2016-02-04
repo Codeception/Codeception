@@ -1,6 +1,9 @@
 # Changelog
 
 #### 2.2.0
+
+* **Conflicts API implemented** Frameworks + PhpBrowser + WebDriver can't be used together unless only non-conflicting part is used.
+* [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 
 #### 2.1.6
