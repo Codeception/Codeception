@@ -199,7 +199,7 @@ class ModuleContainer
                 }
                 $conflicts = get_class($this->getModule($conflicts)); // try get module by name
             }
-            foreach(get_class_methods($conflicts) as $interfaceMethod) {
+            foreach (get_class_methods($conflicts) as $interfaceMethod) {
                 if (!isset($this->actions[$interfaceMethod])) {
                     continue;
                 }
