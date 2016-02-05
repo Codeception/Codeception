@@ -134,20 +134,22 @@ modules:
 
 [See the full reference](http://codeception.com/docs/modules/ZF1)
 
-### Phalcon 1.x
+### Phalcon
 
-`Phalcon1` module requires creating bootstrap file which returns instance of `\Phalcon\Mvc\Application`. To start writing functional tests with Phalcon support you should enable `Phalcon1` module and provide path to this bootstrap file:
+`Phalcon` module requires creating bootstrap file which returns instance of `\Phalcon\Mvc\Application`. To start writing functional tests with Phalcon support you should enable `Phalcon` module and provide path to this bootstrap file:
 
 ```yaml
 class_name: FunctionalTester
 modules:
     enabled:
-        - Phalcon1:
+        - Phalcon:
             bootstrap: 'app/config/bootstrap.php'
+             cleanup: true
+             savepoints: true
         - \Helper\Functional
 ```
 
-[See the full reference](http://codeception.com/docs/modules/Phalcon1)
+[See the full reference](http://codeception.com/docs/modules/Phalcon)
 
 ## Writing Functional Tests
 
@@ -198,7 +200,7 @@ $I->seeCurrentUrlEquals('/profile/john');
 ?>
 ```
 
-Framework modules also contain additional methods to access framework internals. For instance, `Laravel4`, `Phalcon1`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
+Framework modules also contain additional methods to access framework internals. For instance, `Laravel4`, `Phalcon`, and `Yii2` modules have `seeRecord` method which uses ActiveRecord layer to check that record exists in database.
 `Laravel4` module also contains methods to do additional session checks. You may find `seeSessionHasErrors` useful when you test form validations.
 
 Take a look at the complete reference for module you are using. Most of its methods are common for all modules but some of them are unique.

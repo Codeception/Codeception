@@ -80,7 +80,6 @@ class Run extends Command
         $this->setDefinition([
             new InputArgument('suite', InputArgument::OPTIONAL, 'suite to be tested'),
             new InputArgument('test', InputArgument::OPTIONAL, 'test to be run'),
-            new InputOption('config', 'c', InputOption::VALUE_REQUIRED, 'Use custom path for config'),
             new InputOption('report', '', InputOption::VALUE_NONE, 'Show output in compact style'),
             new InputOption('html', '', InputOption::VALUE_OPTIONAL, 'Generate html with results', 'report.html'),
             new InputOption('xml', '', InputOption::VALUE_OPTIONAL, 'Generate JUnit XML Log', 'report.xml'),
