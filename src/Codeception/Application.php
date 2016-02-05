@@ -24,7 +24,7 @@ class Application extends BaseApplication
      *
      *  extensions:
      *      commands:
-     *          - project\MyNewCommand
+     *          - Project\Command\MyCustomCommand
      *
      */
     public function registerCustomCommands()

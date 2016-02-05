@@ -190,13 +190,13 @@ You have to register your command in the file `codeception.yml`
 
 ```yaml
 extensions:
-    commands: [Codeception\Command\MyCustomCommand]
+    commands: [Project\Command\MyCustomCommand]
 ```
 
 If you want to activate the Command globally, because you use more then one ```codeception.yml``` file, then
 you have to register your command in ```codeception.dist.yml``` in the root folder of your project.
 
-You can find an example here: [/tests/data/register_command/examples/MyCustomCommand.php]
+You can find an example here: [/tests/data/register_command/examples/MyCustomCommand.php](https://gist.github.com/sd-tm/37d5f9bca871c72648cb)
 
 ## Group Objects
 

@@ -9,5 +9,5 @@ settings:
     colors: false
 extensions:
     commands:
-        - Codeception\Command\MyCustomCommand
-        - Codeception\Command\YourCustomCommand
+        - Project\Command\MyCustomCommand
+        - Project\Command\YourCustomCommand

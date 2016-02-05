@@ -16,7 +16,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         \Codeception\Configuration::append(array('extensions' => array(
             'commands' => array(
-                'Codeception\Command\MyCustomCommand'))));
+                'Project\Command\MyCustomCommand'))));
 
         $application = new Application();
         $application->registerCustomCommands();
