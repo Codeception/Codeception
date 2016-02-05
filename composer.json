@@ -56,5 +56,8 @@
         "branch-alias": {
         }
     },
-    "bin":["codecept"]
+    "bin":["codecept"],
+    "config": {
+        "platform": {}
+    }
 }
