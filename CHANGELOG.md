@@ -6,6 +6,7 @@
 * [HHVM] Asserts module works on HHVM
 * Fixed using codecoverage with environments #2634
 * [Filesystem] Added `seeNumberNewLines` method to check the number of new lines in opened file. By @sergeyklay
+* [WebDriver] Fixed uploading files with PhantomJS #1823
 
 #### 2.1.5
 

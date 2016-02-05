@@ -29,6 +29,7 @@ use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Interactions\WebDriverActions;
 use Facebook\WebDriver\Remote\LocalFileDetector;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\UselessFileDetector;
 use Facebook\WebDriver\Remote\WebDriverCapabilityType;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverDimension;
@@ -1127,7 +1128,12 @@ class WebDriver extends CodeceptionModule implements
             throw new \InvalidArgumentException("file not found or not readable: $filePath");
         }
         // in order for remote upload to be enabled
-        $el->setFileDetector(new LocalFileDetector);
+        $el->setFileDetector(new LocalFileDetector());
+
+        // skip file detector for phantomjs
+        if (strpos($this->config['browser'], 'phantom') === 0) {
+            $el->setFileDetector(new UselessFileDetector());
+        }
         $el->sendKeys($filePath);
     }
 
