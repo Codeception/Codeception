@@ -4,12 +4,21 @@
  */
 namespace Codeception\Lib\Driver;
 
-use Facebook\FacebookSession;
-use Facebook\FacebookRequest;
+use Facebook\Facebook as FacebookSDK;
 
 class Facebook
 {
     protected $logCallback;
+
+    /**
+     * @var FacebookSDK
+     */
+    protected $fb;
+
+    protected $appId;
+    protected $appSecret;
+    protected $appToken;
+
 
     public function __construct($config, $logCallback = null)
     {
@@ -17,9 +26,14 @@ class Facebook
             $this->logCallback = $logCallback;
         }
 
-        FacebookSession::setDefaultApplication($config['app_id'], $config['secret']);
-        $this->appSession = FacebookSession::newAppSession($config['app_id'], $config['secret']);
+        $this->fb = new FacebookSDK([
+            'app_id' => $config['app_id'],
+            'app_secret' => $config['secret'],
+            'default_graph_version' => 'v2.5', //TODO add to config
+        ]);
         $this->appId = $config['app_id'];
+        $this->appSecret = $config['secret'];
+        $this->appToken = $this->appId . '|' . $this->appSecret;
     }
 
     /**
@@ -31,23 +45,21 @@ class Facebook
     public function createTestUser($name, array $permissions)
     {
         $response = $this->executeFacebookRequest(
-            $this->appSession,
             'POST',
-            '/' . FacebookSession::_getTargetAppId() . '/accounts/test-users',
+            $this->appId . '/accounts/test-users',
             [
                 'name' => $name,
                 'installed' => true,
                 'permissions' => $permissions
             ]
-        )->getRawResponse();
+        );
 
-        return json_decode($response, true);
+        return $response->getDecodedBody();
     }
 
     public function deleteTestUser($testUserID)
     {
         $this->executeFacebookRequest(
-            $this->appSession,
             'DELETE',
             '/' . $testUserID
         );
@@ -56,57 +68,84 @@ class Facebook
     public function getTestUserInfo($testUserAccessToken)
     {
         $response = $this->executeFacebookRequest(
-            new FacebookSession($testUserAccessToken),
             'GET',
-            '/me'
-        )->getRawResponse();
+            '/me',
+            $parameters = [],
+            $testUserAccessToken
+        );
 
-        return json_decode($response, true);
+        return $response->getDecodedBody();
     }
 
     public function getLastPostsForTestUser($testUserAccessToken)
     {
         $response = $this->executeFacebookRequest(
-            new FacebookSession($testUserAccessToken),
             'GET',
-            '/me/feed'
-        )->getRawResponse();
+            '/me/feed',
+            $parameters = [],
+            $testUserAccessToken
+        );
 
-        return json_decode($response, true);
+        return $response->getDecodedBody();
+    }
+
+    public function getVisitedPlaceTagForTestUser($placeId, $testUserAccessToken)
+    {
+        $response = $this->executeFacebookRequest(
+            'GET',
+            "/$placeId",
+            $parameters = [],
+            $testUserAccessToken
+        );
+
+        return $response->getDecodedBody();
     }
 
     public function sendPostToFacebook($testUserAccessToken, array $parameters)
     {
         $response = $this->executeFacebookRequest(
-            new FacebookSession($testUserAccessToken),
             'POST',
             '/me/feed',
-            $parameters
-        )->getRawResponse();
-        return json_decode($response, true);
+            $parameters,
+            $testUserAccessToken
+        );
+        return $response->getDecodedBody();
     }
 
+
     /**
-     * @param FacebookSession $session
      * @param string $method
      * @param string $endpoint
      * @param array $parameters
+     * @param string $token
      * @return \Facebook\FacebookResponse
      */
-    private function executeFacebookRequest(FacebookSession $session, $method, $endpoint, array $parameters = [])
+    private function executeFacebookRequest($method, $endpoint, array $parameters = [], $token = null)
     {
         if (is_callable($this->logCallback)) {
+            //used only for debugging:
             call_user_func($this->logCallback, 'Facebook API request', func_get_args());
         }
-        $response = (new FacebookRequest(
-            $session,
-            $method,
-            $endpoint,
-            $parameters
-        ))->execute();
+
+        if (!$token) $token = $this->appToken;
+
+        switch ($method) {
+            case 'GET':
+                $response = $this->fb->get($endpoint, $token);
+                break;
+            case 'POST':
+                $response = $this->fb->post($endpoint, $parameters, $token);
+                break;
+            case 'DELETE':
+                $response = $this->fb->delete($endpoint, $parameters, $token);
+                break;
+            default:
+                throw new \Exception("Facebook driver exception, please add support for method: " . $method);
+                break;
+        }
 
         if (is_callable($this->logCallback)) {
-            call_user_func($this->logCallback, 'Facebook API response', $response->getRawResponse());
+            call_user_func($this->logCallback, 'Facebook API response', $response->getDecodedBody());
         }
 
         return $response;
