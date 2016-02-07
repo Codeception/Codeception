@@ -19,4 +19,8 @@ env:
         WebDriver:
           browser: phantomjs
           port: 4455
-          restart: true;
+  chrome:
+    modules:
+      config:
+        WebDriver:
+          browser: chrome
