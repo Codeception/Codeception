@@ -22,6 +22,7 @@ use Codeception\TestCase;
 use Codeception\Util\Debug;
 use Codeception\Util\Locator;
 use Codeception\Util\Uri;
+use Facebook\WebDriver\Exception\InvalidElementStateException;
 use Facebook\WebDriver\Exception\InvalidSelectorException;
 use Facebook\WebDriver\Exception\NoSuchElementException;
 use Facebook\WebDriver\Exception\UnknownServerException;
@@ -57,6 +58,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * 1. Download [PhantomJS](http://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
  *
+ * You will need to set a browser name to `phantom` in configuration.
+ *
  *
  * ## Status
  *
@@ -91,11 +94,18 @@ use Symfony\Component\DomCrawler\Crawler;
  *              url: 'http://localhost/'
  *              browser: firefox
  *              window_size: 1024x768
- *              wait: 10
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
  *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
  *
+ *
+ * ### PhantomJS Example (`acceptance.suite.yml`)
+ *
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              browser: phantomjs
  *
  *
  * ## SauceLabs.com Integration
@@ -261,6 +271,7 @@ class WebDriver extends CodeceptionModule implements
             // but RemoteWebDriver doesn't provide public access to check on executor
             // so we need to unset $this->webDriver here to shut it down completely
             $this->webDriver = null;
+            return;
         }
         if ($this->config['clear_cookies'] && isset($this->webDriver)) {
             $this->webDriver->manage()->deleteAllCookies();
@@ -488,6 +499,12 @@ class WebDriver extends CodeceptionModule implements
         $params['value'] = $value;
         if (isset($params['expires'])) { // PhpBrowser compatibility
             $params['expiry'] = $params['expires'];
+        }
+        if (!isset($params['domain'])) {
+            $urlParts = parse_url($this->config['url']);
+            if (isset($urlParts['host'])) {
+                $params['domain'] = $urlParts['host'];
+            }
         }
         $this->webDriver->manage()->addCookie($params);
         $this->debugSection('Cookies', json_encode($this->webDriver->manage()->getCookies()));
@@ -1131,7 +1148,7 @@ class WebDriver extends CodeceptionModule implements
         $el->setFileDetector(new LocalFileDetector());
 
         // skip file detector for phantomjs
-        if (strpos($this->config['browser'], 'phantom') === 0) {
+        if ($this->isPhantom()) {
             $el->setFileDetector(new UselessFileDetector());
         }
         $el->sendKeys($filePath);
@@ -1349,6 +1366,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function acceptPopup()
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->accept();
     }
 
@@ -1357,6 +1377,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function cancelPopup()
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->dismiss();
     }
 
@@ -1367,6 +1390,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function seeInPopup($text)
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->assertContains($text, $this->webDriver->switchTo()->alert()->getText());
     }
 
@@ -1377,6 +1403,9 @@ class WebDriver extends CodeceptionModule implements
      */
     public function typeInPopup($keys)
     {
+        if ($this->isPhantom()) {
+            throw new ModuleException($this, 'PhantomJS does not support working with popups');
+        }
         $this->webDriver->switchTo()->alert()->sendKeys($keys);
     }
 
@@ -1995,6 +2024,10 @@ class WebDriver extends CodeceptionModule implements
                 return $page->findElements($this->getStrictLocator($selector));
             } catch (InvalidSelectorException $e) {
                 throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator");
+            } catch (InvalidElementStateException $e) {
+                if ($this->isPhantom() and $e->getResults()['status'] == 12) {
+                    throw new MalformedLocatorException(key($selector) . ' => ' . reset($selector), "Strict locator ".$e->getCode());
+                }
             }
         }
         if ($selector instanceof WebDriverBy) {
@@ -2344,5 +2377,13 @@ class WebDriver extends CodeceptionModule implements
         $setCookie->setDomain($cookie['domain']);
 
         return $setCookie->matchesDomain(parse_url($this->config['url'], PHP_URL_HOST));
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPhantom()
+    {
+        return strpos($this->config['browser'], 'phantom') === 0;
     }
 }
