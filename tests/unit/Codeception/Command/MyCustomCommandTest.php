@@ -1,5 +1,5 @@
 <?php
-namespace Codception\Command;
+namespace Project\Command;
 
 class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,13 +10,13 @@ class MyCustomCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testHasCodeceptionCustomCommandInterface()
     {
-        $command = new \Codeception\Command\MyCustomCommand('commandName');
+        $command = new MyCustomCommand('commandName');
         $this->assertInstanceOf('Codeception\CustomCommandInterface', $command);
     }
 
     public function testHasCommandName()
     {
-        $commandName = \Codeception\Command\MyCustomCommand::getCommandName();
+        $commandName = MyCustomCommand::getCommandName();
         $this->assertEquals('myProject:myCommand', $commandName);
     }
 }
