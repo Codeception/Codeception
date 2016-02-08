@@ -1143,6 +1143,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $httpOnly     = isset($params['httpOnly'])  ? $params['httpOnly'] : true;
         $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
 
+
+
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
         $this->debugCookieJar();
     }

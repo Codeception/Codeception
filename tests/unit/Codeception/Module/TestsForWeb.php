@@ -8,7 +8,7 @@
  *
  */
 
-abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
+abstract class TestsForWeb extends \Codeception\TestCase\Test
 {
     /**
      * @var \Codeception\Module\PhpBrowser
@@ -1171,7 +1171,7 @@ abstract class TestsForWeb extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Codeception\Exception\MalformedLocatorException');
         $this->module->amOnPage('/');
-        $this->module->seeElement(['css' => 'hello<world']);
+        $this->module->seeElement(['css' => 'hel!1$<world']);
     }
 
     public function testWrongStrictXPathLocator()

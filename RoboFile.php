@@ -14,7 +14,11 @@ class RoboFile extends \Robo\Tasks
         $this->update();
         $this->buildDocs();
         $this->publishDocs();
+        $this->installDependenciesForPhp54();
+        $this->buildPhar54();
+        $this->installDependenciesForPhp55();
         $this->buildPhar();
+        $this->revertComposerJsonChanges();
         $this->publishPhar();
         $this->publishGit();
         $this->versionBump();
@@ -142,13 +146,59 @@ class RoboFile extends \Robo\Tasks
             ->run();
     }
 
+    private function installDependenciesForPhp54()
+    {
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {"php": "5.4.0"}')
+            ->run();
+
+        $this->taskComposerUpdate()->run();
+    }
+
+    private function installDependenciesForPhp55()
+    {
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {"php": "5.5.10"}')
+            ->run();
+
+        $this->taskComposerUpdate()->run();
+    }
+
+    private function revertComposerJsonChanges()
+    {
+        $this->taskReplaceInFile('composer.json')
+            ->regex('/"platform": \{.*?\}/')
+            ->to('"platform": {}')
+            ->run();
+    }
+
+
     /**
      * @desc creates codecept.phar
      * @throws Exception
      */
     public function buildPhar()
     {
-        $pharTask = $this->taskPackPhar('package/codecept.phar')
+        $this->packPhar('package/codecept.phar');
+    }
+
+    /**
+     * @desc creates codecept.phar with Guzzle 5.3 and Symfony 2.8
+     * @throws Exception
+     */
+    public function buildPhar54()
+    {
+        if (!file_exists('package/php54')) {
+            mkdir('package/php54');
+        }
+        $this->packPhar('package/php54/codecept.phar');
+    }
+
+    private function packPhar($pharFileName)
+    {
+        $pharTask = $this->taskPackPhar($pharFileName)
             ->compress()
             ->stub('package/stub.php');
 
@@ -209,7 +259,7 @@ class RoboFile extends \Robo\Tasks
             ->addFile('codecept', 'package/bin')
             ->run();
         
-        $code = $this->taskExec('php package/codecept.phar')->run()->getExitCode();
+        $code = $this->taskExec('php ' . $pharFileName)->run()->getExitCode();
         if ($code !== 0) {
             throw new Exception("There was problem compiling phar");
         }
@@ -352,12 +402,19 @@ class RoboFile extends \Robo\Tasks
         if (strpos($version, self::STABLE_BRANCH) === 0) {
             $this->say("publishing to release branch");
             copy('../codecept.phar','codecept.phar');
+            if (!is_dir('php54')) {
+                mkdir('php54');
+            }
+            copy('../php54/codecept.phar','php54/codecept.phar');
             $this->taskExec('git add codecept.phar')->run();
+            $this->taskExec('git add php54/codecept.phar')->run();
         }
 
         $this->taskFileSystemStack()
             ->mkdir("releases/$version")
+            ->mkdir("releases/$version/php54")
             ->copy('../codecept.phar',"releases/$version/codecept.phar")
+            ->copy('../php54/codecept.phar',"releases/$version/php54/codecept.phar")
             ->run();
 
         $this->taskGitStack()->add('-A')->run();
@@ -390,7 +447,11 @@ class RoboFile extends \Robo\Tasks
                 }
                 $releaseFile->line("* **[Download Latest $branch Release](http://codeception.com/releases/$releaseName/codecept.phar)**");
             }
-            $releaseFile->line("* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)");
+            $versionLine = "* [$releaseName](http://codeception.com/releases/$releaseName/codecept.phar)";
+            if (file_exists("releases/$releaseName/php54/codecept.phar")) {
+                $versionLine .= ", [for PHP 5.4](http://codeception.com/releases/$releaseName/php54/codecept.phar)";
+            }
+            $releaseFile->line($versionLine);
         }
         $releaseFile->run();
 

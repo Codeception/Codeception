@@ -20,58 +20,18 @@ class WebDriverTest extends TestsForBrowsers
      */
     protected $webDriver;
 
-    // this is my local config
-    protected $is_local = false;
+    const MODULE_CLASS = 'Codeception\Module\WebDriver';
+    const WEBDRIVER_CLASS = 'Facebook\WebDriver\Remote\RemoteWebDriver';
 
-    protected $initialized = false;
-
-    public function setUp()
+    public function _before()
     {
-        $this->noPhpWebserver();
-        $this->noSelenium();
-        $this->module = new \Codeception\Module\WebDriver(\Codeception\Util\Stub::make('Codeception\Lib\ModuleContainer'));
-        $url = 'http://localhost:8000';
-        $this->module->_setConfig(['url' => $url, 'browser' => 'firefox', 'port' => '4444', 'restart' => true, 'wait' => 0]);
-        $this->module->_initialize();
-        $this->module->_before($this->makeTest());
-        $this->webDriver = $this->module->webDriver;
+        $this->module = $this->getModule('WebDriver');
+        $this->webDriver = &$this->getModule('WebDriver')->webDriver;
     }
 
-    public function tearDown()
+    public function _after()
     {
-        $this->module->webDriver = $this->webDriver;
-        $this->noPhpWebserver();
-        $this->noSelenium();
-        $this->module->_after($this->makeTest());
         data::clean();
-    }
-
-    protected function makeTest()
-    {
-        return Stub::makeEmpty(
-            '\Codeception\Test\Test',
-            ['dispatcher' => Stub::makeEmpty('Symfony\Component\EventDispatcher\EventDispatcher')]
-        );
-    }
-
-    protected function noSelenium()
-    {
-        $fp = @fsockopen('localhost', 4444);
-        if ($fp !== false) {
-            fclose($fp);
-            return true;
-        }
-        $this->markTestSkipped(
-            'Requires Selenium2 Server running on port 4444'
-        );
-        return false;
-    }
-
-    protected function noPhpWebserver()
-    {
-        if (version_compare(PHP_VERSION, '5.4', '<') and (! $this->is_local)) {
-            $this->markTestSkipped('Requires PHP built-in web server, available only in PHP 5.4.');
-        }
     }
 
     public function testClickEventOnCheckbox()
@@ -85,6 +45,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testAcceptPopup()
     {
+        $this->notForPhantomJS();
         $this->module->amOnPage('/form/popup');
         $this->module->click('Confirm');
         $this->module->acceptPopup();
@@ -93,6 +54,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testCancelPopup()
     {
+        $this->notForPhantomJS();
         $this->module->amOnPage('/form/popup');
         $this->module->click('Confirm');
         $this->module->cancelPopup();
@@ -110,6 +72,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSeeInPopup()
     {
+        $this->notForPhantomJS();
         $this->module->amOnPage('/form/popup');
         $this->module->click('Alert');
         $this->module->seeInPopup('Really?');
@@ -425,14 +388,14 @@ class WebDriverTest extends TestsForBrowsers
                 'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
             ]),
         ]);
-        $this->module->webDriver = $fakeWd;
-        $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
-        $this->module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
+        $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
+            $cept = (new \Codeception\Test\Cept('loginCept', 'loginCept.php'));
+        $module->_failed($cept, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateCestScreenshotOnFail()
     {
-        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
+        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
             'takeScreenshot' => Stub::once(function($filename) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir('stdClass.login.fail.png'), $filename);
             }),
@@ -441,15 +404,15 @@ class WebDriverTest extends TestsForBrowsers
                 'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
             ]),
         ]);
-        $this->module->webDriver = $fakeWd;
+        $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
         $cest = new \Codeception\Test\Cest(new stdClass(), 'login', 'someCest.php');
-        $this->module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
+        $module->_failed($cest, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testCreateTestScreenshotOnFail()
     {
         $test = Stub::make('\Codeception\TestCase\Test', ['getName' => 'testLogin']);
-        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
+        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
             'takeScreenshot' => Stub::once(function($filename) use ($test) {
                 PHPUnit_Framework_Assert::assertEquals(codecept_log_dir(get_class($test).'.testLogin.fail.png'), $filename);
             }),
@@ -458,30 +421,30 @@ class WebDriverTest extends TestsForBrowsers
                 'getAvailableLogTypes' => Stub::atLeastOnce(function() { return []; }),
             ]),
         ]);
-        $this->module->webDriver = $fakeWd;
-        $this->module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
+        $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
+        $module->_failed($test, new PHPUnit_Framework_AssertionFailedError());
     }
 
     public function testWebDriverWaits()
     {
-        $fakeWd = Stub::make('\Codeception\Module\WebDriver', ['wait' => Stub::exactly(12, function () {
+        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, ['wait' => Stub::exactly(12, function () {
             return new \Codeception\Util\Maybe();
         })]);
-        $this->module->webDriver = $fakeWd;
-        $this->module->waitForElement(WebDriverBy::partialLinkText('yeah'));
-        $this->module->waitForElement(['id' => 'user']);
-        $this->module->waitForElement(['css' => '.user']);
-        $this->module->waitForElement('//xpath');
+        $module = Stub::make(self::MODULE_CLASS, ['webDriver' => $fakeWd]);
+        $module->waitForElement(WebDriverBy::partialLinkText('yeah'));
+        $module->waitForElement(['id' => 'user']);
+        $module->waitForElement(['css' => '.user']);
+        $module->waitForElement('//xpath');
 
-        $this->module->waitForElementVisible(WebDriverBy::partialLinkText('yeah'));
-        $this->module->waitForElementVisible(['id' => 'user']);
-        $this->module->waitForElementVisible(['css' => '.user']);
-        $this->module->waitForElementVisible('//xpath');
+        $module->waitForElementVisible(WebDriverBy::partialLinkText('yeah'));
+        $module->waitForElementVisible(['id' => 'user']);
+        $module->waitForElementVisible(['css' => '.user']);
+        $module->waitForElementVisible('//xpath');
 
-        $this->module->waitForElementNotVisible(WebDriverBy::partialLinkText('yeah'));
-        $this->module->waitForElementNotVisible(['id' => 'user']);
-        $this->module->waitForElementNotVisible(['css' => '.user']);
-        $this->module->waitForElementNotVisible('//xpath');
+        $module->waitForElementNotVisible(WebDriverBy::partialLinkText('yeah'));
+        $module->waitForElementNotVisible(['id' => 'user']);
+        $module->waitForElementNotVisible(['css' => '.user']);
+        $module->waitForElementNotVisible('//xpath');
     }
 
     public function testBug1467()
@@ -534,6 +497,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSessionSnapshots()
     {
+        $this->notForPhantomJS();
         $this->module->amOnPage('/');
         $this->module->setCookie('PHPSESSID', '123456', ['path' => '/']);
         $this->module->saveSessionSnapshot('login');
@@ -546,6 +510,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testSaveSessionSnapshotsExcludeInvalidCookieDomains()
     {
+        $this->notForPhantomJS();
         $fakeWdOptions = Stub::make('\Facebook\WebDriver\WebDriverOptions', [
             'getCookies' => Stub::atLeastOnce(function() {
                 return [
@@ -564,7 +529,7 @@ class WebDriverTest extends TestsForBrowsers
             }),
         ]);
 
-        $fakeWd = Stub::make('\Facebook\WebDriver\Remote\RemoteWebDriver', [
+        $fakeWd = Stub::make(self::WEBDRIVER_CLASS, [
             'manage' => Stub::atLeastOnce(function() use ($fakeWdOptions) {
                 return $fakeWdOptions;
             }),
@@ -603,6 +568,7 @@ class WebDriverTest extends TestsForBrowsers
 
     public function testAppendFieldDiv()
     {
+        $this->notForPhantomJS();
         $this->module->amOnPage('/form/div_content_editable');
         //make sure we see 'sunrise' which is the default text in the textarea
         $this->module->see('sunrise', '#description');
@@ -611,4 +577,40 @@ class WebDriverTest extends TestsForBrowsers
         $this->module->appendField('#description', $textarea_value);
         $this->module->see('sunrise' . $textarea_value, '#description');
     }
+
+    public function testOpenPageException()
+    {
+        if (!$this->module->_getConfig('restart')) {
+            $this->markTestSkipped('works only on restarts');
+        }
+        parent::testOpenPageException();
+    }
+
+    public function testCookies()
+    {
+        $this->notForPhantomJS();
+        parent::testCookies();
+    }
+
+    public function testSendingCookies()
+    {
+        $this->notForPhantomJS();
+        parent::testSendingCookies();
+    }
+
+
+
+    public function testCookiesWithPath()
+    {
+        $this->notForPhantomJS();
+        parent::testCookiesWithPath();
+    }
+
+    protected function notForPhantomJS()
+    {
+        if ($this->module->_getConfig('browser') == 'phantomjs') {
+            $this->markTestSkipped('does not work for phantomjs');
+        }
+    }
+
 }
