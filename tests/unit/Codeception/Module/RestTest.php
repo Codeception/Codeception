@@ -241,6 +241,16 @@ class RestTest extends \PHPUnit_Framework_TestCase
         $this->module->dontSeeResponseJsonMatchesJsonPath('$[*].profile');
     }
 
+    /**
+     * @Issue https://github.com/Codeception/Codeception/issues/2775
+     */
+    public function testSeeResponseJsonMatchesXPathWorksWithAmpersand()
+    {
+        $this->setStubResponse('{ "product":[ { "category":[ { "comment":"something & something" } ] } ] }');
+        $this->module->seeResponseIsJson();
+        $this->module->seeResponseJsonMatchesXpath('//comment');
+    }
+
     
     public function testArrayJsonPathFails()
     {
