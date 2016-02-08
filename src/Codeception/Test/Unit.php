@@ -2,6 +2,7 @@
 namespace Codeception\Test;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
 use Codeception\Scenario;
 use Codeception\TestInterface;
 
@@ -90,13 +91,24 @@ class Unit extends \PHPUnit_Framework_TestCase implements
 
     /**
      * @param $module
-     *
      * @return \Codeception\Module
-     * @throws \Codeception\Exception\TestRuntimeException
+     * @throws ModuleException
      */
     public function getModule($module)
     {
-        return $this->getMetadata()->getCurrent('modules')->getModule($module);
+        $modules = $this->getMetadata()->getCurrent('modules');
+        if (!isset($modules[$module])) {
+            throw new ModuleException($module, "Module can't be accessed");
+        }
+        return $modules[$module];
+    }
+
+    /**
+     * Returns current values
+     */
+    public function getCurrent($current)
+    {
+        return $this->getMetadata()->getCurrent($current);
     }
 
     /**
