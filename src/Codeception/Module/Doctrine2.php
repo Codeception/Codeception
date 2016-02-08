@@ -424,7 +424,7 @@ EOF;
             if ($val === null) {
                 $qb->andWhere("s.$key IS NULL");
             } else {
-                $paramname = "s__$key";
+                $paramname = str_replace(".", "", "s_$key");
                 $qb->andWhere("s.$key = :$paramname");
                 $qb->setParameter($paramname, $val);
             }

@@ -1144,6 +1144,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         $httpOnly     = isset($params['httpOnly'])  ? $params['httpOnly'] : true;
         $encodedValue = isset($params['encodedValue'])  ? $params['encodedValue'] : false;
 
+
+
         $cookies->set(new Cookie($name, $val, $expires, $path, $domain, $secure, $httpOnly, $encodedValue));
         $this->debugCookieJar();
     }
@@ -1251,7 +1253,11 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     protected function matchSelectedOption($select)
     {
         $nodes = $this->getFieldsByLabelOrCss($select);
-        return $nodes->filter('option[selected],input:checked');
+        $selectedOptions = $nodes->filter('option[selected],input:checked');
+        if ($selectedOptions->count() == 0) {
+            $selectedOptions = $nodes->filter('option,input')->first();
+        }
+        return $selectedOptions;
     }
 
     /**
