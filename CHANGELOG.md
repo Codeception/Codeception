@@ -2,11 +2,23 @@
 
 #### 2.1.6
 
+* Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
+* [WebDriver] Fixed uploading files with PhantomJS #1823 by @DavertMik and @Naktibalda
+* [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
-* [HHVM] Asserts module works on HHVM
 * Fixed using codecoverage with environments #2634
+* [Asserts] works on HHVM
 * [Filesystem] Added `seeNumberNewLines` method to check the number of new lines in opened file. By @sergeyklay
-* [WebDriver] Fixed uploading files with PhantomJS #1823
+* [Symfony2] Added `seeCurrentRouteMatches` action by @laszlo-karpati See #2665
+* [Sequence] Added `sqs` function to generate unique sequences per suite. #2766 by @johnatannvmd
+* [FTP] Fixed various bugs by @k-serenade. See #2755
+* [Frameworks][PhpBrowser] Fixed #2733: `seeOptionIsSelected` sees first option as selected if none is selected by @Naktibalda
+* [Symfony2] Removed 'localhost' from getInternalDomains by @Naktibalda. Fixed #2717
+* Bugfix for using groups by directory on Windows by @tortuetorche See #2550 and #2551
+* [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
+* [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
+
+
 
 #### 2.1.5
 
