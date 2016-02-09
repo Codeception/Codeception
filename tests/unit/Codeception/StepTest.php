@@ -17,13 +17,16 @@ class StepTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('"' . Locator::humanReadableString($by) . '"', $step->getArguments(true));
 
         $step = $this->getStep([null, [['just', 'array']]]);
-        $this->assertEquals('"just","array"', $step->getArguments(true));
+        $this->assertEquals('["just","array"]', $step->getArguments(true));
 
         $step = $this->getStep([null, [function(){}]]);
-        $this->assertEquals('"lambda function"', $step->getArguments(true));
+        $this->assertEquals('"Closure"', $step->getArguments(true));
 
         $step = $this->getStep([null, [[$this, 'testGetArguments']]]);
-        $this->assertEquals('"callable function"', $step->getArguments(true));
+        $this->assertEquals('["StepTest","testGetArguments"]', $step->getArguments(true));
+
+        $step = $this->getStep([null, [['PDO', 'getAvailableDrivers']]]);
+        $this->assertEquals('["PDO","getAvailableDrivers"]', $step->getArguments(true));
     }
 
     public function testGetHtml()
