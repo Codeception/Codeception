@@ -3,6 +3,6 @@ bootstrap: false
 modules:
     enabled:
         - AngularJS:
-            url: http://www.way2automation.com/angularjs-protractor/banking
+            url: http://davertmik.github.io/angular-demo-app
             browser: firefox
         - \Helper\Angular
