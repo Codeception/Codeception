@@ -179,7 +179,7 @@ class ModuleContainer
         $moduleNames = array_keys($this->modules);
         foreach ($moduleNames as $moduleName) {
             $currentModule = $this->modules[$moduleName];
-            /** @var $currentModule Module  * */
+            /** @var $currentModule Module  */
             if (!$currentModule instanceof ConflictsWithModule) {
                 continue; // don't validate modules which are not in conflict
             }
@@ -193,7 +193,7 @@ class ModuleContainer
             }
 
             $conflicts = $currentModule->_conflicts();
-            if (!interface_exists($conflicts) and !class_exists($conflicts)) {
+            if (!interface_exists($conflicts) && !class_exists($conflicts)) {
                 if (!$this->hasModule($conflicts)) {
                     continue;
                 }
