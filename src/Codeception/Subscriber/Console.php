@@ -260,10 +260,11 @@ class Console implements EventSubscriberInterface
             $msg->append('  ');
         }
         $msg->append($step->getPrefix());
+        $prefixLength = $msg->getLength();
         if (!$this->metaStep) {
             $msg->style('bold');
         }
-        $maxLength = $this->width - $msg->getLength();
+        $maxLength = $this->width - $prefixLength;
         $msg->append($step->toString($maxLength));
         if ($this->metaStep) {
             $msg->style('info');
