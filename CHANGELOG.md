@@ -8,6 +8,7 @@
 
 #### 2.1.6
 
+* Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
 * [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to use PhantomJS-specific hooks.
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
