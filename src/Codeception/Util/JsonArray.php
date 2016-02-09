@@ -211,7 +211,7 @@ class JsonArray
             if (is_array($value)) {
                 $this->arrayToXml($doc, $subNode, $value);
             } else {
-                $subNode->nodeValue = (string)$value;
+                $subNode->nodeValue = htmlspecialchars((string)$value);
             }
         }
     }
