@@ -2,9 +2,7 @@
 
 #### 2.1.6
 
-* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda.
-Please specify your browser name as `phantom` in WebDriver config in order to handle PhantomJS-specific hooks.
-
+* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda. Please specify your browser name as `phantom` in WebDriver config in order to handle PhantomJS-specific hooks.
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
