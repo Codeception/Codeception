@@ -2,12 +2,16 @@
 
 #### 2.1.6
 
+* [WebDriver] Fixed uploading files with **PhantomJS** #1823 by @DavertMik and @Naktibalda.
+Please specify your browser name as `phantom` in WebDriver config in order to handle PhantomJS-specific hooks.
+
 * Fixed parsing PHP files with spaces in name on PHP<7 by @acuthbert. Fixes #2647
-* [WebDriver] Fixed uploading files with PhantomJS #1823 by @DavertMik and @Naktibalda
 * [WebDriver] Fixed proxy error when using with Chrome #2651 by @vaikla
 * [Laravel5] Allow Laravel5 application URL to be set through config. By @gmhenderson. See #2676
+* [Laravel5] Mocked events should also return an array. Fix by @devinfd
 * Fixed using codecoverage with environments #2634
-* [Asserts] works on HHVM
+* Various HHVM improvements by @Naktibalda, for instance, Asserts module issues has been fixed.
+* [REST] Fixes #2775 `seeResponseJsonMatchesXpath` when JSON contains ampersand. By @Naktibalda.
 * [Filesystem] Added `seeNumberNewLines` method to check the number of new lines in opened file. By @sergeyklay
 * [Symfony2] Added `seeCurrentRouteMatches` action by @laszlo-karpati See #2665
 * [Sequence] Added `sqs` function to generate unique sequences per suite. #2766 by @johnatannvmd
