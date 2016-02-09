@@ -18,6 +18,7 @@
 * [Symfony2] Removed 'localhost' from getInternalDomains by @Naktibalda. Fixed #2717
 * Bugfix for using groups by directory on Windows by @tortuetorche See #2550 and #2551
 * [REST] Fixed failed message for `seeHttpHeader` and `dontSeeHttpHeader` from null to expected value #2697 by @zondor
+* [REST] Added methods to control redirect: `stopFollowingRedirects` and `startFollowingRedirects` by @brutuscat
 * [Recorder Extension] Added `animate_slides` config to disable left-right sliding animation between screenshots by @vml-rmott
 
 
