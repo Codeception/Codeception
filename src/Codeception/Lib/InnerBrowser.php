@@ -7,6 +7,7 @@ use Codeception\Exception\ExternalUrlException;
 use Codeception\Exception\MalformedLocatorException;
 use Codeception\Exception\ModuleException;
 use Codeception\Exception\TestRuntimeException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Lib\Interfaces\ElementLocator;
 use Codeception\Lib\Interfaces\PageSourceSaver;
 use Codeception\Lib\Interfaces\Web;
@@ -28,7 +29,7 @@ use Symfony\Component\DomCrawler\Field\TextareaFormField;
 use Symfony\Component\DomCrawler\Form;
 use Symfony\Component\DomCrawler\Link;
 
-class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator
+class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocator, ConflictsWithModule
 {
     /**
      * @var \Symfony\Component\DomCrawler\Crawler
