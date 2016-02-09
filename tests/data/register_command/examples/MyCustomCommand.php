@@ -5,7 +5,7 @@
  * @author    Tobias Matthaiou <tm@solutionDrive.de>
  * @date      27.01.16
  */
-namespace Codeception\Command;
+namespace Project\Command;
 
 use \Symfony\Component\Console\Command\Command;
 use \Codeception\CustomCommandInterface;
@@ -16,8 +16,8 @@ use \Symfony\Component\Console\Output\OutputInterface;
 class MyCustomCommand extends Command implements CustomCommandInterface
 {
 
-    use Shared\FileSystem;
-    use Shared\Config;
+    use \Codeception\Command\Shared\FileSystem;
+    use \Codeception\Command\Shared\Config;
 
     /**
      * returns the name of the command

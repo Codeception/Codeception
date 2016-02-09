@@ -1,8 +1,26 @@
 class_name: WebGuy
 modules:
-    enabled: [WebDriver, WebHelper]
-    config:
-      WebDriver:
-        url: http://localhost:8000
-        browser: firefox
-        window_size: 1200x768
+  enabled: [WebDriver, WebHelper]
+  config:
+    WebDriver:
+      url: http://localhost:8000
+      browser: firefox
+      window_size: 1200x768
+      restart: true
+env:
+  fast:
+    modules:
+      config:
+        WebDriver:
+          restart: false
+  phantom:
+    modules:
+      config:
+        WebDriver:
+          browser: phantomjs
+          port: 4455
+  chrome:
+    modules:
+      config:
+        WebDriver:
+          browser: chrome

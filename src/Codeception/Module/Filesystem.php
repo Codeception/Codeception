@@ -149,6 +149,29 @@ class Filesystem extends CodeceptionModule
     }
 
     /**
+     * Checks If opened file has the `number` of new lines.
+     *
+     * Usage:
+     *
+     * ``` php
+     * <?php
+     * $I->openFile('composer.json');
+     * $I->seeNumberNewLines(5);
+     * ?>
+     * ```
+     *
+     * @param int $number New lines
+     */
+    public function seeNumberNewLines($number)
+    {
+        $lines = preg_split('/\n|\r/', $this->file);
+
+        $this->assertTrue(
+            (int) $number === count($lines),
+            "The number of new lines does not match with $number"
+        );
+    }
+    /**
      * Checks that contents of currently opened file matches $regex
      *
      * @param $regex

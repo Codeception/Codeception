@@ -24,7 +24,7 @@ class Application extends BaseApplication
      *
      *  extensions:
      *      commands:
-     *          - project\MyNewCommand
+     *          - Project\Command\MyCustomCommand
      *
      */
     public function registerCustomCommands()
@@ -121,9 +121,10 @@ class Application extends BaseApplication
      * Search for --config Option and if found will be loaded
      *
      * example:
-     * -c file.yml
-     * --config file.yml
-     * --config=file.yml
+     * -c file.yml|dir
+     * -cfile.yml|dir
+     * --config file.yml|dir
+     * --config=file.yml|dir
      *
      * @return ArgvInput
      */
@@ -137,11 +138,14 @@ class Application extends BaseApplication
         $argvWithoutConfig = array();
 
         for ($i = 0; $i < count($argv); $i++) {
-            if (preg_match("/^(?:-c|--config(?:=(.*))?)$/", $argv[$i], $match)) {
-                if (isset($match[1])) { //same index
-                    $this->preloadConfigration($match[1]);
+            if (preg_match('/^(?:-([^c-]*)?c|--config(?:=|$))(.*)$/', $argv[$i], $match)) {
+                if (!empty($match[2])) { //same index
+                    $this->preloadConfigration($match[2]);
                 } elseif (isset($argv[$i + 1])) { //next index
                     $this->preloadConfigration($argv[++$i]);
+                }
+                if (!empty($match[1])) {
+                    $argvWithoutConfig[] = "-".$match[1]; //rest comands
                 }
                 continue;
             }

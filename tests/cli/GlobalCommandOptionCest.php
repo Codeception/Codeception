@@ -26,6 +26,22 @@ class GlobalCommandOptionCest
         $I->seeInShellOutput('myProject:myCommand');
     }
 
+    public function configOptionShortcutWithoutSpace(CliGuy $I)
+    {
+        $I->wantTo("start codeception with shortcut -c option and not Space");
+        $I->amInPath('tests/data/register_command/');
+        $I->executeCommand('-cstandard/codeception.yml');
+        $I->seeInShellOutput('myProject:myCommand');
+    }
+
+    public function configOptionShortcutWithoutSpaceAndOther(CliGuy $I)
+    {
+        $I->wantTo("start codeception with two shortcuts and -c option has not Space");
+        $I->amInPath('tests/data/register_command/');
+        $I->executeCommand('-vcstandard/codeception.yml');
+        $I->seeInShellOutput('version');
+    }
+
     public function configStartWithoutOption(CliGuy $I)
     {
         $I->wantTo("start first time codeception without options");

@@ -89,9 +89,17 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     {
         $modules = $this->getMetadata()->getCurrent('modules');
         if (!isset($modules[$module])) {
-            throw new ModuleException($module, "Can't access from a unit test");
+            throw new ModuleException($module, "Module can't be accessed");
         }
         return $modules[$module];
+    }
+
+    /**
+     * Returns current values
+     */
+    public function getCurrent($current)
+    {
+        return $this->getMetadata()->getCurrent($current);
     }
 
     /**
