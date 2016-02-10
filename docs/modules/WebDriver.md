@@ -3,28 +3,83 @@
 
 New generation Selenium WebDriver module.
 
-## Selenium Installation
+## Local Testing
+
+### Selenium
 
 1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
 2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
+3. Configure this module (in acceptance.suite.yml) by setting url and browser:
 
+```yaml
+    modules:
+       enabled:
+          - WebDriver:
+             url: 'http://localhost/'
+             browser: firefox
+```
 
-## PhantomJS Installation
+### PhantomJS
 
 PhantomJS is a headless alternative to Selenium Server that implements [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
 It allows you to run Selenium tests on a server without a GUI installed.
 
 1. Download [PhantomJS](http://phantomjs.org/download.html)
 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
+3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
 
+```yaml
+    modules:
+       enabled:
+          - WebDriver:
+             url: 'http://localhost/'
+             browser: phantomjs
+```
 
-## Status
+## Cloud Testing
 
-* Maintainer: **davert**
-* Stability: **stable**
-* Contact: davert.codecept@mailican.com
-* Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
+Cloud Testing services can run your WebDriver tests in the cloud.
+In case you want to test a local site or site behind a firewall you should use a tunnel application provided by a service.
 
+### SauceLabs
+
+1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+
+```yaml
+    modules:
+       enabled:
+          - WebDriver:
+             url: http://mysite.com
+             host: '<username>:<access key>@ondemand.saucelabs.com'
+             port: 80
+             browser: chrome
+             capabilities:
+                 platform: 'Windows 10'
+```
+4. run a tunnel app if your site can't be accessed from Internet
+
+### BrowserStack
+
+1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
+2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+
+```yaml
+    modules:
+       enabled:
+          - WebDriver:
+             url: http://mysite.com
+             host: '<username>:<access key>@hub.browserstack.com'
+             port: 80
+             browser: chrome
+             capabilities:
+                 os: Windows
+                 os_version: 10
+                 browserstack.local: true # for local testing
+```
+4. run a tunnel app if your site can't be accessed from Internet. In this case ensure that `browserstack.local` capability is set to true.
 
 ## Configuration
 
@@ -41,8 +96,9 @@ It allows you to run Selenium tests on a server without a GUI installed.
 * `request_timeout` - timeout for a request to return something from remote selenium server (30 seconds by default).
 * `http_proxy` - sets http proxy server url for testing a remote server.
 * `http_proxy_port` - sets http proxy server port
+* `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
 
-### Example (`acceptance.suite.yml`)
+Example (`acceptance.suite.yml`)
 
     modules:
        enabled:
@@ -50,26 +106,18 @@ It allows you to run Selenium tests on a server without a GUI installed.
              url: 'http://localhost/'
              browser: firefox
              window_size: 1024x768
-             wait: 10
              capabilities:
                  unexpectedAlertBehaviour: 'accept'
-                 firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+                 firefox_profile: '~/firefox-profiles/codeception-profile.zip.b64'
 
+### Status
 
+Stability: **stable**
+Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
 
-## SauceLabs.com Integration
+## Usage
 
-SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
-enabling you to test locally hosted sites from their servers.
-
-1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
-2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
-3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
-
-[CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
-
-
-## Locating Elements
+### Locating Elements
 
 Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
 
@@ -186,7 +234,6 @@ Opens the page for the given relative URI.
 $I->amOnPage('/');
 // opens /register page
 $I->amOnPage('/register');
-?>
 ```
 
  * `param` $page
@@ -316,18 +363,36 @@ Performs contextual click with the right mouse button on an element.
  * `throws`  \Codeception\Exception\ElementNotFound
 
 
+### debugWebDriverLogs
+ 
+Print out latest Selenium Logs in debug mode
+
+
 ### dontSee
  
-Checks that the current page doesn't contain the text specified.
+Checks that the current page doesn't contain the text specified (case insensitive).
 Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login'); // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1'); // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1'); // with XPath
-?>
+$I->dontSee('Login');                    // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');      // with XPath
 ```
+
+Note that the search is done after stripping all HTML tags from the body,
+so `$I->dontSee('strong')` will fail on strings like:
+
+  - `<p>I am Stronger than thou</p>`
+  - `<script>document.createElement('strong');</script>`
+
+But will ignore strings like:
+
+  - `<strong>Home</strong>`
+  - `<div class="strong">Home</strong>`
+  - `<!-- strong -->`
+
+For checking the raw source code, use `seeInSource()`.
 
  * `param`      $text
  * `param null` $selector
@@ -494,6 +559,19 @@ Checks that the page source doesn't contain the given string.
  * `param` $text
 
 
+### dontSeeInSource
+ 
+Checks that the current page contains the given string in its
+raw source code.
+
+```php
+<?php
+$I->dontSeeInSource('<h1>Green eggs &amp; ham</h1>');
+```
+
+ * `param`      $raw
+
+
 ### dontSeeInTitle
  
 Checks that the page title does not contain the given string.
@@ -624,7 +702,7 @@ $I->grabAttributeFrom('#tooltip', 'title');
 
  * `param` $cssOrXpath
  * `param` $attribute
- * `internal param` $element
+
 
 
 ### grabCookie
@@ -651,7 +729,6 @@ $uri = $I->grabFromCurrentUrl();
 
  * `param null` $uri
 
- * `internal param` $url
 
 
 ### grabMultiple
@@ -837,16 +914,31 @@ $I->resizeWindow(800, 600);
 
 ### see
  
-Checks that the current page contains the given string.
-Specify a locator as the second parameter to match a specific region.
+Checks that the current page contains the given string (case insensitive).
+
+You can specify a specific HTML element (via CSS or XPath) as the second 
+parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout'); // I can suppose user is logged in
-$I->see('Sign Up','h1'); // I can suppose it's a signup page
-$I->see('Sign Up','//body/h1'); // with XPath
-?>
+$I->see('Logout');                 // I can suppose user is logged in
+$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');   // with XPath
 ```
+
+Note that the search is done after stripping all HTML tags from the body,
+so `$I->see('strong')` will return true for strings like:
+
+  - `<p>I am Stronger than thou</p>`
+  - `<script>document.createElement('strong');</script>`
+
+But will *not* be true for strings like:
+
+  - `<strong>Home</strong>`
+  - `<div class="strong">Home</strong>`
+  - `<!-- strong -->`
+
+For checking the raw source code, use `seeInSource()`.
 
  * `param`      $text
  * `param null` $selector
@@ -1064,6 +1156,19 @@ Checks that the active JavaScript popup, as created by `window.alert`|`window.co
  * `param` $text
 
 
+### seeInSource
+ 
+Checks that the current page contains the given string in its
+raw source code.
+
+``` php
+<?php
+$I->seeInSource('<h1>Green eggs &amp; ham</h1>');
+```
+
+ * `param`      $raw
+
+
 ### seeInTitle
  
 Checks that the page title contains the given string.
@@ -1156,7 +1261,7 @@ $I->selectOption('Which OS do you use?', array('Windows','Linux'));
 ### setCookie
  
 Sets a cookie with the given name and value.
-You can set additional cookie params like `domain`, `path`, `expire`, `secure` in array passed as last argument.
+You can set additional cookie params like `domain`, `path`, `expires`, `secure` in array passed as last argument.
 
 ``` php
 <?php
@@ -1286,7 +1391,7 @@ $I->submitForm('#my-form', [
 Mixing string and boolean values for a checkbox's value is not supported
 and may produce unexpected results.
 
-Field names ending in "[]" must be passed without the trailing square 
+Field names ending in "[]" must be passed without the trailing square
 bracket characters, and must contain an array for its value.  This allows
 submitting multiple values with the same name, consider:
 

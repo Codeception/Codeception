@@ -44,30 +44,83 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * New generation Selenium WebDriver module.
  *
- * ## Selenium Installation
+ * ## Local Testing
+ *
+ * ### Selenium
  *
  * 1. Download [Selenium Server](http://docs.seleniumhq.org/download/)
  * 2. Launch the daemon: `java -jar selenium-server-standalone-2.xx.xxx.jar`
+ * 3. Configure this module (in acceptance.suite.yml) by setting url and browser:
  *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              browser: firefox
+ * ```
  *
- * ## PhantomJS Installation
+ * ### PhantomJS
  *
  * PhantomJS is a headless alternative to Selenium Server that implements [the WebDriver protocol](https://code.google.com/p/selenium/wiki/JsonWireProtocol).
  * It allows you to run Selenium tests on a server without a GUI installed.
  *
  * 1. Download [PhantomJS](http://phantomjs.org/download.html)
  * 2. Run PhantomJS in WebDriver mode: `phantomjs --webdriver=4444`
+ * 3. Configure this module (in acceptance.suite.yml) by setting url and `phantomjs` as browser:
  *
- * You will need to set a browser name to `phantom` in configuration.
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: 'http://localhost/'
+ *              browser: phantomjs
+ * ```
  *
+ * ## Cloud Testing
  *
- * ## Status
+ * Cloud Testing services can run your WebDriver tests in the cloud.
+ * In case you want to test a local site or site behind a firewall you should use a tunnel application provided by a service.
  *
- * * Maintainer: **davert**
- * * Stability: **stable**
- * * Contact: davert.codecept@mailican.com
- * * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
+ * ### SauceLabs
  *
+ * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<username>:<access key>@ondemand.saucelabs.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  platform: 'Windows 10'
+ * ```
+ * 4. run a tunnel app if your site can't be accessed from Internet
+ *
+ * ### BrowserStack
+ *
+ * 1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
+ * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<username>:<access key>@hub.browserstack.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  os: Windows
+ *                  os_version: 10
+ *                  browserstack.local: true # for local testing
+ * ```
+ * 4. run a tunnel app if your site can't be accessed from Internet. In this case ensure that `browserstack.local` capability is set to true.
  *
  * ## Configuration
  *
@@ -86,7 +139,7 @@ use Symfony\Component\DomCrawler\Crawler;
  * * `http_proxy_port` - sets http proxy server port
  * * `debug_log_entries` - how many selenium entries to print with `debugWebDriverLogs` or on fail (15 by default).
  *
- * ### Example (`acceptance.suite.yml`)
+ * Example (`acceptance.suite.yml`)
  *
  *     modules:
  *        enabled:
@@ -96,31 +149,16 @@ use Symfony\Component\DomCrawler\Crawler;
  *              window_size: 1024x768
  *              capabilities:
  *                  unexpectedAlertBehaviour: 'accept'
- *                  firefox_profile: '/Users/paul/Library/Application Support/Firefox/Profiles/codeception-profile.zip.b64'
+ *                  firefox_profile: '~/firefox-profiles/codeception-profile.zip.b64'
  *
+ * ### Status
  *
- * ### PhantomJS Example (`acceptance.suite.yml`)
+ * Stability: **stable**
+ * Based on [facebook php-webdriver](https://github.com/facebook/php-webdriver)
  *
- *     modules:
- *        enabled:
- *           - WebDriver:
- *              url: 'http://localhost/'
- *              browser: phantomjs
+ * ## Usage
  *
- *
- * ## SauceLabs.com Integration
- *
- * SauceLabs can run your WebDriver tests in the cloud, you can also create a tunnel
- * enabling you to test locally hosted sites from their servers.
- *
- * 1. Create an account at [SauceLabs.com](http://SauceLabs.com) to get your username and access key
- * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
- * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
- *
- * [CodeCeption and SauceLabs example](https://github.com/Codeception/Codeception/issues/657#issuecomment-28122164)
- *
- *
- * ## Locating Elements
+ * ### Locating Elements
  *
  * Most methods in this module that operate on a DOM element (e.g. `click`) accept a locator as the first argument, which can be either a string or an array.
  *
