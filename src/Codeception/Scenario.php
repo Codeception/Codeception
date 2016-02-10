@@ -28,6 +28,8 @@ class Scenario
      */
     protected $feature;
 
+    protected $metaStep;
+
     /**
      * Constructor
      *
@@ -56,6 +58,10 @@ class Scenario
 
     public function runStep(Step $step)
     {
+        $step->saveTrace();
+        if ($this->metaStep instanceof Step\Meta) {
+            $step->setMetaStep($this->metaStep);
+        }
         $this->steps[] = $step;
         $result = null;
         $this->metadata->getService('dispatcher')->dispatch(Events::STEP_BEFORE, new StepEvent($this->test, $step));
@@ -107,8 +113,11 @@ class Scenario
 
     public function getText()
     {
-        $text = implode("\r\n", $this->getSteps());
-        $text = str_replace(array('"\'','\'"'), array("'","'"), $text);
+        $text = '';
+        foreach ($this->getSteps() as $step) {
+            $text .= $step->getPrefix() . "$step \r\n";
+        }
+        $text = trim(str_replace(['"\'', '\'"'], ["'", "'"], $text));
         $text = strtoupper('I want to ' . $this->getFeature()) . str_repeat("\r\n", 2) . $text . str_repeat("\r\n", 2);
         return $text;
 
@@ -133,5 +142,13 @@ class Scenario
     {
         // all methods were deprecated and removed from here
         Notification::deprecate("\$scenario->$method() was deprecated in 2.1 and removed. Don't use it");
+    }
+
+    /**
+     * @param null $metaStep
+     */
+    public function setMetaStep($metaStep)
+    {
+        $this->metaStep = $metaStep;
     }
 }

@@ -127,10 +127,10 @@ class RunCest
     public function skipGroupOfCest(\CliGuy $I)
     {
         $I->executeCommand('run dummy');
-        $I->seeInShellOutput('optimistic');
+        $I->seeInShellOutput('Optimistic');
         $I->executeCommand('run dummy --skip-group ok');
-        $I->seeInShellOutput('pessimistic');
-        $I->dontSeeInShellOutput('optimistic');
+        $I->seeInShellOutput('Pessimistic');
+        $I->dontSeeInShellOutput('Optimistic');
     }
 
     public function runTwoSuites(\CliGuy $I)
@@ -155,25 +155,25 @@ class RunCest
     public function runOneTestFromUnit(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherTest.php:testFirst');
-        $I->seeShellOutputMatches("~AnotherTest:testFirst\s*?Ok~");
+        $I->seeInShellOutput("AnotherTest:testFirst");
+        $I->seeInShellOutput('OK');
         $I->dontSeeInShellOutput('AnotherTest:testSecond');
     }
 
     public function runOneTestFromCest(\CliGuy $I)
     {
         $I->executeCommand('run tests/dummy/AnotherCest.php:optimistic');
-        $I->seeShellOutputMatches("~\(AnotherCest:optimistic\)\s*?Ok~");
-        $I->dontSeeInShellOutput('AnotherCest:pessimistic');
+        $I->seeInShellOutput("Optimistic");
+        $I->dontSeeInShellOutput('Pessimistic');
     }
 
     public function runTestWithDataProviders(\CliGuy $I)
     {
         $I->executeCommand('run tests/unit/DataProvidersTest.php');
-        $I->seeInShellOutput(
-          'Test is triangle | "real triangle" (DataProvidersTest:testIsTriangle)'
-        );
-        $I->seeInShellOutput('Test is triangle | #0 (DataProvidersTest:testIsTriangle)');
-        $I->seeInShellOutput('Test is triangle | #1 (DataProvidersTest:testIsTriangle)');
+        $I->seeInShellOutput('Test is triangle | "real triangle"');
+        $I->seeInShellOutput('Test is triangle | #0');
+        $I->seeInShellOutput('Test is triangle | #1');
+        $I->seeInShellOutput('DataProvidersTest.php');
         $I->seeInShellOutput("OK");
     }
 
@@ -181,7 +181,7 @@ class RunCest
     {
         $I->executeCommand('run unit --skip-group error --no-exit');
         $I->seeInShellOutput('FailingTest:testMe');
-        $I->seeInShellOutput("PassingTest:testMe");
+        $I->seeInShellOutput("Test me at PassingTest");
         $I->executeCommand('run unit --fail-fast --skip-group error --no-exit');
         $I->seeInShellOutput('There was 1 failure');
         $I->dontSeeInShellOutput("PassingTest:testMe");
@@ -202,10 +202,10 @@ class RunCest
     public function runTestsWithDependencyInjections(\CliGuy $I)
     {
         $I->executeCommand('run math');
-        $I->seeInShellOutput('Test addition (MathCest:testAddition)');
-        $I->seeInShellOutput('Test subtraction (MathCest:testSubtraction)');
-        $I->seeInShellOutput('Test square (MathCest:testSquare)');
-        $I->seeInShellOutput('Test all (MathTest:testAll)');
+        $I->seeInShellOutput('Test addition at MathCest');
+        $I->seeInShellOutput('Test subtraction at MathCest');
+        $I->seeInShellOutput('Test square at MathCest');
+        $I->seeInShellOutput('Test all at MathTest');
         $I->seeInShellOutput('OK (');
         $I->dontSeeInShellOutput('fail');
         $I->dontSeeInShellOutput('error');
@@ -233,9 +233,9 @@ class RunCest
     {
         $I->executeCommand('run scenario SuccessCept --steps');
         $I->seeInShellOutput(<<<EOF
-Scenario:
-* I am in path "."
-* I see file found "scenario.suite.yml"
+Scenario --
+ I am in path "."
+ I see file found "scenario.suite.yml"
  PASSED
 EOF
 );
@@ -251,10 +251,10 @@ EOF
         }
         $I->executeCommand('run scenario FailedCept --steps --no-exit');
         $I->seeInShellOutput(<<<EOF
-Fail when file is not found (FailedCept)
-Scenario:
-* I am in path "."
-* I see file found "games.zip"
+Fail when file is not found at FailedCept.php
+Scenario --
+ I am in path "."
+ I see file found "games.zip"
  FAIL
 EOF
         );
@@ -281,18 +281,18 @@ EOF
         $file = "codeception".DIRECTORY_SEPARATOR."c3";
         $I->executeCommand('run scenario SubStepsCept --steps');
         $I->seeInShellOutput(<<<EOF
-Scenario:
-* I am in path "."
-* I see code coverage files are present
+Scenario --
+ I am in path "."
+ I see code coverage files are present
 EOF
-);
+        );
         // I split this assertion into two, because extra space is printed after "present" on HHVM
         $I->seeInShellOutput(<<<EOF
-  I see file found "c3.php"
-  I see file found "composer.json"
-  I see in this file "$file"
+   I see file found "c3.php"
+   I see file found "composer.json"
+   I see in this file "$file"
 EOF
-);
+        );
     }
 
     public function runDependentCest(CliGuy $I)
@@ -308,4 +308,34 @@ EOF
         $I->executeCommand('run unit --no-exit');
         $I->seeInShellOutput('Skipped: 2');
     }
+
+    public function runGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario File.feature --steps');
+        $I->seeInShellOutput(<<<EOF
+ In order to test a feature
+ As a user
+ I need to be able to see output
+EOF
+        );
+        $I->seeInShellOutput('Given i have terminal opened');
+        $I->seeInShellOutput('When i am in current directory');
+        $I->seeInShellOutput('Then there is a file "scenario.suite.yml"');
+        $I->seeInShellOutput('And there are keywords in "scenario.suite.yml"');
+        $I->seeInShellOutput(<<<EOF
+   | class_name | ScenarioGuy |
+   | enabled    | Filesystem  |
+EOF
+        );
+        $I->seeInShellOutput('PASSED');
+    }
+
+    public function runIncompleteGherkinTest(CliGuy $I)
+    {
+        $I->executeCommand('run scenario File.feature -v');
+        $I->seeInShellOutput('OK, but incomplete');
+        $I->seeInShellOutput('Step definition for `I have only idea of what\'s going on here` not found in contexts');
+    }
+
+
 }

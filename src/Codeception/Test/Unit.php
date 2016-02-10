@@ -19,7 +19,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
     /**
      * @var Metadata
      */
-    protected $metadata;
+    private $metadata;
 
     public function getMetadata()
     {
@@ -37,7 +37,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
             }
             if ($this->getMetadata()->getIncomplete() !== null) {
                 $this->markTestIncomplete($this->getMetadata()->getIncomplete());
-                return;
             }
             return;
         }
@@ -69,14 +68,6 @@ class Unit extends \PHPUnit_Framework_TestCase implements
      */
     protected function _after()
     {
-    }
-
-    public function getFeature()
-    {
-        $text = $this->getName();
-        $text = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\\1 \\2', $text);
-        $text = preg_replace('/([a-z\d])([A-Z])/', '\\1 \\2', $text);
-        return strtolower($text);
     }
 
     public function getSignature()
@@ -119,8 +110,7 @@ class Unit extends \PHPUnit_Framework_TestCase implements
         return [
             'name'    => $this->getName(),
             'class'   => get_class($this),
-            'file'    => $this->getFileName(),
-            'feature' => $this->getFeature()
+            'file'    => $this->getFileName()
         ];
     }
 

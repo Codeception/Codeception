@@ -1,9 +1,6 @@
 <?php
 namespace Codeception;
 
-use Codeception\Test\Descriptor;
-use Codeception\Test\Interfaces\Dependent;
-
 class Suite extends \PHPUnit_Framework_TestSuite
 {
     protected $modules;
@@ -12,7 +9,6 @@ class Suite extends \PHPUnit_Framework_TestSuite
     public function reorderDependencies()
     {
         $tests = [];
-
         foreach ($this->tests as $test) {
             $tests = array_merge($tests, $this->getDependencies($test));
         }
@@ -27,7 +23,6 @@ class Suite extends \PHPUnit_Framework_TestSuite
         }
         $this->tests = $queue;
     }
-
     protected function getDependencies($test)
     {
         if (!$test instanceof Dependent) {
@@ -44,7 +39,6 @@ class Suite extends \PHPUnit_Framework_TestSuite
         $tests[] = $test;
         return $tests;
     }
-
     protected function findMatchedTest($testSignature)
     {
         foreach ($this->tests as $test) {
@@ -57,7 +51,6 @@ class Suite extends \PHPUnit_Framework_TestSuite
             $test->getMetadata()->setSkip("Dependent test for $testSignature not found");
         }
     }
-
 
     /**
      * @return mixed

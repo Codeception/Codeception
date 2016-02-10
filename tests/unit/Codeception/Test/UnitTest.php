@@ -8,8 +8,7 @@ class TestTest extends \Codeception\Test\Unit
         $this->assertEquals(array(
             'file' => __FILE__,
             'name' => 'testReportedInterface',
-            'class' => 'TestTest',
-            'feature' => 'test reported interface',
+            'class' => 'TestTest'
         ), $this->getReportFields());
     }
 

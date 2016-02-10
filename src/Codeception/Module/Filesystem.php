@@ -171,6 +171,15 @@ class Filesystem extends CodeceptionModule
             "The number of new lines does not match with $number"
         );
     }
+    /**
+     * Checks that contents of currently opened file matches $regex
+     *
+     * @param $regex
+     */
+    public function seeThisFileMatches($regex)
+    {
+        $this->assertRegExp($regex, $this->file, "Contents of currently opened file does not match '$regex'");
+    }
 
     /**
      * Checks the strict matching of file contents.
