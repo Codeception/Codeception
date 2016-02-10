@@ -21,14 +21,17 @@ class Meta extends CodeceptionStep
         $this->prefix = $actor;
     }
 
-    protected function getArgumentsAsString(array $arguments)
+    public function getArgumentsAsString($maxLength = 200)
     {
+        $argumentBackup = $this->arguments;
         $lastArgAsString = '';
-        $lastArg = end($arguments);
+        $lastArg = end($this->arguments);
         if (is_string($lastArg) && strpos($lastArg, "\n")  !== false) {
             $lastArgAsString = "\r\n   " . str_replace("\n", "\n   ", $lastArg);
-            array_pop($arguments);
+            array_pop($this->arguments);
         }
-        return parent::getArgumentsAsString($arguments) . $lastArgAsString;
+        $result = parent::getArgumentsAsString($maxLength) . $lastArgAsString;
+        $this->arguments = $argumentBackup;
+        return $result;
     }
 }

@@ -11,6 +11,11 @@ class Comment extends CodeceptionStep
         return $this->getAction();
     }
 
+    public function toString($maxLength)
+    {
+        return $this->getAction();
+    }
+
     public function getHumanizedAction()
     {
         return $this->getAction();
@@ -21,7 +26,7 @@ class Comment extends CodeceptionStep
         return '<strong>' . $this->getAction() . '</strong>';
     }
 
-    public function getPhpCode()
+    public function getPhpCode($maxLength)
     {
         return '// ' . $this->getAction();
     }
