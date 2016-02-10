@@ -9,7 +9,22 @@ class DependsTest extends \Codeception\Test\Unit {
     {
         $this->assertTrue(true);
     }
+    
+    /**
+     * @group depends
+     * @depends testFour
+     */
+    public function testThree()
+    {
+        $this->assertTrue(true);
+    }
 
+    public function testFour()
+    {
+        $this->assertTrue(true);        
+    }
+    
+    
     /**
      * @group depends
      */
@@ -17,7 +32,5 @@ class DependsTest extends \Codeception\Test\Unit {
     {
         $this->assertTrue(false);
     }
-
-
 
 }

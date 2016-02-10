@@ -1,6 +1,9 @@
 <?php
 namespace Codeception;
 
+use Codeception\Test\Descriptor;
+use Codeception\Test\Interfaces\Dependent;
+
 class Suite extends \PHPUnit_Framework_TestSuite
 {
     protected $modules;
@@ -12,6 +15,7 @@ class Suite extends \PHPUnit_Framework_TestSuite
         foreach ($this->tests as $test) {
             $tests = array_merge($tests, $this->getDependencies($test));
         }
+
         $queue = [];
         $hashes = [];
         foreach ($tests as $test) {
