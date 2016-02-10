@@ -4,10 +4,9 @@
 Module for testing REST WebService.
 
 This module can be used either with frameworks or PHPBrowser.
-It tries to guess the framework is is attached to.
+If a framework module is connected, the testing will occur in the application directly.
+Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
 
-Whether framework is used it operates via standard framework modules.
-Otherwise sends raw HTTP requests to url via PHPBrowser.
 
 ## Status
 
@@ -156,7 +155,7 @@ Checks wheather XML response does not match XPath
 
 ```php
 <?php
-$I->dontSeeXmlResponseMatchesXpath('//root/user[ * `id=1]');`
+$I->dontSeeXmlResponseMatchesXpath('//root/user[ * `id=1]');` 
 ```
  * `[Part]` xml
  * `param` $xpath
@@ -179,7 +178,7 @@ Deprecated since 2.0.9 and removed since 2.1.0
 
  * `param` $path
  * `throws`  ModuleException
- * `deprecated`
+ * `deprecated` 
 
 
 ### grabDataFromResponseByJsonPath
@@ -315,11 +314,11 @@ Examples:
 
 ``` php
 <?php
-// response: {name: john, email: john * `gmail.com}`
+// response: {name: john, email: john * `gmail.com}` 
 $I->seeResponseContainsJson(array('name' => 'john'));
 
 // response {user: john, profile: { email: john * `gmail.com`  }}
-$I->seeResponseContainsJson(array('email' => 'john * `gmail.com'));`
+$I->seeResponseContainsJson(array('email' => 'john * `gmail.com'));` 
 
 ?>
 ```
@@ -494,13 +493,15 @@ Here is the list of possible filters:
 * `integer:>{val}` - checks that integer is greater than {val} (works with float and string types too).
 * `integer:<{val}` - checks that integer is lower than {val} (works with float and string types too).
 * `string:url` - checks that value is valid url.
+* `string:date` - checks that value is date in JavaScript format: https://weblog.west-wind.com/posts/2014/Jan/06/JavaScript-JSON-Date-Parsing-and-real-Dates
+* `string:email` - checks that value is a valid email according to http://emailregex.com/
 * `string:regex({val})` - checks that string matches a regex provided with {val}
 
 This is how filters can be used:
 
 ```php
 <?php
-// {'user_id': 1, 'email' => 'davert * `codeception.com'}`
+// {'user_id': 1, 'email' => 'davert * `codeception.com'}` 
 $I->seeResponseIsJsonType([
      'user_id' => 'string:>0:<1000', // multiple filters can be used
      'email' => 'string:regex(~\ * `~)'`  // we just check that  * ``  char is included
@@ -547,6 +548,7 @@ $I->seeXmlResponseIncludes("<result>1</result>");
 ```
 
  * `param` $xml
+ * `[Part]` xml
 
 
 ### seeXmlResponseMatchesXpath
@@ -555,7 +557,7 @@ Checks wheather XML response matches XPath
 
 ```php
 <?php
-$I->seeXmlResponseMatchesXpath('//root/user[ * `id=1]');`
+$I->seeXmlResponseMatchesXpath('//root/user[ * `id=1]');` 
 ```
  * `[Part]` xml
  * `param` $xpath
@@ -601,7 +603,7 @@ Sends LINK request to given uri.
 
  * `link`  http://tools.ietf.org/html/rfc2068#section-19.6.2.4
 
- * `author`  samva.ua * `gmail.com`
+ * `author`  samva.ua * `gmail.com` 
  * `[Part]` json
  * `[Part]` xml
 
@@ -658,8 +660,18 @@ Sends UNLINK request to given uri.
  * `param`       $url
  * `param array` $linkEntries (entry is array with keys "uri" and "link-param")
  * `link`  http://tools.ietf.org/html/rfc2068#section-19.6.2.4
- * `author`  samva.ua * `gmail.com`
+ * `author`  samva.ua * `gmail.com` 
  * `[Part]` json
  * `[Part]` xml
+
+
+### startFollowingRedirects
+ 
+Enables automatic redirects to be followed by the client
+
+
+### stopFollowingRedirects
+ 
+Prevents automatic redirects to be followed by the client
 
 <p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/REST.php">Help us to improve documentation. Edit module reference</a></div>
