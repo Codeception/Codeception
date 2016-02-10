@@ -121,6 +121,24 @@ use Symfony\Component\DomCrawler\Crawler;
  *                  os_version: 10
  *                  browserstack.local: true # for local testing
  * ```
+ ** ### TestingBot
+ *
+ * 1. Create an account at [TestingBot](https://testingbot.com/) to get your key and secret
+ * 2. In the module configuration use the format `key`:`secret`@hub.testingbot.com' for `host`
+ * 3. Configure `platform` under `capabilities` to define the [Operating System](https://testingbot.com/support/getting-started/browsers.html)
+ * 4. run [TestingBot Tunnel](https://testingbot.com/support/other/tunnel) if your site can't be accessed from Internet
+ *
+ * ```yaml
+ *     modules:
+ *        enabled:
+ *           - WebDriver:
+ *              url: http://mysite.com
+ *              host: '<key>:<secret>@hub.testingbot.com'
+ *              port: 80
+ *              browser: chrome
+ *              capabilities:
+ *                  platform: Windows 10
+ * ```
  *
  * ## Configuration
  *
