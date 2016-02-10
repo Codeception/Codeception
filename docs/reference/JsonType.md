@@ -47,10 +47,10 @@ Example:
 
 ```php
 <?php
-JsonType::addCustomFilter('email', function($value) {
-    return strpos(' * `',`  $value) !== false;
+JsonType::addCustomFilter('slug', function($value) {
+    return strpos(' ', $value) !== false;
 });
-// => use it as 'string:email'
+// => use it as 'string:slug'
 
 
 // add custom function to matcher with `len($val)` syntax
