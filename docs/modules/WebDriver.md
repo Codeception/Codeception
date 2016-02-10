@@ -64,7 +64,7 @@ In case you want to test a local site or site behind a firewall you should use a
 
 1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
-3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+3. Configure `os` and `os_version` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
 4. If your site is available only locally or via VPN you should use a tunnel app. In this case add `browserstack.local` capability and set it to true.
 
 ```yaml
@@ -79,6 +79,24 @@ In case you want to test a local site or site behind a firewall you should use a
                  os: Windows
                  os_version: 10
                  browserstack.local: true # for local testing
+```
+### TestingBot
+
+1. Create an account at [TestingBot](https://testingbot.com/) to get your key and secret
+2. In the module configuration use the format `key`:`secret`@hub.testingbot.com' for `host`
+3. Configure `platform` under `capabilities` to define the [Operating System](https://testingbot.com/support/getting-started/browsers.html)
+4. Run [TestingBot Tunnel](https://testingbot.com/support/other/tunnel) if your site can't be accessed from Internet
+
+```yaml
+    modules:
+       enabled:
+          - WebDriver:
+             url: http://mysite.com
+             host: '<key>:<secret>@hub.testingbot.com'
+             port: 80
+             browser: chrome
+             capabilities:
+                 platform: Windows 10
 ```
 
 ## Configuration

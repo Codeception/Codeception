@@ -107,7 +107,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * 1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
  * 2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
- * 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
+ * 3. Configure `os` and `os_version` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
  * 4. If your site is available only locally or via VPN you should use a tunnel app. In this case add `browserstack.local` capability and set it to true.
  *
  * ```yaml
@@ -123,12 +123,12 @@ use Symfony\Component\DomCrawler\Crawler;
  *                  os_version: 10
  *                  browserstack.local: true # for local testing
  * ```
- ** ### TestingBot
+ * ### TestingBot
  *
  * 1. Create an account at [TestingBot](https://testingbot.com/) to get your key and secret
  * 2. In the module configuration use the format `key`:`secret`@hub.testingbot.com' for `host`
  * 3. Configure `platform` under `capabilities` to define the [Operating System](https://testingbot.com/support/getting-started/browsers.html)
- * 4. run [TestingBot Tunnel](https://testingbot.com/support/other/tunnel) if your site can't be accessed from Internet
+ * 4. Run [TestingBot Tunnel](https://testingbot.com/support/other/tunnel) if your site can't be accessed from Internet
  *
  * ```yaml
  *     modules:
