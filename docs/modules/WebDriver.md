@@ -63,7 +63,7 @@ In case you want to test a local site or site behind a firewall you should use a
 ### BrowserStack
 
 1. Create an account at [BrowserStack](https://www.browserstack.com/) to get your username and access key
-2. In the module configuration use the format `username`:`access_key`@ondemand.saucelabs.com' for `host`
+2. In the module configuration use the format `username`:`access_key`@hub.browserstack.com' for `host`
 3. Configure `platform` under `capabilities` to define the [Operating System](https://docs.saucelabs.com/reference/platforms-configurator/#/)
 4. If your site is available only locally or via VPN you should use a tunnel app. In this case add `browserstack.local` capability and set it to true.
 
