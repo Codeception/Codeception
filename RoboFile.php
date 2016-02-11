@@ -424,7 +424,7 @@ class RoboFile extends \Robo\Tasks
             return version_compare($a->getBaseName(), $b->getBaseName());
         };
 
-        $releases = array_reverse(iterator_to_array(Finder::create()->directories()->sort($sortByVersion)->in('releases')));
+        $releases = array_reverse(iterator_to_array(Finder::create()->depth(0)->directories()->sort($sortByVersion)->in('releases')));
         $branch = null;
         $releaseFile = $this->taskWriteToFile('builds.markdown')
             ->line('---')
