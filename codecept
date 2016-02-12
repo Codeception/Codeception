@@ -4,7 +4,15 @@
  * Codeception CLI
  */
 
-require_once dirname(__FILE__).'/autoload.php';
+if (
+    $autoloader = realpath(__DIR__ . '/autoload.php')
+    or $autoloader = realpath(dirname(__DIR__) . '/codeception/codeception/autoload.php')
+) {
+    require_once $autoloader;
+} else {
+    echo "Autoloader was not found";
+    exit(255);
+}
 
 use Symfony\Component\Console\Application;
 
