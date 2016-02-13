@@ -6,6 +6,10 @@
 * [REST] `grabAttributeFrom` renamed to `grabAttributeFromXmlElement` to avoid conflicts
 * [Phalcon] Merged `Phalcon1` and `Phalcon2` modules into one `Phalcon` due the fact that Phalcon Framework v1.3.x no longer supported at all
 
+#### 2.1.7
+
+* [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
+
 #### 2.1.6
 
 * Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
