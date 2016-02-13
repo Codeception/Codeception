@@ -9,6 +9,7 @@
 #### 2.1.7
 
 * [Laravel5] Authentication now persists between requests when calling `amLoggedAs` with an instance of `Authenticable`. See #2795
+* `Util\Locator` added `contains` method to easily locate any element containing a text.
 
 #### 2.1.6
 

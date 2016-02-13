@@ -182,6 +182,25 @@ class Locator
         return (bool)preg_match('~^#[\w\.\-\[\]\=\^\~\:]+$~', $id);
     }
 
+    /**
+     * Locates an element containing a text inside.
+     * Either CSS or XPath locator can be passed, however they will be converted to XPath.
+     *
+     * ```php
+     * Locator::contains('label', 'Name'); // label containing name
+     * Locator::contains('div[@contenteditable=true]', 'hello world');
+     * ```
+     *
+     * @param $element
+     * @param $text
+     * @return string
+     */
+    public static function contains($element, $text)
+    {
+        $text = Translator::getXpathLiteral($text);
+        return sprintf('%s[%s]', self::toXPath($element), "contains(., $text)");
+    }
+
     public static function humanReadableString($selector)
     {
        if (is_string($selector)) {
