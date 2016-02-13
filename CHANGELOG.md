@@ -1,5 +1,9 @@
 # Changelog
 
+#### 2.1.7
+
+* `Util\Locator` added `contains` method to easily locate any element containing a text.
+
 #### 2.1.6
 
 * Starting from 2.1.6 you can **download PHP 5.4 compatible phar build** at http://codeception.com/php54/codecept.phar by @Naktibalda. See [installation guide](http://codeception.com/install).
