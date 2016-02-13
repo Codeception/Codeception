@@ -117,6 +117,7 @@ Starting from Codeception 2.0 actor classes are auto-generated. Use this command
 Creates empty Helper class.
 
 * `codecept g:helper MyHelper`
+* `codecept g:helper "My\Helper"`
 
 
 
