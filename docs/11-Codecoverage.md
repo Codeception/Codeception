@@ -5,7 +5,7 @@ Just for this case the [CodeCoverage](http://en.wikipedia.org/wiki/Code_coverage
 you will receive statistics of all classes, methods, and lines triggered by these tests.
 The ratio between all lines in script and all touched lines is a main coverage criterion. In the ideal world you should get 100% code coverage, but in reality 80% is really enough. Because even 100% code coverage rate doesn't save you from fatal errors and crashes.
 
-**Codeception has CodeCoverage tools since 1.5. To collect coverage information `xdebug` is required**.
+*To collect coverage information `xdebug` is required**.
 
 ![Code Coverage Example](http://codeception.com/images/coverage.png)
 
@@ -14,7 +14,7 @@ or locally but running through web server. It may look hard to collect code cove
 
 ### Configuration
 
-To enable codecoverge put these lines in the global configuration file `codeception.yml`:
+To enable code coverage put these lines in the global configuration file `codeception.yml`:
 
 ``` yaml
 coverage:
@@ -43,6 +43,9 @@ What are whitelists and blacklists?
 * A **whitelist** is a list of files that should be included in report even they were not touched.
 * A **blacklist** is a list of files that should be excluded from report even they were touched.
 
+<div class="alert alert-info">
+The blacklist functionality has been removed from PHPUnit 5, but it can still be used with PHPUnit 4.8.
+</div>
 Pass an array of files or directory to include/exclude sections. The path ending with '\*' matches the directory.
 Also you can use '\*' mask in a file name, i.e. `app/models/*Model.php` to match all models.
 
