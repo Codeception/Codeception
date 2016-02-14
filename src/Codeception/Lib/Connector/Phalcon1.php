@@ -16,7 +16,7 @@ use ReflectionProperty;
 use RuntimeException;
 use Closure;
 
-class Phalcon extends Client
+class Phalcon1 extends Client
 {
     use PhpSuperGlobalsConverter;
 
@@ -156,7 +156,7 @@ class Phalcon extends Client
     }
 }
 
-class PhalconMemorySession implements SessionInterface
+class Phalcon1MemorySession implements SessionInterface
 {
     /**
      * @var string
@@ -212,7 +212,7 @@ class PhalconMemorySession implements SessionInterface
      *
      * @param array $options
      */
-    public function setOptions(array $options)
+    public function setOptions($options)
     {
         if (isset($options['uniqueId'])) {
             $this->sessionId = $options['uniqueId'];

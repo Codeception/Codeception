@@ -13,13 +13,13 @@ use Codeception\Util\ReflectionHelper;
 use Phalcon\Mvc\Url;
 use Codeception\TestCase;
 use Codeception\Configuration;
-use Codeception\Lib\Connector\Phalcon as PhalconConnector;
+use Codeception\Lib\Connector\Phalcon1 as Phalcon1Connector;
+use Codeception\Lib\Connector\Phalcon1MemorySession;
 use Codeception\Lib\Framework;
 use Codeception\Lib\Interfaces\ActiveRecord;
 use Codeception\Lib\Interfaces\PartedModule;
 use Codeception\Exception\ModuleConfigException;
 use Exception;
-use Codeception\Lib\Connector\PhalconMemorySession;
 
 /**
  * This module provides integration with [Phalcon framework](http://www.phalconphp.com/) (1.x).
@@ -96,7 +96,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
 
     /**
      * Phalcon Connector
-     * @var PhalconConnector
+     * @var Phalcon1Connector
      */
     public $client;
 
@@ -121,8 +121,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
                 . 'return new \Phalcon\Mvc\Application($di);'
             );
         }
-
-        $this->client = new PhalconConnector();
+        $this->client = $this->createClient();
     }
 
     /**
@@ -149,7 +148,7 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
 
         if ($this->di->has('session')) {
             // Destroy existing sessions of previous tests
-            $this->di['session'] = new PhalconMemorySession();
+            $this->di['session'] = $this->createSession();
         }
 
         if ($this->di->has('cookies')) {
@@ -211,6 +210,22 @@ class Phalcon1 extends Framework implements ActiveRecord, PartedModule
     public function _parts()
     {
         return ['orm'];
+    }
+
+    /**
+     * @return Phalcon1Connector
+     */
+    public function createClient()
+    {
+        return new Phalcon1Connector();
+    }
+
+    /**
+     * @return Phalcon1MemorySession
+     */
+    public function createSession()
+    {
+        return new Phalcon1MemorySession();
     }
 
     /**
