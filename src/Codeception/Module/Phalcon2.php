@@ -2,7 +2,8 @@
 namespace Codeception\Module;
 
 use Phalcon\Di;
-use Phalcon\Mvc\Model as PhalconModel;
+use Codeception\Lib\Connector\Phalcon2 as Phalcon2Connector;
+use Codeception\Lib\Connector\Phalcon2MemorySession;
 use Codeception\TestCase;
 
 /**
@@ -62,4 +63,19 @@ use Codeception\TestCase;
  */
 class Phalcon2 extends Phalcon1
 {
+    /**
+     * @return Phalcon2Connector
+     */
+    public function createClient()
+    {
+        return new Phalcon2Connector();
+    }
+
+    /**
+     * @return Phalcon2MemorySession
+     */
+    public function createSession()
+    {
+        return new Phalcon2MemorySession();
+    }
 }
