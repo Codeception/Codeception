@@ -53,7 +53,6 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer update --prefer-dist'
-  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require guzzlehttp/guzzle=~5.0 --no-update ; fi' # install old guzzle
   - composer install --prefer-dist
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
