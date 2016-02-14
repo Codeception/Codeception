@@ -2,6 +2,7 @@
 namespace Codeception\Coverage;
 
 use Codeception\Configuration;
+use Codeception\Exception\ModuleException;
 use Symfony\Component\Finder\Finder;
 
 class Filter
@@ -107,6 +108,11 @@ class Filter
         }
         $coverage = $config['coverage'];
         if (isset($coverage['blacklist'])) {
+            if (!method_exists($filter, 'addFileToBlacklist')) {
+                throw new ModuleException($this, 'The blacklist functionality has been removed from PHPUnit 5,'
+                . ' please remove blacklist section from configuration.');
+            }
+
             if (isset($coverage['blacklist']['include'])) {
                 foreach ($coverage['blacklist']['include'] as $fileOrDir) {
                     $finder = strpos($fileOrDir, '*') === false
