@@ -10,6 +10,8 @@ matrix:
   allow_failures:
     - php: hhvm
   include:
+    - php: 5.4 # lowest versions of all dependencies
+      env: dependencies=lowest
     - php: 5.4 # lowest PHP & Symfony
       env: SYMFONY=2.7.0
     - php: 5.5 # lowest symfony version with Guzzle 6
@@ -52,8 +54,8 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/css-selector=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
-  - '[[ -z "$SYMFONY" ]] || composer update --prefer-dist'
-  - composer install --prefer-dist
+  - '[[ "$dependencies" != "" ]] || composer update --prefer-dist'
+  - '[[ "$dependencies" != "lowest" ]] || composer update --prefer-lowest -n'
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
