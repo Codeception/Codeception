@@ -15,20 +15,20 @@
     "minimum-stability": "stable",
 
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.4.0 <8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "phpunit/phpunit": "~4.8.0",
-        "facebook/webdriver": ">=1.0.1",
+        "phpunit/phpunit": "~4.8.21",
+        "facebook/webdriver": ">=1.0.1 <2.0",
         "guzzlehttp/guzzle": ">=4.1.4 <7.0",
         "guzzlehttp/psr7": "~1.0",
-        "symfony/finder": ">=2.4|<3.1",
-        "symfony/console": ">=2.4|<3.1",
-        "symfony/event-dispatcher": ">=2.4|<3.1",
-        "symfony/yaml": ">=2.4|<3.1",
-        "symfony/browser-kit": ">=2.4|<3.1",
-        "symfony/css-selector": ">=2.4|<3.1",
-        "symfony/dom-crawler": ">=2.4|<3.1"
+        "symfony/finder": ">=2.7 <3.1",
+        "symfony/console": ">=2.7 <3.1",
+        "symfony/event-dispatcher": ">=2.7 <3.1",
+        "symfony/yaml": ">=2.7 <3.1",
+        "symfony/browser-kit": ">=2.7 <3.1",
+        "symfony/css-selector": ">=2.7 <3.1",
+        "symfony/dom-crawler": ">=2.7 <3.1"
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
