@@ -65,9 +65,10 @@ class Laravel5 extends Client
 
         $this->initialize();
 
-        $components = array_key_exists('url',
-            $this->module->config) ? parse_url($this->module->config['url']) : parse_url($this->app['config']->get('app.url',
-            'http://localhost'));
+        $components = parse_url($this->app['config']->get('app.url', 'http://localhost'));
+        if (array_key_exists('url', $this->module->config)) {
+            $components = parse_url($this->module->config['url']);
+        }
         $host = isset($components['host']) ? $components['host'] : 'localhost';
 
         parent::__construct($this->app, ['HTTP_HOST' => $host]);
