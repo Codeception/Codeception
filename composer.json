@@ -19,6 +19,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "phpunit/phpunit": "~4.8.21",
+        "phpunit/php-code-coverage": ">=2.1.3",
         "facebook/webdriver": ">=1.0.1 <2.0",
         "guzzlehttp/guzzle": ">=4.1.4 <7.0",
         "guzzlehttp/psr7": "~1.0",
