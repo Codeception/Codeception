@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Facade;
  * * bootstrap: `string`, default `bootstrap/app.php` - Relative path to app.php config file.
  * * root: `string`, default `` - Root path of our application.
  * * packages: `string`, default `workbench` - Root path of application packages (if any).
+ * * disable_exception_handling: `boolean`, default `true` - disable Laravel exception handling
  * * disable_middleware: `boolean`, default `false` - disable all middleware.
  * * disable_events: `boolean`, default `false` - disable all events.
  * * url: `string`, default `` - The application URL.
@@ -96,6 +97,7 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
                 'bootstrap' => 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php',
                 'root' => '',
                 'packages' => 'workbench',
+                'disable_exception_handling' => true,
                 'disable_middleware' => false,
                 'disable_events' => false,
             ],
@@ -225,6 +227,34 @@ class Laravel5 extends Framework implements ActiveRecord, PartedModule
     public function setApplication($app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Enable Laravel exception handling.
+     *
+     * ``` php
+     * <?php
+     * $I->enableExceptionHandling();
+     * ?>
+     * ```
+     */
+    public function enableExceptionHandling()
+    {
+        $this->client->enableExceptionHandling();
+    }
+
+    /**
+     * Disable Laravel exception handling.
+     *
+     * ``` php
+     * <?php
+     * $I->disableExceptionHandling();
+     * ?>
+     * ```
+     */
+    public function disableExceptionHandling()
+    {
+        $this->client->disableExceptionHandling();
     }
 
     /**
