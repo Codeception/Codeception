@@ -15,6 +15,7 @@
  * under the License.
  */
 
+use Facebook\Exceptions\FacebookSDKException;
 
 /**
  * Facebook gives cross-site-request-forgery-validation-failed without
@@ -23,22 +24,16 @@
  */
 session_start();
 
-
-use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Facebook;
-
 /**
  * you should update these values when debugging,
  * NOTE website URL for the app must be be set to http://localhost:8000/
  */
-$fb = new Facebook(array(
-    'app_id' => '559014250919816',
-    'app_secret' => 'cba289481ed31d875bd112b289285325',
+$fb = new Facebook\Facebook(array(
+    'app_id' => '460287924057084',
+    'app_secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
     'default_graph_version' => 'v2.5',
     'persistent_data_handler' => 'session'
 ));
-
-$debug = true;
 
 $helper = $fb->getRedirectLoginHelper();
 
@@ -66,55 +61,50 @@ try {
     $errorCode = " 3 " . $e->getMessage();
     $user = null;
 }
-?>
 
+?>
 <!doctype html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
-<head>
+  <head>
     <title>php-sdk</title>
-
     <style>
-        body {
-            font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
-        }
-
-        h1 a {
-            text-decoration: none;
-            color: #3b5998;
-        }
-
-        h1 a:hover {
-            text-decoration: underline;
-        }
-
+      body {
+        font-family: 'Lucida Grande', Verdana, Arial, sans-serif;
+      }
+      h1 a {
+        text-decoration: none;
+        color: #3b5998;
+      }
+      h1 a:hover {
+        text-decoration: underline;
+      }
     </style>
+  </head>
+  <body>
+    <h1>php-sdk</h1>
 
-</head>
-<body>
-<h1>php-sdk</h1>
+    <pre><?php print_r("\n errorCode: $errorCode\n"); ?></pre>
 
-<pre><?php print_r($debug ? "\n errorCode: " . $errorCode . "\n" : ''); ?></pre>
-
-<?php if ($user) : ?>
-    <a href="<?php echo $logoutUrl; ?>">Logout</a>
-<?php else : ?>
-    <div>
+    <?php if ($user): ?>
+      <a href="<?php echo $logoutUrl; ?>">Logout</a>
+    <?php else: ?>
+      <div>
         Login using OAuth 2.0 handled by the PHP SDK:
         <a href="<?php echo $loginUrl; ?>">Login with Facebook</a>
-    </div>
-<?php endif ?>
+      </div>
+    <?php endif ?>
 
-<h3>PHP Session</h3>
-<pre><?php print_r($_SESSION); ?></pre>
+    <h3>PHP Session</h3>
+    <pre><?php print_r($_SESSION); ?></pre>
 
-<?php if ($user) : ?>
-    <h3>You</h3>
-    <img src="https://graph.facebook.com/<?php echo $user['name']; ?>/picture">
+    <?php if ($user): ?>
+      <h3>You</h3>
+      <img src="https://graph.facebook.com/<?php echo $user['id']; ?>/picture">
 
-    <h3>Your User Object (/me)</h3>
-    <pre><?php print_r($user['name']); ?></pre>
-<?php else : ?>
-    <strong><em>You are not Connected.</em></strong>
-<?php endif ?>
-</body>
+      <h3>Your User Object (/me)</h3>
+      <pre><?php print_r($user); ?></pre>
+    <?php else: ?>
+      <strong><em>You are not Connected.</em></strong>
+    <?php endif ?>
+  </body>
 </html>

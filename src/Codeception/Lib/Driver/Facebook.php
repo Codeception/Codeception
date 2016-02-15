@@ -2,12 +2,16 @@
 /**
  * @author tiger
  */
+
 namespace Codeception\Lib\Driver;
 
 use Facebook\Facebook as FacebookSDK;
 
 class Facebook
 {
+    /**
+     * @var callable
+     */
     protected $logCallback;
 
     /**
@@ -15,30 +19,49 @@ class Facebook
      */
     protected $fb;
 
+    /**
+     * @var string
+     */
     protected $appId;
+
+    /**
+     * @var string
+     */
     protected $appSecret;
+
+    /**
+     * @var string
+     */
     protected $appToken;
 
-
+    /**
+     * Facebook constructor.
+     *
+     * @param array         $config
+     * @param callable|null $logCallback
+     */
     public function __construct($config, $logCallback = null)
     {
         if (is_callable($logCallback)) {
             $this->logCallback = $logCallback;
         }
 
-        $this->fb = new FacebookSDK([
-            'app_id' => $config['app_id'],
-            'app_secret' => $config['secret'],
-            'default_graph_version' => 'v2.5', //TODO add to config
-        ]);
-        $this->appId = $config['app_id'];
+        $this->fb = new FacebookSDK(
+            [
+                'app_id'                => $config['app_id'],
+                'app_secret'            => $config['secret'],
+                'default_graph_version' => 'v2.5', //TODO add to config
+            ]
+        );
+
+        $this->appId     = $config['app_id'];
         $this->appSecret = $config['secret'];
-        $this->appToken = $this->appId . '|' . $this->appSecret;
+        $this->appToken  = $this->appId . '|' . $this->appSecret;
     }
 
     /**
-     * @param $name
-     * @param array $permissions
+     * @param string $name
+     * @param array  $permissions
      *
      * @return array
      */
@@ -48,8 +71,8 @@ class Facebook
             'POST',
             $this->appId . '/accounts/test-users',
             [
-                'name' => $name,
-                'installed' => true,
+                'name'        => $name,
+                'installed'   => true,
                 'permissions' => $permissions
             ]
         );
@@ -59,10 +82,7 @@ class Facebook
 
     public function deleteTestUser($testUserID)
     {
-        $this->executeFacebookRequest(
-            'DELETE',
-            '/' . $testUserID
-        );
+        $this->executeFacebookRequest('DELETE', '/' . $testUserID);
     }
 
     public function getTestUserInfo($testUserAccessToken)
@@ -109,15 +129,16 @@ class Facebook
             $parameters,
             $testUserAccessToken
         );
+
         return $response->getDecodedBody();
     }
-
 
     /**
      * @param string $method
      * @param string $endpoint
-     * @param array $parameters
+     * @param array  $parameters
      * @param string $token
+     *
      * @return \Facebook\FacebookResponse
      */
     private function executeFacebookRequest($method, $endpoint, array $parameters = [], $token = null)
@@ -127,7 +148,9 @@ class Facebook
             call_user_func($this->logCallback, 'Facebook API request', func_get_args());
         }
 
-        if (!$token) $token = $this->appToken;
+        if (!$token) {
+            $token = $this->appToken;
+        }
 
         switch ($method) {
             case 'GET':

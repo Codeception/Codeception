@@ -11,8 +11,8 @@ use Codeception\Util\Stub;
 class FacebookTest extends \PHPUnit_Framework_TestCase
 {
     protected $config = array(
-        'app_id' => '559014250919816',
-        'secret' => 'cba289481ed31d875bd112b289285325',
+        'app_id' => '460287924057084',
+        'secret' => 'e27a5a07f9f07f52682d61dd69b716b5',
         'test_user' => array(
             'permissions' => ['publish_actions', 'user_posts'],
             'name' => 'Codeception Testuser'

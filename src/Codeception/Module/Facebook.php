@@ -202,7 +202,14 @@ EOF;
         $this->browserModule->amOnUrl('https://facebook.com/login');
         $this->browserModule->fillField('#email', $this->grabFacebookTestUserEmail());
         $this->browserModule->fillField('#pass', $this->grabFacebookTestUserPassword());
-        $this->browserModule->click('login', 'input');
+
+        try {
+            $this->browserModule->click('login', 'input');
+        } catch (\Codeception\Exception\ElementNotFound $e) {
+            $x = $this->browserModule->_getResponseContent();
+            mail('tiger.seo@gmail.com', 'facebook html as it is seen from travis', $x);
+            throw $e;
+        }
         $this->browserModule->see($this->grabFacebookTestUserName());
         $this->browserModule->amOnUrl($callbackUrl);
     }
@@ -262,6 +269,7 @@ EOF;
         if (!array_key_exists('profile', $this->testUser)) {
             $this->testUser['profile'] = $this->facebook->getTestUserInfo($this->grabFacebookTestUserAccessToken());
         }
+
         return $this->testUser['profile']['name'];
     }
 
