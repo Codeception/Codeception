@@ -52,7 +52,7 @@ install:
   - '[[ -z "$SYMFONY" ]] || composer require symfony/dom-crawler=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ -z "$SYMFONY" ]] || composer require symfony/browser-kit=~$SYMFONY --no-update --ignore-platform-reqs'
   - '[[ "$dependencies" != "" ]] || composer update --prefer-dist'
-  - '[[ "$dependencies" != "lowest" ]] || composer update --prefer-lowest -n'
+  - '[[ "$dependencies" != "lowest" ]] || composer update --prefer-lowest --prefer-dist -n'
   # Yii2
   - composer create-project yiisoft/yii2-app-basic frameworks-yii-basic
   # Phalcon
