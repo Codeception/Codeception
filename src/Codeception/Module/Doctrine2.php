@@ -1,6 +1,7 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\DataMapper;
 use Codeception\Module as CodeceptionModule;
 use Codeception\Exception\ModuleConfigException;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -64,7 +65,7 @@ use Codeception\Util\Stub;
  * * `em` - Entity Manager
  */
 
-class Doctrine2 extends CodeceptionModule implements DependsOnModule
+class Doctrine2 extends CodeceptionModule implements DependsOnModule, DataMapper
 {
 
     protected $config = [
@@ -429,5 +430,10 @@ EOF;
                 $qb->setParameter($paramname, $val);
             }
         }
+    }
+
+    public function _getEntityManager()
+    {
+        return $this->em;
     }
 }

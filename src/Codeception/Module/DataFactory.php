@@ -1,8 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Lib\Interfaces\DataMapper;
+use Codeception\Lib\Interfaces\ORM;
 use Codeception\TestCase;
 use League\FactoryMuffin\FactoryMuffin;
+use League\FactoryMuffin\Stores\RepositoryStore;
 
 /**
  * DataFactory allows you to easily generate and create test data using [**FactoryMuffin**](https://github.com/thephpleague/factory-muffin).
@@ -17,7 +20,8 @@ use League\FactoryMuffin\FactoryMuffin;
  *
  * // MyModel is a valid class name of a model you are using
  * $fm->define('MyModel')->setDefinitions([
- *    'name'   => Faker::name(),
+ *
+ *  'name'   => Faker::name(),
  *    'email'  => Faker::email(),
  *    'body'   => Faker::text()
  *]);
@@ -52,7 +56,7 @@ use League\FactoryMuffin\FactoryMuffin;
 class DataFactory extends \Codeception\Module
 {
     protected $dependencyMessage = <<<EOF
-Framework module with ActiveRecord support required
+ORM module (like Doctrine2) or Framework module with ActiveRecord support is required:
 --
 modules:
     enabled:
@@ -62,6 +66,7 @@ modules:
 --
 EOF;
 
+    protected $orm;
 
     /**
      * @var FactoryMuffin
@@ -73,13 +78,23 @@ EOF;
     public function _initialize()
     {
         if (!class_exists('League\FactoryMuffin\FactoryMuffin')) {
-            throw new \Exception('FactoryMuffin not installed. Please add `"league/factory-muffin": "~3.0|v3.0.0-dev"` to composer.json');
+            throw new \Exception('FactoryMuffin not installed. Please add `"league/factory-muffin": "~3.0"` to composer.json');
         }
-        $this->factoryMuffin = new FactoryMuffin();
+
+        $store = null;
+        if ($this->orm instanceof DataMapper) { // for Doctrine
+            $store = new RepositoryStore($this->orm->_getEntityManager());
+        }
+        $this->factoryMuffin = new FactoryMuffin($store);
 
         if ($this->config['factories']) {
             $this->factoryMuffin->loadFactories($this->config['factories']);
         }
+    }
+
+    public function _inject(ORM $orm)
+    {
+        $this->orm = $orm;
     }
 
     public function _after(TestCase $test)
@@ -90,7 +105,7 @@ EOF;
 
     public function _depends()
     {
-        return ['Codeception\Lib\Interfaces\ActiveRecord' => $this->dependencyMessage];
+        return ['Codeception\Lib\Interfaces\ORM' => $this->dependencyMessage];
     }
 
     /**
