@@ -32,8 +32,8 @@
     },
     "require-dev": {
         "monolog/monolog": "~1.8",
-        "league/factory-muffin": "~3.0|v3.0.0-dev",
-        "league/factory-muffin-faker": "~1.0|v1.0.0-dev",
+        "league/factory-muffin": "~3.0",
+        "league/factory-muffin-faker": "~1.0",
         "facebook/php-sdk-v4": "~4.0",
         "videlalvaro/php-amqplib": "~2.4",
         "codeception/specify": "~0.3",
