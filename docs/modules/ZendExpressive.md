@@ -1,43 +1,24 @@
 
 
 
+This module allows you to run tests inside Zend Expressive.
 
-This module allows you to run functional tests for Laravel 4.
-It should **not** be used for acceptance tests.
-
-## Demo Project
-
-<https://github.com/Codeception/sample-l4-app>
-
-## Example
-
-    modules:
-        enabled:
-            - Laravel4
+Uses `config/container.php` file by default.
 
 ## Status
 
-* Maintainer: **Jan-Henk Gerritsen**
-* Stability: **stable**
+* Maintainer: **Naktibalda**
+* Stability: **alpha**
 
 ## Config
 
-* cleanup: `boolean`, default `true` - all db queries will be run in transaction, which will be rolled back at the end of test.
-* unit: `boolean`, default `true` - Laravel will run in unit testing mode.
-* environment: `string`, default `testing` - When running in unit testing mode, we will set a different environment.
-* start: `string`, default `bootstrap/start.php` - Relative path to start.php config file.
-* root: `string`, default ` ` - Root path of our application.
-* filters: `boolean`, default: `false` - enable or disable filters for testing.
+* container: relative path to file which returns Container (default: `config/container.php`)
 
 ## API
 
-* app - `Illuminate\Foundation\Application` instance
-* client - `\Symfony\Component\BrowserKit\Client` instance
-
-## Parts
-
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
-
+* application -  instance of `\Zend\Expressive\Application`
+* container - instance of `\Interop\Container\ContainerInterface`
+* client - BrowserKit client
 
 
 
@@ -55,10 +36,10 @@ Use it in Helpers or GroupObject or Extension classes:
 
 ```php
 <?php
-$els = $this->getModule('Laravel4')->_findElements('.items');
-$els = $this->getModule('Laravel4')->_findElements(['name' => 'username']);
+$els = $this->getModule('ZendExpressive')->_findElements('.items');
+$els = $this->getModule('ZendExpressive')->_findElements(['name' => 'username']);
 
-$editLinks = $this->getModule('Laravel4')->_findElements(['link' => 'Edit']);
+$editLinks = $this->getModule('ZendExpressive')->_findElements(['link' => 'Edit']);
 // now you can iterate over $editLinks and check that all them have valid hrefs
 ```
 
@@ -81,7 +62,7 @@ Use it in Helpers when you want to retrieve response of request performed by ano
 // in Helper class
 public function seeResponseContains($text)
 {
-   $this->assertContains($text, $this->getModule('Laravel4')->_getResponseContent(), "response contains");
+   $this->assertContains($text, $this->getModule('ZendExpressive')->_getResponseContent(), "response contains");
 }
 ?>
 ```
@@ -101,7 +82,7 @@ Useful for testing multi-step forms on a specific step.
 <?php
 // in Helper class
 public function openCheckoutFormStep2($orderId) {
-    $this->getModule('Laravel4')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
+    $this->getModule('ZendExpressive')->_loadPage('POST', '/checkout/step2', ['order' => $orderId]);
 }
 ?>
 ```
@@ -126,7 +107,7 @@ Returns a string with response body.
 <?php
 // in Helper class
 public function createUserByApi($name) {
-    $userData = $this->getModule('Laravel4')->_request('POST', '/api/v1/users', ['name' => $name]);
+    $userData = $this->getModule('ZendExpressive')->_request('POST', '/api/v1/users', ['name' => $name]);
     $user = json_decode($userData);
     return $user->id;
 }
@@ -153,7 +134,7 @@ To load arbitrary page for interaction, use `_loadPage` method.
 Saves page source of to a file
 
 ```php
-$this->getModule('Laravel4')->_savePageSource(codecept_output_dir().'page.html');
+$this->getModule('ZendExpressive')->_savePageSource(codecept_output_dir().'page.html');
 ```
  * `param` $filename
 
@@ -164,31 +145,6 @@ Authenticates user for HTTP_AUTH
 
  * `param` $username
  * `param` $password
-
-
-### amLoggedAs
- 
-Set the currently logged in user for the application.
-Takes either `UserInterface` instance or array of credentials.
-
- * `param`  \Illuminate\Auth\UserInterface|array $user
- * `param`  string $driver
- * `return` void
- * `[Part]` framework
-
-
-### amOnAction
- 
-Opens web page by action name
-
-``` php
-<?php
-$I->amOnAction('PostsController * `index');` 
-?>
-```
-
- * `param` $action
- * `param array` $params
 
 
 ### amOnPage
@@ -206,20 +162,6 @@ $I->amOnPage('/register');
  * `param` $page
 
 
-### amOnRoute
- 
-Opens web page using route name and parameters.
-
-``` php
-<?php
-$I->amOnRoute('posts.create');
-?>
-```
-
- * `param` $route
- * `param array` $params
-
-
 ### attachFile
  
 Attaches a file relative to the Codeception data directory to the given file upload field.
@@ -233,16 +175,6 @@ $I->attachFile('input[ * `type="file"]',`  'prices.xls');
 
  * `param` $field
  * `param` $filename
-
-
-### callArtisan
- 
-Calls an Artisan command and returns output as a string
-
- * `param string` $command The name of the command as displayed in the artisan command list
- * `param array` $parameters An associative array of command arguments
-
- * `return` string
 
 
 ### checkOption
@@ -319,11 +251,6 @@ For checking the raw source code, use `seeInSource()`.
 
  * `param`      $text
  * `param null` $selector
-
-
-### dontSeeAuthentication
- 
-Check that user is not authenticated
 
 
 ### dontSeeCheckboxIsChecked
@@ -525,22 +452,6 @@ $I->dontSeeOptionIsSelected('#form input[name=payment]', 'Visa');
 
 
 
-### dontSeeRecord
- 
-Checks that record does not exist in database.
-
-``` php
-<?php
-$I->dontSeeRecord('users', array('name' => 'davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
-
-
 ### fillField
  
 Fills a text field or textarea with the given string.
@@ -554,13 +465,6 @@ $I->fillField(['name' => 'email'], 'jon * `mail.com');`
 
  * `param` $field
  * `param` $value
-
-
-### getApplication
- 
-Provides access the Laravel application object.
-
- * `return` \Illuminate\Foundation\Application
 
 
 ### grabAttributeFrom
@@ -632,47 +536,6 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `return` string[]
 
 
-### grabRecord
- 
-Retrieves record from database
-
-``` php
-<?php
-$category = $I->grabRecord('users', array('name' => 'davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` ORM
- * `[Part]` framework
-
-
-### grabService
- 
-Return an instance of a class from the IoC Container.
-(http://laravel.com/docs/ioc)
-
-Example
-``` php
-<?php
-// In Laravel
-App::bind('foo', function($app)
-{
-    return new FooBar;
-});
-
-// Then in test
-$service = $I->grabService('foo');
-
-// Will return an instance of FooBar, also works for singletons.
-?>
-```
-
- * `param`  string $class
- * `[Part]` framework
-
-
 ### grabTextFrom
  
 Finds and returns the text contents of the given element.
@@ -695,38 +558,6 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
  * `return` array|mixed|null|string
-
-
-### haveDisabledFilters
- 
-Disable Laravel filters for next requests.
-
-
-### haveEnabledFilters
- 
-Enable Laravel filters for next requests.
-
-
-### haveRecord
- 
-Inserts record into the database.
-
-``` php
-<?php
-$user_id = $I->haveRecord('users', array('name' => 'Davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
-
-
-### logout
- 
-Logs user out
- * `[Part]` framework
 
 
 ### moveBack
@@ -778,12 +609,6 @@ For checking the raw source code, use `seeInSource()`.
  * `param null` $selector
 
 
-### seeAuthentication
- 
-Checks that user is authenticated
- * `[Part]` framework
-
-
 ### seeCheckboxIsChecked
  
 Checks that the specified checkbox is checked.
@@ -811,33 +636,6 @@ $I->seeCookie('PHPSESSID');
 ```
 
  * `param` $cookie
- * `param array` $params
-
-
-### seeCurrentActionIs
- 
-Checks that current url matches action
-
-``` php
-<?php
-$I->seeCurrentActionIs('PostsController * `index');` 
-?>
-```
-
- * `param` $action
- * `param array` $params
-
-
-### seeCurrentRouteIs
- 
-Checks that current url matches route
-
-``` php
-<?php
-$I->seeCurrentRouteIs('posts.index');
-?>
-```
- * `param` $route
  * `param array` $params
 
 
@@ -890,56 +688,6 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
  * `param` $selector
  * `param array` $attributes
  * `return` 
-
-
-### seeFormErrorMessage
- 
-Assert that specific form error message is set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeFormErrorMessage('username', 'Invalid Username');
-?>
-```
- * `param string` $key
- * `param string` $errorMessage
-
-
-### seeFormErrorMessages
- 
-Assert that specific form error messages are set in the view.
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeFormErrorMessages(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
-
-
-### seeFormHasErrors
- 
-Assert that form errors are bound to the View.
-
-``` php
-<?php
-$I->seeFormHasErrors();
-?>
-```
-
- * `return` bool
 
 
 ### seeInCurrentUrl
@@ -1041,22 +789,6 @@ $I->seeInFormFields('//form[ * `id=my-form]',`  $form);
  * `param` $params
 
 
-### seeInSession
- 
-Assert that a session variable exists.
-
-``` php
-<?php
-$I->seeInSession('key');
-$I->seeInSession('key', 'value');
-?>
-```
-
- * `param`  string|array $key
- * `param`  mixed $value
- * `return` void
-
-
 ### seeInSource
  
 Checks that the current page contains the given string in its
@@ -1136,77 +868,12 @@ $I->seeOptionIsSelected('#form input[name=payment]', 'Visa');
 Asserts that current page has 404 response status code.
 
 
-### seeRecord
- 
-Checks that record exists in database.
-
-``` php
-<?php
-$I->seeRecord('users', array('name' => 'davert'));
-?>
-```
-
- * `param` $tableName
- * `param array` $attributes
- * `[Part]` orm
- * `[Part]` framework
-
-
 ### seeResponseCodeIs
  
 Checks that response code is equal to value provided.
 
  * `param` $code
 
-
-
-### seeSessionErrorMessage
- 
-Assert that Session has error messages
-The seeSessionHasValues cannot be used, as Message bag Object is returned by Laravel4
-
-Useful for validation messages and generally messages array
- e.g.
- return `Redirect::to('register')->withErrors($validator);`
-
-Example of Usage
-
-``` php
-<?php
-$I->seeSessionErrorMessage(array('username'=>'Invalid Username'));
-?>
-```
- * `param array` $bindings
- * `deprecated` 
-
-
-### seeSessionHasErrors
- 
-Assert that the session has errors bound.
-
-``` php
-<?php
-$I->seeSessionHasErrors();
-?>
-```
-
- * `return` bool
- * `deprecated` 
-
-
-### seeSessionHasValues
- 
-Assert that the session has a given list of values.
-
-``` php
-<?php
-$I->seeSessionHasValues(['key1', 'key2']);
-$I->seeSessionHasValues(['key1' => 'value1', 'key2' => 'value2']);
-?>
-```
-
- * `param`  array $bindings
- * `return` void
 
 
 ### selectOption
@@ -1284,11 +951,6 @@ $I->sendAjaxRequest('PUT', '/posts/7', array('title' => 'new title'));
  * `param` $method
  * `param` $uri
  * `param` $params
-
-
-### setApplication
- 
- * `param` $app
 
 
 ### setCookie
@@ -1511,4 +1173,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/Laravel4.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.1/src/Codeception/Module/ZendExpressive.php">Help us to improve documentation. Edit module reference</a></div>

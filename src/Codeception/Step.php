@@ -96,8 +96,9 @@ abstract class Step
 
     protected function getArgumentsAsString(array $arguments)
     {
+        $argumentsAsJson = [];
         foreach ($arguments as $key => $argument) {
-            $arguments[$key] = (is_string($argument)) ? trim($argument,"''") : $this->parseArgumentAsString($argument);
+            $argumentsAsJson []= stripcslashes(json_encode($this->parseArgumentAsString($argument), JSON_UNESCAPED_UNICODE));
         }
         return stripcslashes(trim(json_encode($arguments, JSON_UNESCAPED_UNICODE), '[]'));
     }
@@ -111,18 +112,35 @@ abstract class Step
             if (get_class($argument) == 'Facebook\WebDriver\WebDriverBy') {
                 return Locator::humanReadableString($argument);
             }
+            return $this->getClassName($argument);
         }
-        if ($argument instanceof \Closure) {
-            return 'lambda function';
-        }
-        if (is_callable($argument)) {
-            return 'callable function';
-        }
-        if (!is_object($argument)) {
+
+        if (is_array($argument)) {
+            foreach ($argument as $key => $value) {
+                if (is_object($value)) {
+                    $argument[$key] = $this->getClassName($value);
+                }
+            }
             return $argument;
         }
 
-        return (isset($argument->__mocked)) ? $this->formatClassName($argument->__mocked) : $this->formatClassName(get_class($argument));
+        if (is_resource($argument)) {
+            return (string)$argument;
+        }
+
+        return $argument;
+    }
+
+
+    protected function getClassName($argument)
+    {
+        if ($argument instanceof \Closure) {
+            return 'Closure';
+        } elseif ((isset($argument->__mocked))) {
+            return $this->formatClassName($argument->__mocked);
+        } else {
+            return $this->formatClassName(get_class($argument));
+        }
     }
 
     protected function formatClassName($classname)
